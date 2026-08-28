@@ -1,0 +1,18 @@
+name: rk_rt
+# Same defect as rk_spiffe had, found while fixing it: the line promised
+# commands and telemetry, and the package is 17 lines of Dart with a probe that
+# returns false. pub.dev shows this line in search results.
+description: "A motion control contract for Dart, name reservation only: 0.0.1 ships no commands, no telemetry and no control loop, and says so at runtime."
+version: 0.0.1
+repository: https://github.com/0101001001001011/rk-rt
+issue_tracker: https://github.com/0101001001001011/rk-rt/issues
+
+environment:
+  sdk: ^3.8.0
+
+dev_dependencies:
+  # Нужен только ради analysis_options.yaml: без своего файла с правилами
+  # анализатор уходит вверх, находит файл приложения с package:flutter_lints,
+  # не может разрешить включение — и не применяет НИКАКИХ правил. «No issues
+  # found» тогда означает «проверка прекратилась», а не «нарушений нет.
+  lints: ^5.0.0

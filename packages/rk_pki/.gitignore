@@ -1,0 +1,31 @@
+# Build output never enters the package: a consumer builds the native part
+# themselves, and a committed binary is a binary nobody can audit.
+rust/target/
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+
+# A library does not pin its resolved versions; the lock belongs to the app.
+pubspec.lock
+.dart_tool/
+
+# The generated header-to-Dart bindings ARE committed (lib/src/native/
+# bindings.g.dart): a consumer must not need LLVM to use the package. The
+# local ffigen config that points at a machine's LLVM is not.
+ffigen.local.yaml
+
+# The package became a Flutter FFI plugin, so the platform build systems now
+# write scratch inside it. AGP puts its CMake scratch and its local SDK path in
+# the *plugin* directory, not the application's, and both are machine-specific.
+android/local.properties
+android/.cxx/
+.gradle/
+build/
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.pdb

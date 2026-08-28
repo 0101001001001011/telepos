@@ -1,0 +1,196 @@
+// Android runs cargo from Gradle directly. It does NOT go through
+// `externalNativeBuild` and CMake, and that is a measured decision, not a
+// stylistic one.
+//
+// Measured on rk_quic, 2026-08-01, and the reason it must not be re-litigated
+// by trying CMake again:
+//
+// 1. With `project(... LANGUAGES NONE)` AGP dies at configure time with a bare
+//    `java.lang.NullPointerException` in
+//    `CmakeFileApiV1Kt.readCmakeFileApiReply` — it needs the `toolchains`
+//    object, which CMake only emits once a language is declared.
+//
+// 2. Declaring `LANGUAGES C` gets past that, and then the build **succeeds and
+//    ships nothing**: AGP records the cargo custom target with no `output` key,
+//    because a custom target produces no library CMake can name, then asks
+//    ninja to build an empty list of targets. cargo never runs. Verified by
+//    unzipping the APK.
+//
+// A green build that ships no library is the worst available outcome, so the
+// CMake route is abandoned on Android rather than patched.
+//
+// WHAT THIS DOES INSTEAD. One cargo invocation per ABI, writing into a
+// directory listed in `jniLibs.srcDirs`. AGP packages whatever it finds there
+// without needing to understand where it came from.
+
+group = "kz.robkim.rk_zenoh"
+version = "0.2.2"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.7.3")
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+
+// ABI -> [Rust target triple, NDK clang wrapper prefix].
+//
+// The two are not the same string and one cannot be derived from the other:
+// for 32-bit ARM the NDK wrapper is `armv7a-linux-androideabi` while the Rust
+// triple is `armv7-linux-androideabi`. Every entry is a moving part; nothing
+// keeps these lists in step with either toolchain.
+ext.rkZenohAbis = [
+    "armeabi-v7a": ["armv7-linux-androideabi", "armv7a-linux-androideabi"],
+    "arm64-v8a"  : ["aarch64-linux-android", "aarch64-linux-android"],
+    "x86"        : ["i686-linux-android", "i686-linux-android"],
+    "x86_64"     : ["x86_64-linux-android", "x86_64-linux-android"],
+]
+
+// Which of them are built unless asked otherwise.
+//
+// Not all four, and the reason is a defect this shape actually produced on
+// rk_quic: building `x86` too put `lib/x86/librk_zenoh.so` in an APK whose
+// `lib/x86/` had no `libflutter.so`, because Flutter ships no 32-bit x86
+// slice. Android picks the directory matching the device's primary ABI and
+// then loads what is in it — so a 32-bit x86 device would have chosen a folder
+// containing only this library and crashed. The default therefore matches
+// exactly what Flutter ships; `x86` remains supported, on request (И151).
+ext.rkZenohDefaultAbis = ["armeabi-v7a", "arm64-v8a", "x86_64"]
+
+// The API level cargo links against. Must not exceed the consuming app's
+// minSdk, or the app installs and then fails to load the library at run time
+// on the oldest devices it claims to support.
+ext.rkZenohApiLevel = 24
+
+def rkZenohJniDir = new File(project.buildDir, "rk_zenoh_jni")
+
+android {
+    namespace = "kz.robkim.rk_zenoh"
+
+    // Raising this forces every consumer of the plugin to raise theirs.
+    compileSdk = 35
+
+    ndkVersion = android.ndkVersion
+
+    defaultConfig {
+        // 24, not 21: the Rust standard library's Android targets need the
+        // 64-bit file API and `getauxval`, both of which arrive at 24.
+        minSdk = 24
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs += [rkZenohJniDir]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+// Which ABIs to build. `-PrkZenohAbiFilter=arm64-v8a` cuts a local build
+// from three cargo invocations to one; `-PrkZenohAbiFilter=x86` builds the
+// slice the default deliberately leaves out.
+def selectedAbis() {
+    def filter = project.findProperty("rkZenohAbiFilter")
+    if (filter == null || filter.toString().trim().isEmpty()) {
+        return project.ext.rkZenohDefaultAbis
+    }
+    def requested = filter.toString().split(",").collect { it.trim() }.findAll { it }
+    def unknown = requested.findAll { !project.ext.rkZenohAbis.containsKey(it) }
+    if (!unknown.isEmpty()) {
+        throw new GradleException("rk_zenoh: unknown ABI(s) ${unknown}; known: "
+            + project.ext.rkZenohAbis.keySet())
+    }
+    return requested
+}
+
+def ndkClang(String clangPrefix) {
+    def host = org.gradle.internal.os.OperatingSystem.current()
+    def hostTag = host.isWindows() ? "windows-x86_64"
+        : host.isMacOsX() ? "darwin-x86_64" : "linux-x86_64"
+    def suffix = host.isWindows() ? ".cmd" : ""
+    def clang = new File(android.ndkDirectory,
+        "toolchains/llvm/prebuilt/${hostTag}/bin/"
+        + "${clangPrefix}${project.ext.rkZenohApiLevel}-clang${suffix}")
+    if (!clang.exists()) {
+        // Naming the path beats "linker not found": the usual causes are a
+        // missing NDK and an API level the NDK does not carry a wrapper for.
+        throw new GradleException("rk_zenoh: no NDK clang at ${clang}. "
+            + "ndkDirectory=${android.ndkDirectory}, "
+            + "apiLevel=${project.ext.rkZenohApiLevel}")
+    }
+    return clang
+}
+
+tasks.register("rkZenohCargoBuild") {
+    group = "build"
+    description = "Builds librk_zenoh.so for each Android ABI and stages it for packaging"
+
+    def crateDir = new File(projectDir, "../rust")
+    def cargoTargetDir = new File(project.buildDir, "rk_zenoh_cargo")
+
+    inputs.dir(new File(crateDir, "src"))
+    inputs.file(new File(crateDir, "Cargo.toml"))
+    outputs.dir(rkZenohJniDir)
+
+    doLast {
+        selectedAbis().each { abi ->
+            def (triple, clangPrefix) = project.ext.rkZenohAbis[abi]
+            def clang = ndkClang(clangPrefix)
+            def envTriple = triple.toUpperCase().replace("-", "_")
+            // cc-rs reads CC_<triple> and AR_<triple> with the dashes intact;
+            // `llvm-ar` has to be named because the NDK ships no
+            // `<triple>-ar`, and without it cc-rs fails naming a program
+            // rather than the missing variable.
+            def underscored = triple.replace("-", "_")
+            def arTool = new File(clang.parentFile,
+                "llvm-ar" + (clang.name.endsWith(".cmd") ? ".exe" : "")).absolutePath
+
+            project.exec {
+                workingDir crateDir
+                commandLine "cargo", "build", "--release",
+                    "--target", triple,
+                    "--target-dir", cargoTargetDir.absolutePath
+                // Named here rather than left to a developer's
+                // ~/.cargo/config.toml, so the build does not depend on what
+                // happens to be on one machine.
+                environment "CARGO_TARGET_${envTriple}_LINKER", clang.absolutePath
+                environment "CC_${triple}", clang.absolutePath
+                environment "AR_${triple}", arTool
+                environment "CC_${underscored}", clang.absolutePath
+                environment "AR_${underscored}", arTool
+            }
+
+            def built = new File(cargoTargetDir, "${triple}/release/librk_zenoh.so")
+            if (!built.exists()) {
+                throw new GradleException(
+                    "rk_zenoh: cargo reported success but ${built} is not there")
+            }
+            def staged = new File(rkZenohJniDir, abi)
+            staged.mkdirs()
+            project.copy {
+                from built
+                into staged
+            }
+        }
+    }
+}
+
+// `preBuild` is early enough: `jniLibs.srcDirs` is read when the native-libs
+// merge runs, which is well after this.
+tasks.named("preBuild").configure { dependsOn("rkZenohCargoBuild") }

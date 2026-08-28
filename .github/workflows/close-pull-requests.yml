@@ -1,0 +1,81 @@
+# Закрывает чужие pull request'ы — вежливо, сразу и с объяснением.
+#
+# Политика: код вливает только своя команда (README, CONTRIBUTING). Без этого
+# файла политика существует только в документации, а человек узнаёт о ней после
+# того, как потратил вечер на правку. Молчащий PR, висящий месяцами, читается
+# хуже, чем отказ в первую минуту.
+#
+# `pull_request_target`, а не `pull_request`: у события `pull_request` из форка
+# токен только на чтение, и закрыть PR им нельзя. `pull_request_target` даёт
+# права на запись — и потому НИКОГДА не должен выкачивать и запускать код из
+# ветки автора. Здесь и не выкачивает: ни `actions/checkout`, ни единой команды
+# из репозитория. Только вызов API.
+name: Pull requests are not accepted
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+
+    # Свои правки не трогаем: у члена команды `author_association` будет
+    # OWNER, MEMBER или COLLABORATOR. Всё остальное — снаружи.
+    if: >
+      github.event.pull_request.author_association != 'OWNER' &&
+      github.event.pull_request.author_association != 'MEMBER' &&
+      github.event.pull_request.author_association != 'COLLABORATOR'
+
+    steps:
+      - name: Explain and close
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            const body = [
+              "Thank you for taking the time — and sorry for the answer.",
+              "",
+              "**This repository does not accept pull requests.** Code is merged only by the",
+              "team that maintains it. That is a deliberate policy rather than a judgement on",
+              "your change, which nobody has read: this is automated, and it closes every",
+              "outside pull request the same way.",
+              "",
+              "The reasoning is in [CONTRIBUTING.md](https://github.com/" + context.repo.owner +
+                "/" + context.repo.repo + "/blob/main/CONTRIBUTING.md). Briefly: this code takes",
+              "money at a counter, merging a patch means vouching for it at that standard, and",
+              "saying plainly that we cannot is more honest than accepting patches and",
+              "reviewing them thinly.",
+              "",
+              "### What is open to you",
+              "",
+              "- **Fork it.** TelePOS is AGPL-3.0-or-later. You may take this code, change it,",
+              "  run it and distribute your version, as long as your version stays under the",
+              "  same licence and its users can obtain its source. Your fork is yours.",
+              "- **Open an issue.** If this pull request fixes a bug, the *report* is worth more",
+              "  to us than the patch — it tells us what broke, and we would rather fix it in a",
+              "  way that fits the rest of the system. A reproduction we can follow is the most",
+              "  useful thing anyone outside the team can send.",
+              "- **Say what you think**, including about this policy. Criticism in the issue",
+              "  tracker is welcome.",
+              "",
+              "Your commits stay yours, and your fork keeps them.",
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body,
+            });
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              state: "closed",
+            });

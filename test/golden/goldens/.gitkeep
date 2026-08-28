@@ -1,0 +1,2 @@
+# Golden file storage
+# Run: flutter test --update-goldens test/golden/

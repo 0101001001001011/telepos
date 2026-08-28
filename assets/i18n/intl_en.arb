@@ -1,0 +1,4917 @@
+{
+  "@@locale": "en",
+  "navReports": "Reports",
+  "navStock": "Stock",
+  "@@last_modified": "2026-02-07T00:00:00.000Z",
+  "appName": "TelePOS",
+  "globalOk": "OK",
+  "globalCancel": "Cancel",
+  "globalYes": "Yes",
+  "globalNo": "No",
+  "globalSave": "Save",
+  "globalNew": "New",
+  "globalDelete": "Delete",
+  "globalEdit": "Edit",
+  "globalAdd": "Add",
+  "globalSearch": "Search",
+  "globalClose": "Close",
+  "globalBack": "Back",
+  "globalNext": "Next",
+  "globalDone": "Done",
+  "globalLoading": "Loading...",
+  "globalError": "Error",
+  "globalSuccess": "Success",
+  "globalWarning": "Warning",
+  "globalInfo": "Info",
+  "globalConfirm": "Confirm",
+  "globalClear": "Clear",
+  "globalSelect": "Select",
+  "globalAll": "All",
+  "globalNone": "None",
+  "globalTotal": "Total",
+  "globalAmount": "Amount",
+  "globalQuantity": "Quantity",
+  "globalPrice": "Price",
+  "globalDiscount": "Discount",
+  "globalDate": "Date",
+  "globalTime": "Time",
+  "loginTitle": "Login",
+  "loginPin": "Enter PIN",
+  "loginPinHint": "4 digits",
+  "loginEnter": "Enter",
+  "loginSelectUser": "Select user",
+  "loginNoUsers": "No users",
+  "loginWrongPin": "Wrong PIN",
+  "loginBlocked": "User blocked",
+  "loginSessionExpired": "Session expired",
+  "loginShiftRequired": "Open shift to login",
+  "loginCashier": "Cashier",
+  "loginAdmin": "Administrator",
+  "loginManager": "Manager",
+  "loginLogout": "Logout",
+  "loginSwitchUser": "Switch user",
+  "saleTitle": "Sale",
+  "saleNewSale": "New sale",
+  "saleAddProduct": "Add product",
+  "saleScanBarcode": "Scan barcode",
+  "saleEnterBarcode": "Enter barcode",
+  "saleProductNotFound": "Product not found",
+  "saleEmptyCart": "Cart is empty",
+  "saleSubtotal": "Subtotal",
+  "saleTax": "Tax",
+  "saleTotalDiscount": "Discount",
+  "saleToPay": "To pay",
+  "saleItems": "{count, plural, one{{count} item} other{{count} items}}",
+  "saleRemoveItem": "Remove item",
+  "saleClearCart": "Clear cart",
+  "saleConfirmClear": "Clear cart?",
+  "saleProceedPayment": "Proceed to payment",
+  "saleHold": "Hold",
+  "saleRecall": "Recall",
+  "saleHeldSales": "Held sales",
+  "saleNoHeldSales": "No held sales",
+  "saleProductSearch": "Search products",
+  "saleByCategory": "By category",
+  "saleByName": "By name",
+  "saleByBarcode": "By barcode",
+  "saleWeight": "Weight",
+  "saleWeightKg": "Weight: {weight} kg",
+  "saleEnterWeight": "Enter weight",
+  "saleEnterQuantity": "Enter quantity",
+  "saleEnterPrice": "Enter price",
+  "saleFreePrice": "Free price",
+  "saleMaxDiscount": "Max discount: {percent}%",
+  "refundTitle": "Refund",
+  "refundNewRefund": "New refund",
+  "refundByReceipt": "By receipt",
+  "refundWithoutReceipt": "Without receipt",
+  "refundEnterReceipt": "Enter receipt number",
+  "refundReceiptNotFound": "Receipt not found",
+  "refundSelectItems": "Select items to refund",
+  "refundReason": "Refund reason",
+  "refundConfirm": "Confirm refund",
+  "refundAmount": "Refund amount",
+  "refundComplete": "Refund complete",
+  "refundCash": "Cash refund",
+  "refundCard": "Card refund",
+  "refundNoItems": "No items to refund",
+  "refundAlreadyRefunded": "Item already refunded",
+  "refundPartial": "Partial refund",
+  "shiftTitle": "Shift",
+  "shiftOpen": "Open shift",
+  "shiftClose": "Close shift",
+  "shiftCurrent": "Current shift",
+  "shiftNumber": "Shift #: {number}",
+  "shiftOpenedAt": "Opened: {time}",
+  "shiftCashier": "Cashier: {name}",
+  "shiftSalesCount": "Sales: {count}",
+  "shiftRefundsCount": "Refunds: {count}",
+  "shiftTotalSales": "Total sales",
+  "shiftTotalRefunds": "Total refunds",
+  "shiftCashInDrawer": "Cash in drawer",
+  "shiftExpected": "Expected",
+  "shiftActual": "Actual",
+  "shiftDifference": "Difference",
+  "shiftXReport": "X-report",
+  "shiftZReport": "Z-report",
+  "shiftConfirmClose": "Close shift?",
+  "shiftAlreadyOpen": "Shift already open",
+  "shiftNotOpen": "Shift not open",
+  "shiftOpenFirst": "Open shift first",
+  "paymentTitle": "Payment",
+  "paymentCash": "Cash",
+  "paymentCard": "Card",
+  "paymentKaspi": "Kaspi QR",
+  "paymentBonus": "Bonus",
+  "paymentDebt": "Debt",
+  "paymentMixed": "Mixed",
+  "paymentEnterAmount": "Enter amount",
+  "paymentRemaining": "Remaining: {amount}",
+  "paymentChange": "Change: {amount}",
+  "paymentComplete": "Payment complete",
+  "paymentFailed": "Payment failed",
+  "paymentWaitingCard": "Waiting for card...",
+  "paymentWaitingQr": "Waiting for QR...",
+  "paymentInsertCard": "Insert card",
+  "paymentScanQr": "Scan QR",
+  "paymentApproved": "Approved",
+  "paymentDeclined": "Declined",
+  "paymentReceipt": "Print receipt",
+  "paymentNoReceipt": "No receipt",
+  "paymentEmail": "Send email",
+  "paymentSms": "Send SMS",
+  "historyTitle": "History",
+  "historyToday": "Today",
+  "historyYesterday": "Yesterday",
+  "historyThisWeek": "This week",
+  "historyThisMonth": "This month",
+  "historyDateRange": "Select period",
+  "historyNoSales": "No sales for period",
+  "historyReceipt": "Receipt #{number}",
+  "historyReprint": "Reprint",
+  "historyDetails": "Details",
+  "historySale": "Sale",
+  "historyRefund": "Refund",
+  "historyFilter": "Filter",
+  "agentTitle": "Agents",
+  "agentClients": "Clients",
+  "agentSuppliers": "Suppliers",
+  "agentSearch": "Search agent",
+  "agentAdd": "Add agent",
+  "agentEdit": "Edit",
+  "agentName": "Name",
+  "agentPhone": "Phone",
+  "agentEmail": "Email",
+  "agentIin": "IIN/BIN",
+  "agentAddress": "Address",
+  "agentBalance": "Balance",
+  "agentBonusBalance": "Bonus balance",
+  "agentDebt": "Debt",
+  "agentNoAgents": "No agents",
+  "agentSaveSuccess": "Agent saved",
+  "agentDeleteConfirm": "Delete agent?",
+  "cashTitle": "Cash",
+  "cashInvestment": "Cash in",
+  "cashExpense": "Cash out",
+  "cashBalance": "Cash balance",
+  "cashEnterAmount": "Enter amount",
+  "cashReason": "Reason",
+  "cashReasonPlaceholder": "Enter reason",
+  "cashSuccess": "Operation complete",
+  "cashExpenseTypes": "Expense type",
+  "cashSalary": "Salary",
+  "cashRent": "Rent",
+  "cashUtilities": "Utilities",
+  "cashSupplies": "Supplies",
+  "cashOther": "Other",
+  "discountTitle": "Discount",
+  "discountPercent": "Percent",
+  "discountFixed": "Fixed",
+  "discountEnterValue": "Enter value",
+  "discountApply": "Apply",
+  "discountRemove": "Remove discount",
+  "discountOnItem": "Item discount",
+  "discountOnTotal": "Total discount",
+  "discountMaxExceeded": "Maximum discount exceeded",
+  "quickProductTitle": "Quick products",
+  "quickProductAdd": "Add product",
+  "quickProductName": "Name",
+  "quickProductPrice": "Price",
+  "quickProductCategory": "Category",
+  "quickProductSave": "Save",
+  "quickProductDelete": "Delete",
+  "syncTitle": "Sync",
+  "syncStatus": "Sync status",
+  "syncLastSync": "Last sync: {time}",
+  "syncNow": "Sync now",
+  "syncInProgress": "Syncing...",
+  "syncSuccess": "Sync complete",
+  "syncFailed": "Sync failed",
+  "syncProducts": "Products",
+  "syncPrices": "Prices",
+  "syncAgents": "Agents",
+  "syncSales": "Sales",
+  "syncPending": "Pending: {count}",
+  "syncOffline": "Offline",
+  "syncOnline": "Online",
+  "printerTitle": "Printer",
+  "printerStatus": "Printer status",
+  "printerConnected": "Connected",
+  "printerDisconnected": "Disconnected",
+  "printerError": "Printer error",
+  "printerPaperOut": "Paper out",
+  "printerConnect": "Connect",
+  "printerDisconnect": "Disconnect",
+  "printerTest": "Test print",
+  "printerSettings": "Printer settings",
+  "printerWidth": "Receipt width",
+  "additionalTitle": "Additional",
+  "additionalSettings": "Settings",
+  "additionalReports": "Reports",
+  "additionalInventory": "Inventory",
+  "additionalSupply": "Supply",
+  "additionalPriceChange": "Price change",
+  "additionalBackup": "Backup",
+  "additionalRestore": "Restore",
+  "additionalUpdate": "Update",
+  "additionalAbout": "About",
+  "additionalLicense": "License",
+  "additionalSupport": "Support",
+  "receiptTitle": "Receipt",
+  "receiptNumber": "Receipt #",
+  "receiptDate": "Date",
+  "receiptCashier": "Cashier",
+  "receiptItems": "Items",
+  "receiptSubtotal": "Subtotal",
+  "receiptDiscount": "Discount",
+  "receiptTax": "Tax",
+  "receiptTotal": "TOTAL",
+  "receiptCash": "Cash",
+  "receiptCard": "Card",
+  "receiptChange": "Change",
+  "receiptThankYou": "Thank you for your purchase!",
+  "receiptFiscalNumber": "Fiscal number",
+  "receiptQrCode": "QR for verification",
+  "receiptCopy": "Receipt copy",
+  "errorUnknown": "Unknown error",
+  "errorNetwork": "Network error",
+  "errorServer": "Server error",
+  "errorTimeout": "Timeout",
+  "errorNotFound": "Not found",
+  "errorPermission": "Permission denied",
+  "errorDatabase": "Database error",
+  "errorValidation": "Validation error",
+  "errorRequired": "Required field",
+  "errorInvalidFormat": "Invalid format",
+  "errorMinLength": "Minimum {min} characters",
+  "errorMaxLength": "Maximum {max} characters",
+  "errorMinValue": "Minimum {min}",
+  "errorMaxValue": "Maximum {max}",
+  "errorPrinter": "Printer error",
+  "errorFiscal": "Fiscal error",
+  "errorPayment": "Payment error",
+  "errorSync": "Sync error",
+  "errorNoInternet": "No internet connection",
+  "errorTryAgain": "Try again",
+  "helpTitle": "Help",
+  "helpTips": "Tips",
+  "helpShortcuts": "Keyboard shortcuts",
+  "helpRelatedScreens": "Related sections",
+  "helpKey": "Key",
+  "helpAction": "Action",
+  "navSale": "Sale",
+  "navRefund": "Refund",
+  "navShift": "Shift",
+  "navHistory": "History",
+  "navTables": "Tables",
+  "navOrders": "Orders",
+  "navQueue": "Queue",
+  "navIntake": "Intake",
+  "navAgents": "Agents",
+  "navSupply": "Supply",
+  "navCash": "Cash",
+  "navSettings": "Settings",
+  "navSync": "Sync",
+  "navMore": "More",
+  "navAdditional": "Additional",
+  "navLockScreen": "Lock",
+  "navMain": "Main",
+  "loginEnterSystem": "Login",
+  "loginWithoutPin": "Login without PIN",
+  "loginShiftOpen": "Shift open",
+  "loginShiftClosed": "Shift closed",
+  "saleQuickProducts": "Quick products",
+  "saleIncrease": "Increase",
+  "saleDecrease": "Decrease",
+  "saleMark": "Marking",
+  "saleDataMatrix": "Marking (DataMatrix)",
+  "saleHeld": "Sale held",
+  "saleNoDeferredSales": "No deferred sales",
+  "saleReceiptNo": "Receipt #",
+  "salePositions": "Items",
+  "saleSearchHint": "Search product (name or barcode)",
+  "refundWithReceipt": "WITH RECEIPT",
+  "refundWithoutReceiptUpper": "WITHOUT RECEIPT",
+  "refundLoadReceipt": "Load receipt",
+  "refundSearchProducts": "Search products",
+  "refundSelectAll": "Select all",
+  "refundDeselectAll": "Deselect all",
+  "refundMaxQuantity": "Maximum: {max}",
+  "refundConfirmTitle": "Confirm refund",
+  "refundSelectedItems": "Selected items: {count}",
+  "refundSuccessMsg": "Refund completed successfully",
+  "refundSearchHint": "Search product for refund",
+  "paymentRefundTitle": "Refund",
+  "paymentPayTitle": "Payment",
+  "paymentRefundBtn": "REFUND",
+  "paymentPayBtn": "PAY",
+  "paymentChangeLabel": "Change:",
+  "paymentSuccessRefund": "Refund completed",
+  "paymentSuccessPay": "Payment successful",
+  "paymentCardType": "Card",
+  "paymentToPay": "To pay",
+  "paymentBonusLabel": "Bonuses",
+  "paymentTotalToPay": "Total to pay",
+  "paymentByCard": "By card",
+  "paymentRemainLabel": "Remaining",
+  "shiftBills": "Bills",
+  "shiftTotalAmount": "Total amount",
+  "shiftOperations": "Operations",
+  "shiftOpened": "Shift opened",
+  "shiftClosed": "Shift closed",
+  "shiftSince": "since {time}",
+  "shiftSystem": "System",
+  "shiftEntered": "Entered",
+  "shiftRecounting": "Bill recount",
+  "shiftManualEntry": "Manual amount entry",
+  "shiftCashOps": "Cash operations",
+  "shiftOpenAction": "Opening shift",
+  "shiftCloseAction": "Closing shift",
+  "historyOperations": "Transaction history",
+  "historyResetFilters": "Reset filters",
+  "historyRefresh": "Refresh",
+  "historyNoRecords": "No records",
+  "historyChangeFilters": "Try changing filters",
+  "historyEmpty": "No transaction history",
+  "historyFilterTitle": "Filters",
+  "historyPeriod": "Period",
+  "historyOpType": "Operation type",
+  "historySearchHint": "Receipt number, amount...",
+  "historyType": "Type:",
+  "historyPrint": "Print receipt",
+  "agentFound": "Found: {count}",
+  "agentWithDebt": "With debt only",
+  "agentSearchHint": "Search by name or phone...",
+  "agentNewClient": "New client",
+  "agentNameRequired": "Name *",
+  "agentEnterName": "Enter client name",
+  "agentPhoneLabel": "Phone",
+  "agentIinLabel": "BIN/IIN",
+  "agentIinHint": "12 digits",
+  "agentDeleteQuestion": "Delete client?",
+  "agentDeleteConfirmMsg": "Are you sure you want to delete {name}?",
+  "agentDeleted": "Client deleted",
+  "agentFoundExisting": "Client found",
+  "supplyTitle": "Supply receipt",
+  "supplySaved": "Supply saved",
+  "supplySaveError": "Save error",
+  "supplyCancelQuestion": "Cancel supply?",
+  "supplyDataLost": "All entered data will be lost.",
+  "supplyProducts": "Products: {count}",
+  "supplyBarcodeHint": "Barcode or article",
+  "supplyComment": "Comment",
+  "supplyCommentHint": "Enter comment...",
+  "supplyNotFound": "Product not found",
+  "supplySelectSupplier": "Select supplier",
+  "supplySelectAccount": "Select account",
+  "supplyBalance": "Balance: {amount}",
+  "supplyPurchasePrice": "Purchase price",
+  "supplySerialNumbers": "Serial numbers",
+  "supplySerialHint": "Enter or scan S/N",
+  "supplySerialCount": "{count} of {expected}",
+  "@supplySerialCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      }
+    }
+  },
+  "supplySerialMismatch": "Serial number count does not match quantity",
+  "supplyInvalidQty": "Enter valid quantity",
+  "supplyInvalidPrice": "Enter valid price",
+  "inventoryTitle": "Inventory",
+  "inventoryFullCount": "Full inventory count",
+  "inventoryFullCountSubtitle": "Zero out quantity of unscanned products",
+  "inventoryStart": "Start",
+  "inventoryFinish": "Finish",
+  "inventoryScanHint": "Scan barcode",
+  "inventoryScanProducts": "Scan products to count",
+  "inventoryPressStart": "Press \"Start\" for inventory",
+  "inventoryProductCount": "Products: {count}",
+  "inventoryDiscrepancies": "Discrepancies: {count}",
+  "inventoryExpected": "Expected:",
+  "inventoryActual": "Actual:",
+  "inventoryProduct": "Product",
+  "inventoryExpectedQty": "Expected",
+  "inventoryActualQty": "Actual",
+  "inventoryDiscrepancy": "Discrepancy",
+  "inventoryActualLabel": "Actual quantity",
+  "inventoryFinishQuestion": "Finish inventory?",
+  "inventoryCompleted": "Inventory completed",
+  "writeoffTitle": "Write-off",
+  "writeoffReason": "Reason",
+  "writeoffProduct": "Product",
+  "writeoffScanHint": "Scan barcode",
+  "writeoffCommentHint": "Optional",
+  "writeoffReasonBreakage": "Breakage",
+  "writeoffReasonExpired": "Expired",
+  "writeoffReasonDamage": "Damage",
+  "writeoffReasonLoss": "Loss",
+  "writeoffReasonOther": "Other",
+  "writeoffCancelQuestion": "Cancel write-off?",
+  "writeoffSaved": "Write-off saved",
+  "settingsTitle": "Settings",
+  "settingsPosInfo": "POS info",
+  "settingsPosName": "POS name",
+  "settingsCompany": "Company",
+  "settingsIin": "IIN/BIN",
+  "settingsPosId": "POS ID",
+  "settingsStoreId": "Store ID",
+  "settingsNotSpecified": "Not specified",
+  "settingsAppVersion": "App version",
+  "settingsVersion": "Version",
+  "settingsPlatform": "Platform",
+  "settingsLanguage": "Interface language",
+  "settingsLanguageChanged": "Language changed",
+  "settingsCurrency": "Currency",
+  "settingsCurrencySymbol": "Symbol",
+  "settingsCurrencyCode": "Code",
+  "settingsCountry": "Country",
+  "settingsAdditional": "Additional settings",
+  "settingsTransport": "Transport",
+  "settingsTransportDesc": "Data sync settings",
+  "settingsPrinter": "Printer",
+  "settingsPrinterDesc": "Receipt print settings",
+  "settingsFiscal": "Fiscalization",
+  "settingsFiscalDesc": "WebKassa, OFD, VAT",
+  "settingsTelegram": "Telegram",
+  "settingsTelegramDesc": "Telegram integration and channels",
+  "settingsPermissions": "Permissions",
+  "settingsPermissionsDesc": "Cashier permissions",
+  "fiscalTitle": "Fiscalization",
+  "fiscalOperator": "Fiscal operator",
+  "fiscalWebkassa": "WebKassa settings",
+  "fiscalTaxpayer": "Taxpayer data",
+  "fiscalVatSettings": "VAT settings",
+  "fiscalVatPayer": "VAT payer",
+  "fiscalPrintVat": "Print VAT on receipt",
+  "fiscalSaved": "Settings saved",
+  "fiscalSaveError": "Save error",
+  "printerSettingsTitle": "Printer settings",
+  "printerConnectionType": "Connection type",
+  "printerAddress": "Printer address",
+  "printerPaperWidth": "Paper width",
+  "printerTesting": "Testing",
+  "printerReady": "Ready",
+  "printerNotConnected": "Not connected",
+  "printerPaperOut2": "No paper",
+  "printerCoverOpen": "Cover open",
+  "printerPrinting": "Printing...",
+  "printerCheckStatus": "Checking...",
+  "printerPrintSuccess": "Print successful",
+  "printerPrintError": "Print error",
+  "printerCheckBtn": "Check",
+  "printerTestReceipt": "Test receipt",
+  "printerPort": "Port",
+  "cashOperationTitle": "Cash operation",
+  "cashWithdrawal": "Withdrawal",
+  "cashCommentRequired": "Comment *",
+  "cashCommentOptional": "Comment",
+  "cashCommentHint": "Enter comment...",
+  "cashEnterAmountMsg": "Enter amount",
+  "cashPositiveOnly": "Amount must be positive",
+  "cashInsufficient": "Insufficient cash",
+  "cashInvalidAmount": "Enter valid amount",
+  "cashInDrawer": "Cash in drawer:",
+  "telegramTitle": "Telegram Settings",
+  "telegramAuth": "Authorization",
+  "telegramSync": "Sync",
+  "telegramNotifications": "Enable notifications",
+  "telegramAutoSync": "Auto sync",
+  "telegramSyncData": "Auto sync data",
+  "telegramSyncInterval": "Sync interval",
+  "telegramForceSync": "Force sync",
+  "telegramFullSync": "Full sync",
+  "telegramRecreateChannels": "Recreate channels",
+  "telegramLogout": "Logout from Telegram",
+  "telegramSyncComplete": "Sync complete",
+  "telegramSyncError": "Sync error",
+  "telegramLogoutComplete": "Logout complete",
+  "chatTitle": "Staff chat",
+  "chatParticipants": "{count} participants",
+  "chatConnected": "Connected",
+  "chatDisconnected": "No connection",
+  "chatNoMessages": "No messages",
+  "chatStartConversation": "Start chatting with team",
+  "chatMessageHint": "Message...",
+  "chatSearch": "Search",
+  "chatSearchHint": "Enter search text...",
+  "chatMembers": "Members",
+  "chatLinkTelegram": "Link Telegram",
+  "chatCopied": "Copied",
+  "chatReply": "Reply",
+  "chatCopy": "Copy",
+  "chatDeleteMsg": "Delete message?",
+  "chatDeleteConfirm": "Message will be deleted for all members.",
+  "chatPhoto": "Photo",
+  "chatDocument": "Document",
+  "chatLocation": "Location",
+  "chatCamera": "Camera",
+  "chatGallery": "Gallery",
+  "chatSelectSource": "Select source",
+  "updateAvailable": "Update available",
+  "updateInProgress": "Updating...",
+  "updateAutoIn": "Auto update in {seconds} sec",
+  "updateNowBtn": "Update now",
+  "updateLater": "Later",
+  "updateSkip": "Skip",
+  "updateBtn": "Update",
+  "storageWarningTitle": "Low disk space",
+  "storageWarningMsg": "Free at least 2 GB for stable POS operation.",
+  "storageUnderstood": "Got it",
+  "errorCritical": "Critical error",
+  "errorAppProblem": "App encountered a problem",
+  "errorDescription": "Error description:",
+  "errorTechnical": "Technical details",
+  "errorRetry": "Retry",
+  "errorOpenFolder": "Open folder",
+  "errorOtherVersion": "Other version",
+  "errorExit": "Exit",
+  "switchOn": "On",
+  "switchOff": "Off",
+  "keyboardSpace": "Space",
+  "keyboardHide": "Hide keyboard",
+  "keyboardShow": "Show keyboard",
+  "commentReceipt": "Receipt comment",
+  "commentReceiptHint": "Enter comment...",
+  "productNameLabel": "Product name",
+  "productNameHint": "Enter name...",
+  "nothingFound": "Nothing found",
+  "datePlaceholder": "DD.MM.YYYY",
+  "timePlaceholder": "HH:MM",
+  "dateTimePlaceholder": "DD.MM.YYYY HH:MM",
+  "selectPeriod": "Select period",
+  "bonusProgram": "Bonus program",
+  "enterPhone": "Enter client phone number",
+  "enterSmsCode": "Enter SMS code",
+  "resendIn": "Resend in {seconds} sec",
+  "resendCode": "Resend code",
+  "availableBonuses": "Available bonuses:",
+  "useBonuses": "Use bonuses",
+  "deferredSales": "Held sales",
+  "noDeferredSales": "No held sales",
+  "fiscalErrors": "Fiscal errors",
+  "selectAllErrors": "Select all",
+  "retrySelected": "Retry",
+  "receiptNo": "Receipt #{number}",
+  "dontAskAgain": "Don't ask again",
+  "deleteTitle": "Delete",
+  "deleteItemConfirm": "Are you sure you want to delete \"{name}\"?",
+  "exitTitle": "Exit",
+  "exitConfirm": "Are you sure you want to exit?",
+  "exitBtn": "Exit",
+  "valueCannotBeNegative": "Value cannot be negative",
+  "maxPercent": "Maximum {percent}%",
+  "maxAmount": "Maximum {amount}",
+  "enterValidNumber": "Enter a valid number",
+  "discountAmount": "Discount amount:",
+  "sumLabel": "Amount",
+  "enterAmount": "Enter amount",
+  "amountMustBePositive": "Amount must be positive",
+  "notEnoughCashInDrawer": "Not enough cash in drawer",
+  "enterValidAmount": "Enter a valid amount",
+  "inDrawer": "In drawer:",
+  "commentOptional": "Comment (optional)",
+  "operationReason": "Reason for operation...",
+  "positions": "items",
+  "enterWeight": "Enter weight",
+  "weightMustBePositive": "Weight must be positive",
+  "maxWeightValue": "Maximum {max} {unit}",
+  "unitPcs": "pcs",
+  "unitKg": "kg",
+  "lowStorageTooltip": "Low storage: {gb} GB",
+  "storageFree": "Free: {gb} GB",
+  "storageRecommendation": "For stable operation, it is recommended to have at least 2 GB of free space.\n\nPlease free up disk space or contact administrator.",
+  "lowStorageBanner": "Low free space: {gb} GB. Recommended to free at least 2 GB for stable operation.",
+  "lowStorageTooltipShort": "Low disk space: {gb} GB",
+  "cashier": "Cashier:",
+  "buyer": "Customer:",
+  "receiptHeader": "RECEIPT #{number}",
+  "receiptDiscountItem": "Discount:",
+  "receiptSubtotalLabel": "Subtotal",
+  "receiptPayment": "Payment:",
+  "fiscalMark": "FP:",
+  "remainingStock": "Stock: {qty}",
+  "tableHeaderName": "Name",
+  "tableHeaderPrice": "Price",
+  "tableHeaderQty": "Qty",
+  "tableHeaderTotal": "Total",
+  "emptyReceipt": "Receipt is empty",
+  "addProductsViaSearch": "Add products via search\nor scan a barcode",
+  "addProductsViaSearchShort": "Add products via search",
+  "priceLabel": "Price",
+  "receiptTotalLabel": "Receipt total",
+  "positionsLabel": "Items",
+  "toPayLabel": "TO PAY",
+  "payBtn": "PAY",
+  "totalLabel": "Total:",
+  "posAndQty": "{positions} items / {qty} pcs",
+  "modeRetail": "Retail",
+  "modeWholesale": "WHOLESALE",
+  "quickProducts": "Quick products",
+  "editProduct": "Edit",
+  "labelComment": "Comment",
+  "selectPackage": "Select package",
+  "packageQty": "{qty} pcs",
+  "allBreadcrumb": "All",
+  "productPrice": "{price} ₸",
+  "maxBonusPercent": "Can use up to {percent}% of receipt total",
+  "insufficientBonuses": "Insufficient bonuses",
+  "enterValidPhone": "Enter a valid phone number",
+  "errorsCount": "{count} errors",
+  "selectAllCount": "Select all ({count})",
+  "retryCount": "Retry ({count})",
+  "receiptHash": "Receipt #{number}",
+  "enterIntegerNumber": "Enter an integer",
+  "enterDigits": "Enter {length} digits",
+  "drawerPrimary": "Main",
+  "drawerSecondary": "Additional",
+  "tooltipMore": "More",
+  "statusOnline": "Online",
+  "statusOffline": "Offline",
+  "statusSyncing": "Sync...",
+  "thankYouForPurchase": "Thank you for your purchase!",
+  "searchProductHint": "Search product (name or barcode)",
+  "actionDefer": "Defer",
+  "actionDeferredList": "Deferred",
+  "actionMark": "Marking",
+  "actionIncrease": "Increase",
+  "actionDecrease": "Decrease",
+  "restaurantSettings": "Restaurant Mode",
+  "restaurantSettingsDesc": "Tables, zones, service charge",
+  "restaurantOperatingMode": "Operating Mode",
+  "restaurantModeRetail": "Retail",
+  "restaurantModeRetailDesc": "Standard POS for stores",
+  "restaurantModeRestaurant": "Restaurant",
+  "restaurantModeRestaurantDesc": "Tables, orders, service charge",
+  "restaurantModeService": "Service",
+  "restaurantModeServiceDesc": "Service intake, queue",
+  "restaurantZoneManagement": "Zone Management",
+  "restaurantZoneAdd": "Add Zone",
+  "restaurantZoneRename": "Rename",
+  "restaurantZonePresets": "Presets",
+  "restaurantZoneHall": "Hall",
+  "restaurantZoneTerrace": "Terrace",
+  "restaurantZoneVip": "VIP",
+  "restaurantZoneBar": "Bar",
+  "restaurantZoneBooth": "Booth",
+  "restaurantZoneKaraoke": "Karaoke",
+  "restaurantZoneVeranda": "Veranda",
+  "restaurantZonePrivate": "Private Room",
+  "restaurantTableManagement": "Table Management",
+  "restaurantTableAdd": "Add Table",
+  "restaurantTableEdit": "Edit Table",
+  "restaurantTableName": "Table Name",
+  "restaurantTableCapacity": "Capacity",
+  "restaurantTableZone": "Zone",
+  "restaurantTableSortOrder": "Sort Order",
+  "restaurantTableDeactivate": "Deactivate Table",
+  "restaurantTableDeactivateConfirm": "Deactivate table \"{name}\"?",
+  "@restaurantTableDeactivateConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantServiceCharge": "Service Charge",
+  "restaurantServiceChargeEnabled": "Enable Service Charge",
+  "restaurantServiceChargePercent": "Service Charge Percent",
+  "restaurantTableFree": "Free",
+  "restaurantTableOccupied": "Occupied",
+  "restaurantTableReserved": "Reserved",
+  "restaurantTableDirty": "Dirty",
+  "restaurantOrderDineIn": "Dine In",
+  "restaurantOrderTakeout": "Takeout",
+  "restaurantOrderDelivery": "Delivery",
+  "restaurantAllZones": "All Zones",
+  "restaurantNoTables": "No Tables",
+  "restaurantNoTablesHint": "Add tables in restaurant settings",
+  "restaurantGoToSettings": "Go to Settings",
+  "restaurantOrdersEmpty": "No active orders",
+  "restaurantOrderItems": "{count} items",
+  "@restaurantOrderItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantOrderGuests": "Guests: {count}",
+  "@restaurantOrderGuests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantOrderWaiter": "Waiter: {name}",
+  "@restaurantOrderWaiter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantOrderElapsed": "{minutes} min",
+  "@restaurantOrderElapsed": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantNoOrder": "No active order",
+  "restaurantOpenOrder": "Open Order",
+  "restaurantCloseOrder": "Close Order",
+  "restaurantAddItems": "Add Items",
+  "restaurantGoToPayment": "To Payment",
+  "restaurantTransfer": "Transfer",
+  "restaurantSplitBill": "Split Bill",
+  "restaurantChangeStatus": "Change Status",
+  "restaurantSetFree": "Free",
+  "restaurantSetReserved": "Reserve",
+  "restaurantSetDirty": "Needs Cleaning",
+  "restaurantCreateOrder": "New Order",
+  "restaurantPartySize": "Party Size",
+  "restaurantOrderType": "Order Type",
+  "restaurantWaiter": "Waiter",
+  "restaurantNote": "Note",
+  "restaurantDeliveryAddress": "Delivery Address",
+  "restaurantDeliveryPhone": "Phone",
+  "restaurantTransferTitle": "Transfer Order",
+  "restaurantTransferCurrent": "Current: {table}",
+  "@restaurantTransferCurrent": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantTransferSelectFree": "Select a free table:",
+  "restaurantSplitTitle": "Split Bill",
+  "restaurantSplitEvenly": "Evenly",
+  "restaurantSplitByItems": "By Items",
+  "restaurantSplitGuestCount": "Number of Guests",
+  "restaurantSplitPerGuest": "Per guest: {amount}",
+  "@restaurantSplitPerGuest": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantSplitGuest": "Guest {number}",
+  "@restaurantSplitGuest": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantSplitApply": "Apply",
+  "restaurantSplitPaymentTitle": "Split payment by guest",
+  "restaurantSplitPaymentProceed": "To payment",
+  "restaurantPreCheckPrinted": "Pre-check sent to printer",
+  "restaurantPreCheckFailed": "Pre-check print failed",
+  "restaurantSubtotal": "Subtotal",
+  "restaurantServiceChargeLine": "Service charge ({percent}%)",
+  "@restaurantServiceChargeLine": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantOrderNumber": "Order #{number}",
+  "@restaurantOrderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantTakeoutNumber": "Takeout #{number}",
+  "@restaurantTakeoutNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantDeliveryNumber": "Delivery #{number}",
+  "@restaurantDeliveryNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantSaved": "Restaurant settings saved",
+  "restaurantQuickActions": "Quick Actions",
+  "restaurantNoItems": "No items",
+  "restaurantTableSeats": "{count} seats",
+  "@restaurantTableSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantOrderTab": "Order",
+  "restaurantMenuTab": "Menu",
+  "restaurantGuestLabel": "Guest {number}",
+  "@restaurantGuestLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantRemoveItem": "Remove item",
+  "restaurantPrintPrecheck": "Pre-check",
+  "restaurantNewTakeout": "Takeout",
+  "restaurantNewDelivery": "Delivery",
+  "setupSectionOrganization": "Company",
+  "setupSectionContact": "Contact person",
+  "setupSectionAddress": "Addresses",
+  "setupSectionCashBox": "Till",
+  "setupSectionUsers": "Who will be working",
+  "setupSectionSecurity": "PIN sign-in",
+  "setupSectionScanner": "Scanner",
+  "setupSectionScale": "Scales",
+  "setupSectionDisplay": "Customer display",
+  "setupSectionTerminal": "Payment terminal",
+  "setupSectionCashback": "Cash withdrawal",
+  "setupTaxIdExplanation": "The tax number is printed on every receipt and sent to the fiscal service. A mistake here surfaces only at the first reconciliation with the tax authority — after the receipts have been handed out.",
+  "setupFiscalCredentialsExplanation": "These credentials come from the fiscal operator. While they are wrong, receipts still print as usual but never reach the fiscal service — the gap shows up at reconciliation, not at the sale.",
+  "setupKktNumberExplanation": "The register number ties this till to its registration with the operator. A mistake here files receipts under someone else’s till, and the till itself gives no sign of it.",
+  "setupStepProgress": "Step {current} of {total}",
+  "@setupStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "setupStepChecking": "Checking",
+  "setupStepTelegram": "Telegram",
+  "setupStepCountry": "Country",
+  "setupStepOrganization": "Organization",
+  "setupStepVat": "VAT",
+  "setupStepUsers": "Users",
+  "setupStepWorkMode": "Work Mode",
+  "setupStepPos": "POS",
+  "setupStepFiscal": "Fiscalization",
+  "setupStepEquipment": "Equipment",
+  "setupStepTerminals": "Terminals",
+  "setupStepOperatingMode": "Business Type",
+  "setupStepBusinessRules": "Rules",
+  "setupStepSummary": "Review",
+  "setupStepComplete": "Done",
+  "setupCheckingSettings": "Checking settings...",
+  "setupStateUnreadableTitle": "The till did not answer",
+  "setupStateUnreadableBody": "Setup will not start until the till’s state can be read — otherwise it could overwrite a shop that is already working. Check that the till is running and reachable over the network.",
+  "wtUnavailableTitle": "No connection to the till",
+  "wtUnavailableBody": "The terminal gets its data over WebTransport only. There is no fallback: with no session there is nothing to show, and showing stale data as fresh is worse than showing nothing. Check that the till is running, then retry.",
+  "wtUnavailableReason": "Reason: {reason}",
+  "@wtUnavailableReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalHomeWhoHeader": "Who is signed in",
+  "terminalHomeUserLabel": "Cashier",
+  "terminalHomeSaleNote": "Selling in the browser is separate work: the sale screen reads the till's database directly and does not build for the browser yet.",
+  "wtNotPortedTitle": "This screen is on the till only for now",
+  "wtNotPortedBody": "The browser terminal gets its data over the wire, and a screen appears here once every one of its contracts can work over that wire. This one cannot yet. Showing it empty would be worse than saying so.",
+  "wtNotPortedLocation": "Route: {location}",
+  "@wtNotPortedLocation": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "setupWelcomeTitle": "Welcome to TelePOS!",
+  "setupCountryDescription": "Select your country for currency and tax setup",
+  "setupPriceExample": "Example: {amount}",
+  "@setupPriceExample": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "setupVatRateLabel": "VAT: {rate}%",
+  "@setupVatRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "setupOrganizationTitle": "Organization Data",
+  "setupOrganizationDescription": "Enter your company information",
+  "setupCompanyNameLabel": "Company name",
+  "setupCompanyNameHint": "LLC \"My Company\"",
+  "setupTaxIdDigits": "{length} digits",
+  "@setupTaxIdDigits": {
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "setupLegalAddressLabel": "Legal address",
+  "setupActualAddressLabel": "Store address",
+  "setupOwnerNameLabel": "Director's full name",
+  "setupPhoneLabel": "Phone",
+  "setupVatTitle": "Value Added Tax",
+  "setupVatDescription": "Select your organization's tax regime",
+  "setupVatPayerTitle": "VAT Payer",
+  "setupVatPayerRate": "VAT rate: {rate}%",
+  "@setupVatPayerRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "setupVatPayerRateUnknown": "VAT rate depends on country",
+  "setupVatPayerDescription": "VAT will be shown on receipts.\nRequired for companies on general taxation.",
+  "setupVatNonPayerTitle": "No VAT",
+  "setupVatNonPayerSubtitle": "VAT not applicable",
+  "setupVatNonPayerDescription": "VAT will not be shown on receipts.\nFor individual entrepreneurs on simplified system.",
+  "setupWorkModeTitle": "Work Mode",
+  "setupWorkModeDescription": "Choose how your POS will operate",
+  "setupAutonomousTitle": "Autonomous Mode",
+  "setupAutonomousSubtitle": "Work without internet",
+  "setupAutonomousDescription": "POS works completely offline.\nData stored locally only.\nNo sync between registers.",
+  "setupNetworkTitle": "Network Mode",
+  "setupNetworkConfigured": "Telegram configured",
+  "setupNetworkRequired": "Telegram required",
+  "setupNetworkDescription": "Data sync between registers.\nCloud backup.\nReports and notifications via Telegram.",
+  "setupNetworkRequiresTelegram": "Telegram setup is required for network mode",
+  "setupOperatingModeTitle": "Business Type",
+  "setupOperatingModeDescription": "Select your business type",
+  "setupRetailTitle": "Retail POS",
+  "setupRetailSubtitle": "Shop, pharmacy, supermarket",
+  "setupRetailDescription": "Standard POS for retail.\nSales, refunds, supply receipt.\nShifts and reporting.",
+  "setupRestaurantTitle": "Restaurant / Cafe",
+  "setupRestaurantSubtitle": "Tables, orders, delivery",
+  "setupRestaurantDescription": "Table and hall management.\nTakeout and delivery.\nBill splitting and service charge.",
+  "setupServiceTitle": "Service Center",
+  "setupServiceSubtitle": "Repair, services, procedures",
+  "setupServiceDescription": "Service intake.\nWork orders and task tracking.\nStatus tracking and release.",
+  "setupPosConfigTitle": "POS Setup",
+  "setupPosConfigDescription": "Set POS parameters",
+  "setupCashBoxNameLabel": "POS name",
+  "setupCashBoxNameHint": "POS 1",
+  "setupPosIdLabel": "POS ID",
+  "setupPrinterConfigTitle": "Receipt Printer",
+  "setupPaperWidthLabel": "Paper width",
+  "setupPaperWidth58": "58 mm (32 chars)",
+  "setupPaperWidth80": "80 mm (48 chars)",
+  "setupPrinterHeaderLabel": "Receipt header",
+  "setupPrinterHeaderHint": "Store name\nAddress",
+  "setupPrinterFooterLabel": "Receipt footer",
+  "setupPrinterFooterHint": "Thank you for your purchase!",
+  "setupFiscalNotRequired": "Fiscalization is not required for your country",
+  "setupFiscalDescription": "Set up fiscal operator connection",
+  "setupEnableWebkassa": "Enable WebKassa",
+  "setupEnableOfd": "Enable OFD",
+  "setupWebkassaDescription": "Receipt fiscalization via WebKassa (Kazakhstan)",
+  "setupOfdDescription": "Receipt fiscalization via OFD (Russia)",
+  "setupSkipLater": "Skip (configure later)",
+  "setupWebkassaAccountTitle": "WebKassa Account",
+  "setupWebkassaAccountIdLabel": "Account ID",
+  "setupWebkassaAccountIdHint": "Your WebKassa ID",
+  "setupWebkassaTokenLabel": "Account token",
+  "setupWebkassaTokenHint": "API token",
+  "setupWebkassaPosTitle": "WebKassa POS",
+  "setupWebkassaPosIdLabel": "POS ID",
+  "setupWebkassaPosIdHint": "POS ID in WebKassa",
+  "setupWebkassaPosTokenLabel": "POS token",
+  "setupWebkassaPosTokenHint": "POS token",
+  "setupWebkassaFactoryNoLabel": "Cash register serial number",
+  "setupOfdParamsTitle": "OFD Parameters",
+  "setupOfdInnLabel": "Organization INN",
+  "setupOfdKktRegNoLabel": "KKT reg. number",
+  "setupOfdFnNoLabel": "FN number",
+  "setupOfdUrlLabel": "OFD URL",
+  "setupEquipmentTitle": "Equipment",
+  "setupEquipmentDescription": "Configure connected equipment",
+  "setupEquipmentPrinter": "Receipt Printer",
+  "setupEquipmentScanner": "Barcode Scanner",
+  "setupEquipmentScales": "Scales",
+  "setupEquipmentCashDrawer": "Cash Drawer",
+  "setupEquipmentDisplay": "Customer Display",
+  "setupConnectionTypeLabel": "Connection type",
+  "setupConnectionUsb": "USB",
+  "setupConnectionBluetooth": "Bluetooth",
+  "setupConnectionWifi": "Wi-Fi / Ethernet",
+  "setupConnectionSerial": "COM port",
+  "setupConnectionNone": "Not selected",
+  "setupPrinterIpLabel": "Printer IP address",
+  "setupPrinterMacLabel": "Printer MAC address",
+  "setupPrinterNameLabel": "Printer name",
+  "setupPrinterNameHint": "Kitchen printer",
+  "setupScannerTypeLabel": "Scanner type",
+  "setupScannerCamera": "Device camera",
+  "setupScannerUsb": "USB scanner",
+  "setupScannerBluetooth": "Bluetooth scanner",
+  "setupScalePortLabel": "COM port",
+  "setupBaudRateLabel": "Baud rate",
+  "setupCashDrawerConnected": "Connected to printer",
+  "setupCashDrawerConnectedDesc": "Opens via printer command",
+  "setupSkip": "Skip",
+  "setupPaymentTerminalsTitle": "Payment Terminals",
+  "setupPaymentTerminalsDescription": "Configure payment system integrations",
+  "setupKaspiIpLabel": "Terminal IP address",
+  "setupPortLabel": "Port",
+  "setupApiUrlLabel": "API URL",
+  "setupApiKeyLabel": "API key",
+  "setupNoTerminalsAvailable": "No payment terminals available for your region",
+  "setupBusinessRulesTitle": "Business Rules",
+  "setupBusinessRulesDescription": "Configure POS rules",
+  "setupPermissionsTitle": "Permissions",
+  "setupAllowDiscounts": "Discounts",
+  "setupAllowDiscountsDesc": "Allow applying discounts",
+  "setupAllowDebtSales": "Debt sales",
+  "setupAllowDebtSalesDesc": "Allow credit sales",
+  "setupAllowPriceEdit": "Price editing",
+  "setupAllowPriceEditDesc": "Allow price changes during sale",
+  "setupAllowCashInOut": "Cash operations",
+  "setupAllowCashInOutDesc": "Cash deposits and withdrawals",
+  "setupBlockPriceDecrease": "Block price decrease",
+  "setupBlockPriceDecreaseDesc": "Prevent selling below set price",
+  "setupLimitsTitle": "Limits",
+  "setupAllowBigAmount": "Large amounts",
+  "setupAllowBigAmountDesc": "Allow operations > 1,000,000",
+  "setupCashWithdrawalLimitLabel": "Cash withdrawal limit",
+  "setupCashWithdrawalLimitHelper": "Leave empty for no limit",
+  "setupLoyaltyTitle": "Loyalty Program",
+  "setupCashbackLabel": "Cashback",
+  "setupCashbackDesc": "Enable bonus accrual",
+  "setupCashbackRateLabel": "Cashback rate",
+  "setupRoundingTitle": "Rounding",
+  "setupDiscountRounding": "Discount rounding",
+  "setupWeightRounding": "Weight product rounding",
+  "setupRoundingNone": "No rounding",
+  "setupRoundingUp1": "To 1 (up)",
+  "setupRoundingDown1": "To 1 (down)",
+  "setupRoundingUp5": "To 5 (up)",
+  "setupRoundingDown5": "To 5 (down)",
+  "setupRoundingUp10": "To 10 (up)",
+  "setupRoundingDown10": "To 10 (down)",
+  "setupFiscalDisablesRounding": "Rounding is automatically disabled when fiscalization is enabled",
+  "setupUserCreationTitle": "Create Users",
+  "setupUserCreationDescription": "Create users for POS operation",
+  "setupAdminLabel": "ADMINISTRATOR",
+  "setupAdminSubtitle": "POS owner",
+  "setupUserNameLabel": "Name",
+  "setupUserPinLabel": "PIN",
+  "setupUserPinConfirmLabel": "Confirmation",
+  "setupAdminPinDefault": "Default: 0000",
+  "setupSellerLabel": "SELLER",
+  "setupSellerOptional": "Optional",
+  "setupSellerPinDefault": "Default: 1111",
+  "setupAdminPinMismatch": "Administrator PINs do not match",
+  "setupSummaryTitle": "Review Data",
+  "setupSummaryDescription": "Make sure everything is correct",
+  "setupSummaryCountry": "Country",
+  "setupSummaryCurrency": "Currency",
+  "setupSummaryFormat": "Format",
+  "setupSummaryVat": "VAT",
+  "setupSummaryTelegram": "Telegram",
+  "setupSummaryStatus": "Status",
+  "setupConfigured": "Configured",
+  "setupNotConfigured": "Not configured",
+  "setupSummaryOrganization": "Organization",
+  "setupSummaryName": "Name",
+  "setupSummaryAddress": "Address",
+  "setupSummaryWorkMode": "Work Mode",
+  "setupSummaryMode": "Mode",
+  "setupSummaryAutonomous": "Autonomous (no network)",
+  "setupSummaryNetwork": "Network (sync)",
+  "setupSummaryPos": "POS",
+  "setupSummaryId": "ID",
+  "setupEnabled": "Enabled",
+  "setupDisabled": "Disabled",
+  "setupSummaryFiscalType": "Type",
+  "setupSummaryEquipment": "Equipment",
+  "setupSummaryPrinter": "Printer",
+  "setupSummaryScanner": "Scanner",
+  "setupSummaryScales": "Scales",
+  "setupSummaryCashDrawer": "Cash drawer",
+  "setupSummaryTerminals": "Payment Terminals",
+  "setupSummaryRules": "Business Rules",
+  "setupSummaryDiscounts": "Discounts",
+  "setupSummaryDebtSales": "Debt",
+  "setupSummaryCashback": "Cashback",
+  "setupSummaryBigAmount": "Large amounts",
+  "setupSummaryUsers": "Users",
+  "setupSummaryAdmin": "Administrator",
+  "setupSummarySeller": "Seller",
+  "setupCompleteTitle": "Setup Complete!",
+  "setupCompleteSubtitle": "POS is ready to work",
+  "setupStartWork": "Start Working",
+  "setupVatPayerSummary": "VAT Payer ({rate}%)",
+  "@setupVatPayerSummary": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "setupSummaryWkPosId": "WK POS ID",
+  "setupSummaryOfdInn": "INN",
+  "setupScalesConfigured": "Configured",
+  "setupScalesNotConfigured": "Not configured",
+  "setupCashDrawerOn": "Enabled",
+  "setupAllowed": "Allowed",
+  "setupDenied": "Denied",
+  "setupAllowedFem": "Allowed",
+  "setupDeniedFem": "Denied",
+  "setupCashbackOff": "Disabled",
+  "setupBigAmountLimit": "Limit 100,000",
+  "setupDisplayPortLabel": "COM port",
+  "telegramAuthSkip": "Skip (configure later)",
+  "telegramInitializing": "Initializing",
+  "telegramErrorTdlib": "TDLib Error",
+  "telegramAuthLogin": "Telegram Login",
+  "telegramAuthCodeStep": "Verification code",
+  "telegramAuth2fa": "Two-factor authentication",
+  "telegramRegister": "Registration",
+  "telegramSearchingChannels": "Searching channels",
+  "telegramLoadingData": "Loading data",
+  "telegramOrgData": "Organization data",
+  "telegramSetupChannels": "Setting up channels",
+  "telegramSetupEncryption": "Setting up encryption",
+  "telegramSetupComplete": "Done",
+  "telegramInitializingLong": "Initializing Telegram...",
+  "telegramConnecting": "Connecting to Telegram servers",
+  "telegramTdlibNotFound": "TDLib not found",
+  "telegramTdlibErrorMessage": "Native TDLib library not found.\nInstall tdjson to use Telegram.",
+  "telegramForWindows": "For Windows:",
+  "telegramWindowsInstructions": "1. Download TDLib: github.com/tdlib/td/releases\n2. Copy tdjson.dll to project root\n3. Or install to C:\\TDLib\\bin\\",
+  "telegramPhoneAuthTitle": "Phone Number Login",
+  "telegramPhoneAuthDescription": "Enter the phone number linked to your Telegram account",
+  "telegramCountryCodeLabel": "Country code",
+  "telegramPhoneNumber": "Phone number",
+  "telegramGetCode": "Get Code",
+  "telegramRefreshQr": "Refresh QR Code",
+  "telegramSignUp": "Sign Up",
+  "telegramEnterStoreName": "Enter store name",
+  "telegramInvalidBinIin": "Enter valid BIN/IIN (12 digits)",
+  "telegramInvalidCode": "Enter valid code",
+  "telegramEnterPassword": "Enter password",
+  "telegramCodeResent": "Code resent",
+  "telegramEnterName": "Enter name",
+  "telegramManageAccount": "Manage Account",
+  "telegramNotificationsSection": "Notifications",
+  "telegramNotificationsDesc": "Receive notifications about sales, shifts, etc.",
+  "telegramNotifySales": "Sales notifications",
+  "telegramNotifySalesDesc": "Large sales, refunds",
+  "telegramNotifyShifts": "Shift notifications",
+  "telegramNotifyShiftsDesc": "Shift opening and closing",
+  "telegramNotifyCritical": "Critical notifications",
+  "telegramNotifyCriticalDesc": "Errors, OFD issues",
+  "telegramNotifyStock": "Stock notifications",
+  "telegramNotifyStockDesc": "Product shortages",
+  "telegramSyncSettings": "Sync Settings",
+  "telegramAutoSyncDesc": "Automatically sync data",
+  "telegramSyncInterval1min": "1 minute",
+  "telegramSyncInterval5min": "5 minutes",
+  "telegramSyncInterval15min": "15 minutes",
+  "telegramSyncInterval30min": "30 minutes",
+  "telegramSyncInterval1hour": "1 hour",
+  "telegramSystemChannels": "System Channels",
+  "telegramRefresh": "Refresh",
+  "telegramChannelsNotConnected": "Channels not connected.\nLog in to Telegram for automatic creation.",
+  "telegramChannelsConnected": "{connected} of {total} channels connected",
+  "@telegramChannelsConnected": {
+    "placeholders": {
+      "connected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "telegramChannelsLoadError": "Error loading channels: {error}",
+  "@telegramChannelsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "telegramForceSyncDesc": "Sync all data now",
+  "telegramFullSyncDesc": "Reset and re-sync everything",
+  "telegramRecreateChannelsDesc": "Recreate system channels",
+  "telegramLogoutDesc": "Disconnect Telegram integration",
+  "telegramFullSyncWarning": "This will reset all sync timestamps and reload all data. This may take a while.",
+  "telegramRecreateChannelsWarning": "This will recreate all system channels. Existing channel data will be lost.",
+  "telegramLogoutWarning": "Are you sure you want to log out? Sync and notifications will be disabled.",
+  "telegramChannelsRecreated": "Channels recreated",
+  "telegramConnectedStatus": "Connected",
+  "telegramNotConnected": "Not connected",
+  "telegramAccountLabel": "Telegram Account",
+  "telegramLoginForSync": "Log in to sync data",
+  "channelDescSystemEvents": "System events",
+  "channelDescSales": "Sales feed",
+  "channelDescAlerts": "Critical alerts",
+  "channelDescReports": "Reports and summaries",
+  "channelDescSync": "Data sync",
+  "channelDescFiscal": "Fiscal events",
+  "channelDescStaffChat": "Staff chat",
+  "channelDescDataExchange": "Data exchange",
+  "channelDescTerminalStatus": "Terminal status",
+  "channelDescBackup": "Database backups",
+  "chatNoConnectionBanner": "No connection. Messages will be sent when restored.",
+  "chatLinkTelegramForId": "Link Telegram for chat identification",
+  "chatSendError": "Send error: {error}",
+  "@chatSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "chatFoundMessages": "Found {count} messages",
+  "@chatFoundMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatNoResults": "Nothing found",
+  "chatCopyUidInstructions": "Copy UID for use in other systems",
+  "chatUidExample": "Example: telepos@pos-1",
+  "chatServiceUnavailable": "Service unavailable",
+  "chatTelegramLinked": "Telegram linked successfully",
+  "additionalLogout": "Logout",
+  "additionalLockCashier": "Lock",
+  "additionalPrinterAction": "Printer",
+  "additionalPrintLastReceipt": "Last Receipt",
+  "additionalSyncAction": "Sync",
+  "additionalCheckPrice": "Price Check",
+  "additionalMinimize": "Minimize",
+  "additionalCustomers": "Customers",
+  "additionalUpdateAction": "Update",
+  "additionalExtraPrinter": "Extra Printer",
+  "additionalSupplyAction": "Supply",
+  "additionalLanguageAction": "Language",
+  "additionalKaspiPos": "Kaspi POS",
+  "additionalPrinterEscPos": "Thermal Printer ESC/POS",
+  "additionalPrinterNotConfigured": "Printer not configured",
+  "additionalPrinterWifi": "Wi-Fi Printer",
+  "additionalPrinterWifiDesc": "Connect via IP",
+  "additionalPrinterBluetooth": "Bluetooth Printer",
+  "additionalPrinterBluetoothDesc": "Search devices",
+  "additionalPrinterUsb": "USB Printer",
+  "additionalPrinterSystem": "System Printer",
+  "additionalPrinterDisconnected": "Printer disconnected",
+  "additionalPrinterIpLabel": "IP",
+  "additionalPrinterEnterIp": "Enter IP address",
+  "additionalPrinterConnecting": "Connecting to {address}...",
+  "@additionalPrinterConnecting": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalPrinterConnectingUsb": "Connecting USB printer...",
+  "additionalPrinterNotConnected": "Printer not connected",
+  "additionalPrintingLastReceipt": "Printing last receipt...",
+  "additionalTestReceiptTitle": "=== TEST RECEIPT ===",
+  "additionalReceiptPrinted": "Receipt printed",
+  "additionalPriceSearching": "Searching: {query}",
+  "@additionalPriceSearching": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalMinimizing": "Minimizing window...",
+  "additionalLatestVersion": "You have the latest version",
+  "additionalExtraPrinterTitle": "Extra Printer",
+  "additionalExtraPrinterUsedFor": "Extra printer is used for:",
+  "additionalExtraPrinterLabels": "Label printing",
+  "additionalExtraPrinterKitchen": "Kitchen printing",
+  "additionalExtraPrinterDuplicate": "Receipt duplicate",
+  "additionalKaspiPosTitle": "Kaspi POS",
+  "additionalKaspiPosDesc": "Kaspi terminal for payment acceptance.",
+  "additionalKaspiPosNotConnected": "Status: Not connected",
+  "additionalPrinterConnectedName": "Printer connected: {name}",
+  "@additionalPrinterConnectedName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalErrorWithMessage": "Error: {message}",
+  "@additionalErrorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalPrinterUsbNotSupported": "USB printers not supported",
+  "additionalPrinterUsbConnected": "USB printer connected",
+  "additionalBarcodeLabel": "Barcode",
+  "additionalBarcodeHint": "Scan or enter",
+  "additionalTestReceiptProduct": "Product {number}",
+  "@additionalTestReceiptProduct": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalTestReceiptTotal": "TOTAL:",
+  "additionalTestReceiptThankYou": "Thank you for your purchase!",
+  "langRussian": "Русский",
+  "langEnglish": "English",
+  "langKazakh": "Қазақша",
+  "langKyrgyz": "Кыргызча",
+  "langUzbek": "O'zbekcha",
+  "transportFullSyncWarning": "This will reset all sync timestamps and reload all data. This may take a while. Continue?",
+  "transportSyncAbout": "About sync",
+  "transportSyncStateError": "Error loading sync state: {error}",
+  "@transportSyncStateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "transportSyncInfoDialog": "Each data type is synced independently. Only items modified after the last sync are transferred.\n\nInterval: 5 minutes (default)\nData is encrypted with AES-256-GCM before transfer.",
+  "transportSyncNever": "Never",
+  "transportModeDescription": "Select how the app communicates with the server",
+  "transportModeRest": "REST API",
+  "transportModeRestDesc": "Traditional HTTP/WebSocket connection",
+  "transportModeTelegram": "Telegram",
+  "transportModeTelegramDesc": "Uses Telegram as transport layer",
+  "transportModeHybrid": "Hybrid",
+  "transportModeHybridDesc": "Telegram primary, REST as fallback",
+  "transportModeRecommended": "Recommended",
+  "transportSyncIntervalMinutes": "{minutes} minutes",
+  "@transportSyncIntervalMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "transportSyncOnConnectivity": "Sync when network is restored",
+  "transportSyncIntervalOption": "{minutes, plural, one{{minutes} minute} other{{minutes} minutes}}",
+  "@transportSyncIntervalOption": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "transportEnableQueue": "Operation Queue",
+  "transportEnableQueueDesc": "Buffer operations when offline",
+  "transportMaxQueueSize": "Max Queue Size",
+  "transportQueueSizeStatus": "{size} operations",
+  "@transportQueueSizeStatus": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "transportAutoCleanup": "Auto Cleanup",
+  "transportAutoCleanupDesc": "Remove completed operations after 7 days",
+  "transportNotifyChanges": "Transport Changes",
+  "transportNotifyChangesDesc": "Notify when transport mode changes",
+  "transportNotifySyncErrors": "Sync Errors",
+  "transportNotifySyncErrorsDesc": "Notify on synchronization failures",
+  "transportNotifyOfflineOnline": "Connectivity",
+  "transportNotifyConnectivityDesc": "Notify on connectivity changes",
+  "transportNotifyQueueFull": "Queue Full",
+  "transportNotifyQueueFullDesc": "Notify when queue reaches limit",
+  "saleErrorInitiation": "Sale initiation error: {error}",
+  "@saleErrorInitiation": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorNotInitialized": "Sale not initialized",
+  "saleErrorEmpty": "Receipt is empty",
+  "saleErrorCompletion": "Sale completion error: {error}",
+  "@saleErrorCompletion": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorSearch": "Search error: {error}",
+  "@saleErrorSearch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorDeferred": "Defer error: {error}",
+  "@saleErrorDeferred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorDeferredNotFound": "Deferred receipt not found",
+  "saleErrorLoadingDeferred": "Error loading deferred receipt: {error}",
+  "@saleErrorLoadingDeferred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCustomerDefault": "Customer",
+  "paymentErrorFormation": "Could not form payment. Check account settings.",
+  "paymentErrorSaving": "Error saving sale",
+  "paymentErrorProcessing": "Payment processing error: {error}",
+  "@paymentErrorProcessing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentAccountDefault": "Account {id}",
+  "@paymentAccountDefault": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "refundErrorReceiptNotFound": "Receipt #{number} not found",
+  "@refundErrorReceiptNotFound": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "refundErrorLoadingReceipt": "Error loading receipt: {error}",
+  "@refundErrorLoadingReceipt": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "refundErrorSearch": "Search error: {error}",
+  "@refundErrorSearch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "refundErrorProductNotFound": "Product not found",
+  "refundErrorNotAuthenticated": "User not authenticated",
+  "refundErrorProcessing": "Refund error: {error}",
+  "@refundErrorProcessing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorLoadingData": "Error loading shift data: {error}",
+  "@shiftErrorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorOpening": "Error opening shift: {error}",
+  "@shiftErrorOpening": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorClosing": "Error closing shift: {error}",
+  "@shiftErrorClosing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorPrinting": "Z-report print error: {error}",
+  "@shiftErrorPrinting": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cashOpTypeInvestment": "Deposit",
+  "cashOpTypeExpense": "Expense",
+  "cashOpTypeDividend": "Withdrawal",
+  "supplyNoName": "No name",
+  "supplyNoTitle": "Untitled",
+  "supplyErrorSupplierNotFound": "Supplier not found",
+  "supplyErrorSelectingSupplier": "Error selecting supplier: {error}",
+  "@supplyErrorSelectingSupplier": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyErrorAccountNotFound": "Account not found",
+  "supplyErrorSelectingAccount": "Error selecting account: {error}",
+  "@supplyErrorSelectingAccount": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyErrorAddingProduct": "Error adding product: {error}",
+  "@supplyErrorAddingProduct": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyErrorProductNotFound": "Product not found",
+  "supplyErrorMissingFields": "Fill in all required fields",
+  "supplyErrorSaving": "Save error: {error}",
+  "@supplyErrorSaving": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "historyErrorLoading": "Error loading history: {error}",
+  "@historyErrorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "syncTypeProducts": "Products",
+  "syncTypePrices": "Prices",
+  "syncTypeCategories": "Categories",
+  "syncTypeAgents": "Agents",
+  "syncTypeConfig": "Settings",
+  "syncTypeSales": "Sales",
+  "syncTypeRefunds": "Refunds",
+  "syncTypeCashOps": "Cash operations",
+  "syncTypeShifts": "Shifts",
+  "syncTypeSupplies": "Supplies",
+  "syncStepPreparing": "Preparing...",
+  "syncStepUploading": "Uploading: {type}",
+  "@syncStepUploading": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "syncStepDownloading": "Downloading: {type}",
+  "@syncStepDownloading": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "syncCompleted": "Sync completed",
+  "loginErrorNoUsers": "No registered users",
+  "loginErrorLoadingData": "Error loading data: {error}",
+  "@loginErrorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "loginErrorSelectUser": "Select a user",
+  "loginErrorIncompletePin": "Enter PIN (minimum 4 digits)",
+  "loginErrorNoRsaKey": "Error: RSA key not configured. Contact administrator.",
+  "loginErrorWrongPin": "Wrong PIN",
+  "loginErrorSystemTime": "System time is incorrect. Check date and time settings.",
+  "receiptLabelBin": "BIN:",
+  "receiptLabelPhone": "Tel:",
+  "receiptLabelReceiptNo": "Receipt #:",
+  "receiptLabelPosId": "POS:",
+  "receiptLabelDate": "Date:",
+  "receiptLabelCashier": "Cashier:",
+  "receiptLabelTable": "Table:",
+  "receiptLabelWaiter": "Waiter:",
+  "receiptLabelGuests": "Guests:",
+  "receiptLabelCustomer": "Customer:",
+  "receiptLabelSubtotal": "Subtotal:",
+  "receiptLabelDiscount": "Discount:",
+  "receiptLabelServiceCharge": "Service charge:",
+  "receiptLabelTotal": "TOTAL:",
+  "receiptLabelVat": "incl. VAT {percent}%:",
+  "@receiptLabelVat": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptLabelCash": "Cash:",
+  "receiptLabelCard": "Card:",
+  "receiptLabelChange": "Change:",
+  "receiptLabelCheckReceipt": "Verify receipt:",
+  "receiptLabelItemName": "Name",
+  "receiptLabelQty": "Qty",
+  "receiptLabelPrice": "Price",
+  "receiptLabelAmount": "Amount",
+  "receiptLabelItemDiscount": "Discount:",
+  "receiptLabelFiscalBin": "BIN:",
+  "receiptLabelFiscalNo": "FN:",
+  "receiptLabelFiscalSign": "FS:",
+  "receiptLabelVatCertificate": "VAT:",
+  "receiptLabelOfflineMode": "*** OFFLINE ***",
+  "receiptLabelRefundHeader": "*** REFUND ***",
+  "receiptLabelRefundNo": "Refund #:",
+  "receiptLabelReason": "Reason:",
+  "receiptLabelRefundTotal": "REFUND TOTAL:",
+  "receiptLabelZReport": "Z-REPORT",
+  "receiptLabelShiftClosing": "SHIFT CLOSING",
+  "receiptLabelShiftNo": "Shift #:",
+  "receiptLabelShiftOpenTime": "Opened:",
+  "receiptLabelShiftCloseTime": "Closed:",
+  "receiptLabelSales": "SALES",
+  "receiptLabelQuantity": "Quantity:",
+  "receiptLabelCashSales": "Cash:",
+  "receiptLabelCardSales": "Card:",
+  "receiptLabelSalesTotal": "Total:",
+  "receiptLabelRefunds": "REFUNDS",
+  "receiptLabelRefundQty": "Quantity:",
+  "receiptLabelRefundAmount": "Amount:",
+  "receiptLabelCashOperations": "CASH OPERATIONS",
+  "receiptLabelInvestments": "Deposits:",
+  "receiptLabelExpenses": "Expenses:",
+  "receiptLabelRevenue": "REVENUE:",
+  "receiptLabelCashInDrawer": "CASH IN DRAWER:",
+  "receiptLabelXReport": "X-REPORT",
+  "receiptLabelType": "Type:",
+  "receiptLabelDescription": "Description:",
+  "receiptLabelDebtPayment": "DEBT PAYMENT",
+  "receiptLabelPreviousDebt": "Previous debt:",
+  "receiptLabelPaidAmount": "PAID:",
+  "receiptLabelRemainingDebt": "Remaining:",
+  "receiptLabelTestPrint": "TEST PRINT",
+  "receiptLabelThankYou": "Thank you for your purchase!",
+  "receiptLabelSaleReceipt": "SALES RECEIPT",
+  "receiptLabelOfflineHeader": "*** OFFLINE MODE ***",
+  "receiptLabelVatCertificateTitle": "VAT Certificate:",
+  "fiscalErrorBin12Digits": "BIN must contain 12 digits",
+  "fiscalErrorBinDigitsOnly": "BIN must contain only digits",
+  "fiscalErrorFiscalNoRequired": "Fiscal number is required",
+  "fiscalErrorRnkRequired": "RNK is required",
+  "fiscalErrorZnkRequired": "ZNK is required",
+  "fiscalErrorVatSerialRequired": "VAT certificate serial is required",
+  "fiscalErrorVatNumberRequired": "VAT certificate number is required",
+  "telegramTabPhone": "By phone",
+  "telegramTabQr": "QR code",
+  "telegramQrAuthTitle": "QR Code Login",
+  "telegramQrAuthDescription": "Scan the QR code in the Telegram app on your phone",
+  "telegramQrTapToGenerate": "Tap to generate\nQR code",
+  "telegramQrHowToScan": "How to scan:",
+  "telegramQrStep1": "Open Telegram on your phone",
+  "telegramQrStep2": "Go to Settings → Devices",
+  "telegramQrStep3": "Tap \"Link Desktop Device\"",
+  "telegramQrStep4": "Scan the QR code",
+  "telegramEnterCode": "Enter code",
+  "telegramCodeSentTo": "Code was sent to Telegram to number\n{phone}",
+  "@telegramCodeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "telegramCodeLabel": "Verification code",
+  "telegramPasswordDescription": "Enter your Telegram account password",
+  "telegramPasswordHint": "Hint: {hint}",
+  "@telegramPasswordHint": {
+    "placeholders": {
+      "hint": {
+        "type": "String"
+      }
+    }
+  },
+  "telegramPasswordLabel": "Password",
+  "telegramRegistrationDescription": "Account with this number not found.\nCreate a new Telegram account.",
+  "telegramFirstNameLabel": "First name",
+  "telegramLastNameLabel": "Last name (optional)",
+  "telegramLoadingOrgData": "Loading organization data...",
+  "telegramSearchingExistingChannels": "Searching for existing channels...",
+  "telegramFoundChannels": "Organization channels found.\nLoading configuration...",
+  "telegramCheckingChannels": "Checking for existing channels...",
+  "telegramOrgDataNotLoaded": "Could not load data.\nEnter your organization information.",
+  "telegramOrgDataFirstRun": "First TelePOS launch.\nEnter your organization information.",
+  "telegramStoreNameLabel": "Store name *",
+  "telegramStoreNameHint": "My Store",
+  "telegramBinLabel": "BIN/IIN *",
+  "telegramAddressLabel": "Address (optional)",
+  "telegramAddressHint": "City, Street, 123",
+  "telegramPosIdLabel": "POS ID",
+  "telegramOwnerNameLabel": "Owner name (optional)",
+  "telegramImportantNote": "Important",
+  "telegramOrgDataNote": "This data will be used to create system channels and sync between POS devices. On other devices data will be loaded automatically.",
+  "telegramCreatingChannels": "Creating system channels...",
+  "telegramSettingUpEncryption": "Setting up encryption...",
+  "telegramSettingUp": "Setting up...",
+  "telegramPleaseWait": "Please wait.\nThis may take a moment.",
+  "telegramSetupDone": "Setup complete!",
+  "telegramSetupDoneMessage": "Telegram configured successfully.\nSystem channels created.",
+  "telegramTermsNotice": "By tapping \"Get Code\", you agree to Telegram's terms of service",
+  "telegramActionsSection": "Actions",
+  "chatNotConfigured": "Chat not configured",
+  "chatCanDeleteOwnOnly": "You can only delete your own messages",
+  "chatMessageDeleted": "Message deleted",
+  "chatDeleteFailed": "Could not delete message",
+  "chatTelegramNotLinked": "Telegram not linked",
+  "chatLinkInstructions": "Enter your Telegram User ID for identification in the staff chat.",
+  "chatLinkHowTo": "How to find ID:\n1. Open @userinfobot in Telegram\n2. Tap /start\n3. Copy the number from the \"Id\" field",
+  "chatLinkFailed": "Could not link. This ID may already be in use.",
+  "chatPhotoSent": "Photo sent",
+  "chatPhotoFailed": "Could not send photo",
+  "chatPhotoError": "Error selecting photo",
+  "chatPhotoUnavailableWeb": "Photo sending is not available in web version",
+  "chatDocSent": "Document sent",
+  "chatDocFailed": "Could not send document",
+  "chatDocError": "Error selecting document",
+  "chatDocUnavailableWeb": "Document sending is not available in web version",
+  "chatDocPathError": "Could not get file path",
+  "chatDocTooLarge": "File too large (max 50 MB)",
+  "chatLocationSent": "Location sent",
+  "chatLocationFailed": "Could not send location",
+  "chatLocationError": "Error getting location",
+  "chatLocationUnavailableWeb": "Geolocation is not available in web version",
+  "chatLocationDenied": "Location access denied",
+  "chatLocationDeniedForever": "Location access permanently denied. Change in settings.",
+  "chatLocationServiceDisabled": "Enable location services on your device",
+  "syncToUpload": "To upload",
+  "syncToDownload": "To download",
+  "syncDataTypeCol": "Data type",
+  "syncDirectionCol": "Direction",
+  "syncPendingCol": "Pending",
+  "syncStatusCol": "Status",
+  "syncProgressCol": "Progress",
+  "syncUpload": "Upload",
+  "syncDownload": "Download",
+  "syncPendingCount": "Pending: {count}",
+  "@syncPendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncInfoTelegram": "Data syncs between POS terminals via Telegram. Users are shared across all terminals.",
+  "syncAutoEnabled": "Data syncs automatically",
+  "syncManualOnly": "Manual sync only",
+  "syncMinutes": "{count} min",
+  "@syncMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agentBinIin": "BIN/IIN",
+  "agentLastOperation": "Last operation",
+  "agentNoAdditionalInfo": "No additional information",
+  "agentNoDebt": "No debt",
+  "agentDeletedWithName": "Customer \"{name}\" deleted",
+  "@agentDeletedWithName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentDeleteError": "Delete error: {error}",
+  "@agentDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "agentNewCustomer": "New customer",
+  "agentTypeCustomer": "Customer",
+  "agentTypeSupplier": "Supplier",
+  "agentNameHint": "Enter name",
+  "agentBinHint": "12 digits",
+  "agentCustomerFound": "Customer found",
+  "agentDeletedPhoneMsg": "Customer with this phone was deleted",
+  "agentRestoreQuestion": "Want to restore?",
+  "agentRestore": "Restore",
+  "kaspiTerminal": "Kaspi POS Terminal",
+  "kaspiIpAddress": "Terminal IP address",
+  "kaspiInvalidIp": "Invalid IP address format",
+  "kaspiPort": "Port",
+  "kaspiTesting": "Testing...",
+  "kaspiTest": "TEST",
+  "kaspiDisconnected": "Disconnected",
+  "kaspiConnecting": "Connecting...",
+  "kaspiConnected": "Connection established",
+  "kaspiNoConnection": "No connection",
+  "kaspiTestPassed": "Test passed",
+  "kaspiTestFailed": "Test failed",
+  "kaspiLatency": "Latency: {ms} ms",
+  "@kaspiLatency": {
+    "placeholders": {
+      "ms": {
+        "type": "String"
+      }
+    }
+  },
+  "kaspiTerminalInfo": "Terminal: {info}",
+  "@kaspiTerminalInfo": {
+    "placeholders": {
+      "info": {
+        "type": "String"
+      }
+    }
+  },
+  "splashSubtitle": "Point of Sale System",
+  "splashInitializing": "Initializing...",
+  "splashLoadingOrg": "Loading organization data...",
+  "splashEnterPosKey": "Enter POS key",
+  "splashEnterPosKeyMessage": "To activate the POS, enter the key provided by the administrator.",
+  "splashPosKeyHint": "XXXX-XXXX-XXXX-XXXX",
+  "splashKeyEmpty": "Key cannot be empty",
+  "splashKeyTooShort": "Key is too short",
+  "splashKeyNotEntered": "Key not entered",
+  "splashKeyRequiredMessage": "The POS cannot operate without a key. The application will be closed.",
+  "splashDataCorrupted": "Data corrupted",
+  "splashDataCorruptedMessage": "Required application data is missing or corrupted.\n\nChoose an action:",
+  "splashReconfigure": "Reconfigure",
+  "splashExit": "Exit",
+  "splashDatabaseError": "Database error",
+  "splashDatabaseErrorMessage": "The database is corrupted or unavailable.\n\nYou can try to restore from a backup or reconfigure the POS.",
+  "splashRestoreFromBackup": "Restore from backup",
+  "splashSyncSuspended": "Sync suspended",
+  "splashSyncSuspendedMessage": "Data synchronization is temporarily suspended.\n\nThe POS is operating in offline mode. Data will be synced when connection is restored.",
+  "splashAuthError": "Authorization error\n\nThe access token is invalid or expired.\nContact the administrator for a new key.",
+  "splashSupportEnded": "Version not supported\n\nThis application version is no longer supported.\nPlease update to the latest version.",
+  "generalSettingsTitle": "Settings",
+  "generalSettingsPosInfo": "POS Information",
+  "generalSettingsCashBoxName": "POS Name",
+  "generalSettingsCompany": "Company",
+  "generalSettingsIinBin": "IIN/BIN",
+  "generalSettingsPosId": "POS ID",
+  "generalSettingsStoreId": "Store ID",
+  "generalSettingsNotSpecified": "Not specified",
+  "generalSettingsAppVersion": "App Version",
+  "generalSettingsVersion": "Version",
+  "generalSettingsPlatform": "Platform",
+  "generalSettingsLanguage": "Interface Language",
+  "generalSettingsTheme": "Appearance",
+  "generalSettingsThemeDesc": "Light, dark or follow the system",
+  "generalSettingsThemeLight": "Light",
+  "generalSettingsThemeDark": "Dark",
+  "generalSettingsThemeSystem": "Follow the system",
+  "generalSettingsLanguageChanged": "Language changed to {language}",
+  "@generalSettingsLanguageChanged": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "generalSettingsCurrency": "Currency",
+  "generalSettingsCurrencySymbol": "Symbol",
+  "generalSettingsCurrencyCode": "Code",
+  "generalSettingsCountry": "Country",
+  "generalSettingsAdditional": "Additional Settings",
+  "generalSettingsTransport": "Transport",
+  "generalSettingsTransportSubtitle": "Data sync settings",
+  "generalSettingsPrinter": "Printer",
+  "generalSettingsPrinterSubtitle": "Receipt printing settings",
+  "generalSettingsPermissions": "Permissions",
+  "generalSettingsPermissionsSubtitle": "Cashier permissions",
+  "generalSettingsFiscal": "Fiscalization",
+  "generalSettingsFiscalSubtitle": "WebKassa, OFD, VAT",
+  "generalSettingsRestaurant": "Operating Mode",
+  "generalSettingsRestaurantSubtitle": "Retail, restaurant, service mode",
+  "generalSettingsTelegram": "Telegram",
+  "generalSettingsTelegramSubtitle": "Communication channels and bots",
+  "generalSettingsPosInfoDesc": "POS name, company, ID",
+  "generalSettingsVersionDesc": "Current version and platform",
+  "generalSettingsLanguageDesc": "Interface language selection",
+  "generalSettingsCurrencyDesc": "Currency and country",
+  "generalSettingsUpdate": "Update",
+  "generalSettingsUpdateSubtitle": "Check and install updates",
+  "generalSettingsAppUpdate": "Application update",
+  "generalSettingsAppUpdateSubtitle": "POS app update (not the OS update)",
+  "generalSettingsUpdateDesc": "Current version and updates",
+  "settingsUpdateTitle": "Application Update",
+  "settingsUpdateCurrentVersion": "Current version",
+  "settingsUpdateCheckBtn": "Check for updates",
+  "settingsUpdateChecking": "Checking for updates...",
+  "settingsUpdateUpToDate": "You have the latest version",
+  "settingsUpdateAvailable": "Version {version} available",
+  "@settingsUpdateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUpdateDownloadBtn": "Download update",
+  "settingsUpdateDownloading": "Downloading... {percent}%",
+  "@settingsUpdateDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUpdateInstallBtn": "Install update",
+  "settingsUpdateInstalling": "Installing...",
+  "settingsUpdateFailed": "Update failed",
+  "settingsUpdateAutoEnabled": "Automatic check every 3 hours",
+  "settingsUpdateCloseShift": "Close shift before updating",
+  "settingsUpdateReleaseNotes": "What's new",
+  "countryKazakhstan": "Kazakhstan",
+  "countryRussia": "Russia",
+  "countryKyrgyzstan": "Kyrgyzstan",
+  "countryUzbekistan": "Uzbekistan",
+  "countryUSA": "USA",
+  "countryTurkmenistan": "Turkmenistan",
+  "permEditPrice": "Edit price",
+  "permSellInDebt": "Sell on credit",
+  "permDiscounts": "Discounts",
+  "permCashOperations": "Cash operations",
+  "permSendToOfd": "Send to OFD",
+  "permCancelPayment": "Cancel payment",
+  "permDeferSale": "Deferred sale",
+  "permShowHistory": "Show history",
+  "printerSettingsSaved": "Settings saved",
+  "printerSettingsSaveError": "Save error: {error}",
+  "@printerSettingsSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "printerSettingsPrinting": "Printing...",
+  "printerSettingsTestReceipt": "TEST RECEIPT",
+  "printerSettingsWidth": "Width:",
+  "printerSettingsWidthValue": "{width} characters",
+  "@printerSettingsWidthValue": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      }
+    }
+  },
+  "printerSettingsType": "Type:",
+  "printerSettingsAddress": "Address:",
+  "printerSettingsNotSpecifiedAddr": "Not specified",
+  "printerSettingsPrinterWorks": "Printer works!",
+  "printerSettingsPrintSuccess": "Print successful",
+  "printerSettingsPrintError": "Print error",
+  "printerSettingsNotConnected": "Not connected",
+  "printerSettingsChecking": "Checking...",
+  "printerSettingsReady": "Ready",
+  "printerSettingsNoPaper": "No paper",
+  "printerSettingsCoverOpen": "Cover open",
+  "printerSettingsSave": "Save",
+  "printerSettingsConnectionType": "Connection Type",
+  "printerSettingsPrinterAddress": "Printer Address",
+  "printerSettingsPaperWidth": "Paper Width",
+  "printerSettingsTesting": "Testing",
+  "printerSettingsStatus": "Status: {status}",
+  "@printerSettingsStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "printerSettingsCheck": "Check",
+  "printerSettingsTestCheck": "Test receipt",
+  "printerSettingsPort": "Port",
+  "printerSettingsIpAddress": "Printer IP address",
+  "printerSettingsMacAddress": "MAC address or name",
+  "printerSettingsPrinterName": "Printer name",
+  "printerSettingsComPort": "COM port",
+  "printerSettingsSerialCom": "Serial (COM)",
+  "printerSettingsPaperWidth58": "58mm (32 chars)",
+  "printerSettingsPaperWidth80_42": "80mm (42 chars)",
+  "printerSettingsPaperWidth80_48": "80mm (48 chars)",
+  "fiscalSettingsTitle": "Fiscalization",
+  "fiscalSettingsSaved": "Settings saved",
+  "fiscalSettingsSaveError": "Save error: {error}",
+  "@fiscalSettingsSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fiscalSettingsSave": "Save",
+  "fiscalSettingsOperator": "Fiscal Operator",
+  "fiscalSettingsWebkassaSettings": "WebKassa Settings",
+  "fiscalSettingsTaxpayerInfo": "Taxpayer Information",
+  "fiscalSettingsVatSettings": "VAT Settings",
+  "fiscalSettingsWebkassaLabel": "WebKassa",
+  "fiscalSettingsWebkassaDesc": "Cloud fiscal service",
+  "fiscalSettingsOfdLabel": "OFD",
+  "fiscalSettingsOfdDesc": "Fiscal data operator",
+  "fiscalSettingsNoneLabel": "No fiscalization",
+  "fiscalSettingsNoneDesc": "Receipts are not sent to OFD",
+  "fiscalSettingsOfdId": "OFD ID",
+  "fiscalSettingsOfdIdHint": "OFD identifier",
+  "fiscalSettingsOfdName": "OFD Name",
+  "fiscalSettingsOfdNameHint": "WebKassa / OFD.kz",
+  "fiscalSettingsOfdHost": "OFD Server Address",
+  "fiscalSettingsOfdHostHint": "https://api.webkassa.kz",
+  "fiscalSettingsWebkassaActive": "WebKassa activated",
+  "fiscalSettingsWebkassaInactive": "WebKassa not activated",
+  "fiscalSettingsCompanyName": "Company Name",
+  "fiscalSettingsCashBox": "Cash Register",
+  "fiscalSettingsVatPayer": "VAT Payer",
+  "fiscalSettingsVatPayerSubtitle": "Organization is a VAT payer (12%)",
+  "fiscalSettingsPrintVat": "Print VAT on receipt",
+  "fiscalSettingsPrintVatSubtitle": "Display VAT amount on receipt",
+  "fiscalSettingsVatRate": "VAT rate: 12% (calculated as 3/28)",
+  "historyProductUcode": "Product #{ucode}",
+  "@historyProductUcode": {
+    "placeholders": {
+      "ucode": {
+        "type": "String"
+      }
+    }
+  },
+  "historyRefundProductId": "Refund product #{id}",
+  "@historyRefundProductId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "historyAccountId": "Account #{id}",
+  "@historyAccountId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "historyLoadError": "Loading error: {error}",
+  "@historyLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "historyReceiptNo": "Receipt {number}",
+  "@historyReceiptNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "historySyncSynced": "Synced",
+  "historySyncPending": "Pend.",
+  "historySyncSending": "Send.",
+  "historySyncDeferred": "Defer.",
+  "historySyncInProgress": "In progress",
+  "historyClient": "Client",
+  "historyFiscalization": "Fiscalization",
+  "historyProducts": "Products",
+  "historyPayment": "Payment",
+  "historyNoProducts": "No products",
+  "historyNoPayments": "No payments",
+  "historyPrintingReceipt": "Printing receipt {number}...",
+  "@historyPrintingReceipt": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "historyReceiptPrinted": "Receipt printed",
+  "historyPrintError": "Print error",
+  "historyOperationType": "Operation type",
+  "historyFilterSales": "Sales",
+  "historyFilterRefunds": "Refunds",
+  "historySearchShort": "Search...",
+  "historyFilters": "Filters",
+  "historyDateFrom": "From",
+  "historyDateTo": "To",
+  "historyReset": "Reset",
+  "historyApply": "Apply",
+  "historySearchFull": "Search by receipt number, amount...",
+  "historySyncStatus": "Sync status",
+  "historyReceiptColumn": "Receipt",
+  "historySyncSyncedFull": "Synchronized",
+  "historySyncPendingFull": "Pending sync",
+  "historySyncSendingFull": "Sending",
+  "historySyncDeferredFull": "Deferred",
+  "historySyncInProgressFull": "In progress",
+  "historyPaymentCash": "Cash",
+  "historyPaymentCard": "Card",
+  "historyPaymentMixed": "Mixed",
+  "historyPaymentBonus": "Bonus",
+  "historyPaymentDebt": "Debt",
+  "historyPaymentDiscount": "Discount",
+  "historyPaymentWithDiscount": "With discount",
+  "historyOfdFiscalized": "Fiscalized",
+  "historyOfdError": "Fiscal error",
+  "historyOfdNotFiscalized": "Not fiscalized",
+  "historyClearFilters": "Clear filters",
+  "historyRecordsRange": "Records {start}–{end} of {total}",
+  "@historyRecordsRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "historyFirstPage": "First page",
+  "historyPrevious": "Previous",
+  "historyNextPage": "Next",
+  "historyLastPage": "Last page",
+  "@historyType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "historyAmount": "Amount: {amount}",
+  "@historyAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "historyDate": "Date: {date}",
+  "@historyDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "historyPos": "POS: {id}",
+  "@historyPos": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "historyClientName": "Client: {name}",
+  "@historyClientName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "historyFiscalYes": "Yes",
+  "historyFiscalNo": "No",
+  "historyFiscalError": "Error",
+  "shiftPrintZReport": "Print Z-report",
+  "shiftZReportQueued": "Z-report accepted into the print queue. There is no paper yet: it will come out when the printer can. The job waits 30 minutes — see it under Settings → Printer",
+  "shiftZReportAlreadyQueued": "The Z-report has already been submitted for printing — it is not printed twice",
+  "shiftZReportPrintFailed": "Failed to submit the Z-report for printing",
+  "shiftFinishAllSales": "Finish all sales",
+  "shiftCannotClose": "Cannot close shift",
+  "shiftOpeningShift": "Open shift",
+  "shiftClosingShift": "Close shift",
+  "shiftEnterInitialAmount": "Enter initial cash amount:",
+  "shiftDiscrepancyFound": "Discrepancy found",
+  "shiftDifferenceAmount": "Difference: {amount}",
+  "@shiftDifferenceAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftConfirmCloseQuestion": "Are you sure you want to close the shift?",
+  "shiftFixedAmount": "Amount to be recorded: {amount} KZT",
+  "@shiftFixedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftCloseWithDiscrepancy": "Close with discrepancy",
+  "shiftCashierLabel": "Cashier",
+  "shiftUnknown": "Unknown",
+  "shiftSystemTotal": "Expected in register",
+  "shiftEnteredTotal": "Counted amount",
+  "shiftCashOperations": "Cash operations",
+  "shiftSalesLabel": "Sales",
+  "shiftSalesTotal": "Sales total",
+  "shiftCashSales": "Cash",
+  "shiftCardSales": "Card",
+  "shiftRefundsTotal": "Refunds",
+  "shiftShortage": "Shortage",
+  "shiftSurplus": "Surplus",
+  "shiftBalances": "Balanced",
+  "shiftCloseBlocked": "Closing blocked",
+  "shiftActiveSalesCount": "Active sales: {count}",
+  "@shiftActiveSalesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftPendingSalesCount": "Pending sales: {count}",
+  "@shiftPendingSalesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftFinishSalesBeforeClose": "Finish or cancel sales before closing the shift",
+  "shiftBillsTab": "Bills",
+  "shiftTotalTab": "Total",
+  "shiftOperationsTab": "Operations",
+  "shiftAmountTab": "Amount",
+  "shiftBillCount": "Bill count",
+  "@shiftSince": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftDifferenceLabel": "Difference: ",
+  "supplySupplierRequired": "Supplier *",
+  "supplyPaymentType": "Payment type",
+  "supplyFullPayment": "Full payment",
+  "supplyAccountDebit": "Account debit",
+  "supplyConsignment": "Consignment",
+  "supplyDeferredPayment": "Deferred payment",
+  "supplyPaymentAccountRequired": "Payment account *",
+  "supplyAddProduct": "Add product",
+  "supplyBarcodeOrSku": "Barcode or SKU",
+  "supplyProductsCount": "Products ({count})",
+  "@supplyProductsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplyAmountValue": "Amount: {amount}",
+  "@supplyAmountValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyProductNotFound": "Product not found",
+  "supplyInvalidQuantity": "Enter a valid quantity",
+  "supplySelectSupplierTitle": "Select supplier",
+  "supplySuppliersNotFound": "No suppliers found",
+  "supplySelectAccountTitle": "Select account",
+  "supplyAccountsNotFound": "No accounts found",
+  "supplyAccountBalance": "Balance: {amount}",
+  "@supplyAccountBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyProductNumber": "Product #{number}",
+  "@supplyProductNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyProductCountLabel": "Products: {count}",
+  "@supplyProductCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplyTotalLabel": "Total: {amount}",
+  "@supplyTotalLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplySavedSuccess": "Supply saved. Products: {count}, amount: {amount}",
+  "@supplySavedSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyCancelConfirm": "Cancel supply?",
+  "supplyCancelMessage": "All entered data will be lost.",
+  "supplyYesCancel": "Yes, cancel",
+  "supplySearchProduct": "Search product...",
+  "supplyAddProductsHint": "Add products to supply",
+  "supplyScanOrSearch": "Scan barcode or search product",
+  "refundTotalAmount": "Refund amount",
+  "refundPosLabel": "POS",
+  "refundSelectedOfTotal": "{selected} of {total}",
+  "@refundSelectedOfTotal": {
+    "placeholders": {
+      "selected": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "refundTotalProducts": "Total products",
+  "refundToReturn": "TO REFUND",
+  "refundToReturnLabel": "To refund:",
+  "refundAction": "REFUND",
+  "refundSelectedItemsShort": "{selected} of {total} items",
+  "@refundSelectedItemsShort": {
+    "placeholders": {
+      "selected": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "refundColumnName": "Name",
+  "refundColumnQty": "Qty",
+  "refundEmptyHint": "Load a receipt or add products manually",
+  "refundNoItemsShort": "No products",
+  "refundEmptyHintShort": "Load a receipt or\nadd products",
+  "@refundMaxQuantity": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSelectedCount": "Selected items: {count}",
+  "@refundSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "refundAmountValue": "Refund amount: {amount}",
+  "@refundAmountValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSuccess": "Refund completed successfully",
+  "paymentAmountDue": "Amount due",
+  "paymentTotalDue": "Total due",
+  "paymentCashLabel": "Cash",
+  "paymentReceived": "Received",
+  "paymentRemainingLabel": "Remaining",
+  "paymentCardAmount": "Card payment for {amount}",
+  "@paymentCardAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentLoyaltyProgram": "Loyalty program",
+  "paymentPhoneNumber": "Phone number",
+  "paymentAvailableBonus": "Available bonus:",
+  "paymentUseBonuses": "Use bonuses",
+  "paymentBonusToDeduct": "To deduct: {amount} bonuses",
+  "@paymentBonusToDeduct": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSuccessMessage": "Payment successful",
+  "paymentRefundButton": "REFUND",
+  "paymentPayButton": "PAY",
+  "syncWidgetRetry": "Retry",
+  "syncWidgetLastSync": "Last sync: {time}",
+  "@syncWidgetLastSync": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "syncWidgetRecordsCount": "{count} records",
+  "@syncWidgetRecordsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetWaiting": "Waiting",
+  "syncWidgetSynced": "Synced",
+  "syncWidgetJustNow": "just now",
+  "syncWidgetMinutesAgo": "{minutes} min ago",
+  "@syncWidgetMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetHoursAgo": "{hours} h ago",
+  "@syncWidgetHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetDaysAgo": "{days} d ago",
+  "@syncWidgetDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetConnecting": "Connecting to server...",
+  "syncWidgetSyncingProducts": "Syncing products...",
+  "syncWidgetSyncingSales": "Syncing sales...",
+  "syncWidgetSyncingAgents": "Syncing agents...",
+  "syncWidgetSyncingPrices": "Syncing prices...",
+  "syncWidgetFinishing": "Finishing...",
+  "updateDialogUpdating": "Updating...",
+  "updateDialogAvailable": "Update available",
+  "updateDialogAutoUpdate": "Auto update in {seconds} sec",
+  "@updateDialogAutoUpdate": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "updateDialogUpdateNow": "Update now",
+  "updateDialogLater": "Later",
+  "updateDialogSkip": "Skip",
+  "updateDialogUpdate": "Update",
+  "storeUpdateVersion": "Version {version}",
+  "@storeUpdateVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "storeUpdateNewVersionAvailable": "A new version of the app is available in {storeName}.",
+  "@storeUpdateNewVersionAvailable": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "storeUpdateWhatsNew": "What's new:",
+  "storeUpdateRequired": "This is a required update",
+  "storeUpdateGoTo": "Go to {storeName}",
+  "@storeUpdateGoTo": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "storeUpdateButton": "UPDATE",
+  "storeUpdateDownloaded": "Update downloaded",
+  "storeUpdateReadyToInstall": "Update downloaded and ready to install.\nInstall now? The app will be restarted.",
+  "storeUpdateInstall": "INSTALL",
+  "storeUpdateDownloading": "Downloading update...",
+  "storeUpdateReadyShort": "Update ready to install",
+  "versionConflictTitle": "Version conflict",
+  "versionConflictDescription": "A version conflict has been detected.",
+  "versionConflictCurrent": "Current version",
+  "versionConflictFound": "Found version",
+  "versionConflictChooseAction": "Choose an action:",
+  "versionConflictOpenFolder": "Open in folder",
+  "versionConflictPreviousVersion": "Previous version",
+  "versionConflictContinue": "Continue",
+  "restoreLoadingBackups": "Loading backups...",
+  "restoreSearchingBackups": "Searching backups...",
+  "restoreLoadError": "Load error: {error}",
+  "@restoreLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreRestoring": "Restoring...",
+  "restoreRestoreError": "Restore error",
+  "restoreRestoreFailed": "Failed to restore from backup",
+  "restoreTitle": "Restore",
+  "restoreChooseMethod": "Choose setup method",
+  "restoreSetupNewPos": "Set up new POS",
+  "restoreNoBackups": "No backups found",
+  "restoreSetupAsNew": "Set up POS as new",
+  "restoreFoundBackups": "Found backups:",
+  "agentSearchByNameOrPhone": "Search by name or phone...",
+  "agentOnlyWithDebt": "Only with debt",
+  "agentTypeTooltip": "Type",
+  "agentBinLabel": "BIN: {bin}",
+  "@agentBinLabel": {
+    "placeholders": {
+      "bin": {
+        "type": "String"
+      }
+    }
+  },
+  "agentSelectedMessage": "Selected: {name}",
+  "@agentSelectedMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentFoundCount": "Found: {count}",
+  "@agentFoundCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agentEnterNameOrPhoneToSearch": "Enter name or phone to search",
+  "agentNotFound": "No clients found",
+  "agentSearchClients": "Search clients",
+  "agentNotFoundShort": "Not found",
+  "agentEnterNameOrPhone": "Enter name or phone",
+  "agentEnterCustomerName": "Enter customer name",
+  "agentDeletedCustomerPhone": "Customer with this phone was deleted",
+  "agentWantRestore": "Do you want to restore?",
+  "agentDeleteCustomerTitle": "Delete customer?",
+  "agentDeleteConfirmMessage": "Are you sure you want to delete \"{name}\"?",
+  "@agentDeleteConfirmMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentCustomerDeleted": "Customer \"{name}\" deleted",
+  "@agentCustomerDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cashOpTitle": "Cash operation",
+  "cashOpComment": "Comment",
+  "cashOpCommentRequired": "Comment *",
+  "cashOpCommentHint": "Enter comment...",
+  "cashOpError": "Error: {error}",
+  "@cashOpError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cashOpOperationType": "Operation type",
+  "cashOpExpense": "Expense",
+  "cashOpDividend": "Withdrawal",
+  "saleReceiptTotal": "Receipt total",
+  "salePay": "PAY",
+  "saleTotalColon": "Total:",
+  "salePositionsAndQuantity": "{count} items / {qty} pcs.",
+  "@salePositionsAndQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "saleWholesale": "WHOLESALE",
+  "saleRetail": "Retail",
+  "syncPreparing": "Preparing...",
+  "errorSaveFailed": "Save error: {details}",
+  "@errorSaveFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSaveFailedGeneric": "Save error",
+  "errorLoadFailed": "Data loading error: {details}",
+  "@errorLoadFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadFailedGeneric": "Data loading error",
+  "errorSearchFailed": "Search error: {details}",
+  "@errorSearchFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSearchFailedGeneric": "Search error",
+  "errorUnknownGeneric": "Unknown error",
+  "errorFillRequired": "Fill in all required fields",
+  "errorNoUsers": "No registered users",
+  "errorSelectUser": "Select a user",
+  "errorPinTooShort": "Enter PIN (minimum 4 digits)",
+  "errorRsaNotConfigured": "Error: RSA key not configured. Contact administrator.",
+  "errorWrongPin": "Incorrect PIN",
+  "errorAmbiguousPin": "This PIN matches more than one cashier. Select your name and log in with it.",
+  "errorNoPinSet": "No PIN is set for this cashier. Ask an administrator to set one.",
+  "errorWalkUpDisabled": "Signing in without picking a name is disabled at this point. Select your name from the list.",
+  "errorCredentialUnreadable": "The PIN record is corrupted. Contact an administrator — retyping the PIN will not help.",
+  "errorAuthUnknown": "The till could not answer the login attempt. Try again.",
+  "errorTillNotConfigured": "The till is not set up yet — sign-in is unavailable until the setup wizard has run.",
+  "errorTerminalLimitReached": "This till already has the maximum number of terminals. Ask an administrator to free up a slot.",
+  "errorPairingCodeInvalid": "The pairing code did not work — it may be expired, already used, or mistyped. Get a new code from the till operator.",
+  "errorTerminalSecretInvalid": "This device's pairing is no longer valid — the terminal may have been removed on the till. Enter a new pairing code.",
+  "errorSessionExpired": "Your session has expired — sign in again.",
+  "errorSessionEnded": "Your session was ended by the till — sign in again.",
+  "errorSaleNotInitialized": "Sale not initialized",
+  "errorReceiptEmpty": "Receipt is empty",
+  "errorDeferredNotFound": "Deferred receipt not found",
+  "errorReceiptNotFound": "Receipt #{receiptNo} not found",
+  "@errorReceiptNotFound": {
+    "placeholders": {
+      "receiptNo": {
+        "type": "String"
+      }
+    }
+  },
+  "errorReceiptNotFoundGeneric": "Receipt not found",
+  "errorNotAuthorized": "User not authorized",
+  "errorSupplierNotFound": "Supplier not found",
+  "errorAccountNotFound": "Account not found",
+  "errorProductNotFound": "Product not found: {details}",
+  "@errorProductNotFound": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorProductNotFoundGeneric": "Product not found",
+  "errorNameRequired": "Name is required",
+  "errorNameTooShort": "Minimum 2 characters",
+  "errorPhoneInvalid": "Invalid phone format",
+  "errorBinInvalid": "BIN/IIN must contain 12 digits",
+  "errorPhoneExists": "Customer with this phone already exists",
+  "errorShiftOpenFailed": "Shift opening error: {details}",
+  "@errorShiftOpenFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorShiftOpenFailedGeneric": "Shift opening error",
+  "errorShiftCloseFailed": "Shift closing error: {details}",
+  "@errorShiftCloseFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorShiftCloseFailedGeneric": "Shift closing error",
+  "errorShiftLoadFailed": "Shift data loading error: {details}",
+  "@errorShiftLoadFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorShiftLoadFailedGeneric": "Shift data loading error",
+  "errorPaymentConfig": "Failed to create payment. Check account settings.",
+  "errorSaleSaveFailed": "Sale save error",
+  "errorInventoryCannotComplete": "Cannot complete",
+  "errorNoProducts": "No products to write off",
+  "errorSelectCountry": "Select a country",
+  "errorEnterOrgName": "Enter organization name",
+  "errorEnterTaxId": "Enter {label}",
+  "@errorEnterTaxId": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "errorEnterTaxIdGeneric": "Enter tax ID",
+  "errorTaxIdLength": "{info}",
+  "@errorTaxIdLength": {
+    "placeholders": {
+      "info": {
+        "type": "String"
+      }
+    }
+  },
+  "errorTaxIdLengthGeneric": "Invalid tax ID length",
+  "errorEnterPosName": "Enter POS name",
+  "errorFillWebkassa": "Fill in all WebKassa fields",
+  "errorFillOfd": "Fill in all OFD fields",
+  "errorEnterKaspiIp": "Enter Kaspi terminal IP address",
+  "errorEnterAdminName": "Enter administrator name",
+  "errorAdminPinShort": "Administrator PIN must contain at least 4 digits",
+  "errorSellerPinShort": "Seller PIN must contain at least 4 digits",
+  "errorCheckFailed": "Validation error: {details}",
+  "@errorCheckFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorCheckFailedGeneric": "Validation error",
+  "errorTelegramNotInitialized": "TelegramInitializer not initialized",
+  "errorTelegramAuthNotInitialized": "TelegramAuthService not initialized",
+  "errorPhoneSendFailed": "Phone number send error: {details}",
+  "@errorPhoneSendFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorPhoneSendFailedGeneric": "Phone number send error",
+  "errorQrAuthFailed": "QR authorization error: {details}",
+  "@errorQrAuthFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorQrAuthFailedGeneric": "QR authorization error",
+  "errorWrongCode": "Incorrect code: {details}",
+  "@errorWrongCode": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorWrongCodeGeneric": "Incorrect code",
+  "errorWrongPassword": "Incorrect password: {details}",
+  "@errorWrongPassword": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorWrongPasswordGeneric": "Incorrect password",
+  "errorRegistrationFailed": "Registration error: {details}",
+  "@errorRegistrationFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorRegistrationFailedGeneric": "Registration error",
+  "errorChannelSearchFailed": "Channel search error: {details}",
+  "@errorChannelSearchFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorChannelSearchFailedGeneric": "Channel search error",
+  "errorChannelConnectFailed": "Channel connection error: {details}",
+  "@errorChannelConnectFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorChannelConnectFailedGeneric": "Channel connection error",
+  "errorChannelCreateFailed": "Channel creation error: {details}",
+  "@errorChannelCreateFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorChannelCreateFailedGeneric": "Channel creation error",
+  "errorFillClientData": "Fill in client data",
+  "shiftCashInvestments": "Cash in",
+  "shiftCashExpenses": "Expenses",
+  "shiftCashDividends": "Cash out",
+  "shiftNoCashOps": "No cash operations",
+  "shiftNoCashOpsDescription": "Cash in, expenses and cash out\nwill be displayed here",
+  "shiftMoreItems": "+{count} more",
+  "@shiftMoreItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftEqualsSystem": "= System",
+  "shiftBillsTotal": "Bills total:",
+  "receiptInputTitle": "Find receipt",
+  "receiptInputNumber": "Receipt number",
+  "receiptInputNumberHint": "For example: 12345",
+  "receiptInputPos": "POS",
+  "receiptInputInvalid": "Enter a valid receipt number",
+  "receiptInputFind": "Find",
+  "paymentDenominations": "Denominations",
+  "paymentExactAmount": "Exact amount",
+  "paymentNumpad": "Numpad",
+  "paymentIinLabel": "IIN/BIN (optional)",
+  "paymentIinInvalid": "Invalid IIN/BIN",
+  "paymentIinHint": "IIN — for individuals, BIN — for legal entities",
+  "paymentIinShort": "IIN/BIN",
+  "paymentTypeCash": "Cash",
+  "paymentTypeCard": "Card",
+  "paymentTypeMixed": "Mixed",
+  "paymentAccount": "Account",
+  "authNoUsers": "No registered users",
+  "authNoPin": "No PIN",
+  "authSelectUser": "Select user",
+  "authNoUsersShort": "No users",
+  "authEnterPin": "Enter PIN",
+  "updateVersion": "Version {version}",
+  "@updateVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNew": "What's new",
+  "updateFixedIssues": "Fixed",
+  "updateSize": "Size",
+  "updateDate": "Date",
+  "updateMandatory": "This is a mandatory update",
+  "updateLaterCountdown": "Later ({countdown})",
+  "@updateLaterCountdown": {
+    "placeholders": {
+      "countdown": {
+        "type": "int"
+      }
+    }
+  },
+  "updateDownloading": "Downloading update",
+  "updateDownloadingFile": "Downloading update file...",
+  "updatePosNow": "UPDATE POS",
+  "serviceAddNote": "Add note",
+  "serviceClientLookup": "Client lookup",
+  "serviceOrderDetail": "Service order details #{orderId}",
+  "@serviceOrderDetail": {
+    "placeholders": {
+      "orderId": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentDefaultLabel": "Default",
+  "currencySymbol": "₸",
+  "serviceIntakeTitle": "Service intake",
+  "serviceIntakeClient": "Client",
+  "serviceIntakeDevice": "Device / Item",
+  "serviceIntakeServices": "Services",
+  "serviceIntakeDelivery": "Delivery",
+  "serviceIntakePickup": "Pick up from client",
+  "serviceIntakeSave": "Save",
+  "serviceIntakeCancel": "Cancel",
+  "serviceQueueTitle": "Service orders",
+  "serviceQueueEmpty": "No service orders",
+  "serviceQueueSearch": "Search by number, client, device",
+  "serviceDetailTitle": "Order details",
+  "serviceDetailInfo": "Information",
+  "serviceDetailTimeline": "Work log",
+  "serviceDetailCost": "Cost",
+  "serviceDetailActions": "Actions",
+  "serviceStatusIntake": "Intake",
+  "serviceStatusInProgress": "In progress",
+  "serviceStatusCompleted": "Completed",
+  "serviceStatusClosed": "Closed",
+  "serviceStatusCancelled": "Cancelled",
+  "serviceMarkDiagnostic": "Diagnostic",
+  "serviceMarkReplacement": "Part replacement",
+  "serviceMarkRepair": "Repair",
+  "serviceMarkTesting": "Testing",
+  "serviceMarkOther": "Other",
+  "serviceAddMark": "Add work entry",
+  "serviceDeleteMark": "Delete entry",
+  "serviceMarkDescription": "Description",
+  "serviceMarkType": "Work type",
+  "serviceMarkCost": "Cost",
+  "serviceMarkNote": "Note",
+  "serviceCatalogTitle": "Service catalog",
+  "serviceCatalogAdd": "Add service",
+  "serviceCatalogDuration": "min",
+  "serviceCatalogWarranty": "Warranty (days)",
+  "serviceCatalogRequiresDevice": "Requires device",
+  "serviceClientNew": "New client",
+  "serviceClientPhone": "Phone",
+  "serviceClientName": "Name",
+  "serviceClientAddress": "Address",
+  "serviceAssignTechnician": "Assign technician",
+  "serviceReassignTechnician": "Reassign technician",
+  "@serviceReassignTechnician": {
+    "description": "Tooltip/action to assign or reassign the technician on a service order"
+  },
+  "serviceTechnicianAssigned": "Technician assigned: {name}",
+  "@serviceTechnicianAssigned": {
+    "description": "Snackbar shown after assigning a technician",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceTechnicianSelect": "Select technician",
+  "servicePrepayment": "Prepayment",
+  "servicePrepaymentAmount": "Prepayment amount",
+  "serviceEstimatedDate": "Estimated date",
+  "serviceEstimatedAmount": "Amount",
+  "servicePrintLabel": "QR label",
+  "servicePrintReceipt": "Print receipt",
+  "serviceProgressConfirm": "Start work",
+  "serviceCancelConfirm": "Cancel",
+  "serviceTotalCost": "Work cost",
+  "servicePrepaid": "Prepaid",
+  "serviceRemaining": "To pay",
+  "serviceDeliveryAddress": "Delivery address",
+  "serviceNeedsPickup": "Pick up from client",
+  "serviceNeedsDelivery": "Deliver to client",
+  "serviceQrFormat": "TELEPOS:SO:{id}:{number}",
+  "serviceOrderCreated": "New order",
+  "serviceOrderUpdated": "Edit",
+  "serviceNoOrders": "No data",
+  "serviceFilterAll": "All",
+  "navCatalog": "Catalog",
+  "catalogTitle": "Product Catalog",
+  "catalogSearch": "Search",
+  "catalogSearchHint": "Name or barcode",
+  "catalogFilterAll": "All",
+  "catalogFilterProducts": "Products",
+  "catalogFilterWeighted": "Weighted",
+  "catalogFilterServices": "Services",
+  "catalogFilterPackages": "Packages",
+  "catalogAddProduct": "Add product",
+  "catalogEditProduct": "Edit product",
+  "catalogDeleteProduct": "Delete product",
+  "catalogRestoreProduct": "Restore product",
+  "catalogProductName": "Name",
+  "catalogBarcode": "Barcode",
+  "catalogType": "Type",
+  "catalogPrice": "Selling price",
+  "catalogWholesalePrice": "Wholesale price",
+  "catalogCategory": "Category",
+  "catalogMeasure": "Unit of measure",
+  "catalogQuantity": "Stock",
+  "catalogQuickProduct": "Quick product",
+  "catalogAddToQuick": "Add to quick products",
+  "catalogRemoveFromQuick": "Remove from quick products",
+  "catalogNoProducts": "No products",
+  "catalogDeleted": "Deleted",
+  "catalogConfirmDelete": "Delete product \"{name}\"?",
+  "@catalogConfirmDelete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogProductCreated": "Product created",
+  "catalogProductUpdated": "Product updated",
+  "catalogProductDeleted": "Product deleted",
+  "catalogProductRestored": "Product restored",
+  "catalogShowDeleted": "Show deleted",
+  "catalogTypeNormal": "Normal",
+  "catalogTypeWeight": "Weighted",
+  "catalogTypeInner": "Inner",
+  "catalogTypePackage": "Package",
+  "catalogTypeService": "Service",
+  "catalogMeasurePiece": "Piece",
+  "catalogMeasureKg": "Kilogram",
+  "catalogMeasureLiter": "Liter",
+  "catalogMeasureMeter": "Meter",
+  "catalogNameRequired": "Enter product name",
+  "catalogPriceRequired": "Enter price",
+  "catalogPriceInvalid": "Price must be greater than 0",
+  "catalogBarcodeExists": "Product with this barcode already exists",
+  "catalogCategories": "Categories",
+  "catalogAllCategories": "All categories",
+  "catalogNoCategories": "No categories",
+  "catalogQuickProductCategory": "Quick product category",
+  "catalogAddCategory": "Add category",
+  "catalogCategoryName": "Category name",
+  "catalogManageCategories": "Manage categories",
+  "catalogCategoryHasProducts": "Cannot delete: category has products",
+  "catalogConfirmDeleteCategory": "Delete category",
+  "catalogMenuCategories": "Menu categories",
+  "catalogParentCategory": "Parent category",
+  "catalogRootCategory": "Root (no parent)",
+  "telegramErrorPhoneSendFailed": "Failed to send verification code",
+  "telegramErrorQrAuthFailed": "QR code authorization failed",
+  "telegramErrorWrongCode": "Wrong verification code",
+  "telegramErrorWrongPassword": "Wrong password",
+  "telegramErrorRegistrationFailed": "Registration failed",
+  "telegramErrorChannelSearchFailed": "Channel search failed",
+  "telegramErrorChannelConnectFailed": "Failed to connect to channels",
+  "telegramErrorChannelCreateFailed": "Failed to create channels",
+  "hwSettingsTitle": "Hardware",
+  "hwSettingsSubtitle": "Scanner, display, terminals",
+  "terminalServiceTitle": "Browser terminals",
+  "terminalServiceSubtitle": "A tablet or a phone as a workstation",
+  "terminalServiceEnable": "Serve browser terminals",
+  "terminalServiceEnabledNote": "The till listens on the shop network. Terminals can connect.",
+  "terminalServiceDisabledNote": "The till listens to itself only. No port is open to the network, and terminals cannot connect.",
+  "terminalServiceRestartNote": "The change takes effect after the till is restarted.",
+  "terminalServiceAddress": "Address for the terminal",
+  "terminalServiceAddressHint": "Open this address in the tablet's browser. If the name does not resolve, type the till's IP address.",
+  "pairingTitle": "Terminal pairing",
+  "pairingSubtitle": "Code for a new device",
+  "pairingDisabledNote": "The till does not serve browser terminals. Turn on serving to issue a pairing code.",
+  "pairingDisabledAction": "Open terminal settings",
+  "pairingAddressLabel": "Link for the new device",
+  "pairingAddressHint": "Type or copy this address exactly on the new device — the code is already in it.",
+  "pairingLinkPending": "The link appears here once you issue a code.",
+  "pairingRestartNote": "Terminal service is on in settings, but this till has not restarted with it yet — the address will not answer. Restart the till.",
+  "pairingMint": "Issue code",
+  "pairingMintAgain": "Issue a new code",
+  "pairingCodeLabel": "Pairing code",
+  "pairingExpiresAt": "Valid until {time}",
+  "@pairingExpiresAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pairingOnceNote": "The code is shown only now — leaving this screen loses it. Issuing a new code revokes this one if it has not been used yet. This code is spent by opening the link — the device itself will then ask for a second, separate code: issue a new one when it does.",
+  "enrolTitle": "Terminal pairing",
+  "enrolInstructions": "This device is not paired with the till yet. Ask the operator to open \"Terminal pairing\" on the till and enter the code shown there.",
+  "enrolCodeLabel": "Pairing code",
+  "enrolSubmit": "Pair",
+  "accountsSettingsTitle": "Payment Accounts",
+  "accountsSettingsSubtitle": "Cash and card accounts for payments",
+  "accountsSettingsAdd": "Add Account",
+  "accountsSettingsEdit": "Edit Account",
+  "accountsSettingsEmpty": "No payment accounts configured",
+  "accountsSettingsName": "Account Name",
+  "accountsSettingsType": "Account Type",
+  "accountsSettingsTypePOS": "POS (cash register)",
+  "accountsSettingsTypeBank": "Bank (card)",
+  "accountsSettingsTypeCash": "Cash",
+  "accountsSettingsTypeSystem": "System",
+  "accountsSettingsTypeBonus": "Bonus",
+  "accountsSettingsTypeOther": "Other",
+  "accountsSettingsBalance": "Balance",
+  "accountsSettingsVisible": "POS",
+  "accountsSettingsVisibleToPos": "Visible in POS",
+  "hwSettingsSaved": "Hardware settings saved",
+  "hwScannerTitle": "Barcode Scanner",
+  "hwScannerMode": "Scanner Mode",
+  "hwScannerModeKeyboard": "USB / keyboard (wedge)",
+  "hwScannerModeSerial": "Serial",
+  "hwScannerModeCamera": "Camera",
+  "hwScannerModeHint": "USB scanners work in this mode",
+  "hwScannerTimeout": "Timeout",
+  "hwScannerMinLength": "Min length",
+  "hwScannerMaxLength": "Max length",
+  "hwDisplayTitle": "Customer Display",
+  "hwDisplayModel": "Model",
+  "hwDisplayModelLed8": "LED 8 chars",
+  "hwDisplayModelVfd20": "VFD 20x2",
+  "hwDisplayPort": "COM Port",
+  "hwDisplayBaudRate": "Baud Rate",
+  "hwDisplayDisabled": "Customer display disabled",
+  "hwDrawerTitle": "Cash Drawer",
+  "hwDrawerMode": "Open Mode",
+  "hwDrawerModePrinter": "Via Printer",
+  "hwDrawerModeSerial": "Serial Port",
+  "hwDrawerPort": "COM Port",
+  "hwTerminalsTitle": "Payment Terminals",
+  "hwTerminalIp": "IP Address",
+  "hwTerminalPort": "Port",
+  "hwTerminalMerchantId": "Merchant ID",
+  "hwTerminalTerminalId": "Terminal ID",
+  "catalogExportCsv": "Export CSV",
+  "catalogImport": "Import",
+  "catalogFilterColumn": "Filter...",
+  "catalogExportSuccess": "Exported to {path}",
+  "@catalogExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogExportFailed": "Export failed",
+  "catalogImportResults": "Import Results",
+  "catalogImportImported": "Imported: {count}",
+  "@catalogImportImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogImportUpdated": "Updated: {count}",
+  "@catalogImportUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogImportSkipped": "Skipped: {count}",
+  "@catalogImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogImportErrors": "Errors:",
+  "catalogTypeConsumable": "Consumable",
+  "catalogFilterConsumable": "Consumables",
+  "catalogFilterInner": "Internal",
+  "serviceMarkConsumable": "Consumable material",
+  "serviceConsumableSearch": "Search product / consumable",
+  "serviceConsumableSelected": "Selected product",
+  "serviceQuickServicesTitle": "Quick services",
+  "serviceQuickServicesEmpty": "No quick services",
+  "serviceIntakeItems": "Items received",
+  "serviceItemName": "What are you accepting (item, thing, device)",
+  "serviceItemDescription": "Problem description / client wishes",
+  "serviceItemSerial": "Serial number / marking",
+  "serviceItemAdd": "Add item",
+  "serviceItemEmpty": "Add at least one item",
+  "serviceItemCount": "{count} pcs.",
+  "@serviceItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceClientQuickName": "Client name",
+  "serviceClientQuickPhone": "Client phone",
+  "serviceClientOrSearch": "or find in database",
+  "catalogTypeDish": "Dish",
+  "catalogFilterDish": "Dishes",
+  "dishCalculation": "Costing",
+  "dishCalculationStub": "Costing module will be available later",
+  "dishIngredients": "Ingredients",
+  "serviceConsumablesTitle": "Consumption norms",
+  "serviceConsumablesEmpty": "No consumable materials",
+  "serviceConsumablesAdd": "Add consumable",
+  "serviceConsumableQuantity": "Qty per 1 service",
+  "serviceConsumablesAutoAdded": "Consumables added automatically",
+  "catalogDescription": "Description",
+  "catalogImagePlaceholder": "Tap to upload photo",
+  "globalRetry": "Retry",
+  "globalRefresh": "Refresh",
+  "globalReset": "Reset",
+  "globalApply": "Apply",
+  "globalCreate": "Create",
+  "stockOpSupply": "Receipt",
+  "stockOpMovement": "Transfer",
+  "stockOpSupplierReturn": "Return to supplier",
+  "stockOpMovementShort": "Transfer",
+  "stockOpReturnShort": "Return",
+  "stockRegistryTitle": "Stock operations",
+  "stockRegistryAppBarTitle": "Warehouse",
+  "stockRegistryLoadError": "Failed to load the registry",
+  "stockRegistryResetFilters": "Reset filters",
+  "stockRegistryFilters": "Filters",
+  "stockRegistryEmpty": "No records",
+  "stockRegistryEmptyFiltered": "Adjust the filter parameters",
+  "stockRegistryEmptyCreate": "Create your first stock operation",
+  "stockRegistryPeriod": "Period",
+  "stockRegistryOperationType": "Operation type",
+  "stockRegistrySearchHint": "Search by number, counterparty...",
+  "stockRegistryDateFrom": "From",
+  "stockRegistryDateTo": "To",
+  "stockRegistryColType": "Type",
+  "stockRegistryColNumber": "Number",
+  "stockRegistryColCounterparty": "Counterparty / Warehouse",
+  "stockRegistryColProducts": "Items",
+  "stockRegistryColStatus": "Status",
+  "stockSyncDraft": "Draft",
+  "stockSyncPending": "Pending",
+  "stockSyncSending": "Sending",
+  "stockSyncSynced": "Synced",
+  "stockRegistryDetailType": "Type: {type}",
+  "@stockRegistryDetailType": {
+    "placeholders": {
+      "type": {
+        "type": "String",
+        "example": "Приёмка"
+      }
+    }
+  },
+  "stockRegistryDetailDate": "Date: {date}",
+  "@stockRegistryDetailDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryDetailCounterparty": "Counterparty: {name}",
+  "@stockRegistryDetailCounterparty": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryDetailAmount": "Amount: {amount}",
+  "@stockRegistryDetailAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryDetailProducts": "Items: {count}",
+  "@stockRegistryDetailProducts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stockRegistryDetailComment": "Comment: {comment}",
+  "@stockRegistryDetailComment": {
+    "placeholders": {
+      "comment": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryProductsShort": "{count} pcs",
+  "@stockRegistryProductsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stockRegistryPaginationRange": "{from}–{to} of {total}",
+  "@stockRegistryPaginationRange": {
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "stockCreateSupplyTitle": "New receipt",
+  "stockCreateSupplySubtitle": "Receive goods from a supplier",
+  "stockCreateMovementSubtitle": "Transfer between warehouses",
+  "stockCreateReturnSubtitle": "Return goods to the supplier",
+  "serviceQueueActive": "Active",
+  "serviceScanQrTitle": "Scan order QR code",
+  "serviceScanQrHint": "TELEPOS:SO:... or order number",
+  "serviceIntakePhotos": "Intake photos",
+  "serviceIntakePhotosHint": "Take photos of the items being received",
+  "expenseTypeOther": "Other",
+  "expenseTypeSmallPurchases": "Small purchases",
+  "expenseTypeSalary": "Salary",
+  "expenseTypeUtilities": "Utilities",
+  "expenseTypeCollection": "Cash collection",
+  "expenseTypeCustom": "Custom",
+  "networkTitle": "Network & Connections",
+  "networkUnavailableTitle": "Available only on a TelePOS OS device",
+  "networkUnavailableDesc": "The telepos-sysd system daemon was not found. Network management works only when the POS runs on a TelePOS OS appliance.",
+  "networkRefresh": "Refresh",
+  "networkSearch": "Search",
+  "networkConnect": "Connect",
+  "networkDisconnect": "Disconnect",
+  "networkConnected": "Connected",
+  "networkEthernetTitle": "Wired network (Ethernet)",
+  "networkEthernetDesc": "Cable connection status and internet access.",
+  "networkCableLabel": "Cable",
+  "networkCableConnected": "Connected",
+  "networkCableNotConnected": "Not connected",
+  "networkInternetLabel": "Internet",
+  "networkInternetAvailable": "Available",
+  "networkInternetUnavailable": "No access",
+  "networkWifiTitle": "Wi-Fi",
+  "networkWifiDesc": "Connect to a wireless network.",
+  "networkWifiSearchHint": "Tap \"Search\" to find networks.",
+  "networkBluetoothTitle": "Bluetooth",
+  "networkBluetoothDesc": "Pair with printers, scales and other devices.",
+  "networkBluetoothSearchHint": "Tap \"Search\" to find devices.",
+  "networkBluetoothUnavailableInBrowser": "Not available in the browser — Bluetooth is configured on the till itself only.",
+  "networkWifiPasswordTitle": "Password for \"{ssid}\"",
+  "networkWifiPasswordLabel": "Wi-Fi password",
+  "networkConnectedTo": "Connected to {ssid}",
+  "networkConnectFailed": "Could not connect to {ssid}",
+  "networkPaired": "Paired: {device}",
+  "networkPairFailed": "Pairing failed",
+  "networkEthernetConfigure": "Настроить",
+  "networkEthernetConfigTitle": "Настройка Ethernet",
+  "networkEthernetInterface": "Интерфейс",
+  "networkEthernetCurrentIp": "Текущий IP",
+  "networkEthernetMode": "Способ получения адреса",
+  "networkEthernetModeDhcp": "Автоматически (DHCP)",
+  "networkEthernetModeStatic": "Вручную (статический)",
+  "networkEthernetIpLabel": "IP-адрес",
+  "networkEthernetPrefixLabel": "Префикс (маска)",
+  "networkEthernetGatewayLabel": "Шлюз",
+  "networkEthernetDnsLabel": "DNS-сервер",
+  "networkEthernetApply": "Применить",
+  "networkEthernetApplied": "Настройки сети применены",
+  "networkEthernetApplyFailed": "Не удалось применить настройки сети",
+  "networkEthernetNoInterface": "Интерфейс Ethernet не определён",
+  "networkEthernetInvalidIp": "Неверный IP-адрес",
+  "networkEthernetInvalidGateway": "Неверный адрес шлюза",
+  "networkEthernetInvalidDns": "Неверный адрес DNS",
+  "networkEthernetInvalidPrefix": "Префикс должен быть от 0 до 32",
+  "networkEthernetIpRequired": "Укажите IP-адрес",
+  "networkEthernetOptional": "необязательно",
+  "applianceTitle": "System (TelePOS OS)",
+  "applianceHubSubtitle": "System management, network, drivers",
+  "applianceUnavailableDesc": "The telepos-sysd system daemon was not found. This section works only when the POS runs on a TelePOS OS appliance.",
+  "applianceNetworkTitle": "Network & Connections",
+  "applianceNetworkDesc": "Wi-Fi, wired network and Bluetooth. Required for login and sync.",
+  "applianceNetworkButton": "Configure network",
+  "applianceDesktopTitle": "Desktop mode",
+  "applianceDesktopDesc": "Full desktop for installing apps and maintenance.",
+  "applianceCurrentMode": "Current mode: ",
+  "applianceOpenDesktop": "Open desktop",
+  "applianceDesktopUnavailable": "Desktop is not available in this build.",
+  "applianceModeKiosk": "POS (kiosk)",
+  "applianceModeDesktop": "Desktop",
+  "applianceDriversTitle": "Peripheral drivers",
+  "applianceDriversDesc": "Install drivers for printers, scales and payment terminals from the trusted TelePOS catalog.",
+  "applianceDriversEmpty": "Driver catalog is empty.",
+  "applianceDriverInstall": "Install",
+  "applianceDriverRemove": "Remove",
+  "applianceDriverInstalled": "Driver installed: {title}",
+  "applianceDriverRemoved": "Driver removed: {title}",
+  "applianceError": "Error: {message}",
+  "navNetwork": "Network",
+  "navCollapseMenu": "Collapse menu",
+  "navExpandMenu": "Expand menu",
+  "languageSwitcherTooltip": "Language / Язык / Тіл",
+  "labelPrinterSettingsTitle": "Label printer",
+  "labelPrinterSettingsSubtitle": "Price tags and barcodes",
+  "labelPrinterLanguage": "Printer language",
+  "labelPrinterSize": "Label size",
+  "labelPrinterWidthMm": "Width, mm",
+  "labelPrinterHeightMm": "Height, mm",
+  "labelPrinterTestSuccess": "Label sent to printer",
+  "labelPrinterNotConfigured": "Label printer is not configured. Set the address in settings.",
+  "labelTemplatesTitle": "Label templates",
+  "labelTemplatesManage": "Manage templates",
+  "labelTemplatesManageSubtitle": "Create and edit layouts",
+  "labelTemplatesEmpty": "No templates found",
+  "labelTemplateNew": "New template",
+  "labelTemplateEdit": "Edit template",
+  "labelTemplateBuiltIn": "Built-in",
+  "labelMmUnit": "mm",
+  "labelTemplateDeleteTitle": "Delete template",
+  "labelTemplateDeleteConfirm": "Delete template \"{name}\"?",
+  "labelTemplateName": "Template name",
+  "labelTemplateNameRequired": "Enter a template name",
+  "labelTemplatePreview": "Preview",
+  "labelTemplateFields": "Fields",
+  "labelTemplateAddField": "Add field",
+  "labelTemplateNoFields": "No fields. Add at least one field.",
+  "labelFieldKind": "Field type",
+  "labelFieldText": "Text",
+  "labelFieldFontSize": "Font",
+  "labelFieldBold": "Bold",
+  "labelFieldKindName": "Name",
+  "labelFieldKindPrice": "Price",
+  "labelFieldKindBarcode": "Barcode",
+  "labelFieldKindSku": "SKU",
+  "labelFieldKindDate": "Date",
+  "labelFieldKindText": "Text",
+  "labelPrintTitle": "Print price tag",
+  "labelPrintBulkTitle": "Print price tags ({count})",
+  "labelPrintChooseTemplate": "Choose a template",
+  "labelPrintCopies": "Copies",
+  "labelPrintAction": "Print",
+  "labelPrintedCount": "Printed: {count}",
+  "catalogPrintLabel": "Print price tag",
+  "receiptTemplatesTitle": "Receipt templates",
+  "receiptTemplatesSubtitle": "Receipt layout: logo, header/footer, BIN, QR, width",
+  "receiptTemplatesEmpty": "No templates found",
+  "receiptTemplateNew": "New template",
+  "receiptTemplateEdit": "Edit template",
+  "receiptTemplateBuiltIn": "Built-in",
+  "receiptTemplateActive": "Active",
+  "receiptTemplateMakeActive": "Make active",
+  "receiptTemplateName": "Template name",
+  "receiptTemplateNameRequired": "Enter a template name",
+  "receiptTemplatePreview": "Preview",
+  "receiptTemplatePaperWidth": "Paper width",
+  "receiptTemplateContent": "Receipt content",
+  "receiptTemplateHeaderFooter": "Header and footer",
+  "receiptTemplateHeaderText": "Header text",
+  "receiptTemplateFooterText": "Footer text",
+  "receiptTemplateExtraFooter": "Extra footer lines",
+  "receiptTemplateExtraFooterHint": "One line each (e.g. return policy)",
+  "receiptTemplateShowBin": "Print BIN/IIN",
+  "receiptTemplateShowAddress": "Print address",
+  "receiptTemplateShowCashier": "Print cashbox/cashier",
+  "receiptTemplateShowVat": "Print VAT",
+  "receiptTemplateShowQr": "Print verification link (QR)",
+  "receiptTemplateShowItemNumbers": "Number items",
+  "receiptTemplateShowLogo": "Print logo",
+  "receiptTemplateTestPrint": "Test print",
+  "receiptTemplateTestPrintOk": "Sample receipt sent to printer",
+  "receiptTemplateTestPrintFail": "Print failed (check the printer)",
+  "receiptTemplateDeleteTitle": "Delete template",
+  "receiptTemplateDeleteConfirm": "Delete template \"{name}\"?",
+  "@receiptTemplateDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stockCreateWriteoffSubtitle": "Write off goods (breakage, spoilage, expiry)",
+  "stockCreateInventorySubtitle": "Recount actual stock",
+  "actionWeigh": "Scales",
+  "actionPrintLabel": "Price tag",
+  "restaurantMergeTitle": "Merge tables",
+  "restaurantMergeTarget": "Into table: {table}",
+  "restaurantMergeSelectSources": "Select tables to merge in:",
+  "restaurantMergeNoOpenTables": "No other occupied tables",
+  "restaurantMergeConfirm": "Merge ({count})",
+  "restaurantMergeDone": "Tables merged",
+  "restaurantMergeNeedTarget": "The current table has no open order",
+  "shiftOverAgeTitle": "Shift open for over 24 hours",
+  "shiftOverAgeMessage": "Sale is blocked. Close the current shift and open a new one to continue.",
+  "supplierRepayTitle": "Repay supplier debt",
+  "supplierRepayCurrentDebt": "Current debt: {amount}",
+  "supplierRepayNoDebt": "No debt to the supplier",
+  "supplierRepayAmountLabel": "Payment amount",
+  "supplierRepayAmountError": "Enter an amount greater than 0",
+  "supplierRepaySubmit": "Pay supplier",
+  "supplierRepayDone": "Supplier payment recorded",
+  "supplierRepayError": "Failed to record the payment",
+  "catalogImageFromGallery": "Choose from gallery",
+  "catalogImageFromCamera": "Take a photo",
+  "catalogImageRemove": "Remove photo",
+  "catalogImagePickError": "Failed to load photo",
+  "sysmTitle": "System management",
+  "sysmHubSubtitle": "Health, updates, backups, power",
+  "sysmOpenPanel": "Open management panel",
+  "sysmNoData": "No data",
+  "sysmGenericError": "Operation failed",
+  "sysmHealthTitle": "System health",
+  "sysmHealthDesc": "CPU load, memory, disk, temperature and uptime",
+  "sysmCpu": "CPU",
+  "sysmCores": "cores",
+  "sysmRam": "Memory",
+  "sysmMb": "MB",
+  "sysmDisk": "Disk",
+  "sysmGb": "GB",
+  "sysmGbFree": "GB free",
+  "sysmTemperature": "Temperature",
+  "sysmUptime": "Uptime",
+  "sysmDaysShort": "d",
+  "sysmHoursShort": "h",
+  "sysmMinsShort": "m",
+  "sysmUpdateTitle": "Software update",
+  "sysmUpdateDesc": "Check for and install system updates",
+  "sysmCurrentVersion": "Current version",
+  "sysmLatestVersion": "Latest version",
+  "sysmUpdateAvailable": "Update available",
+  "sysmCheckUpdate": "Check",
+  "sysmUpdateNow": "Update",
+  "sysmUpdateConfirm": "The system will download and install the update. A reboot may be required afterwards. Continue?",
+  "sysmUpdateStarted": "Update started",
+  "sysmUpdateFailed": "Update failed",
+  "sysmUpdatePhaseDownload": "Downloading update…",
+  "sysmUpdatePhaseApply": "Installing update…",
+  "sysmRollback": "Roll back version",
+  "sysmRollbackConfirm": "Roll back to the previous system version?",
+  "sysmRollbackDone": "Rollback complete",
+  "sysmBackupTitle": "Backups",
+  "sysmBackupDesc": "Create, restore and transfer backups via USB",
+  "sysmBackupEmpty": "No backups",
+  "sysmBackupCreate": "Create backup",
+  "sysmBackupCreated": "Backup created",
+  "sysmBackupRestore": "Restore",
+  "sysmBackupRestoreConfirm": "Restore the system from backup \"{name}\"? Current data will be replaced.",
+  "@sysmBackupRestoreConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sysmBackupRestored": "Restore started",
+  "sysmBackupExport": "To USB",
+  "sysmBackupExported": "Backup exported to USB",
+  "sysmBackupImport": "Import from USB",
+  "sysmBackupImported": "Backup imported from USB",
+  "sysmSnapshotTitle": "Snapshots & reset",
+  "sysmSnapshotDesc": "System restore points and factory reset",
+  "sysmSnapshotUnsupported": "Snapshots are not supported on this device",
+  "sysmSnapshotEmpty": "No snapshots",
+  "sysmSnapshotCreate": "Create snapshot",
+  "sysmSnapshotCreated": "Snapshot created",
+  "sysmSnapshotRollback": "Roll back",
+  "sysmSnapshotRollbackConfirm": "Roll the system back to snapshot \"{name}\"?",
+  "@sysmSnapshotRollbackConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sysmSnapshotRolledBack": "Rolled back to snapshot",
+  "sysmSnapshotRebootRequired": "Rollback complete. A reboot is required.",
+  "sysmFactoryReset": "Factory reset",
+  "sysmFactoryResetWarn": "Erases all data and settings, returning the device to factory state.",
+  "sysmFactoryResetConfirm1": "Factory reset will erase ALL data, settings and sales. This action is irreversible. Continue?",
+  "sysmFactoryResetConfirm2": "Are you sure? All data will be permanently erased. Confirm the factory reset.",
+  "sysmFactoryResetDo": "Reset",
+  "sysmFactoryResetStarted": "Factory reset started",
+  "sysmDisplayTitle": "Display",
+  "sysmDisplayDesc": "Screen brightness and rotation",
+  "sysmDisplayUnsupported": "This device has no controllable screen (no backlight). Adjust brightness and rotation on the monitor itself.",
+  "sysmRotation": "Screen rotation",
+  "sysmRemoteTitle": "Remote support",
+  "sysmRemoteDesc": "Temporary secure access for the support team",
+  "sysmRemoteHelp": "“Restore support” opens a temporary, secure (SSH) channel for the TelePOS support team to reach this appliance and fix issues remotely. Access closes automatically after 30 minutes. Enable it only when support asks you to.",
+  "sysmRemoteOn": "Access enabled",
+  "sysmRemoteOff": "Access disabled",
+  "sysmRemoteExpires": "Expires in {minutes} min",
+  "@sysmRemoteExpires": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sysmRemoteEnable": "Enable for 30 minutes",
+  "sysmRemoteEnabled": "Remote access enabled",
+  "sysmRemoteDisable": "Disable access",
+  "sysmRemoteDisabled": "Remote access disabled",
+  "sysmPowerTitle": "Power",
+  "sysmPowerDesc": "Reboot and shut down the device",
+  "sysmReboot": "Reboot",
+  "sysmRebootConfirm": "Reboot the device now?",
+  "sysmRebooting": "Rebooting…",
+  "sysmShutdown": "Shut down",
+  "sysmShutdownConfirm": "Shut down the device now?",
+  "sysmShuttingDown": "Shutting down…",
+  "sysmTimeTitle": "Time and timezone",
+  "sysmTimeDesc": "Current time, timezone and NTP synchronization",
+  "sysmTimeCurrent": "Current time",
+  "sysmTimezone": "Timezone",
+  "sysmTimezoneSave": "Save timezone",
+  "sysmTimezoneSaved": "Timezone saved",
+  "sysmTimezoneSaveError": "Failed to save timezone",
+  "sysmNtpSync": "Sync time (NTP)",
+  "sysmNtpSyncing": "Synchronizing…",
+  "sysmNtpDone": "Time synchronized",
+  "sysmNtpFailed": "Failed to synchronize time",
+  "sysmTerminalTitle": "Terminal",
+  "sysmTerminalDesc": "Appliance diagnostics and management (command line)",
+  "sysmTerminalOpen": "Open terminal",
+  "sysmTerminalRootNote": "Commands run as root on the appliance.",
+  "sysmTerminalHint": "Enter a command (e.g.: systemctl status telepos-sysd)",
+  "sysmTerminalRun": "Run",
+  "sysmTerminalClear": "Clear output",
+  "sysmTerminalRunning": "Running…",
+  "sysmTerminalExitCode": "Exit code: {code}",
+  "@sysmTerminalExitCode": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "sysmTerminalEmpty": "Output will appear here",
+  "sysmTerminalHistory": "Command history",
+  "sysmTerminalPresets": "Presets",
+  "sysmTerminalPresetsNetwork": "Network",
+  "sysmTerminalPresetsPrinters": "Printers",
+  "sysmTerminalPresetsSystem": "System",
+  "sysmTerminalPresetsTime": "Time",
+  "sysmTermGroupDiagnostics": "Diagnostics",
+  "sysmTermGroupPrinter": "Printer",
+  "sysmTermGroupNetwork": "Network",
+  "sysmTermGroupSystem": "System",
+  "sysmTermGroupTime": "Time",
+  "sysmTermDiagOsAndDaemon": "OS and daemon version",
+  "sysmTermDiagNetworkStatus": "Network: status and address",
+  "sysmTermDiagNetworkConnectivity": "Network: connectivity",
+  "sysmTermDiagHardware": "Hardware: disk/memory/printers",
+  "sysmTermPrinterFixAuto": "Fix printer (auto)",
+  "sysmTermPrinterDiag": "Printer diagnostics",
+  "sysmTermPrinterLoadUsblp": "Load usblp module",
+  "sysmTermPrinterNodesAndPerms": "Printer nodes and permissions",
+  "sysmTermPrinterLsusb": "USB devices (lsusb)",
+  "sysmTermPrinterCupsStatus": "CUPS: status and queues",
+  "sysmTermPrinterGiveToKernel": "Hand printer to kernel (usblp)",
+  "sysmTermPrinterTestPrint": "Test print to /dev/usb/lp0",
+  "sysmTermNetDeviceStatus": "Device status",
+  "sysmTermNetIpAddresses": "IP addresses",
+  "sysmTermNetConnectEthernet": "Connect Ethernet",
+  "sysmTermNetReload": "Reload network",
+  "sysmTermNetPing": "Ping 8.8.8.8",
+  "sysmTermSysDisk": "Disk",
+  "sysmTermSysMemory": "Memory",
+  "sysmTermSysSysdStatus": "telepos-sysd status",
+  "sysmTermSysKioskLogs": "Kiosk logs",
+  "sysmTermTimeDateTime": "Date and time",
+  "sysmTermTimeNtpSync": "NTP sync",
+  "labelPrinterDevicePath": "Device path",
+  "labelPrinterDevicePathHint": "E.g. /dev/usb/lp0 (USB) or /dev/ttyUSB0 (Serial). Leave empty for the default.",
+  "movementTitle": "Transfer",
+  "movementTitleFull": "Stock transfer",
+  "movementFrom": "From *",
+  "movementTo": "To *",
+  "movementLocationHint": "Warehouse / location name",
+  "movementProductsCount": "Items: {count}",
+  "@movementProductsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "movementSumLabel": "Total: {amount}",
+  "@movementSumLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "movementAddProduct": "Add product",
+  "movementBarcodeHint": "Barcode or SKU",
+  "movementComment": "Comment",
+  "movementCommentHint": "Note for the transfer...",
+  "movementCommentHintShort": "Note...",
+  "movementProductNotFound": "Product not found",
+  "movementSavedMessage": "Transfer saved: {count} items for {amount}",
+  "@movementSavedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "movementCancelTitle": "Cancel transfer?",
+  "movementCancelMessage": "All unsaved data will be lost.",
+  "movementCancelConfirm": "Yes, cancel",
+  "movementProductFallback": "Product #{ucode}",
+  "@movementProductFallback": {
+    "placeholders": {
+      "ucode": {
+        "type": "String"
+      }
+    }
+  },
+  "movementPriceLabel": "Price",
+  "movementSaveError": "Save error",
+  "movementEmptyTitle": "Add products to transfer",
+  "movementEmptyHint": "Scan a barcode or enter manually",
+  "supplierReturnTitle": "Return to supplier",
+  "supplierReturnProductsCount": "Items: {count}",
+  "@supplierReturnProductsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplierReturnSumLabel": "Total: {amount}",
+  "@supplierReturnSumLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnSupplier": "Supplier *",
+  "supplierReturnSelectSupplier": "Select supplier",
+  "supplierReturnAccount": "Return account",
+  "supplierReturnSelectAccount": "Select account",
+  "supplierReturnAddProduct": "Add product",
+  "supplierReturnBarcodeHint": "Barcode or SKU",
+  "supplierReturnComment": "Comment",
+  "supplierReturnCommentHint": "Reason for return...",
+  "supplierReturnProductNotFound": "Product not found",
+  "supplierReturnSavedMessage": "Return saved: {count} items for {amount}",
+  "@supplierReturnSavedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnCancelTitle": "Cancel return?",
+  "supplierReturnCancelMessage": "All unsaved data will be lost.",
+  "supplierReturnCancelConfirm": "Yes, cancel",
+  "supplierReturnProductFallback": "Product #{ucode}",
+  "@supplierReturnProductFallback": {
+    "placeholders": {
+      "ucode": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnNoSuppliers": "No suppliers",
+  "supplierReturnNoAccounts": "No accounts",
+  "supplierReturnBalance": "Balance: {amount}",
+  "@supplierReturnBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnPriceLabel": "Price",
+  "supplierReturnSaveError": "Save error",
+  "supplierReturnEmptyTitle": "Add products to return",
+  "supplierReturnEmptyHint": "Scan a barcode or enter manually",
+  "esfSettingsTitle": "ESF (electronic invoices)",
+  "esfSettingsSubtitle": "Requisites, digital signature, outbox",
+  "esfSettingsSave": "Save",
+  "esfSettingsSaved": "ESF settings saved",
+  "esfSettingsSaveError": "Failed to save ESF settings",
+  "esfSettingsEnable": "Enable ESF",
+  "esfSettingsEnableSubtitle": "Build invoices for B2B sales (by buyer BIN)",
+  "esfSettingsOperator": "ESF operator",
+  "esfSettingsTestMode": "Test mode",
+  "esfSettingsSupplier": "Supplier requisites (our organization)",
+  "esfSettingsBin": "BIN/IIN",
+  "esfSettingsName": "Name",
+  "esfSettingsAddress": "Address",
+  "esfSettingsVatPayer": "VAT payer",
+  "esfSettingsVatSeries": "VAT certificate series",
+  "esfSettingsVatNumber": "VAT certificate number",
+  "esfSettingsVatRate": "VAT rate, %",
+  "esfSettingsEcp": "Digital signature (NCA RK)",
+  "esfSettingsEcpKeyPath": "Signature key path",
+  "esfSettingsEcpKeyAlias": "Key alias",
+  "esfSettingsB2bOnly": "B2B only",
+  "esfSettingsB2bOnlySubtitle": "Do not build ESF for retail sales to individuals",
+  "esfSettingsEcpHint": "Real issuance requires an NCA RK signature and an IS ESF profile. Drafts are built and stored offline without a signature.",
+  "esfSettingsWebkassaNote": "Issuance credentials (signature, connection, token) come from WebKassa (Fiscal) settings — one shared config. No separate ESF credentials are needed here.",
+  "esfOutboxTitle": "ESF outbox",
+  "esfOutboxEmpty": "No ESF documents",
+  "esfOutboxEmptyHint": "Invoices will appear here after B2B sales",
+  "esfOutboxRetry": "Retry submission",
+  "esfOutboxRetryAll": "Retry all",
+  "esfOutboxRetryDone": "Processed: delivered {delivered}, queued {queued}, failed {failed}",
+  "@esfOutboxRetryDone": {
+    "placeholders": {
+      "delivered": {
+        "type": "int"
+      },
+      "queued": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "esfOutboxStatusDraft": "Draft",
+  "esfOutboxStatusQueued": "Queued",
+  "esfOutboxStatusSubmitted": "Submitted",
+  "esfOutboxStatusDelivered": "Registered",
+  "esfOutboxStatusRejected": "Rejected",
+  "esfOutboxStatusRevoked": "Revoked",
+  "esfOutboxStatusError": "Error",
+  "esfOutboxAttempts": "Attempts: {count}",
+  "@esfOutboxAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "esfOutboxRegNumber": "Reg. no.: {number}",
+  "@esfOutboxRegNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "sntTitle": "SNT (goods transport notices)",
+  "sntSubtitle": "Virtual warehouse, goods movement",
+  "sntEmpty": "No SNT documents",
+  "sntEmptyHint": "SNT are built automatically after receiving traceable goods",
+  "sntRefresh": "Refresh queue",
+  "sntDrainDone": "Processed: submitted {submitted}, queued {remaining}, failed {failed}",
+  "@sntDrainDone": {
+    "placeholders": {
+      "submitted": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "sntDirectionInbound": "Inbound",
+  "sntDirectionOutbound": "Outbound",
+  "sntStatusDraft": "Draft",
+  "sntStatusQueued": "Queued",
+  "sntStatusRegistered": "Registered",
+  "sntStatusDelivered": "Delivered",
+  "sntStatusConfirmed": "Confirmed",
+  "sntStatusRejected": "Rejected",
+  "sntStatusRevoked": "Revoked",
+  "sntStatusAnnulled": "Annulled",
+  "sntStatusFailed": "Failed",
+  "sntLinesCount": "Lines: {count}",
+  "@sntLinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sntRegNumber": "Reg. no.: {number}",
+  "@sntRegNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "sntNotConfigured": "SNT / Virtual warehouse not configured. Documents are stored locally and will be submitted after the signature is set up.",
+  "sntConfigure": "Configure SNT",
+  "sntSettingsTitle": "SNT settings",
+  "sntSettingsOperator": "Operator / submission method",
+  "sntSettingsEnable": "Enable SNT",
+  "sntSettingsEnableSubtitle": "Assemble and submit accompanying waybills (IS ESF)",
+  "sntSettingsProvider": "Submission method",
+  "sntSettingsTestMode": "Test mode",
+  "sntSettingsRequisites": "Taxpayer details",
+  "sntSettingsOwnBin": "BIN / IIN (ours)",
+  "sntSettingsWarehouseCode": "Virtual warehouse code",
+  "sntSettingsBackend": "TelePOS backend (IS ESF proxy)",
+  "sntSettingsBackendUrl": "Backend URL",
+  "sntSettingsApiKey": "API key",
+  "sntSettingsEcp": "Digital signature (NUC RK)",
+  "sntSettingsCertPath": "Signature key path",
+  "sntSettingsCertPassword": "Key password",
+  "sntSettingsEcpHint": "Real SNT submission requires a NUC RK digital signature and a registered IS ESF profile. Without a signature, documents are assembled and stored locally (the Virtual warehouse works offline).",
+  "sntSettingsSharedEsfHint": "SNT and ESF are KGD subsystems. The BIN and signature can be configured on the ESF screen.",
+  "sntSettingsWebkassaNote": "Connection credentials (login, apiKey, cashbox, signature) come from WebKassa (Fiscal) settings — one shared config.",
+  "sntSettingsOpenEsf": "ESF settings",
+  "sntSettingsSave": "Save",
+  "sntSettingsSaved": "SNT settings saved",
+  "sntSettingsSaveError": "Failed to save SNT settings",
+  "sntSettingsBinRequired": "Enter the taxpayer's BIN / IIN",
+  "esutdTitle": "ESUTD (e-waybills)",
+  "esutdSubtitle": "Goods transport waybills (e-waybill)",
+  "esutdNotConfigured": "ESUTD is not configured. Enter portal credentials to load waybills.",
+  "esutdNotConfiguredShort": "ESUTD is not configured",
+  "esutdConfigure": "Configure ESUTD",
+  "esutdRefresh": "Refresh",
+  "esutdInbound": "Inbound waybills",
+  "esutdOutbound": "Outbound waybills",
+  "esutdEmpty": "No waybills",
+  "esutdWaybillNumber": "Waybill No. {number}",
+  "@esutdWaybillNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "esutdCargoCount": "Cargo items: {count}",
+  "@esutdCargoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "esutdSettingsTitle": "ESUTD settings",
+  "esutdSettingsConnection": "Connection",
+  "esutdSettingsEnable": "Enable ESUTD",
+  "esutdSettingsEnableSubtitle": "Load and submit e-waybills (esutd.gov.kz)",
+  "esutdSettingsCredentials": "Portal credentials",
+  "esutdSettingsEmail": "Email (portal login)",
+  "esutdSettingsPassword": "Password",
+  "esutdSettingsApiUrl": "API URL (optional)",
+  "esutdSettingsApiUrlHint": "Leave empty for the default: https://esutd.gov.kz/api",
+  "esutdSettingsTestLogin": "Test login / Sign in",
+  "esutdSettingsSessionActive": "Session active",
+  "esutdSettingsLoginOk": "Signed in to ESUTD",
+  "esutdSettingsLoginError": "Login failed: {error}",
+  "@esutdSettingsLoginError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "esutdSettingsCredsRequired": "Enter the ESUTD portal email and password",
+  "esutdSettingsSave": "Save",
+  "esutdSettingsSaved": "ESUTD settings saved",
+  "esutdSettingsSaveError": "Failed to save ESUTD settings",
+  "esutdSettingsHint": "ESUTD has no public API. The integration uses the portal's internal endpoints: a login/password sign-in yields a session that is reused and auto-refreshed. Creating/approving waybills requires complex reference data (KATO, product classifier, carriers) and is not yet available from the POS.",
+  "ismptSettingsTitle": "IS MPT settings",
+  "ismptSettingsSubtitle": "Marking (Honest Sign KZ)",
+  "ismptSettingsOperator": "Operator / submission method",
+  "ismptSettingsEnable": "Enable IS MPT",
+  "ismptSettingsEnableSubtitle": "Verify and submit marking codes (ismet.kz / Tañba)",
+  "ismptSettingsBackend": "Backend",
+  "ismptSettingsTestMode": "Test mode",
+  "ismptSettingsRequisites": "Taxpayer details",
+  "ismptSettingsOwnBin": "BIN / IIN (ours)",
+  "ismptSettingsApi": "True API (ismet.kz)",
+  "ismptSettingsApiUrl": "API URL",
+  "ismptSettingsApiKey": "API key / token",
+  "ismptSettingsEcp": "Digital signature (NUC RK)",
+  "ismptSettingsCertPath": "Signature key path",
+  "ismptSettingsCertPassword": "Key password",
+  "ismptSettingsEcpHint": "Live IS MPT operations require an NUC RK digital signature and a registered participant profile. Without a signature, marking codes are accepted and stored locally (receiving works offline, sales are never blocked).",
+  "ismptSettingsSharedEsfHint": "IS MPT and ESF are KGD subsystems. BIN and digital signature can be configured on the ESF screen.",
+  "ismptSettingsWebkassaNote": "Marking-code verification runs through WebKassa. Connection credentials (login, apiKey, cashbox, signature) come from WebKassa (Fiscal) settings — one shared config.",
+  "ismptSettingsOpenEsf": "ESF settings",
+  "ismptSettingsSave": "Save",
+  "ismptSettingsSaved": "IS MPT settings saved",
+  "ismptSettingsSaveError": "Failed to save IS MPT settings",
+  "ismptSettingsBinRequired": "Enter the taxpayer's BIN / IIN",
+  "reorderRulesTitle": "Reorder rules",
+  "reorderRulesSubtitle": "Minimum stock per product",
+  "reorderRulesEmpty": "No reorder rules",
+  "reorderRulesEmptyHint": "Set a minimum stock per product to get reorder signals",
+  "reorderRulesAdd": "Add rule",
+  "reorderRulesMinStock": "Minimum stock",
+  "reorderRulesReorderQty": "Order quantity",
+  "reorderRulesProduct": "Product (ucode)",
+  "reorderRulesProductHint": "Product code",
+  "reorderRulesSave": "Save",
+  "reorderRulesSaved": "Rule saved",
+  "reorderRulesInvalid": "Specify product code and minimum stock",
+  "reorderRulesBelowPoint": "Below reorder point: {count}",
+  "@reorderRulesBelowPoint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reorderRulesEditTitle": "Reorder rule",
+  "supplierOrderRuleBased": "By reorder rules",
+  "supplierOrderGlobalThreshold": "Global threshold ({threshold})",
+  "@supplierOrderGlobalThreshold": {
+    "placeholders": {
+      "threshold": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogPageFirst": "First",
+  "catalogPagePrev": "Previous",
+  "catalogPageNext": "Next",
+  "catalogPageLast": "Last",
+  "catalogGoToPage": "Go to page",
+  "catalogPageOf": "Page of {total}",
+  "shiftClosedGateTitle": "Shift is closed",
+  "shiftClosedGateMessage": "Open a shift to continue with operations.",
+  "shiftClosedGateOpen": "Open shift",
+  "sysmTerminalPresetsDiag": "Diagnostics",
+  "wmsDashboardTitle": "WMS — Warehouse management",
+  "wmsDashboardTitleShort": "WMS — Warehouse",
+  "wmsSettings": "WMS settings",
+  "wmsSettingsSubtitle": "Module configuration",
+  "wmsModuleWarehouses": "Warehouses",
+  "wmsModuleWarehousesSubtitle": "Warehouses, zones, cells",
+  "wmsModuleBatches": "Batches",
+  "wmsModuleBatchesSubtitle": "Batch tracking",
+  "wmsModuleCellStock": "Cell stock",
+  "wmsModuleCellStockSubtitle": "Stock, placement, picking",
+  "wmsModuleSerials": "Serial tracking",
+  "wmsModuleSerialsSubtitle": "Serial numbers",
+  "wmsModuleMarking": "Marking",
+  "wmsModuleMarkingSubtitle": "Marking codes",
+  "wmsModuleClaims": "Claims",
+  "wmsModuleClaimsSubtitle": "Claims and returns",
+  "wmsWarehousesAndCells": "Warehouses and cells",
+  "wmsWarehouses": "Warehouses",
+  "wmsAddWarehouse": "Add warehouse",
+  "wmsNoWarehouses": "No warehouses",
+  "wmsNoName": "No name",
+  "wmsZones": "Zones",
+  "wmsZonesNamed": "Zones: {name}",
+  "wmsAddZone": "Add zone",
+  "wmsSelectWarehouse": "Select warehouse",
+  "wmsNoZones": "No zones",
+  "wmsCells": "Cells",
+  "wmsCellsNamed": "Cells: {name}",
+  "wmsGenerate": "Generate",
+  "wmsSelectZone": "Select zone",
+  "wmsNoCells": "No cells",
+  "wmsNoAddress": "No address",
+  "wmsCellBlocked": "Blocked",
+  "wmsCellsCount": "{count} cells",
+  "wmsNewWarehouse": "New warehouse",
+  "wmsWarehouseCode": "Warehouse code",
+  "wmsName": "Name",
+  "wmsError": "Error",
+  "wmsCreate": "Create",
+  "wmsSelectWarehouseFirst": "Select a warehouse first",
+  "wmsNewZone": "New zone",
+  "wmsZoneCode": "Zone code",
+  "wmsSelectZoneFirst": "Select a zone first",
+  "wmsGenerateCells": "Generate cells",
+  "wmsRows": "Rows",
+  "wmsRacks": "Racks",
+  "wmsLevels": "Levels",
+  "wmsBins": "Bins",
+  "wmsEditWarehouse": "Edit warehouse",
+  "wmsAddress": "Address",
+  "wmsDeleteWarehouseTitle": "Delete warehouse?",
+  "wmsDeleteWarehouseConfirm": "Are you sure you want to delete the warehouse \"{name}\"?",
+  "wmsCellStockTitle": "Cell stock",
+  "wmsPlace": "Place",
+  "wmsPick": "Pick",
+  "wmsTransfer": "Transfer",
+  "wmsByCell": "By cell",
+  "wmsByProduct": "By product",
+  "wmsSearchCellHint": "Enter cell ID or address...",
+  "wmsSearchProductHint": "Enter product ucode...",
+  "wmsCell": "Cell",
+  "wmsProductUcode": "Product code (ucode)",
+  "wmsFind": "Find",
+  "wmsEnterCellIdToSearch": "Enter a cell ID to search stock",
+  "wmsEnterUcodeToSearch": "Enter a product ucode to search",
+  "wmsProductLabeled": "Product: {value}",
+  "wmsCellLabeled": "Cell: {value}",
+  "wmsStockSummary": "Qty: {qty}  |  Reserved: {reserved}  |  Available: {available}",
+  "wmsBatchLabeled": "Batch: {value}",
+  "wmsQuantityShort": "Qty",
+  "wmsReserved": "Reserved",
+  "wmsAvailable": "Available",
+  "wmsBatch": "Batch",
+  "wmsEnterNumericId": "Enter a numeric ID",
+  "wmsPlaceStockTitle": "Place stock in cell",
+  "wmsCellId": "Cell ID",
+  "wmsProductUcodeField": "Product ucode",
+  "wmsQuantity": "Quantity",
+  "wmsBatchIdOptional": "Batch ID (optional)",
+  "wmsFillRequiredNumericFields": "Fill in the required fields (numeric values)",
+  "wmsStockPlaced": "Stock placed in cell {cellId}",
+  "wmsPlaceError": "Placement error",
+  "wmsPickStockTitle": "Pick stock from cell",
+  "wmsFillAllNumericFields": "Fill in all fields (numeric values)",
+  "wmsStockPicked": "Stock picked from cell {cellId}",
+  "wmsPickError": "Picking error",
+  "wmsTransferStockTitle": "Transfer stock",
+  "wmsCellIdFrom": "Cell ID (from)",
+  "wmsCellIdTo": "Cell ID (to)",
+  "wmsStockTransferred": "Stock transferred from cell {from} to {to}",
+  "wmsTransferError": "Transfer error",
+  "wmsBatches": "Batches",
+  "wmsBatchTrackingTitle": "Batch tracking",
+  "wmsBatchTabAll": "All batches",
+  "wmsBatchTabExpiring": "Expiring",
+  "wmsBatchTabExpired": "Expired",
+  "wmsBatchTabQuarantine": "Quarantine",
+  "wmsNoBatches": "No batches",
+  "wmsNoExpiringBatches": "No expiring batches",
+  "wmsNoExpiredBatches": "No expired batches",
+  "wmsNoQuarantinedBatches": "No quarantined batches",
+  "wmsSearchByUcodeHint": "Search by product ucode...",
+  "wmsNoNumber": "No number",
+  "wmsBatchCardSummary": "Product: {ucode}  |  Expiry: {expiry}  |  Qty: {qty}",
+  "wmsBatchNumber": "Batch number",
+  "wmsProduct": "Product",
+  "wmsExpiryDate": "Expiry date",
+  "wmsStatus": "Status",
+  "wmsActions": "Actions",
+  "wmsQuarantine": "Quarantine",
+  "wmsApprove": "Approve",
+  "wmsStatusQuarantine": "Quarantine",
+  "wmsStatusExpired": "Expired",
+  "wmsStatusExpiring": "Expiring",
+  "wmsStatusOk": "OK",
+  "wmsMoveToQuarantine": "Move to quarantine",
+  "wmsBatchQuarantined": "Batch {number} moved to quarantine",
+  "wmsBatchApproved": "Batch {number} approved",
+  "wmsSearchBatchesByProduct": "Search batches by product",
+  "wmsEnterProductCode": "Enter product code",
+  "wmsSerialTrackingTitle": "Serial tracking",
+  "wmsScan": "Scan",
+  "wmsSearchBySerialHint": "Search by serial number...",
+  "wmsNothingFound": "Nothing found",
+  "wmsEnterSerialToSearch": "Enter a serial number to search",
+  "wmsRegister": "Register",
+  "wmsSelectSerial": "Select a serial number",
+  "wmsSerialNumber": "Serial number",
+  "wmsLocation": "Location",
+  "wmsCellHash": "Cell #{id}",
+  "wmsDetails": "Details",
+  "wmsMarking": "Marking",
+  "wmsWarrantyUntil": "Warranty until",
+  "wmsNotes": "Notes",
+  "wmsMovementHistory": "Movement history",
+  "wmsNoData": "No data",
+  "wmsSerialStatusInStock": "In stock",
+  "wmsSerialStatusSold": "Sold",
+  "wmsSerialStatusReturned": "Returned",
+  "wmsSerialStatusWrittenOff": "Written off",
+  "wmsSerialStatusUnknown": "Unknown",
+  "wmsScannerUseHardware": "Scanner: use a hardware scanner",
+  "wmsRegisterSerialTitle": "Register serial number",
+  "wmsSerialRegistered": "Serial number registered",
+  "wmsMarkingCodesTitle": "Marking codes",
+  "wmsMarkingAccept": "Receive",
+  "wmsRefresh": "Refresh",
+  "wmsIsMptSettings": "IS MPT settings",
+  "wmsMarkingAcceptTitle": "Receive marking codes",
+  "wmsSupplyIdOptional": "Supply ID (optional)",
+  "wmsMarkingCodesPerLine": "Marking codes (one per line)",
+  "wmsAccept": "Accept",
+  "wmsNoCodesEntered": "No codes entered",
+  "wmsAcceptedLocally": "Accepted locally: {count} (IS MPT — deferred)",
+  "wmsAccepted": "Accepted: {count}",
+  "wmsAcceptError": "Receiving error: {error}",
+  "wmsMarkingStatusResult": "Marking code status: {status}",
+  "wmsInCirculation": "(in circulation)",
+  "wmsIsMptNoConnection": "No connection to IS MPT — verification deferred",
+  "wmsVerifyUnavailable": "Verification unavailable (IS MPT not configured)",
+  "wmsVerifyError": "Verification error: {error}",
+  "wmsNoMarkingCodes": "No marking codes",
+  "wmsVerifyStatus": "Verify status (IS MPT)",
+  "wmsMarkingStatusReceived": "Received",
+  "wmsMarkingStatusInStock": "In stock",
+  "wmsMarkingStatusSold": "Sold",
+  "wmsMarkingStatusReturned": "Returned",
+  "wmsMarkingStatusRetired": "Written off",
+  "wmsMarkingStatusBlocked": "Blocked",
+  "wmsClaims": "Claims",
+  "wmsClaimTabOpen": "Open",
+  "wmsClaimTabInProgress": "In progress",
+  "wmsClaimTabResolved": "Resolved",
+  "wmsNoOpenClaims": "No open claims",
+  "wmsNoInProgressClaims": "No claims in progress",
+  "wmsNoResolvedClaims": "No resolved claims",
+  "wmsNewClaim": "New claim",
+  "wmsNumber": "Number",
+  "wmsType": "Type",
+  "wmsSeverity": "Severity",
+  "wmsDate": "Date",
+  "wmsSeverityLow": "Low",
+  "wmsSeverityMedium": "Medium",
+  "wmsSeverityHigh": "High",
+  "wmsSeverityCritical": "Critical",
+  "wmsClaimTypeDefect": "Defect",
+  "wmsClaimTypeMissort": "Missort",
+  "wmsClaimTypeShortage": "Shortage",
+  "wmsClaimTypeDamage": "Damage",
+  "wmsClaimTypeOther": "Other",
+  "wmsProblemDescription": "Problem description",
+  "wmsClaimCreated": "Claim created",
+  "wmsClaimTitle": "Claim {number}",
+  "wmsTypeLabeled": "Type: {value}",
+  "wmsSeverityLabeled": "Severity: {value}",
+  "wmsDateLabeled": "Date: {value}",
+  "wmsProblemDescriptionLabel": "Problem description:",
+  "wmsNoDescription": "No description",
+  "wmsResolutionLabel": "Resolution:",
+  "wmsNotSpecified": "Not specified",
+  "wmsHistoryLabel": "History:",
+  "wmsNoRecords": "No records",
+  "wmsResolve": "Resolve",
+  "wmsResolveClaimTitle": "Resolve claim",
+  "wmsResolutionNotes": "Resolution notes",
+  "wmsClaimResolved": "Claim resolved",
+  "setUserManagementTitle": "Users and access",
+  "setUsersTitle": "Users",
+  "setUsersSubtitle": "Access management",
+  "authSettingsTitle": "Login and session",
+  "authSettingsSubtitle": "Walk-up login and session length",
+  "authSettingsWalkUpTitle": "Login without picking a cashier",
+  "authSettingsWalkUpSubtitle": "One PIN lets anyone in without a name. Unsafe with several cashiers: off by default.",
+  "authSettingsSessionTitle": "Session length",
+  "authSettingsSessionSubtitle": "How many minutes a cashier's session stays open without activity. Applies right away, no restart needed.",
+  "authSettingsSessionMinutesLabel": "Minutes",
+  "authSettingsSaved": "Saved",
+  "authSettingsInvalidMinutes": "Enter a whole number of minutes from 1 to 1440",
+  "sessionsTitle": "Active sessions",
+  "sessionsSubtitle": "Who is logged in now, revoke with a button",
+  "sessionsEmpty": "Nobody is logged in right now",
+  "sessionsTerminalLabel": "Terminal #{id}",
+  "@sessionsTerminalLabel": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsTimes": "Logged in {issued} · expires {expires}",
+  "@sessionsTimes": {
+    "placeholders": {
+      "issued": {
+        "type": "String"
+      },
+      "expires": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsRevoke": "End session",
+  "sessionsRevokeConfirmTitle": "End this session?",
+  "sessionsRevokeConfirmBody": "«{name}» will be logged out immediately.",
+  "@sessionsRevokeConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsRevoked": "Session for «{name}» ended",
+  "@sessionsRevoked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsRevokeError": "Could not end the session: {error}",
+  "@sessionsRevokeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "setUsersEmpty": "No users",
+  "setAddUser": "Add user",
+  "setUserNumber": "User #{id}",
+  "setUserActive": "Active",
+  "setUsersLoadError": "Error: {error}",
+  "setNewUser": "New user",
+  "setEditUser": "Edit",
+  "setUserTabProfile": "Profile",
+  "setUserTabPermissions": "Permissions",
+  "setUserName": "Name",
+  "setUserNameRequired": "Enter a name",
+  "setUserPinLabel": "PIN (4-6 digits)",
+  "setUserPinRequired": "Enter a PIN",
+  "setUserPinMin": "At least 4 digits",
+  "setUserPinRange": "PIN must be 4-6 digits",
+  "setUserRole": "Role",
+  "setRoleOwner": "Owner",
+  "setRoleAdministrator": "Administrator",
+  "setRoleUser": "User",
+  "setRoleCashier": "Cashier",
+  "setUserActiveDesc": "User can sign in",
+  "setUserBlockedDesc": "Access blocked",
+  "setUserOwnerFullAccess": "Owner has full access",
+  "setUserSelectAll": "Select all",
+  "setUserDeselectAll": "Deselect all",
+  "setDeleteUserTitle": "Delete user?",
+  "setDeleteUserConfirm": "User \"{name}\" will be deleted. This action cannot be undone.",
+  "setDeleteUserError": "Failed to delete user: {error}",
+  "setUserNoEncryptionKey": "Encryption key is not set. Complete the initial POS setup.",
+  "setUserPinEncryptFailed": "Failed to encrypt PIN",
+  "setWmsTitle": "WMS settings",
+  "setWmsModules": "WMS modules",
+  "setWmsCellStorage": "Bin storage",
+  "setWmsCellStorageDesc": "Addressed storage of goods by zones and bins",
+  "setWmsBatchTracking": "Batch tracking",
+  "setWmsBatchTrackingDesc": "Track goods by batch with supply tracing",
+  "setWmsSerialTracking": "Serial tracking",
+  "setWmsSerialTrackingDesc": "Per-unit tracking by unique serial numbers",
+  "setWmsExpiryControl": "Expiry control",
+  "setWmsExpiryControlDesc": "Expiry warnings and automatic FEFO picking",
+  "setWmsMarking": "Marking",
+  "setWmsMarkingDesc": "Support for mandatory marking codes (DataMatrix, GS1)",
+  "setWmsWarranty": "Warranty tracking",
+  "setWmsWarrantyDesc": "Track warranty periods by serial numbers",
+  "setWmsPickingStrategy": "Picking strategy",
+  "setWmsPickingStrategyDesc": "Defines the order goods are shipped from the warehouse",
+  "setWmsStrategy": "Strategy",
+  "setWmsStrategyFefo": "FEFO — first to expire, first out",
+  "setWmsStrategyFifo": "FIFO — first in, first out",
+  "setWmsStrategyLifo": "LIFO — last in, first out",
+  "setWmsCostMethod": "Cost calculation method",
+  "setWmsCostMethodDesc": "Cost write-off method on sale",
+  "setWmsMethod": "Method",
+  "setWmsCostFifo": "FIFO — by order of receipt",
+  "setWmsCostLifo": "LIFO — in reverse order",
+  "setWmsCostAvg": "Weighted average cost",
+  "setWmsExpiryWarnDesc": "How many days before expiry to warn",
+  "setWmsDaysShort": "{days} d.",
+  "setWmsAbcAnalysis": "ABC analysis",
+  "setWmsAbcDesc": "Thresholds for classifying goods by turnover",
+  "setWmsAbcCategoryA": "Category A (high turnover)",
+  "setWmsAbcCategoryB": "Category B (medium turnover)",
+  "setWmsAbcCategoryC": "Category C (low turnover)",
+  "setWmsSaved": "WMS settings saved",
+  "setWmsSaveError": "Failed to save WMS settings",
+  "setSalesPolicy": "Sales policy",
+  "setSalesPolicyDesc": "Stock control on sale",
+  "setBlockOversell": "Block sale when stock is insufficient",
+  "setBlockOversellDesc": "Do not complete a sale if receipt quantity exceeds stock (protection against negative stock)",
+  "setScreenTouch": "Screen and touchscreen",
+  "setScreenTouchDesc": "Touchscreen convenience",
+  "setScrollAssist": "Scroll buttons on touchscreen",
+  "setScrollAssistDesc": "On-screen ▲/▼ buttons for scrolling long lists (catalog, receipt, reports, warehouse) on a touchscreen",
+  "setDemoData": "Demo data",
+  "setDemoDataSubtitle": "12 months of sales",
+  "setDemoDataDialogContent": "Load demo data for all modes:\n• Retail: ~6000 sales, supplies, refunds\n• Restaurant: 15 tables, 29 dishes with costing, orders\n• Service: services, consumables, work orders\n\nOr clear all data for a clean start.",
+  "setDemoClearAll": "Clear all",
+  "setDemoLoad": "Load demo",
+  "setDemoGenerating": "Generating demo data...",
+  "setDemoLoadedTitle": "Demo data loaded",
+  "setDemoAlreadyExists": "Data already exists. First press \"Clear all\".",
+  "setClearDataTitle": "Clear data",
+  "setClearDataContent": "ALL data will be deleted:\n• Sales, refunds, payments\n• Products, categories, prices\n• Counterparties, supplies\n• Orders, shifts, cash operations\n• Restaurant tables, orders\n• Service orders\n\nPOS settings and users will be kept.\nThis action is irreversible!",
+  "setClearDeleteAll": "Delete all",
+  "setClearInProgress": "Clearing data...",
+  "setClearDone": "All data cleared",
+  "setGenericError": "Error: {error}",
+  "setCorrectionTitle": "Correction receipt",
+  "setCorrectionIntro": "A correction receipt fixes a previously punched or unpunched amount. Specify the reason and amount. If the operator does not support correction, this will be shown honestly.",
+  "setCorrectionReasonLabel": "Correction reason",
+  "setCorrectionReasonHint": "e.g. self-correction",
+  "setCorrectionAmountLabel": "Correction amount, KZT",
+  "setCorrectionPaymentLabel": "Payment method",
+  "setCorrectionCash": "Cash",
+  "setCorrectionCard": "Card",
+  "setCorrectionSubmit": "Send correction receipt",
+  "setCorrectionDefaultName": "Correction",
+  "setCorrectionInvalidAmount": "Enter a valid correction amount (> 0)",
+  "setCorrectionQueued": "Correction receipt queued (offline)",
+  "setCorrectionSent": "Correction receipt sent",
+  "setCorrectionUnsupported": "Correction receipt is not supported by the current operator",
+  "setCorrectionNotConfigured": "Fiscalization is not configured",
+  "setCorrectionError": "Correction receipt error",
+  "setFiscalConnection": "Connection",
+  "setFiscalTestMode": "Test mode",
+  "setFiscalLogin": "Login",
+  "setFiscalLoginHint": "email / phone",
+  "setFiscalPassword": "Password",
+  "setFiscalCashboxSerial": "ZNM (cash register serial number)",
+  "setFiscalCashboxSerialHint": "e.g. SWK00033717",
+  "setFiscalRnm": "RNM (registration number)",
+  "setFiscalKeyPath": "Path to key/certificate",
+  "setFiscalOfflineModule": "Offline module address",
+  "setFiscalVatRate": "VAT rate, %",
+  "dishTabRecipe": "Recipe",
+  "dishTabCosting": "Costing",
+  "dishTabYield": "Yield & nutrition",
+  "dishVersions": "Versions",
+  "dishCostLabel": "Cost",
+  "dishPriceLabel": "Price",
+  "dishProfitLabel": "Profit",
+  "dishMarkupLabel": "Markup",
+  "dishNoIngredients": "No ingredients",
+  "dishNoIngredientsHint": "Add ingredients to calculate the recipe",
+  "dishAddIngredient": "Add ingredient",
+  "dishColIngredient": "Ingredient",
+  "dishColGross": "Gross",
+  "dishColColdLoss": "Prep loss%",
+  "dishColNet": "Net",
+  "dishColHotLoss": "Cook loss%",
+  "dishColYield": "Yield",
+  "dishColCost": "Cost",
+  "dishDeleteIngredient": "Delete ingredient",
+  "dishTotal": "Total",
+  "dishDeleteIngredientTitle": "Delete ingredient?",
+  "dishDeleteIngredientConfirm": "Remove \"{name}\" from the recipe?",
+  "dishSearchIngredientHint": "Search ingredient by name or barcode...",
+  "dishCodeOnly": "Code: {code}",
+  "dishCodeWithBarcode": "Code: {code}  |  Barcode: {barcode}",
+  "dishAddTitle": "Add: {name}",
+  "dishGrossQty": "Gross (qty)",
+  "dishColdLossLabel": "Prep loss, %",
+  "dishHotLossLabel": "Heat-treatment loss, %",
+  "dishSeasonCoefficient": "Seasonal coefficient",
+  "dishSeasonStandard": "Standard (x1.0)",
+  "dishSeasonWinter": "Winter (+15%) (x1.15)",
+  "dishSeasonSummer": "Summer (-5%) (x0.95)",
+  "dishEffectiveColdLoss": "Effective prep loss: {value}%",
+  "dishTotalYieldSummary": "Total: {cost} ₸  |  Yield: {yield}",
+  "dishGostNorms": "GOST norms",
+  "dishGostNormsTitle": "GOST loss norms",
+  "dishSearchProductHint": "Search product...",
+  "dishReferenceEmpty": "Reference is empty",
+  "dishGostNotLoaded": "GOST norm data not loaded yet",
+  "dishGostLossLine": "Cold: {cold}%  Heat: {hot}%",
+  "dishPhotoSection": "Dish photo",
+  "dishMissingPricesWarning": "Some ingredients have no purchase price",
+  "dishProfitPerServing": "Profit per serving",
+  "dishLossPerServing": "Loss per serving",
+  "dishCostOfDish": "Dish cost",
+  "dishSellingPrice": "Selling price",
+  "dishMargin": "Margin",
+  "dishNoPhoto": "No photo",
+  "dishPhotoLoaded": "Photo uploaded",
+  "dishPhotoAddHint": "Add a photo of the finished dish",
+  "dishCamera": "Camera",
+  "dishGallery": "Gallery",
+  "dishPhotoLoadError": "Failed to load photo",
+  "dishFoodCost": "Food cost",
+  "dishFoodCostExcellent": "Excellent",
+  "dishFoodCostNormal": "Normal",
+  "dishFoodCostHigh": "High",
+  "dishServingsCount": "Servings:",
+  "dishCostPerServing": "Cost per serving",
+  "dishPricePerServing": "Price per serving",
+  "dishTotalYield": "Total yield",
+  "dishIngredientsCount": "Ingredients",
+  "dishKbjuSection": "Nutrition (per serving)",
+  "dishKbjuEmpty": "Nutrition data not filled in",
+  "dishKbjuCalories": "Calories",
+  "dishKbjuProteins": "Proteins",
+  "dishKbjuFats": "Fats",
+  "dishKbjuCarbs": "Carbs",
+  "dishKcalValue": "{value} kcal",
+  "dishGramValue": "{value} g",
+  "dishVersionHistory": "Change history",
+  "dishNoVersions": "No saved versions",
+  "dishVersionN": "Version {version}",
+  "dishViewComposition": "View composition",
+  "dishRestoreThisVersion": "Restore this version",
+  "dishSaveVersion": "Save version",
+  "dishVersionComposition": "Version {version} — composition",
+  "dishSnapshotUnavailable": "Composition snapshot unavailable",
+  "dishSnapshotIngredientLine": "Gross: {gross}  |  Prep loss: {cold}%  |  Cook loss: {hot}%  |  Yield: {yield}",
+  "dishVersionNotRestorable": "This version cannot be restored (no ingredient data), view only",
+  "dishRestoreVersionTitle": "Restore version?",
+  "dishRestoreVersionConfirm": "The current recipe will be replaced with the composition of version {version}. Continue?",
+  "dishRestore": "Restore",
+  "dishVersionRestored": "Version {version} restored",
+  "dishRestoreError": "Failed to restore version",
+  "dishVersionSummary": "Ingredients: {count}, cost: {cost}",
+  "dishSaveVersionError": "Failed to save recipe version",
+  "prodBarcodeAutoHint": "Auto",
+  "prodCatalogAttributes": "Catalog attributes",
+  "prodBrand": "Brand",
+  "prodManufacturer": "Manufacturer",
+  "prodCountryOfOrigin": "Country of origin",
+  "prodFiscalAttributes": "Fiscal attributes",
+  "prodVatRate": "VAT rate",
+  "prodVatNone": "No VAT",
+  "prodNtin": "NTIN",
+  "prodMarkable": "Subject to marking",
+  "promoTitle": "Promotions",
+  "promoNew": "New promotion",
+  "promoError": "Error: {error}",
+  "promoEmpty": "No promotions",
+  "promoEmptyHint": "Create a 1+1 or Gift promotion",
+  "promoTypeGift": "Gift",
+  "promoBuyGetFree": "buy {trigger} → {reward} free",
+  "promoSupplierTag": "supplier-funded",
+  "promoDefaultName11": "1+1 promotion",
+  "promoNameLabel": "Name",
+  "promoTriggerLabel": "Trigger product (what to buy)",
+  "promoRewardLabel": "Gift (what's free)",
+  "promoSupplierFunded": "Supplier-funded promotion",
+  "promoSaveButton": "Save promotion",
+  "saleWeighingPlaceItem": "Weighing... place the item on the scale",
+  "saleWeightReadFailed": "Failed to read weight — enter manually",
+  "salePriceLabelSent": "Price label sent to printer",
+  "transPrimary": "Primary",
+  "transSecondary": "Secondary",
+  "transStatusOnline": "Online",
+  "transStatusOffline": "Offline",
+  "transStatusSyncing": "Syncing",
+  "transStatusQueued": "Queued",
+  "transStatusWarning": "Warning",
+  "transStatusError": "Error",
+  "transQueuedCount": "{count} in queue",
+  "transFailedCount": "{count} failed",
+  "transLastSyncAgo": "Last sync: {ago} ago",
+  "transSyncing": "Syncing...",
+  "transSyncNow": "Sync Now",
+  "transRetryFailed": "Retry Failed",
+  "restTips": "Tips",
+  "restNoTips": "No tips",
+  "svcPendingApproval": "Pending approval",
+  "svcApprove": "Approve",
+  "svcReject": "Reject",
+  "svcRejected": "Rejected",
+  "svcQr": "QR",
+  "catCollapse": "Collapse",
+  "repError": "Error",
+  "repNoData": "No data",
+  "repNoDataForPeriod": "No data for the selected period",
+  "repKpiLoadError": "KPI load error",
+  "repColIndicator": "Indicator",
+  "repColCount": "Qty",
+  "repColSumTenge": "Amount, ₸",
+  "repColRow": "Line",
+  "repColTurnoverExclVat": "Turnover (excl. VAT)",
+  "repColVat": "VAT",
+  "repColDate": "Date",
+  "repColOperation": "Operation",
+  "repColIncome": "Income",
+  "repColExpense": "Expense",
+  "repColBalance": "Balance",
+  "repColRate": "Rate",
+  "repColGross": "Gross",
+  "repColNet": "Net",
+  "repNoVat": "No VAT",
+  "repColCounterparty": "Counterparty",
+  "repColType": "Type",
+  "repColSaldo": "Balance",
+  "repDebtor": "Debtor",
+  "repCreditor": "Creditor",
+  "repColAccount": "Account",
+  "repColCashier": "Cashier",
+  "repColAmount": "Amount",
+  "repColProduct": "Product",
+  "repColRevenue": "Revenue",
+  "repColCogs": "COGS",
+  "repColProfit": "Profit",
+  "repColMarginPct": "Margin %",
+  "repColReason": "Reason",
+  "repColDocuments": "Documents",
+  "repColCostShort": "Cost",
+  "repF910Title": "Form 910 — Income (simplified)",
+  "repF910Subtitle": "Taxable income: {income} ₸ • tax {rate}%: {tax} ₸",
+  "repF910RowSalesIncome": "Sales income",
+  "repF910RowRefunds": "Refunds (minus)",
+  "repF910RowTaxableIncome": "Taxable income",
+  "repF300Title": "Form 300 — VAT (declaration)",
+  "repF300Subtitle": "Taxable turnover: {turnover} ₸ • output VAT: {vat} ₸",
+  "repF300TaxableTurnoverRate": "Taxable turnover {rate}%",
+  "repF300ZeroRatedTurnover": "Exempt / 0% turnover",
+  "repCashBookTitle": "Cash book (KO-4)",
+  "repCashBookSubtitle": "Income: {income} • Expense: {expense} • Balance: {balance} ₸",
+  "repVatPeriodTitle": "VAT for the period",
+  "repVatPeriodSubtitle": "VAT: {vat} ₸ • base: {base} ₸",
+  "repArApTitle": "Receivables / Payables",
+  "repArApSubtitle": "Receivables: {receivable} • Payables: {payable} • Balance: {saldo}",
+  "repCashCollectionTitle": "Cash collection",
+  "repCashCollectionSubtitle": "{count} operations • total: {total} ₸",
+  "repProfitCogsTitle": "Profit / Margin (COGS)",
+  "repProfitMarginTitle": "Profit / Margin",
+  "repProfitMarginSubtitle": "Profit: {profit} ₸ • margin {margin}% • {note}",
+  "repProfitCostRealCogs": "cost: real COGS",
+  "repProfitCostWholesale": "cost: wholesale price (no CalculateCogsUseCase)",
+  "repWriteoffTitle": "Write-offs",
+  "repWriteoffSubtitle": "{count} documents • total: {total} ₸",
+  "repOrderTypesTitle": "Order types",
+  "repOrderTypesSubtitle": "distribution by service type",
+  "repTableTurnoverTitle": "Table turnover",
+  "repTableTurnoverSubtitle": "seatings for the period (top-10)",
+  "repDishPopularityTitle": "Dish popularity",
+  "repDishPopularitySubtitle": "top-10 by sales count",
+  "repFoodCostAnalysisShort": "Food cost analysis",
+  "repFoodCostAnalysisTitle": "Cost analysis (Food Cost)",
+  "repFoodCostAnalysisSubtitle": "green <30%, yellow 30-40%, red >40%",
+  "repColDish": "Dish",
+  "repColFoodCostPct": "Food Cost %",
+  "repTipsByWaiterTitle": "Tips by waiter",
+  "repTipsByWaiterSubtitle": "sorted by tip amount",
+  "repColWaiter": "Waiter",
+  "repColOrders": "Orders",
+  "repColTips": "Tips",
+  "repColTipsPct": "Tips %",
+  "repKpiRestaurantRevenue": "Restaurant revenue",
+  "repKpiOrders": "Orders",
+  "repKpiAvgCheck": "Average check",
+  "repKpiTips": "Tips",
+  "repKpiRevenue": "Revenue",
+  "repKpiExpenses": "Expenses",
+  "repKpiRefunds": "Refunds",
+  "repKpiSales": "Sales",
+  "repSubtitleForPeriod": "for the period",
+  "repSubtitleTotal": "total",
+  "repSubtitleCashExpenses": "cash expenses",
+  "repSubtitleRefundTotal": "refund amount",
+  "repSubtitleReceipts": "receipts",
+  "repCashFlowTitle": "Cash flow by day",
+  "repCashFlowInvestments": "Investments",
+  "repCashFlowExpenses": "Expenses",
+  "repCashFlowDividends": "Dividends",
+  "repDaysCount": "{count} days",
+  "repTopProfitableTitle": "Top-10 profitable products",
+  "repTopProfitableSubtitle": "by absolute profit",
+  "repProductProfitTitle": "Product profitability",
+  "repProductProfitSubtitle": "top-20 by profit",
+  "repRefundTrendTitle": "Refund trend",
+  "repSupplierVolumeTitle": "Supplies by supplier",
+  "repSuppliersCount": "{count} suppliers",
+  "repSupplierTableTitle": "Suppliers table",
+  "repSupplierTableSubtitle": "sorted by supply count",
+  "repColSupplier": "Supplier",
+  "repColSupplyCount": "Supply count",
+  "repPriceTrendTitle": "Purchase price trend",
+  "repPriceTrendSubtitle": "top-5 products by supply count",
+  "repNotEnoughDataForChart": "Not enough data for the chart",
+  "repPriceChangesShort": "Price changes",
+  "repPriceChangesTitle": "Supplier price changes",
+  "repPriceChangesSubtitle": "recent purchase price changes",
+  "repColWas": "Was",
+  "repColBecame": "Now",
+  "repColChangePctShort": "Chg. %",
+  "repNoSupplierData": "No supplier data",
+  "repNoSuppliesForPeriod": "No supplies found for the selected period",
+  "navWmsDashboard": "WMS",
+  "navWmsWarehouses": "Warehouses",
+  "navWmsBatches": "Batches",
+  "navWmsSerials": "Serials",
+  "navWmsCellStock": "Cells",
+  "navWmsClaims": "Claims",
+  "navWmsMarking": "Marking",
+  "navWmsSettings": "WMS settings",
+  "errorInsufficientStock": "Insufficient stock: {name}",
+  "errorBigAmountBlocked": "Sale total exceeds 1,000,000 ₸. Enable the large-amount permission in POS settings.",
+  "errorMarkRequired": "Marking code required: {name}",
+  "errorOrderNotFound": "Order not found",
+  "errorSerialNotFound": "Serial number not found",
+  "errorReceiptFailedPrint": "Failed to print receipt",
+  "errorDeleteFailed": "Failed to delete",
+  "errorCancelFailed": "Failed to cancel",
+  "errorShiftZreportFailed": "Z-report error",
+  "errorTransitionFailed": "Failed to change status",
+  "logJournalTitle": "Work log",
+  "logJournalOpen": "Open log",
+  "logJournalCardDesc": "Dated file work log: export to USB, cleanup",
+  "logJournalEmpty": "Log is empty",
+  "logJournalPickFolder": "Choose a folder (USB) to export",
+  "logJournalExport": "Export to USB",
+  "logJournalExported": "Exported {count} files to {dir}",
+  "logJournalSummary": "Files: {count}, total {size}",
+  "logJournalDeleteOld": "Older than 7 days",
+  "logJournalDeletedOld": "Deleted {count} files",
+  "logJournalDeleteAllTitle": "Delete all logs?",
+  "logJournalDeleteAllConfirm": "All log files except today's will be deleted. This cannot be undone.",
+  "setUserTabPin": "PIN",
+  "setUserPinChange": "Change PIN",
+  "setUserPinSetHint": "Set a login PIN (4-6 digits)",
+  "setUserPinKeepHint": "Leave blank to keep the current PIN",
+  "setUserPinNew": "New PIN",
+  "receiptInputRecent": "Recent receipts",
+  "receiptInputNoRecent": "No receipts yet",
+  "shiftHistoryTitle": "Shift history",
+  "shiftHistoryEmpty": "No closed shifts yet",
+  "shiftHistoryShiftNo": "Shift #{id}",
+  "shiftHistorySales": "Sales",
+  "shiftHistoryRefunds": "Refunds",
+  "shiftHistoryOpeningCash": "Opening cash",
+  "saleExpiredBatchWarning": "Warning: \"{name}\" has an expired batch",
+  "setPolicyEditProduct": "Allow editing products",
+  "setPolicyEditProductDesc": "Cashier can edit product cards in the catalog",
+  "setPolicyEditPrice": "Allow changing price during sale",
+  "setPolicyEditPriceDesc": "Cashier can manually change a line price on the receipt",
+  "setPolicyDiscounts": "Allow discounts",
+  "setPolicyDiscountsDesc": "Cashier can apply discounts to receipt lines",
+  "setPolicyCashInOut": "Allow cash in/out",
+  "setPolicyCashInOutDesc": "Cashier can deposit and withdraw cash from the till",
+  "setPolicyBigAmount": "Allow large amounts (>1M)",
+  "setPolicyBigAmountDesc": "Lift the 1,000,000 cap on operations",
+  "setPolicyBlockPriceDecrease": "Forbid lowering price below the card price",
+  "setPolicyBlockPriceDecreaseDesc": "A receipt line price cannot be set below the product price",
+  "printerAutoDetect": "Find printer",
+  "printerAutoDetecting": "Searching for printer…",
+  "printerFound": "Found: {device}",
+  "printerFoundWithNote": "Found: {device} — {note}",
+  "printerNotFoundAnyPort": "Printer not found on any port (USB/serial). Check the cable and power.",
+  "printerUsbName": "USB printer",
+  "printerSelectDevice": "Select printer",
+  "printerNoAccessGroupLp": "Node found but no access (group lp required)",
+  "printerLabelUsb": "USB printer ({path})",
+  "printerLabelSerial": "Serial printer ({path})",
+  "printerNoAccessGroupLpHint": "Node found but no access (group lp required): usermod -aG lp telepos and restart the session.",
+  "printerRawOpenNoPermsHint": "Node {path} found but cannot be opened — no permissions. Add the user to group lp (usermod -aG lp telepos) and restart the session/appliance.",
+  "printerNotFoundNoNode": "Printer not found: no /dev/usb/lp* char node and no USB-serial port. Check the printer cable and power.",
+  "ownerOnlyTitle": "Available to the till owner only",
+  "ownerOnlyDesc": "System operations (reboot, reset, drivers, terminal) are available only under the owner account.",
+  "telegramApiSectionTitle": "Telegram application",
+  "telegramApiSectionDesc": "TelePOS ships without Telegram credentials. Register an application at my.telegram.org and enter the pair below, or pass it at build time via --dart-define.",
+  "telegramApiIdLabel": "api_id",
+  "telegramApiHashLabel": "api_hash",
+  "telegramApiSave": "Save credentials",
+  "telegramApiClear": "Clear credentials",
+  "telegramApiSaved": "Telegram credentials saved",
+  "telegramApiCleared": "Telegram credentials cleared",
+  "telegramApiInvalid": "Enter a numeric api_id and a non-empty api_hash",
+  "telegramApiStatusConfigured": "Credentials set",
+  "telegramApiStatusMissing": "Credentials not set",
+  "deviceSearchButton": "Search",
+  "deviceSearchTitle": "Discovered devices",
+  "deviceSearchRunning": "Searching…",
+  "deviceSearchEmpty": "Nothing found. Every source was searched — the device is not attached or is switched off.",
+  "deviceSearchNoValueForField": "Devices were found, but none of them supplies a value for this field.",
+  "deviceSearchFailedSources": "Could not search over: {sources}. That is not the same as “nothing is attached”.",
+  "@deviceSearchFailedSources": {
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceSearchUnavailable": "Device search is not available in this build.",
+  "deviceSearchFieldFilled": "Field filled in: {value}",
+  "@deviceSearchFieldFilled": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceSourceSerialPort": "Serial port",
+  "deviceSourceUsb": "USB",
+  "deviceSourceNetwork": "Network",
+  "deviceSourceBluetooth": "Bluetooth",
+  "deviceCheckButton": "Check device",
+  "deviceCheckRunning": "Checking…",
+  "deviceCheckUnavailable": "Device checks are not available in this build.",
+  "deviceCheckSavedBindingNotice": "The check runs against the saved binding: the device is contacted using the stored parameters, not the unsaved edits on this screen. Restart the app for a changed binding to take effect in sales.",
+  "deviceCheckReasonOk": "The device responded",
+  "deviceCheckReasonNotConfigured": "The device is not configured",
+  "deviceCheckReasonInvalidBinding": "The binding is invalid",
+  "deviceCheckReasonDriverNotLive": "Bound, but this build cannot drive this device",
+  "deviceCheckReasonConnectionFailed": "The device did not answer",
+  "deviceCheckReasonDeviceRefused": "The device refused the operation",
+  "deviceCheckReasonNotSupportedOnPlatform": "Not supported on this platform",
+  "deviceCheckReasonNotImplemented": "No check is implemented for this device class yet",
+  "deviceCheckReasonUnexpectedError": "Unexpected error",
+  "scannerRulesTitle": "Barcode reading rules",
+  "scannerRulesSubtitle": "Not scanner properties — installation rules deciding which read value to accept.",
+  "scannerRulesMinLength": "Minimum barcode length",
+  "scannerRulesMaxLength": "Maximum barcode length",
+  "scannerRulesTimeoutMs": "Scanner inter-character gap, ms",
+  "scannerRulesDefaultHint": "Empty — default {value}",
+  "@scannerRulesDefaultHint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "scannerRulesNotAnInteger": "“{value}” is not a whole number",
+  "@scannerRulesNotAnInteger": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "scannerRulesUnavailable": "Barcode reading rules are not available in this build.",
+  "scannerRulesSaved": "Barcode reading rules saved",
+  "printQueueSectionTitle": "Print queue",
+  "printQueueSubtitle": "What is waiting to print, what did not print and why.",
+  "printQueueEmpty": "The queue is empty — there are no unprinted receipts.",
+  "printQueueUnavailable": "The print queue is not available in this build.",
+  "printQueueUnreadable": "The print queue cannot be read",
+  "printQueueUnreadableHint": "This is not an empty queue: jobs may be waiting to print, but the list cannot be read. Service is required.",
+  "printQueueStateQueued": "Waiting to print",
+  "printQueueStatePrinting": "Printing",
+  "printQueueStatePrinted": "Printed",
+  "printQueueStateFailed": "Not printed, will be retried",
+  "printQueueStateExpired": "Deadline passed, will not retry by itself",
+  "printQueueStateCancelled": "Cancelled by the operator",
+  "printQueueAttempts": "Attempts: {count}",
+  "printQueueDeadline": "Valid until {moment}",
+  "printQueueReason": "Reason: {reason}",
+  "printQueueRetry": "Retry",
+  "printQueueCancelJob": "Cancel job",
+  "printQueueExtendTitle": "How much longer should the job live?",
+  "printQueueExtend5Minutes": "5 more minutes",
+  "printQueueExtend30Minutes": "30 more minutes",
+  "printQueueExtend2Hours": "2 more hours",
+  "printQueueRetryAccepted": "The job is back in the queue",
+  "printQueueRetryAlreadyPrinted": "This receipt has already been printed — it is not printed a second time",
+  "printQueueRetryRejected": "Retry failed",
+  "printQueueCancelTitle": "Cancel this job?",
+  "printQueueCancelBody": "A cancelled job can no longer be printed. If the same receipt is still needed, it has to be issued again.",
+  "printQueueCancelConfirm": "Cancel job",
+  "printQueueCancelDone": "The job has been cancelled",
+  "printQueueCancelRefused": "This job can no longer be cancelled: it is printing or already finished"
+}

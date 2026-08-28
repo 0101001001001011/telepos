@@ -1,0 +1,21 @@
+# Shell scripts must reach a Mac with LF endings.
+#
+# Measured twice. On 2026-08-03 a build script went to pub.dev with CRLF and
+# exited zero having built nothing. On 2026-08-04 the same script, checked out
+# on Windows, killed a macOS build on its first line:
+#
+#   apple/build_rust.sh: line 32: $'\r': command not found
+#   apple/build_rust.sh: line 33: set: -$'\r'
+#
+# Both times the git *index* held LF and only the checkout was wrong, which is
+# why a diff shows nothing and a review cannot see it. With `core.autocrlf=true`
+# — the default on Windows — and no rule here, every checkout re-arms it.
+#
+# It reaches consumers because `flutter pub publish` packs the **working tree**,
+# not the index: whatever is on the publishing machine's disk is what every
+# Apple consumer downloads. `pub publish --dry-run` does not check line endings,
+# so the gate stays green while the package is unbuildable.
+#
+# Dart, Rust, C and CMake all tolerate CRLF. A shell script does not, so it is
+# the only thing pinned here.
+*.sh text eol=lf

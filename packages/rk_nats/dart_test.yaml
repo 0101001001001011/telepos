@@ -1,0 +1,9 @@
+# Tests that need something the machine may not have are named, not hidden.
+tags:
+  native:
+    # Needs `cargo build --release` in rust/. Runs by default when the library
+    # is there and says what to type when it is not.
+  live:
+    # Needs running nats-servers. Excluded by default because a green run
+    # against no server would be a claim about nothing.
+    skip: "needs live nats-servers: see test/live_test.dart, then `dart test --tags live`"

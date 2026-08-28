@@ -1,0 +1,24 @@
+# Line endings.
+#
+# This package is developed inside a monorepo on Windows, where core.autocrlf
+# turns the working tree into CRLF. `dart pub publish` packs the WORKING TREE,
+# not the git blob, so a shell script checked out here reaches every consumer
+# with CRLF. Measured 2026-08-03 by unpacking the published rk_syslog 0.2.1:
+# all 79 lines of apple/build_rust.sh were CRLF, line 32 being `set -eu`.
+#
+# What then happens on a consumer's Mac: /bin/sh reads `set -eu` as a command
+# whose name ends in a carriage return, prints
+#
+#   apple/build_rust.sh: line 32: : command not found
+#   apple/build_rust.sh: line 33: set: -: invalid option
+#
+# and carries on. `set -eu` never took effect, the `: "${VAR:?}"` guards never
+# ran, cargo was never invoked -- and the script EXITS 0 having built nothing.
+# A green build that ships no library is the worst outcome available, and this
+# repository had already met it once on Android.
+#
+# This file must live in the package, not only in the monorepo root: the public
+# mirror takes this directory as its repository root and would not inherit it.
+*.sh   text eol=lf
+*.bash text eol=lf
+*.podspec text eol=lf

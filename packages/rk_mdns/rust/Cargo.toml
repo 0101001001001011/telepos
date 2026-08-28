@@ -1,0 +1,49 @@
+[package]
+name = "rk_mdns"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+license = "MIT"
+description = "Native part of the rk_mdns Dart package: an mDNS responder and a DNS-SD browser behind a C ABI."
+publish = false
+
+[lib]
+name = "rk_mdns"
+# cdylib for Windows, Linux and Android; staticlib for Apple, where the pod is
+# built as a framework and the artefact must land inside it (see
+# ../doc/native-build.md).
+# `rlib` is here only so `tests/` can link the crate: an integration test
+# cannot import a cdylib. It changes nothing about what ships.
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+# The protocol is written out here rather than taken from a crate, and the
+# choice was made by measurement rather than by taste (see ../doc/architecture.md).
+#
+# What a ready-made crate would have had to give: control over WHICH interface
+# a datagram leaves by. That is the one property this package exists for — a
+# send without `IP_MULTICAST_IF` goes out exactly one interface, chosen by the
+# routing table, silently, and on the machine this was measured on that
+# interface was a virtual switch no device is ever behind. Every mDNS crate on
+# offer either hides the socket entirely or reaches the same default.
+#
+# So only two dependencies are real:
+#
+# socket2 — the socket options themselves. SO_REUSEADDR and SO_REUSEPORT
+# (Chrome already holds UDP 5353 on Windows), IP_MULTICAST_IF /
+# IPV6_MULTICAST_IF, IP_ADD_MEMBERSHIP per interface, and the IPv6 scope id
+# that `std::net` will not let a caller set.
+socket2 = { version = "0.5", features = ["all"] }
+# if-addrs — the interface list with indices. `std::net` has no equivalent, and
+# an IPv6 link-local group needs the index, not the address.
+if-addrs = "0.13"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+# NOT "abort". The boundary catches panics so that a failure leaves as a value
+# (И144); aborting the process would make that promise false.
+panic = "unwind"

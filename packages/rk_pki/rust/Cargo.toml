@@ -1,0 +1,53 @@
+[package]
+name = "rk_pki"
+version = "0.4.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Certificates, mutual TLS and a per-installation certificate authority behind a C ABI."
+license = "MIT"
+repository = "https://github.com/0101001001001011/rk-pki"
+publish = false
+
+[lib]
+name = "rk_pki"
+# cdylib for the platforms that load a shared library, staticlib for iOS, rlib
+# so the crate's own tests can link against it. Which one a given platform
+# picks is decided by the build wiring in ../src, ../android and ../apple.
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+# One certificate representation shared with rk_quic: rustls-pki-types is the
+# type rustls itself passes around, and rustls-webpki is the verifier rustls
+# uses. The full rustls crate is not linked here because rk_pki runs no TLS
+# session of its own -- it issues and checks the certificates rk_quic presents.
+rustls-pki-types = "1"
+rustls-webpki = { version = "0.103", default-features = false, features = [
+    "aws-lc-rs",
+    "std",
+] }
+# The provider rustls 0.23 defaults to. Not ring: RUSTSEC-2025-0007.
+aws-lc-rs = { version = "1", default-features = false, features = ["aws-lc-sys"] }
+# Certificate and CSR construction. Same org as rustls, same crypto provider.
+rcgen = { version = "0.14", default-features = false, features = [
+    "aws_lc_rs",
+    "pem",
+    "x509-parser",
+] }
+x509-parser = "0.17"
+argon2 = { version = "0.5", features = ["std"] }
+password-hash = { version = "0.5", features = ["std"] }
+zeroize = { version = "1", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+time = { version = "0.3", default-features = false, features = ["std"] }
+base64 = "0.22"
+sha2 = "0.10"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "unwind" # a panic must be catchable at the boundary, never an abort

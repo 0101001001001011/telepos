@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Установщик TelePOS для Windows.
+
+  Почему WiX/MSI, а не Inno Setup и не NSIS — в docs/windows-installer.md.
+  Коротко: MSI умеет выполнить при удалении действие ОТ ИМЕНИ SYSTEM, и это
+  единственный способ гарантированно снять корневой сертификат у всех
+  пользователей машины, а не только у того, кто запустил деинсталляцию.
+
+  Файл не собирается сам по себе: версия и путь к сборке приходят снаружи,
+  из tools/build_windows_installer.ps1. Собирать вручную не нужно и не следует.
+
+  GUID'ы ниже постоянны. UpgradeCode нельзя менять НИКОГДА: по нему Windows
+  понимает, что новая версия — это та же программа. Сменить его — значит
+  получить две TelePOS в списке установленных.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <?ifndef Version ?><?error Не задана версия: ожидается -d Version=x.y.z ?><?endif?>
+  <?ifndef BuildNumber ?><?error Не задан номер сборки: ожидается -d BuildNumber=N ?><?endif?>
+  <?ifndef BuildDir ?><?error Не задан каталог сборки: ожидается -d BuildDir=... ?><?endif?>
+  <?ifndef SourceRoot ?><?error Не задан корень репозитория: ожидается -d SourceRoot=... ?><?endif?>
+  <?ifndef ObjDir ?><?error Не задан каталог промежуточных файлов: ожидается -d ObjDir=... ?><?endif?>
+  <?ifndef WebDir ?><?error Не задан каталог браузерного бандла: ожидается -d WebDir=... ?><?endif?>
+
+  <Package
+      Name="TelePOS"
+      Manufacturer="Rob Kim"
+      Version="$(Version)"
+      Scope="perMachine"
+      Compressed="yes"
+      Language="1049"
+      UpgradeCode="df337c0c-b6d8-4f09-8e19-a2e6e21a9a97">
+
+    <SummaryInformation Description="TelePOS — касса для розницы, общепита, услуг и склада" />
+
+    <!--
+      Обновление версией: 3.5.0 поверх 3.4.x заменяет, а не ставится рядом.
+      AllowSameVersionUpgrades — чтобы пересборка той же версии при отладке
+      не требовала сначала удалить предыдущую.
+    -->
+    <MajorUpgrade
+        AllowSameVersionUpgrades="yes"
+        DowngradeErrorMessage="На этом компьютере уже установлена более новая версия TelePOS. Сначала удалите её." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <!-- 64 бита: Flutter собирает только x64, 32-разрядной сборки не существует. -->
+    <Launch Condition="VersionNT64" Message="TelePOS работает только на 64-разрядной Windows." />
+
+    <!--
+      Тихая установка без прав администратора отказывает СРАЗУ и по имени.
+
+      # Что было
+
+      `msiexec /i TelePOS.msi /qn` без повышения прав давал 1603 и полный откат.
+      Причём отказ приходил не в начале, а в середине: установка доходила до
+      RemoveExistingProducts, пыталась снять прежнюю версию, получала 1730
+      («чтобы удалить это приложение, нужно быть администратором») и откатывала
+      уже разложенные файлы. Измерено 2026-08-06 дважды, на одной машине и в
+      одну минуту: тот же MSI без повышения — 1603, с повышением — 0.
+
+      Хуже всего, что симптом зависел от того, стояла ли прежняя версия. На
+      чистой машине тот же запуск отказывает внятным 1925; там, где TelePOS уже
+      стоял, — невнятным 1603 «поставилось и откатилось», в котором ни слова про
+      права. Заказчик будет ставить версию поверх версии, то есть попадать
+      ровно во второй случай.
+
+      # Почему условие именно такое
+
+      `Privileged` — установка идёт с повышением (в том числе от SYSTEM, как её
+      разворачивает групповая политика). `UILevel > 2` — установка не тихая, а
+      значит Windows сама покажет запрос UAC и права появятся позже; блокировать
+      её здесь было бы неверно, потому что при обычном двойном щелчке
+      (UILevel = 5) на этом шаге прав ещё нет и не должно быть.
+
+      Остаётся ровно один отсекаемый случай: тихая установка, которой повышения
+      уже неоткуда взять. Свойства измерены на обоих прогонах: тихий без
+      повышения — UILevel = 2 и `Privileged` не задано вовсе; тихий с повышением
+      — UILevel = 2, Privileged = 1.
+    -->
+    <Launch Condition="Privileged OR UILevel &gt; 2"
+            Message="TelePOS ставится для всей машины, а тихая установка (/qn) не может запросить права администратора сама. Запустите msiexec от имени администратора — либо без /qn, чтобы Windows спросила сама." />
+
+    <Icon Id="TelePosIcon" SourceFile="$(SourceRoot)\windows\runner\resources\app_icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="TelePosIcon" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/kvgosu/telepos" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+
+    <!-- ── Куда ставим ──────────────────────────────────────────────────── -->
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="TelePOS">
+        <!--
+          Страница терминала. Имя «web» — не украшение: касса ищет бандл именно
+          в каталоге `web` РЯДОМ С telepos.exe (lib/backend/web_bundle.dart,
+          WebBundleOrigin.besideExecutable). Переименовать здесь, не переименовав
+          там, — значит поставить кассу, которая снова отвечает терминалу
+          отказом; сторож test/architecture/installer_ships_web_bundle_test.dart
+          держит оба имени вместе.
+        -->
+        <Directory Id="WebFolder" Name="web" />
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppMenuFolder" Name="TelePOS" />
+    </StandardDirectory>
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- ── Файлы ────────────────────────────────────────────────────────── -->
+
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <!--
+        Всё содержимое сборки забирается целиком и рекурсивно. Список файлов
+        НИГДЕ не записан намеренно: в сборке 91 файл и 30 каталогов, и любой
+        записанный от руки список разошёлся бы с действительностью — а цена
+        расхождения измерена: это отсутствующая нативная библиотека и касса,
+        которая не поднимает ни TLS, ни провод. Что четыре библиотеки rk_* на
+        месте, проверяет tools/build_windows_installer.ps1 ДО вызова wix.
+
+        telepos.exe попадает сюда же, отдельным компонентом он не объявлен: у
+        файлов, собранных элементом Files, идентификаторы генерируются, но
+        ярлыкам они и не нужны — те целятся путём [INSTALLFOLDER]telepos.exe.
+      -->
+      <Files Include="$(BuildDir)\**" />
+    </ComponentGroup>
+
+    <ComponentGroup Id="WebBundle" Directory="WebFolder">
+      <!--
+        Собранный браузерный бандл — целиком и рекурсивно, той же причины ради,
+        что и сборка кассы выше: в нём около сорока файлов, из них шрифты и
+        canvaskit, и записанный от руки список разошёлся бы с действительностью
+        молча. Цена расхождения тут известна поимённо: без `main.dart.js`
+        браузер получает белый экран, а касса при этом рапортует, что бандл на
+        месте.
+
+        Что бандл вообще собран, проверяет tools/build_windows_installer.ps1 ДО
+        вызова wix — ровно так же, как он проверяет четыре библиотеки rk_*.
+      -->
+      <Files Include="$(WebDir)\**" />
+    </ComponentGroup>
+
+    <ComponentGroup Id="TrustTooling" Directory="INSTALLFOLDER">
+      <Component Id="TrustScript" Guid="1e312a12-2c6d-454e-8c0f-cfc6b01aef09">
+        <File Id="TrustPs1" Source="$(SourceRoot)\installer\windows\trust.ps1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- ── Ярлыки ───────────────────────────────────────────────────────── -->
+
+    <ComponentGroup Id="Shortcuts">
+      <Component Id="MenuShortcut" Directory="AppMenuFolder" Guid="b57f083d-a787-4ba5-96ed-f3ccdd62b3cc">
+        <Shortcut Id="MenuTelePos" Name="TelePOS" Description="Касса TelePOS"
+                  Target="[INSTALLFOLDER]telepos.exe" WorkingDirectory="INSTALLFOLDER" Icon="TelePosIcon" />
+        <RemoveFolder Id="RemoveAppMenuFolder" Directory="AppMenuFolder" On="uninstall" />
+        <!-- Ключ реестра как KeyPath: ярлык сам по себе KeyPath'ом быть не может. -->
+        <RegistryValue Root="HKLM" Key="SOFTWARE\TelePOS" Name="MenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="bf13557a-5826-447a-9cae-3fea110c330a">
+        <Shortcut Id="DesktopTelePos" Name="TelePOS" Description="Касса TelePOS"
+                  Target="[INSTALLFOLDER]telepos.exe" WorkingDirectory="INSTALLFOLDER" Icon="TelePosIcon" />
+        <RegistryValue Root="HKLM" Key="SOFTWARE\TelePOS" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- ── Сведения об установке ────────────────────────────────────────── -->
+
+    <ComponentGroup Id="InstallInfo" Directory="INSTALLFOLDER">
+      <Component Id="InstallRegistry" Guid="1c5c7f0d-24b8-4f16-b7c6-49b2c36a597c">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\TelePOS">
+          <RegistryValue Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+          <RegistryValue Name="Version" Type="string" Value="$(Version)" />
+          <!--
+            Номер сборки из pubspec (3.5.0+19). В версию MSI он не влезает: там
+            только три числа, и четвёртое MSI при обновлении всё равно
+            игнорирует. Поэтому он живёт здесь — иначе по установленной машине
+            нельзя сказать, какая именно сборка на ней стоит.
+          -->
+          <RegistryValue Name="BuildNumber" Type="string" Value="$(BuildNumber)" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+
+    <!-- ── Корневой сертификат магазина ─────────────────────────────────── -->
+    <!--
+      Корень выписывает касса, у каждой установки он свой, поэтому «вшить»
+      готовый файл в установщик нельзя. Установщик регистрирует задачу
+      планировщика, а та при входе пользователя подбирает корень и кладёт его в
+      ПОЛЬЗОВАТЕЛЬСКОЕ хранилище доверенных корневых центров. Почему
+      пользовательское, а не машинное — в шапке trust.ps1 и в
+      docs/windows-installer.md: файл корня лежит в профиле и переписывается без
+      всяких прав, а значит через машинное хранилище любой пользователь кассы
+      стал бы доверенным центром для всей машины.
+    -->
+
+    <!--
+      `-InstallDir` здесь НЕ передаётся, и это не упущение.
+
+      `[INSTALLFOLDER]` всегда раскрывается с завершающей обратной косой:
+      `C:\Program Files\TelePOS\`. В кавычках такая косая экранирует саму
+      кавычку (правила CommandLineToArgvW), и до скрипта доезжало
+      `C:\Program Files\TelePOS"` — со шальной кавычкой на конце. `Test-Path`
+      на таком пути ложен, `Invoke-Register` бросал «не найден … —
+      регистрировать нечего», действие возвращало 1, MSI — 1722, установка —
+      1603 и полный откат. То есть установщик не ставился ВООБЩЕ; измерено
+      2026-08-06, до этого его ни разу не запускали на живой машине.
+
+      Скрипт лежит в INSTALLFOLDER (группа TrustTooling), поэтому его
+      собственный `$PSScriptRoot` — тот же каталог и есть, и передавать его
+      снаружи попросту незачем. Сам `trust.ps1` вдобавок снимает шальную
+      кавычку, если аргумент всё-таки придёт.
+    -->
+    <CustomAction Id="RegisterTrustTask"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="powershell.exe -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File &quot;[INSTALLFOLDER]trust.ps1&quot; -Register"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="check" />
+
+    <CustomAction Id="RemoveTrust"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="powershell.exe -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File &quot;[INSTALLFOLDER]trust.ps1&quot; -Unregister"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="ignore" />
+
+    <InstallExecuteSequence>
+      <!--
+        Регистрация — после того, как файлы легли: до InstallFiles скрипта ещё
+        нет. Return="check": если задачу зарегистрировать не удалось, доверие не
+        появится никогда и само не починится, поэтому установка обязана
+        отказаться громко, а не оставить кассу с неоткрывающимся терминалом.
+      -->
+      <Custom Action="RegisterTrustTask" After="InstallFiles" Condition="NOT REMOVE" />
+
+      <!--
+        Снятие — ДО удаления файлов, иначе скрипта уже не будет.
+        Return="ignore": деинсталляция не имеет права застревать, иначе
+        программа останется наполовину удалённой. Скрипт внутри тоже не падает
+        и доходит до конца при любой ошибке отдельного профиля.
+      -->
+      <Custom Action="RemoveTrust" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+    </InstallExecuteSequence>
+
+    <!-- ── Состав ───────────────────────────────────────────────────────── -->
+
+    <Feature Id="Main" Title="TelePOS" Level="1" AllowAbsent="no">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentGroupRef Id="WebBundle" />
+      <ComponentGroupRef Id="TrustTooling" />
+      <ComponentGroupRef Id="Shortcuts" />
+      <ComponentGroupRef Id="InstallInfo" />
+    </Feature>
+
+    <!--
+      Мастер с выбором каталога. Текст лицензии не хранится здесь копией:
+      license.rtf порождается из LICENSE в корне репозитория на шаге сборки —
+      две копии одного текста разошлись бы ровно так же, как две копии версии.
+    -->
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(ObjDir)\license.rtf" />
+
+  </Package>
+</Wix>

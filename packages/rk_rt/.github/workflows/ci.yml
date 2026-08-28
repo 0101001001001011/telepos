@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Dependencies
+        run: dart pub get
+
+      - name: Format
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: dart analyze --fatal-infos
+
+      # Tests run only once there are any: a stub package has none, and a
+      # green run over an empty suite would be a claim about nothing.
+      - name: Test
+        run: if [ -d test ]; then dart test; else echo "no test/ yet - skipped"; fi
+
+      # The publish gate is a build step, not a release step. A package that
+      # cannot be published breaks the build now rather than on release day.
+      - name: Publish gate
+        run: dart pub publish --dry-run

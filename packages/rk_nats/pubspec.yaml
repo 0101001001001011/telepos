@@ -1,0 +1,41 @@
+name: rk_nats
+description: NATS and JetStream over a native client, with a durability contract - an acknowledgement means fsynced to disk by default, or says plainly what else it meant.
+version: 0.2.2
+repository: https://github.com/0101001001001011/rk-nats
+issue_tracker: https://github.com/0101001001001011/rk-nats/issues
+
+environment:
+  sdk: ^3.8.0
+  flutter: '>=3.3.0'
+
+dependencies:
+  ffi: ^2.1.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0
+
+flutter:
+  plugin:
+    platforms:
+      # An FFI plugin, not a method-channel plugin: there is no platform class
+      # to register, only a library to build and bundle. Without this block the
+      # Flutter tool never looks at android/, linux/, windows/, ios/ or macos/,
+      # and the native library reaches no application at all — И150.
+      #
+      # A `hook/` directory must never appear here: on Flutter stable it
+      # reaches zero targets out of six, and its mere presence breaks
+      # `dart run`, `dart test` and `flutter build` for every consumer.
+      #
+      # macOS and iOS are declared because a package without them is wrong the
+      # moment a Mac appears; neither has ever been built. See README.
+      android:
+        ffiPlugin: true
+      ios:
+        ffiPlugin: true
+      linux:
+        ffiPlugin: true
+      macos:
+        ffiPlugin: true
+      windows:
+        ffiPlugin: true

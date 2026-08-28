@@ -1,0 +1,18 @@
+# The package is analysed on its own terms, not the application's: it is
+# published separately and its consumers will not have the application's rules.
+include: package:lints/recommended.yaml
+
+analyzer:
+  exclude:
+    - rust/**
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    # Every public name carries documentation. This package's whole subject is
+    # what an acknowledgement means, and a public name that does not say so is
+    # the defect, not a style complaint.
+    - public_member_api_docs

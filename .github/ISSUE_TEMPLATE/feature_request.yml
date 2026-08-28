@@ -1,0 +1,60 @@
+name: Feature request
+description: Suggest a capability TelePOS does not have yet
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: |
+        Describe the situation at the counter, not the solution. What is
+        slow, impossible or error-prone today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like instead
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Sales and payments
+        - Shifts and cash management
+        - Catalog and pricing
+        - Stock, supply and inventory
+        - Warehouse (WMS)
+        - Restaurant (tables and orders)
+        - Service (repairs and intake)
+        - Promotions and loyalty
+        - Fiscalization
+        - Hardware integration
+        - Sync (CouchDB / Telegram)
+        - Reports
+        - Localization
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you do today instead
+      description: Workarounds you currently use, and why they fall short.
+    validations:
+      required: false
+
+  - type: textarea
+    id: regulatory
+    attributes:
+      label: Regulatory context
+      description: |
+        If this is driven by a legal or tax requirement, name the jurisdiction
+        and the rule. It changes how the feature must be built.
+    validations:
+      required: false

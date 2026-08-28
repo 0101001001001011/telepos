@@ -1,0 +1,18 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # A package whose public surface is undocumented is a package whose rules
+    # live only in the head of whoever wrote it.
+    public_member_api_docs: warning
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_dynamic_calls
+    - prefer_final_locals
+    - unawaited_futures

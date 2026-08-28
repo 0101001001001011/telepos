@@ -1,0 +1,22 @@
+# Свой файл правил обязателен у каждого пакета, и размер пакета тут ни при чём.
+#
+# Без него анализатор поднимается вверх по дереву, находит analysis_options.yaml
+# приложения, а тот включает package:flutter_lints — зависимость, которой у
+# пакета нет. Включение не разрешается, и тогда не применяется НИ ОДНО правило:
+# `dart analyze --fatal-infos` печатает «No issues found!» потому, что перестал
+# проверять, а не потому, что проверил.
+#
+# Семнадцать строк, проверенных нулём правил, — это всё равно ноль правил.
+include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    - avoid_dynamic_calls
+    - prefer_final_locals
+    - unawaited_futures

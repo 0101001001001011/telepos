@@ -1,0 +1,36 @@
+[package]
+name = "rk_infer"
+version = "0.2.1"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT"
+description = "Native side of the rk_infer Dart package: an embedded inference engine behind a C ABI whose statuses cross by name and whose frame buffers never leave it."
+publish = false
+
+[lib]
+name = "rk_infer"
+# cdylib and staticlib only, with a plain C ABI. Choosing the per-platform
+# Flutter build mechanism is a separate, once-for-all-packages decision; this
+# crate deliberately produces the two artefacts every such mechanism can wire.
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+# No dependencies, on purpose. Everything this crate needs -- SHA-256, the
+# manifest reader, the dynamic loader -- is small enough to own and test, and
+# a package that cannot be built offline cannot be built on a till.
+[dependencies]
+
+# A stand-in for the ONNX Runtime shared library, built as a cdylib so the
+# loader's success path is exercised by a test rather than asserted in prose.
+# It is an example, not a dependency: nothing links it, and it never ships.
+[[example]]
+name = "stub_ort"
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = 3
+lto = true
+# NOT panic = "abort". И144 says a native failure comes back as a value, and
+# the only way to turn a panic into a value is to catch it at the boundary,
+# which requires unwinding. Aborting would trade a returned status for a dead
+# till, which is exactly the trade the invariant forbids.
+panic = "unwind"

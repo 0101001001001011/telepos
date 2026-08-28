@@ -1,0 +1,16 @@
+# The package's own rules. Without this file the analyzer walks up and finds
+# the consuming application's options, which include `package:flutter_lints` —
+# a dependency this package does not have and must not need. A package that
+# only analyses cleanly inside one repository is not self-contained.
+include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+# `public_member_api_docs` is deliberately not enabled. Every type and every
+# non-obvious case here carries a doc comment saying why it exists; a rule
+# demanding one on each signature alias in `lib/src/bindings.dart` buys
+# ceremony, not understanding.

@@ -1,0 +1,40 @@
+[package]
+name = "rk_zenoh_native"
+version = "0.2.2"
+edition = "2021"
+rust-version = "1.75.0"
+license = "MIT"
+description = "C ABI over the stable subset of Zenoh, for the rk_zenoh Dart package"
+repository = "https://github.com/0101001001001011/rk-zenoh"
+publish = false
+
+# Standalone: this crate must not be absorbed by a workspace above it.
+[workspace]
+
+[lib]
+name = "rk_zenoh"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+# Default features only. `unstable` is deliberately NOT enabled: see doc/stable-subset.md.
+zenoh = { version = "1.9.0", default-features = false, features = [
+    "transport_tcp",
+    "transport_tls",
+    "transport_quic",
+    "transport_udp",
+    "transport_compression",
+] }
+
+[dev-dependencies]
+# The integration tests drive Zenoh directly to measure its behaviour under a
+# configuration this crate produced. Same spec as above, so it is one build.
+zenoh = { version = "1.9.0", default-features = false, features = [
+    "transport_tcp",
+    "transport_tls",
+    "transport_quic",
+    "transport_udp",
+    "transport_compression",
+] }
+
+[profile.release]
+panic = "unwind" # required: catch_unwind at the boundary is how failure becomes a value

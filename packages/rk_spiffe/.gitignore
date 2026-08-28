@@ -1,0 +1,4 @@
+# A library does not pin its resolved versions; the lock belongs to the app
+# that depends on it. It appears the moment the publish gate is run.
+pubspec.lock
+.dart_tool/

@@ -1,0 +1,30 @@
+# Build output never enters the repository and never enters the package: the
+# consumer builds the native side themselves.
+rust/target/
+.dart_tool/
+build/
+
+# A library pins its dependencies at the consumer's resolution, not ours.
+pubspec.lock
+
+# Built native artefacts, wherever they land.
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.rlib
+
+# The package became a Flutter FFI plugin, so the platform build systems now
+# write scratch inside it. AGP puts its CMake scratch and its local SDK path in
+# the *plugin* directory, not the application's, and both are machine-specific.
+android/local.properties
+android/.cxx/
+.gradle/
+build/
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.pdb

@@ -1,0 +1,34 @@
+# Flutter Localization Configuration
+# Docs: https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization
+
+# Directory containing ARB files
+arb-dir: assets/i18n
+
+# Template file (base language)
+template-arb-file: intl_ru.arb
+
+# Output file name
+output-localization-file: app_localizations.dart
+
+# Generated class name
+output-class: AppLocalizations
+
+# Don't use synthetic package (generate to lib folder)
+synthetic-package: false
+
+# Output directory for generated files
+output-dir: lib/l10n
+
+# Generate nullable getter for optional context access
+nullable-getter: true
+
+# Use deferred loading for locales (web optimization)
+use-deferred-loading: false
+
+# Preferred supported locales (affects fallback order)
+preferred-supported-locales:
+  - ru
+  - en
+  - kk
+  - ky
+  - uz

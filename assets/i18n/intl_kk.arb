@@ -1,0 +1,5182 @@
+{
+  "@@locale": "kk",
+  "navReports": "Есептер",
+  "navStock": "Қойма",
+  "@@last_modified": "2026-02-07T00:00:00.000Z",
+  "appName": "TelePOS",
+  "@appName": {
+    "description": "Application name"
+  },
+  "globalOk": "OK",
+  "globalCancel": "Болдырмау",
+  "globalYes": "Иә",
+  "globalNo": "Жоқ",
+  "globalSave": "Сақтау",
+  "globalDelete": "Жою",
+  "globalEdit": "Өңдеу",
+  "globalAdd": "Қосу",
+  "globalSearch": "Іздеу",
+  "globalClose": "Жабу",
+  "globalBack": "Артқа",
+  "globalNext": "Келесі",
+  "globalDone": "Дайын",
+  "globalLoading": "Жүктелуде...",
+  "globalError": "Қате",
+  "globalSuccess": "Сәтті",
+  "globalWarning": "Ескерту",
+  "globalInfo": "Ақпарат",
+  "globalConfirm": "Растау",
+  "globalClear": "Тазалау",
+  "globalSelect": "Таңдау",
+  "globalAll": "Барлығы",
+  "globalNone": "Жоқ",
+  "globalTotal": "Барлығы",
+  "globalAmount": "Сома",
+  "globalQuantity": "Саны",
+  "globalPrice": "Баға",
+  "globalDiscount": "Жеңілдік",
+  "globalDate": "Күні",
+  "globalTime": "Уақыт",
+  "loginTitle": "Жүйеге кіру",
+  "loginPin": "PIN енгізіңіз",
+  "loginPinHint": "4 сан",
+  "loginEnter": "Кіру",
+  "loginSelectUser": "Пайдаланушыны таңдаңыз",
+  "loginNoUsers": "Пайдаланушылар жоқ",
+  "loginWrongPin": "Қате PIN",
+  "loginBlocked": "Пайдаланушы бұғатталған",
+  "loginSessionExpired": "Сессия мерзімі өтті",
+  "loginShiftRequired": "Кіру үшін ауысымды ашыңыз",
+  "loginCashier": "Кассир",
+  "loginAdmin": "Әкімші",
+  "loginManager": "Менеджер",
+  "loginLogout": "Шығу",
+  "loginSwitchUser": "Пайдаланушыны ауыстыру",
+  "saleTitle": "Сату",
+  "saleNewSale": "Жаңа сату",
+  "saleAddProduct": "Тауар қосу",
+  "saleScanBarcode": "Штрих-кодты сканерлеу",
+  "saleEnterBarcode": "Штрих-кодты енгізіңіз",
+  "saleProductNotFound": "Тауар табылмады",
+  "saleEmptyCart": "Себет бос",
+  "saleSubtotal": "Аралық сома",
+  "saleTax": "ҚҚС",
+  "saleTotalDiscount": "Жеңілдік",
+  "saleToPay": "Төлеуге",
+  "saleItems": "{count, plural, one{{count} тауар} other{{count} тауар}}",
+  "@saleItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saleRemoveItem": "Тауарды жою",
+  "saleClearCart": "Себетті тазалау",
+  "saleConfirmClear": "Себетті тазалау керек пе?",
+  "saleProceedPayment": "Төлемге өту",
+  "saleHold": "Кейінге қалдыру",
+  "saleRecall": "Қайтару",
+  "saleHeldSales": "Кейінге қалдырылған сатулар",
+  "saleNoHeldSales": "Кейінге қалдырылған сатулар жоқ",
+  "saleProductSearch": "Тауарларды іздеу",
+  "saleByCategory": "Санаттар бойынша",
+  "saleByName": "Атауы бойынша",
+  "saleByBarcode": "Штрих-код бойынша",
+  "saleWeight": "Салмақ",
+  "saleWeightKg": "Салмағы: {weight} кг",
+  "saleEnterWeight": "Салмақты енгізіңіз",
+  "saleEnterQuantity": "Санын енгізіңіз",
+  "saleEnterPrice": "Бағаны енгізіңіз",
+  "saleFreePrice": "Еркін баға",
+  "saleMaxDiscount": "Макс. жеңілдік: {percent}%",
+  "@saleMaxDiscount": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "refundTitle": "Қайтару",
+  "refundNewRefund": "Жаңа қайтару",
+  "refundByReceipt": "Чек бойынша",
+  "refundWithoutReceipt": "Чексіз",
+  "refundEnterReceipt": "Чек нөмірін енгізіңіз",
+  "refundReceiptNotFound": "Чек табылмады",
+  "refundSelectItems": "Қайтаруға тауарларды таңдаңыз",
+  "refundReason": "Қайтару себебі",
+  "refundConfirm": "Қайтаруды растау",
+  "refundAmount": "Қайтару сомасы",
+  "refundComplete": "Қайтару орындалды",
+  "refundCash": "Қолма-қол қайтару",
+  "refundCard": "Картаға қайтару",
+  "refundNoItems": "Қайтаруға тауарлар жоқ",
+  "refundAlreadyRefunded": "Тауар қайтарылған",
+  "refundPartial": "Ішінара қайтару",
+  "shiftTitle": "Ауысым",
+  "shiftOpen": "Ауысымды ашу",
+  "shiftClose": "Ауысымды жабу",
+  "shiftCurrent": "Ағымдағы ауысым",
+  "shiftNumber": "Ауысым №: {number}",
+  "@shiftNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftOpenedAt": "Ашылған: {time}",
+  "@shiftOpenedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftCashier": "Кассир: {name}",
+  "@shiftCashier": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftSalesCount": "Сатулар: {count}",
+  "@shiftSalesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftRefundsCount": "Қайтарулар: {count}",
+  "@shiftRefundsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftTotalSales": "Сату сомасы",
+  "shiftTotalRefunds": "Қайтару сомасы",
+  "shiftCashInDrawer": "Кассада",
+  "shiftExpected": "Күтілетін",
+  "shiftActual": "Нақты",
+  "shiftDifference": "Айырмашылық",
+  "shiftXReport": "X-есеп",
+  "shiftZReport": "Z-есеп",
+  "shiftConfirmClose": "Ауысымды жабу керек пе?",
+  "shiftAlreadyOpen": "Ауысым ашық",
+  "shiftNotOpen": "Ауысым ашылмаған",
+  "shiftOpenFirst": "Алдымен ауысымды ашыңыз",
+  "paymentTitle": "Төлем",
+  "paymentCash": "Қолма-қол",
+  "paymentCard": "Карта",
+  "paymentKaspi": "Kaspi QR",
+  "paymentBonus": "Бонустар",
+  "paymentDebt": "Қарызға",
+  "paymentMixed": "Аралас",
+  "paymentEnterAmount": "Соманы енгізіңіз",
+  "paymentRemaining": "Қалды: {amount}",
+  "@paymentRemaining": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentChange": "Қайтарым: {amount}",
+  "@paymentChange": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentComplete": "Төлем аяқталды",
+  "paymentFailed": "Төлем қатесі",
+  "paymentWaitingCard": "Картаны күту...",
+  "paymentWaitingQr": "QR күту...",
+  "paymentInsertCard": "Картаны салыңыз",
+  "paymentScanQr": "QR сканерлеңіз",
+  "paymentApproved": "Мақұлданды",
+  "paymentDeclined": "Қабылданбады",
+  "paymentReceipt": "Чек басып шығару",
+  "paymentNoReceipt": "Чексіз",
+  "paymentEmail": "Email-ге жіберу",
+  "paymentSms": "SMS жіберу",
+  "historyTitle": "Тарих",
+  "historyToday": "Бүгін",
+  "historyYesterday": "Кеше",
+  "historyThisWeek": "Осы апта",
+  "historyThisMonth": "Осы ай",
+  "historyDateRange": "Кезеңді таңдау",
+  "historyNoSales": "Кезеңде сатулар жоқ",
+  "historyReceipt": "Чек №{number}",
+  "@historyReceipt": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "historyReprint": "Қайта басып шығару",
+  "historyDetails": "Толығырақ",
+  "historySale": "Сату",
+  "historyRefund": "Қайтару",
+  "historyFilter": "Сүзгі",
+  "agentTitle": "Контрагенттер",
+  "agentClients": "Клиенттер",
+  "agentSuppliers": "Жеткізушілер",
+  "agentSearch": "Контрагентті іздеу",
+  "agentAdd": "Контрагент қосу",
+  "agentEdit": "Өңдеу",
+  "agentName": "Атауы/Т.А.Ә.",
+  "agentPhone": "Телефон",
+  "agentEmail": "Email",
+  "agentIin": "ЖСН/БСН",
+  "agentAddress": "Мекенжай",
+  "agentBalance": "Баланс",
+  "agentBonusBalance": "Бонус балансы",
+  "agentDebt": "Қарыз",
+  "agentNoAgents": "Контрагенттер жоқ",
+  "agentSaveSuccess": "Контрагент сақталды",
+  "agentDeleteConfirm": "Контрагентті жою керек пе?",
+  "cashTitle": "Касса",
+  "cashInvestment": "Салым",
+  "cashExpense": "Төлем",
+  "cashBalance": "Касса балансы",
+  "cashEnterAmount": "Соманы енгізіңіз",
+  "cashReason": "Негіздеме",
+  "cashReasonPlaceholder": "Себебін көрсетіңіз",
+  "cashSuccess": "Операция орындалды",
+  "cashExpenseTypes": "Шығыс түрі",
+  "cashSalary": "Жалақы",
+  "cashRent": "Жалға алу",
+  "cashUtilities": "Коммуналдық",
+  "cashSupplies": "Сатып алулар",
+  "cashOther": "Басқа",
+  "discountTitle": "Жеңілдік",
+  "discountPercent": "Пайыз",
+  "discountFixed": "Бекітілген",
+  "discountEnterValue": "Мәнін енгізіңіз",
+  "discountApply": "Қолдану",
+  "discountRemove": "Жеңілдікті алып тастау",
+  "discountOnItem": "Тауарға жеңілдік",
+  "discountOnTotal": "Чекке жеңілдік",
+  "discountMaxExceeded": "Максималды жеңілдік асып кетті",
+  "quickProductTitle": "Жылдам тауарлар",
+  "quickProductAdd": "Тауар қосу",
+  "quickProductName": "Атауы",
+  "quickProductPrice": "Бағасы",
+  "quickProductCategory": "Санаты",
+  "quickProductSave": "Сақтау",
+  "quickProductDelete": "Жою",
+  "syncTitle": "Синхрондау",
+  "syncStatus": "Синхрондау күйі",
+  "syncLastSync": "Соңғы синхрондау: {time}",
+  "@syncLastSync": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "syncNow": "Синхрондау",
+  "syncInProgress": "Синхрондалуда...",
+  "syncSuccess": "Синхрондау аяқталды",
+  "syncFailed": "Синхрондау қатесі",
+  "syncProducts": "Тауарлар",
+  "syncPrices": "Бағалар",
+  "syncAgents": "Контрагенттер",
+  "syncSales": "Сатулар",
+  "syncPending": "Жіберуді күтуде: {count}",
+  "@syncPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncOffline": "Байланыс жоқ",
+  "syncOnline": "Қосылған",
+  "printerTitle": "Принтер",
+  "printerStatus": "Принтер күйі",
+  "printerConnected": "Қосылған",
+  "printerDisconnected": "Ажыратылған",
+  "printerError": "Принтер қатесі",
+  "printerPaperOut": "Қағаз жоқ",
+  "printerConnect": "Қосу",
+  "printerDisconnect": "Ажырату",
+  "printerTest": "Сынақ басып шығару",
+  "printerSettings": "Принтер баптаулары",
+  "printerWidth": "Чек ені",
+  "additionalTitle": "Қосымша",
+  "additionalSettings": "Баптаулар",
+  "additionalReports": "Есептер",
+  "additionalInventory": "Түгендеу",
+  "additionalSupply": "Тауар қабылдау",
+  "additionalPriceChange": "Бағаларды өзгерту",
+  "additionalBackup": "Сақтық көшірме",
+  "additionalRestore": "Қалпына келтіру",
+  "additionalUpdate": "Жаңарту",
+  "additionalAbout": "Бағдарлама туралы",
+  "additionalLicense": "Лицензия",
+  "additionalSupport": "Қолдау",
+  "receiptTitle": "Чек",
+  "receiptNumber": "Чек №",
+  "receiptDate": "Күні",
+  "receiptCashier": "Кассир",
+  "receiptItems": "Тауарлар",
+  "receiptSubtotal": "Аралық сома",
+  "receiptDiscount": "Жеңілдік",
+  "receiptTax": "ҚҚС",
+  "receiptTotal": "БАРЛЫҒЫ",
+  "receiptCash": "Қолма-қол",
+  "receiptCard": "Карта",
+  "receiptChange": "Қайтарым",
+  "receiptThankYou": "Сатып алғаныңызға рахмет!",
+  "receiptFiscalNumber": "Фискалдық нөмір",
+  "receiptQrCode": "Тексеру үшін QR",
+  "receiptCopy": "Чек көшірмесі",
+  "errorUnknown": "Белгісіз қате",
+  "errorNetwork": "Желі қатесі",
+  "errorServer": "Сервер қатесі",
+  "errorTimeout": "Күту уақыты асып кетті",
+  "errorNotFound": "Табылмады",
+  "errorPermission": "Рұқсат жоқ",
+  "errorDatabase": "Деректер базасы қатесі",
+  "errorValidation": "Валидация қатесі",
+  "errorRequired": "Міндетті өріс",
+  "errorInvalidFormat": "Қате формат",
+  "errorMinLength": "Ең аз {min} символ",
+  "@errorMinLength": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "errorMaxLength": "Ең көп {max} символ",
+  "@errorMaxLength": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "errorMinValue": "Ең аз {min}",
+  "@errorMinValue": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "errorMaxValue": "Ең көп {max}",
+  "@errorMaxValue": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "errorPrinter": "Принтер қатесі",
+  "errorFiscal": "Фискализация қатесі",
+  "errorPayment": "Төлем қатесі",
+  "errorSync": "Синхрондау қатесі",
+  "errorNoInternet": "Интернет байланысы жоқ",
+  "errorTryAgain": "Қайталап көріңіз",
+  "helpTitle": "Анықтама",
+  "@helpTitle": {
+    "description": "Help dialog title"
+  },
+  "helpTips": "Кеңестер",
+  "@helpTips": {
+    "description": "Tips section header"
+  },
+  "helpShortcuts": "Ыстық пернелер",
+  "@helpShortcuts": {
+    "description": "Shortcuts section header"
+  },
+  "helpRelatedScreens": "Байланысты бөлімдер",
+  "@helpRelatedScreens": {
+    "description": "Related screens section header"
+  },
+  "helpKey": "Перне",
+  "@helpKey": {
+    "description": "Shortcut key column header"
+  },
+  "helpAction": "Әрекет",
+  "@helpAction": {
+    "description": "Shortcut action column header"
+  },
+  "navSale": "Сату",
+  "navRefund": "Қайтару",
+  "navShift": "Ауысым",
+  "navHistory": "Тарих",
+  "navTables": "Үстелдер",
+  "navOrders": "Тапсырыстар",
+  "navQueue": "Кезек",
+  "navIntake": "Қабылдау",
+  "navAgents": "Контрагенттер",
+  "navSupply": "Қабылдау",
+  "navCash": "Касса",
+  "navSettings": "Баптаулар",
+  "navSync": "Синхрондау",
+  "navMore": "Тағы да",
+  "navAdditional": "Қосымша",
+  "navLockScreen": "Құлыптау",
+  "navMain": "Негізгі",
+  "loginEnterSystem": "Жүйеге кіру",
+  "loginWithoutPin": "PIN-сіз кіру",
+  "loginShiftOpen": "Ауысым ашық",
+  "loginShiftClosed": "Ауысым жабық",
+  "saleQuickProducts": "Жылдам тауарлар",
+  "saleIncrease": "Көбейту",
+  "saleDecrease": "Азайту",
+  "saleMark": "Маркировка",
+  "saleDataMatrix": "Маркировка (DataMatrix)",
+  "saleHeld": "Чек кейінге қалдырылды",
+  "salePositions": "Тауарлар",
+  "saleSearchHint": "Тауар іздеу (атау немесе штрих-код)",
+  "refundWithReceipt": "ЧЕКПЕН",
+  "refundWithoutReceiptUpper": "ЧЕКСІЗ",
+  "refundLoadReceipt": "Чекті жүктеу",
+  "refundSearchProducts": "Тауарларды іздеу",
+  "refundSelectAll": "Барлығын таңдау",
+  "refundDeselectAll": "Барлығын алу",
+  "refundMaxQuantity": "Максимум: {max}",
+  "@refundMaxQuantity": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "refundConfirmTitle": "Қайтаруды растаңыз",
+  "refundSelectedItems": "Таңдалған позициялар: {count}",
+  "@refundSelectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refundSuccessMsg": "Қайтару сәтті жүргізілді",
+  "refundSearchHint": "Қайтару үшін тауар іздеу",
+  "paymentRefundTitle": "Қайтару",
+  "paymentPayTitle": "Төлем",
+  "paymentRefundBtn": "ҚАЙТАРУ",
+  "paymentPayBtn": "ТӨЛЕУ",
+  "paymentChangeLabel": "Қайтарым:",
+  "paymentSuccessRefund": "Қайтару жүргізілді",
+  "paymentSuccessPay": "Төлем сәтті",
+  "paymentCardType": "Қолма-қолсыз",
+  "paymentToPay": "Төлеуге",
+  "paymentBonusLabel": "Бонустар",
+  "paymentTotalToPay": "Жалпы төлеу",
+  "paymentByCard": "Картамен",
+  "paymentRemainLabel": "Қалды",
+  "shiftBills": "Купюралар",
+  "shiftTotalAmount": "Жалпы сома",
+  "shiftOperations": "Операциялар",
+  "shiftOpened": "Ауысым ашылды",
+  "shiftClosed": "Ауысым жабылды",
+  "shiftSince": "{time} бастап",
+  "@shiftSince": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftSystem": "Жүйе",
+  "shiftEntered": "Енгізілді",
+  "shiftRecounting": "Купюралар бойынша қайта есептеу",
+  "shiftManualEntry": "Қолмен сома енгізу",
+  "shiftCashOps": "Касса операциялары",
+  "shiftOpenAction": "Ауысымды ашу",
+  "shiftCloseAction": "Ауысымды жабу",
+  "historyOperations": "Операциялар тарихы",
+  "historyResetFilters": "Сүзгілерді тастау",
+  "historyRefresh": "Жаңарту",
+  "historyNoRecords": "Жазбалар жоқ",
+  "historyChangeFilters": "Сүзгілерді өзгертіп көріңіз",
+  "historyEmpty": "Операциялар тарихы бос",
+  "historyFilterTitle": "Сүзгілер",
+  "historyPeriod": "Кезең",
+  "historyOpType": "Операция түрі",
+  "historySearchHint": "Чек нөмірі, сома...",
+  "historyType": "Түрі:",
+  "historyPrint": "Чекті басып шығару",
+  "agentFound": "Табылды: {count}",
+  "@agentFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agentWithDebt": "Тек қарызы бар",
+  "agentSearchHint": "Аты немесе телефоны бойынша іздеу...",
+  "agentNewClient": "Жаңа клиент",
+  "agentNameRequired": "Аты *",
+  "agentEnterName": "Клиент атын енгізіңіз",
+  "agentPhoneLabel": "Телефон",
+  "agentIinLabel": "БИН/ЖСН",
+  "agentIinHint": "12 сан",
+  "agentDeleteQuestion": "Клиентті жоюу?",
+  "agentDeleteConfirmMsg": "{name} жоюға сенімдісіз бе?",
+  "@agentDeleteConfirmMsg": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentDeleted": "Клиент жойылды",
+  "agentFoundExisting": "Клиент табылды",
+  "supplyTitle": "Тауарды қабылдау",
+  "supplySaved": "Қабылдау сақталды",
+  "supplySaveError": "Сақтау қатесі",
+  "supplyCancelQuestion": "Қабылдауды бас тарту?",
+  "supplyDataLost": "Барлық енгізілген деректер жоғалады.",
+  "supplyProducts": "Тауарлар: {count}",
+  "@supplyProducts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplyBarcodeHint": "Штрих-код немесе артикул",
+  "supplyComment": "Пікір",
+  "supplyCommentHint": "Пікір жазыңыз...",
+  "supplyNotFound": "Тауар табылмады",
+  "supplySelectSupplier": "Жеткізушіні таңдаңыз",
+  "supplySelectAccount": "Шотты таңдаңыз",
+  "supplyBalance": "Баланс: {amount}",
+  "@supplyBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyPurchasePrice": "Келу бағасы",
+  "supplySerialNumbers": "Сериялық нөмірлер",
+  "supplySerialHint": "S/N енгізіңіз немесе сканерлеңіз",
+  "supplySerialCount": "{expected} ішінен {count}",
+  "@supplySerialCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      }
+    }
+  },
+  "supplySerialMismatch": "Сериялық нөмірлер саны санға сәйкес келмейді",
+  "supplyInvalidQty": "Дұрыс санды енгізіңіз",
+  "supplyInvalidPrice": "Дұрыс бағаны енгізіңіз",
+  "inventoryTitle": "Инвентаризация",
+  "inventoryStart": "Бастау",
+  "inventoryFinish": "Аяқтау",
+  "inventoryScanHint": "Штрих-кодты сканерлеңіз",
+  "inventoryScanProducts": "Тауарларды санау үшін сканерлеңіз",
+  "inventoryPressStart": "Инвентаризация үшін \"Бастау\" басыңыз",
+  "inventoryProductCount": "Тауарлар: {count}",
+  "@inventoryProductCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryDiscrepancies": "Алшақтықтар: {count}",
+  "@inventoryDiscrepancies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryExpected": "Күтілді:",
+  "inventoryActual": "Факт:",
+  "inventoryProduct": "Тауар",
+  "inventoryExpectedQty": "Күтілетін",
+  "inventoryActualQty": "Нақты",
+  "inventoryDiscrepancy": "Алшақтық",
+  "inventoryActualLabel": "Нақты саны",
+  "inventoryFinishQuestion": "Инвентаризацияны аяқтау?",
+  "inventoryCompleted": "Инвентаризация аяқталды",
+  "writeoffTitle": "Есептен шығару",
+  "writeoffReason": "Себеп",
+  "writeoffProduct": "Тауар",
+  "writeoffScanHint": "Штрих-кодты сканерлеңіз",
+  "writeoffCommentHint": "Міндетті емес",
+  "writeoffReasonBreakage": "Сыну",
+  "writeoffReasonExpired": "Мерзімі өткен",
+  "writeoffReasonDamage": "Бүліну",
+  "writeoffReasonLoss": "Жоғалу",
+  "writeoffReasonOther": "Басқа",
+  "writeoffCancelQuestion": "Есептен шығаруды бас тарту?",
+  "writeoffSaved": "Есептен шығару сақталды",
+  "settingsTitle": "Баптаулар",
+  "settingsPosInfo": "Касса ақпараты",
+  "settingsPosName": "Касса атауы",
+  "settingsCompany": "Компания",
+  "settingsIin": "ЖСН/БИН",
+  "settingsPosId": "POS ID",
+  "settingsStoreId": "Дүкен ID",
+  "settingsNotSpecified": "Көрсетілмеген",
+  "settingsAppVersion": "Қолданба нұсқасы",
+  "settingsVersion": "Нұсқа",
+  "settingsPlatform": "Платформа",
+  "settingsLanguage": "Интерфейс тілі",
+  "settingsLanguageChanged": "Тіл өзгертілді",
+  "settingsCurrency": "Валюта",
+  "settingsCurrencySymbol": "Белгі",
+  "settingsCurrencyCode": "Код",
+  "settingsCountry": "Ел",
+  "settingsAdditional": "Қосымша баптаулар",
+  "settingsTransport": "Көлік",
+  "settingsTransportDesc": "Деректерді синхрондау баптаулары",
+  "settingsPrinter": "Принтер",
+  "settingsPrinterDesc": "Чектерді басып шығару баптаулары",
+  "settingsFiscal": "Фискализация",
+  "settingsFiscalDesc": "WebKassa, ОФД, ҚҚС",
+  "settingsTelegram": "Telegram",
+  "settingsTelegramDesc": "Telegram интеграциясы және арналар",
+  "settingsPermissions": "Рұқсаттар",
+  "settingsPermissionsDesc": "Кассирлерге рұқсаттар",
+  "fiscalTitle": "Фискализация",
+  "fiscalOperator": "Фискалдық оператор",
+  "fiscalWebkassa": "WebKassa баптаулары",
+  "fiscalTaxpayer": "Салық төлеуші деректері",
+  "fiscalVatSettings": "ҚҚС баптаулары",
+  "fiscalVatPayer": "ҚҚС төлеуші",
+  "fiscalPrintVat": "Чекте ҚҚС басу",
+  "fiscalSaved": "Баптаулар сақталды",
+  "fiscalSaveError": "Сақтау қатесі",
+  "printerSettingsTitle": "Принтер баптаулары",
+  "printerConnectionType": "Қосылу түрі",
+  "printerAddress": "Принтер мекенжайы",
+  "printerPaperWidth": "Қағаз ені",
+  "printerTesting": "Тестілеу",
+  "printerReady": "Дайын",
+  "printerNotConnected": "Қосылмаған",
+  "printerPaperOut2": "Қағаз жоқ",
+  "printerCoverOpen": "Қақпағы ашық",
+  "printerPrinting": "Басып шығару...",
+  "printerCheckStatus": "Тексеру...",
+  "printerPrintSuccess": "Басып шығару сәтті",
+  "printerPrintError": "Басып шығару қатесі",
+  "printerCheckBtn": "Тексеру",
+  "printerTestReceipt": "Тестілік чек",
+  "printerPort": "Порт",
+  "cashOperationTitle": "Касса операциясы",
+  "cashWithdrawal": "Алу",
+  "cashCommentRequired": "Пікір *",
+  "cashCommentOptional": "Пікір",
+  "cashCommentHint": "Пікір жазыңыз...",
+  "cashEnterAmountMsg": "Соманы енгізіңіз",
+  "cashPositiveOnly": "Сома оң болуы керек",
+  "cashInsufficient": "Кассада ақша жеткіліксіз",
+  "cashInvalidAmount": "Дұрыс соманы енгізіңіз",
+  "cashInDrawer": "Кассада:",
+  "telegramTitle": "Telegram баптаулары",
+  "telegramAuth": "Авторизация",
+  "telegramSync": "Синхрондау",
+  "telegramNotifications": "Хабарландыруларды қосу",
+  "telegramAutoSync": "Автосинхрондау",
+  "telegramSyncData": "Деректерді автоматты синхрондау",
+  "telegramSyncInterval": "Синхрондау аралығы",
+  "telegramForceSync": "Мәжбүрлі синхрондау",
+  "telegramFullSync": "Толық синхрондау",
+  "telegramRecreateChannels": "Арналарды қайта құру",
+  "telegramLogout": "Telegram-нен шығу",
+  "telegramSyncComplete": "Синхрондау аяқталды",
+  "telegramSyncError": "Синхрондау қатесі",
+  "telegramLogoutComplete": "Шығу орындалды",
+  "chatTitle": "Қызметкерлер чаты",
+  "chatParticipants": "{count} қатысушы",
+  "@chatParticipants": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatConnected": "Қосылды",
+  "chatDisconnected": "Байланыс жоқ",
+  "chatNoMessages": "Хабарламалар жоқ",
+  "chatStartConversation": "Команда мүшелерімен сөйлесіңіз",
+  "chatMessageHint": "Хабарлама...",
+  "chatSearch": "Іздеу",
+  "chatSearchHint": "Іздеу мәтінін енгізіңіз...",
+  "chatMembers": "Қатысушылар",
+  "chatLinkTelegram": "Telegram байлау",
+  "chatCopied": "Көшірілді",
+  "chatReply": "Жауап беру",
+  "chatCopy": "Көшіру",
+  "chatDeleteMsg": "Хабарламаны жою?",
+  "chatDeleteConfirm": "Хабарлама барлық қатысушылар үшін жойылады.",
+  "chatPhoto": "Фото",
+  "chatDocument": "Құжат",
+  "chatLocation": "Орналасу",
+  "chatCamera": "Камера",
+  "chatGallery": "Галерея",
+  "chatSelectSource": "Көзді таңдаңыз",
+  "updateAvailable": "Жаңарту қолжетімді",
+  "updateInProgress": "Жаңартылуда...",
+  "updateAutoIn": "Автожаңарту {seconds} сек кейін",
+  "@updateAutoIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "updateNowBtn": "Қазір жаңарту",
+  "updateLater": "Кейін",
+  "updateSkip": "Өткізу",
+  "updateBtn": "Жаңарту",
+  "storageWarningTitle": "Дискте орын аз",
+  "storageWarningMsg": "Кассаның тұрақты жұмысы үшін кемінде 2 ГБ босатыңыз.",
+  "storageUnderstood": "Түсінікті",
+  "errorCritical": "Сыни қате",
+  "errorAppProblem": "Қолданба мәселеге тап болды",
+  "errorDescription": "Қате сипаттамасы:",
+  "errorTechnical": "Техникалық мәліметтер",
+  "errorRetry": "Қайталау",
+  "errorOpenFolder": "Қалтаны ашу",
+  "errorOtherVersion": "Басқа нұсқа",
+  "errorExit": "Шығу",
+  "switchOn": "Қосу",
+  "switchOff": "Өшіру",
+  "keyboardSpace": "Бос орын",
+  "keyboardHide": "Пернетақтаны жасыру",
+  "keyboardShow": "Пернетақтаны көрсету",
+  "commentReceipt": "Чекке пікір",
+  "commentReceiptHint": "Пікір жазыңыз...",
+  "productNameLabel": "Тауар атауы",
+  "productNameHint": "Атауын енгізіңіз...",
+  "nothingFound": "Ештеңе табылмады",
+  "datePlaceholder": "КК.АА.ЖЖЖЖ",
+  "timePlaceholder": "СС:ММ",
+  "dateTimePlaceholder": "КК.АА.ЖЖЖЖ СС:ММ",
+  "selectPeriod": "Кезеңді таңдаңыз",
+  "bonusProgram": "Бонус бағдарламасы",
+  "enterPhone": "Клиенттің телефон нөмірін енгізіңіз",
+  "enterSmsCode": "SMS-тен кодты енгізіңіз",
+  "resendIn": "{seconds} сек кейін қайта жіберу",
+  "@resendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "resendCode": "Кодты қайта жіберу",
+  "availableBonuses": "Қолжетімді бонустар:",
+  "useBonuses": "Бонустарды есептен шығару",
+  "deferredSales": "Кейінге қалдырылған сатулар",
+  "noDeferredSales": "Кейінге қалдырылған сатулар жоқ",
+  "fiscalErrors": "Фискализация қателері",
+  "selectAllErrors": "Барлығын таңдау",
+  "retrySelected": "Қайталау",
+  "receiptNo": "Чек №{number}",
+  "@receiptNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "dontAskAgain": "Қайта сұрамау",
+  "deleteTitle": "Жою",
+  "deleteItemConfirm": "\"{name}\" жоюға сенімдісіз бе?",
+  "@deleteItemConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "exitTitle": "Шығу",
+  "exitConfirm": "Шығуға сенімдісіз бе?",
+  "exitBtn": "Шығу",
+  "valueCannotBeNegative": "Мән теріс болуы мүмкін емес",
+  "maxPercent": "Максимум {percent}%",
+  "@maxPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "maxAmount": "Максимум {amount}",
+  "@maxAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "enterValidNumber": "Дұрыс санды енгізіңіз",
+  "discountAmount": "Жеңілдік сомасы:",
+  "sumLabel": "Сома",
+  "enterAmount": "Соманы енгізіңіз",
+  "amountMustBePositive": "Сома оң болуы керек",
+  "notEnoughCashInDrawer": "Кассада ақша жеткіліксіз",
+  "enterValidAmount": "Дұрыс соманы енгізіңіз",
+  "inDrawer": "Кассада:",
+  "commentOptional": "Пікір (міндетті емес)",
+  "operationReason": "Операция себебі...",
+  "positions": "позициялар",
+  "enterWeight": "Салмақты енгізіңіз",
+  "weightMustBePositive": "Салмақ оң болуы керек",
+  "maxWeightValue": "Максимум {max} {unit}",
+  "@maxWeightValue": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "unitPcs": "дана",
+  "unitKg": "кг",
+  "lowStorageTooltip": "Орын аз: {gb} GB",
+  "@lowStorageTooltip": {
+    "placeholders": {
+      "gb": {
+        "type": "String"
+      }
+    }
+  },
+  "storageFree": "Бос: {gb} GB",
+  "@storageFree": {
+    "placeholders": {
+      "gb": {
+        "type": "String"
+      }
+    }
+  },
+  "storageRecommendation": "Кассаның тұрақты жұмысы үшін кемінде 2 GB бос орын ұсынылады.\n\nДискте орын босатыңыз немесе әкімшіге хабарласыңыз.",
+  "lowStorageBanner": "Бос орын аз: {gb} GB. Тұрақты жұмыс үшін кемінде 2 GB босату ұсынылады.",
+  "@lowStorageBanner": {
+    "placeholders": {
+      "gb": {
+        "type": "String"
+      }
+    }
+  },
+  "lowStorageTooltipShort": "Дискте орын аз: {gb} GB",
+  "@lowStorageTooltipShort": {
+    "placeholders": {
+      "gb": {
+        "type": "String"
+      }
+    }
+  },
+  "cashier": "Кассир:",
+  "buyer": "Сатып алушы:",
+  "receiptHeader": "ЧЕК #{number}",
+  "@receiptHeader": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptDiscountItem": "Жеңілдік:",
+  "receiptSubtotalLabel": "Аралық сома",
+  "receiptPayment": "Төлем:",
+  "fiscalMark": "ФБ:",
+  "remainingStock": "Қалд: {qty}",
+  "@remainingStock": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "tableHeaderName": "Атауы",
+  "tableHeaderPrice": "Бағасы",
+  "tableHeaderQty": "Саны",
+  "tableHeaderTotal": "Барлығы",
+  "emptyReceipt": "Чек бос",
+  "addProductsViaSearch": "Іздеу арқылы тауар қосыңыз\nнемесе штрих-кодты сканерлеңіз",
+  "addProductsViaSearchShort": "Іздеу арқылы тауар қосыңыз",
+  "priceLabel": "Бағасы",
+  "receiptTotalLabel": "Чек бойынша барлығы",
+  "positionsLabel": "Позициялар",
+  "toPayLabel": "ТӨЛЕУГЕ",
+  "payBtn": "ТӨЛЕУ",
+  "totalLabel": "Барлығы:",
+  "posAndQty": "{positions} поз. / {qty} дана",
+  "@posAndQty": {
+    "placeholders": {
+      "positions": {
+        "type": "int"
+      },
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "modeRetail": "Бөлшек",
+  "modeWholesale": "КӨТЕРМЕ",
+  "quickProducts": "Жылдам тауарлар",
+  "editProduct": "Өңдеу",
+  "labelComment": "Пікір",
+  "selectPackage": "Фасовканы таңдаңыз",
+  "packageQty": "{qty} дана",
+  "@packageQty": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "allBreadcrumb": "Барлығы",
+  "productPrice": "{price} ₸",
+  "@productPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "maxBonusPercent": "Чек сомасының {percent}%-на дейін есептен шығаруға болады",
+  "@maxBonusPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "insufficientBonuses": "Бонустар жеткіліксіз",
+  "enterValidPhone": "Дұрыс телефон нөмірін енгізіңіз",
+  "errorsCount": "{count} қате",
+  "@errorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectAllCount": "Барлығын таңдау ({count})",
+  "@selectAllCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "retryCount": "Қайталау ({count})",
+  "@retryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptHash": "Чек #{number}",
+  "@receiptHash": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "enterIntegerNumber": "Бүтін санды енгізіңіз",
+  "enterDigits": "{length} сан енгізіңіз",
+  "@enterDigits": {
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "drawerPrimary": "Негізгі",
+  "drawerSecondary": "Қосымша",
+  "tooltipMore": "Тағы да",
+  "statusOnline": "Online",
+  "statusOffline": "Offline",
+  "statusSyncing": "Синхрондау...",
+  "thankYouForPurchase": "Сатып алғаныңызға рахмет!",
+  "searchProductHint": "Тауар іздеу (атау немесе штрих-код)",
+  "actionDefer": "Кейінге қалдыру",
+  "actionMark": "Маркировка",
+  "actionIncrease": "Көбейту",
+  "actionDecrease": "Азайту",
+  "restaurantSettings": "Мейрамхана режимі",
+  "restaurantSettingsDesc": "Үстелдер, аймақтар, сервис алымы",
+  "restaurantOperatingMode": "Жұмыс режимі",
+  "restaurantModeRetail": "Бөлшек сауда",
+  "restaurantModeRetailDesc": "Дүкендерге арналған стандартты POS",
+  "restaurantModeRestaurant": "Мейрамхана",
+  "restaurantModeRestaurantDesc": "Үстелдер, тапсырыстар, сервис алымы",
+  "restaurantModeService": "Сервис",
+  "restaurantModeServiceDesc": "Өтінімдерді қабылдау, кезек",
+  "restaurantZoneManagement": "Аймақтарды басқару",
+  "restaurantZoneAdd": "Аймақ қосу",
+  "restaurantZoneRename": "Атын өзгерту",
+  "restaurantZonePresets": "Алдын ала орнату",
+  "restaurantZoneHall": "Зал",
+  "restaurantZoneTerrace": "Терраса",
+  "restaurantZoneVip": "VIP",
+  "restaurantZoneBar": "Бар",
+  "restaurantZoneBooth": "Кабинка",
+  "restaurantZoneKaraoke": "Караоке",
+  "restaurantZoneVeranda": "Веранда",
+  "restaurantZonePrivate": "Жеке бөлме",
+  "restaurantTableManagement": "Үстелдерді басқару",
+  "restaurantTableAdd": "Үстел қосу",
+  "restaurantTableEdit": "Үстелді өзгерту",
+  "restaurantTableName": "Үстел атауы",
+  "restaurantTableCapacity": "Сыйымдылық",
+  "restaurantTableZone": "Аймақ",
+  "restaurantTableSortOrder": "Реттілік",
+  "restaurantTableDeactivate": "Үстелді өшіру",
+  "restaurantTableDeactivateConfirm": "«{name}» үстелін өшіру керек пе?",
+  "@restaurantTableDeactivateConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantServiceCharge": "Сервис алымы",
+  "restaurantServiceChargeEnabled": "Сервис алымын қосу",
+  "restaurantServiceChargePercent": "Сервис алымы пайызы",
+  "restaurantTableFree": "Бос",
+  "restaurantTableOccupied": "Бос емес",
+  "restaurantTableReserved": "Брондалған",
+  "restaurantTableDirty": "Жинау",
+  "restaurantOrderDineIn": "Залда",
+  "restaurantOrderTakeout": "Алып кету",
+  "restaurantOrderDelivery": "Жеткізу",
+  "restaurantAllZones": "Барлық аймақтар",
+  "restaurantNoTables": "Үстелдер жоқ",
+  "restaurantNoTablesHint": "Мейрамхана параметрлерінде үстелдер қосыңыз",
+  "restaurantGoToSettings": "Параметрлерге өту",
+  "restaurantOrdersEmpty": "Белсенді тапсырыстар жоқ",
+  "restaurantOrderItems": "{count} позиция",
+  "@restaurantOrderItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantOrderGuests": "Қонақтар: {count}",
+  "@restaurantOrderGuests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantOrderWaiter": "Даяшы: {name}",
+  "@restaurantOrderWaiter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantOrderElapsed": "{minutes} мин",
+  "@restaurantOrderElapsed": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantNoOrder": "Белсенді тапсырыс жоқ",
+  "restaurantOpenOrder": "Тапсырыс ашу",
+  "restaurantCloseOrder": "Тапсырысты жабу",
+  "restaurantAddItems": "Позиция қосу",
+  "restaurantGoToPayment": "Төлемге",
+  "restaurantTransfer": "Ауыстыру",
+  "restaurantSplitBill": "Бөлу",
+  "restaurantChangeStatus": "Мәртебені өзгерту",
+  "restaurantSetFree": "Бос",
+  "restaurantSetReserved": "Брондау",
+  "restaurantSetDirty": "Жинау қажет",
+  "restaurantCreateOrder": "Жаңа тапсырыс",
+  "restaurantPartySize": "Қонақтар саны",
+  "restaurantOrderType": "Тапсырыс түрі",
+  "restaurantWaiter": "Даяшы",
+  "restaurantNote": "Ескертпе",
+  "restaurantDeliveryAddress": "Жеткізу мекенжайы",
+  "restaurantDeliveryPhone": "Телефон",
+  "restaurantTransferTitle": "Тапсырысты ауыстыру",
+  "restaurantTransferCurrent": "Ағымдағы: {table}",
+  "@restaurantTransferCurrent": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantTransferSelectFree": "Бос үстелді таңдаңыз:",
+  "restaurantSplitTitle": "Шотты бөлу",
+  "restaurantSplitEvenly": "Тең",
+  "restaurantSplitByItems": "Позициялар бойынша",
+  "restaurantSplitGuestCount": "Қонақтар саны",
+  "restaurantSplitPerGuest": "Әрқайсысына: {amount}",
+  "@restaurantSplitPerGuest": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantSplitGuest": "Қонақ {number}",
+  "@restaurantSplitGuest": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantSplitApply": "Қолдану",
+  "restaurantPreCheckPrinted": "Алдын ала чек басып шығаруға жіберілді",
+  "restaurantPreCheckFailed": "Алдын ала чекті басып шығару қатесі",
+  "restaurantSubtotal": "Аралық сома",
+  "restaurantServiceChargeLine": "Сервис алымы ({percent}%)",
+  "@restaurantServiceChargeLine": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantOrderNumber": "Тапсырыс #{number}",
+  "@restaurantOrderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantTakeoutNumber": "Алып кету #{number}",
+  "@restaurantTakeoutNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantDeliveryNumber": "Жеткізу #{number}",
+  "@restaurantDeliveryNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantSaved": "Мейрамхана параметрлері сақталды",
+  "restaurantQuickActions": "Жылдам әрекеттер",
+  "restaurantNoItems": "Тауарлар жоқ",
+  "restaurantTableSeats": "{count} орын",
+  "@restaurantTableSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantOrderTab": "Тапсырыс",
+  "restaurantMenuTab": "Мәзір",
+  "restaurantGuestLabel": "Қонақ {number}",
+  "@restaurantGuestLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantRemoveItem": "Тауарды жою",
+  "restaurantPrintPrecheck": "Алдын-ала чек",
+  "restaurantNewTakeout": "Алып кету",
+  "restaurantNewDelivery": "Жеткізу",
+  "setupSectionOrganization": "Ұйым",
+  "setupSectionContact": "Байланыс тұлғасы",
+  "setupSectionAddress": "Мекенжайлар",
+  "setupSectionCashBox": "Касса",
+  "setupSectionUsers": "Кім жұмыс істейді",
+  "setupSectionSecurity": "Кодпен кіру",
+  "setupSectionScanner": "Сканер",
+  "setupSectionScale": "Таразы",
+  "setupSectionDisplay": "Сатып алушы дисплейі",
+  "setupSectionTerminal": "Төлем терминалы",
+  "setupSectionCashback": "Қолма-қол ақша қайтару",
+  "setupTaxIdExplanation": "Салық нөмірі әр чекте басылады және фискалдық қызметке жіберіледі. Мұндағы қате салық органымен алғашқы салыстыру кезінде ғана байқалады — чектер сатып алушыларға берілгеннен кейін.",
+  "setupFiscalCredentialsExplanation": "Деректемелерді фискалдық оператор береді. Олар дұрыс болмаса, чектер әдеттегідей басылады, бірақ фискалдық қызметке жетпейді — айырма сатылым кезінде емес, салыстыру кезінде байқалады.",
+  "setupKktNumberExplanation": "ККМ нөмірі кассаны оператордағы тіркеуімен байланыстырады. Мұндағы қате чектерді бөтен касса атынан жібереді, ал мұны кассаның өзінен байқау мүмкін емес.",
+  "setupStepProgress": "{current} / {total} қадам",
+  "@setupStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "setupStepChecking": "Тексеру",
+  "setupStepTelegram": "Telegram",
+  "setupStepCountry": "Ел",
+  "setupStepOrganization": "Ұйым",
+  "setupStepVat": "ҚҚС",
+  "setupStepUsers": "Пайдаланушылар",
+  "setupStepWorkMode": "Жұмыс режимі",
+  "setupStepPos": "Касса",
+  "setupStepFiscal": "Фискализация",
+  "setupStepEquipment": "Жабдық",
+  "setupStepTerminals": "Терминалдар",
+  "setupStepOperatingMode": "Бизнес түрі",
+  "setupStepBusinessRules": "Ережелер",
+  "setupStepSummary": "Тексеру",
+  "setupStepComplete": "Дайын",
+  "setupCheckingSettings": "Баптаулар тексерілуде...",
+  "setupStateUnreadableTitle": "Касса жауап бермеді",
+  "setupStateUnreadableBody": "Шебер касса күйін оқымайынша баптауды бастамайды: әйтпесе ол жұмыс істеп тұрған дүкенді өшіріп жіберуі мүмкін. Кассаның қосулы және желіде қолжетімді екенін тексеріңіз.",
+  "wtUnavailableTitle": "Кассамен байланыс жоқ",
+  "wtUnavailableBody": "Терминал деректерді тек WebTransport арқылы алады. Қосалқы жол жоқ: байланыс болмаса, көрсететін ештеңе жоқ, ал ескі деректерді жаңа деп көрсету — ештеңе көрсетпегеннен жаман. Кассаның қосулы екенін тексеріп, қайталаңыз.",
+  "wtUnavailableReason": "Себебі: {reason}",
+  "@wtUnavailableReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalHomeWhoHeader": "Кім кірді",
+  "terminalHomeUserLabel": "Кассир",
+  "terminalHomeSaleNote": "Браузерде сату — бөлек жұмыс: сату экраны кассаның дерекқорын тікелей оқиды және әзірге браузер үшін құрастырылмайды.",
+  "wtNotPortedTitle": "Бұл экран әзірге тек кассада",
+  "wtNotPortedBody": "Браузер терминалы деректерді сым арқылы алады, және экран мұнда оның барлық келісімдері сым үстінен жұмыс істей алғанда пайда болады. Бұл әлі үйренген жоқ. Оны бос көрсеткеннен гөрі, тіке айтқан дұрыс.",
+  "wtNotPortedLocation": "Бағыт: {location}",
+  "@wtNotPortedLocation": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "setupWelcomeTitle": "TelePOS-қа қош келдіңіз!",
+  "setupCountryDescription": "Валюта мен салықтарды баптау үшін еліңізді таңдаңыз",
+  "setupPriceExample": "Мысалы: {amount}",
+  "@setupPriceExample": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "setupVatRateLabel": "ҚҚС: {rate}%",
+  "@setupVatRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "setupOrganizationTitle": "Ұйым деректері",
+  "setupOrganizationDescription": "Компанияңыз туралы ақпаратты енгізіңіз",
+  "setupCompanyNameLabel": "Ұйым атауы",
+  "setupCompanyNameHint": "ЖШС \"Менің компаниям\"",
+  "setupTaxIdDigits": "{length} сан",
+  "@setupTaxIdDigits": {
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "setupLegalAddressLabel": "Заңды мекенжай",
+  "setupActualAddressLabel": "Дүкеннің нақты мекенжайы",
+  "setupOwnerNameLabel": "Басшының Т.А.Ә.",
+  "setupPhoneLabel": "Телефон",
+  "setupVatTitle": "Қосылған құн салығы",
+  "setupVatDescription": "Ұйымыңыздың салық салу режимін таңдаңыз",
+  "setupVatPayerTitle": "ҚҚС төлеуші",
+  "setupVatPayerRate": "ҚҚС мөлшерлемесі: {rate}%",
+  "@setupVatPayerRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "setupVatPayerRateUnknown": "ҚҚС мөлшерлемесі елге байланысты",
+  "setupVatPayerDescription": "Чектерде ҚҚС бөлінеді.\nЖалпы салық салу жүйесіндегі компаниялар үшін міндетті.",
+  "setupVatNonPayerTitle": "ҚҚС-сыз",
+  "setupVatNonPayerSubtitle": "ҚҚС қолданылмайды",
+  "setupVatNonPayerDescription": "Чектерде ҚҚС бөлінбейді.\nЖеңілдетілген жүйедегі немесе патенттегі ЖК үшін.",
+  "setupWorkModeTitle": "Жұмыс режимі",
+  "setupWorkModeDescription": "Кассаңыздың жұмыс тәсілін таңдаңыз",
+  "setupAutonomousTitle": "Автономды режим",
+  "setupAutonomousSubtitle": "Интернетсіз жұмыс",
+  "setupAutonomousDescription": "Касса толығымен автономды жұмыс істейді.\nДеректер тек жергілікті сақталады.\nКассалар арасында синхрондау жоқ.",
+  "setupNetworkTitle": "Желілік режим",
+  "setupNetworkConfigured": "Telegram бапталған",
+  "setupNetworkRequired": "Telegram қажет",
+  "setupNetworkDescription": "Кассалар арасында деректерді синхрондау.\nБұлтқа сақтық көшірме жасау.\nTelegram-да есептер мен хабарландырулар.",
+  "setupNetworkRequiresTelegram": "Желілік режим үшін Telegram баптау қажет",
+  "setupOperatingModeTitle": "Бизнес түрі",
+  "setupOperatingModeDescription": "Бизнесіңіздің түрін таңдаңыз",
+  "setupRetailTitle": "Бөлшек касса",
+  "setupRetailSubtitle": "Дүкен, дәріхана, супермаркет",
+  "setupRetailDescription": "Бөлшек сауда үшін стандартты POS.\nСату, қайтару, тауар қабылдау.\nАуысымдар мен есеп беру.",
+  "setupRestaurantTitle": "Мейрамхана / Кафе",
+  "setupRestaurantSubtitle": "Үстелдер, тапсырыстар, жеткізу",
+  "setupRestaurantDescription": "Үстелдер мен залды басқару.\nАлып кету және жеткізу.\nШотты бөлу және сервис алымы.",
+  "setupServiceTitle": "Сервис орталығы",
+  "setupServiceSubtitle": "Жөндеу, қызметтер, рәсімдер",
+  "setupServiceDescription": "Жөндеуге/қызметке қабылдау.\nТапсырыс-нарядтар және жұмыс белгілері.\nМәртебені бақылау және беру.",
+  "setupPosConfigTitle": "Кассаны баптау",
+  "setupPosConfigDescription": "Кассалық аппараттың параметрлерін көрсетіңіз",
+  "setupCashBoxNameLabel": "Касса атауы",
+  "setupCashBoxNameHint": "Касса 1",
+  "setupPosIdLabel": "Касса ID",
+  "setupPrinterConfigTitle": "Чек принтері",
+  "setupPaperWidthLabel": "Қағаз ені",
+  "setupPaperWidth58": "58 мм (32 символ)",
+  "setupPaperWidth80": "80 мм (48 символ)",
+  "setupPrinterHeaderLabel": "Чек тақырыбы",
+  "setupPrinterHeaderHint": "Дүкен атауы\nМекенжайы",
+  "setupPrinterFooterLabel": "Чек төменгі жағы",
+  "setupPrinterFooterHint": "Сатып алғаныңызға рахмет!",
+  "setupFiscalNotRequired": "Сіздің ел үшін фискализация қажет емес",
+  "setupFiscalDescription": "Фискалдық оператормен байланысты баптаңыз",
+  "setupEnableWebkassa": "WebKassa қосу",
+  "setupEnableOfd": "ОФД қосу",
+  "setupWebkassaDescription": "WebKassa арқылы чектерді фискализациялау (Қазақстан)",
+  "setupOfdDescription": "ОФД арқылы чектерді фискализациялау (Ресей)",
+  "setupSkipLater": "Өткізу (кейін баптау)",
+  "setupWebkassaAccountTitle": "WebKassa аккаунты",
+  "setupWebkassaAccountIdLabel": "Аккаунт ID",
+  "setupWebkassaAccountIdHint": "WebKassa-дағы ID-ңіз",
+  "setupWebkassaTokenLabel": "Аккаунт токені",
+  "setupWebkassaTokenHint": "API токен",
+  "setupWebkassaPosTitle": "WebKassa кассасы",
+  "setupWebkassaPosIdLabel": "Касса ID",
+  "setupWebkassaPosIdHint": "WebKassa-дағы касса ID",
+  "setupWebkassaPosTokenLabel": "Касса токені",
+  "setupWebkassaPosTokenHint": "Касса токені",
+  "setupWebkassaFactoryNoLabel": "ККМ зауыттық нөмірі",
+  "setupOfdParamsTitle": "ОФД параметрлері",
+  "setupOfdInnLabel": "Ұйымның ИНН",
+  "setupOfdKktRegNoLabel": "ККТ тіркеу нөмірі",
+  "setupOfdFnNoLabel": "ФН нөмірі",
+  "setupOfdUrlLabel": "ОФД URL",
+  "setupEquipmentTitle": "Жабдық",
+  "setupEquipmentDescription": "Қосылған жабдықты баптаңыз",
+  "setupEquipmentPrinter": "Чек принтері",
+  "setupEquipmentScanner": "Штрих-код сканері",
+  "setupEquipmentScales": "Таразы",
+  "setupEquipmentCashDrawer": "Ақша жәшігі",
+  "setupEquipmentDisplay": "Сатып алушы дисплейі",
+  "setupConnectionTypeLabel": "Қосылу түрі",
+  "setupConnectionUsb": "USB",
+  "setupConnectionBluetooth": "Bluetooth",
+  "setupConnectionWifi": "Wi-Fi / Ethernet",
+  "setupConnectionSerial": "COM-порт",
+  "setupConnectionNone": "Таңдалмаған",
+  "setupPrinterIpLabel": "Принтер IP-мекенжайы",
+  "setupPrinterMacLabel": "Принтер MAC-мекенжайы",
+  "setupPrinterNameLabel": "Принтер атауы",
+  "setupPrinterNameHint": "Ас үй принтері",
+  "setupScannerTypeLabel": "Сканер түрі",
+  "setupScannerCamera": "Құрылғы камерасы",
+  "setupScannerUsb": "USB-сканер",
+  "setupScannerBluetooth": "Bluetooth-сканер",
+  "setupScalePortLabel": "COM-порт",
+  "setupBaudRateLabel": "Жылдамдық (baud rate)",
+  "setupCashDrawerConnected": "Принтерге қосылған",
+  "setupCashDrawerConnectedDesc": "Принтер командасымен ашылады",
+  "setupSkip": "Өткізу",
+  "setupPaymentTerminalsTitle": "Төлем терминалдары",
+  "setupPaymentTerminalsDescription": "Төлем жүйелерімен интеграцияны баптаңыз",
+  "setupKaspiIpLabel": "Терминал IP-мекенжайы",
+  "setupPortLabel": "Порт",
+  "setupApiUrlLabel": "API URL",
+  "setupApiKeyLabel": "API кілті",
+  "setupNoTerminalsAvailable": "Сіздің аймақ үшін қолжетімді төлем терминалдары жоқ",
+  "setupBusinessRulesTitle": "Бизнес-ережелер",
+  "setupBusinessRulesDescription": "Касса жұмысының ережелерін баптаңыз",
+  "setupPermissionsTitle": "Рұқсаттар",
+  "setupAllowDiscounts": "Жеңілдіктер",
+  "setupAllowDiscountsDesc": "Жеңілдіктерді қолдануға рұқсат беру",
+  "setupAllowDebtSales": "Қарызға сату",
+  "setupAllowDebtSalesDesc": "Несиеге сатуға рұқсат беру",
+  "setupAllowPriceEdit": "Бағаларды өңдеу",
+  "setupAllowPriceEditDesc": "Сату кезінде бағаларды өзгертуге рұқсат беру",
+  "setupAllowCashInOut": "Касса операциялары",
+  "setupAllowCashInOutDesc": "Қолма-қол ақша енгізу және беру",
+  "setupBlockPriceDecrease": "Бағаны төмендетуді бұғаттау",
+  "setupBlockPriceDecreaseDesc": "Белгіленген бағадан төмен сатуға тыйым салу",
+  "setupLimitsTitle": "Лимиттер",
+  "setupAllowBigAmount": "Ірі сомалар",
+  "setupAllowBigAmountDesc": "> 1 000 000 операцияларға рұқсат беру",
+  "setupCashWithdrawalLimitLabel": "Қолма-қол беру лимиті",
+  "setupCashWithdrawalLimitHelper": "Лимитсіз үшін бос қалдырыңыз",
+  "setupLoyaltyTitle": "Адалдық бағдарламасы",
+  "setupCashbackLabel": "Кешбэк",
+  "setupCashbackDesc": "Бонустар есептеуді қосу",
+  "setupCashbackRateLabel": "Кешбэк пайызы",
+  "setupRoundingTitle": "Дөңгелектеу",
+  "setupDiscountRounding": "Жеңілдіктерді дөңгелектеу",
+  "setupWeightRounding": "Салмақтық тауарларды дөңгелектеу",
+  "setupRoundingNone": "Дөңгелектеусіз",
+  "setupRoundingUp1": "1-ге дейін (жоғары)",
+  "setupRoundingDown1": "1-ге дейін (төмен)",
+  "setupRoundingUp5": "5-ке дейін (жоғары)",
+  "setupRoundingDown5": "5-ке дейін (төмен)",
+  "setupRoundingUp10": "10-ға дейін (жоғары)",
+  "setupRoundingDown10": "10-ға дейін (төмен)",
+  "setupFiscalDisablesRounding": "Фискализация қосылған кезде дөңгелектеу автоматты түрде өшіріледі",
+  "setupUserCreationTitle": "Пайдаланушыларды құру",
+  "setupUserCreationDescription": "Кассамен жұмыс істеу үшін пайдаланушыларды жасаңыз",
+  "setupAdminLabel": "ӘКІМШІ",
+  "setupAdminSubtitle": "Касса иесі",
+  "setupUserNameLabel": "Аты",
+  "setupUserPinLabel": "PIN",
+  "setupUserPinConfirmLabel": "Растау",
+  "setupAdminPinDefault": "Әдепкі: 0000",
+  "setupSellerLabel": "САТУШЫ",
+  "setupSellerOptional": "Қосымша",
+  "setupSellerPinDefault": "Әдепкі: 1111",
+  "setupAdminPinMismatch": "Әкімші PIN-кодтары сәйкес келмейді",
+  "setupSummaryTitle": "Деректерді тексеріңіз",
+  "setupSummaryDescription": "Барлығы дұрыс көрсетілгеніне көз жеткізіңіз",
+  "setupSummaryCountry": "Ел",
+  "setupSummaryCurrency": "Валюта",
+  "setupSummaryFormat": "Формат",
+  "setupSummaryVat": "ҚҚС",
+  "setupSummaryTelegram": "Telegram",
+  "setupSummaryStatus": "Мәртебе",
+  "setupConfigured": "Бапталған",
+  "setupNotConfigured": "Бапталмаған",
+  "setupSummaryOrganization": "Ұйым",
+  "setupSummaryName": "Атауы",
+  "setupSummaryAddress": "Мекенжай",
+  "setupSummaryWorkMode": "Жұмыс режимі",
+  "setupSummaryMode": "Режим",
+  "setupSummaryAutonomous": "Автономды (желісіз)",
+  "setupSummaryNetwork": "Желілік (синхрондау)",
+  "setupSummaryPos": "Касса",
+  "setupSummaryId": "ID",
+  "setupEnabled": "Қосылған",
+  "setupDisabled": "Өшірілген",
+  "setupSummaryFiscalType": "Түрі",
+  "setupSummaryEquipment": "Жабдық",
+  "setupSummaryPrinter": "Принтер",
+  "setupSummaryScanner": "Сканер",
+  "setupSummaryScales": "Таразы",
+  "setupSummaryCashDrawer": "Ақша жәшігі",
+  "setupSummaryTerminals": "Төлем терминалдары",
+  "setupSummaryRules": "Бизнес-ережелер",
+  "setupSummaryDiscounts": "Жеңілдіктер",
+  "setupSummaryDebtSales": "Қарызға",
+  "setupSummaryCashback": "Кешбэк",
+  "setupSummaryBigAmount": "Ірі сомалар",
+  "setupSummaryUsers": "Пайдаланушылар",
+  "setupSummaryAdmin": "Әкімші",
+  "setupSummarySeller": "Сатушы",
+  "setupCompleteTitle": "Баптау аяқталды!",
+  "setupCompleteSubtitle": "Касса жұмысқа дайын",
+  "setupStartWork": "Жұмысты бастау",
+  "setupVatPayerSummary": "ҚҚС төлеуші ({rate}%)",
+  "@setupVatPayerSummary": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "setupSummaryWkPosId": "WK касса ID",
+  "setupSummaryOfdInn": "ИНН",
+  "setupScalesConfigured": "Бапталған",
+  "setupScalesNotConfigured": "Бапталмаған",
+  "setupCashDrawerOn": "Қосылған",
+  "setupAllowed": "Рұқсат етілген",
+  "setupDenied": "Тыйым салынған",
+  "setupAllowedFem": "Рұқсат етілген",
+  "setupDeniedFem": "Тыйым салынған",
+  "setupCashbackOff": "Өшірілген",
+  "setupBigAmountLimit": "Лимит 100 000",
+  "setupDisplayPortLabel": "COM-порт",
+  "telegramAuthSkip": "Өткізу (кейін баптау)",
+  "telegramInitializing": "Инициализация",
+  "telegramErrorTdlib": "TDLib қатесі",
+  "telegramAuthLogin": "Telegram-ға кіру",
+  "telegramAuthCodeStep": "Растау коды",
+  "telegramAuth2fa": "Екі факторлы аутентификация",
+  "telegramRegister": "Тіркелу",
+  "telegramSearchingChannels": "Арналарды іздеу",
+  "telegramLoadingData": "Деректерді жүктеу",
+  "telegramOrgData": "Ұйым деректері",
+  "telegramSetupChannels": "Арналарды баптау",
+  "telegramSetupEncryption": "Шифрлеуді баптау",
+  "telegramSetupComplete": "Дайын",
+  "telegramInitializingLong": "Telegram инициализациясы...",
+  "telegramConnecting": "Telegram серверлеріне қосылу",
+  "telegramTdlibNotFound": "TDLib табылмады",
+  "telegramTdlibErrorMessage": "TDLib жергілікті кітапханасы табылмады.\nTelegram-мен жұмыс істеу үшін tdjson орнату қажет.",
+  "telegramForWindows": "Windows үшін:",
+  "telegramWindowsInstructions": "1. TDLib жүктеңіз: github.com/tdlib/td/releases\n2. tdjson.dll файлын жоба түбіріне көшіріңіз\n3. Немесе C:\\TDLib\\bin\\ ішіне орнатыңыз",
+  "telegramPhoneAuthTitle": "Телефон нөмірімен кіру",
+  "telegramPhoneAuthDescription": "Telegram аккаунтыңызға байланған телефон нөмірін енгізіңіз",
+  "telegramCountryCodeLabel": "Ел коды",
+  "telegramPhoneNumber": "Телефон нөмірі",
+  "telegramGetCode": "Код алу",
+  "telegramRefreshQr": "QR-кодты жаңарту",
+  "telegramSignUp": "Тіркелу",
+  "telegramEnterStoreName": "Дүкен атауын енгізіңіз",
+  "telegramInvalidBinIin": "Дұрыс БИН/ЖСН енгізіңіз (12 сан)",
+  "telegramInvalidCode": "Дұрыс кодты енгізіңіз",
+  "telegramEnterPassword": "Құпия сөзді енгізіңіз",
+  "telegramCodeResent": "Код қайта жіберілді",
+  "telegramEnterName": "Атыңызды енгізіңіз",
+  "telegramManageAccount": "Аккаунтты басқару",
+  "telegramNotificationsSection": "Хабарландырулар",
+  "telegramNotificationsDesc": "Сату, ауысымдар және т.б. туралы хабарландырулар алу",
+  "telegramNotifySales": "Сату хабарландырулары",
+  "telegramNotifySalesDesc": "Ірі сатулар, қайтарулар",
+  "telegramNotifyShifts": "Ауысым хабарландырулары",
+  "telegramNotifyShiftsDesc": "Ауысымдарды ашу және жабу",
+  "telegramNotifyCritical": "Сыни хабарландырулар",
+  "telegramNotifyCriticalDesc": "Қателер, OFD мәселелері",
+  "telegramNotifyStock": "Қалдық хабарландырулары",
+  "telegramNotifyStockDesc": "Тауар тапшылығы",
+  "telegramSyncSettings": "Синхрондау баптаулары",
+  "telegramAutoSyncDesc": "Деректерді автоматты синхрондау",
+  "telegramSyncInterval1min": "1 минут",
+  "telegramSyncInterval5min": "5 минут",
+  "telegramSyncInterval15min": "15 минут",
+  "telegramSyncInterval30min": "30 минут",
+  "telegramSyncInterval1hour": "1 сағат",
+  "telegramSystemChannels": "Жүйелік арналар",
+  "telegramRefresh": "Жаңарту",
+  "telegramChannelsNotConnected": "Арналар қосылмаған.\nАвтоматты құру үшін Telegram-ға кіріңіз.",
+  "telegramChannelsConnected": "{total} арнаның {connected} қосылған",
+  "@telegramChannelsConnected": {
+    "placeholders": {
+      "connected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "telegramChannelsLoadError": "Арналарды жүктеу қатесі: {error}",
+  "@telegramChannelsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "telegramForceSyncDesc": "Барлық деректерді қазір синхрондау",
+  "telegramFullSyncDesc": "Тастау және барлығын қайта синхрондау",
+  "telegramRecreateChannelsDesc": "Жүйелік арналарды қайта құру",
+  "telegramLogoutDesc": "Telegram интеграциясын ажырату",
+  "telegramFullSyncWarning": "Бұл барлық синхрондау уақыт белгілерін тастайды және барлық деректерді қайта жүктейді. Операция ұзаққа созылуы мүмкін.",
+  "telegramRecreateChannelsWarning": "Бұл әрекет барлық жүйелік арналарды қайта құрады. Арналардағы бар деректер жоғалады.",
+  "telegramLogoutWarning": "Шығуға сенімдісіз бе? Синхрондау мен хабарландырулар өшіріледі.",
+  "telegramChannelsRecreated": "Арналар қайта құрылды",
+  "telegramConnectedStatus": "Қосылған",
+  "telegramNotConnected": "Қосылмаған",
+  "telegramAccountLabel": "Telegram аккаунты",
+  "telegramLoginForSync": "Деректерді синхрондау үшін кіріңіз",
+  "channelDescSystemEvents": "Жүйелік оқиғалар",
+  "channelDescSales": "Сату лентасы",
+  "channelDescAlerts": "Сыни хабарландырулар",
+  "channelDescReports": "Есептер мен жиынтықтар",
+  "channelDescSync": "Деректерді синхрондау",
+  "channelDescFiscal": "Фискалдық оқиғалар",
+  "channelDescStaffChat": "Қызметкерлер чаты",
+  "channelDescDataExchange": "Деректер алмасу",
+  "channelDescTerminalStatus": "Терминал мәртебесі",
+  "channelDescBackup": "ДБ сақтық көшірмелері",
+  "chatNoConnectionBanner": "Байланыс жоқ. Хабарламалар қалпына келтірілгенде жіберіледі.",
+  "chatLinkTelegramForId": "Чатта сәйкестендіру үшін Telegram-ды байлаңыз",
+  "chatSendError": "Жіберу қатесі: {error}",
+  "@chatSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "chatFoundMessages": "{count} хабарлама табылды",
+  "@chatFoundMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatNoResults": "Ештеңе табылмады",
+  "chatCopyUidInstructions": "Басқа жүйелерде пайдалану үшін UID көшіріңіз",
+  "chatUidExample": "Мысалы: telepos@pos-1",
+  "chatServiceUnavailable": "Қызмет қолжетімсіз",
+  "chatTelegramLinked": "Telegram сәтті байланды",
+  "additionalLogout": "Шығу",
+  "additionalLockCashier": "Бұғаттау",
+  "additionalPrinterAction": "Принтер",
+  "additionalPrintLastReceipt": "Соңғы чек",
+  "additionalSyncAction": "Синхрондау",
+  "additionalCheckPrice": "Бағаны тексеру",
+  "additionalMinimize": "Жасыру",
+  "additionalCustomers": "Сатып алушылар",
+  "additionalUpdateAction": "Жаңарту",
+  "additionalExtraPrinter": "Қосымша принтер",
+  "additionalSupplyAction": "Қабылдау",
+  "additionalLanguageAction": "Тіл",
+  "additionalKaspiPos": "Kaspi POS",
+  "additionalPrinterEscPos": "ESC/POS термопринтер",
+  "additionalPrinterNotConfigured": "Принтер бапталмаған",
+  "additionalPrinterWifi": "Wi-Fi принтер",
+  "additionalPrinterWifiDesc": "IP бойынша қосылу",
+  "additionalPrinterBluetooth": "Bluetooth принтер",
+  "additionalPrinterBluetoothDesc": "Құрылғыларды іздеу",
+  "additionalPrinterUsb": "USB принтер",
+  "additionalPrinterSystem": "Жүйелік принтер",
+  "additionalPrinterDisconnected": "Принтер ажыратылған",
+  "additionalPrinterIpLabel": "IP",
+  "additionalPrinterEnterIp": "IP мекенжайын енгізіңіз",
+  "additionalPrinterConnecting": "{address} қосылуда...",
+  "@additionalPrinterConnecting": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalPrinterConnectingUsb": "USB принтерді қосу...",
+  "additionalPrinterNotConnected": "Принтер қосылмаған",
+  "additionalPrintingLastReceipt": "Соңғы чекті басып шығару...",
+  "additionalTestReceiptTitle": "=== ТЕСТІЛІК ЧЕК ===",
+  "additionalReceiptPrinted": "Чек басып шығарылды",
+  "additionalPriceSearching": "Іздеу: {query}",
+  "@additionalPriceSearching": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalMinimizing": "Терезені жасыру...",
+  "additionalLatestVersion": "Соңғы нұсқа орнатылған",
+  "additionalExtraPrinterTitle": "Қосымша принтер",
+  "additionalExtraPrinterUsedFor": "Қосымша принтер мыналар үшін қолданылады:",
+  "additionalExtraPrinterLabels": "Жапсырмаларды басып шығару",
+  "additionalExtraPrinterKitchen": "Ас үйге басып шығару",
+  "additionalExtraPrinterDuplicate": "Чек дубликаты",
+  "additionalKaspiPosTitle": "Kaspi POS",
+  "additionalKaspiPosDesc": "Төлемдерді қабылдауға арналған Kaspi терминалы.",
+  "additionalKaspiPosNotConnected": "Мәртебе: Қосылмаған",
+  "additionalPrinterConnectedName": "Принтер қосылды: {name}",
+  "@additionalPrinterConnectedName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalErrorWithMessage": "Қате: {message}",
+  "@additionalErrorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalPrinterUsbNotSupported": "USB принтерлер қолдау көрсетілмейді",
+  "additionalPrinterUsbConnected": "USB принтер қосылды",
+  "additionalBarcodeLabel": "Штрихкод",
+  "additionalBarcodeHint": "Сканерлеңіз немесе енгізіңіз",
+  "additionalTestReceiptProduct": "Тауар {number}",
+  "@additionalTestReceiptProduct": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalTestReceiptTotal": "БАРЛЫҒЫ:",
+  "additionalTestReceiptThankYou": "Сатып алғаныңызға рахмет!",
+  "langRussian": "Русский",
+  "langEnglish": "English",
+  "langKazakh": "Қазақша",
+  "langKyrgyz": "Кыргызча",
+  "langUzbek": "O'zbekcha",
+  "transportFullSyncWarning": "Бұл барлық синхрондау белгілерін тастайды және барлық деректерді қайта жүктейді. Бұл ұзаққа созылуы мүмкін. Жалғастыру керек пе?",
+  "transportSyncAbout": "Синхрондау туралы",
+  "transportSyncStateError": "Синхрондау күйін жүктеу қатесі: {error}",
+  "@transportSyncStateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "transportSyncInfoDialog": "Деректердің әрбір түрі тәуелсіз синхрондалады. Соңғы синхрондаудан кейін өзгерген элементтер ғана жіберіледі.\n\nАралық: 5 минут (әдепкі)\nДеректер жіберу алдында AES-256-GCM шифрленеді.",
+  "transportSyncNever": "Ешқашан",
+  "transportModeDescription": "Сервермен деректер алмасу тәсілін таңдаңыз",
+  "transportModeRest": "REST API",
+  "transportModeRestDesc": "Классикалық HTTP/WebSocket қосылу",
+  "transportModeTelegram": "Telegram",
+  "transportModeTelegramDesc": "Telegram көлік қабаты ретінде",
+  "transportModeHybrid": "Гибридті",
+  "transportModeHybridDesc": "Telegram негізгі, REST резерв ретінде",
+  "transportModeRecommended": "Ұсынылады",
+  "transportSyncIntervalMinutes": "{minutes} минут",
+  "@transportSyncIntervalMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "transportSyncOnConnectivity": "Желі қалпына келгенде синхрондау",
+  "transportSyncIntervalOption": "{minutes, plural, one{{minutes} минут} other{{minutes} минут}}",
+  "@transportSyncIntervalOption": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "transportEnableQueue": "Операциялар кезегі",
+  "transportEnableQueueDesc": "Желі болмаған кезде операцияларды буферлеу",
+  "transportMaxQueueSize": "Кезек өлшемі",
+  "transportQueueSizeStatus": "{size} операция",
+  "@transportQueueSizeStatus": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "transportAutoCleanup": "Автотазалау",
+  "transportAutoCleanupDesc": "Аяқталған операцияларды 7 күннен кейін жою",
+  "transportNotifyChanges": "Көлікті ауыстыру",
+  "transportNotifyChangesDesc": "Көлік режимі ауысқанда хабарлау",
+  "transportNotifySyncErrors": "Синхрондау қателері",
+  "transportNotifySyncErrorsDesc": "Синхрондау қателері туралы хабарлау",
+  "transportNotifyOfflineOnline": "Байланыс",
+  "transportNotifyConnectivityDesc": "Қосылу ауысқанда хабарлау",
+  "transportNotifyQueueFull": "Кезек толы",
+  "transportNotifyQueueFullDesc": "Кезек толғанда хабарлау",
+  "saleErrorInitiation": "Сатуды бастау қатесі: {error}",
+  "@saleErrorInitiation": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorNotInitialized": "Сату инициализацияланбаған",
+  "saleErrorEmpty": "Чек бос",
+  "saleErrorCompletion": "Сатуды аяқтау қатесі: {error}",
+  "@saleErrorCompletion": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorSearch": "Іздеу қатесі: {error}",
+  "@saleErrorSearch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorDeferred": "Чекті кейінге қалдыру қатесі: {error}",
+  "@saleErrorDeferred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saleErrorDeferredNotFound": "Кейінге қалдырылған чек табылмады",
+  "saleErrorLoadingDeferred": "Кейінге қалдырылған чекті жүктеу қатесі: {error}",
+  "@saleErrorLoadingDeferred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCustomerDefault": "Клиент",
+  "paymentErrorFormation": "Төлемді қалыптастыру мүмкін болмады. Шот баптауларын тексеріңіз.",
+  "paymentErrorSaving": "Сатуды сақтау қатесі",
+  "paymentErrorProcessing": "Төлемді өңдеу қатесі: {error}",
+  "@paymentErrorProcessing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentAccountDefault": "Шот {id}",
+  "@paymentAccountDefault": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "refundErrorReceiptNotFound": "#{number} чек табылмады",
+  "@refundErrorReceiptNotFound": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "refundErrorLoadingReceipt": "Чекті жүктеу қатесі: {error}",
+  "@refundErrorLoadingReceipt": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "refundErrorSearch": "Іздеу қатесі: {error}",
+  "@refundErrorSearch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "refundErrorProductNotFound": "Тауар табылмады",
+  "refundErrorNotAuthenticated": "Пайдаланушы авторизацияланбаған",
+  "refundErrorProcessing": "Қайтару қатесі: {error}",
+  "@refundErrorProcessing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorLoadingData": "Ауысым деректерін жүктеу қатесі: {error}",
+  "@shiftErrorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorOpening": "Ауысымды ашу қатесі: {error}",
+  "@shiftErrorOpening": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorClosing": "Ауысымды жабу қатесі: {error}",
+  "@shiftErrorClosing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftErrorPrinting": "Z-есепті басып шығару қатесі: {error}",
+  "@shiftErrorPrinting": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cashOpTypeInvestment": "Салым",
+  "cashOpTypeExpense": "Шығыс",
+  "cashOpTypeDividend": "Алу",
+  "supplyNoName": "Атаусыз",
+  "supplyNoTitle": "Атауы жоқ",
+  "supplyErrorSupplierNotFound": "Жеткізуші табылмады",
+  "supplyErrorSelectingSupplier": "Жеткізушіні таңдау қатесі: {error}",
+  "@supplyErrorSelectingSupplier": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyErrorAccountNotFound": "Шот табылмады",
+  "supplyErrorSelectingAccount": "Шотты таңдау қатесі: {error}",
+  "@supplyErrorSelectingAccount": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyErrorAddingProduct": "Тауар қосу қатесі: {error}",
+  "@supplyErrorAddingProduct": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyErrorProductNotFound": "Тауар табылмады",
+  "supplyErrorMissingFields": "Барлық міндетті өрістерді толтырыңыз",
+  "supplyErrorSaving": "Сақтау қатесі: {error}",
+  "@supplyErrorSaving": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "historyErrorLoading": "Тарихты жүктеу қатесі: {error}",
+  "@historyErrorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "syncTypeProducts": "Тауарлар",
+  "syncTypePrices": "Бағалар",
+  "syncTypeCategories": "Санаттар",
+  "syncTypeAgents": "Контрагенттер",
+  "syncTypeConfig": "Баптаулар",
+  "syncTypeSales": "Сатулар",
+  "syncTypeRefunds": "Қайтарулар",
+  "syncTypeCashOps": "Касса операциялары",
+  "syncTypeShifts": "Ауысымдар",
+  "syncTypeSupplies": "Қабылдаулар",
+  "syncStepPreparing": "Дайындау...",
+  "syncStepUploading": "Жүктеу: {type}",
+  "@syncStepUploading": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "syncStepDownloading": "Жүктеп алу: {type}",
+  "@syncStepDownloading": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "syncCompleted": "Синхрондау аяқталды",
+  "loginErrorNoUsers": "Тіркелген пайдаланушылар жоқ",
+  "loginErrorLoadingData": "Деректерді жүктеу қатесі: {error}",
+  "@loginErrorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "loginErrorSelectUser": "Пайдаланушыны таңдаңыз",
+  "loginErrorIncompletePin": "PIN-кодты енгізіңіз (кемінде 4 сан)",
+  "loginErrorNoRsaKey": "Қате: RSA кілті бапталмаған. Әкімшіге хабарласыңыз.",
+  "loginErrorWrongPin": "Қате PIN-код",
+  "loginErrorSystemTime": "Жүйелік уақыт дұрыс емес. Күн мен уақыт баптауларын тексеріңіз.",
+  "receiptLabelBin": "БИН:",
+  "receiptLabelPhone": "Тел:",
+  "receiptLabelReceiptNo": "Чек №:",
+  "receiptLabelPosId": "Касса:",
+  "receiptLabelDate": "Күні:",
+  "receiptLabelCashier": "Кассир:",
+  "receiptLabelTable": "Үстел:",
+  "receiptLabelWaiter": "Даяшы:",
+  "receiptLabelGuests": "Қонақтар:",
+  "receiptLabelCustomer": "Клиент:",
+  "receiptLabelSubtotal": "Аралық сома:",
+  "receiptLabelDiscount": "Жеңілдік:",
+  "receiptLabelServiceCharge": "Сервис алымы:",
+  "receiptLabelTotal": "БАРЛЫҒЫ:",
+  "receiptLabelVat": "оның ішінде ҚҚС {percent}%:",
+  "@receiptLabelVat": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptLabelCash": "Қолма-қол:",
+  "receiptLabelCard": "Карта:",
+  "receiptLabelChange": "Қайтарым:",
+  "receiptLabelCheckReceipt": "Чекті тексеру:",
+  "receiptLabelItemName": "Атауы",
+  "receiptLabelQty": "Сан",
+  "receiptLabelPrice": "Баға",
+  "receiptLabelAmount": "Сома",
+  "receiptLabelItemDiscount": "Жеңілдік:",
+  "receiptLabelFiscalBin": "БИН:",
+  "receiptLabelFiscalNo": "ФН:",
+  "receiptLabelFiscalSign": "ФБ:",
+  "receiptLabelVatCertificate": "ҚҚС:",
+  "receiptLabelOfflineMode": "*** ОФФЛАЙН ***",
+  "receiptLabelRefundHeader": "*** ҚАЙТАРУ ***",
+  "receiptLabelRefundNo": "Қайтару №:",
+  "receiptLabelReason": "Себебі:",
+  "receiptLabelRefundTotal": "ҚАЙТАРУҒА:",
+  "receiptLabelZReport": "Z-ЕСЕП",
+  "receiptLabelShiftClosing": "АУЫСЫМДЫ ЖАБУ",
+  "receiptLabelShiftNo": "Ауысым №:",
+  "receiptLabelShiftOpenTime": "Ашылды:",
+  "receiptLabelShiftCloseTime": "Жабылды:",
+  "receiptLabelSales": "САТУЛАР",
+  "receiptLabelQuantity": "Саны:",
+  "receiptLabelCashSales": "Қолма-қол:",
+  "receiptLabelCardSales": "Карта:",
+  "receiptLabelSalesTotal": "Барлығы:",
+  "receiptLabelRefunds": "ҚАЙТАРУЛАР",
+  "receiptLabelRefundQty": "Саны:",
+  "receiptLabelRefundAmount": "Сомасы:",
+  "receiptLabelCashOperations": "КАССА ОПЕРАЦИЯЛАРЫ",
+  "receiptLabelInvestments": "Салымдар:",
+  "receiptLabelExpenses": "Төлемдер:",
+  "receiptLabelRevenue": "ТҮСІМ:",
+  "receiptLabelCashInDrawer": "КАССАДА:",
+  "receiptLabelXReport": "X-ЕСЕП",
+  "receiptLabelType": "Түрі:",
+  "receiptLabelDescription": "Сипаттама:",
+  "receiptLabelDebtPayment": "ҚАРЫЗДЫ ӨТЕУ",
+  "receiptLabelPreviousDebt": "Қарыз болған:",
+  "receiptLabelPaidAmount": "ТӨЛЕНДІ:",
+  "receiptLabelRemainingDebt": "Қалдық:",
+  "receiptLabelTestPrint": "TEST PRINT",
+  "receiptLabelThankYou": "Сатып алғаныңызға рахмет!",
+  "receiptLabelSaleReceipt": "КАССАЛЫҚ ЧЕК",
+  "receiptLabelOfflineHeader": "*** ОФФЛАЙН РЕЖИМІ ***",
+  "receiptLabelVatCertificateTitle": "ҚҚС куәлігі:",
+  "fiscalErrorBin12Digits": "БИН 12 саннан тұруы керек",
+  "fiscalErrorBinDigitsOnly": "БИН тек сандардан тұруы керек",
+  "fiscalErrorFiscalNoRequired": "Фискалдық нөмір міндетті",
+  "fiscalErrorRnkRequired": "РНК міндетті",
+  "fiscalErrorZnkRequired": "ЗНК міндетті",
+  "fiscalErrorVatSerialRequired": "ҚҚС куәлігінің сериясы міндетті",
+  "fiscalErrorVatNumberRequired": "ҚҚС куәлігінің нөмірі міндетті",
+  "telegramTabPhone": "Телефон бойынша",
+  "telegramTabQr": "QR-код",
+  "telegramQrAuthTitle": "QR-код арқылы кіру",
+  "telegramQrAuthDescription": "Телефондағы Telegram қолданбасында QR-кодты сканерлеңіз",
+  "telegramQrTapToGenerate": "QR-код жасау үшін\nбасыңыз",
+  "telegramQrHowToScan": "Қалай сканерлеуге болады:",
+  "telegramQrStep1": "Телефонда Telegram ашыңыз",
+  "telegramQrStep2": "Баптаулар → Құрылғылар бөліміне өтіңіз",
+  "telegramQrStep3": "\"Құрылғыны қосу\" басыңыз",
+  "telegramQrStep4": "QR-кодты сканерлеңіз",
+  "telegramEnterCode": "Кодты енгізіңіз",
+  "telegramCodeSentTo": "Код Telegram-ға жіберілді\n{phone} нөмірге",
+  "@telegramCodeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "telegramCodeLabel": "Растау коды",
+  "telegramPasswordDescription": "Telegram аккаунтыңыздың құпия сөзін енгізіңіз",
+  "telegramPasswordHint": "Кеңес: {hint}",
+  "@telegramPasswordHint": {
+    "placeholders": {
+      "hint": {
+        "type": "String"
+      }
+    }
+  },
+  "telegramPasswordLabel": "Құпия сөз",
+  "telegramRegistrationDescription": "Бұл нөмірмен аккаунт табылмады.\nЖаңа Telegram аккаунтын жасаңыз.",
+  "telegramFirstNameLabel": "Аты",
+  "telegramLastNameLabel": "Тегі (міндетті емес)",
+  "telegramLoadingOrgData": "Ұйым деректерін жүктеу...",
+  "telegramSearchingExistingChannels": "Бар арналарды іздеу...",
+  "telegramFoundChannels": "Ұйым арналары табылды.\nКонфигурацияны жүктеу...",
+  "telegramCheckingChannels": "Арналардың бар-жоғын тексеру...",
+  "telegramOrgDataNotLoaded": "Деректерді жүктеу мүмкін болмады.\nҰйымыңыз туралы ақпаратты енгізіңіз.",
+  "telegramOrgDataFirstRun": "TelePOS-тың алғашқы іске қосылуы.\nҰйымыңыз туралы ақпаратты енгізіңіз.",
+  "telegramStoreNameLabel": "Дүкен атауы *",
+  "telegramStoreNameHint": "Менің дүкенім",
+  "telegramBinLabel": "Ұйымның БИН/ЖСН *",
+  "telegramAddressLabel": "Мекенжай (міндетті емес)",
+  "telegramAddressHint": "Алматы қ., Мысал көш., 123",
+  "telegramPosIdLabel": "Касса ID",
+  "telegramOwnerNameLabel": "Иесінің аты (міндетті емес)",
+  "telegramImportantNote": "Маңызды",
+  "telegramOrgDataNote": "Бұл деректер жүйелік арналарды құру және кассалар арасында синхрондау үшін пайдаланылады. Басқа құрылғыларда деректер автоматты жүктеледі.",
+  "telegramCreatingChannels": "Жүйелік арналарды құру...",
+  "telegramSettingUpEncryption": "Шифрлеуді баптау...",
+  "telegramSettingUp": "Баптау...",
+  "telegramPleaseWait": "Күте тұрыңыз.\nБұл біраз уақыт алуы мүмкін.",
+  "telegramSetupDone": "Баптау аяқталды!",
+  "telegramSetupDoneMessage": "Telegram сәтті бапталды.\nЖүйелік арналар құрылды.",
+  "telegramTermsNotice": "\"Код алу\" басу арқылы сіз Telegram пайдалану шарттарымен келісесіз",
+  "telegramActionsSection": "Әрекеттер",
+  "chatNotConfigured": "Чат бапталмаған",
+  "chatCanDeleteOwnOnly": "Тек өз хабарламаларын ғана жоюға болады",
+  "chatMessageDeleted": "Хабарлама жойылды",
+  "chatDeleteFailed": "Хабарламаны жою мүмкін болмады",
+  "chatTelegramNotLinked": "Telegram байланбаған",
+  "chatLinkInstructions": "Қызметкерлер чатында сәйкестендіру үшін Telegram User ID-ді енгізіңіз.",
+  "chatLinkHowTo": "ID-ді қалай білуге болады:\n1. Telegram-да @userinfobot ашыңыз\n2. /start басыңыз\n3. \"Id\" өрісіндегі санды көшіріңіз",
+  "chatLinkFailed": "Байлау мүмкін болмады. Мүмкін бұл ID қолданыста.",
+  "chatPhotoSent": "Фото жіберілді",
+  "chatPhotoFailed": "Фотоны жіберу мүмкін болмады",
+  "chatPhotoError": "Фотоны таңдау қатесі",
+  "chatPhotoUnavailableWeb": "Веб-нұсқада фото жіберу қолжетімсіз",
+  "chatDocSent": "Құжат жіберілді",
+  "chatDocFailed": "Құжатты жіберу мүмкін болмады",
+  "chatDocError": "Құжатты таңдау қатесі",
+  "chatDocUnavailableWeb": "Веб-нұсқада құжат жіберу қолжетімсіз",
+  "chatDocPathError": "Файл жолын алу мүмкін болмады",
+  "chatDocTooLarge": "Файл тым үлкен (макс. 50 МБ)",
+  "chatLocationSent": "Орналасу жіберілді",
+  "chatLocationFailed": "Орналасуды жіберу мүмкін болмады",
+  "chatLocationError": "Орналасуды алу қатесі",
+  "chatLocationUnavailableWeb": "Веб-нұсқада геолокация қолжетімсіз",
+  "chatLocationDenied": "Геолокацияға кіру тыйым салынған",
+  "chatLocationDeniedForever": "Геолокацияға кіру мүлдем тыйым салынған. Баптауларда өзгертіңіз.",
+  "chatLocationServiceDisabled": "Құрылғыда геолокацияны қосыңыз",
+  "syncToUpload": "Жүктеуге",
+  "syncToDownload": "Жүктеп алуға",
+  "syncDataTypeCol": "Деректер түрі",
+  "syncDirectionCol": "Бағыт",
+  "syncPendingCol": "Күтуде",
+  "syncStatusCol": "Мәртебесі",
+  "syncProgressCol": "Барысы",
+  "syncUpload": "Жүктеу",
+  "syncDownload": "Жүктеп алу",
+  "syncPendingCount": "Күтуде: {count}",
+  "@syncPendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncInfoTelegram": "Деректер кассалар арасында Telegram арқылы синхрондалады. Пайдаланушылар барлық кассаларға ортақ.",
+  "syncAutoEnabled": "Деректер автоматты синхрондалады",
+  "syncManualOnly": "Тек қолмен синхрондау",
+  "syncMinutes": "{count} мин",
+  "@syncMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agentBinIin": "БСН/ЖСН",
+  "agentLastOperation": "Соңғы операция",
+  "agentNoAdditionalInfo": "Қосымша ақпарат жоқ",
+  "agentNoDebt": "Қарыз жоқ",
+  "agentDeletedWithName": "Клиент \"{name}\" жойылды",
+  "@agentDeletedWithName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentDeleteError": "Жою қатесі: {error}",
+  "@agentDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "agentNewCustomer": "Жаңа клиент",
+  "agentNameHint": "Клиент атын енгізіңіз",
+  "agentBinHint": "12 сан",
+  "agentCustomerFound": "Клиент табылды",
+  "agentDeletedPhoneMsg": "Осы телефонмен клиент жойылған",
+  "agentRestoreQuestion": "Қалпына келтіру керек пе?",
+  "agentRestore": "Қалпына келтіру",
+  "kaspiTerminal": "Kaspi POS Терминал",
+  "kaspiIpAddress": "Терминал IP-мекенжайы",
+  "kaspiInvalidIp": "IP-мекенжай форматы қате",
+  "kaspiPort": "Порт",
+  "kaspiTesting": "Тексеру...",
+  "kaspiTest": "ТЕСТ",
+  "kaspiDisconnected": "Қосылмаған",
+  "kaspiConnecting": "Қосылуда...",
+  "kaspiConnected": "Байланыс орнатылды",
+  "kaspiNoConnection": "Байланыс жоқ",
+  "kaspiTestPassed": "Тест сәтті",
+  "kaspiTestFailed": "Тест сәтсіз",
+  "kaspiLatency": "Кідіріс: {ms} мс",
+  "@kaspiLatency": {
+    "placeholders": {
+      "ms": {
+        "type": "String"
+      }
+    }
+  },
+  "kaspiTerminalInfo": "Терминал: {info}",
+  "@kaspiTerminalInfo": {
+    "placeholders": {
+      "info": {
+        "type": "String"
+      }
+    }
+  },
+  "splashSubtitle": "Касса жүйесі",
+  "splashInitializing": "Инициализация...",
+  "splashLoadingOrg": "Ұйым деректерін жүктеу...",
+  "splashEnterPosKey": "POS кілтін енгізіңіз",
+  "splashEnterPosKeyMessage": "Кассаны белсендіру үшін әкімшіден алынған кілтті енгізіңіз.",
+  "splashPosKeyHint": "XXXX-XXXX-XXXX-XXXX",
+  "splashKeyEmpty": "Кілт бос болмауы керек",
+  "splashKeyTooShort": "Кілт тым қысқа",
+  "splashKeyNotEntered": "Кілт енгізілмеді",
+  "splashKeyRequiredMessage": "POS кілтсіз жұмыс істей алмайды. Қолданба жабылады.",
+  "splashDataCorrupted": "Деректер зақымдалған",
+  "splashDataCorruptedMessage": "Қолданбаның міндетті деректері жоқ немесе зақымдалған.\n\nӘрекетті таңдаңыз:",
+  "splashReconfigure": "Қайта баптау",
+  "splashExit": "Шығу",
+  "splashDatabaseError": "Деректер базасы қатесі",
+  "splashDatabaseErrorMessage": "Деректер базасы зақымдалған немесе қол жетімсіз.\n\nСақтық көшірмеден қалпына келтіруге немесе кассаны қайта баптауға болады.",
+  "splashRestoreFromBackup": "Сақтық көшірмеден қалпына келтіру",
+  "splashSyncSuspended": "Синхрондау тоқтатылды",
+  "splashSyncSuspendedMessage": "Деректерді синхрондау уақытша тоқтатылды.\n\nКасса автономды режимде жұмыс істейді. Байланыс қалпына келтірілгенде деректер синхрондалады.",
+  "splashAuthError": "Авторизация қатесі\n\nКіру токені жарамсыз немесе мерзімі өтті.\nЖаңа кілт алу үшін әкімшіге хабарласыңыз.",
+  "splashSupportEnded": "Нұсқа қолдау көрсетілмейді\n\nБұл қолданба нұсқасына бұдан былай қолдау көрсетілмейді.\nСоңғы нұсқаға жаңартыңыз.",
+  "generalSettingsTitle": "Баптаулар",
+  "generalSettingsPosInfo": "Касса туралы ақпарат",
+  "generalSettingsCashBoxName": "Касса атауы",
+  "generalSettingsCompany": "Компания",
+  "generalSettingsIinBin": "ЖСН/БСН",
+  "generalSettingsPosId": "POS ID",
+  "generalSettingsStoreId": "Дүкен ID",
+  "generalSettingsNotSpecified": "Көрсетілмеген",
+  "generalSettingsAppVersion": "Қолданба нұсқасы",
+  "generalSettingsVersion": "Нұсқа",
+  "generalSettingsPlatform": "Платформа",
+  "generalSettingsLanguage": "Интерфейс тілі",
+  "generalSettingsTheme": "Безендіру",
+  "generalSettingsThemeDesc": "Ашық, күңгірт немесе жүйедегідей",
+  "generalSettingsThemeLight": "Ашық",
+  "generalSettingsThemeDark": "Күңгірт",
+  "generalSettingsThemeSystem": "Жүйедегідей",
+  "generalSettingsLanguageChanged": "Тіл {language} болып өзгертілді",
+  "@generalSettingsLanguageChanged": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "generalSettingsCurrency": "Валюта",
+  "generalSettingsCurrencySymbol": "Белгі",
+  "generalSettingsCurrencyCode": "Код",
+  "generalSettingsCountry": "Ел",
+  "generalSettingsAdditional": "Қосымша баптаулар",
+  "generalSettingsTransport": "Көлік",
+  "generalSettingsTransportSubtitle": "Деректерді синхрондау баптаулары",
+  "generalSettingsPrinter": "Принтер",
+  "generalSettingsPrinterSubtitle": "Чек басып шығару баптаулары",
+  "generalSettingsPermissions": "Рұқсаттар",
+  "generalSettingsPermissionsSubtitle": "Кассирлер үшін рұқсаттар",
+  "generalSettingsFiscal": "Фискализация",
+  "generalSettingsFiscalSubtitle": "WebKassa, ОФД, ҚҚС",
+  "generalSettingsRestaurant": "Мейрамхана",
+  "generalSettingsRestaurantSubtitle": "Үстелдер, залдар, қызмет көрсету",
+  "generalSettingsTelegram": "Telegram",
+  "generalSettingsTelegramSubtitle": "Байланыс арналары және боттар",
+  "generalSettingsPosInfoDesc": "Касса атауы, компания, ID",
+  "generalSettingsVersionDesc": "Ағымдағы нұсқа және платформа",
+  "generalSettingsLanguageDesc": "Интерфейс тілін таңдау",
+  "generalSettingsCurrencyDesc": "Валюта және ел",
+  "generalSettingsUpdate": "Жаңарту",
+  "generalSettingsUpdateSubtitle": "Жаңартуларды тексеру және орнату",
+  "generalSettingsAppUpdate": "Қосымшаны жаңарту",
+  "generalSettingsAppUpdateSubtitle": "Касса қосымшасын жаңарту (ОЖ жаңартуымен шатастырмаңыз)",
+  "generalSettingsUpdateDesc": "Ағымдағы нұсқа және жаңартулар",
+  "settingsUpdateTitle": "Қолданбаны жаңарту",
+  "settingsUpdateCurrentVersion": "Ағымдағы нұсқа",
+  "settingsUpdateCheckBtn": "Жаңартуларды тексеру",
+  "settingsUpdateChecking": "Жаңартулар тексерілуде...",
+  "settingsUpdateUpToDate": "Соңғы нұсқа орнатылған",
+  "settingsUpdateAvailable": "{version} нұсқасы қол жетімді",
+  "@settingsUpdateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUpdateDownloadBtn": "Жаңартуды жүктеу",
+  "settingsUpdateDownloading": "Жүктелуде... {percent}%",
+  "@settingsUpdateDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUpdateInstallBtn": "Жаңартуды орнату",
+  "settingsUpdateInstalling": "Орнатылуда...",
+  "settingsUpdateFailed": "Жаңарту қатесі",
+  "settingsUpdateAutoEnabled": "Автоматты тексеру әр 3 сағат сайын",
+  "settingsUpdateCloseShift": "Жаңарту алдында ауысымды жабыңыз",
+  "settingsUpdateReleaseNotes": "Жаңалықтар",
+  "countryKazakhstan": "Қазақстан",
+  "countryRussia": "Ресей",
+  "countryKyrgyzstan": "Қырғызстан",
+  "countryUzbekistan": "Өзбекстан",
+  "countryUSA": "АҚШ",
+  "countryTurkmenistan": "Түрікменстан",
+  "permEditPrice": "Бағаны өңдеу",
+  "permSellInDebt": "Қарызға сату",
+  "permDiscounts": "Жеңілдіктер",
+  "permCashOperations": "Касса операциялары",
+  "permSendToOfd": "ОФД-ге жіберу",
+  "permCancelPayment": "Төлемді болдырмау",
+  "permDeferSale": "Кейінге қалдырылған сату",
+  "permShowHistory": "Тарихты көрсету",
+  "printerSettingsSaved": "Баптаулар сақталды",
+  "printerSettingsSaveError": "Сақтау қатесі: {error}",
+  "@printerSettingsSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "printerSettingsPrinting": "Басып шығарылуда...",
+  "printerSettingsTestReceipt": "СЫНАҚ ЧЕГІ",
+  "printerSettingsWidth": "Ені:",
+  "printerSettingsWidthValue": "{width} символ",
+  "@printerSettingsWidthValue": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      }
+    }
+  },
+  "printerSettingsType": "Түрі:",
+  "printerSettingsAddress": "Мекенжай:",
+  "printerSettingsNotSpecifiedAddr": "Көрсетілмеген",
+  "printerSettingsPrinterWorks": "Принтер жұмыс істейді!",
+  "printerSettingsPrintSuccess": "Басып шығару сәтті",
+  "printerSettingsPrintError": "Басып шығару қатесі",
+  "printerSettingsNotConnected": "Қосылмаған",
+  "printerSettingsChecking": "Тексерілуде...",
+  "printerSettingsReady": "Дайын",
+  "printerSettingsNoPaper": "Қағаз жоқ",
+  "printerSettingsCoverOpen": "Қақпақ ашық",
+  "printerSettingsSave": "Сақтау",
+  "printerSettingsConnectionType": "Қосылу түрі",
+  "printerSettingsPrinterAddress": "Принтер мекенжайы",
+  "printerSettingsPaperWidth": "Қағаз ені",
+  "printerSettingsTesting": "Тестілеу",
+  "printerSettingsStatus": "Күй: {status}",
+  "@printerSettingsStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "printerSettingsCheck": "Тексеру",
+  "printerSettingsTestCheck": "Сынақ чегі",
+  "printerSettingsPort": "Порт",
+  "printerSettingsIpAddress": "Принтердің IP мекенжайы",
+  "printerSettingsMacAddress": "MAC мекенжай немесе атауы",
+  "printerSettingsPrinterName": "Принтер атауы",
+  "printerSettingsComPort": "COM порт",
+  "printerSettingsSerialCom": "Serial (COM)",
+  "printerSettingsPaperWidth58": "58мм (32 символ)",
+  "printerSettingsPaperWidth80_42": "80мм (42 символ)",
+  "printerSettingsPaperWidth80_48": "80мм (48 символ)",
+  "fiscalSettingsTitle": "Фискализация",
+  "fiscalSettingsSaved": "Баптаулар сақталды",
+  "fiscalSettingsSaveError": "Сақтау қатесі: {error}",
+  "@fiscalSettingsSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fiscalSettingsSave": "Сақтау",
+  "fiscalSettingsOperator": "Фискалдық оператор",
+  "fiscalSettingsWebkassaSettings": "WebKassa баптаулары",
+  "fiscalSettingsTaxpayerInfo": "Салық төлеуші деректері",
+  "fiscalSettingsVatSettings": "ҚҚС баптаулары",
+  "fiscalSettingsWebkassaLabel": "WebKassa",
+  "fiscalSettingsWebkassaDesc": "Бұлтты фискалдық қызмет",
+  "fiscalSettingsOfdLabel": "ОФД",
+  "fiscalSettingsOfdDesc": "Фискалдық деректер операторы",
+  "fiscalSettingsNoneLabel": "Фискализациясыз",
+  "fiscalSettingsNoneDesc": "Чектер ОФД-ге жіберілмейді",
+  "fiscalSettingsOfdId": "ОФД ID",
+  "fiscalSettingsOfdIdHint": "ОФД идентификаторы",
+  "fiscalSettingsOfdName": "ОФД атауы",
+  "fiscalSettingsOfdNameHint": "WebKassa / ОФД.kz",
+  "fiscalSettingsOfdHost": "ОФД сервер мекенжайы",
+  "fiscalSettingsOfdHostHint": "https://api.webkassa.kz",
+  "fiscalSettingsWebkassaActive": "WebKassa белсендірілген",
+  "fiscalSettingsWebkassaInactive": "WebKassa белсендірілмеген",
+  "fiscalSettingsCompanyName": "Атауы",
+  "fiscalSettingsCashBox": "Касса",
+  "fiscalSettingsVatPayer": "ҚҚС төлеуші",
+  "fiscalSettingsVatPayerSubtitle": "Ұйым ҚҚС төлеуші болып табылады (12%)",
+  "fiscalSettingsPrintVat": "Чекте ҚҚС басып шығару",
+  "fiscalSettingsPrintVatSubtitle": "Чекте ҚҚС сомасын көрсету",
+  "fiscalSettingsVatRate": "ҚҚС мөлшерлемесі: 12% (3/28 формуласы бойынша)",
+  "historyProductUcode": "Тауар #{ucode}",
+  "@historyProductUcode": {
+    "placeholders": {
+      "ucode": {
+        "type": "String"
+      }
+    }
+  },
+  "historyRefundProductId": "Қайтару тауары #{id}",
+  "@historyRefundProductId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "historyAccountId": "Шот #{id}",
+  "@historyAccountId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "historyLoadError": "Жүктеу қатесі: {error}",
+  "@historyLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "historyReceiptNo": "Чек {number}",
+  "@historyReceiptNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "historySyncSynced": "Синхр.",
+  "historySyncPending": "Күту",
+  "historySyncSending": "Жіб.",
+  "historySyncDeferred": "Кейін",
+  "historySyncInProgress": "Жұмыста",
+  "historyClient": "Клиент",
+  "historyFiscalization": "Фискализация",
+  "historyProducts": "Тауарлар",
+  "historyPayment": "Төлем",
+  "historyNoProducts": "Тауарлар жоқ",
+  "historyNoPayments": "Төлемдер жоқ",
+  "historyPrintingReceipt": "Чекті басып шығару {number}...",
+  "@historyPrintingReceipt": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "historyReceiptPrinted": "Чек басылды",
+  "historyPrintError": "Басып шығару қатесі",
+  "historyOperationType": "Операция түрі",
+  "historyFilterSales": "Сатулар",
+  "historyFilterRefunds": "Қайтарулар",
+  "historySearchShort": "Іздеу...",
+  "historyFilters": "Сүзгілер",
+  "historyDateFrom": "Бастап",
+  "historyDateTo": "Дейін",
+  "historyReset": "Тастау",
+  "historyApply": "Қолдану",
+  "historySearchFull": "Чек нөмірі, сома бойынша іздеу...",
+  "historySyncStatus": "Синхрондау күйі",
+  "historyReceiptColumn": "Чек",
+  "historySyncSyncedFull": "Синхрондалған",
+  "historySyncPendingFull": "Синхрондауды күтуде",
+  "historySyncSendingFull": "Жіберілуде",
+  "historySyncDeferredFull": "Кейінге қалдырылған",
+  "historySyncInProgressFull": "Орындалуда",
+  "historyPaymentCash": "Қолма-қол",
+  "historyPaymentCard": "Карта",
+  "historyPaymentMixed": "Аралас",
+  "historyPaymentBonus": "Бонустар",
+  "historyPaymentDebt": "Қарызға",
+  "historyPaymentDiscount": "Жеңілдік",
+  "historyPaymentWithDiscount": "Жеңілдікпен",
+  "historyOfdFiscalized": "Фискалданған",
+  "historyOfdError": "Фискализация қатесі",
+  "historyOfdNotFiscalized": "Фискалданбаған",
+  "historyClearFilters": "Сүзгілерді тастау",
+  "historyRecordsRange": "Жазбалар {start}–{end}, барлығы {total}",
+  "@historyRecordsRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "historyFirstPage": "Бірінші бет",
+  "historyPrevious": "Алдыңғы",
+  "historyNextPage": "Келесі",
+  "historyLastPage": "Соңғы бет",
+  "@historyType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "historyAmount": "Сома: {amount}",
+  "@historyAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "historyDate": "Күні: {date}",
+  "@historyDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "historyPos": "POS: {id}",
+  "@historyPos": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "historyClientName": "Клиент: {name}",
+  "@historyClientName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "historyFiscalYes": "Иә",
+  "historyFiscalNo": "Жоқ",
+  "historyFiscalError": "Қате",
+  "shiftPrintZReport": "Z-есепті басып шығару",
+  "shiftFinishAllSales": "Барлық сатуларды аяқтаңыз",
+  "shiftCannotClose": "Ауысымды жабу мүмкін емес",
+  "shiftOpeningShift": "Ауысымды ашу",
+  "shiftClosingShift": "Ауысымды жабу",
+  "shiftEnterInitialAmount": "Кассадағы бастапқы соманы енгізіңіз:",
+  "shiftDiscrepancyFound": "Сәйкессіздік анықталды",
+  "shiftDifferenceAmount": "Айырмашылық: {amount}",
+  "@shiftDifferenceAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftConfirmCloseQuestion": "Ауысымды жабуға сенімдісіз бе?",
+  "shiftFixedAmount": "Тіркелетін сома: {amount} KZT",
+  "@shiftFixedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftCloseWithDiscrepancy": "Сәйкессіздікпен жабу",
+  "shiftCashierLabel": "Кассир",
+  "shiftUnknown": "Белгісіз",
+  "shiftSystemTotal": "Жүйелік сома",
+  "shiftEnteredTotal": "Енгізілген сома",
+  "shiftCashOperations": "Кассалық операциялар",
+  "shiftShortage": "Тапшылық",
+  "shiftSurplus": "Артықшылық",
+  "shiftBalances": "Сәйкес келеді",
+  "shiftCloseBlocked": "Жабу бұғатталған",
+  "shiftActiveSalesCount": "Белсенді сатулар: {count}",
+  "@shiftActiveSalesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftPendingSalesCount": "Кейінге қалдырылған сатулар: {count}",
+  "@shiftPendingSalesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftFinishSalesBeforeClose": "Ауысымды жабу алдында сатуларды аяқтаңыз немесе болдырмаңыз",
+  "shiftBillsTab": "Купюралар",
+  "shiftTotalTab": "Жалпы сома",
+  "shiftOperationsTab": "Операциялар",
+  "shiftAmountTab": "Сома",
+  "shiftBillCount": "Купюралар бойынша санау",
+  "shiftDifferenceLabel": "Айырмашылық: ",
+  "supplySupplierRequired": "Жеткізуші *",
+  "supplyPaymentType": "Төлем түрі",
+  "supplyFullPayment": "Толық төлем",
+  "supplyAccountDebit": "Шоттан есептен шығару",
+  "supplyConsignment": "Консигнация",
+  "supplyDeferredPayment": "Кейінге қалдырылған төлем",
+  "supplyPaymentAccountRequired": "Төлем шоты *",
+  "supplyAddProduct": "Тауар қосу",
+  "supplyBarcodeOrSku": "Штрихкод немесе артикул",
+  "supplyProductsCount": "Тауарлар ({count})",
+  "@supplyProductsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplyAmountValue": "Сома: {amount}",
+  "@supplyAmountValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyProductNotFound": "Тауар табылмады",
+  "supplyInvalidQuantity": "Дұрыс санын енгізіңіз",
+  "supplySelectSupplierTitle": "Жеткізушіні таңдаңыз",
+  "supplySuppliersNotFound": "Жеткізушілер табылмады",
+  "supplySelectAccountTitle": "Шотты таңдаңыз",
+  "supplyAccountsNotFound": "Шоттар табылмады",
+  "supplyAccountBalance": "Баланс: {amount}",
+  "@supplyAccountBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyProductNumber": "Тауар #{number}",
+  "@supplyProductNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyProductCountLabel": "Тауарлар: {count}",
+  "@supplyProductCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplyTotalLabel": "Барлығы: {amount}",
+  "@supplyTotalLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplySavedSuccess": "Қабылдау сақталды. Тауарлар: {count}, сома: {amount}",
+  "@supplySavedSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplyCancelConfirm": "Қабылдауды болдырмау керек пе?",
+  "supplyCancelMessage": "Барлық енгізілген деректер жоғалады.",
+  "supplyYesCancel": "Иә, болдырмау",
+  "supplySearchProduct": "Тауар іздеу...",
+  "supplyAddProductsHint": "Қабылдауға тауарлар қосыңыз",
+  "supplyScanOrSearch": "Штрихкодты сканерлеңіз немесе тауарды табыңыз",
+  "refundTotalAmount": "Қайтару сомасы",
+  "refundPosLabel": "Касса",
+  "refundSelectedOfTotal": "{selected} / {total}",
+  "@refundSelectedOfTotal": {
+    "placeholders": {
+      "selected": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "refundTotalProducts": "Барлық тауарлар",
+  "refundToReturn": "ҚАЙТАРУҒА",
+  "refundToReturnLabel": "Қайтаруға:",
+  "refundAction": "ҚАЙТАРУ",
+  "refundSelectedItemsShort": "{selected} / {total} поз.",
+  "@refundSelectedItemsShort": {
+    "placeholders": {
+      "selected": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "refundColumnName": "Атауы",
+  "refundColumnQty": "Саны",
+  "refundEmptyHint": "Чекті жүктеңіз немесе тауарларды қолмен қосыңыз",
+  "refundNoItemsShort": "Тауарлар жоқ",
+  "refundEmptyHintShort": "Чекті жүктеңіз немесе\nтауарларды қосыңыз",
+  "refundSelectedCount": "Таңдалған позициялар: {count}",
+  "@refundSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "refundAmountValue": "Қайтару сомасы: {amount}",
+  "@refundAmountValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSuccess": "Қайтару сәтті орындалды",
+  "paymentAmountDue": "Төлеуге",
+  "paymentTotalDue": "Барлығы төлеуге",
+  "paymentCashLabel": "Қолма-қолмен",
+  "paymentReceived": "Алынды",
+  "paymentRemainingLabel": "Қалды",
+  "paymentCardAmount": "Картамен төлем {amount} сомаға",
+  "@paymentCardAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentLoyaltyProgram": "Адалдық бағдарламасы",
+  "paymentPhoneNumber": "Телефон нөмірі",
+  "paymentAvailableBonus": "Қолжетімді бонустар:",
+  "paymentUseBonuses": "Бонустарды пайдалану",
+  "paymentBonusToDeduct": "Есептен шығару: {amount} бонус",
+  "@paymentBonusToDeduct": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSuccessMessage": "Төлем сәтті",
+  "paymentRefundButton": "ҚАЙТАРУ",
+  "paymentPayButton": "ТӨЛЕУ",
+  "syncWidgetRetry": "Қайталау",
+  "syncWidgetLastSync": "Соңғы синхрондау: {time}",
+  "@syncWidgetLastSync": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "syncWidgetRecordsCount": "{count} жазба",
+  "@syncWidgetRecordsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetWaiting": "Күтуде",
+  "syncWidgetSynced": "Синхрондалған",
+  "syncWidgetJustNow": "жаңа ғана",
+  "syncWidgetMinutesAgo": "{minutes} мин. бұрын",
+  "@syncWidgetMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetHoursAgo": "{hours} сағ. бұрын",
+  "@syncWidgetHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetDaysAgo": "{days} күн бұрын",
+  "@syncWidgetDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWidgetConnecting": "Серверге қосылуда...",
+  "syncWidgetSyncingProducts": "Тауарларды синхрондау...",
+  "syncWidgetSyncingSales": "Сатуларды синхрондау...",
+  "syncWidgetSyncingAgents": "Контрагенттерді синхрондау...",
+  "syncWidgetSyncingPrices": "Бағаларды синхрондау...",
+  "syncWidgetFinishing": "Аяқталуда...",
+  "updateDialogUpdating": "Жаңарту...",
+  "updateDialogAvailable": "Жаңарту қол жетімді",
+  "updateDialogAutoUpdate": "Автоматты жаңарту {seconds} сек. кейін",
+  "@updateDialogAutoUpdate": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "updateDialogUpdateNow": "Қазір жаңарту",
+  "updateDialogLater": "Кейін",
+  "updateDialogSkip": "Өткізіп жіберу",
+  "updateDialogUpdate": "Жаңарту",
+  "storeUpdateVersion": "Нұсқа {version}",
+  "@storeUpdateVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "storeUpdateNewVersionAvailable": "Қолданбаның жаңа нұсқасы {storeName} ішінде қол жетімді.",
+  "@storeUpdateNewVersionAvailable": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "storeUpdateWhatsNew": "Жаңалықтар:",
+  "storeUpdateRequired": "Бұл міндетті жаңарту",
+  "storeUpdateGoTo": "{storeName} ішіне өту",
+  "@storeUpdateGoTo": {
+    "placeholders": {
+      "storeName": {
+        "type": "String"
+      }
+    }
+  },
+  "storeUpdateButton": "ЖАҢАРТУ",
+  "storeUpdateDownloaded": "Жаңарту жүктелді",
+  "storeUpdateReadyToInstall": "Жаңарту жүктелді және орнатуға дайын.\nҚазір орнату керек пе? Қолданба қайта іске қосылады.",
+  "storeUpdateInstall": "ОРНАТУ",
+  "storeUpdateDownloading": "Жаңартуды жүктеу...",
+  "storeUpdateReadyShort": "Жаңарту орнатуға дайын",
+  "versionConflictTitle": "Нұсқалар қайшылығы",
+  "versionConflictDescription": "Қолданба нұсқаларының қайшылығы анықталды.",
+  "versionConflictCurrent": "Ағымдағы нұсқа",
+  "versionConflictFound": "Табылған нұсқа",
+  "versionConflictChooseAction": "Әрекетті таңдаңыз:",
+  "versionConflictOpenFolder": "Қалтада ашу",
+  "versionConflictPreviousVersion": "Алдыңғы нұсқа",
+  "versionConflictContinue": "Жалғастыру",
+  "restoreLoadingBackups": "Бэкаптар жүктелуде...",
+  "restoreSearchingBackups": "Бэкаптарды іздеу...",
+  "restoreLoadError": "Жүктеу қатесі: {error}",
+  "@restoreLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreRestoring": "Қалпына келтіру...",
+  "restoreRestoreError": "Қалпына келтіру қатесі",
+  "restoreRestoreFailed": "Бэкаптан қалпына келтіру сәтсіз аяқталды",
+  "restoreTitle": "Қалпына келтіру",
+  "restoreChooseMethod": "Баптау тәсілін таңдаңыз",
+  "restoreSetupNewPos": "Жаңа кассаны баптау",
+  "restoreNoBackups": "Бэкаптар табылмады",
+  "restoreSetupAsNew": "Кассаны жаңадан баптаңыз",
+  "restoreFoundBackups": "Табылған бэкаптар:",
+  "agentSearchByNameOrPhone": "Аты немесе телефоны бойынша іздеу...",
+  "agentOnlyWithDebt": "Тек қарызымен",
+  "agentTypeTooltip": "Түрі",
+  "agentBinLabel": "БСН: {bin}",
+  "@agentBinLabel": {
+    "placeholders": {
+      "bin": {
+        "type": "String"
+      }
+    }
+  },
+  "agentSelectedMessage": "Таңдалды: {name}",
+  "@agentSelectedMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentFoundCount": "Табылды: {count}",
+  "@agentFoundCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agentEnterNameOrPhoneToSearch": "Іздеу үшін атын немесе телефонын енгізіңіз",
+  "agentNotFound": "Клиенттер табылмады",
+  "agentSearchClients": "Клиенттерді іздеу",
+  "agentNotFoundShort": "Табылмады",
+  "agentEnterNameOrPhone": "Атын немесе телефонын енгізіңіз",
+  "agentEnterCustomerName": "Клиенттің атын енгізіңіз",
+  "agentDeletedCustomerPhone": "Осы телефонмен клиент жойылған",
+  "agentWantRestore": "Қалпына келтіру керек пе?",
+  "agentDeleteCustomerTitle": "Клиентті жою керек пе?",
+  "agentDeleteConfirmMessage": "\"{name}\" жоюға сенімдісіз бе?",
+  "@agentDeleteConfirmMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "agentCustomerDeleted": "Клиент \"{name}\" жойылды",
+  "@agentCustomerDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cashOpTitle": "Кассалық операция",
+  "cashOpComment": "Түсініктеме",
+  "cashOpCommentRequired": "Түсініктеме *",
+  "cashOpCommentHint": "Түсініктеме енгізіңіз...",
+  "cashOpError": "Қате: {error}",
+  "@cashOpError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cashOpOperationType": "Операция түрі",
+  "cashOpExpense": "Шығыс",
+  "cashOpDividend": "Алу",
+  "saleReceiptTotal": "Чек бойынша жиынтығы",
+  "salePay": "ТӨЛЕУ",
+  "saleTotalColon": "Жиынтығы:",
+  "salePositionsAndQuantity": "{count} поз. / {qty} дана",
+  "@salePositionsAndQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "saleWholesale": "КӨТЕРМЕ",
+  "saleRetail": "Бөлшек",
+  "syncPreparing": "Дайындалуда...",
+  "errorSaveFailed": "Сақтау қатесі: {details}",
+  "@errorSaveFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSaveFailedGeneric": "Сақтау қатесі",
+  "errorLoadFailed": "Деректерді жүктеу қатесі: {details}",
+  "@errorLoadFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadFailedGeneric": "Деректерді жүктеу қатесі",
+  "errorSearchFailed": "Іздеу қатесі: {details}",
+  "@errorSearchFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSearchFailedGeneric": "Іздеу қатесі",
+  "errorUnknownGeneric": "Белгісіз қате",
+  "errorFillRequired": "Барлық міндетті өрістерді толтырыңыз",
+  "errorNoUsers": "Тіркелген пайдаланушылар жоқ",
+  "errorSelectUser": "Пайдаланушыны таңдаңыз",
+  "errorPinTooShort": "PIN кодты енгізіңіз (кемінде 4 сан)",
+  "errorRsaNotConfigured": "Қате: RSA кілт бапталмаған. Әкімшіге хабарласыңыз.",
+  "errorWrongPin": "Қате PIN код",
+  "errorAmbiguousPin": "Бұл PIN код бірнеше кассирде бірдей. Атыңызды таңдап, содан кіріңіз.",
+  "errorNoPinSet": "Бұл кассир үшін PIN код орнатылмаған. Оны орнату үшін әкімшіге хабарласыңыз.",
+  "errorWalkUpDisabled": "Бұл нүктеде атын таңдамай кіру өшірілген. Тізімнен атыңызды таңдаңыз.",
+  "errorCredentialUnreadable": "PIN код жазбасы бүлінген. Әкімшіге хабарласыңыз — қайта теру көмектеспейді.",
+  "errorAuthUnknown": "Касса кіру әрекетіне жауап бере алмады. Қайта көріңіз.",
+  "errorTillNotConfigured": "Касса әлі бапталмаған — баптау шебері аяқталмайынша кіру мүмкін емес.",
+  "errorTerminalLimitReached": "Бұл кассада терминалдардың ең көп саны тіркелген. Орын босату үшін әкімшіге хабарласыңыз.",
+  "errorPairingCodeInvalid": "Байланыстыру коды сәйкес келмеді — мерзімі өткен, бұрын пайдаланылған немесе қате терілген. Кассадан жаңа код алыңыз.",
+  "errorTerminalSecretInvalid": "Бұл құрылғының байланысы енді жарамсыз — терминал кассадан өшірілген болуы мүмкін. Жаңа байланыстыру кодын енгізіңіз.",
+  "errorSessionExpired": "Сеанс мерзімі өтті — қайта кіріңіз.",
+  "errorSessionEnded": "Сеансты касса аяқтады — қайта кіріңіз.",
+  "errorSaleNotInitialized": "Сатылым іске қосылмаған",
+  "errorReceiptEmpty": "Чек бос",
+  "errorDeferredNotFound": "Кейінге қалдырылған чек табылмады",
+  "errorReceiptNotFound": "#{receiptNo} чек табылмады",
+  "@errorReceiptNotFound": {
+    "placeholders": {
+      "receiptNo": {
+        "type": "String"
+      }
+    }
+  },
+  "errorReceiptNotFoundGeneric": "Чек табылмады",
+  "errorNotAuthorized": "Пайдаланушы авторизацияланбаған",
+  "errorSupplierNotFound": "Жеткізуші табылмады",
+  "errorAccountNotFound": "Шот табылмады",
+  "errorProductNotFound": "Тауар табылмады: {details}",
+  "@errorProductNotFound": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorProductNotFoundGeneric": "Тауар табылмады",
+  "errorNameRequired": "Аты міндетті",
+  "errorNameTooShort": "Кемінде 2 таңба",
+  "errorPhoneInvalid": "Телефон форматы дұрыс емес",
+  "errorBinInvalid": "БИН/ЖСН 12 саннан тұруы тиіс",
+  "errorPhoneExists": "Осындай телефоны бар клиент бар",
+  "errorShiftOpenFailed": "Ауысымды ашу қатесі: {details}",
+  "@errorShiftOpenFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorShiftOpenFailedGeneric": "Ауысымды ашу қатесі",
+  "errorShiftCloseFailed": "Ауысымды жабу қатесі: {details}",
+  "@errorShiftCloseFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorShiftCloseFailedGeneric": "Ауысымды жабу қатесі",
+  "errorShiftLoadFailed": "Ауысым деректерін жүктеу қатесі: {details}",
+  "@errorShiftLoadFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorShiftLoadFailedGeneric": "Ауысым деректерін жүктеу қатесі",
+  "errorPaymentConfig": "Төлемді құрастыру мүмкін болмады. Шот параметрлерін тексеріңіз.",
+  "errorSaleSaveFailed": "Сатылымды сақтау қатесі",
+  "errorInventoryCannotComplete": "Аяқтау мүмкін емес",
+  "errorNoProducts": "Есептен шығаруға тауарлар жоқ",
+  "errorSelectCountry": "Елді таңдаңыз",
+  "errorEnterOrgName": "Ұйым атауын енгізіңіз",
+  "errorEnterTaxId": "{label} енгізіңіз",
+  "@errorEnterTaxId": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "errorEnterTaxIdGeneric": "Салық нөмірін енгізіңіз",
+  "errorTaxIdLength": "{info}",
+  "@errorTaxIdLength": {
+    "placeholders": {
+      "info": {
+        "type": "String"
+      }
+    }
+  },
+  "errorTaxIdLengthGeneric": "Салық нөмірінің ұзындығы дұрыс емес",
+  "errorEnterPosName": "Касса атауын енгізіңіз",
+  "errorFillWebkassa": "WebKassa барлық өрістерін толтырыңыз",
+  "errorFillOfd": "ОФД барлық өрістерін толтырыңыз",
+  "errorEnterKaspiIp": "Kaspi терминалының IP-мекенжайын енгізіңіз",
+  "errorEnterAdminName": "Әкімші атын енгізіңіз",
+  "errorAdminPinShort": "Әкімші PIN коды кемінде 4 саннан тұруы тиіс",
+  "errorSellerPinShort": "Сатушы PIN коды кемінде 4 саннан тұруы тиіс",
+  "errorCheckFailed": "Тексеру қатесі: {details}",
+  "@errorCheckFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorCheckFailedGeneric": "Тексеру қатесі",
+  "errorTelegramNotInitialized": "TelegramInitializer іске қосылмаған",
+  "errorTelegramAuthNotInitialized": "TelegramAuthService іске қосылмаған",
+  "errorPhoneSendFailed": "Нөмірді жіберу қатесі: {details}",
+  "@errorPhoneSendFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorPhoneSendFailedGeneric": "Нөмірді жіберу қатесі",
+  "errorQrAuthFailed": "QR авторизация қатесі: {details}",
+  "@errorQrAuthFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorQrAuthFailedGeneric": "QR авторизация қатесі",
+  "errorWrongCode": "Қате код: {details}",
+  "@errorWrongCode": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorWrongCodeGeneric": "Қате код",
+  "errorWrongPassword": "Қате құпиясөз: {details}",
+  "@errorWrongPassword": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorWrongPasswordGeneric": "Қате құпиясөз",
+  "errorRegistrationFailed": "Тіркеу қатесі: {details}",
+  "@errorRegistrationFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorRegistrationFailedGeneric": "Тіркеу қатесі",
+  "errorChannelSearchFailed": "Каналдарды іздеу қатесі: {details}",
+  "@errorChannelSearchFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorChannelSearchFailedGeneric": "Каналдарды іздеу қатесі",
+  "errorChannelConnectFailed": "Каналдарға қосылу қатесі: {details}",
+  "@errorChannelConnectFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorChannelConnectFailedGeneric": "Каналдарға қосылу қатесі",
+  "errorChannelCreateFailed": "Каналдарды құру қатесі: {details}",
+  "@errorChannelCreateFailed": {
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "errorChannelCreateFailedGeneric": "Каналдарды құру қатесі",
+  "errorFillClientData": "Клиент деректерін толтырыңыз",
+  "shiftCashInvestments": "Салымдар",
+  "shiftCashExpenses": "Шығыстар",
+  "shiftCashDividends": "Алымдар",
+  "shiftNoCashOps": "Кассалық операциялар жоқ",
+  "shiftNoCashOpsDescription": "Салымдар, шығыстар және алымдар\nмұнда көрсетіледі",
+  "shiftMoreItems": "+{count} тағы",
+  "@shiftMoreItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftEqualsSystem": "= Жүйе",
+  "shiftBillsTotal": "Купюралар бойынша:",
+  "receiptInputTitle": "Чекті іздеу",
+  "receiptInputNumber": "Чек нөмірі",
+  "receiptInputNumberHint": "Мысалы: 12345",
+  "receiptInputPos": "Касса",
+  "receiptInputInvalid": "Дұрыс чек нөмірін енгізіңіз",
+  "receiptInputFind": "Табу",
+  "paymentDenominations": "Номиналдар",
+  "paymentExactAmount": "Қайтарымсыз",
+  "paymentNumpad": "Пернетақта",
+  "paymentIinLabel": "ЖСН/БСН (міндетті емес)",
+  "paymentIinInvalid": "Қате ЖСН/БСН",
+  "paymentIinHint": "ЖСН — жеке тұлғалар үшін, БСН — заңды тұлғалар үшін",
+  "paymentIinShort": "ЖСН/БСН",
+  "paymentTypeCash": "Қолма-қол",
+  "paymentTypeCard": "Қолма-қолсыз",
+  "paymentTypeMixed": "Аралас",
+  "paymentAccount": "Шот",
+  "authNoUsers": "Тіркелген пайдаланушылар жоқ",
+  "authNoPin": "PIN жоқ",
+  "authSelectUser": "Пайдаланушыны таңдаңыз",
+  "authNoUsersShort": "Пайдаланушылар жоқ",
+  "authEnterPin": "PIN-кодты енгізіңіз",
+  "updateVersion": "Нұсқа {version}",
+  "@updateVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNew": "Жаңалықтар",
+  "updateFixedIssues": "Түзетілді",
+  "updateSize": "Өлшемі",
+  "updateDate": "Күні",
+  "updateMandatory": "Бұл міндетті жаңарту",
+  "updateLaterCountdown": "Кейінірек ({countdown})",
+  "@updateLaterCountdown": {
+    "placeholders": {
+      "countdown": {
+        "type": "int"
+      }
+    }
+  },
+  "updateDownloading": "Жаңарту жүктелуде",
+  "updateDownloadingFile": "Жаңарту файлы жүктелуде...",
+  "updatePosNow": "КАССАНЫ ЖАҢАРТУ",
+  "serviceAddNote": "Белгі қосу",
+  "serviceClientLookup": "Клиентті іздеу",
+  "serviceOrderDetail": "Тапсырыс-наряд мәліметтері #{orderId}",
+  "@serviceOrderDetail": {
+    "placeholders": {
+      "orderId": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentDefaultLabel": "Әдепкі",
+  "currencySymbol": "₸",
+  "serviceIntakeTitle": "Тапсырысты қабылдау",
+  "serviceIntakeClient": "Клиент",
+  "serviceIntakeDevice": "Құрылғы / Зат",
+  "serviceIntakeServices": "Қызметтер",
+  "serviceIntakeDelivery": "Жеткізу",
+  "serviceIntakePickup": "Клиенттен алу",
+  "serviceIntakeSave": "Сақтау",
+  "serviceIntakeCancel": "Бас тарту",
+  "serviceQueueTitle": "Тапсырыс-нарядтар",
+  "serviceQueueEmpty": "Тапсырыс-нарядтар жоқ",
+  "serviceQueueSearch": "Нөмір, клиент, құрылғы бойынша іздеу",
+  "serviceDetailTitle": "Тапсырыс мәліметтері",
+  "serviceDetailInfo": "Ақпарат",
+  "serviceDetailTimeline": "Жұмыстар",
+  "serviceDetailCost": "Құн",
+  "serviceDetailActions": "Әрекеттер",
+  "serviceStatusIntake": "Қабылдау",
+  "serviceStatusInProgress": "Жұмыста",
+  "serviceStatusCompleted": "Дайын",
+  "serviceStatusClosed": "Жабық",
+  "serviceStatusCancelled": "Бас тартылған",
+  "serviceMarkDiagnostic": "Диагностика",
+  "serviceMarkReplacement": "Бөлшек ауыстыру",
+  "serviceMarkRepair": "Жөндеу",
+  "serviceMarkTesting": "Тестілеу",
+  "serviceMarkOther": "Басқа",
+  "serviceAddMark": "Жұмыс қосу",
+  "serviceDeleteMark": "Белгіні жою",
+  "serviceMarkDescription": "Сипаттама",
+  "serviceMarkType": "Жұмыс түрі",
+  "serviceMarkCost": "Құн",
+  "serviceMarkNote": "Ескертпе",
+  "serviceCatalogTitle": "Қызметтер каталогі",
+  "serviceCatalogAdd": "Қызмет қосу",
+  "serviceCatalogDuration": "мин",
+  "serviceCatalogWarranty": "Кепілдік (күн)",
+  "serviceCatalogRequiresDevice": "Құрылғы қажет",
+  "serviceClientNew": "Жаңа клиент",
+  "serviceClientPhone": "Телефон",
+  "serviceClientName": "Аты",
+  "serviceClientAddress": "Мекенжай",
+  "serviceAssignTechnician": "Шебер тағайындау",
+  "serviceReassignTechnician": "Шеберді қайта тағайындау",
+  "serviceTechnicianAssigned": "Шебер тағайындалды: {name}",
+  "serviceTechnicianSelect": "Шебер таңдаңыз",
+  "servicePrepayment": "Алдын ала төлем",
+  "servicePrepaymentAmount": "Алдын ала төлем сомасы",
+  "serviceEstimatedDate": "Күтілетін күн",
+  "serviceEstimatedAmount": "Сома",
+  "servicePrintLabel": "QR-жапсырма",
+  "servicePrintReceipt": "Чек басып шығару",
+  "serviceProgressConfirm": "Жұмысты бастау",
+  "serviceCancelConfirm": "Бас тарту",
+  "serviceTotalCost": "Жұмыс құны",
+  "servicePrepaid": "Алдын ала төлем",
+  "serviceRemaining": "Төлеуге",
+  "serviceDeliveryAddress": "Жеткізу мекенжайы",
+  "serviceNeedsPickup": "Клиенттен алу",
+  "serviceNeedsDelivery": "Клиентке жеткізу",
+  "serviceQrFormat": "TELEPOS:SO:{id}:{number}",
+  "serviceOrderCreated": "Жаңа тапсырыс",
+  "serviceOrderUpdated": "Өзгерту",
+  "serviceNoOrders": "Деректер жоқ",
+  "serviceFilterAll": "Барлығы",
+  "navCatalog": "Каталог",
+  "catalogTitle": "Тауарлар каталогы",
+  "catalogSearch": "Іздеу",
+  "catalogSearchHint": "Атауы немесе штрихкод",
+  "catalogFilterAll": "Барлығы",
+  "catalogFilterProducts": "Тауарлар",
+  "catalogFilterWeighted": "Салмақтық",
+  "catalogFilterServices": "Қызметтер",
+  "catalogFilterPackages": "Жинақтар",
+  "catalogAddProduct": "Тауар қосу",
+  "catalogEditProduct": "Тауарды өзгерту",
+  "catalogDeleteProduct": "Тауарды жою",
+  "catalogRestoreProduct": "Тауарды қалпына келтіру",
+  "catalogProductName": "Атауы",
+  "catalogBarcode": "Штрихкод",
+  "catalogType": "Түрі",
+  "catalogPrice": "Сату бағасы",
+  "catalogWholesalePrice": "Көтерме баға",
+  "catalogCategory": "Санат",
+  "catalogMeasure": "Өлшем бірлігі",
+  "catalogQuantity": "Қалдық",
+  "catalogQuickProduct": "Жылдам тауар",
+  "catalogAddToQuick": "Жылдамға қосу",
+  "catalogRemoveFromQuick": "Жылдамнан алып тастау",
+  "catalogNoProducts": "Тауарлар жоқ",
+  "catalogDeleted": "Жойылған",
+  "catalogConfirmDelete": "\"{name}\" тауарын жою керек пе?",
+  "@catalogConfirmDelete": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogProductCreated": "Тауар жасалды",
+  "catalogProductUpdated": "Тауар жаңартылды",
+  "catalogProductDeleted": "Тауар жойылды",
+  "catalogProductRestored": "Тауар қалпына келтірілді",
+  "catalogShowDeleted": "Жойылғандарды көрсету",
+  "catalogTypeNormal": "Қарапайым",
+  "catalogTypeWeight": "Салмақтық",
+  "catalogTypeInner": "Ішкі",
+  "catalogTypePackage": "Жинақ",
+  "catalogTypeService": "Қызмет",
+  "catalogMeasurePiece": "Дана",
+  "catalogMeasureKg": "Килограмм",
+  "catalogMeasureLiter": "Литр",
+  "catalogMeasureMeter": "Метр",
+  "catalogNameRequired": "Атауын енгізіңіз",
+  "catalogPriceRequired": "Бағаны енгізіңіз",
+  "catalogPriceInvalid": "Баға 0-ден жоғары болуы керек",
+  "catalogBarcodeExists": "Бұл штрихкодпен тауар бар",
+  "catalogCategories": "Санаттар",
+  "catalogAllCategories": "Барлық санаттар",
+  "catalogNoCategories": "Санаттар жоқ",
+  "catalogQuickProductCategory": "Жылдам тауар санаты",
+  "catalogAddCategory": "Санат қосу",
+  "catalogCategoryName": "Санат атауы",
+  "catalogManageCategories": "Санаттарды басқару",
+  "catalogCategoryHasProducts": "Жою мүмкін емес: санатта тауарлар бар",
+  "catalogConfirmDeleteCategory": "Санатты жою",
+  "catalogMenuCategories": "Мәзір санаттары",
+  "catalogParentCategory": "Ата-аналық санат",
+  "catalogRootCategory": "Түбір (ата-анасыз)",
+  "telegramErrorPhoneSendFailed": "Телефонға код жіберілмеді",
+  "telegramErrorQrAuthFailed": "QR-код арқылы авторизация қатесі",
+  "telegramErrorWrongCode": "Растау коды дұрыс емес",
+  "telegramErrorWrongPassword": "Құпиясөз дұрыс емес",
+  "telegramErrorRegistrationFailed": "Тіркелу қатесі",
+  "telegramErrorChannelSearchFailed": "Арналарды іздеу қатесі",
+  "telegramErrorChannelConnectFailed": "Арналарға қосылу қатесі",
+  "telegramErrorChannelCreateFailed": "Арналарды құру қатесі",
+  "hwSettingsTitle": "Жабдықтар",
+  "hwSettingsSubtitle": "Сканер, дисплей, терминалдар",
+  "terminalServiceTitle": "Браузер терминалдары",
+  "terminalServiceSubtitle": "Планшет немесе телефон — жұмыс орны ретінде",
+  "terminalServiceEnable": "Браузер терминалдарына қызмет көрсету",
+  "terminalServiceEnabledNote": "Касса дүкен желісін тыңдайды. Терминалдар қосыла алады.",
+  "terminalServiceDisabledNote": "Касса тек өзін тыңдайды. Желіге порт ашылмаған, терминалдар қосыла алмайды.",
+  "terminalServiceRestartNote": "Өзгеріс касса қайта іске қосылғаннан кейін күшіне енеді.",
+  "terminalServiceAddress": "Терминалға арналған мекенжай",
+  "terminalServiceAddressHint": "Осы мекенжайды планшет браузерінде ашыңыз. Атау ашылмаса, кассаның IP-мекенжайын теріңіз.",
+  "pairingTitle": "Терминалды тіркеу",
+  "pairingSubtitle": "Жаңа құрылғы үшін код",
+  "pairingDisabledNote": "Касса браузерлік терминалдарға қызмет көрсетпейді. Тіркеу коды үшін қызметті қосыңыз.",
+  "pairingDisabledAction": "Терминал баптауларын ашу",
+  "pairingAddressLabel": "Жаңа құрылғы үшін сілтеме",
+  "pairingAddressHint": "Осы мекенжайды жаңа құрылғыда толығымен теріңіз немесе көшіріңіз — код онда бар.",
+  "pairingLinkPending": "Сілтеме сіз кодты бергеннен кейін осында пайда болады.",
+  "pairingRestartNote": "Терминал қызметі баптауларда қосулы, бірақ бұл касса онымен әлі қайта іске қосылған жоқ — мекенжай жауап бермейді. Кассаны қайта іске қосыңыз.",
+  "pairingMint": "Код беру",
+  "pairingMintAgain": "Жаңа код беру",
+  "pairingCodeLabel": "Тіркеу коды",
+  "pairingExpiresAt": "{time} дейін жарамды",
+  "@pairingExpiresAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pairingOnceNote": "Код тек қазір көрсетіледі — осы экраннан кетсеңіз, ол жоғалады. Жаңа код беру, егер бұрынғысы әлі пайдаланылмаса, оны күшінен айырады. Бұл код сілтемені ашқанда жұмсалады — құрылғыдағы кіру экраны содан кейін бөлек, екінші кодты сұрайды: сол сәтте жаңа код беріңіз.",
+  "enrolTitle": "Терминалды байланыстыру",
+  "enrolInstructions": "Бұл құрылғы әлі кассаға байланыстырылмаған. Операторды кассада «Терминалды байланыстыру» экранын ашуын сұраңыз да, сол жерде көрсетілген кодты енгізіңіз.",
+  "enrolCodeLabel": "Байланыстыру коды",
+  "enrolSubmit": "Байланыстыру",
+  "accountsSettingsTitle": "Төлем шоттары",
+  "accountsSettingsSubtitle": "Қолма-қол және карта шоттары",
+  "accountsSettingsAdd": "Шот қосу",
+  "accountsSettingsEdit": "Шотты өңдеу",
+  "accountsSettingsEmpty": "Төлем шоттары бапталмаған",
+  "accountsSettingsName": "Шот атауы",
+  "accountsSettingsType": "Шот түрі",
+  "accountsSettingsTypePOS": "Касса (қолма-қол)",
+  "accountsSettingsTypeBank": "Банк (карта)",
+  "accountsSettingsTypeCash": "Қолма-қол",
+  "accountsSettingsTypeSystem": "Жүйелік",
+  "accountsSettingsTypeBonus": "Бонустық",
+  "accountsSettingsTypeOther": "Басқа",
+  "accountsSettingsBalance": "Баланс",
+  "accountsSettingsVisible": "POS",
+  "accountsSettingsVisibleToPos": "POS-та көрінеді",
+  "hwSettingsSaved": "Жабдық параметрлері сақталды",
+  "hwScannerTitle": "Штрих-код сканері",
+  "hwScannerMode": "Сканер режимі",
+  "hwScannerModeKeyboard": "USB / пернетақта (wedge)",
+  "hwScannerModeSerial": "Сериялық",
+  "hwScannerModeCamera": "Камера",
+  "hwScannerModeHint": "USB сканерлер осы режимде жұмыс істейді",
+  "hwScannerTimeout": "Таймаут",
+  "hwScannerMinLength": "Мин. ұзындық",
+  "hwScannerMaxLength": "Макс. ұзындық",
+  "hwDisplayTitle": "Сатып алушы дисплейі",
+  "hwDisplayModel": "Үлгісі",
+  "hwDisplayModelLed8": "LED 8 таңба",
+  "hwDisplayModelVfd20": "VFD 20x2",
+  "hwDisplayPort": "COM-порт",
+  "hwDisplayBaudRate": "Жылдамдық",
+  "hwDisplayDisabled": "Сатып алушы дисплейі өшірулі",
+  "hwDrawerTitle": "Кассалық жәшік",
+  "hwDrawerMode": "Ашу режимі",
+  "hwDrawerModePrinter": "Принтер арқылы",
+  "hwDrawerModeSerial": "Сериялық порт",
+  "hwDrawerPort": "COM-порт",
+  "hwTerminalsTitle": "Төлем терминалдары",
+  "hwTerminalIp": "IP-мекенжай",
+  "hwTerminalPort": "Порт",
+  "hwTerminalMerchantId": "Merchant ID",
+  "hwTerminalTerminalId": "Terminal ID",
+  "catalogTypeConsumable": "Шығын материалы",
+  "catalogFilterConsumable": "Шығындар",
+  "catalogFilterInner": "Ішкі",
+  "serviceMarkConsumable": "Шығын материалы",
+  "serviceConsumableSearch": "Тауар / шығын материалын іздеу",
+  "serviceConsumableSelected": "Таңдалған тауар",
+  "serviceQuickServicesTitle": "Жылдам қызметтер",
+  "serviceQuickServicesEmpty": "Жылдам қызметтер жоқ",
+  "catalogTypeDish": "Тағам",
+  "catalogFilterDish": "Тағамдар",
+  "dishCalculation": "Калькуляция",
+  "dishCalculationStub": "Калькуляция модулі кейін қолжетімді болады",
+  "dishIngredients": "Ингредиенттер",
+  "serviceConsumablesTitle": "Шығын нормалары",
+  "serviceConsumablesEmpty": "Шығын материалдары жоқ",
+  "serviceConsumablesAdd": "Шығынды қосу",
+  "serviceConsumableQuantity": "1 қызметке саны",
+  "serviceConsumablesAutoAdded": "Шығындар автоматты түрде қосылды",
+  "catalogDescription": "Сипаттама",
+  "catalogImagePlaceholder": "Фото жүктеу үшін басыңыз",
+  "globalRetry": "Қайталау",
+  "globalRefresh": "Жаңарту",
+  "globalReset": "Тазалау",
+  "globalApply": "Қолдану",
+  "globalCreate": "Жасау",
+  "stockOpSupply": "Қабылдау",
+  "stockOpMovement": "Ауыстыру",
+  "stockOpSupplierReturn": "Жеткізушіге қайтару",
+  "stockOpMovementShort": "Ауыс.",
+  "stockOpReturnShort": "Қайтару",
+  "stockRegistryTitle": "Қойма операциялары",
+  "stockRegistryAppBarTitle": "Қойма",
+  "stockRegistryLoadError": "Тізілімді жүктеу мүмкін болмады",
+  "stockRegistryResetFilters": "Сүзгілерді тазалау",
+  "stockRegistryFilters": "Сүзгілер",
+  "stockRegistryEmpty": "Жазбалар жоқ",
+  "stockRegistryEmptyFiltered": "Сүзгі параметрлерін өзгертіңіз",
+  "stockRegistryEmptyCreate": "Алғашқы қойма операциясын жасаңыз",
+  "stockRegistryPeriod": "Кезең",
+  "stockRegistryOperationType": "Операция түрі",
+  "stockRegistrySearchHint": "Нөмір, контрагент бойынша іздеу...",
+  "stockRegistryDateFrom": "Бастап",
+  "stockRegistryDateTo": "Дейін",
+  "stockRegistryColType": "Түрі",
+  "stockRegistryColNumber": "Нөмір",
+  "stockRegistryColCounterparty": "Контрагент / Қойма",
+  "stockRegistryColProducts": "Тауарлар",
+  "stockRegistryColStatus": "Күйі",
+  "stockSyncDraft": "Жұмыста",
+  "stockSyncPending": "Күтуде",
+  "stockSyncSending": "Жіберілуде",
+  "stockSyncSynced": "Синхр.",
+  "stockRegistryDetailType": "Түрі: {type}",
+  "@stockRegistryDetailType": {
+    "placeholders": {
+      "type": {
+        "type": "String",
+        "example": "Приёмка"
+      }
+    }
+  },
+  "stockRegistryDetailDate": "Күні: {date}",
+  "@stockRegistryDetailDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryDetailCounterparty": "Контрагент: {name}",
+  "@stockRegistryDetailCounterparty": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryDetailAmount": "Сома: {amount}",
+  "@stockRegistryDetailAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryDetailProducts": "Тауарлар: {count}",
+  "@stockRegistryDetailProducts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stockRegistryDetailComment": "Түсініктеме: {comment}",
+  "@stockRegistryDetailComment": {
+    "placeholders": {
+      "comment": {
+        "type": "String"
+      }
+    }
+  },
+  "stockRegistryProductsShort": "{count} тау.",
+  "@stockRegistryProductsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stockRegistryPaginationRange": "{from}–{to} / {total}",
+  "@stockRegistryPaginationRange": {
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "stockCreateSupplyTitle": "Жаңа қабылдау",
+  "stockCreateSupplySubtitle": "Жеткізушіден тауар қабылдау",
+  "stockCreateMovementSubtitle": "Қоймалар арасында ауыстыру",
+  "stockCreateReturnSubtitle": "Тауарды жеткізушіге қайтару",
+  "serviceQueueActive": "Белсенді",
+  "serviceScanQrTitle": "Тапсырыс QR-белгісін сканерлеу",
+  "serviceScanQrHint": "TELEPOS:SO:... немесе тапсырыс нөмірі",
+  "serviceIntakePhotos": "Қабылдау фотосы",
+  "serviceIntakePhotosHint": "Қабылданатын заттардың фотосын түсіріңіз",
+  "expenseTypeOther": "Басқа",
+  "expenseTypeSmallPurchases": "Ұсақ сатып алу",
+  "expenseTypeSalary": "Жалақы",
+  "expenseTypeUtilities": "Коммуналдық",
+  "expenseTypeCollection": "Инкассация",
+  "expenseTypeCustom": "Теңшелетін",
+  "networkTitle": "Желі және қосылымдар",
+  "networkUnavailableTitle": "Тек TelePOS OS құрылғысында қолжетімді",
+  "networkUnavailableDesc": "telepos-sysd жүйелік демоны табылмады. Желіні басқару тек POS TelePOS OS құрылғысында іске қосылғанда жұмыс істейді.",
+  "networkRefresh": "Жаңарту",
+  "networkSearch": "Іздеу",
+  "networkConnect": "Қосылу",
+  "networkDisconnect": "Ажырату",
+  "networkConnected": "Қосылды",
+  "networkEthernetTitle": "Сымды желі (Ethernet)",
+  "networkEthernetDesc": "Кабельдік қосылым күйі және интернетке қолжетімділік.",
+  "networkCableLabel": "Кабель",
+  "networkCableConnected": "Қосылды",
+  "networkCableNotConnected": "Қосылмаған",
+  "networkInternetLabel": "Интернет",
+  "networkInternetAvailable": "Қолжетімді",
+  "networkInternetUnavailable": "Қолжетімсіз",
+  "networkWifiTitle": "Wi-Fi",
+  "networkWifiDesc": "Сымсыз желіге қосылу.",
+  "networkWifiSearchHint": "Желілерді табу үшін «Іздеу» түймесін басыңыз.",
+  "networkBluetoothTitle": "Bluetooth",
+  "networkBluetoothDesc": "Принтерлермен, таразылармен және басқа құрылғылармен жұптау.",
+  "networkBluetoothSearchHint": "Құрылғыларды табу үшін «Іздеу» түймесін басыңыз.",
+  "networkBluetoothUnavailableInBrowser": "Браузерде қолжетімсіз — Bluetooth тек кассаның өзінде теңшеледі.",
+  "networkWifiPasswordTitle": "«{ssid}» үшін құпиясөз",
+  "networkWifiPasswordLabel": "Wi-Fi құпиясөзі",
+  "networkConnectedTo": "{ssid} желісіне қосылды",
+  "networkConnectFailed": "{ssid} желісіне қосыла алмады",
+  "networkPaired": "Жұпталды: {device}",
+  "networkPairFailed": "Жұптау сәтсіз аяқталды",
+  "networkEthernetConfigure": "Настроить",
+  "networkEthernetConfigTitle": "Настройка Ethernet",
+  "networkEthernetInterface": "Интерфейс",
+  "networkEthernetCurrentIp": "Текущий IP",
+  "networkEthernetMode": "Способ получения адреса",
+  "networkEthernetModeDhcp": "Автоматически (DHCP)",
+  "networkEthernetModeStatic": "Вручную (статический)",
+  "networkEthernetIpLabel": "IP-адрес",
+  "networkEthernetPrefixLabel": "Префикс (маска)",
+  "networkEthernetGatewayLabel": "Шлюз",
+  "networkEthernetDnsLabel": "DNS-сервер",
+  "networkEthernetApply": "Применить",
+  "networkEthernetApplied": "Настройки сети применены",
+  "networkEthernetApplyFailed": "Не удалось применить настройки сети",
+  "networkEthernetNoInterface": "Интерфейс Ethernet не определён",
+  "networkEthernetInvalidIp": "Неверный IP-адрес",
+  "networkEthernetInvalidGateway": "Неверный адрес шлюза",
+  "networkEthernetInvalidDns": "Неверный адрес DNS",
+  "networkEthernetInvalidPrefix": "Префикс должен быть от 0 до 32",
+  "networkEthernetIpRequired": "Укажите IP-адрес",
+  "networkEthernetOptional": "необязательно",
+  "applianceTitle": "Жүйе (TelePOS OS)",
+  "applianceHubSubtitle": "Жүйені басқару, желі, драйверлер",
+  "applianceUnavailableDesc": "telepos-sysd жүйелік демоны табылмады. Бұл бөлім тек POS TelePOS OS құрылғысында іске қосылғанда жұмыс істейді.",
+  "applianceNetworkTitle": "Желі және қосылымдар",
+  "applianceNetworkDesc": "Wi-Fi, сымды желі және Bluetooth. Кіру мен синхрондау үшін қажет.",
+  "applianceNetworkButton": "Желіні баптау",
+  "applianceDesktopTitle": "Жұмыс үстелі режимі",
+  "applianceDesktopDesc": "Қолданбаларды орнату және қызмет көрсетуге арналған толық жұмыс үстелі.",
+  "applianceCurrentMode": "Ағымдағы режим: ",
+  "applianceOpenDesktop": "Жұмыс үстелін ашу",
+  "applianceDesktopUnavailable": "Бұл құрастыруда жұмыс үстелі қолжетімсіз.",
+  "applianceModeKiosk": "Касса (POS)",
+  "applianceModeDesktop": "Жұмыс үстелі",
+  "applianceDriversTitle": "Перифериялық драйверлер",
+  "applianceDriversDesc": "Принтерлер, таразылар және төлем терминалдарының драйверлерін сенімді TelePOS каталогынан орнату.",
+  "applianceDriversEmpty": "Драйверлер каталогы бос.",
+  "applianceDriverInstall": "Орнату",
+  "applianceDriverRemove": "Жою",
+  "applianceDriverInstalled": "Драйвер орнатылды: {title}",
+  "applianceDriverRemoved": "Драйвер жойылды: {title}",
+  "applianceError": "Қате: {message}",
+  "navNetwork": "Желі",
+  "navCollapseMenu": "Мәзірді жию",
+  "navExpandMenu": "Мәзірді жаю",
+  "languageSwitcherTooltip": "Тіл / Язык / Language",
+  "labelPrinterSettingsTitle": "Жапсырма принтері",
+  "labelPrinterSettingsSubtitle": "Бағалар мен штрих-кодтар",
+  "labelPrinterLanguage": "Принтер тілі",
+  "labelPrinterSize": "Жапсырма өлшемі",
+  "labelPrinterWidthMm": "Ені, мм",
+  "labelPrinterHeightMm": "Биіктігі, мм",
+  "labelPrinterTestSuccess": "Жапсырма басып шығаруға жіберілді",
+  "labelPrinterNotConfigured": "Жапсырма принтері бапталмаған. Параметрлерде мекенжайды көрсетіңіз.",
+  "labelTemplatesTitle": "Жапсырма үлгілері",
+  "labelTemplatesManage": "Үлгілерді басқару",
+  "labelTemplatesManageSubtitle": "Жаймаларды құру және өңдеу",
+  "labelTemplatesEmpty": "Үлгілер табылмады",
+  "labelTemplateNew": "Жаңа үлгі",
+  "labelTemplateEdit": "Үлгіні өңдеу",
+  "labelTemplateBuiltIn": "Кірістірілген",
+  "labelMmUnit": "мм",
+  "labelTemplateDeleteTitle": "Үлгіні жою",
+  "labelTemplateDeleteConfirm": "«{name}» үлгісін жою керек пе?",
+  "labelTemplateName": "Үлгі атауы",
+  "labelTemplateNameRequired": "Үлгі атауын енгізіңіз",
+  "labelTemplatePreview": "Алдын ала қарау",
+  "labelTemplateFields": "Өрістер",
+  "labelTemplateAddField": "Өріс қосу",
+  "labelTemplateNoFields": "Өрістер жоқ. Кемінде бір өріс қосыңыз.",
+  "labelFieldKind": "Өріс түрі",
+  "labelFieldText": "Мәтін",
+  "labelFieldFontSize": "Қаріп",
+  "labelFieldBold": "Қалың",
+  "labelFieldKindName": "Атауы",
+  "labelFieldKindPrice": "Бағасы",
+  "labelFieldKindBarcode": "Штрих-код",
+  "labelFieldKindSku": "Артикул",
+  "labelFieldKindDate": "Күні",
+  "labelFieldKindText": "Мәтін",
+  "labelPrintTitle": "Баға басып шығару",
+  "labelPrintBulkTitle": "Бағаларды басып шығару ({count})",
+  "labelPrintChooseTemplate": "Үлгіні таңдаңыз",
+  "labelPrintCopies": "Көшірмелер",
+  "labelPrintAction": "Басып шығару",
+  "labelPrintedCount": "Басып шығарылды: {count}",
+  "catalogPrintLabel": "Баға басып шығару",
+  "receiptTemplatesTitle": "Чек үлгілері",
+  "receiptTemplatesSubtitle": "Чек безендірілуі: логотип, тақырып/төменгі, БСН, QR, ені",
+  "receiptTemplatesEmpty": "Үлгілер табылмады",
+  "receiptTemplateNew": "Жаңа үлгі",
+  "receiptTemplateEdit": "Үлгіні өңдеу",
+  "receiptTemplateBuiltIn": "Кірістірілген",
+  "receiptTemplateActive": "Белсенді",
+  "receiptTemplateMakeActive": "Белсенді ету",
+  "receiptTemplateName": "Үлгі атауы",
+  "receiptTemplateNameRequired": "Үлгі атауын енгізіңіз",
+  "receiptTemplatePreview": "Алдын ала қарау",
+  "receiptTemplatePaperWidth": "Қағаз ені",
+  "receiptTemplateContent": "Чек мазмұны",
+  "receiptTemplateHeaderFooter": "Тақырып және төменгі деректеме",
+  "receiptTemplateHeaderText": "Тақырып мәтіні",
+  "receiptTemplateFooterText": "Төменгі деректеме мәтіні",
+  "receiptTemplateExtraFooter": "Қосымша төменгі жолдар",
+  "receiptTemplateExtraFooterHint": "Әрқайсысы жеке жол (мысалы, қайтару шарттары)",
+  "receiptTemplateShowBin": "БСН/ЖСН басып шығару",
+  "receiptTemplateShowAddress": "Мекенжайды басып шығару",
+  "receiptTemplateShowCashier": "Касса/кассирді басып шығару",
+  "receiptTemplateShowVat": "ҚҚС басып шығару",
+  "receiptTemplateShowQr": "Тексеру сілтемесін басып шығару (QR)",
+  "receiptTemplateShowItemNumbers": "Позицияларды нөмірлеу",
+  "receiptTemplateShowLogo": "Логотипті басып шығару",
+  "receiptTemplateTestPrint": "Сынақ басып шығару",
+  "receiptTemplateTestPrintOk": "Чек үлгісі басып шығаруға жіберілді",
+  "receiptTemplateTestPrintFail": "Басып шығару сәтсіз (принтерді тексеріңіз)",
+  "receiptTemplateDeleteTitle": "Үлгіні жою",
+  "receiptTemplateDeleteConfirm": "«{name}» үлгісін жою керек пе?",
+  "@receiptTemplateDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stockCreateWriteoffSubtitle": "Списание товара (бой, порча, просрочка)",
+  "stockCreateInventorySubtitle": "Пересчёт фактических остатков",
+  "actionWeigh": "Весы",
+  "actionPrintLabel": "Ценник",
+  "restaurantMergeTitle": "Объединить столы",
+  "restaurantMergeTarget": "В стол: {table}",
+  "restaurantMergeSelectSources": "Выберите столы для присоединения:",
+  "restaurantMergeNoOpenTables": "Нет других занятых столов",
+  "restaurantMergeConfirm": "Объединить ({count})",
+  "restaurantMergeDone": "Столы объединены",
+  "restaurantMergeNeedTarget": "На текущем столе нет открытого заказа",
+  "shiftOverAgeTitle": "Смена открыта более 24 часов",
+  "shiftOverAgeMessage": "Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.",
+  "supplierRepayTitle": "Погасить долг поставщику",
+  "supplierRepayCurrentDebt": "Текущий долг: {amount}",
+  "supplierRepayNoDebt": "Долга перед поставщиком нет",
+  "supplierRepayAmountLabel": "Сумма оплаты",
+  "supplierRepayAmountError": "Введите сумму больше 0",
+  "supplierRepaySubmit": "Оплатить поставщику",
+  "supplierRepayDone": "Оплата поставщику проведена",
+  "supplierRepayError": "Ошибка проведения оплаты",
+  "catalogImageFromGallery": "Выбрать из галереи",
+  "catalogImageFromCamera": "Сделать фото",
+  "catalogImageRemove": "Удалить фото",
+  "catalogImagePickError": "Не удалось загрузить фото",
+  "sysmTitle": "Управление системой",
+  "sysmHubSubtitle": "Состояние, обновления, бэкапы, питание",
+  "sysmOpenPanel": "Открыть панель управления",
+  "sysmNoData": "Нет данных",
+  "sysmGenericError": "Не удалось выполнить операцию",
+  "sysmHealthTitle": "Состояние системы",
+  "sysmHealthDesc": "Загрузка процессора, память, диск, температура и время работы",
+  "sysmCpu": "Процессор",
+  "sysmCores": "ядер",
+  "sysmRam": "Память",
+  "sysmMb": "МБ",
+  "sysmDisk": "Диск",
+  "sysmGb": "ГБ",
+  "sysmGbFree": "ГБ свободно",
+  "sysmTemperature": "Температура",
+  "sysmUptime": "Время работы",
+  "sysmDaysShort": "д",
+  "sysmHoursShort": "ч",
+  "sysmMinsShort": "м",
+  "sysmUpdateTitle": "Обновление ПО",
+  "sysmUpdateDesc": "Проверка и установка обновлений системы",
+  "sysmCurrentVersion": "Текущая версия",
+  "sysmLatestVersion": "Доступная версия",
+  "sysmUpdateAvailable": "Доступно обновление",
+  "sysmCheckUpdate": "Проверить",
+  "sysmUpdateNow": "Обновить",
+  "sysmUpdateConfirm": "Система загрузит и установит обновление. После установки может потребоваться перезагрузка. Продолжить?",
+  "sysmUpdateStarted": "Обновление запущено",
+  "sysmUpdateFailed": "Не удалось обновить",
+  "sysmUpdatePhaseDownload": "Загрузка обновления…",
+  "sysmUpdatePhaseApply": "Установка обновления…",
+  "sysmRollback": "Откатить версию",
+  "sysmRollbackConfirm": "Откатиться к предыдущей версии системы?",
+  "sysmRollbackDone": "Откат выполнен",
+  "sysmBackupTitle": "Резервные копии",
+  "sysmBackupDesc": "Создание, восстановление и перенос копий на USB",
+  "sysmBackupEmpty": "Резервных копий нет",
+  "sysmBackupCreate": "Создать копию",
+  "sysmBackupCreated": "Резервная копия создана",
+  "sysmBackupRestore": "Восстановить",
+  "sysmBackupRestoreConfirm": "Восстановить систему из копии «{name}»? Текущие данные будут заменены.",
+  "@sysmBackupRestoreConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sysmBackupRestored": "Восстановление запущено",
+  "sysmBackupExport": "На USB",
+  "sysmBackupExported": "Копия экспортирована на USB",
+  "sysmBackupImport": "Импорт с USB",
+  "sysmBackupImported": "Копия импортирована с USB",
+  "sysmSnapshotTitle": "Снапшоты и сброс",
+  "sysmSnapshotDesc": "Точки восстановления системы и заводской сброс",
+  "sysmSnapshotUnsupported": "Снапшоты не поддерживаются на этом устройстве",
+  "sysmSnapshotEmpty": "Снапшотов нет",
+  "sysmSnapshotCreate": "Создать снапшот",
+  "sysmSnapshotCreated": "Снапшот создан",
+  "sysmSnapshotRollback": "Откатить",
+  "sysmSnapshotRollbackConfirm": "Откатить систему к снапшоту «{name}»?",
+  "@sysmSnapshotRollbackConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sysmSnapshotRolledBack": "Откат к снапшоту выполнен",
+  "sysmSnapshotRebootRequired": "Откат выполнен. Требуется перезагрузка.",
+  "sysmFactoryReset": "Заводской сброс",
+  "sysmFactoryResetWarn": "Удалит все данные и настройки, вернёт устройство к заводскому состоянию.",
+  "sysmFactoryResetConfirm1": "Заводской сброс удалит ВСЕ данные, настройки и продажи. Это действие необратимо. Продолжить?",
+  "sysmFactoryResetConfirm2": "Вы уверены? Все данные будут безвозвратно удалены. Подтвердите заводской сброс.",
+  "sysmFactoryResetDo": "Сбросить",
+  "sysmFactoryResetStarted": "Заводской сброс запущен",
+  "sysmDisplayTitle": "Экран",
+  "sysmDisplayDesc": "Яркость и поворот экрана",
+  "sysmDisplayUnsupported": "Бұл құрылғыда басқарылатын экран жоқ (backlight жоқ). Жарықтық пен бұрылысты монитордың өзінде реттеңіз.",
+  "sysmRotation": "Поворот экрана",
+  "sysmRemoteTitle": "Удалённая поддержка",
+  "sysmRemoteDesc": "Временный защищённый доступ для службы поддержки",
+  "sysmRemoteHelp": "«Қолдауды қалпына келтіру» TelePOS қолдау қызметіне ақауды қашықтан шешу үшін приставкаға уақытша қорғалған (SSH) арна ашады. Қолжетімділік 30 минуттан кейін автоматты түрде жабылады. Тек қолдау сұраған кезде ғана қосыңыз.",
+  "sysmRemoteOn": "Доступ включён",
+  "sysmRemoteOff": "Доступ выключен",
+  "sysmRemoteExpires": "Истекает через {minutes} мин",
+  "@sysmRemoteExpires": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sysmRemoteEnable": "Включить на 30 минут",
+  "sysmRemoteEnabled": "Удалённый доступ включён",
+  "sysmRemoteDisable": "Отключить доступ",
+  "sysmRemoteDisabled": "Удалённый доступ отключён",
+  "sysmPowerTitle": "Питание",
+  "sysmPowerDesc": "Перезагрузка и выключение устройства",
+  "sysmReboot": "Перезагрузить",
+  "sysmRebootConfirm": "Перезагрузить устройство сейчас?",
+  "sysmRebooting": "Перезагрузка…",
+  "sysmShutdown": "Выключить",
+  "sysmShutdownConfirm": "Выключить устройство сейчас?",
+  "sysmShuttingDown": "Выключение…",
+  "sysmTimeTitle": "Время и часовой пояс",
+  "sysmTimeDesc": "Текущее время, часовой пояс и синхронизация по NTP",
+  "sysmTimeCurrent": "Текущее время",
+  "sysmTimezone": "Часовой пояс",
+  "sysmTimezoneSave": "Сохранить часовой пояс",
+  "sysmTimezoneSaved": "Часовой пояс сохранён",
+  "sysmTimezoneSaveError": "Не удалось сохранить часовой пояс",
+  "sysmNtpSync": "Синхронизировать время (NTP)",
+  "sysmNtpSyncing": "Синхронизация…",
+  "sysmNtpDone": "Время синхронизировано",
+  "sysmNtpFailed": "Не удалось синхронизировать время",
+  "sysmTerminalTitle": "Терминал",
+  "sysmTerminalDesc": "Диагностика и управление приставкой (командная строка)",
+  "sysmTerminalOpen": "Открыть терминал",
+  "sysmTerminalRootNote": "Команды выполняются как root на приставке.",
+  "sysmTerminalHint": "Введите команду (например: systemctl status telepos-sysd)",
+  "sysmTerminalRun": "Выполнить",
+  "sysmTerminalClear": "Очистить вывод",
+  "sysmTerminalRunning": "Выполняется…",
+  "sysmTerminalExitCode": "Код возврата: {code}",
+  "@sysmTerminalExitCode": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "sysmTerminalEmpty": "Вывод появится здесь",
+  "sysmTerminalHistory": "История команд",
+  "sysmTerminalPresets": "Пресеты",
+  "sysmTerminalPresetsNetwork": "Сеть",
+  "sysmTerminalPresetsPrinters": "Принтеры",
+  "sysmTerminalPresetsSystem": "Система",
+  "sysmTerminalPresetsTime": "Время",
+  "sysmTermGroupDiagnostics": "Диагностика",
+  "sysmTermGroupPrinter": "Принтер",
+  "sysmTermGroupNetwork": "Желі",
+  "sysmTermGroupSystem": "Жүйе",
+  "sysmTermGroupTime": "Уақыт",
+  "sysmTermDiagOsAndDaemon": "ОЖ және демон нұсқасы",
+  "sysmTermDiagNetworkStatus": "Желі: күй және мекенжай",
+  "sysmTermDiagNetworkConnectivity": "Желі: байланыс",
+  "sysmTermDiagHardware": "Жабдық: диск/жад/принтерлер",
+  "sysmTermPrinterFixAuto": "Принтерді жөндеу (авто)",
+  "sysmTermPrinterDiag": "Принтер диагностикасы",
+  "sysmTermPrinterLoadUsblp": "usblp модулін жүктеу",
+  "sysmTermPrinterNodesAndPerms": "Принтер түйіндері мен рұқсаттар",
+  "sysmTermPrinterLsusb": "USB құрылғылары (lsusb)",
+  "sysmTermPrinterCupsStatus": "CUPS: күй және кезектер",
+  "sysmTermPrinterGiveToKernel": "Принтерді ядроға беру (usblp)",
+  "sysmTermPrinterTestPrint": "/dev/usb/lp0 сынақ басып шығару",
+  "sysmTermNetDeviceStatus": "Құрылғылар күйі",
+  "sysmTermNetIpAddresses": "IP мекенжайлары",
+  "sysmTermNetConnectEthernet": "Ethernet қосу",
+  "sysmTermNetReload": "Желіні қайта жүктеу",
+  "sysmTermNetPing": "Пинг 8.8.8.8",
+  "sysmTermSysDisk": "Диск",
+  "sysmTermSysMemory": "Жад",
+  "sysmTermSysSysdStatus": "telepos-sysd күйі",
+  "sysmTermSysKioskLogs": "Киоск журналдары",
+  "sysmTermTimeDateTime": "Күн және уақыт",
+  "sysmTermTimeNtpSync": "NTP синхрондау",
+  "labelPrinterDevicePath": "Путь к устройству",
+  "labelPrinterDevicePathHint": "Например: /dev/usb/lp0 (USB) или /dev/ttyUSB0 (Serial). Оставьте пустым для значения по умолчанию.",
+  "movementTitle": "Перемещение",
+  "movementTitleFull": "Перемещение товаров",
+  "movementFrom": "Откуда *",
+  "movementTo": "Куда *",
+  "movementLocationHint": "Название склада / точки",
+  "movementProductsCount": "Товаров: {count}",
+  "@movementProductsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "movementSumLabel": "Сумма: {amount}",
+  "@movementSumLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "movementAddProduct": "Добавить товар",
+  "movementBarcodeHint": "Штрихкод или артикул",
+  "movementComment": "Комментарий",
+  "movementCommentHint": "Примечание к перемещению...",
+  "movementCommentHintShort": "Примечание...",
+  "movementProductNotFound": "Товар не найден",
+  "movementSavedMessage": "Перемещение сохранено: {count} товаров на {amount}",
+  "@movementSavedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "movementCancelTitle": "Отменить перемещение?",
+  "movementCancelMessage": "Все несохранённые данные будут потеряны.",
+  "movementCancelConfirm": "Да, отменить",
+  "movementProductFallback": "Товар #{ucode}",
+  "@movementProductFallback": {
+    "placeholders": {
+      "ucode": {
+        "type": "String"
+      }
+    }
+  },
+  "movementPriceLabel": "Цена",
+  "movementSaveError": "Ошибка сохранения",
+  "movementEmptyTitle": "Добавьте товары для перемещения",
+  "movementEmptyHint": "Отсканируйте штрихкод или введите вручную",
+  "supplierReturnTitle": "Возврат поставщику",
+  "supplierReturnProductsCount": "Товаров: {count}",
+  "@supplierReturnProductsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplierReturnSumLabel": "Сумма: {amount}",
+  "@supplierReturnSumLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnSupplier": "Поставщик *",
+  "supplierReturnSelectSupplier": "Выберите поставщика",
+  "supplierReturnAccount": "Счёт возврата",
+  "supplierReturnSelectAccount": "Выберите счёт",
+  "supplierReturnAddProduct": "Добавить товар",
+  "supplierReturnBarcodeHint": "Штрихкод или артикул",
+  "supplierReturnComment": "Комментарий",
+  "supplierReturnCommentHint": "Причина возврата...",
+  "supplierReturnProductNotFound": "Товар не найден",
+  "supplierReturnSavedMessage": "Возврат сохранён: {count} товаров на {amount}",
+  "@supplierReturnSavedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnCancelTitle": "Отменить возврат?",
+  "supplierReturnCancelMessage": "Все несохранённые данные будут потеряны.",
+  "supplierReturnCancelConfirm": "Да, отменить",
+  "supplierReturnProductFallback": "Товар #{ucode}",
+  "@supplierReturnProductFallback": {
+    "placeholders": {
+      "ucode": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnNoSuppliers": "Нет поставщиков",
+  "supplierReturnNoAccounts": "Нет счетов",
+  "supplierReturnBalance": "Баланс: {amount}",
+  "@supplierReturnBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "supplierReturnPriceLabel": "Цена",
+  "supplierReturnSaveError": "Ошибка сохранения",
+  "supplierReturnEmptyTitle": "Добавьте товары для возврата",
+  "supplierReturnEmptyHint": "Отсканируйте штрихкод или введите вручную",
+  "esfSettingsTitle": "ЭСФ (электронные счета-фактуры)",
+  "esfSettingsSubtitle": "Реквизиты, ЭЦП, исходящие документы",
+  "esfSettingsSave": "Сохранить",
+  "esfSettingsSaved": "Настройки ЭСФ сохранены",
+  "esfSettingsSaveError": "Ошибка сохранения настроек ЭСФ",
+  "esfSettingsEnable": "Включить ЭСФ",
+  "esfSettingsEnableSubtitle": "Формировать счета-фактуры по продажам B2B (по БИН покупателя)",
+  "esfSettingsOperator": "Оператор ЭСФ",
+  "esfSettingsTestMode": "Тестовый режим",
+  "esfSettingsSupplier": "Реквизиты поставщика (наша организация)",
+  "esfSettingsBin": "БИН/ИИН",
+  "esfSettingsName": "Наименование",
+  "esfSettingsAddress": "Адрес",
+  "esfSettingsVatPayer": "Плательщик НДС",
+  "esfSettingsVatSeries": "Серия свидетельства НДС",
+  "esfSettingsVatNumber": "Номер свидетельства НДС",
+  "esfSettingsVatRate": "Ставка НДС, %",
+  "esfSettingsEcp": "ЭЦП (НУЦ РК)",
+  "esfSettingsEcpKeyPath": "Путь к ключу ЭЦП",
+  "esfSettingsEcpKeyAlias": "Алиас ключа",
+  "esfSettingsB2bOnly": "Только B2B",
+  "esfSettingsB2bOnlySubtitle": "Не формировать ЭСФ для розничных продаж физлицам",
+  "esfSettingsEcpHint": "Для реальной выписки требуется ЭЦП НУЦ РК и профиль ИС ЭСФ. Черновики формируются и хранятся офлайн без ЭЦП.",
+  "esfSettingsWebkassaNote": "Жазып беру деректемелері (ЭЦҚ, қосылым, токен) WebKassa (Фискализация) баптауларынан алынады — бір ортақ конфиг. ЭШФ деректемелерін бөлек баптау қажет емес.",
+  "esfOutboxTitle": "Исходящие ЭСФ",
+  "esfOutboxEmpty": "Нет документов ЭСФ",
+  "esfOutboxEmptyHint": "Счета-фактуры появятся здесь после продаж B2B",
+  "esfOutboxRetry": "Повторить отправку",
+  "esfOutboxRetryAll": "Повторить все",
+  "esfOutboxRetryDone": "Обработано: доставлено {delivered}, в очереди {queued}, ошибок {failed}",
+  "@esfOutboxRetryDone": {
+    "placeholders": {
+      "delivered": {
+        "type": "int"
+      },
+      "queued": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "esfOutboxStatusDraft": "Черновик",
+  "esfOutboxStatusQueued": "В очереди",
+  "esfOutboxStatusSubmitted": "Отправлен",
+  "esfOutboxStatusDelivered": "Зарегистрирован",
+  "esfOutboxStatusRejected": "Отклонён",
+  "esfOutboxStatusRevoked": "Отозван",
+  "esfOutboxStatusError": "Ошибка",
+  "esfOutboxAttempts": "Попыток: {count}",
+  "@esfOutboxAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "esfOutboxRegNumber": "Рег. №: {number}",
+  "@esfOutboxRegNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "sntTitle": "СНТ (сопроводительные накладные)",
+  "sntSubtitle": "Виртуальный склад, движение товаров",
+  "sntEmpty": "Нет документов СНТ",
+  "sntEmptyHint": "СНТ формируются автоматически после приёмки прослеживаемых товаров",
+  "sntRefresh": "Обновить очередь",
+  "sntDrainDone": "Обработано: отправлено {submitted}, в очереди {remaining}, ошибок {failed}",
+  "@sntDrainDone": {
+    "placeholders": {
+      "submitted": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "sntDirectionInbound": "Входящая",
+  "sntDirectionOutbound": "Исходящая",
+  "sntStatusDraft": "Черновик",
+  "sntStatusQueued": "В очереди",
+  "sntStatusRegistered": "Зарегистрирована",
+  "sntStatusDelivered": "Доставлена",
+  "sntStatusConfirmed": "Подтверждена",
+  "sntStatusRejected": "Отклонена",
+  "sntStatusRevoked": "Отозвана",
+  "sntStatusAnnulled": "Аннулирована",
+  "sntStatusFailed": "Ошибка",
+  "sntLinesCount": "Позиций: {count}",
+  "@sntLinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sntRegNumber": "Рег. №: {number}",
+  "@sntRegNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "sntNotConfigured": "СНТ / Виртуальный склад не настроены. Документы хранятся локально и будут отправлены после настройки ЭЦП.",
+  "sntConfigure": "Настроить СНТ",
+  "sntSettingsTitle": "Настройки СНТ",
+  "sntSettingsOperator": "Оператор / способ отправки",
+  "sntSettingsEnable": "Включить СНТ",
+  "sntSettingsEnableSubtitle": "Сборка и отправка сопроводительных накладных (ИС ЭСФ)",
+  "sntSettingsProvider": "Способ отправки",
+  "sntSettingsTestMode": "Тестовый режим",
+  "sntSettingsRequisites": "Реквизиты налогоплательщика",
+  "sntSettingsOwnBin": "БИН / ИИН (наш)",
+  "sntSettingsWarehouseCode": "Код виртуального склада",
+  "sntSettingsBackend": "TelePOS backend (прокси ИС ЭСФ)",
+  "sntSettingsBackendUrl": "URL бэкенда",
+  "sntSettingsApiKey": "API-ключ",
+  "sntSettingsEcp": "ЭЦП (НУЦ РК)",
+  "sntSettingsCertPath": "Путь к ключу ЭЦП",
+  "sntSettingsCertPassword": "Пароль ключа",
+  "sntSettingsEcpHint": "Реальная отправка СНТ требует ЭЦП НУЦ РК и зарегистрированного профиля ИС ЭСФ. Без ЭЦП документы собираются и хранятся локально (Виртуальный склад работает офлайн).",
+  "sntSettingsSharedEsfHint": "СНТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.",
+  "sntSettingsWebkassaNote": "Қосылым деректемелері (логин, apiKey, касса, ЭЦҚ) WebKassa (Фискализация) баптауларынан алынады — бір ортақ конфиг.",
+  "sntSettingsOpenEsf": "Настройки ЭСФ",
+  "sntSettingsSave": "Сохранить",
+  "sntSettingsSaved": "Настройки СНТ сохранены",
+  "sntSettingsSaveError": "Не удалось сохранить настройки СНТ",
+  "sntSettingsBinRequired": "Укажите БИН / ИИН налогоплательщика",
+  "esutdTitle": "ЕСУТД (электронные ТТН)",
+  "esutdSubtitle": "Товарно-транспортные накладные (e-waybill)",
+  "esutdNotConfigured": "ЕСУТД не настроена. Укажите логин портала, чтобы загружать ТТН.",
+  "esutdNotConfiguredShort": "ЕСУТД не настроена",
+  "esutdConfigure": "Настроить ЕСУТД",
+  "esutdRefresh": "Обновить",
+  "esutdInbound": "Входящие ТТН",
+  "esutdOutbound": "Исходящие ТТН",
+  "esutdEmpty": "Нет ТТН",
+  "esutdWaybillNumber": "ТТН № {number}",
+  "@esutdWaybillNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "esutdCargoCount": "Грузов: {count}",
+  "@esutdCargoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "esutdSettingsTitle": "Настройки ЕСУТД",
+  "esutdSettingsConnection": "Подключение",
+  "esutdSettingsEnable": "Включить ЕСУТД",
+  "esutdSettingsEnableSubtitle": "Загрузка и отправка электронных ТТН (esutd.gov.kz)",
+  "esutdSettingsCredentials": "Учётные данные портала",
+  "esutdSettingsEmail": "Email (логин портала)",
+  "esutdSettingsPassword": "Пароль",
+  "esutdSettingsApiUrl": "URL API (необязательно)",
+  "esutdSettingsApiUrlHint": "Оставьте пустым для значения по умолчанию: https://esutd.gov.kz/api",
+  "esutdSettingsTestLogin": "Проверить вход / Войти",
+  "esutdSettingsSessionActive": "Сессия активна",
+  "esutdSettingsLoginOk": "Вход в ЕСУТД выполнен",
+  "esutdSettingsLoginError": "Ошибка входа: {error}",
+  "@esutdSettingsLoginError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "esutdSettingsCredsRequired": "Укажите email и пароль портала ЕСУТД",
+  "esutdSettingsSave": "Сохранить",
+  "esutdSettingsSaved": "Настройки ЕСУТД сохранены",
+  "esutdSettingsSaveError": "Не удалось сохранить настройки ЕСУТД",
+  "esutdSettingsHint": "ЕСУТД не имеет публичного API. Интеграция использует внутренние эндпоинты портала: вход по логину/паролю даёт сессию, которая переиспользуется и автоматически обновляется. Создание/подтверждение ТТН требует сложных справочников (КАТО, классификатор товаров, перевозчики) и пока недоступно из POS.",
+  "ismptSettingsTitle": "ИС МПТ баптаулары",
+  "ismptSettingsSubtitle": "Таңбалау (Честный знак KZ)",
+  "ismptSettingsOperator": "Оператор / жіберу әдісі",
+  "ismptSettingsEnable": "ИС МПТ қосу",
+  "ismptSettingsEnableSubtitle": "Таңбалау кодтарын тексеру және жіберу (ismet.kz / Tañba)",
+  "ismptSettingsBackend": "Бэкенд",
+  "ismptSettingsTestMode": "Сынақ режимі",
+  "ismptSettingsRequisites": "Салық төлеуші деректемелері",
+  "ismptSettingsOwnBin": "БСН / ЖСН (біздің)",
+  "ismptSettingsApi": "True API (ismet.kz)",
+  "ismptSettingsApiUrl": "API URL",
+  "ismptSettingsApiKey": "API кілті / токен",
+  "ismptSettingsEcp": "ЭЦҚ (ҚР ҰКО)",
+  "ismptSettingsCertPath": "ЭЦҚ кілтінің жолы",
+  "ismptSettingsCertPassword": "Кілт құпиясөзі",
+  "ismptSettingsEcpHint": "ИС МПТ-мен нақты жұмыс ҚР ҰКО ЭЦҚ-сын және тіркелген қатысушы профилін талап етеді. ЭЦҚ-сыз таңбалау кодтары қабылданып, жергілікті сақталады (қабылдау офлайн жұмыс істейді, сату ешқашан бұғатталмайды).",
+  "ismptSettingsSharedEsfHint": "ИС МПТ мен ЭШФ — МКД ішкі жүйелері. БСН мен ЭЦҚ-ны ЭШФ экранынан баптауға болады.",
+  "ismptSettingsWebkassaNote": "Таңбалау кодтарын тексеру WebKassa арқылы жүреді. Қосылым деректемелері (логин, apiKey, касса, ЭЦҚ) WebKassa (Фискализация) баптауларынан алынады — бір ортақ конфиг.",
+  "ismptSettingsOpenEsf": "ЭШФ баптаулары",
+  "ismptSettingsSave": "Сақтау",
+  "ismptSettingsSaved": "ИС МПТ баптаулары сақталды",
+  "ismptSettingsSaveError": "ИС МПТ баптауларын сақтау мүмкін болмады",
+  "ismptSettingsBinRequired": "Салық төлеушінің БСН / ЖСН-ін көрсетіңіз",
+  "reorderRulesTitle": "Правила перезаказа",
+  "reorderRulesSubtitle": "Минимальный остаток по товарам",
+  "reorderRulesEmpty": "Нет правил перезаказа",
+  "reorderRulesEmptyHint": "Задайте минимальный остаток для товаров, чтобы получать сигналы дозаказа",
+  "reorderRulesAdd": "Добавить правило",
+  "reorderRulesMinStock": "Минимальный остаток",
+  "reorderRulesReorderQty": "Размер заказа",
+  "reorderRulesProduct": "Товар (ucode)",
+  "reorderRulesProductHint": "Код товара",
+  "reorderRulesSave": "Сохранить",
+  "reorderRulesSaved": "Правило сохранено",
+  "reorderRulesInvalid": "Укажите код товара и минимальный остаток",
+  "reorderRulesBelowPoint": "Ниже точки перезаказа: {count}",
+  "@reorderRulesBelowPoint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reorderRulesEditTitle": "Правило перезаказа",
+  "supplierOrderRuleBased": "По правилам перезаказа",
+  "supplierOrderGlobalThreshold": "Глобальный порог ({threshold})",
+  "@supplierOrderGlobalThreshold": {
+    "placeholders": {
+      "threshold": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogPageFirst": "Бірінші",
+  "catalogPagePrev": "Артқа",
+  "catalogPageNext": "Алға",
+  "catalogPageLast": "Соңғы",
+  "catalogGoToPage": "Бетке өту",
+  "catalogPageOf": "{total} ішінен бет",
+  "shiftClosedGateTitle": "Ауысым жабық",
+  "shiftClosedGateMessage": "Операцияларды жалғастыру үшін ауысымды ашыңыз.",
+  "shiftClosedGateOpen": "Ауысымды ашу",
+  "sysmTerminalPresetsDiag": "Диагностика",
+  "wmsDashboardTitle": "WMS — Қойманы басқару",
+  "wmsDashboardTitleShort": "WMS — Қойма",
+  "wmsSettings": "WMS баптаулары",
+  "wmsSettingsSubtitle": "Модульдер конфигурациясы",
+  "wmsModuleWarehouses": "Қоймалар",
+  "wmsModuleWarehousesSubtitle": "Қоймалар, аймақтар, ұяшықтар",
+  "wmsModuleBatches": "Партиялар",
+  "wmsModuleBatchesSubtitle": "Партиялық есеп",
+  "wmsModuleCellStock": "Ұяшық қалдықтары",
+  "wmsModuleCellStockSubtitle": "Қалдықтар, орналастыру, іріктеу",
+  "wmsModuleSerials": "Сериялық есеп",
+  "wmsModuleSerialsSubtitle": "Сериялық нөмірлер",
+  "wmsModuleMarking": "Таңбалау",
+  "wmsModuleMarkingSubtitle": "Таңбалау кодтары",
+  "wmsModuleClaims": "Шағымдар",
+  "wmsModuleClaimsSubtitle": "Талаптар мен қайтарулар",
+  "wmsWarehousesAndCells": "Қоймалар мен ұяшықтар",
+  "wmsWarehouses": "Қоймалар",
+  "wmsAddWarehouse": "Қойма қосу",
+  "wmsNoWarehouses": "Қоймалар жоқ",
+  "wmsNoName": "Атауы жоқ",
+  "wmsZones": "Аймақтар",
+  "wmsZonesNamed": "Аймақтар: {name}",
+  "wmsAddZone": "Аймақ қосу",
+  "wmsSelectWarehouse": "Қойманы таңдаңыз",
+  "wmsNoZones": "Аймақтар жоқ",
+  "wmsCells": "Ұяшықтар",
+  "wmsCellsNamed": "Ұяшықтар: {name}",
+  "wmsGenerate": "Генерациялау",
+  "wmsSelectZone": "Аймақты таңдаңыз",
+  "wmsNoCells": "Ұяшықтар жоқ",
+  "wmsNoAddress": "Мекенжайы жоқ",
+  "wmsCellBlocked": "Бұғатталған",
+  "wmsCellsCount": "{count} ұяшық",
+  "wmsNewWarehouse": "Жаңа қойма",
+  "wmsWarehouseCode": "Қойма коды",
+  "wmsName": "Атауы",
+  "wmsError": "Қате",
+  "wmsCreate": "Жасау",
+  "wmsSelectWarehouseFirst": "Алдымен қойманы таңдаңыз",
+  "wmsNewZone": "Жаңа аймақ",
+  "wmsZoneCode": "Аймақ коды",
+  "wmsSelectZoneFirst": "Алдымен аймақты таңдаңыз",
+  "wmsGenerateCells": "Ұяшықтарды генерациялау",
+  "wmsRows": "Қатарлар",
+  "wmsRacks": "Сөрелер",
+  "wmsLevels": "Деңгейлер",
+  "wmsBins": "Ұяшықтар",
+  "wmsEditWarehouse": "Қойманы өңдеу",
+  "wmsAddress": "Мекенжай",
+  "wmsDeleteWarehouseTitle": "Қойманы жою керек пе?",
+  "wmsDeleteWarehouseConfirm": "\"{name}\" қоймасын жойғыңыз келетініне сенімдісіз бе?",
+  "wmsCellStockTitle": "Ұяшық қалдықтары",
+  "wmsPlace": "Орналастыру",
+  "wmsPick": "Іріктеу",
+  "wmsTransfer": "Жылжыту",
+  "wmsByCell": "Ұяшық бойынша",
+  "wmsByProduct": "Тауар бойынша",
+  "wmsSearchCellHint": "Ұяшық ID немесе мекенжайын енгізіңіз...",
+  "wmsSearchProductHint": "Тауар ucode енгізіңіз...",
+  "wmsCell": "Ұяшық",
+  "wmsProductUcode": "Тауар коды (ucode)",
+  "wmsFind": "Табу",
+  "wmsEnterCellIdToSearch": "Қалдықтарды іздеу үшін ұяшық ID енгізіңіз",
+  "wmsEnterUcodeToSearch": "Іздеу үшін тауар ucode енгізіңіз",
+  "wmsProductLabeled": "Тауар: {value}",
+  "wmsCellLabeled": "Ұяшық: {value}",
+  "wmsStockSummary": "Саны: {qty}  |  Резерв: {reserved}  |  Қолжетімді: {available}",
+  "wmsBatchLabeled": "Партия: {value}",
+  "wmsQuantityShort": "Саны",
+  "wmsReserved": "Резерв",
+  "wmsAvailable": "Қолжетімді",
+  "wmsBatch": "Партия",
+  "wmsEnterNumericId": "Сандық ID енгізіңіз",
+  "wmsPlaceStockTitle": "Тауарды ұяшыққа орналастыру",
+  "wmsCellId": "Ұяшық ID",
+  "wmsProductUcodeField": "Тауар ucode",
+  "wmsQuantity": "Саны",
+  "wmsBatchIdOptional": "Партия ID (міндетті емес)",
+  "wmsFillRequiredNumericFields": "Міндетті өрістерді толтырыңыз (сандық мәндер)",
+  "wmsStockPlaced": "Тауар {cellId} ұяшығына орналастырылды",
+  "wmsPlaceError": "Орналастыру қатесі",
+  "wmsPickStockTitle": "Тауарды ұяшықтан іріктеу",
+  "wmsFillAllNumericFields": "Барлық өрістерді толтырыңыз (сандық мәндер)",
+  "wmsStockPicked": "Тауар {cellId} ұяшығынан іріктелді",
+  "wmsPickError": "Іріктеу қатесі",
+  "wmsTransferStockTitle": "Тауарды жылжыту",
+  "wmsCellIdFrom": "Ұяшық ID (қайдан)",
+  "wmsCellIdTo": "Ұяшық ID (қайда)",
+  "wmsStockTransferred": "Тауар {from} ұяшығынан {to} ұяшығына жылжытылды",
+  "wmsTransferError": "Жылжыту қатесі",
+  "wmsBatches": "Партиялар",
+  "wmsBatchTrackingTitle": "Партиялық есеп",
+  "wmsBatchTabAll": "Барлық партиялар",
+  "wmsBatchTabExpiring": "Мерзімі бітетін",
+  "wmsBatchTabExpired": "Мерзімі өткен",
+  "wmsBatchTabQuarantine": "Карантин",
+  "wmsNoBatches": "Партиялар жоқ",
+  "wmsNoExpiringBatches": "Мерзімі бітетін партиялар жоқ",
+  "wmsNoExpiredBatches": "Мерзімі өткен партиялар жоқ",
+  "wmsNoQuarantinedBatches": "Карантиндегі партиялар жоқ",
+  "wmsSearchByUcodeHint": "Тауар ucode бойынша іздеу...",
+  "wmsNoNumber": "Нөмірсіз",
+  "wmsBatchCardSummary": "Тауар: {ucode}  |  Мерзімі: {expiry}  |  Саны: {qty}",
+  "wmsBatchNumber": "Партия нөмірі",
+  "wmsProduct": "Тауар",
+  "wmsExpiryDate": "Жарамдылық мерзімі",
+  "wmsStatus": "Күй",
+  "wmsActions": "Әрекеттер",
+  "wmsQuarantine": "Карантин",
+  "wmsApprove": "Мақұлдау",
+  "wmsStatusQuarantine": "Карантин",
+  "wmsStatusExpired": "Мерзімі өткен",
+  "wmsStatusExpiring": "Мерзімі бітуде",
+  "wmsStatusOk": "ОК",
+  "wmsMoveToQuarantine": "Карантинге орналастыру",
+  "wmsBatchQuarantined": "{number} партиясы карантинге орналастырылды",
+  "wmsBatchApproved": "{number} партиясы мақұлданды",
+  "wmsSearchBatchesByProduct": "Тауар бойынша партияларды іздеу",
+  "wmsEnterProductCode": "Тауар кодын енгізіңіз",
+  "wmsSerialTrackingTitle": "Сериялық есеп",
+  "wmsScan": "Сканерлеу",
+  "wmsSearchBySerialHint": "Сериялық нөмір бойынша іздеу...",
+  "wmsNothingFound": "Ештеңе табылмады",
+  "wmsEnterSerialToSearch": "Іздеу үшін сериялық нөмір енгізіңіз",
+  "wmsRegister": "Тіркеу",
+  "wmsSelectSerial": "Сериялық нөмірді таңдаңыз",
+  "wmsSerialNumber": "Сериялық нөмір",
+  "wmsLocation": "Орналасуы",
+  "wmsCellHash": "Ұяшық #{id}",
+  "wmsDetails": "Мәліметтер",
+  "wmsMarking": "Таңбалау",
+  "wmsWarrantyUntil": "Кепілдік мерзімі",
+  "wmsNotes": "Ескертпелер",
+  "wmsMovementHistory": "Қозғалыс тарихы",
+  "wmsNoData": "Деректер жоқ",
+  "wmsSerialStatusInStock": "Қоймада",
+  "wmsSerialStatusSold": "Сатылды",
+  "wmsSerialStatusReturned": "Қайтарылды",
+  "wmsSerialStatusWrittenOff": "Есептен шығарылды",
+  "wmsSerialStatusUnknown": "Белгісіз",
+  "wmsScannerUseHardware": "Сканер: аппараттық сканерді пайдаланыңыз",
+  "wmsRegisterSerialTitle": "Сериялық нөмірді тіркеу",
+  "wmsSerialRegistered": "Сериялық нөмір тіркелді",
+  "wmsMarkingCodesTitle": "Таңбалау кодтары",
+  "wmsMarkingAccept": "Қабылдау",
+  "wmsRefresh": "Жаңарту",
+  "wmsIsMptSettings": "ИС МПТ баптаулары",
+  "wmsMarkingAcceptTitle": "Таңбалау кодтарын қабылдау",
+  "wmsSupplyIdOptional": "Жеткізу ID (міндетті емес)",
+  "wmsMarkingCodesPerLine": "Таңбалау кодтары (әр жолда біреуден)",
+  "wmsAccept": "Қабылдау",
+  "wmsNoCodesEntered": "Бірде-бір код енгізілмеді",
+  "wmsAcceptedLocally": "Жергілікті қабылданды: {count} (ИС МПТ — кейінге қалдырылды)",
+  "wmsAccepted": "Қабылданды: {count}",
+  "wmsAcceptError": "Қабылдау қатесі: {error}",
+  "wmsMarkingStatusResult": "ТК күйі: {status}",
+  "wmsInCirculation": "(айналымда)",
+  "wmsIsMptNoConnection": "ИС МПТ-мен байланыс жоқ — тексеру кейінге қалдырылды",
+  "wmsVerifyUnavailable": "Тексеру қолжетімсіз (ИС МПТ бапталмаған)",
+  "wmsVerifyError": "Тексеру қатесі: {error}",
+  "wmsNoMarkingCodes": "Таңбалау кодтары жоқ",
+  "wmsVerifyStatus": "Күйін тексеру (ИС МПТ)",
+  "wmsMarkingStatusReceived": "Алынды",
+  "wmsMarkingStatusInStock": "Қоймада",
+  "wmsMarkingStatusSold": "Сатылды",
+  "wmsMarkingStatusReturned": "Қайтарылды",
+  "wmsMarkingStatusRetired": "Есептен шығарылды",
+  "wmsMarkingStatusBlocked": "Бұғатталған",
+  "wmsClaims": "Шағымдар",
+  "wmsClaimTabOpen": "Ашық",
+  "wmsClaimTabInProgress": "Жұмыста",
+  "wmsClaimTabResolved": "Шешілген",
+  "wmsNoOpenClaims": "Ашық шағымдар жоқ",
+  "wmsNoInProgressClaims": "Жұмыстағы шағымдар жоқ",
+  "wmsNoResolvedClaims": "Шешілген шағымдар жоқ",
+  "wmsNewClaim": "Жаңа шағым",
+  "wmsNumber": "Нөмір",
+  "wmsType": "Түрі",
+  "wmsSeverity": "Маңыздылығы",
+  "wmsDate": "Күні",
+  "wmsSeverityLow": "Төмен",
+  "wmsSeverityMedium": "Орташа",
+  "wmsSeverityHigh": "Жоғары",
+  "wmsSeverityCritical": "Сыни",
+  "wmsClaimTypeDefect": "Ақау",
+  "wmsClaimTypeMissort": "Сұрыптау қатесі",
+  "wmsClaimTypeShortage": "Кемшілік",
+  "wmsClaimTypeDamage": "Зақым",
+  "wmsClaimTypeOther": "Басқа",
+  "wmsProblemDescription": "Мәселе сипаттамасы",
+  "wmsClaimCreated": "Шағым жасалды",
+  "wmsClaimTitle": "Шағым {number}",
+  "wmsTypeLabeled": "Түрі: {value}",
+  "wmsSeverityLabeled": "Маңыздылығы: {value}",
+  "wmsDateLabeled": "Күні: {value}",
+  "wmsProblemDescriptionLabel": "Мәселе сипаттамасы:",
+  "wmsNoDescription": "Сипаттама жоқ",
+  "wmsResolutionLabel": "Шешім:",
+  "wmsNotSpecified": "Көрсетілмеген",
+  "wmsHistoryLabel": "Тарих:",
+  "wmsNoRecords": "Жазбалар жоқ",
+  "wmsResolve": "Шешу",
+  "wmsResolveClaimTitle": "Шағымды шешу",
+  "wmsResolutionNotes": "Шешім бойынша ескертпелер",
+  "wmsClaimResolved": "Шағым шешілді",
+  "setUserManagementTitle": "Пайдаланушылар және рұқсат",
+  "setUsersTitle": "Пайдаланушылар",
+  "setUsersSubtitle": "Рұқсатты басқару",
+  "authSettingsTitle": "Кіру және сеанс",
+  "authSettingsSubtitle": "Кассирсіз кіру және сеанс мерзімі",
+  "authSettingsWalkUpTitle": "Кассирді таңдамай кіру",
+  "authSettingsWalkUpSubtitle": "Бір PIN есімсіз кіргізеді. Бірнеше кассир болғанда қауіпсіз емес: әдепкідегідей өшірулі.",
+  "authSettingsSessionTitle": "Сеанс мерзімі",
+  "authSettingsSessionSubtitle": "Кассир әрекетсіз қанша минут сеанста қалады. Дереу қолданылады, кассаны қайта іске қосу қажет емес.",
+  "authSettingsSessionMinutesLabel": "Минут",
+  "authSettingsSaved": "Сақталды",
+  "authSettingsInvalidMinutes": "1-ден 1440-қа дейінгі бүтін минут санын енгізіңіз",
+  "sessionsTitle": "Белсенді сеанстар",
+  "sessionsSubtitle": "Қазір кассада кім бар, батырмамен тоқтату",
+  "sessionsEmpty": "Қазір кассада ешкім жоқ",
+  "sessionsTerminalLabel": "Терминал №{id}",
+  "@sessionsTerminalLabel": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsTimes": "Кірді {issued} · мерзімі {expires}",
+  "@sessionsTimes": {
+    "placeholders": {
+      "issued": {
+        "type": "String"
+      },
+      "expires": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsRevoke": "Аяқтау",
+  "sessionsRevokeConfirmTitle": "Сеансты аяқтау керек пе?",
+  "sessionsRevokeConfirmBody": "«{name}» кассадан дереу шығарылады.",
+  "@sessionsRevokeConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsRevoked": "«{name}» сеансы аяқталды",
+  "@sessionsRevoked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsRevokeError": "Сеансты аяқтау мүмкін болмады: {error}",
+  "@sessionsRevokeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "setUsersEmpty": "Пайдаланушылар жоқ",
+  "setAddUser": "Пайдаланушы қосу",
+  "setUserNumber": "Пайдаланушы №{id}",
+  "setUserActive": "Белсенді",
+  "setUsersLoadError": "Қате: {error}",
+  "setNewUser": "Жаңа пайдаланушы",
+  "setEditUser": "Өңдеу",
+  "setUserTabProfile": "Профиль",
+  "setUserTabPermissions": "Қол жеткізу құқықтары",
+  "setUserName": "Аты",
+  "setUserNameRequired": "Атын енгізіңіз",
+  "setUserPinLabel": "PIN (4-6 сан)",
+  "setUserPinRequired": "PIN енгізіңіз",
+  "setUserPinMin": "Кемінде 4 сан",
+  "setUserPinRange": "PIN 4-6 сан болуы керек",
+  "setUserRole": "Рөл",
+  "setRoleOwner": "Иесі",
+  "setRoleAdministrator": "Әкімші",
+  "setRoleUser": "Пайдаланушы",
+  "setRoleCashier": "Кассир",
+  "setUserActiveDesc": "Пайдаланушы жүйеге кіре алады",
+  "setUserBlockedDesc": "Қол жеткізу бұғатталған",
+  "setUserOwnerFullAccess": "Иесінде толық рұқсат бар",
+  "setUserSelectAll": "Барлығын таңдау",
+  "setUserDeselectAll": "Барлығын алып тастау",
+  "setDeleteUserTitle": "Пайдаланушыны жою керек пе?",
+  "setDeleteUserConfirm": "«{name}» пайдаланушысы жойылады. Бұл әрекетті болдырмау мүмкін емес.",
+  "setDeleteUserError": "Пайдаланушыны жою мүмкін болмады: {error}",
+  "setUserNoEncryptionKey": "Шифрлау кілті бапталмаған. POS бастапқы баптауын аяқтаңыз.",
+  "setUserPinEncryptFailed": "PIN шифрлау мүмкін болмады",
+  "setWmsTitle": "WMS баптаулары",
+  "setWmsModules": "WMS модульдері",
+  "setWmsCellStorage": "Ұяшықпен сақтау",
+  "setWmsCellStorageDesc": "Тауарларды аймақтар мен ұяшықтар бойынша мекенжайлы сақтау",
+  "setWmsBatchTracking": "Партиялық есеп",
+  "setWmsBatchTrackingDesc": "Тауарларды партиялар бойынша жеткізілімді бақылаумен есепке алу",
+  "setWmsSerialTracking": "Сериялық есеп",
+  "setWmsSerialTrackingDesc": "Бірегей сериялық нөмірлер бойынша даналап есеп",
+  "setWmsExpiryControl": "Жарамдылық мерзімін бақылау",
+  "setWmsExpiryControlDesc": "Мерзімнің аяқталуы туралы ескертулер және автоматты FEFO іріктеу",
+  "setWmsMarking": "Таңбалау",
+  "setWmsMarkingDesc": "Міндетті таңбалау кодтарын қолдау (DataMatrix, GS1)",
+  "setWmsWarranty": "Кепілдік есебі",
+  "setWmsWarrantyDesc": "Сериялық нөмірлер бойынша кепілдік мерзімдерін бақылау",
+  "setWmsPickingStrategy": "Іріктеу стратегиясы",
+  "setWmsPickingStrategyDesc": "Тауарларды қоймадан тиеу тәртібін анықтайды",
+  "setWmsStrategy": "Стратегия",
+  "setWmsStrategyFefo": "FEFO — мерзімі бірінші бітеді, бірінші шығады",
+  "setWmsStrategyFifo": "FIFO — бірінші келді, бірінші кетті",
+  "setWmsStrategyLifo": "LIFO — соңғы келді, бірінші кетті",
+  "setWmsCostMethod": "Өзіндік құнды есептеу әдісі",
+  "setWmsCostMethodDesc": "Сату кезінде өзіндік құнды есептен шығару әдісі",
+  "setWmsMethod": "Әдіс",
+  "setWmsCostFifo": "FIFO — түсу реті бойынша",
+  "setWmsCostLifo": "LIFO — кері тәртіппен",
+  "setWmsCostAvg": "Орташа өлшенген құн",
+  "setWmsExpiryWarnDesc": "Мерзім бітуіне неше күн қалғанда ескерту",
+  "setWmsDaysShort": "{days} күн",
+  "setWmsAbcAnalysis": "ABC талдау",
+  "setWmsAbcDesc": "Тауарларды айналым бойынша жіктеу шектері",
+  "setWmsAbcCategoryA": "A санаты (жоғары айналым)",
+  "setWmsAbcCategoryB": "B санаты (орташа айналым)",
+  "setWmsAbcCategoryC": "C санаты (төмен айналым)",
+  "setWmsSaved": "WMS баптаулары сақталды",
+  "setWmsSaveError": "WMS баптауларын сақтау мүмкін болмады",
+  "setSalesPolicy": "Сату саясаты",
+  "setSalesPolicyDesc": "Сату кезінде қалдықтарды бақылау",
+  "setBlockOversell": "Қалдық жеткіліксіз болғанда сатуға тыйым салу",
+  "setBlockOversellDesc": "Чектегі саны қалдықтан асып кетсе, сатуды аяқтамау (теріс қалдықтан қорғау)",
+  "setScreenTouch": "Экран және сенсорлық экран",
+  "setScreenTouchDesc": "Сенсорлық экрандағы ыңғайлылық",
+  "setScrollAssist": "Сенсорлық экрандағы айналдыру түймелері",
+  "setScrollAssistDesc": "Сенсорлық экранда ұзын тізімдерді (каталог, чек, есептер, қойма) айналдыруға арналған ▲/▼ түймелері",
+  "setDemoData": "Демо деректер",
+  "setDemoDataSubtitle": "12 ай сату",
+  "setDemoDataDialogContent": "Барлық режимдер үшін демо деректерді жүктеу:\n• Бөлшек сауда: ~6000 сату, жеткізілім, қайтарым\n• Мейрамхана: 15 үстел, калькуляциясы бар 29 тағам, тапсырыстар\n• Сервис: қызметтер, шығын материалдары, жұмыс тапсырыстары\n\nНемесе таза бастау үшін барлық деректерді тазалау.",
+  "setDemoClearAll": "Барлығын тазалау",
+  "setDemoLoad": "Демо жүктеу",
+  "setDemoGenerating": "Демо деректерді жасау...",
+  "setDemoLoadedTitle": "Демо деректер жүктелді",
+  "setDemoAlreadyExists": "Деректер бұрыннан бар. Алдымен «Барлығын тазалау» басыңыз.",
+  "setClearDataTitle": "Деректерді тазалау",
+  "setClearDataContent": "БАРЛЫҚ деректер жойылады:\n• Сатулар, қайтарымдар, төлемдер\n• Тауарлар, санаттар, бағалар\n• Контрагенттер, жеткізілімдер\n• Тапсырыстар, ауысымдар, касса операциялары\n• Мейрамхана үстелдері, тапсырыстар\n• Сервистік тапсырыстар\n\nPOS баптаулары мен пайдаланушылар сақталады.\nБұл әрекет қайтарылмайды!",
+  "setClearDeleteAll": "Барлығын жою",
+  "setClearInProgress": "Деректер тазалануда...",
+  "setClearDone": "Барлық деректер тазаланды",
+  "setGenericError": "Қате: {error}",
+  "setCorrectionTitle": "Түзету чегі",
+  "setCorrectionIntro": "Түзету чегі бұрын тіркелген немесе тіркелмеген соманы түзетеді. Себебі мен соманы көрсетіңіз. Егер оператор түзетуді қолдамаса — бұл шынайы көрсетіледі.",
+  "setCorrectionReasonLabel": "Түзету себебі",
+  "setCorrectionReasonHint": "мыс. өздік түзету",
+  "setCorrectionAmountLabel": "Түзету сомасы, KZT",
+  "setCorrectionPaymentLabel": "Төлеу әдісі",
+  "setCorrectionCash": "Қолма-қол",
+  "setCorrectionCard": "Карта",
+  "setCorrectionSubmit": "Түзету чегін жіберу",
+  "setCorrectionDefaultName": "Түзету",
+  "setCorrectionInvalidAmount": "Дұрыс түзету сомасын енгізіңіз (> 0)",
+  "setCorrectionQueued": "Түзету чегі кезекке қойылды (offline)",
+  "setCorrectionSent": "Түзету чегі жіберілді",
+  "setCorrectionUnsupported": "Түзету чегін ағымдағы оператор қолдамайды",
+  "setCorrectionNotConfigured": "Фискалдау бапталмаған",
+  "setCorrectionError": "Түзету чегінің қатесі",
+  "setFiscalConnection": "Қосылым",
+  "setFiscalTestMode": "Сынақ режимі",
+  "setFiscalLogin": "Логин",
+  "setFiscalLoginHint": "email / телефон",
+  "setFiscalPassword": "Құпия сөз",
+  "setFiscalCashboxSerial": "ЗНМ (касса сериялық нөмірі)",
+  "setFiscalCashboxSerialHint": "мыс. SWK00033717",
+  "setFiscalRnm": "РНМ (тіркеу нөмірі)",
+  "setFiscalKeyPath": "Кілт/сертификат жолы",
+  "setFiscalOfflineModule": "Offline модуль мекенжайы",
+  "setFiscalVatRate": "ҚҚС мөлшерлемесі, %",
+  "dishTabRecipe": "Рецептура",
+  "dishTabCosting": "Өзіндік құны",
+  "dishTabYield": "Шығымы және КБЖУ",
+  "dishVersions": "Нұсқалар",
+  "dishCostLabel": "Өзіндік құны",
+  "dishPriceLabel": "Баға",
+  "dishProfitLabel": "Пайда",
+  "dishMarkupLabel": "Үстеме баға",
+  "dishNoIngredients": "Ингредиенттер жоқ",
+  "dishNoIngredientsHint": "Рецептураны есептеу үшін ингредиенттер қосыңыз",
+  "dishAddIngredient": "Ингредиент қосу",
+  "dishColIngredient": "Ингредиент",
+  "dishColGross": "Брутто",
+  "dishColColdLoss": "Өңд.жоғ.%",
+  "dishColNet": "Нетто",
+  "dishColHotLoss": "Жыл.жоғ.%",
+  "dishColYield": "Шығымы",
+  "dishColCost": "Құны",
+  "dishDeleteIngredient": "Ингредиентті жою",
+  "dishTotal": "Барлығы",
+  "dishDeleteIngredientTitle": "Ингредиентті жою керек пе?",
+  "dishDeleteIngredientConfirm": "\"{name}\" рецептурадан жойылсын ба?",
+  "dishSearchIngredientHint": "Ингредиентті атауы немесе штрих-коды бойынша іздеу...",
+  "dishCodeOnly": "Коды: {code}",
+  "dishCodeWithBarcode": "Коды: {code}  |  Штрих-коды: {barcode}",
+  "dishAddTitle": "Қосу: {name}",
+  "dishGrossQty": "Брутто (саны)",
+  "dishColdLossLabel": "Өңдеу жоғалтуы, %",
+  "dishHotLossLabel": "Жылу өңдеу жоғалтуы, %",
+  "dishSeasonCoefficient": "Маусымдық коэффициент",
+  "dishSeasonStandard": "Стандарт (x1.0)",
+  "dishSeasonWinter": "Қыс (+15%) (x1.15)",
+  "dishSeasonSummer": "Жаз (-5%) (x0.95)",
+  "dishEffectiveColdLoss": "Тиімді өңдеу жоғалтуы: {value}%",
+  "dishTotalYieldSummary": "Барлығы: {cost} ₸  |  Шығымы: {yield}",
+  "dishGostNorms": "МЕСТ нормалары",
+  "dishGostNormsTitle": "МЕСТ жоғалту нормалары",
+  "dishSearchProductHint": "Өнімді іздеу...",
+  "dishReferenceEmpty": "Анықтамалық бос",
+  "dishGostNotLoaded": "МЕСТ нормалары әлі жүктелмеген",
+  "dishGostLossLine": "Сал: {cold}%  Жыл: {hot}%",
+  "dishPhotoSection": "Тағам фотосы",
+  "dishMissingPricesWarning": "Кейбір ингредиенттердің сатып алу бағасы жоқ",
+  "dishProfitPerServing": "Порциядан пайда",
+  "dishLossPerServing": "Порциядан шығын",
+  "dishCostOfDish": "Тағамның өзіндік құны",
+  "dishSellingPrice": "Сату бағасы",
+  "dishMargin": "Маржа",
+  "dishNoPhoto": "Фото жоқ",
+  "dishPhotoLoaded": "Фото жүктелді",
+  "dishPhotoAddHint": "Дайын тағамның фотосын қосыңыз",
+  "dishCamera": "Камера",
+  "dishGallery": "Галерея",
+  "dishPhotoLoadError": "Фото жүктеу мүмкін болмады",
+  "dishFoodCost": "Фудкост",
+  "dishFoodCostExcellent": "Өте жақсы",
+  "dishFoodCostNormal": "Қалыпты",
+  "dishFoodCostHigh": "Жоғары",
+  "dishServingsCount": "Порция саны:",
+  "dishCostPerServing": "Порция құны",
+  "dishPricePerServing": "Порция бағасы",
+  "dishTotalYield": "Жалпы шығымы",
+  "dishIngredientsCount": "Ингредиенттер",
+  "dishKbjuSection": "Тағамдық құндылық (1 порцияға)",
+  "dishKbjuEmpty": "КБЖУ деректері толтырылмаған",
+  "dishKbjuCalories": "Калория",
+  "dishKbjuProteins": "Ақуыздар",
+  "dishKbjuFats": "Майлар",
+  "dishKbjuCarbs": "Көмірсулар",
+  "dishKcalValue": "{value} ккал",
+  "dishGramValue": "{value} г",
+  "dishVersionHistory": "Өзгерістер тарихы",
+  "dishNoVersions": "Сақталған нұсқалар жоқ",
+  "dishVersionN": "{version}-нұсқа",
+  "dishViewComposition": "Құрамын қарау",
+  "dishRestoreThisVersion": "Осы нұсқаны қалпына келтіру",
+  "dishSaveVersion": "Нұсқаны сақтау",
+  "dishVersionComposition": "{version}-нұсқа — құрамы",
+  "dishSnapshotUnavailable": "Құрам суреті қолжетімсіз",
+  "dishSnapshotIngredientLine": "Брутто: {gross}  |  Өңд.жоғ.: {cold}%  |  Жыл.жоғ.: {hot}%  |  Шығымы: {yield}",
+  "dishVersionNotRestorable": "Бұл нұсқаны қалпына келтіру мүмкін емес (ингредиент деректері жоқ), тек қарауға болады",
+  "dishRestoreVersionTitle": "Нұсқаны қалпына келтіру керек пе?",
+  "dishRestoreVersionConfirm": "Ағымдағы рецептура {version}-нұсқаның құрамымен ауыстырылады. Жалғастыру керек пе?",
+  "dishRestore": "Қалпына келтіру",
+  "dishVersionRestored": "{version}-нұсқа қалпына келтірілді",
+  "dishRestoreError": "Нұсқаны қалпына келтіру мүмкін болмады",
+  "dishVersionSummary": "Ингредиенттер: {count}, өзіндік құны: {cost}",
+  "dishSaveVersionError": "Рецепт нұсқасын сақтау мүмкін болмады",
+  "prodBarcodeAutoHint": "Авто",
+  "prodCatalogAttributes": "Каталог атрибуттары",
+  "prodBrand": "Бренд",
+  "prodManufacturer": "Өндіруші",
+  "prodCountryOfOrigin": "Шығу елі",
+  "prodFiscalAttributes": "Фискалдық атрибуттар",
+  "prodVatRate": "ҚҚС мөлшерлемесі",
+  "prodVatNone": "ҚҚС-сыз",
+  "prodNtin": "НКТ (НТИН)",
+  "prodMarkable": "Таңбалауға жатады",
+  "promoTitle": "Акциялар",
+  "promoNew": "Жаңа акция",
+  "promoError": "Қате: {error}",
+  "promoEmpty": "Акциялар жоқ",
+  "promoEmptyHint": "1+1 немесе Сыйлық акциясын жасаңыз",
+  "promoTypeGift": "Сыйлық",
+  "promoBuyGetFree": "{trigger} сатып ал → {reward} тегін",
+  "promoSupplierTag": "жеткізушіден",
+  "promoDefaultName11": "1+1 акциясы",
+  "promoNameLabel": "Атауы",
+  "promoTriggerLabel": "Триггер-тауар (нені сатып алу)",
+  "promoRewardLabel": "Сыйлық (не тегін)",
+  "promoSupplierFunded": "Жеткізушіден акция",
+  "promoSaveButton": "Акцияны сақтау",
+  "saleWeighingPlaceItem": "Өлшеу... тауарды таразыға қойыңыз",
+  "saleWeightReadFailed": "Салмақты оқу мүмкін болмады — қолмен енгізіңіз",
+  "salePriceLabelSent": "Баға белгісі басып шығаруға жіберілді",
+  "transPrimary": "Негізгі",
+  "transSecondary": "Қосалқы",
+  "transStatusOnline": "Желіде",
+  "transStatusOffline": "Желіден тыс",
+  "transStatusSyncing": "Синхрондау",
+  "transStatusQueued": "Кезекте",
+  "transStatusWarning": "Ескерту",
+  "transStatusError": "Қате",
+  "transQueuedCount": "кезекте {count}",
+  "transFailedCount": "{count} сәтсіз",
+  "transLastSyncAgo": "Соңғы синхрондау: {ago} бұрын",
+  "transSyncing": "Синхрондау...",
+  "transSyncNow": "Қазір синхрондау",
+  "transRetryFailed": "Сәтсіздерді қайталау",
+  "restTips": "Шайпұл",
+  "restNoTips": "Шайпұлсыз",
+  "svcPendingApproval": "Келісуді күтуде",
+  "svcApprove": "Мақұлдау",
+  "svcReject": "Қабылдамау",
+  "svcRejected": "Қабылданбады",
+  "svcQr": "QR",
+  "catCollapse": "Жию",
+  "repError": "Қате",
+  "repNoData": "Деректер жоқ",
+  "repNoDataForPeriod": "Таңдалған кезеңде деректер жоқ",
+  "repKpiLoadError": "KPI жүктеу қатесі",
+  "repColIndicator": "Көрсеткіш",
+  "repColCount": "Саны",
+  "repColSumTenge": "Сома, ₸",
+  "repColRow": "Жол",
+  "repColTurnoverExclVat": "Айналым (ҚҚС-сыз)",
+  "repColVat": "ҚҚС",
+  "repColDate": "Күні",
+  "repColOperation": "Операция",
+  "repColIncome": "Кіріс",
+  "repColExpense": "Шығыс",
+  "repColBalance": "Қалдық",
+  "repColRate": "Мөлшерлеме",
+  "repColGross": "Брутто",
+  "repColNet": "Нетто",
+  "repNoVat": "ҚҚС-сыз",
+  "repColCounterparty": "Контрагент",
+  "repColType": "Түрі",
+  "repColSaldo": "Сальдо",
+  "repDebtor": "Дебитор",
+  "repCreditor": "Кредитор",
+  "repColAccount": "Шот",
+  "repColCashier": "Кассир",
+  "repColAmount": "Сома",
+  "repColProduct": "Тауар",
+  "repColRevenue": "Түсім",
+  "repColCogs": "Өзіндік құны",
+  "repColProfit": "Пайда",
+  "repColMarginPct": "Маржа %",
+  "repColReason": "Себеп",
+  "repColDocuments": "Құжаттар",
+  "repColCostShort": "Өзіндік",
+  "repF910Title": "ф.910 — Кіріс (жеңілдетілген)",
+  "repF910Subtitle": "Салық салынатын кіріс: {income} ₸ • салық {rate}%: {tax} ₸",
+  "repF910RowSalesIncome": "Сатудан түскен кіріс",
+  "repF910RowRefunds": "Қайтарымдар (минус)",
+  "repF910RowTaxableIncome": "Салық салынатын кіріс",
+  "repF300Title": "ф.300 — ҚҚС (декларация)",
+  "repF300Subtitle": "Салық салынатын айналым: {turnover} ₸ • есептелген ҚҚС: {vat} ₸",
+  "repF300TaxableTurnoverRate": "Салық салынатын айналым {rate}%",
+  "repF300ZeroRatedTurnover": "Салық салынбайтын / 0% айналым",
+  "repCashBookTitle": "Кассалық кітап (КО-4)",
+  "repCashBookSubtitle": "Кіріс: {income} • Шығыс: {expense} • Қалдық: {balance} ₸",
+  "repVatPeriodTitle": "Кезеңдегі ҚҚС",
+  "repVatPeriodSubtitle": "ҚҚС: {vat} ₸ • база: {base} ₸",
+  "repArApTitle": "Дебиторлық / Кредиторлық",
+  "repArApSubtitle": "Дебиторлық: {receivable} • Кредиторлық: {payable} • Сальдо: {saldo}",
+  "repCashCollectionTitle": "Инкассация",
+  "repCashCollectionSubtitle": "{count} операция • барлығы: {total} ₸",
+  "repProfitCogsTitle": "Пайда / Маржа (COGS)",
+  "repProfitMarginTitle": "Пайда / Маржа",
+  "repProfitMarginSubtitle": "Пайда: {profit} ₸ • маржа {margin}% • {note}",
+  "repProfitCostRealCogs": "өзіндік құны: нақты COGS",
+  "repProfitCostWholesale": "өзіндік құны: көтерме баға (CalculateCogsUseCase жоқ)",
+  "repWriteoffTitle": "Есептен шығару",
+  "repWriteoffSubtitle": "{count} құжат • барлығы: {total} ₸",
+  "repOrderTypesTitle": "Тапсырыс түрлері",
+  "repOrderTypesSubtitle": "қызмет көрсету түрі бойынша бөлу",
+  "repTableTurnoverTitle": "Үстелдер айналымы",
+  "repTableTurnoverSubtitle": "кезеңдегі отырғызулар (топ-10)",
+  "repDishPopularityTitle": "Тағамдар танымалдылығы",
+  "repDishPopularitySubtitle": "сату саны бойынша топ-10",
+  "repFoodCostAnalysisShort": "Өзіндік құн талдауы",
+  "repFoodCostAnalysisTitle": "Өзіндік құн талдауы (Food Cost)",
+  "repFoodCostAnalysisSubtitle": "жасыл <30%, сары 30-40%, қызыл >40%",
+  "repColDish": "Тағам",
+  "repColFoodCostPct": "Food Cost %",
+  "repTipsByWaiterTitle": "Даяшылар бойынша шай ақы",
+  "repTipsByWaiterSubtitle": "шай ақы сомасы бойынша сұрыптау",
+  "repColWaiter": "Даяшы",
+  "repColOrders": "Тапсырыстар",
+  "repColTips": "Шай ақы",
+  "repColTipsPct": "Шай ақы %",
+  "repKpiRestaurantRevenue": "Мейрамхана түсімі",
+  "repKpiOrders": "Тапсырыстар",
+  "repKpiAvgCheck": "Орташа чек",
+  "repKpiTips": "Шай ақы",
+  "repKpiRevenue": "Түсім",
+  "repKpiExpenses": "Шығыстар",
+  "repKpiRefunds": "Қайтарымдар",
+  "repKpiSales": "Сатулар",
+  "repSubtitleForPeriod": "кезең ішінде",
+  "repSubtitleTotal": "барлығы",
+  "repSubtitleCashExpenses": "кассалық шығыстар",
+  "repSubtitleRefundTotal": "қайтарым сомасы",
+  "repSubtitleReceipts": "чектер",
+  "repCashFlowTitle": "Күндер бойынша ақша ағыны",
+  "repCashFlowInvestments": "Салымдар",
+  "repCashFlowExpenses": "Шығыстар",
+  "repCashFlowDividends": "Дивидендтер",
+  "repDaysCount": "{count} күн",
+  "repTopProfitableTitle": "Топ-10 пайдалы тауар",
+  "repTopProfitableSubtitle": "абсолютті пайда бойынша",
+  "repProductProfitTitle": "Тауарлар рентабельділігі",
+  "repProductProfitSubtitle": "пайда бойынша топ-20",
+  "repRefundTrendTitle": "Қайтарым трендi",
+  "repSupplierVolumeTitle": "Жеткізушілер бойынша жеткізілім",
+  "repSuppliersCount": "{count} жеткізуші",
+  "repSupplierTableTitle": "Жеткізушілер кестесі",
+  "repSupplierTableSubtitle": "жеткізілім саны бойынша сұрыптау",
+  "repColSupplier": "Жеткізуші",
+  "repColSupplyCount": "Жеткізілім саны",
+  "repPriceTrendTitle": "Сатып алу бағаларының динамикасы",
+  "repPriceTrendSubtitle": "жеткізілім саны бойынша топ-5 тауар",
+  "repNotEnoughDataForChart": "График үшін деректер жеткіліксіз",
+  "repPriceChangesShort": "Баға өзгерістері",
+  "repPriceChangesTitle": "Жеткізуші бағаларының өзгерістері",
+  "repPriceChangesSubtitle": "сатып алу бағаларының соңғы өзгерістері",
+  "repColWas": "Болды",
+  "repColBecame": "Болды",
+  "repColChangePctShort": "Өзг. %",
+  "repNoSupplierData": "Жеткізушілер туралы деректер жоқ",
+  "repNoSuppliesForPeriod": "Таңдалған кезеңде жеткізілімдер табылмады",
+  "navWmsDashboard": "WMS қойма",
+  "navWmsWarehouses": "Қоймалар",
+  "navWmsBatches": "Партиялар",
+  "navWmsSerials": "Сериялар",
+  "navWmsCellStock": "Ұяшықтар",
+  "navWmsClaims": "Шағымдар",
+  "navWmsMarking": "Таңбалау",
+  "navWmsSettings": "WMS баптаулары",
+  "errorInsufficientStock": "Қалдық жеткіліксіз: {name}",
+  "errorBigAmountBlocked": "Сату сомасы 1 млн ₸ асады. Касса баптауларында ірі сомаларға рұқсатты қосыңыз.",
+  "errorMarkRequired": "Таңбалау коды қажет: {name}",
+  "errorOrderNotFound": "Тапсырыс табылмады",
+  "errorSerialNotFound": "Сериялық нөмір табылмады",
+  "errorReceiptFailedPrint": "Чекті басып шығару мүмкін болмады",
+  "errorDeleteFailed": "Жою мүмкін болмады",
+  "errorCancelFailed": "Болдырмау мүмкін болмады",
+  "errorShiftZreportFailed": "Z-есеп қатесі",
+  "errorTransitionFailed": "Күйді өзгерту мүмкін болмады",
+  "logJournalTitle": "Жұмыс журналы",
+  "logJournalOpen": "Журналды ашу",
+  "logJournalCardDesc": "Күндер бойынша файлдық журнал: флешкаға жүктеу, тазалау",
+  "logJournalEmpty": "Журнал бос",
+  "logJournalPickFolder": "Жүктеу үшін қалтаны (флешка) таңдаңыз",
+  "logJournalExport": "Флешкаға жүктеу",
+  "logJournalExported": "{dir} ішіне {count} файл жүктелді",
+  "logJournalSummary": "Файлдар: {count}, барлығы {size}",
+  "logJournalDeleteOld": "7 күннен ескі",
+  "logJournalDeletedOld": "{count} файл жойылды",
+  "logJournalDeleteAllTitle": "Барлық журналдарды жою керек пе?",
+  "logJournalDeleteAllConfirm": "Бүгінгіден басқа барлық журнал файлдары жойылады. Бұл әрекет қайтарылмайды.",
+  "setUserTabPin": "PIN",
+  "setUserPinChange": "PIN ауыстыру",
+  "setUserPinSetHint": "Кіру үшін PIN орнатыңыз (4-6 сан)",
+  "setUserPinKeepHint": "Ағымдағы PIN сақтау үшін бос қалдырыңыз",
+  "setUserPinNew": "Жаңа PIN",
+  "receiptInputRecent": "Соңғы чектер",
+  "receiptInputNoRecent": "Әзірге чектер жоқ",
+  "shiftHistoryTitle": "Ауысымдар тарихы",
+  "shiftHistoryEmpty": "Жабық ауысымдар әзірге жоқ",
+  "shiftHistoryShiftNo": "Ауысым №{id}",
+  "shiftHistorySales": "Сатулар",
+  "shiftHistoryRefunds": "Қайтарымдар",
+  "shiftHistoryOpeningCash": "Бастапқы касса",
+  "saleExpiredBatchWarning": "Назар аударыңыз: «{name}» тауарының партия мерзімі өткен",
+  "setPolicyEditProduct": "Тауарларды өңдеуге рұқсат",
+  "setPolicyEditProductDesc": "Кассир каталогтағы тауар карточкаларын өзгерте алады",
+  "setPolicyEditPrice": "Сатуда бағаны өзгертуге рұқсат",
+  "setPolicyEditPriceDesc": "Кассир чектегі позиция бағасын қолмен өзгерте алады",
+  "setPolicyDiscounts": "Жеңілдіктерге рұқсат",
+  "setPolicyDiscountsDesc": "Кассир чек позицияларына жеңілдік қолдана алады",
+  "setPolicyCashInOut": "Қолма-қол ақша салу/алуға рұқсат",
+  "setPolicyCashInOutDesc": "Кассир кассадан ақша сала және ала алады",
+  "setPolicyBigAmount": "Ірі сомаларға рұқсат (>1 млн)",
+  "setPolicyBigAmountDesc": "Операциялардағы 1 000 000 шегін алып тастау",
+  "setPolicyBlockPriceDecrease": "Бағаны карточкадан төмен түсіруге тыйым",
+  "setPolicyBlockPriceDecreaseDesc": "Чектегі бағаны тауар бағасынан төмен қоюға болмайды",
+  "printerAutoDetect": "Принтерді табу",
+  "printerAutoDetecting": "Принтер ізделуде…",
+  "printerFound": "Табылды: {device}",
+  "printerFoundWithNote": "Табылды: {device} — {note}",
+  "printerNotFoundAnyPort": "Принтер бірде-бір портта табылмады (USB/serial). Кабель мен қуатты тексеріңіз.",
+  "printerUsbName": "USB-принтер",
+  "printerSelectDevice": "Принтерді таңдаңыз",
+  "printerNoAccessGroupLp": "Түйін табылды, бірақ рұқсат жоқ (lp тобы қажет)",
+  "printerLabelUsb": "USB-принтер ({path})",
+  "printerLabelSerial": "Serial-принтер ({path})",
+  "printerNoAccessGroupLpHint": "Түйін табылды, бірақ рұқсат жоқ (lp тобы қажет): usermod -aG lp telepos және сеансты қайта іске қосыңыз.",
+  "printerRawOpenNoPermsHint": "{path} түйіні табылды, бірақ ашу мүмкін емес — рұқсат жоқ. Пайдаланушыны lp тобына қосыңыз (usermod -aG lp telepos) және сеансты/құрылғыны қайта іске қосыңыз.",
+  "printerNotFoundNoNode": "Принтер табылмады: /dev/usb/lp* char-түйіні де, USB-serial порты да жоқ. Принтердің кабелі мен қуатын тексеріңіз.",
+  "ownerOnlyTitle": "Тек касса иесіне қолжетімді",
+  "ownerOnlyDesc": "Жүйелік операциялар (қайта қосу, ысыру, драйверлер, терминал) тек иесінің тіркелгісінде қолжетімді.",
+  "telegramApiSectionTitle": "Telegram қосымшасы",
+  "telegramApiSectionDesc": "TelePOS Telegram кілттерімен жеткізілмейді. my.telegram.org сайтында қосымша тіркеп, төмендегі жұпты енгізіңіз немесе жинау кезінде --dart-define арқылы беріңіз.",
+  "telegramApiIdLabel": "api_id",
+  "telegramApiHashLabel": "api_hash",
+  "telegramApiSave": "Кілттерді сақтау",
+  "telegramApiClear": "Кілттерді жою",
+  "telegramApiSaved": "Telegram кілттері сақталды",
+  "telegramApiCleared": "Telegram кілттері жойылды",
+  "telegramApiInvalid": "Сандық api_id және бос емес api_hash енгізіңіз",
+  "telegramApiStatusConfigured": "Кілттер берілген",
+  "telegramApiStatusMissing": "Кілттер берілмеген",
+  "deviceSearchButton": "Іздеу",
+  "deviceSearchTitle": "Табылған құрылғылар",
+  "deviceSearchRunning": "Іздеу жүріп жатыр…",
+  "deviceSearchEmpty": "Ештеңе табылмады. Барлық көздер сұралды — құрылғы қосылмаған немесе өшірулі.",
+  "deviceSearchNoValueForField": "Құрылғылар табылды, бірақ ешқайсысы бұл өріске мән бермейді.",
+  "deviceSearchFailedSources": "Іздеу орындалмады: {sources}. Бұл «ештеңе қосылмаған» дегенмен бірдей емес.",
+  "@deviceSearchFailedSources": {
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceSearchUnavailable": "Бұл құрастырымда құрылғыларды іздеу қолжетімсіз.",
+  "deviceSearchFieldFilled": "Өріс толтырылды: {value}",
+  "@deviceSearchFieldFilled": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceSourceSerialPort": "Тізбекті порт",
+  "deviceSourceUsb": "USB",
+  "deviceSourceNetwork": "Желі",
+  "deviceSourceBluetooth": "Bluetooth",
+  "deviceCheckButton": "Құрылғыны тексеру",
+  "deviceCheckRunning": "Тексерілуде…",
+  "deviceCheckUnavailable": "Бұл құрастырымда құрылғыны тексеру қолжетімсіз.",
+  "deviceCheckSavedBindingNotice": "Сақталған байланыс тексеріледі: құрылғыға осы экрандағы сақталмаған өзгерістер емес, жазылған параметрлер бойынша сұрау жіберіледі. Жаңа байланыс сатуда жұмыс істеуі үшін қолданбаны қайта қосыңыз.",
+  "deviceCheckReasonOk": "Құрылғы жауап берді",
+  "deviceCheckReasonNotConfigured": "Құрылғы бапталмаған",
+  "deviceCheckReasonInvalidBinding": "Байланыс қате",
+  "deviceCheckReasonDriverNotLive": "Байланыс сақталған, бірақ бұл құрастырма бұл құрылғымен жұмыс істей алмайды",
+  "deviceCheckReasonConnectionFailed": "Құрылғы жауап бермейді",
+  "deviceCheckReasonDeviceRefused": "Құрылғы әрекеттен бас тартты",
+  "deviceCheckReasonNotSupportedOnPlatform": "Бұл платформада қолдау көрсетілмейді",
+  "deviceCheckReasonNotImplemented": "Бұл сынып үшін тексеру әлі жүзеге асырылмаған",
+  "deviceCheckReasonUnexpectedError": "Күтпеген қате",
+  "scannerRulesTitle": "Штрихкодты оқу ережелері",
+  "scannerRulesSubtitle": "Сканердің қасиеттері емес, орнату ережелері: қандай оқылған мәнді қабылдау керек.",
+  "scannerRulesMinLength": "Штрихкодтың ең аз ұзындығы",
+  "scannerRulesMaxLength": "Штрихкодтың ең көп ұзындығы",
+  "scannerRulesTimeoutMs": "Сканер таңбалары арасындағы аралық, мс",
+  "scannerRulesDefaultHint": "Бос — әдепкі {value}",
+  "@scannerRulesDefaultHint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "scannerRulesNotAnInteger": "«{value}» мәні бүтін сан емес",
+  "@scannerRulesNotAnInteger": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "scannerRulesUnavailable": "Бұл құрастырымда штрихкодты оқу ережелері қолжетімсіз.",
+  "scannerRulesSaved": "Штрихкодты оқу ережелері сақталды",
+  "printQueueSectionTitle": "Басып шығару кезегі",
+  "printQueueSubtitle": "Не басылуды күтуде, не басылмады және неліктен.",
+  "printQueueEmpty": "Кезек бос — басылмаған чектер жоқ.",
+  "printQueueUnavailable": "Басып шығару кезегі бұл құрастыруда қолжетімсіз.",
+  "printQueueUnreadable": "Басып шығару кезегін оқу мүмкін емес",
+  "printQueueUnreadableHint": "Бұл бос кезек емес: тапсырмалар басылуды күтуі мүмкін, бірақ тізімді оқу мүмкін емес. Қызмет көрсету қажет.",
+  "printQueueStateQueued": "Басылуды күтуде",
+  "printQueueStatePrinting": "Басылып жатыр",
+  "printQueueStatePrinted": "Басылды",
+  "printQueueStateFailed": "Басылмады, қайталанады",
+  "printQueueStateExpired": "Мерзімі өтті, өздігінен қайталанбайды",
+  "printQueueStateCancelled": "Оператор тоқтатты",
+  "printQueueAttempts": "Әрекеттер: {count}",
+  "printQueueDeadline": "{moment} дейін жарамды",
+  "printQueueReason": "Себебі: {reason}",
+  "printQueueRetry": "Қайталау",
+  "printQueueCancelJob": "Тапсырманы тоқтату",
+  "printQueueExtendTitle": "Тапсырманы қанша уақытқа ұзарту керек?",
+  "printQueueExtend5Minutes": "Тағы 5 минут",
+  "printQueueExtend30Minutes": "Тағы 30 минут",
+  "printQueueExtend2Hours": "Тағы 2 сағат",
+  "printQueueRetryAccepted": "Тапсырма қайтадан кезекте",
+  "printQueueRetryAlreadyPrinted": "Бұл чек басылып қойған — екінші рет басылмайды",
+  "printQueueRetryRejected": "Қайталау сәтсіз аяқталды",
+  "printQueueCancelTitle": "Тапсырманы тоқтату керек пе?",
+  "printQueueCancelBody": "Тоқтатылған тапсырманы басып шығару мүмкін емес. Дәл сондай чек қажет болса, оны қайта шығару керек.",
+  "printQueueCancelConfirm": "Тапсырманы тоқтату",
+  "printQueueCancelDone": "Тапсырма тоқтатылды",
+  "printQueueCancelRefused": "Бұл тапсырманы енді тоқтату мүмкін емес: ол басылып жатыр немесе аяқталған"
+}

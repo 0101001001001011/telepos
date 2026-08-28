@@ -1,0 +1,94 @@
+name: CI
+
+# This file runs in the public mirror (github.com/0101001001001011/rk-mdns),
+# where this directory is the repository root. Inside the monorepo it never
+# runs — GitHub reads workflows only from the root .github/workflows — and the
+# equivalent checks live there, in the `packages` matrix job. Both must keep
+# saying the same thing; when they diverge, the monorepo one gates the merge.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Flutter, not setup-dart: rk_mdns is an FFI plugin and depends on the
+      # Flutter SDK, so `dart test` cannot resolve it.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.4"
+          channel: stable
+          cache: true
+      # Pinned, not @stable: clippy gains lints with every Rust release, and a
+      # floating toolchain turns those into a red build on an unrelated change.
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.97.1"
+          components: clippy, rustfmt
+
+      # The native part first: the Dart tests load the library it produces, and
+      # a Dart suite that skipped because no library was built would be a green
+      # run over nothing.
+      - name: Rust format
+        run: cargo fmt --check
+        working-directory: rust
+
+      - name: Rust lint
+        run: cargo clippy --locked --all-targets -- -D warnings
+        working-directory: rust
+
+      # These are not only unit tests: `tests/announce_and_browse.rs` opens
+      # real sockets on a private port and runs a responder and a browser
+      # against each other, and `tests/every_interface.rs` asserts that this
+      # crate has no code path which sends a multicast datagram out of one
+      # interface. Both need a runner with a network, which is what
+      # ubuntu-latest is.
+      - name: Rust tests
+        run: cargo test --locked
+        working-directory: rust
+
+      - name: Build the native library
+        run: cargo build --locked --release
+        working-directory: rust
+
+      # A library with no exports links green and does nothing. Counting them
+      # is the only way to know that stayed true.
+      - name: The library exports its C ABI
+        run: |
+          so=rust/target/release/librk_mdns.so
+          test -f "$so" || { echo "::error::no artefact at $so"; exit 1; }
+          n=$(nm -D --defined-only "$so" | grep -cE ' [TDB] rk_mdns_')
+          echo "$n exported rk_mdns_ symbols"
+          [ "$n" -gt 0 ] || { echo "::error::the library exports no rk_mdns symbol"; exit 1; }
+
+      # A CRLF checkout turns the Apple build script into a no-op that exits 0.
+      # .gitattributes pins the line endings; this asserts the pin held.
+      - name: The Apple build script has Unix line endings
+        run: |
+          if file apple/build_rust.sh | grep -q CRLF; then
+            echo "::error::apple/build_rust.sh has CRLF; /bin/sh will not run it"
+            exit 1
+          fi
+
+      - name: Dependencies
+        run: flutter pub get
+
+      - name: Format
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: dart analyze --fatal-infos
+
+      - name: Test
+        run: flutter test
+        env:
+          RK_MDNS_LIBRARY: ${{ github.workspace }}/rust/target/release/librk_mdns.so
+
+      # The publish gate is a build step, not a release step. A package that
+      # cannot be published breaks the build now rather than on release day.
+      - name: Publish gate
+        run: dart pub publish --dry-run

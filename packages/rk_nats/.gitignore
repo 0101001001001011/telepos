@@ -1,0 +1,18 @@
+# Build output never enters the package: a consumer builds the native part.
+rust/target/
+.dart_tool/
+pubspec.lock
+
+# The package became a Flutter FFI plugin, so the platform build systems now
+# write scratch inside it. AGP puts its CMake scratch and its local SDK path in
+# the *plugin* directory, not the application's, and both are machine-specific.
+android/local.properties
+android/.cxx/
+.gradle/
+build/
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.pdb

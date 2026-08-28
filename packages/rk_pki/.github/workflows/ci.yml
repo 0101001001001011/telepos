@@ -1,0 +1,72 @@
+name: CI
+
+# This file runs in the public mirror (github.com/0101001001001011/rk-pki),
+# where this directory is the repository root. Inside the monorepo it never
+# runs — GitHub reads workflows only from the root .github/workflows — and the
+# equivalent checks live there, in the `packages` matrix job. Both must keep
+# saying the same thing; when they diverge, the monorepo one gates the merge.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Flutter, not setup-dart: rk_pki is an FFI plugin and depends on the
+      # Flutter SDK, so `dart test` cannot resolve it. That is why this file ran
+      # no tests at all until 2026-08-01 — `Could not find package "test"` —
+      # which nobody saw, because nobody ran this file.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.4"
+          channel: stable
+          cache: true
+      # Pinned, not @stable: clippy gains lints with every Rust release, and a
+      # floating toolchain turns those into a red build on an unrelated change.
+      # Keep in step with RUST_VERSION in the monorepo's root workflow.
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.97.1"
+          components: clippy, rustfmt
+
+      # The native part first: the Dart tests load the library it produces, and
+      # a Dart suite that skipped because no library was built would be a green
+      # run over nothing.
+      - name: Rust format
+        run: cargo fmt --check
+        working-directory: rust
+
+      - name: Rust lint
+        run: cargo clippy --all-targets -- -D warnings
+        working-directory: rust
+
+      - name: Rust tests
+        run: cargo test
+        working-directory: rust
+
+      - name: Build the native library
+        run: cargo build --release
+        working-directory: rust
+
+      - name: Dependencies
+        run: flutter pub get
+
+      - name: Format
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: dart analyze --fatal-infos
+
+      - name: Test
+        run: dart test
+        env:
+          RK_PKI_LIBRARY: ${{ github.workspace }}/rust/target/release/librk_pki.so
+
+      # The publish gate is a build step, not a release step. A package that
+      # cannot be published breaks the build now rather than on release day.
+      - name: Publish gate
+        run: dart pub publish --dry-run

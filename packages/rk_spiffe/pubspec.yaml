@@ -1,0 +1,19 @@
+name: rk_spiffe
+description: SPIFFE identity in pure Dart. Parses and validates spiffe:// IDs and trust domains, and reads X.509-SVID and JWT-SVID documents. Verifies nothing.
+version: 0.1.0
+repository: https://github.com/0101001001001011/rk-spiffe
+issue_tracker: https://github.com/0101001001001011/rk-spiffe/issues
+
+topics:
+  - spiffe
+  - identity
+  - security
+  - x509
+  - jwt
+
+environment:
+  sdk: ^3.8.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0

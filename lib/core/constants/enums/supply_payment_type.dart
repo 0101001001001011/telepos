@@ -1,0 +1,1 @@
+enum SupplyPaymentType { fullSupply, consignment }

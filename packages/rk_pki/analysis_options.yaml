@@ -1,0 +1,22 @@
+# Strict, because the thing being decided here is whether a machine is
+# trusted. An implicit cast or an inferred `dynamic` in that path is a place
+# where a wrong answer can hide.
+#
+# The generated bindings (lib/src/native/bindings.g.dart) carry their own
+# ignore header from ffigen and pass this set as they are; they are analysed,
+# not exempted.
+include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    - avoid_dynamic_calls
+    - cancel_subscriptions
+    - close_sinks
+    - prefer_final_locals
+    - unawaited_futures

@@ -1,0 +1,9 @@
+# Build output never travels with the package: a consumer builds the crate
+# itself, and a stale binary is worse than no binary.
+rust/target/
+.dart_tool/
+pubspec.lock
+
+# Development only.
+.github/
+ffigen.local.yaml

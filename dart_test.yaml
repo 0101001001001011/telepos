@@ -1,0 +1,39 @@
+# `skip:` here is unconditional. `--tags <name>` selects which suites are
+# considered; it does NOT undo a skip. Opting in takes **both** flags:
+#
+#     flutter test --tags native --run-skipped test/native/
+#     flutter test --tags live   --run-skipped
+#
+# Measured 2026-08-01: `flutter test --tags native` alone printed "All tests
+# skipped" — which is what `--tags live` has been doing for as long as that
+# entry has existed, while its comment said it was the way to opt in.
+#
+# Tests tagged `live` reach out to a real backend over the network.
+#
+# Tests tagged `native` need an rk_* native library that has actually been
+# built. `flutter test` does NOT build an FFI plugin's native part, so on an
+# ordinary machine the library is absent and these would fail for a reason
+# that is not a defect. They are the only tests that go red when the library
+# is missing, which is exactly why they exist: the fallback path is green
+# either way, so a suite without them cannot tell the two apart. The
+# `test-native` job in .github/workflows/ci.yml builds the crate and runs
+# them. See docs/testing-notes.md.
+#
+# Tests tagged `manual` are not tests: they are stands a human drives from
+# outside — `test/manual/wt_stand.dart` holds a till, a QUIC listener and an
+# HTTP server open until it is killed. Left in the ordinary suite it would hang
+# it forever, which is why the skip here is unconditional and why the tag is
+# separate from `native`: `--tags native --run-skipped` must stay runnable.
+#
+# Tests tagged `architecture` (test/architecture/) run in the ordinary suite
+# like any other test — no skip. Declared here only so `flutter test` stops
+# printing "A tag was used that wasn't specified in dart_test.yaml" for every
+# suite that carries it.
+tags:
+  live:
+    skip: "requires a reachable live backend; run with --tags live --run-skipped"
+  native:
+    skip: "requires a built rk_* native library; cargo build --release, then flutter test --tags native --run-skipped"
+  manual:
+    skip: "not a test — a stand a human drives; run with --tags manual --run-skipped <file>"
+  architecture: {}

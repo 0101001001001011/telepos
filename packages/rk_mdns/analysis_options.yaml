@@ -1,0 +1,24 @@
+# The package's own rules. Without this file the analyzer walks up and finds
+# the consuming application's options, which include `package:flutter_lints` —
+# a dependency this package does not have and must not need. A package that
+# only analyses cleanly inside one repository is not self-contained.
+#
+# Added 2026-08-01, when the packages were first analysed by CI rather than by
+# hand. Until then this was the one rk_* package with no options file of its
+# own, and the walk-up failed with "Failed to resolve package URI
+# 'package:flutter_lints/flutter.yaml' in include" — after which the analyzer
+# falls back to no lint rules at all. `dart analyze --fatal-infos` here was
+# therefore green because it had stopped checking, not because there was
+# nothing to find.
+include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+# `public_member_api_docs` is deliberately not enabled, for the same reason as
+# in the sibling packages: every type and every non-obvious case here carries a
+# doc comment saying why it exists, and a rule demanding one on each signature
+# alias in `lib/src/bindings_io.dart` buys ceremony, not understanding.

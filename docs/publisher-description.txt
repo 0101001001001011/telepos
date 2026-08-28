@@ -1,0 +1,23 @@
+pub.dev publisher: spherex.kz
+Описание издателя можно менять после создания, в отличие от опубликованной версии пакета.
+
+=== ВАРИАНТ 1 — основной ===
+
+Native building blocks for Dart, reached through dart:ffi: transports (QUIC/WebTransport, Zenoh, NATS), certificates and mutual TLS, RFC 5424 logging, device protocols and on-device inference. Extracted from an offline-first point-of-sale system and published separately so each is usable on its own.
+
+=== ВАРИАНТ 2 — если поле короткое ===
+
+Native building blocks for Dart over dart:ffi: transports, certificates, logging, device protocols and inference. Extracted from an offline-first point-of-sale system.
+
+=== ПОЧЕМУ ТАК СФОРМУЛИРОВАНО ===
+
+"Extracted from" честнее, чем "designed for": пакеты выросли из работающей
+системы, и это их сильная сторона — они решают задачи, которые кто-то
+действительно встретил, а не воображаемые.
+
+"usable on its own" отражает то, что обеспечено намеренно: между пакетами нет
+путевых зависимостей, каждый ставится отдельно.
+
+Обещаний зрелости нет сознательно. Несколько пакетов ранние, rk_rt вообще без
+содержания, и издатель, обещающий больше, чем в пакетах есть, начал бы с того
+же дефекта, который правился в трёх pubspec.yaml 2026-08-01.

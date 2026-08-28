@@ -1,0 +1,334 @@
+name: telepos
+description: "TelePOS - offline-first point of sale for retail, restaurant, service and warehouse operations."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 3.5.0+19
+
+environment:
+  sdk: ^3.8.1
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State Management
+  flutter_riverpod: any
+  riverpod_annotation: any
+
+  # DI
+  get_it: any
+  injectable: any
+
+  # Database
+  drift: any
+  sqlite3_flutter_libs: any
+
+  # Serialization
+  freezed_annotation: any
+  json_annotation: any
+
+  # Navigation
+  go_router: any
+
+  # Logging
+  talker: any
+  talker_flutter: any
+  # RFC 5424 framing, RFC 5425 delivery over TLS, and an on-disk spool, from
+  # the published package rather than packages/rk_syslog: a path dependency
+  # here would mean the application never proves the published artefact works,
+  # and the rk-packages skill forbids carrying both at once.
+  #
+  # This is the application's first native dependency and it is not free:
+  # `flutter build` for Windows, Linux and Android now invokes cargo through
+  # the plugin's own build files, so those three builds need a Rust toolchain.
+  # `flutter test` does NOT — see docs/internal/testing-notes.md, "Нативная библиотека
+  # под flutter test".
+  rk_syslog: ^0.2.2
+
+  # The installation's certificate authority, and the only source of
+  # certificates on a till (И152). Needed here before rk_quic can exist at all:
+  # a WebTransport server has to present something, and this is what issues it.
+  rk_pki: ^0.4.0
+
+  # QUIC and WebTransport, so the till can speak first instead of the browser
+  # asking again. Server side only — a browser cannot load an FFI package, so
+  # the browser end is the platform's own `WebTransport` reached through
+  # dart:js_interop, and the two ends meet on the wire rather than in Dart.
+  #
+  # This one opens a **UDP** port next to the TCP one `api_server.dart`
+  # already listens on: a second firewall rule on the till, and a second
+  # address in the setup screen.
+  rk_quic: ^0.2.0
+
+  # mDNS and DNS-SD, both halves, so a terminal finds the till without anybody
+  # typing an address. The answering half is why it exists: multicast_dns only
+  # asks, and the platform plugins that answer hand the job to a system daemon
+  # that the appliance image and a Windows till both lack.
+  #
+  # It replaces 672 lines of protocol that used to live in
+  # lib/data/transport/till_announcement.dart. What is left there is settings.
+  #
+  # The published version, not a path dependency: the rk-packages skill
+  # forbids carrying both, and a path dependency would mean the application
+  # never proves the published artefact works.
+  rk_mdns: ^0.1.0
+
+  # HTTP (stub)
+  dio: any
+
+  # Encryption
+  pointycastle: any
+  encrypt: any
+  crypto: any
+
+  # QR
+  qr_flutter: any
+  mobile_scanner: any
+
+  # Printing
+  esc_pos_printer: any
+  esc_pos_utils: any
+
+  # Serial Port (desktop)
+  flutter_libserialport: any
+
+  # Bluetooth (mobile)
+  flutter_blue_plus: any
+
+  # NFC (mobile)
+  nfc_manager: any
+
+  # Window (desktop)
+  window_manager: any
+  screen_retriever: any
+
+  # i18n
+  intl: any
+
+  # Preferences
+  shared_preferences: any
+
+  # Paths
+  path_provider: any
+
+  # Permissions
+  permission_handler: any
+
+  # Decimal (P18,S3 - never double for money)
+  decimal: any
+
+  # Equatable
+  equatable: any
+
+  # UUID for unique identifiers
+  uuid: any
+
+  # Functional (Either)
+  dartz: any
+
+  # Path utilities
+  path: any
+
+  # Secure storage (encryption keys)
+  flutter_secure_storage: any
+
+  # Archive (gzip compression for backups)
+  archive: any
+
+  # TDLib Integration (Telegram)
+  libtdjson: ^0.2.2  # TDLib FFI bindings (Android, iOS, macOS built-in)
+
+  # File/Image picker for attachments
+  image_picker: any
+  file_picker: any
+
+  # Geolocation
+  geolocator: any
+  csv: ^6.0.0
+  fl_chart: 0.69.0
+  desktop_multi_window: ^0.3.0
+  # `shelf` и `shelf_static` отдают документ, бандл и шрифты: без страницы в
+  # браузере не появится ни одной сессии WebTransport. `shelf_router` снят
+  # 2026-08-05 вместе с маршрутами данных — разводить по данным больше нечего,
+  # этим занят `TillWire`.
+  shelf: ^1.4.2
+  shelf_static: ^1.1.3
+  http: ^1.6.0
+  sqlite3: ^2.9.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # Виртуальное время для теста стены `LoginThrottle` (задача 7, правка 1,
+  # 2026-08-21): без него измерение 10^4 неудач по одному ключу либо ждало бы
+  # часы настоящего времени прогона, либо не проверяло бы настоящий
+  # `Future.delayed`. Уже резолвился транзитивно через `flutter_test`; здесь —
+  # явной прямой зависимостью, а не только phantom-импортом.
+  fake_async: ^1.3.3
+
+  flutter_lints: ^5.0.0
+
+  # Mocking
+  mocktail: ^1.0.4
+
+  # Code Generation
+  build_runner: any
+  freezed: any
+  json_serializable: any
+  injectable_generator: any
+  drift_dev: any
+  riverpod_generator: any
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  # Enable localization code generation
+  generate: true
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # Assets
+  assets:
+    # Images - Logos
+    - assets/images/logos/
+    # Images - Status icons (OFD, Sync)
+    - assets/images/status/
+    # Images - Navigation arrows
+    - assets/images/navigation/
+    # Images - UI elements (backspace, plus, search, etc.)
+    - assets/images/ui/
+    # Images - Product placeholders
+    - assets/images/products/
+    # Images - Receipt elements
+    - assets/images/receipt/
+    # Images - Fiscal logos (WebKassa, OFD)
+    - assets/images/fiscal/
+    # Images - Splash screen
+    - assets/images/splash/
+    # Images - Empty states
+    - assets/images/empty/
+    # Icons - Menu SVG
+    - assets/icons/menu/
+    # Icons - Payment methods SVG
+    - assets/icons/payment/
+    # Icons - Printer status SVG
+    - assets/icons/printer/
+    # Lottie animations
+    - assets/animations/
+    # Localization ARB files
+    - assets/i18n/
+    # Data files (global products catalog)
+    - assets/data/
+    # Help content (contextual help for each screen)
+    - assets/data/help/
+
+  # Bundled UI fonts â€” make text rendering fully self-contained so the POS works
+  # OFFLINE on any device without relying on system fonts. DejaVu Sans / DejaVu
+  # Sans Mono are used because they cover Cyrillic AND the â‚¸ (tenge, U+20B8)
+  # sign that Flutter's bundled Roboto is missing. Declared under the family
+  # names the theme references ('Roboto' for text, 'RobotoMono' for codes /
+  # barcodes). Generic 'monospace' was replaced by the bundled 'RobotoMono' so
+  # nothing depends on a system font being present offline.
+  fonts:
+    # Настоящий Roboto из артефактов Flutter, SIL OFL.
+    #
+    # До 2026-08-03 под этим именем лежал DejaVu Sans — гарнитура 2004 года с
+    # двумя начертаниями, поэтому каждый w500 и w600 в теме синтезировался
+    # движком. Веса 600 у Roboto НЕ существует: 400, 500, 700.
+    #
+    # Файлы ДОРАБОТАНЫ: Roboto не содержит знака тенге U+20B8, а касса печатает
+    # им каждую цену в Казахстане. Глиф не заимствован из чужой гарнитуры, а
+    # СОБРАН из собственной заглавной T этого же начертания — см.
+    # tools/add_tenge_to_roboto.py. Скрипт идемпотентен: после замены файлов
+    # Roboto его надо прогнать заново, иначе тенге снова станет тофу-квадратом.
+    # Ловится голденом test/golden/font_coverage_golden_test.dart.
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+    - family: TeleposMono
+      fonts:
+        - asset: assets/fonts/DejaVuSansMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/DejaVuSansMono-Bold.ttf
+          weight: 700
+
+    # Собственный набор иконок навигации, а не Material Icons.
+    #
+    # СОБРАН, а не скачан: рисуется в ComfyUI и доводится до шрифта
+    # `tools/icon_pipeline.py`. Именно до шрифта, а не до набора PNG: иконка
+    # живёт на 20–24 px, где решает попиксельная чёткость, а растр, ужатый с
+    # генерации 1024, мягок ровно там, где на него смотрят.
+    #
+    # Волна 1 (2026-08-28): 23 глифа на 24 назначения левой колонки —
+    # `warehouse` берут два маршрута. Пара «контур/заливка» не рисуется:
+    # выбранную строку красит синяя плашка, как в Telegram Desktop.
+    #
+    # Прежний набор из 21 иконки мастера удалён 2026-08-27 как мёртвый —
+    # он не использовался в продукте ни разу. Чтобы это не повторилось,
+    # заведён `test/theme/icon_set_is_used_test.dart`.
+    - family: TeleposIcons
+      fonts:
+        - asset: assets/fonts/TeleposIcons.ttf
+
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package

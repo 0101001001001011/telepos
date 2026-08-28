@@ -1,0 +1,26 @@
+[package]
+name = "rk_devices"
+version = "0.2.2"
+edition = "2021"
+publish = false  # крейт не публикуется на crates.io: он уезжает внутри пакета Dart
+rust-version = "1.73"
+license = "MIT"
+description = "Device protocol codecs for point-of-sale peripherals: scales, customer displays, cash drawers and MDB framing."
+repository = "https://github.com/0101001001001011/rk-devices"
+
+[lib]
+name = "rk_devices"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+
+# И144: a failure crosses the boundary as a value. `panic = "abort"` would turn
+# any bug in this crate into a process kill inside a foreign stack, which is
+# exactly the outcome the invariant forbids. `src/lib.rs` refuses to compile
+# under it; these profiles state the intent as well, so the refusal is a
+# backstop and not the first line of defence.
+[profile.release]
+panic = "unwind"
+
+[profile.dev]
+panic = "unwind"

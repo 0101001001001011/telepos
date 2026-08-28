@@ -1,0 +1,57 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
+# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
+# invoked from the command line by running `flutter analyze`.
+
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    # packages/ is analysed by its own job, not by this one.
+    #
+    # Each rk_* package is a separate publishable unit with its own SDK
+    # constraint, its own dependencies and its own lint set. Pulled into the
+    # application's analysis context it is being analysed in a context no
+    # consumer will ever have — and, until `dart pub get` has run inside each
+    # package, in no context at all: the analyzer walks up to the application's
+    # .dart_tool and invents errors of the form "Target of URI doesn't exist:
+    # 'package:rk_devices/rk_devices.dart'". Measured on run 30679639760: 979
+    # such errors, every one of them from packages/, none from the application.
+    # See docs/internal/testing-notes.md, "the analyzer lies in a worktree".
+    #
+    # This is not a loss of coverage. The `packages` matrix job in
+    # .github/workflows/ci.yml resolves each package and runs
+    # `dart analyze --fatal-infos` on it — stricter than this job's
+    # --no-fatal-infos — plus its format check, its tests and its publish gate.
+    - "packages/**"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+linter:
+  # The lint rules applied to this project can be customized in the
+  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
+  # included above or to enable additional rules. A list of all available lints
+  # and their documentation is published at https://dart.dev/lints.
+  #
+  # Instead of disabling a lint rule for the entire project in the
+  # section below, it can also be suppressed for a single line of code
+  # or a specific dart file by using the `// ignore: name_of_lint` and
+  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
+  # producing the lint.
+  rules:
+    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options

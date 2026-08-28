@@ -1,0 +1,20 @@
+# What must never reach pub.dev.
+#
+# The Rust sources DO ship -- the native side lives inside the package and
+# travels with it, and a consumer builds it. Everything built does not.
+
+rust/target/
+.dart_tool/
+build/
+pubspec.lock
+
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.rlib
+
+# Scratch that has no business in a published archive.
+*.log
+.DS_Store

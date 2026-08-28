@@ -1,0 +1,100 @@
+name: Bug report
+description: Something in TelePOS behaves incorrectly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not report security vulnerabilities here — see
+        [SECURITY.md](../blob/main/SECURITY.md) instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Be specific. For anything involving amounts, list the products, their
+        prices and quantities, any discounts or promotions applied, and how the
+        payment was split — "the total was wrong" is not reproducible.
+      placeholder: |
+        1. Open a shift
+        2. Add 3 × "Milk 1L" at 450,00
+        3. Apply the 1+1 promotion
+        4. Pay 1000,00 cash + card for the rest
+        5. Total on the receipt reads ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: TelePOS version
+      description: Shown at the bottom right of the sale screen, or in Settings.
+      placeholder: "3.5.0+19"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows
+        - Linux desktop
+        - Linux appliance (TelePOS OS)
+        - macOS
+        - Android
+        - iOS
+        - Web
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Operating mode
+      options:
+        - Retail
+        - Restaurant
+        - Service
+        - Warehouse
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sync
+    attributes:
+      label: Sync mode
+      options:
+        - Offline only
+        - CouchDB replication
+        - Telegram
+    validations:
+      required: true
+
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware involved
+      description: Printer, scanner, scales, cash drawer, customer display — model and connection.
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Relevant output from Settings → Log journal. Redact customer data and
+        any credentials before pasting.
+      render: text
+    validations:
+      required: false

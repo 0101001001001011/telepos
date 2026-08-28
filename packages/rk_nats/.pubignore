@@ -1,0 +1,10 @@
+# Build output never travels with the package: a consumer builds it themselves.
+rust/target/
+.dart_tool/
+pubspec.lock
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.pdb

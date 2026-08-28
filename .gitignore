@@ -1,0 +1,75 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+hs_err_pid*.log
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Visual Studio Code related
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Generated ephemeral (each platform folder also carries its own .gitignore)
+**/ephemeral/
+**/Pods/
+**/xcuserdata/
+**/DerivedData/
+
+# Symbolication / obfuscation
+app.*.symbols
+app.*.map.json
+
+# Coverage
+coverage/
+
+# Tooling — local settings stay out, shared skills go in.
+# A standard that exists on one machine is not a standard.
+# Исключается содержимое, а не каталог: в исключённый каталог git не заходит,
+# и отрицание внутри него не срабатывает.
+
+# Credentials / secrets — never commit
+.env
+*.env
+*.pem
+*.p12
+*.pfx
+*.p8
+*.keystore
+*.jks
+id_rsa*
+id_ed25519*
+secrets*.json
+*-private.gpg
+
+# Playwright MCP session artifacts
+.playwright-mcp/
+
+# Local dev database for the backend entry point
+.dev/
+
+# Библиотеки не фиксируют разрешённые версии — lock принадлежит приложению.
+packages/*/pubspec.lock
+
+# Собранные релизы: артефакты живут в разделе релизов GitHub, не в дереве.
+build/release/

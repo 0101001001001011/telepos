@@ -1,0 +1,59 @@
+[package]
+name = "rk_quic"
+version = "0.2.1"
+edition = "2021"
+rust-version = "1.82"
+license = "MIT"
+description = "Native part of the rk_quic Dart package: QUIC and WebTransport behind a C ABI."
+publish = false
+
+[lib]
+name = "rk_quic"
+# cdylib for Windows, Linux and Android; staticlib for Apple, where the pod is
+# built as a framework and the artefact must land inside it (see
+# ../doc/native-build.md).
+# `rlib` is here only so `tests/` can link the crate: an integration test
+# cannot import a cdylib. It changes nothing about what ships.
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+# WebTransport over HTTP/3 over QUIC, on quinn.
+#
+# quinn and not quiche, and the usual argument for quiche does not apply here.
+# quiche ships a purpose-built C API; we never consume one, we *author* one —
+# this crate is a cdylib with its own `extern "C"` surface, so quiche's C API
+# is a non-benefit and quinn's lack of one is a non-cost.
+#
+# What does decide it: a certificate must have ONE representation across
+# rk_quic and rk_pki. rk_pki is rustls + aws-lc-rs, and quinn is rustls-native
+# — a chain is `rustls_pki_types::CertificateDer` on both sides, the same type
+# from the same crate. quiche's TLS is BoringSSL, which would mean a second TLS
+# stack, a second certificate type to convert between, and BoringSSL's own
+# build (CMake plus Go) on all six targets — against the one thing this package
+# has actually proved.
+#
+# `self-signed` is deliberately NOT enabled: generating certificates is
+# rk_pki's job, and two packages that can both mint a certificate is how an
+# install ends up with two authorities.
+wtransport = { version = "0.7.1", default-features = false, features = ["aws-lc-rs"] }
+# `io-util` is named explicitly although wtransport happens to enable it:
+# relying on a transitive feature means a dependency bump can remove a trait
+# this crate calls, and the error lands far from the cause.
+tokio = { version = "1", default-features = false, features = ["rt-multi-thread", "sync", "time", "macros", "io-util"] }
+rustls-pemfile = "2"
+rustls-pki-types = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+# Only the tests mint a certificate, and only because a test needs one that
+# nothing else has to trust. The shipped library cannot do this.
+rcgen = "0.14"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+# NOT "abort". The boundary catches panics so that a failure leaves as a value
+# (И144); aborting the process would make that promise false.
+panic = "unwind"

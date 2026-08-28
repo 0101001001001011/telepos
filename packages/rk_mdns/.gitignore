@@ -1,0 +1,27 @@
+# Sources travel with the package; build products never do.
+# `dart pub publish` honours .gitignore inside a git checkout, so this file is
+# also what keeps a 200 MB `target/` out of the tarball.
+
+.dart_tool/
+build/
+pubspec.lock
+
+rust/target/
+# `rust/Cargo.lock` is deliberately NOT ignored. The crate builds a shipped
+# binary, not a reusable library, so the exact dependency graph is part of what
+# the consumer is meant to reproduce.
+
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.pdb
+
+# `flutter create` writes absolute paths to this machine's SDK into it.
+android/local.properties
+# AGP writes its CMake scratch into the *plugin* directory, not the app's.
+android/.cxx/
+.gradle/
+.idea/
+.vscode/
