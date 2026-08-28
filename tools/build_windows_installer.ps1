@@ -120,7 +120,33 @@ function Set-PubspecVersion {
     $text = [regex]::Replace($text, '(?m)^version:\s*\d+\.\d+\.\d+\+\d+\s*$', "version: $new")
     [System.IO.File]::WriteAllText($Pubspec, $text, [System.Text.UTF8Encoding]::new($false))
 
-    Write-Note "версия поднята: $($v.Version)+$($v.Build) -> $new"
+    # Второе место той же версии — константа, которую показывает само
+    # приложение. Её надо править ЗДЕСЬ, иначе `pubspec.yaml` уезжает вперёд, а
+    # человек в интерфейсе видит прошлую версию.
+    #
+    # Заведено 2026-08-28, и не по осторожности: подъём 3.5.0 -> 3.5.1 прошёл,
+    # MSI собрался с номером 3.5.1, а приложение внутри него сообщало 3.5.0.
+    # Поймал это `test/app_version_matches_pubspec_test.dart` — тот самый
+    # сторож, который завели, когда литерал 3.3.0 на заставке пережил две
+    # минорных версии. Сторож сработал, а вот скрипт, объявленный
+    # ЕДИНСТВЕННЫМ способом менять версию, знал только про одно из двух мест.
+    $constants = Join-Path $RepoRoot 'lib\core\constants\app_constants.dart'
+    $ctext = [System.IO.File]::ReadAllText($constants)
+    $pattern = "(?m)^(\s*static const appVersion\s*=\s*')\d+\.\d+\.\d+(';\s*)$"
+    if ($ctext -notmatch $pattern) {
+        throw @"
+не нашлась строка appVersion в $constants
+
+Ожидалась строка вида:  static const appVersion = '3.5.0';
+
+Без неё версия разойдётся между pubspec.yaml и тем, что показывает
+приложение, а поймает это только тест — уже после сборки установщика.
+"@
+    }
+    $ctext = [regex]::Replace($ctext, $pattern, "`${1}$major.$minor.$patch`${2}")
+    [System.IO.File]::WriteAllText($constants, $ctext, [System.Text.UTF8Encoding]::new($false))
+
+    Write-Note "версия поднята: $($v.Version)+$($v.Build) -> $new (pubspec.yaml и app_constants.dart)"
 }
 
 # ── Тулчейн ──────────────────────────────────────────────────────────────────
@@ -434,7 +460,16 @@ function New-LicenseRtf {
 
     $text = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'LICENSE'))
     # В RTF служебные символы — обратная косая и фигурные скобки.
-    $escaped = $text -replace '\\', '\\\\' -replace '\{', '\{' -replace '\}', '\}'
+    #
+    # Замена делается методом .Replace, а не оператором -replace: у оператора
+    # правая часть это шаблон подстановки .NET, и написать в нём одну обратную
+    # косую нельзя без второго слоя экранирования. Прежняя запись
+    # `-replace '\\', '\\\\'` превращала одну косую в ЧЕТЫРЕ, а не в две, то
+    # есть портила бы текст лицензии. Сегодня это не проявлялось: в AGPL-3.0
+    # нет ни одной обратной косой и ни одной фигурной скобки — проверено. Но
+    # лицензия однажды сменится, и тогда ошибка проявилась бы молча, испортив
+    # ровно тот текст, ради верности которого этот шаг и существует.
+    $escaped = $text.Replace('\', '\\').Replace('{', '\{').Replace('}', '\}')
     # Скобки обязательны: без них PowerShell пытается приклеить перевод строки к
     # правому операнду -replace и отказывается разбирать выражение.
     $escaped = ($escaped -replace "`r`n", "`n") -replace "`n", ('\par' + "`r`n")

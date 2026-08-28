@@ -39,7 +39,7 @@ end-to-end journeys booted against the real dependency-injection graph.
 | **Sync between tills** | CouchDB replication has four verified defects — revisions are not sent on push, errors are swallowed, only one document type of twelve is pulled. **A multi-till shop does not sync today** |
 | **Countries other than Kazakhstan** | Only KZ has ever been tested end to end. Russian, Kyrgyz and Uzbek VAT rates, tax-id formats and masks are unvalidated, and we know of one outright contradiction in our own constants |
 | **Small screens and stylus input** | Layout breaks below tablet width; scrolling with a stylus is poor |
-| **Continuous integration** | There is none, and no workflow ships in this repository. The one that existed was failing and was not the gate anyway; a red badge nobody acts on is worse than an honest gap. The real gate today is the local suite plus a build, described in [Development](#development). Building CI that actually gates is one of the larger open pieces of work |
+| **Continuous integration** | There is none. The workflow that once existed was failing and was not the gate anyway; a red badge nobody acts on is worse than an honest gap, so it was switched off. The real gate today is the local suite plus a build, described in [Development](#development). Building CI that actually gates is one of the larger open pieces of work |
 
 **We are looking for QA.** Not for polish — for the boring, valuable work of
 finding out what breaks: exploratory testing, reproducible bug reports, test

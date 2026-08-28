@@ -85,6 +85,19 @@
 
     <Icon Id="TelePosIcon" SourceFile="$(SourceRoot)\windows\runner\resources\app_icon.ico" />
     <Property Id="ARPPRODUCTICON" Value="TelePosIcon" />
+
+    <!--
+      Что видно в «Установке и удалении программ». Заведено 2026-08-28 после
+      проверки установленной сборки: значок был, а поле «Расположение» пустым,
+      ссылки «О программе» не было вовсе. Для продукта с открытым кодом
+      ссылка не украшение: по ней человек находит исходники и трекер, из
+      которого мы ждём отчёты.
+    -->
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/kvgosu/telepos" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/kvgosu/telepos/releases" />
+    <Property Id="ARPCONTACT" Value="https://github.com/kvgosu/telepos/issues" />
+    <Property Id="ARPCOMMENTS" Value="Офлайн-первая касса: розница, общепит, услуги, склад. Лицензия GNU AGPL v3 или новее." />
+    <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALLFOLDER]" After="CostFinalize" />
     <Property Id="ARPHELPLINK" Value="https://github.com/kvgosu/telepos" />
     <Property Id="ARPNOREPAIR" Value="1" />
 
@@ -260,6 +273,21 @@
       две копии одного текста разошлись бы ровно так же, как две копии версии.
     -->
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+    <!--
+      Своя графика вместо стоковой.
+
+      Без этих двух строк WiX подставляет собственные картинки — красное поле
+      с чужим логотипом. Установщик тогда выглядит не как наш продукт, а как
+      чей-то ещё, и это первое, что видит человек, открывший скачанный файл.
+
+      Размеры заданы WiX и менять их нельзя: баннер 493x58, фон 493x312.
+      Рисуются `tools/make_installer_art.py` из палитры самой иконки
+      приложения, поэтому мастер и касса выглядят одним продуктом. Формат -
+      24-битный BMP: PNG WiX молча не подхватит.
+    -->
+    <WixVariable Id="WixUIBannerBmp" Value="$(SourceRoot)\installer\windows\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(SourceRoot)\installer\windows\dialog.bmp" />
     <WixVariable Id="WixUILicenseRtf" Value="$(ObjDir)\license.rtf" />
 
   </Package>
