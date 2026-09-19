@@ -1,98 +1,34 @@
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
-import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/sale/quick_product_catalog.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/sale/sale_controller.dart';
 
-class QuickProduct {
-  const QuickProduct({
-    required this.id,
-    required this.name,
-    required this.price,
-    this.color,
-    this.icon,
-  });
-
-  final int id;
-  final String name;
-  final Decimal price;
-  final Color? color;
-  final IconData? icon;
-}
-
-class QuickProductCategory {
-  const QuickProductCategory({required this.id, required this.name});
-
-  final int id;
-  final String name;
-}
-
+/// Категории и товары сетки читаются через контракт [QuickProductCatalog]
+/// (задача 8): три DAO, которые этот файл спрашивал сам, у браузерного
+/// терминала отсутствуют, а сетка ему нужна та же.
+///
+/// Типы `QuickProduct`/`QuickProductCategory`, объявленные здесь, уехали в
+/// домен как [QuickProductItem]/[QuickProductCategory] — виджету
+/// принадлежит вид кнопки, а не понятие быстрого товара.
 final quickProductCategoriesProvider =
-    FutureProvider<List<QuickProductCategory>>((ref) async {
-      final db = GetIt.I<AppDatabase>();
-      final all = await db.quickProductDao.findAllByParents();
-      return all
-          .where((qp) => qp.ucode == null && qp.name != null)
-          .map((qp) => QuickProductCategory(id: qp.id, name: qp.name!))
-          .toList();
-    });
-
-final quickProductsByGroupProvider =
-    FutureProvider.family<List<QuickProduct>, int?>((ref, parentId) async {
-      final db = GetIt.I<AppDatabase>();
-
-      final items = parentId == null
-          ? (await db.quickProductDao.findAllByParents())
-                .where((qp) => qp.ucode != null)
-                .toList()
-          : await db.quickProductDao.findAllByParentId(parentId);
-
-      final result = <QuickProduct>[];
-      for (final qp in items) {
-        if (qp.ucode == null) continue;
-
-        final price = await db.productPriceDao.findByUcode(qp.ucode!);
-        final info = await db.productInfoDao.findByIdAndNotDeleted(qp.ucode!);
-        if (info == null) continue;
-
-        result.add(
-          QuickProduct(
-            id: qp.ucode!,
-            name: qp.name ?? info.name,
-            price: price?.sellingPrice ?? Decimal.zero,
-          ),
-        );
-      }
-      return result;
-    });
-
-final quickProductsProvider = FutureProvider<List<QuickProduct>>((ref) async {
-  final db = GetIt.I<AppDatabase>();
-  final quickProducts = await db.quickProductDao.findAllByParents();
-
-  final result = <QuickProduct>[];
-  for (final qp in quickProducts) {
-    if (qp.ucode == null) continue;
-
-    final price = await db.productPriceDao.findByUcode(qp.ucode!);
-    final info = await db.productInfoDao.findByIdAndNotDeleted(qp.ucode!);
-    if (info == null) continue;
-
-    result.add(
-      QuickProduct(
-        id: qp.ucode!,
-        name: qp.name ?? info.name,
-        price: price?.sellingPrice ?? Decimal.zero,
-      ),
+    FutureProvider<List<QuickProductCategory>>(
+      (ref) => GetIt.I<QuickProductCatalog>().categories(),
     );
-  }
-  return result;
-});
+
+/// Товары категории; `null` — лежащие в корне.
+///
+/// Прежний `quickProductsProvider` (все быстрые товары) читал ровно то же,
+/// что эта семья с `null`, и удалён как копия, а не как лишняя функция.
+final quickProductsByGroupProvider =
+    FutureProvider.family<List<QuickProductItem>, int?>(
+      (ref, parentId) =>
+          GetIt.I<QuickProductCatalog>().items(categoryId: parentId),
+    );
 
 class QuickProductsGrid extends ConsumerStatefulWidget {
   const QuickProductsGrid({
@@ -233,7 +169,7 @@ class _QuickProductsGridState extends ConsumerState<QuickProductsGrid> {
                           .read(saleControllerProvider.notifier)
                           .addProduct(
                             ProductSearchResult(
-                              id: product.id,
+                              id: product.ucode,
                               name: product.name,
                               price: product.price,
                             ),
@@ -303,13 +239,16 @@ class _QuickProductButton extends StatelessWidget {
     this.compact = false,
   });
 
-  final QuickProduct product;
+  final QuickProductItem product;
   final VoidCallback onTap;
   final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    final color = product.color ?? AppColors.primary;
+    // Цвет и иконка кнопки в таблице `QuickProducts` не хранятся: поля
+    // `QuickProduct.color`/`icon` не заполнял ни один читатель — умолчание
+    // было и осталось одно.
+    const color = AppColors.primary;
 
     if (compact) {
       return Material(
@@ -358,7 +297,7 @@ class _QuickProductButton extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(product.icon ?? Icons.inventory_2, size: 28, color: color),
+              const Icon(Icons.inventory_2, size: 28, color: color),
               const SizedBox(height: 4),
 
               Text(
@@ -517,7 +456,7 @@ class _QuickProductsDialogState extends ConsumerState<QuickProductsDialog> {
                             .read(saleControllerProvider.notifier)
                             .addProduct(
                               ProductSearchResult(
-                                id: product.id,
+                                id: product.ucode,
                                 name: product.name,
                                 price: product.price,
                               ),

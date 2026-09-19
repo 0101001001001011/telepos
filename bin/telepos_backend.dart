@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:sqlite3/open.dart';
 
 import 'package:telepos/backend/api_server.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/login_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
 import 'package:telepos/backend/session_registry.dart';
@@ -100,6 +101,9 @@ Future<void> main(List<String> args) async {
     // один `ApiServer`; в приложении он приходит доводом из графа зависимостей
     // именно затем, чтобы второй список нельзя было завести молчанием.
     invites: PairingInvites(),
+    // Голый процесс без контейнера и без журнала — замок без записи; оплаты
+    // здесь нет, и проверять сертификаты ему нечем (`payments_unavailable`).
+    certificateThrottle: CertificateThrottle(),
     deviceBindings: LocalDeviceBindingRepository(
       db,
       BuiltinDeviceProfileCatalog(),

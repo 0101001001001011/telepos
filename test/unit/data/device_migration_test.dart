@@ -17,7 +17,7 @@ import 'package:telepos/data/device/device_profile_catalog_builtin.dart';
 /// `Terminals`'s seven legacy per-terminal device columns
 /// (`printer_type`/`printer_address`/`scanner_type`/`scale_port`/
 /// `scale_baud_rate`/`drawer_via_printer`/`display_port`) once
-/// `TerminalDeviceBindings` carried their content — see task-5-report.md —
+/// `TerminalDeviceBindings` carried their content —
 /// and final review finding I1 dropped `ThisPosEntries.printerConnectionType`/
 /// `.printerAddress`/`.printerPort` (schema v27, see
 /// `app_database.dart`'s `if (from < 27)` block). The *current* Dart schema
@@ -47,6 +47,7 @@ class _V26Shape {
     required this.terminalPointModeColumn,
     required this.terminalCreatedAtColumn,
     required this.usersCreateSql,
+    required this.salesCreateSql,
   });
 
   final String thisPosCreateSql;
@@ -72,6 +73,15 @@ class _V26Shape {
   // `users` (таблица существует с версии 1), поэтому это пробел фикстуры,
   // а не свойство реального апгрейда.
   final String usersCreateSql;
+
+  // Задача 2 плана «продажа с браузерного терминала»: схема поднимается до
+  // 37, и открытие с `PRAGMA user_version = 26` теперь проходит и блок
+  // `if (from < 37)`, который трогает существующую таблицу `sales` (`ADD
+  // COLUMN` трижды). Эта фикстура никогда не заводила `sales` — та же
+  // причина, что у `usersCreateSql` выше: без неё подъём падает на
+  // `no such table: sales`, хотя настоящая база апгрейда имеет `sales` с
+  // самой первой схемы.
+  final String salesCreateSql;
 
   // The ten legacy raw columns this fixture adds back are always named
   // exactly this way — literal, not read off the (now column-less) Dart
@@ -162,6 +172,24 @@ Future<_V26Shape> _readV26Shape() async {
       )
       .getSingle();
 
+  // v26 никогда не видел `terminal_id`/`cart_version`/`last_command_key` —
+  // задача 2 добавила их только в v37. Тот же приём DROP COLUMN, что и
+  // ThisPosEntries выше.
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final salesRow = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
+
   final shape = _V26Shape(
     thisPosCreateSql: thisPosRow.read<String>('sql'),
     thisPosTableName: probe.thisPosEntries.actualTableName,
@@ -176,6 +204,7 @@ Future<_V26Shape> _readV26Shape() async {
     terminalPointModeColumn: probe.terminals.pointMode.name,
     terminalCreatedAtColumn: probe.terminals.createdAt.name,
     usersCreateSql: usersRow.read<String>('sql'),
+    salesCreateSql: salesRow.read<String>('sql'),
   );
   await probe.close();
   return shape;
@@ -199,6 +228,7 @@ AppDatabase _openAsIfMigratingFromV26(
         raw.execute(shape.thisPosCreateSql);
         raw.execute(shape.terminalsCreateSql);
         raw.execute(shape.usersCreateSql);
+        raw.execute(shape.salesCreateSql);
         raw.execute('PRAGMA user_version = 26');
         if (seed != null) seed(raw, shape);
       },
@@ -264,7 +294,7 @@ void main() {
         'kaspiIp': '10.0.0.5',
         'kaspiPort': '8888',
         // Rahmet выведен из продукта (решение владельца продукта, посреди
-        // fix round 1 — см. task-2-report.md). Заданы с реальными, валидными
+        // fix round 1). Заданы с реальными, валидными
         // значениями (не false/пусто), чтобы тест ниже доказывал, что эти
         // три ключа действительно проигнорированы, а не просто случайно не
         // сработали бы всё равно.
@@ -579,6 +609,27 @@ void main() {
               )
               .getSingle())
           .read<String>('sql');
+      // `sales` без `terminal_id`/`cart_version`/`last_command_key` —
+      // задача 2 плана «продажа с браузерного терминала» (миграция v36→v37)
+      // трогает существующую таблицу и требует, чтобы она уже была: та же
+      // причина, что и у `terminals` выше.
+      await probe.customStatement(
+        'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+      );
+      await probe.customStatement(
+        'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+      );
+      await probe.customStatement(
+        'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN '
+        'last_command_key',
+      );
+      final salesCreateSql = (await probe
+              .customSelect(
+                "SELECT sql FROM sqlite_master WHERE type = 'table' "
+                "AND name = 'sales'",
+              )
+              .getSingle())
+          .read<String>('sql');
       await probe.close();
 
       // v27 shape = current (v28) shape minus scanner_timeout_ms — the one
@@ -602,6 +653,7 @@ void main() {
             raw.execute(v27CreateSql);
             raw.execute(usersCreateSql);
             raw.execute(terminalsCreateSql);
+            raw.execute(salesCreateSql);
             raw.execute(
               "INSERT INTO $tableName (r_id, company_name, cash_box_name) "
               "VALUES (1, 'ТОО Уже На v27', 'Касса V27')",
@@ -823,7 +875,7 @@ void main() {
       // корректно round-trip'ит две привязки одного класса, а не то, что
       // конкретно эта миграция их сегодня производит. Два чековых принтера
       // — ровно пример, которым коордиантор обосновал сохранение формы
-      // после удаления Rahmet (task-2-report.md, fix round 1).
+      // после удаления Rahmet (fix round 1).
       final db = AppDatabase(NativeDatabase.memory());
       addTearDown(db.close);
 
@@ -928,8 +980,8 @@ void main() {
       // остаются кандидатами, поэтому по правилу "сужать по каждому факту,
       // отказывать только если после сужения всё ещё не единственный
       // кандидат" привязка не создаётся — угадывание между двумя реальными
-      // моделями было бы ровно тем, что это правило запрещает. См.
-      // task-2-report.md, fix round 1.
+      // моделями было бы ровно тем, что это правило запрещает
+      // (fix round 1).
       final width32 = inferLegacyDeviceMigration(
         LegacyDeviceSettings(
           thisPosPaperWidthChars: 32,
@@ -1222,8 +1274,7 @@ void main() {
       // выше), потому что DeviceBinding.validateAgainst's option-permitted
       // check would independently refuse an unsupported width anyway,
       // masking a bug in _narrowToUniqueProfile itself. This assertion is
-      // what the fix-round-1 anti-gaps mutation actually targets — see
-      // task-2-report.md.
+      // what the fix-round-1 anti-gaps mutation actually targets.
       expect(
         resolveReceiptPrinterProfileId(
           catalog,

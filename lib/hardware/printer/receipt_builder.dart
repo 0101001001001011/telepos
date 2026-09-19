@@ -1,16 +1,39 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:telepos/domain/entities/receipt/receipt_text_block.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 import 'package:telepos/hardware/printer/printer_manager.dart';
+import 'package:telepos/hardware/printer/receipt_text_wrap.dart';
 
+/// Поток ESC/POS одного чека.
+///
+/// ## Знаки на ленте
+///
+/// Страница одна и объявлена самим потоком: `EscPosCommands.init` шлёт
+/// `ESC t 17` (CP866), и байты собираются той же таблицей
+/// (`hardware/paper_charset.dart`), которой их читают предпросмотр и эмулятор.
+/// Выбора кодировки у вызывающего **нет**, и это правка, а не упущение: поле
+/// `encoding` принимало `'utf8'`, но `init` всё равно переключал принтер на
+/// CP866 — «выбранная» UTF-8 напечаталась бы крокозябрами. Ни один вызывающий
+/// его не задавал (измерено: ни одного `encoding:` в `lib/` и `test/`).
+///
+/// **Замены знаков делаются на входе каждого метода, до измерения строки.**
+/// Ширина колонок считается по `String.length` ([_truncate], [addRow],
+/// перенос по словам), а замена бывает длиннее знака (`₸` → `тг`). Сделай её
+/// внутри кодировщика — и колонка суммы уехала бы вправо молча.
 class ReceiptBuilder {
-  ReceiptBuilder({this.charWidth = 32, this.encoding = 'cp866'});
+  /// [charWidth] обязателен: умолчание `32` здесь было четвёртым местом,
+  /// помнившим ширину ленты, и X/Z-отчёты печатались узкими при любом выборе.
+  /// Ширину даёт `ReceiptPaperWidthSource`.
+  ReceiptBuilder({required this.charWidth});
 
   final int charWidth;
 
-  final String encoding;
-
   final List<int> _buffer = [];
+
+  /// Текст, готовый к разметке: казахские буквы, `₸`, «ёлочки» и длинные тире
+  /// уже заменены тем, что CP866 умеет напечатать.
+  static String _paper(String text) => paperText(text, PaperCharset.cp866);
 
   ReceiptBuilder init() {
     _buffer.addAll(EscPosCommands.init);
@@ -26,7 +49,7 @@ class ReceiptBuilder {
     if (bold) _buffer.addAll(EscPosCommands.boldOn);
     if (doubleSize) _buffer.addAll(EscPosCommands.sizeDouble);
 
-    _addText(_truncate(text, charWidth));
+    _addText(_truncate(_paper(text), charWidth));
     _buffer.addAll(EscPosCommands.newLine);
 
     if (doubleSize) _buffer.addAll(EscPosCommands.sizeNormal);
@@ -36,11 +59,65 @@ class ReceiptBuilder {
     return this;
   }
 
+  /// По центру, **с переносом по словам** вместо обрезки.
+  ///
+  /// Для обязательных строк, длина которых не зависит от кассы: название
+  /// продавца, адрес, ссылка проверки чека. Ссылка `consumer.oofd.kz` длиннее
+  /// 32 колонок, и до этой правки на ленте 58 мм она печаталась обрезанной —
+  /// покупатель переписывал с чека неработающий адрес.
+  ReceiptBuilder addCenteredWrapped(String text, {bool bold = false}) {
+    _buffer.addAll(EscPosCommands.alignCenter);
+    if (bold) _buffer.addAll(EscPosCommands.boldOn);
+    for (final piece in wrapReceiptLine(_paper(text), charWidth)) {
+      _addText(piece);
+      _buffer.addAll(EscPosCommands.newLine);
+    }
+    if (bold) _buffer.addAll(EscPosCommands.boldOff);
+    _buffer.addAll(EscPosCommands.alignLeft);
+    return this;
+  }
+
+  /// Блок свободного текста шаблона — шапка или подвал.
+  ///
+  /// * Пустой блок не даёт **ни одного** байта: ни пустой строки, ни команды.
+  /// * Каждая строка переносится по словам под ширину ленты; при двойном
+  ///   размере колонок вдвое меньше.
+  /// * Оформление блока снимается **безусловно** после последней строки —
+  ///   обычный размер, жирный выключен, выравнивание влево, — чтобы следующая
+  ///   за блоком обязательная строка не унаследовала ни крупный шрифт, ни
+  ///   правый край.
+  ReceiptBuilder addTextBlock(ReceiptTextBlock block) {
+    final lines = block.lines;
+    if (lines.isEmpty) return this;
+
+    final columns = block.doubleSize ? charWidth ~/ 2 : charWidth;
+    _buffer.addAll(switch (block.align) {
+      ReceiptTextAlign.left => EscPosCommands.alignLeft,
+      ReceiptTextAlign.center => EscPosCommands.alignCenter,
+      ReceiptTextAlign.right => EscPosCommands.alignRight,
+    });
+    if (block.bold) _buffer.addAll(EscPosCommands.boldOn);
+    if (block.doubleSize) _buffer.addAll(EscPosCommands.sizeDouble);
+
+    for (final line in lines) {
+      for (final piece in wrapReceiptLine(_paper(line), columns)) {
+        _addText(piece);
+        _buffer.addAll(EscPosCommands.newLine);
+      }
+    }
+
+    _buffer
+      ..addAll(EscPosCommands.sizeNormal)
+      ..addAll(EscPosCommands.boldOff)
+      ..addAll(EscPosCommands.alignLeft);
+    return this;
+  }
+
   ReceiptBuilder addLeft(String text, {bool bold = false}) {
     _buffer.addAll(EscPosCommands.alignLeft);
     if (bold) _buffer.addAll(EscPosCommands.boldOn);
 
-    _addText(_truncate(text, charWidth));
+    _addText(_truncate(_paper(text), charWidth));
     _buffer.addAll(EscPosCommands.newLine);
 
     if (bold) _buffer.addAll(EscPosCommands.boldOff);
@@ -52,7 +129,7 @@ class ReceiptBuilder {
     _buffer.addAll(EscPosCommands.alignRight);
     if (bold) _buffer.addAll(EscPosCommands.boldOn);
 
-    _addText(_truncate(text, charWidth));
+    _addText(_truncate(_paper(text), charWidth));
     _buffer.addAll(EscPosCommands.newLine);
 
     if (bold) _buffer.addAll(EscPosCommands.boldOff);
@@ -61,9 +138,11 @@ class ReceiptBuilder {
     return this;
   }
 
-  ReceiptBuilder addRow(String left, String right, {bool bold = false}) {
+  ReceiptBuilder addRow(String rawLeft, String rawRight, {bool bold = false}) {
     if (bold) _buffer.addAll(EscPosCommands.boldOn);
 
+    final left = _paper(rawLeft);
+    final right = _paper(rawRight);
     final maxLeftLen = charWidth - right.length - 1;
     final leftTruncated = _truncate(left, maxLeftLen);
     final padding = charWidth - leftTruncated.length - right.length;
@@ -78,13 +157,16 @@ class ReceiptBuilder {
   }
 
   ReceiptBuilder addRow3(
-    String left,
-    String center,
-    String right, {
+    String rawLeft,
+    String rawCenter,
+    String rawRight, {
     bool bold = false,
   }) {
     if (bold) _buffer.addAll(EscPosCommands.boldOn);
 
+    final left = _paper(rawLeft);
+    final center = _paper(rawCenter);
+    final right = _paper(rawRight);
     final totalLen = left.length + center.length + right.length;
     if (totalLen >= charWidth) {
       return addRow(left, right, bold: bold);
@@ -104,7 +186,7 @@ class ReceiptBuilder {
   }
 
   ReceiptBuilder addLine({String char = '-'}) {
-    _addText(char * charWidth);
+    _addText(_paper(char) * charWidth);
     _buffer.addAll(EscPosCommands.newLine);
     return this;
   }
@@ -155,60 +237,12 @@ class ReceiptBuilder {
     return Uint8List.fromList(_buffer);
   }
 
+  /// Кладёт **уже размеченный** текст в поток.
+  ///
+  /// Замены здесь уже сделаны методами-входами; [encodePaper] повторит их
+  /// вхолостую (они идемпотентны) и останется только таблица.
   void _addText(String text) {
-    _buffer.addAll(_encodeText(text));
-  }
-
-  List<int> _encodeText(String text) {
-    if (encoding == 'cp866') {
-      return _encodeCp866(text);
-    }
-    return utf8.encode(text);
-  }
-
-  List<int> _encodeCp866(String text) {
-    final result = <int>[];
-
-    for (int i = 0; i < text.length; i++) {
-      final code = text.codeUnitAt(i);
-
-      if (code < 128) {
-        result.add(code);
-        continue;
-      }
-
-      if (code >= 0x410 && code <= 0x43F) {
-        if (code <= 0x42F) {
-          result.add(code - 0x410 + 0x80);
-        } else {
-          result.add(code - 0x430 + 0xA0);
-        }
-        continue;
-      }
-
-      if (code >= 0x440 && code <= 0x44F) {
-        result.add(code - 0x440 + 0xE0);
-        continue;
-      }
-
-      if (code == 0x401) {
-        result.add(0xF0);
-        continue;
-      }
-      if (code == 0x451) {
-        result.add(0xF1);
-        continue;
-      }
-
-      if (code == 0x2116) {
-        result.add(0xFC);
-        continue;
-      }
-
-      result.add(0x3F);
-    }
-
-    return result;
+    _buffer.addAll(encodePaper(text, PaperCharset.cp866));
   }
 
   String _truncate(String text, int maxLen) {

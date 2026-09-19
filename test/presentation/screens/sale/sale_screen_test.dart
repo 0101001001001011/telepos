@@ -38,13 +38,13 @@ void main() {
       child: MediaQuery(
         data: MediaQueryData(size: Size(width, height)),
         child: MaterialApp(
-   // Тема приложения, а не умолчание Material: экран берёт цвета
-   // ролями (`context.semantic`, `colorScheme`), и под голым
-   // `MaterialApp` расширение `AppSemanticColors` не
-   // зарегистрировано — обращение к нему падает. Это и есть та
-   // причина, по которой такой тест проверял не тот продукт,
-   // что уезжает заказчику.
-   theme: AppTheme.light,
+          // Тема приложения, а не умолчание Material: экран берёт цвета
+          // ролями (`context.semantic`, `colorScheme`), и под голым
+          // `MaterialApp` расширение `AppSemanticColors` не
+          // зарегистрировано — обращение к нему падает. Это и есть та
+          // причина, по которой такой тест проверял не тот продукт,
+          // что уезжает заказчику.
+          theme: AppTheme.light,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -53,7 +53,7 @@ void main() {
           ],
           supportedLocales: const [Locale('en'), Locale('ru')],
           locale: const Locale('ru'),
-          home: const Scaffold(body: SaleScreen()),
+          home: const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
         ),
       ),
     );
@@ -513,6 +513,58 @@ void main() {
     });
   });
 
+  group('Опт на кассе (задача 8, находка 4)', () {
+    testWidgets('ярлык режима — переключатель, а не индикатор', (tester) async {
+      // До задачи 8 `toggleMode` не вызывался **ниоткуда**: панель итогов
+      // показывала режим чека и всегда «Розница», потому что изменить его
+      // было нечем. Проверка достижимости, а не расчёта: что делает касса,
+      // получив команду, доказано на настоящей базе
+      // (`test/data/sale/local_cart_service_test.dart`).
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTeardownForView(tester);
+
+      final notifier = _RecordingSaleNotifier(TestSaleStates.withItems);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            saleControllerProvider.overrideWith(() => notifier),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: MediaQuery(
+            data: const MediaQueryData(size: Size(1400, 900)),
+            child: MaterialApp(
+              theme: AppTheme.light,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [Locale('en'), Locale('ru')],
+              locale: const Locale('ru'),
+              home: const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final toggle = find.byKey(const Key('sale_wholesale_toggle'));
+      expect(toggle, findsOneWidget, reason: 'переключателя режима нет вовсе');
+
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+
+      expect(
+        notifier.toggles,
+        1,
+        reason: 'ярлык показывает режим, но переключить его нечем',
+      );
+    });
+  });
+
   group('Breakpoint boundary tests', () {
     testWidgets('exactly 1200px wide uses desktop layout', (tester) async {
       tester.view.physicalSize = const Size(1200, 800);
@@ -580,4 +632,18 @@ void suppressOverflowErrors() {
   addTearDown(() {
     FlutterError.onError = originalOnError;
   });
+}
+
+/// Подделка контроллера, считающая нажатия переключателя режима.
+///
+/// Тест доказывает **достижимость** команды из интерфейса кассы: что она
+/// делает с чеком, доказано на настоящей базе в
+/// `test/data/sale/local_cart_service_test.dart`.
+class _RecordingSaleNotifier extends MockSaleNotifier {
+  _RecordingSaleNotifier(super.initialState);
+
+  int toggles = 0;
+
+  @override
+  Future<void> toggleMode() async => toggles++;
 }

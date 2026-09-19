@@ -1,6 +1,10 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepos/core/constants/enums/operating_mode.dart';
+import 'package:telepos/domain/discount/discount_policy.dart';
+import 'package:telepos/domain/payment/installment_scheduler.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
+import 'package:telepos/domain/sale/sale_edit_terms.dart';
 import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
 import 'package:telepos/presentation/controllers/sale/sale_controller.dart'
     hide ProductSearchResult;
@@ -23,6 +27,7 @@ import 'package:telepos/domain/usecases/writeoff/create_writeoff_use_case.dart';
 import 'package:telepos/domain/usecases/inventory/create_inventory_use_case.dart';
 import 'package:telepos/presentation/controllers/writeoff/writeoff_controller.dart';
 import 'package:telepos/presentation/controllers/inventory/inventory_controller.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 class MockSaleNotifier extends Notifier<SaleState> implements SaleNotifier {
   MockSaleNotifier([this.initialState]);
@@ -36,58 +41,81 @@ class MockSaleNotifier extends Notifier<SaleState> implements SaleNotifier {
   Future<void> search(String query) async {}
 
   @override
+  Future<int?> currentTerminalId() async => 7;
+
+  @override
   void clearWarning() {}
 
   @override
-  void addProduct(sale.ProductSearchResult product, {Decimal? quantity}) {}
+  void clearError() {}
+
+  @override
+  Future<void> addProduct(
+    sale.ProductSearchResult product, {
+    Decimal? quantity,
+  }) async {}
 
   @override
   void selectItem(String? itemId) {}
 
   @override
-  void updateQuantity(Decimal quantity) {}
+  Future<void> updateQuantity(Decimal quantity) async {}
 
   @override
-  void incrementQuantity() {}
+  Future<void> incrementQuantity() async {}
 
   @override
-  void decrementQuantity() {}
+  Future<void> decrementQuantity() async {}
+
+  /// Условия правки строки по умолчанию — предел **сто процентов с
+  /// названной причиной**, правка цены и скидка разрешены.
+  ///
+  /// Не «удобное значение»: проба, которой предел не важен, не должна
+  /// молча получать ограничение, а проба про предел обязана назвать своё
+  /// (`_RecordingSaleNotifier` в `sale_discount_entry_test.dart`).
+  @override
+  Future<SaleEditTerms?> editTerms() async => SaleEditTerms(
+    policy: const SalePolicy(editPrice: true, sellInDiscount: true),
+    cap: DiscountCap(
+      maxPercent: Decimal.fromInt(100),
+      approvalAbove: null,
+      source: 'предел кассы по умолчанию',
+    ),
+    currencySymbol: '₸',
+  );
 
   @override
-  void setDiscountPercent(Decimal percent) {}
+  Future<void> setDiscountPercent(Decimal percent) async {}
 
   @override
-  void setDiscountAmount(Decimal amount) {}
+  Future<void> setDiscountAmount(Decimal amount) async {}
 
   @override
-  void updatePrice(Decimal price) {}
+  Future<void> updatePrice(Decimal price) async {}
 
   @override
-  Future<bool> canEditPrice() async => true;
+  Future<void> setMark(String mark) async {}
 
   @override
-  void setMark(String mark) {}
+  Future<void> removeSelectedItem() async {}
 
   @override
-  void removeSelectedItem() {}
+  Future<void> clearSale() async {}
 
   @override
-  void clearSale() {}
-
-  @override
-  Future<void> deferSale() async {}
+  Future<bool> deferSale() async => true;
 
   @override
   Future<void> loadDeferredSale(int receiptNo) async {}
 
   @override
-  void toggleMode() {}
+  Future<void> toggleMode() async {}
 
   @override
-  void setAgent(int id, String name) {}
+  Future<void> setAgent(int id, String name) async {}
 
   @override
-  void clearAgent() {}
+  Future<void> clearAgent() async {}
 
   @override
   Future<void> startNewSale() async {}
@@ -126,7 +154,45 @@ class MockPaymentNotifier extends Notifier<PaymentState>
   void initialize(Decimal amount) {}
 
   @override
+  SaleOutcome? get lastOutcome => null;
+
+  @override
+  Future<List<CompletionTrouble>> hardwareTroubles(int receiptNo) async =>
+      const [];
+
+  @override
   void setPaymentType(PaymentType type) {}
+
+  @override
+  void setInstallmentTerms({
+    required int termMonths,
+    required InstallmentScheme scheme,
+  }) {}
+
+  @override
+  void setPrepaymentToUse(Decimal amount) {}
+
+  @override
+  void useAllPrepayment() {}
+
+  @override
+  Future<void> startQr(Decimal amount) async {}
+
+  @override
+  Future<void> pollQr({bool manual = false}) async {}
+
+  @override
+  Future<void> cancelQr() async {}
+
+  @override
+  void dismissQr() {}
+
+  @override
+  Future<bool> presentCertificate(String number, {String? pin}) async =>
+      false;
+
+  @override
+  void removeCertificate(String number) {}
 
   @override
   void setCashReceived(Decimal amount) {}
@@ -153,10 +219,10 @@ class MockPaymentNotifier extends Notifier<PaymentState>
   void clearLoyaltyCustomer() {}
 
   @override
-  void setBonusToUse(Decimal amount) {}
+  Future<void> setBonusToUse(Decimal amount) async {}
 
   @override
-  void useAllBonus() {}
+  Future<void> useAllBonus() async {}
 
   @override
   void setIin(String? iin) {}
@@ -173,15 +239,39 @@ class MockPaymentNotifier extends Notifier<PaymentState>
   @override
   void numpadClear() {}
 
+  /// Признак обработки **настоящий**, а не пустышка.
+  ///
+  /// Круг правки 5 задачи 14: экран гасит кнопку и отсекает второе
+  /// нажатие именно этим признаком, и подделка, которая его не помнит,
+  /// доказывала бы про двойное нажатие ровно ничего.
   @override
-  void setProcessing(bool value) {}
+  void setProcessing(bool value) => state = state.copyWith(isProcessing: value);
+
+  /// Чем кончится оплата.
+  ///
+  /// `false` даёт пробе остановиться сразу после того, как экран
+  /// поговорил с эквайрингом, — дальше `_onPaymentRecorded` печатает чек
+  /// и уходит по маршруту, которых в виджет-пробе нет.
+  bool completes = true;
 
   @override
-  Future<bool> processPayment() async => true;
+  Future<bool> processPayment() async => completes;
+
+  /// Суммы, с которыми экран звал эквайринг.
+  ///
+  /// Записываются, а не выбрасываются: круг правки 3 задачи 14 нашёл, что
+  /// экран звал платёжный терминал **только** при чистой карте, а касса
+  /// требовала доказательства при любой безналичной части — то есть
+  /// смешанная оплата и долг с картой на кассе с привязанным эквайрингом
+  /// не работали вовсе. Ни одна проба этого не видела, потому что ни одна
+  /// не шла путём экрана.
+  final chargedAmounts = <Decimal>[];
 
   @override
-  Future<CardTerminalResult> chargeCardViaTerminal(Decimal amount) async =>
-      const CardTerminalResult(outcome: CardTerminalOutcome.notConfigured);
+  Future<CardCharge> chargeCardViaTerminal(Decimal amount) async {
+    chargedAmounts.add(amount);
+    return const CardCharge(outcome: CardChargeOutcome.notConfigured);
+  }
 }
 
 class MockRefundNotifier extends Notifier<RefundState>
@@ -194,7 +284,7 @@ class MockRefundNotifier extends Notifier<RefundState>
   RefundState build() => initialState ?? const RefundState();
 
   @override
-  void setMode(RefundMode mode) {}
+  Future<void> setMode(RefundMode mode) async {}
 
   @override
   Future<void> loadReceipt(int receiptNo, int posId) async {}
@@ -203,37 +293,49 @@ class MockRefundNotifier extends Notifier<RefundState>
   Future<void> search(String query) async {}
 
   @override
-  void addProduct(RefundSearchResult product, {Decimal? quantity}) {}
+  Future<void> addProduct(
+    RefundSearchResult product, {
+    Decimal? quantity,
+  }) async {}
 
   @override
   void selectItem(String? itemId) {}
 
   @override
-  void toggleItemSelection(String itemId) {}
+  Future<void> toggleItemSelection(String itemId) async {}
 
   @override
-  void selectAll() {}
+  Future<void> selectAll() async {}
 
   @override
-  void deselectAll() {}
+  Future<void> deselectAll() async {}
 
   @override
-  void updateQuantity(String itemId, Decimal quantity) {}
+  Future<void> updateQuantity(String itemId, Decimal quantity) async {}
 
   @override
   void setReason(String itemId, RefundReason reason) {}
 
   @override
-  void removeItem(String itemId) {}
+  Future<void> removeItem(String itemId) async {}
 
   @override
-  void removeSelectedItem() {}
+  Future<void> removeSelectedItem() async {}
 
   @override
   void clear() {}
 
   @override
   Future<bool> processRefund() async => true;
+
+  /// Беды железа проведённого возврата — у подделки их нет.
+  @override
+  Future<List<CompletionTrouble>> hardwareTroubles() async => const [];
+
+  /// Заведена кругом правки задачи 20: экран поднимает подписку при каждом
+  /// заходе, а не один раз за жизнь провайдера. Подделке подписывать нечего.
+  @override
+  Future<void> ensureWatching() async {}
 }
 
 class MockShiftNotifier extends Notifier<ShiftState> implements ShiftNotifier {
@@ -474,7 +576,7 @@ class MockAppStateNotifier extends Notifier<AppState>
   void setTestUser({required int userId, String? userName}) {}
 
   @override
-  void setShiftOpened(bool isOpened) {}
+  void setShift(ShiftStatus shift) {}
 
   @override
   void setConnectionStatus(ConnectionStatus status) {}

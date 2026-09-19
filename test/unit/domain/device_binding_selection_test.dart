@@ -176,9 +176,14 @@ void main() {
     });
 
     test(
-      'enabled is deliberately ignored: no driver builder reads it, and two '
-      'bindings differing only there still name the same endpoint',
+      'enabled is deliberately ignored: two bindings differing only there '
+      'still name the same endpoint',
       () {
+        // Задача 33: прежнее имя утверждало ещё и «ни один сборщик драйверов
+        // не читает `enabled`» — это неверно (`_registerDisplayService` в
+        // `lib/app/di/hardware_module.dart` кладёт `binding.enabled` в
+        // конфигурацию дисплея), и проба этого не проверяла вовсе. Имя
+        // оставлено при том, что проверяется: тождество адреса устройства.
         const disabled = DeviceBinding(
           deviceClass: DeviceClass.receiptPrinter,
           profileId: 'printer.escpos.80mm',

@@ -767,7 +767,7 @@ dependencies = [
 
 [[package]]
 name = "rk_quic"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "rcgen",
  "rustls-pemfile",

@@ -1,6 +1,6 @@
 import 'package:telepos/domain/esf/esf_provider.dart';
 import 'package:telepos/domain/esf/esf_settings.dart';
-import 'package:telepos/domain/esf/noop_esf_provider.dart';
+import 'package:telepos/domain/esf/refusing_esf_provider.dart';
 
 typedef EsfProviderBuilder = EsfProvider Function(EsfSettings settings);
 
@@ -17,11 +17,11 @@ class EsfProviderRegistry {
 
   EsfProvider resolve(EsfSettings settings) {
     if (!settings.isEnabled) {
-      return const NoOpEsfProvider();
+      return const RefusingEsfProvider();
     }
     final builder = _builders[settings.operatorType];
     if (builder == null) {
-      return const NoOpEsfProvider();
+      return const RefusingEsfProvider();
     }
     return builder(settings);
   }

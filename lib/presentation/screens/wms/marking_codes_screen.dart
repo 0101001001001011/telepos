@@ -9,7 +9,7 @@ import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/ismpt/ismpt_offline_queueing_provider.dart';
 import 'package:telepos/data/ismpt/marking_lifecycle_service.dart';
 import 'package:telepos/domain/ismpt/ismpt_service.dart';
-import 'package:telepos/domain/ismpt/noop_ismpt_provider.dart';
+import 'package:telepos/domain/ismpt/refusing_ismpt_provider.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 
 class MarkingCodesScreen extends StatefulWidget {
@@ -35,7 +35,7 @@ class _MarkingCodesScreenState extends State<MarkingCodesScreen> {
       return GetIt.I<IsMptService>();
     }
     return IsMptOfflineQueueingProvider(
-      inner: const NoOpIsMptProvider(),
+      inner: const RefusingIsMptProvider(),
       store: InMemoryIsMptQueueStore(),
       isReachable: () async => false,
     );

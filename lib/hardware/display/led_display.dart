@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:telepos/hardware/display/customer_display_manager.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 
 class LedDisplayManager extends BaseDisplayManager {
   LedDisplayManager(super.config);
@@ -83,9 +84,14 @@ class LedDisplayManager extends BaseDisplayManager {
     await _writeText(formatted);
   }
 
+  /// Байты строки — общей таблицей бумаги (`hardware/paper_charset.dart`).
+  ///
+  /// Было `text.codeUnits`: коды UTF-16 уходили в поток как есть, и всё, что
+  /// крупнее байта, драйвер обрезал бы или отверг. Тот же дефект уже
+  /// измерялся на этикетке — там «Молоко» уходило управляющими символами.
   Future<void> _writeText(String text) async {
     await _write([0x0C]);
-    await _write(text.codeUnits);
+    await _write(encodePaper(text, PaperCharset.cp866));
   }
 
   Future<void> _write(List<int> data) async {

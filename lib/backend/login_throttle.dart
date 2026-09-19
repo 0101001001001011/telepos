@@ -281,6 +281,7 @@
 library;
 
 import 'package:meta/meta.dart' show visibleForTesting;
+import 'package:telepos/backend/failure_ledger.dart';
 
 class LoginThrottle {
   LoginThrottle({
@@ -291,7 +292,7 @@ class LoginThrottle {
     Future<void> Function(Duration)? sleep,
     DateTime Function()? clock,
   }) : _sleep = sleep ?? Future.delayed,
-       _clock = clock ?? DateTime.now;
+       _ledger = FailureLedger(staleAfter: staleAfter, clock: clock);
 
   final int graceFailures;
   final Duration baseDelay;
@@ -304,19 +305,19 @@ class LoginThrottle {
   /// `SessionRegistry._forget()`: без уборки карта росла бы без предела.
   final Duration staleAfter;
   final Future<void> Function(Duration) _sleep;
-  final DateTime Function() _clock;
 
-  /// Счёт неудач по ключу. Один map на все три вида ключей, различённых
+  /// Счёт неудач по ключу. Один счёт на все три вида ключей, различённых
   /// префиксом строки: `t:` — терминал, `u:` — кассир, `w` — общий счётчик
   /// walk-up. Нет `lockedAt` и нет часов истечения задержки вовсе — задержка
   /// не рассасывается сама по себе, только [recordSuccess] сбрасывает счёт
-  /// целиком. [_touchedAt] — не то же самое: она не про задержку, а про то,
+  /// целиком. Время последней неудачи в счёте — не про задержку, а про то,
   /// когда запись можно забыть (см. [staleAfter], [_forget]).
-  final Map<String, int> _failures = {};
-
-  /// Когда по этому ключу в последний раз была неудача — только для
-  /// [_forget], сама задержка её не читает.
-  final Map<String, DateTime> _touchedAt = {};
+  ///
+  /// С 2026-09-13 две карты (`_failures`/`_touchedAt`) и уборка вынесены в
+  /// [FailureLedger]: тот же счёт ведёт `CertificateThrottle`, и третья копия
+  /// этих строк была бы параллельной реализацией одного и того же. Поведение
+  /// класса не менялось ни в одной ветке.
+  final FailureLedger _ledger;
 
   static const String _walkUpKey = 'w';
   static String _terminalKey(int terminalId) => 't:$terminalId';
@@ -342,15 +343,15 @@ class LoginThrottle {
   /// цена следующей попытки, не только гипотетическая: очереди `_queueTail`,
   /// из-за которой этот абзац раньше предупреждал о занижении, в классе
   /// больше нет — [penalizeFailure] ждёт ровно тот же [_delayForCount] от
-  /// счёта [_failures], который здесь и вычислен, ничего сверх.
+  /// счёта в [_ledger], который здесь и вычислен, ничего сверх.
   ///
   /// Большая из задержек по «кто» (кассир или walk-up) и по терминалу —
   /// тот же принцип, что был у `retryAfter` в задаче 6: нападающий, плохой
   /// по любой из двух осей, платит за худшую из них.
   @visibleForTesting
   Duration delayFor({required int terminalId, int? userId}) {
-    final byWho = _delayForCount(_failures[_whoKey(userId)] ?? 0);
-    final byTerminal = _delayForCount(_failures[_terminalKey(terminalId)] ?? 0);
+    final byWho = _delayForCount(_ledger.countOf(_whoKey(userId)));
+    final byTerminal = _delayForCount(_ledger.countOf(_terminalKey(terminalId)));
     return byWho > byTerminal ? byWho : byTerminal;
   }
 
@@ -403,14 +404,12 @@ class LoginThrottle {
 
     final whoKey = _whoKey(userId);
     final terminalKey = _terminalKey(terminalId);
-    final byWho = _failures[whoKey] ?? 0;
-    final byTerminal = _failures[terminalKey] ?? 0;
+    final byWho = _ledger.countOf(whoKey);
+    final byTerminal = _ledger.countOf(terminalKey);
 
-    final now = _clock();
-    _failures[whoKey] = byWho + 1;
-    _touchedAt[whoKey] = now;
-    _failures[terminalKey] = byTerminal + 1;
-    _touchedAt[terminalKey] = now;
+    final now = _ledger.now();
+    _ledger.add(whoKey, now);
+    _ledger.add(terminalKey, now);
 
     final delayByWho = _delayForCount(byWho);
     final delayByTerminal = _delayForCount(byTerminal);
@@ -423,12 +422,8 @@ class LoginThrottle {
   /// Сбрасывает оба счётчика этой попытки. Полный сброс, не декремент — см.
   /// тест «успешный вход полностью сбрасывает счёт».
   void recordSuccess({required int terminalId, int? userId}) {
-    final whoKey = _whoKey(userId);
-    final terminalKey = _terminalKey(terminalId);
-    _failures.remove(whoKey);
-    _touchedAt.remove(whoKey);
-    _failures.remove(terminalKey);
-    _touchedAt.remove(terminalKey);
+    _ledger.clear(_whoKey(userId));
+    _ledger.clear(_terminalKey(terminalId));
   }
 
   /// Убирает записи, по которым дольше [staleAfter] не было неудач —
@@ -438,15 +433,5 @@ class LoginThrottle {
   /// побочных эффектов, и просроченная, но ещё не убранная запись из неё
   /// видна как есть — то же поведение, каким было бы её отсутствие,
   /// разница только в том, когда карта физически освободится.
-  void _forget() {
-    final now = _clock();
-    final stale = _touchedAt.entries
-        .where((e) => now.difference(e.value) >= staleAfter)
-        .map((e) => e.key)
-        .toList();
-    for (final key in stale) {
-      _failures.remove(key);
-      _touchedAt.remove(key);
-    }
-  }
+  void _forget() => _ledger.forgetStale();
 }

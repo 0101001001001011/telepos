@@ -14,16 +14,11 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/backend/api_server.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
 import 'package:telepos/data/database/app_database.dart';
-import 'package:telepos/domain/setup/setup_draft.dart';
-import 'package:telepos/domain/setup/setup_repository.dart';
-import 'package:telepos/domain/startup/app_bootstrap.dart';
-import 'package:telepos/domain/terminal/device_binding.dart';
-import 'package:telepos/domain/terminal/device_binding_repository.dart';
-import 'package:telepos/domain/terminal/terminal.dart' as domain;
-import 'package:telepos/domain/terminal/terminal_repository.dart';
 
+import 'support/noop_api_server.dart';
 import 'support/noop_auth.dart';
 
 /// Не сам корень кассы: `rk_pki` под `flutter test` не грузится. Здесь важно
@@ -38,10 +33,10 @@ void main() {
   ApiServer build({String? rootPem = _root, PairingInvites? invites}) =>
       ApiServer(
         db: db,
-        bootstrap: _NoopBootstrap(),
-        setup: _NoopSetup(),
-        terminals: _NoopTerminals(),
-        deviceBindings: _NoopBindings(),
+        bootstrap: NoopBootstrap(),
+        setup: NoopSetup(),
+        terminals: NoopTerminals(),
+        deviceBindings: NoopBindings(),
         auth: NoopAuth(),
         port: 0,
         frontendDirectory: bundle.path,
@@ -52,6 +47,7 @@ void main() {
         // подставляет умолчание сам, а не полагается на умолчание конструктора
         // (его больше нет).
         invites: invites ?? PairingInvites(),
+        certificateThrottle: CertificateThrottle(),
       );
 
   setUp(() {
@@ -296,66 +292,3 @@ SecurityContext _testContext() => SecurityContext(withTrustedRoots: false)
 
 SecurityContext _trustingTestRoot() => SecurityContext(withTrustedRoots: false)
   ..setTrustedCertificates('test/backend/fixtures/insecure_test_ca.crt');
-
-class _NoopBootstrap implements AppBootstrap {
-  @override
-  Future<AppInitStatus> start({required BootProgress onProgress}) async =>
-      AppInitStatus.success;
-}
-
-class _NoopSetup implements SetupRepository {
-  @override
-  Future<void> completeSetup(SetupDraft draft) async {}
-}
-
-class _NoopTerminals implements TerminalRepository {
-  @override
-  Future<List<domain.Terminal>> list() async => const [];
-
-  @override
-  Stream<List<domain.Terminal>> watchAll() async* {
-    yield const <domain.Terminal>[];
-    await Completer<void>().future;
-  }
-
-  @override
-  Stream<domain.Terminal?> watchSelf() async* {
-    yield null;
-    await Completer<void>().future;
-  }
-
-  @override
-  Future<TerminalEnrollment> register({
-    required String name,
-    String code = '',
-  }) => throw UnimplementedError();
-
-  @override
-  Future<domain.Terminal> resume({
-    required int terminalId,
-    required String secret,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<void> rename(int terminalId, String name) async {}
-
-  @override
-  Future<domain.Terminal> self() => throw UnimplementedError();
-
-  @override
-  Future<void> delete(int terminalId) async {}
-}
-
-class _NoopBindings implements DeviceBindingRepository {
-  @override
-  Future<List<DeviceBinding>> forTerminal(int terminalId) async => const [];
-
-  @override
-  Stream<List<DeviceBinding>> watchForTerminal(int terminalId) async* {
-    yield const <DeviceBinding>[];
-    await Completer<void>().future;
-  }
-
-  @override
-  Future<void> save(int terminalId, DeviceBinding binding) async {}
-}

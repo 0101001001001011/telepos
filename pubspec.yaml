@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 3.5.1+20
+version: 3.6.0+21
 environment:
   sdk: ^3.8.1
 
@@ -81,7 +81,7 @@ dependencies:
   # This one opens a **UDP** port next to the TCP one `api_server.dart`
   # already listens on: a second firewall rule on the till, and a second
   # address in the setup screen.
-  rk_quic: ^0.2.0
+  rk_quic: ^0.2.2
 
   # mDNS and DNS-SD, both halves, so a terminal finds the till without anybody
   # typing an address. The answering half is why it exists: multicast_dns only

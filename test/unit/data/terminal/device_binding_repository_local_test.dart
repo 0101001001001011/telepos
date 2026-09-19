@@ -220,8 +220,10 @@ void main() {
   );
 
   test(
-    'forTerminal returns a disabled binding too — a settings screen must '
-    'redraw it, not lose it',
+    // Задача 33: имя говорило «экран настроек обязан его перерисовать» —
+    // экран здесь не исполняется. Его читатель —
+    // `hardware_settings_screen.dart` (`binding?.enabled`).
+    'forTerminal returns a disabled binding too, with its parameters',
     () async {
       await repo.save(
         terminalId,

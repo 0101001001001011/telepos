@@ -1,117 +1,36 @@
-import 'dart:async';
+/// Железо, которое экран продажи трогает сам: дисплей покупателя, весы,
+/// принтер этикеток.
+///
+/// # Почему шов, а не контракт в домене
+///
+/// Спека (шаг 7, «фискализация, печать, ящик») проводит границу так:
+/// **железо остаётся кассой**. Дисплей покупателя стоит на кассе и смотрит
+/// в зал; весы подключены к ней последовательным портом; принтер этикеток
+/// — её же. Планшет в зале не имеет к этим трём устройствам никакого
+/// отношения и не получит его этой работой. Заводить доменный контракт
+/// значило бы обещать, что когда-нибудь терминал этим управляет, — а по
+/// спеке не управляет.
+///
+/// Значит правильная форма — не контракт с двумя реализациями, а
+/// платформенный шов: там, где железо есть, оно есть; там, где его нет,
+/// вопрос не задаётся вовсе.
+///
+/// # Что это чинит
+///
+/// `sale_hardware_native.dart` импортирует `package:telepos/hardware/`, а
+/// оттуда — `dart:io` (последовательные порты, сокеты). Экран продажи тянул
+/// это одним прыжком, и `flutter build web` на нём лёг бы целиком. Прямой
+/// сторож слоёв узла продажи (`test/architecture/sale_layering_test.dart`)
+/// этот импорт разрешает намеренно и говорит об этом в своём докстринге:
+/// «прямой импорт `lib/hardware/` из интерфейса — известное нарушение слоёв
+/// в 17 файлах дерева, отдельная работа». Здесь оно не чинится — оно
+/// **выносится из браузерной сборки**, что и требовалось.
+///
+/// Обе половины объявляют один и тот же `SaleHardware` с одной и той же
+/// поверхностью; экран (`sale_screen.dart`) не знает, какая из них под ним,
+/// потому что нативная и так молча отсутствует, если устройство не
+/// настроено (`_tryResolve`). Браузерная — просто всегда «не настроено».
+library;
 
-import 'package:decimal/decimal.dart';
-import 'package:get_it/get_it.dart';
-import 'package:telepos/hardware/display/customer_display_manager.dart';
-import 'package:telepos/hardware/label_printer/label_printer_service.dart';
-import 'package:telepos/hardware/scales/scales_service.dart';
-
-class SaleHardware {
-  SaleHardware({
-    CustomerDisplayManager? display,
-    ScalesService? scales,
-    LabelPrinterService? labelPrinter,
-  }) : _display = display ?? _tryResolve<CustomerDisplayManager>(),
-       _scales = scales ?? _tryResolve<ScalesService>(),
-       _labelPrinter = labelPrinter ?? _tryResolve<LabelPrinterService>();
-
-  final CustomerDisplayManager? _display;
-  final ScalesService? _scales;
-  final LabelPrinterService? _labelPrinter;
-
-  bool _displayConnectTried = false;
-
-  static T? _tryResolve<T extends Object>() {
-    try {
-      if (GetIt.I.isRegistered<T>()) return GetIt.I<T>();
-    } catch (_) {}
-    return null;
-  }
-
-  Future<void> showTotalOnDisplay(Decimal total) async {
-    final display = _display;
-    if (display == null) return;
-    try {
-      if (!display.isConnected) {
-        if (_displayConnectTried) return;
-        _displayConnectTried = true;
-        final ok = await display.connect();
-        if (!ok) return;
-      }
-      await display.showTotal(total);
-    } catch (_) {}
-  }
-
-  Future<void> showWelcomeOnDisplay() async {
-    final display = _display;
-    if (display == null) return;
-    try {
-      if (!display.isConnected) {
-        if (_displayConnectTried) return;
-        _displayConnectTried = true;
-        final ok = await display.connect();
-        if (!ok) return;
-      }
-      await display.showWelcome();
-    } catch (_) {}
-  }
-
-  Future<void> disposeDisplay() async {
-    final display = _display;
-    if (display == null) return;
-    try {
-      if (display.isConnected) await display.disconnect();
-    } catch (_) {}
-  }
-
-  bool get isScalesConfigured =>
-      _scales != null && (_scales.port?.isNotEmpty ?? false);
-
-  Future<Decimal?> readWeightKg({
-    Duration timeout = const Duration(seconds: 10),
-  }) async {
-    final scales = _scales;
-    if (scales == null) return null;
-    if (!(scales.port?.isNotEmpty ?? false)) return null;
-
-    try {
-      if (!scales.isConnected) {
-        final res = await scales.connect();
-        if (!res.success) return null;
-      }
-      final reading = await scales.requestWeight(timeout: timeout);
-      if (reading.hasError) return null;
-      if (reading.weight <= Decimal.zero) return null;
-      return reading.weightKg;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  bool get isLabelPrinterConfigured =>
-      _labelPrinter != null && (_labelPrinter.host?.isNotEmpty ?? false);
-
-  Future<String?> printPriceLabel({
-    required String productName,
-    required String barcode,
-    required Decimal price,
-    int copies = 1,
-  }) async {
-    final printer = _labelPrinter;
-    if (printer == null || !(printer.host?.isNotEmpty ?? false)) {
-      return 'Принтер этикеток не настроен';
-    }
-    try {
-      final result = await printer.printPriceLabel(
-        productName: productName,
-        barcode: barcode,
-        price: price,
-        copies: copies,
-      );
-      if (result.success) return null;
-      return result.errorMessage ?? 'Ошибка печати этикетки';
-    } catch (e) {
-      return 'Ошибка печати этикетки: $e';
-    }
-  }
-}
+export 'sale_hardware_native.dart'
+    if (dart.library.js_interop) 'sale_hardware_web.dart';

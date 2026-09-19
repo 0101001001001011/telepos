@@ -20,6 +20,19 @@ import 'package:telepos/web/wt_channel.dart';
 /// потоков, инициированных клиентом. Значения это не меняет, но избавляет от
 /// совпадений вида «поток 1 и поток 1 разных сессий».
 class Loopback implements QuicServer, WtStreams {
+  /// [sessionId] — номер сессии, которым касса помечает всё, что приходит с
+  /// этого конца.
+  ///
+  /// Заведён задачей 20: он единственный отличает **перезагрузку вкладки** от
+  /// продолжения работы. Касса помнит рабочее место по номеру сессии
+  /// (`TillOperations._sessionTerminals`), и F5 — это новая сессия с новым
+  /// номером и пустой памятью о месте. С захардкоженной единицей такой
+  /// сценарий не воспроизводился вовсе: вторая вкладка получала привязку
+  /// первой и выглядела исправной.
+  Loopback({this.sessionId = 1});
+
+  final int sessionId;
+
   final _events = StreamController<QuicEvent>.broadcast();
 
   /// Приёмники браузерной стороны, по одному на открытый поток.
@@ -80,7 +93,7 @@ class Loopback implements QuicServer, WtStreams {
   Future<WtStream> openStream() async {
     final streamId = _nextStream += 4;
     _inbound[streamId] = StreamController<String>();
-    _events.add(StreamOpened(sessionId: 1, streamId: streamId));
+    _events.add(StreamOpened(sessionId: sessionId, streamId: streamId));
     return LoopbackStream(this, streamId);
   }
 
@@ -138,7 +151,11 @@ class LoopbackStream implements WtStream {
     _sendingFinished = true;
     for (final frame in _pending) {
       _loop._events.add(
-        StreamData(sessionId: 1, streamId: _streamId, message: frame),
+        StreamData(
+          sessionId: _loop.sessionId,
+          streamId: _streamId,
+          message: frame,
+        ),
       );
     }
     _pending.clear();
@@ -146,7 +163,9 @@ class LoopbackStream implements WtStream {
     // подписку оно не снимает. Воспроизводится здесь, а не опускается:
     // подписка, которую сняло бы это событие, работала бы в тесте и не
     // работала бы в поле.
-    _loop._events.add(StreamClosed(sessionId: 1, streamId: _streamId));
+    _loop._events.add(
+      StreamClosed(sessionId: _loop.sessionId, streamId: _streamId),
+    );
   }
 
   @override

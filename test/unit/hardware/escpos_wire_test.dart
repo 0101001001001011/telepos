@@ -13,6 +13,8 @@ import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/print/print_queue_local.dart';
 import 'package:telepos/data/services/receipt_print_service_impl.dart';
 import 'package:telepos/data/terminal/terminal_repository_local.dart';
+import 'package:telepos/domain/entities/receipt/receipt_options.dart';
+import 'package:telepos/domain/print/receipt_paper_width_source.dart';
 import 'package:telepos/domain/print/print_job.dart';
 import 'package:telepos/domain/print/print_job_store.dart';
 import 'package:telepos/domain/print/print_queue.dart';
@@ -59,7 +61,9 @@ void main() {
 
       await _bootPrintPath(printer);
 
-      final service = ReceiptPrintServiceImpl(charWidth: 32);
+      final service = ReceiptPrintServiceImpl(
+        paperWidth: const FixedReceiptPaperWidth(ReceiptPaperWidth.mm58),
+      );
       final outcome = await service.printSaleReceipt(_saleReceipt());
 
       _expectQueued(outcome);
@@ -207,60 +211,88 @@ void main() {
       );
     });
 
-    test('казахская и киргизская кириллица в CP866 не помещается', () async {
-      // Это не украшение теста, а измерение. Продукт заявлен на пяти языках, а
-      // на проводе одна кодовая страница — CP866, в которой есть только русский
-      // алфавит. Ә, Ғ, Қ, Ң, Ө, Ұ, Ү, Һ, І и киргизские Ө, Ү отсутствуют как
-      // кодовые точки: заменить их нечем, и кодировщик ставит '?' (0x3F).
-      // Замена сама по себе честная — соврать байтом из другой буквы было бы
-      // хуже. Проверяется здесь то, что потеря происходит **молча**: ни ошибки,
-      // ни отказа печатать, ни следа в результате.
-      final endpoint = await _PrinterEndpoint.bind();
-      addTearDown(endpoint.close);
+    test(
+      'казахские буквы и ₸ выходят читаемыми, а не знаками вопроса',
+      () async {
+        // Это не украшение теста, а измерение. Продукт заявлен на пяти языках,
+        // а на проводе одна кодовая страница — CP866, в которой русский
+        // алфавит есть, а ә, ғ, қ, ң, ө, ұ, ү, һ, і и знака тенге нет **ни в
+        // одной** странице ESC/POS. До правки 2026-09-19 они уходили 0x3F, и
+        // чек — документ покупателя — был нечитаем.
+        //
+        // Решение названо в `hardware/paper_charset.dart`: однобуквенная
+        // замена на русскую основу (разметка колонок не съезжает) и `тг`
+        // вместо `₸`. Это **ухудшение, а не соответствие**, и заказчик видит
+        // его до печати: предпросмотр читает те же байты той же таблицей.
+        final endpoint = await _PrinterEndpoint.bind();
+        addTearDown(endpoint.close);
 
-      final printer = _managerFor(endpoint);
-      addTearDown(printer.disconnect);
+        final printer = _managerFor(endpoint);
+        addTearDown(printer.disconnect);
 
-      await _bootPrintPath(printer);
+        await _bootPrintPath(printer);
 
-      final outcome = await ReceiptPrintServiceImpl(
-        charWidth: 32,
-      ).printSaleReceipt(_saleReceipt());
-      _expectQueued(outcome);
+        final outcome = await ReceiptPrintServiceImpl(
+          paperWidth: const FixedReceiptPaperWidth(ReceiptPaperWidth.mm58),
+        ).printSaleReceipt(_saleReceipt());
+        _expectQueued(outcome);
 
-      final wire = await endpoint.waitFor(_cut);
-      await _expectPrintedByQueue(outcome);
+        final wire = await endpoint.waitFor(_cut);
+        await _expectPrintedByQueue(outcome);
 
-      // «Дүкен» — казахское «магазин». Д=0x84, ү нет в CP866 → 0x3F,
-      // к=0xAA, е=0xA5, н=0xAD.
-      expect(
-        _indexOf(wire, const [0x84, 0x3F, 0xAA, 0xA5, 0xAD]),
-        greaterThanOrEqualTo(0),
-        reason: 'ү теряется и заменяется на «?» — CP866 её не содержит',
-      );
-      // «Көл» — киргизское «озеро». К=0x8A, ө → 0x3F, л=0xAB.
-      expect(
-        _indexOf(wire, const [0x8A, 0x3F, 0xAB]),
-        greaterThanOrEqualTo(0),
-        reason: 'ө теряется так же',
-      );
-      // Знак тенге ₸ (U+20B8) в CP866 тоже отсутствует.
-      expect(
-        _indexOf(wire, ascii.encode('240.00 ?')),
-        greaterThanOrEqualTo(0),
-        reason: 'символ валюты ₸ на чеке печатается как «?»',
-      );
-      // Латиница проходит без потерь — узбекский и английский на этой странице
-      // живут, а две другие кириллицы нет.
-      expect(
-        _indexOf(wire, ascii.encode('Non Toshkent')),
-        greaterThanOrEqualTo(0),
-      );
-      expect(
-        _indexOf(wire, ascii.encode('Coca-Cola 0.5 L')),
-        greaterThanOrEqualTo(0),
-      );
-    });
+        // «Дүкен» — казахское «магазин». Д=0x84, ү→у=0xE3, к=0xAA, е=0xA5,
+        // н=0xAD. Ни одного 0x3F внутри слова.
+        expect(
+          _indexOf(wire, const [0x84, 0xE3, 0xAA, 0xA5, 0xAD]),
+          greaterThanOrEqualTo(0),
+          reason: 'ү печатается русской «у», а не «?»',
+        );
+        // «Көл» — киргизское «озеро». К=0x8A, ө→о=0xAE, л=0xAB.
+        expect(
+          _indexOf(wire, const [0x8A, 0xAE, 0xAB]),
+          greaterThanOrEqualTo(0),
+          reason: 'ө печатается русской «о»',
+        );
+        // «Сүт» — казахское «молоко». С=0x91, ү→у=0xE3, т=0xE2.
+        expect(
+          _indexOf(wire, const [0x91, 0xE3, 0xE2]),
+          greaterThanOrEqualTo(0),
+          reason: 'название товара на казахском читаемо',
+        );
+        // Знак тенге ₸ (U+20B8) — сокращением «тг»: т=0xE2, г=0xA3.
+        expect(
+          _indexOf(wire, [...ascii.encode('240.00 '), 0xE2, 0xA3]),
+          greaterThanOrEqualTo(0),
+          reason: 'символ валюты ₸ печатается как «тг», а не «?» и не «T»',
+        );
+        // Диверсия наоборот: прежнего поведения на ленте не осталось вовсе.
+        expect(
+          _indexOf(wire, const [0x84, 0x3F]),
+          -1,
+          reason: 'знака вопроса вместо казахской буквы больше нет',
+        );
+        expect(
+          _indexOf(wire, ascii.encode('240.00 ?')),
+          -1,
+          reason: 'знака вопроса вместо ₸ больше нет',
+        );
+        // № — 0xFC, и эмулятор читает его тем же словарём, что продукт пишет.
+        expect(
+          _indexOf(wire, const [0xFC, 0x32]),
+          greaterThanOrEqualTo(0),
+          reason: '«№2» в названии магазина',
+        );
+        // Латиница проходит без потерь.
+        expect(
+          _indexOf(wire, ascii.encode('Non Toshkent')),
+          greaterThanOrEqualTo(0),
+        );
+        expect(
+          _indexOf(wire, ascii.encode('Coca-Cola 0.5 L')),
+          greaterThanOrEqualTo(0),
+        );
+      },
+    );
 
     test('чек уходит одной записью и соединение закрывается', () async {
       // Ресурсы: слушатель принял ровно одно соединение, после disconnect оно
@@ -272,7 +304,7 @@ void main() {
       await _bootPrintPath(printer);
 
       final outcome = await ReceiptPrintServiceImpl(
-        charWidth: 32,
+        paperWidth: const FixedReceiptPaperWidth(ReceiptPaperWidth.mm58),
       ).printSaleReceipt(_saleReceipt());
       _expectQueued(outcome);
 

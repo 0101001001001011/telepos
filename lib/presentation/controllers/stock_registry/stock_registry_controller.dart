@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart' show QueryRow, Variable;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:telepos/presentation/controllers/app/stock_revision.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/database/app_database.dart';
@@ -151,6 +152,8 @@ class StockRegistryState {
 class StockRegistryNotifier extends Notifier<StockRegistryState> {
   @override
   StockRegistryState build() {
+    // См. `CatalogNotifier.build` и докстринг `StockRevision` (задача 36).
+    ref.watch(stockRevisionProvider);
     Future.microtask(() => _loadPage(1));
     return StockRegistryState(isLoading: true);
   }

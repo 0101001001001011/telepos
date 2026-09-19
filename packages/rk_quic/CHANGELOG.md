@@ -1,3 +1,22 @@
+## 0.2.2
+
+- **Every call on `QuicServer` now gets its own reply, however many are in
+  flight.** Before, a call took whichever reply arrived next, so two
+  overlapping calls both received the first reply and the second went to
+  nobody. With every call succeeding this was invisible; when one failed, its
+  status was also handed to a healthy call beside it. A server writing to a
+  stream the browser had just abandoned (`peerGone`) could see a concurrent
+  write into a live subscription report `peerGone` too — and close a
+  subscription that was working.
+- Replies are now matched to calls by id. A call still waiting when the
+  endpoint is stopped completes with `notRunning` instead of never completing.
+- `test/concurrent_commands_test.dart` holds it: a write to an unknown session
+  and a `stop()` in flight together must answer `unknownHandle` and `ok`
+  respectively. Measured failing before the change (`stop()` answered
+  `unknownHandle`), passing after.
+- No ABI change and no change to the Rust library: the fix is entirely in the
+  Dart isolate plumbing.
+
 ## 0.2.1
 
 - **An endpoint bound to an IPv6 address now asks for dual stack explicitly**,

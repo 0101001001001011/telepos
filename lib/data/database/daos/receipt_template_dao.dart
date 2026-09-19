@@ -63,11 +63,12 @@ class ReceiptTemplateDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
-  Future<void> seedDefaults({
-    String? header,
-    String? footer,
-    int? paperWidthMm,
-  }) async {
+  /// Засевает шаблон по умолчанию, если его ещё нет.
+  ///
+  /// Ширины ленты здесь нет и быть не должно: она — свойство принтера и живёт
+  /// в его привязке (`ReceiptPaperWidthSource`). Шаблон, помнивший ширину со
+  /// дня мастера, и был причиной «узкого чека при выбранном широком».
+  Future<void> seedDefaults({String? header, String? footer}) async {
     final existing =
         await (select(receiptTemplates)
               ..where((t) => t.isDefault.equals(true))
@@ -77,21 +78,17 @@ class ReceiptTemplateDao extends DatabaseAccessor<AppDatabase>
 
     final hasOverride =
         (header != null && header.trim().isNotEmpty) ||
-        (footer != null && footer.trim().isNotEmpty) ||
-        paperWidthMm != null;
+        (footer != null && footer.trim().isNotEmpty);
 
     if (hasOverride) {
       const base = ReceiptOptions();
       final opts = base.copyWith(
-        headerText: (header != null && header.trim().isNotEmpty)
-            ? header.trim()
-            : base.headerText,
-        footerText: (footer != null && footer.trim().isNotEmpty)
-            ? footer.trim()
-            : base.footerText,
-        paperWidth: paperWidthMm != null
-            ? ReceiptPaperWidth.fromMm(paperWidthMm)
-            : base.paperWidth,
+        header: (header != null && header.trim().isNotEmpty)
+            ? base.header.copyWith(text: header.trim())
+            : base.header,
+        footer: (footer != null && footer.trim().isNotEmpty)
+            ? base.footer.copyWith(text: footer.trim())
+            : base.footer,
       );
       await into(receiptTemplates).insert(
         ReceiptTemplatesCompanion.insert(

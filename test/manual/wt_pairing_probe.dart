@@ -82,6 +82,7 @@ import 'package:talker/talker.dart';
 
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/backend/api_server.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/login_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
 import 'package:telepos/backend/security_journal.dart';
@@ -215,6 +216,7 @@ Future<void> _run(WidgetTester tester) async {
       publicHost: '$name.local',
       frontendDirectory: 'build/web',
       invites: invites,
+      certificateThrottle: CertificateThrottle(),
       rootCertificatePem: root,
     );
 

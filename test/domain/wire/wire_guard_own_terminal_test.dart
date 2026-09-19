@@ -18,6 +18,7 @@ import 'package:telepos/domain/auth/auth_session.dart';
 import 'package:telepos/domain/auth/session_lookup.dart';
 import 'package:telepos/domain/wire/wire_access.dart';
 import 'package:telepos/domain/wire/wire_guard.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 class _Sessions implements SessionLookup {
   _Sessions(this._byToken);
@@ -34,7 +35,7 @@ AuthSession _session({required int terminalId}) => AuthSession(
   permissions: const {PermissionKeys.settingsHardware},
   operatingMode: 0,
   pointMode: 'cashier',
-  shiftOpen: false,
+  shift: ShiftStatus.closed,
   issuedAt: DateTime.utc(2026, 8, 21, 10),
   expiresAt: DateTime.utc(2026, 8, 21, 10, 30),
   terminalId: terminalId,

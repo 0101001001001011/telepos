@@ -4,10 +4,12 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:telepos/backend/api_server.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
 import 'package:telepos/core/net/listen_scope.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/transport/host_addresses.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/setup/setup_draft.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
@@ -48,6 +50,7 @@ void main() {
     // нельзя (см. докстринг у поля `invites` в `ApiServer`). Этому набору
     // сам `PairingInvites` не важен, только область прослушивания.
     invites: PairingInvites(),
+    certificateThrottle: CertificateThrottle(),
   );
 
   setUp(() {
@@ -241,6 +244,12 @@ class _NoopTerminals implements TerminalRepository {
 
   @override
   Future<void> rename(int terminalId, String name) async {}
+
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) async {}
 
   @override
   Future<void> delete(int terminalId) async {}

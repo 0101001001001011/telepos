@@ -14,11 +14,19 @@ and the rule is there.
 statements that must always hold. They can be checked by code and by tests, and
 it is they, rather than the prose, that are the contract.
 
-**Searching for an invariant in the code.** Invariants are numbered `I1`–`I153`
+**Searching for an invariant in the code.** Invariants are numbered `I1`–`I163`
 here, but the source cites them with a Cyrillic prefix — `И68`, not `I68` — from
 the period when this document was written in Russian. The two characters look
 alike and are not the same. To find the code behind an invariant, search for the
 Cyrillic form: `git grep 'И68'`.
+
+**With one measured exception: `I156`–`I163` are cited in Latin.** They were
+written in September 2026, after the document had been translated, and the code
+that carries them uses `I156`, not `И156` — checked: `git grep 'И156' lib/`
+returns nothing, `git grep 'I156' lib/` returns six files. So the search rule
+above splits at 156, and a reader who does not know that finds silence rather
+than an error. Do not "fix" this by converting one set to the other: the
+Cyrillic citations number in the hundreds and mean the same thing.
 
 ---
 
@@ -1027,6 +1035,33 @@ contain no branches of the form "if there is no fiscalization, then somehow".
 - **I25.** A payment with an unknown outcome is stored explicitly and cannot be
   silently forgotten.
 
+- **I172.** The payment lines of a receipt sum to the receipt's amount — for
+  **every** kind of payment, including the kinds that bring no live money: a
+  certificate redeemed, an advance offset, a sale on credit. A kind that moves
+  an obligation instead of cash is still a row in `Payments`, with its account
+  and its supporting document in `reference`, and never a fourth place where a
+  balance lives.
+  *Why it is an invariant and not a preference:* the alternative is a column on
+  the document, and the tree already has one — `ServiceOrders.prepaymentAmount`,
+  which has never reached `Payments` and is named here as unreconciled rather
+  than implied. Once an amount lives outside `Payments`, the shift totals, the
+  operator's envelope (I168) and the refund allocation each read a different
+  truth about the same receipt, and nothing compares them.
+  *Probe:* four, each asserting the sum **separately from the fields** rather
+  than instead of them: `test/data/sale/prepayment_offset_test.dart`,
+  `test/data/sale/qr_with_prepayment_test.dart`,
+  `test/data/sale/certificate_with_neighbours_test.dart` and
+  `test/data/sale/qr_tender_test.dart`.
+  *Note on the number:* I172 was reserved by the sale-completeness plan before
+  it was written, and the probes have cited it since 2026-09-08. Only the
+  declaration here was missing — which is how a rule kept by four probes can
+  still be absent from the document that is supposed to govern it.
+
+Money that leaves the till also has to survive the wire, and that is a separate
+rule with a separate probe: **I159** (a decimal string, never `double`), in
+section 7a. **I157** is I21 restated for two workstations, and **I160** is I22–I23
+restated for a cart command.
+
 ---
 
 ## 7a. Operations between tills and terminals
@@ -1069,6 +1104,189 @@ The rule is simple: if an operation can be continued from elsewhere, it belongs
 to the till; if not, to the terminal. An unfinished sale is bound to a terminal
 because the customer is standing at that one.
 
+### Selling from a browser terminal
+
+Until September 2026 the table above described an intention, not the code. The
+model said the opposite: `Sales` had no terminal column at all, and
+`saleDao.findInProgress()` took `state = 0` with no owner — correct only while a
+till has exactly one workstation. The browser terminal made that false, and the
+work of 2026-09-06…07 (schema v36 → v38, 216 commits) put the model under the
+rule. Its eight invariants are below.
+
+They are stated together, in one place, because they are one mechanism: an
+owned cart, commands that survive a repeat, and a till that decides. Splitting
+them across sections 7, 9 and 11 would have hidden that.
+
+**These eight carry the name of their checking probe.** That is an exception to
+the rule in section 22b ("the register is kept alongside the code, not in this
+document"), and it is deliberate: the eight were written down while the work was
+in flight, and an invariant whose probe nobody can name is prose. Where no probe
+exists, that is said here too, by name — the gap must be as visible as the rule.
+
+- **I156.** A sale in progress belongs to a workstation: with `state = 0` the
+  owner is filled, with `state = 3` (deferred) it is empty, and a deferred sale
+  is reachable by any workstation of its own till.
+  *Probe:* `test/data/sale/deferred_pool_test.dart` — "откладывание освобождает
+  владельца, подъём занимает — в базе" (asserts all three clauses against the
+  row, not against a returned snapshot). The static half —
+  `test/architecture/sale_state_owner_guard_test.dart` — forces every write of
+  `state` to mention `terminalId`, but does not judge the value.
+- **I157.** The till issues receipt numbers sequentially; two simultaneous
+  starts get different numbers.
+  *Probe:* `test/data/sale/receipt_numbers_test.dart` — "два одновременных
+  начала чека получают разные номера" (five concurrent `withNext` on one
+  database; a number issued twice is exactly the failure).
+- **I158.** The till opens a shift by an explicit action; a sale with no open
+  shift gives a named refusal.
+  *Probe:* `test/data/usecases/sale/shift_required_test.dart` — "без открытой
+  смены чек не начинается и смена не заводится сама" (named refusal, no
+  half-created sale, and no shift silently opened).
+  **Gap named:** the "explicit action" half is covered only negatively. Opening
+  a shift is not a wire operation at all, so no probe asserts that a browser
+  terminal can open one — see section 22a, and the debt entry on the age rule
+  below.
+- **I159.** Money crosses the wire as a decimal string, never `double`.
+  *Probe:* `test/architecture/money_over_wire_test.dart` — "денежные поля
+  пересекают провод только через `wireMoney(...)`", with its own
+  anti-degeneracy companion "сторож видит денежные поля вообще — иначе он ничего
+  не проверяет". Runtime confirmation both ways:
+  `test/web/wt_cart_service_test.dart` — "цена, которую `double` передал бы
+  неверно, доезжает точной"; `test/backend/pay_operations_test.dart` — "число
+  вместо строки — названный отказ".
+- **I160.** A mutating cart command is idempotent by key: a repeat does not
+  apply it twice.
+  *Probe:* `test/data/sale/local_cart_service_test.dart` — "повтор команды с тем
+  же ключом не удваивает строку" (checks the stored rows, so a lying snapshot
+  would not save it). Through a real till from the browser:
+  `test/web/wt_cart_service_test.dart` — "повтор тем же ключом второй строки не
+  кладёт".
+- **I161.** One command in flight per cart; a reply from a stale version is
+  rejected with a named refusal.
+  *Probes, two — no single one covers both halves.* One in flight:
+  `test/web/wt_cart_service_test.dart` — "вторая команда не уходит, пока не
+  ответила первая" (`wire.peakOpen == 1` proves no two streams ever lived at
+  once). Stale version: `test/data/sale/local_cart_service_test.dart` —
+  "команда от устаревшей версии отвергается названным отказом".
+- **I162.** The till checks the permission of a cart operation before calling
+  the handler; a hidden button is not a permission.
+  *Probe:* `test/backend/sale_permissions_test.dart` — "отказал сторож, а не
+  корзина: чек не тронут вовсе" (a real frame through the real guard and real
+  handlers; the cart is unchanged afterwards, which is what "before the handler"
+  means). Declaration-level companion:
+  `test/domain/wire/sale_ops_access_test.dart` — "раскладка прав закрыта
+  поимённо — все двадцать".
+- **I163.** Only what changes the truth about money or touches hardware travels
+  the wire.
+  ***No checking probe.*** This is the one invariant of the eight that is prose.
+  It lives as a docstring in `lib/domain/wire/pay_ops.dart` and
+  `lib/backend/till_operations.dart`, and nothing goes red when it is broken.
+  The nearest existing checks lock the **count and kind** of the catalogue
+  (`test/domain/wire/sale_ops_access_test.dart` — "операций ровно двадцать, и
+  все они `sale.*`"; "корзина и отложенные — подписки, остальные восемнадцать —
+  вопросы"), so adding a screen-state operation and bumping the expected length
+  passes. What is missing is a judgement about the *criterion*, and it cannot be
+  made mechanically from the source: "changes the truth about money" is a fact
+  about the operation's meaning. Until someone finds a cheaper form, this is a
+  kind-5 check (review), and it is recorded as such rather than pretended to be
+  automatic.
+- **I164.** A discount is given only by someone entitled to it, and the till
+  decides that — not the screen — identically for the wire and for the desktop.
+  *Why it is an invariant and not a preference:* until task 12 of the
+  sale-completeness plan the two fronts were not equal. The wire guard checked
+  `op.sellDiscount` before the handler (I162); the desktop screen called the
+  cart contract directly and its only protection was a hidden button
+  (`sale_screen.dart` — `if (!policy.sellInDiscount) showBlocked()`). A hidden
+  button is not a right (I44). The fix is a **type, not a guard**:
+  `DiscountAuthority` is a required argument of `setDiscountPercent`,
+  `setDiscountAmount` and the lowering branch of `updatePrice`, so a caller
+  that forgets it does not compile. A service lookup inside the implementation
+  would have been bypassed by a new call path — and a new call path is exactly
+  what the browser implementation was.
+  The wire builds the authority from the **session**, never from the frame
+  body, by the same rule that governs `terminalId`.
+  *Probe:* `test/data/sale/discount_authority_test.dart` (till front) and the
+  group "предел скидки действует и по проводу" in
+  `test/backend/sale_permissions_test.dart` (wire front, through the real
+  `WireGuard`, including a frame that names its own role and permissions and is
+  ignored). Build-level check: removing the argument at any call site is a
+  compile error — measured on 39 sites in nine files.
+- **I165.** A manual discount is bounded by a declared limit. "No limit" does
+  not exist; what exists is the declared value `100 %` and a `NULL` approval
+  threshold, written by the migration.
+  *Why it is an invariant and not a preference:* a limit that is the absence of
+  a row cannot be shown on a screen and cannot be changed by the owner, so it
+  is indistinguishable from a missing feature — which is how three columns in
+  `ThisPosEntries` (`usersAllowedToRefund` and two siblings) came to be
+  migrated and forgotten. It also fixes the direction of the failure: a table
+  arriving with a strict default would stop every discount on every till on
+  upgrade day, making the migration itself the refusal.
+  The arithmetic ceiling ("a discount is never larger than the line") stays
+  **last** and is not replaced: it is about arithmetic, not about a right.
+  Measured: without that ordering, "a 900 discount on a 500 line" reads as
+  180 % and the hundred-percent default refuses it — where yesterday it was
+  simply trimmed to the line.
+  *Probe:* `test/data/database/migration_v39_limits_test.dart` — behaviour is
+  unchanged after the upgrade, and a fresh install gets the same row (measured:
+  `onCreate` runs no migrations, so the first draft seeded only upgraded
+  databases). Screen: `test/presentation/screens/settings/discount_limits_screen_test.dart`
+  proves the owner's click reaches the same reader the till asks.
+- **I168.** Everything that reduces what the buyer pays enters the operator's
+  envelope **once**, as a summand of the position's single `Discount` field —
+  never as a second field, a second receipt-level total, or a payment line.
+  The envelope balances before it is sent: for every receipt,
+  `Σ (round₂(Count) × round₂(Price) − Discount + Markup) == Σ Payments`, with
+  zero tolerance.
+  *Why it is an invariant and not a preference:* the position carries exactly
+  one discount field (`WebKassaProvider._positionToJson`), and VAT is computed
+  from the line **after** discount. Counting a reduction twice lowers the tax
+  base by `rate/(100+rate) × amount` — 10.71 % of it at the Kazakh 12 % — and
+  the operator rejects the mismatch with code 9, which on a real till reads as
+  "money taken, no document" on every such sale. Declaring a loyalty bonus a
+  *payment* instead fails the other way: it tells the operator the buyer paid
+  full price and overstates the base. There is no member of
+  `FiscalPaymentKind` for it, and `_paymentType` is an exhaustive `switch`
+  without `default`, so adding one breaks the build on purpose. A regulator
+  that treats a bonus differently is a **setting**
+  (`PaymentKind.fiscalTreatment`), not a second number.
+  *Probe:* `test/data/fiscal/fiscal_envelope_balance_test.dart` — a real cart,
+  a real `LocalPaymentService.complete` with a bonus, positions built by
+  `FiscalServiceImpl._buildSalePositions`, the envelope assembled by the real
+  `WebKassaProvider.buildCheckPayload` and settled by the **same**
+  `recountCheck` the WebKassa emulator uses. Each case asserts three things,
+  not one: the sums agree, `Price` is still the pre-discount price, and the
+  bonus is absent from `Payments`. The balance alone is not enough — both
+  wrong shapes were measured to balance. Live companion:
+  `test/emulators/webkassa/live_till_test.dart` — "касса фискализует продажу
+  С БОНУСОМ". Guard: `FiscalServiceImpl._imbalance`, which refuses before the
+  envelope is sent and names the difference as a number.
+
+### Two boundaries this work created, named where they are visible
+
+Both were measured while the work was in flight and recorded in the plan
+(`8141ac6`, `88cf0f5`). They belong here because they are properties of the
+system, not of one plan.
+
+**Permissions close on the wire; the till keeps a second front.** The `op.*`
+keys stopped being placebo **on the wire** — the guard reads them in one place
+before the handler (I162). On the desktop till there is no wire, so there is no
+guard: `sale_controller.dart` takes `CartService` from `GetIt` and calls the
+commands directly, and the word `hasPermission` does not appear in that file
+once. An owner who takes "sell at a discount" away from a cashier gets a
+refusal in the browser and **nothing on the till itself** — which is where most
+trade happens today. Named, not fixed; a separate piece of work.
+
+**The "shift no older than a day" rule moved to the till, but degrades
+silently.** Before this work `isShiftOverAge` lived only in the client service
+(`lib/domain/services/shift_service.dart`), and no wire handler called it — in
+the browser the service is not bound and the caveat "could not ask, so do not
+get in the way" is permanent. Task 14 moved the check onto the till, into
+`LocalPaymentService._requireShiftNotOverAge()`, so payment now refuses. What
+remains is that the port is optional: registered as
+`shifts: getIt.isRegistered<ShiftService>() ? … : null`, and a till without it
+takes money in a shift of any age, saying so honestly in the docstring and
+nowhere else. `lib/backend/till_operations.dart` still contains zero references
+to the rule.
+
 ### Invariants
 
 - **I105.** A refund is a separate document referring to the original; the
@@ -1077,6 +1295,29 @@ because the customer is standing at that one.
   with a separate permission.
 - **I107.** An operation continuable from another terminal belongs to the till,
   not to the terminal.
+- **I173.** A refund line tells the operator the **route the money actually
+  took**, and a route that cannot be named refuses the refund **before the money
+  moves**. A difference is never made up in cash.
+  *Why it is an invariant and not a preference:* measured 2026-09-19.
+  `RefundUseCaseImpl._refundFiscalBuckets` dropped a line whose kind it could
+  not resolve and added the remainder to the cash bucket, so a pre-v41 receipt
+  with a bonus line returned money to the bonus account while the operator was
+  told "paid out in cash" — the drawer and the fiscal document diverged by
+  exactly the bonus, and the cashier saw nothing at all. Two different causes
+  need two different answers, and collapsing them into one is what produced the
+  defect: a kind that **is** recorded but is unknown to this till's catalogue (a
+  receipt from another till) is a refusal, `refund_kind_unknown`, raised in
+  `_checkBeforeMoneyLeaves`; a line written before v41, which carries no kind at
+  all, is refunded exactly as before, and the envelope names the route by where
+  the money actually went — out of the drawer is cash, onto a bonus account is
+  bonus. A shortfall is reported in the journal, not silently rounded into the
+  cash line.
+  *Probe:* `test/data/refund/refund_kind_unknown_test.dart` — three cases, two
+  diversions, and the refusal case asserts that the drawer is untouched, no
+  reversal rows exist and the operator was never asked. Neighbours:
+  `test/data/refund/refund_by_payment_kind_test.dart` (the route of the money
+  itself) and `test/data/fiscal/fiscal_envelope_balance_test.dart` (what the
+  operator does with the envelope).
 
 ---
 
@@ -1219,6 +1460,43 @@ lost. That is a normal state, not an exceptional one.
   missing a declared parameter is rejected.
 - **I142.** A parameter that does not affect the conversation with a device is
   not stored among its settings.
+- **I167.** A built-in emulator is reached **by address**, never by
+  substitution. It opens a real server socket (or a real port file) and the
+  till talks to it through the very driver it uses for real hardware; nothing
+  in the dependency graph changes when the operator switches it on. Take the
+  socket away and the till says honestly that the device does not answer.
+  *Why it is an invariant and not a preference:* the tree already has the other
+  kind of emulator, and it is dangerous for exactly this reason — a substituted
+  driver class makes "printing worked" mean nothing, and on a green suite it
+  looks identical to the real thing. Keeping those classes out of a shop build
+  is the whole job of the compile-time flag `kEmulatorsEnabled`, and the
+  built-in emulator must not become a back door into it: `if (kEmulatorsEnabled)`
+  stays a constant branch and is never folded into the operator's switch. The
+  rule is also what makes the emulator worth having — a real socket exercises
+  address parsing, connection, ESC/POS frames, `DLE EOT` polling, the print
+  queue and reply parsing, none of which a substituted class exercises at all.
+  *Probe:* `test/emulators/builtin_emulator_guards_test.dart`, group
+  «Встроенный эмулятор не подменяет драйвер»: the emulator's address yields the
+  same class as a real printer's; the host never touches the container; the
+  QR payment path does not know an emulator is behind the address; and a source
+  guard keeps the operator's choice out of the build flag.
+- **I169.** The fiscal-operator emulator is forbidden on a live till, and the
+  refusal is decided **by data, not by intent**: settings that cannot be read,
+  or credentials that are filled in with test mode off, read as "live".
+  Every door leads through the same check — the screen only shows the reason
+  earlier, and the recovery path after a restart hits the same refusal.
+  *Why it is an invariant and not a preference:* the consequence differs in
+  **kind** from any hardware emulator. A fake printer sends a receipt to a
+  window instead of paper, and that is visible the same second. A till
+  "fiscalising" into a fake looks like it is working and hands the buyer a slip
+  with no document behind it; the discovery comes weeks later, at the tax
+  authority. Decision of the customer, 2026-09-19.
+  *Probe:* same file, group «Эмулятор ОФД: запрет на боевой кассе» — live
+  credentials refuse with a named reason **and the port is proven silent**
+  (a refusal alone is compatible with a socket opened and abandoned);
+  half-filled credentials still count as live; absent settings refuse by the
+  same answer; a test-mode till with empty credentials starts. Diversion
+  measured: removing the `refusalFor` call from `start` reddens the first case.
 
 ---
 
@@ -1518,6 +1796,13 @@ provided for, or it will be solved by a workaround. Emergency access:
 - **I48.** The absence of a permissions server does not stop selling.
 - **I49.** Supervisor confirmation is limited by operation and time and is
   journalled separately.
+
+**I44 has a narrower, checkable form for cart operations — I162, in section 7a.**
+Read the two together: I44 says "on the server", I162 says "before the handler
+runs", and the difference is measurable — a handler that reaches the database and
+then changes its mind satisfies the first and fails the second. Section 7a also
+records the boundary the same work created: on the desktop till there is no wire,
+therefore no guard, therefore no `op.*` check at all.
 
 ---
 
@@ -2115,6 +2400,37 @@ support interface, and it must work before we need to telephone the client.
 - **I80.** Clock drift is detected; a jump backwards is a security event.
 - **I81.** A diagnostic snapshot is gathered by one operation and contains no
   secrets.
+- **I170.** A diagnostic screen shows **what the till computed**; it never
+  re-derives a fact about the till from raw material. Anything that needs the
+  machine's environment — its addresses, its bindings, its filesystem — is
+  decided on the till and crosses the wire as a ready value. Silence from the
+  till reads as "unknown", never as "yes".
+  *Why it is an invariant and not a preference:* the diagnostic tabs are one
+  code path on two surfaces, the till and the browser terminal. When the tab
+  computed "there is an emulator behind the operator's address" itself, the
+  `dart:io` that address parsing needs went with it, and the web build stopped
+  compiling — three browser-table guards reddened at once (merge 2026-09-19,
+  `1e46b1d4`). The build is the lesser half of the reason. The greater half is
+  that a **second parse is a second answer, and the two diverge silently**:
+  measured while writing the probe, the tree held **two** private copies of
+  "this is loopback" — `DiagnosticsScreen._isLoopback` and
+  `EmulatorSettingsScreen._looksLocal` — beside `isLoopbackHost`, the function
+  that exists precisely so this question has one answer and says so in its first
+  paragraph. Both copies already disagreed with it on `[::1]` in brackets (how
+  an IPv6 address arrives inside a URL) and on an address with surrounding
+  spaces. Nothing shows that divergence: a banner that fails to light looks
+  exactly like a healthy till. The same rule is why the till sends the
+  **rendered text** of a receipt rather than its bytes.
+  *Probe:* `test/architecture/diagnostics_ready_value_test.dart` — the question
+  "is this loopback" is asked in one place (a net on the *decision*,
+  `.isLoopback` and a comparison to `'localhost'`, not on the word, because the
+  literal also lives in the tree as a value); no tab shared by the two surfaces
+  imports `dart:io`, the list of shared tabs being computed from the browser
+  screen's imports rather than typed; the `onLoopback` flag survives both ends
+  of the wire codec; and a frame without the key reads `false`. Transitive web
+  safety is deliberately **not** re-checked here — `browser_routes_test.dart`
+  already walks the whole closure, and a second walk would be a copy, not a
+  second check.
 
 ---
 
@@ -2419,6 +2735,46 @@ this mode is first-class.
   detection.
 - **I128.** A failure to detect the country shows no error and does not delay
   the wizard.
+- **I171.** Under selective fiscalisation it is the **composition of the
+  receipt** that decides whether it goes to the operator, never a single line.
+  A receipt that carries a cashless line and no cash line is cashless; only cash
+  has a veto. A line whose kind cannot be determined is never counted as cash.
+  *Why it is an invariant and not a preference:* `ofdSyncType = 2` asked
+  `kind.fiscalTreatment != card`, which was true by construction while card was
+  the only cashless kind. QR/SBP was the second, and the question had no way of
+  knowing. Measured 2026-09-19: receipts paid "card + certificate", "card +
+  bonus" and "card + credit" left for nobody — outcome `notRequired`, no
+  refusal, and an ordinary successful sale in front of the cashier. The answer
+  therefore moved onto the enumeration itself (`FiscalTreatment.isCashless`,
+  `FiscalTreatment.receiptIsCashless`) instead of being restated at each caller:
+  a list repeated at the point of asking goes stale at the first forgotten
+  repetition, and the cost of that is discovered at the tax authority rather
+  than in the suite.
+  *Probe:* `test/data/fiscal/ofd_policy_cashless_kinds_test.dart` — six
+  compositions plus a table walking **every** member of the enumeration, so a
+  new member reddens on the day it is added; and
+  `test/data/fiscal/fiscal_envelope_balance_test.dart` («карта 180 +
+  сертификат 120» balances).
+- **I174.** A fiscal document is keyed by the pair **kind + number**, never by
+  the number alone.
+  *Why it is an invariant and not a preference:* the numbers come from three
+  different sequences — `Sales.receiptNo` for a sale, `Refunds.localId` for a
+  refund, `CashOperations.id` for an advance — and on a new till they coincide
+  by construction: the first of each is 1. Measured 2026-09-19:
+  `webkassa_receipts` had `operation_id` as its whole primary key, the pair
+  "sale №5 and refund №5" fails `UNIQUE constraint failed` **today**, and
+  `FiscalServiceImpl._persistReceipt` swallows the failure into a log line — the
+  document exists at the operator and no local record of it remains. `isSale`
+  cannot serve as the other half of the key: a sale and an advance intake are
+  both `true`. The kind's index lives on disk, so new members are added only at
+  the end, and an unknown index is read as a sale rather than thrown away.
+  *Probe:* `test/data/database/migration_v50_fiscal_doc_kind_test.dart` — the
+  v49 fixture is first shown to **refuse** the second document, so the case is
+  real and not staged; the migration derives the kind of existing rows from
+  `is_sale` (a complete case analysis, not a guess, because only two kinds were
+  ever written before v50); four kinds with one number coexist afterwards; and a
+  fresh database gets the pair as well. Live path:
+  `test/data/fiscal/prepayment_fiscal_receipt_test.dart`.
 
 ---
 
@@ -2970,9 +3326,9 @@ observability do not work.
 | 5a | Backup and restore | I97–I101 |
 | 5b | Limits of offline operation | I102–I104 |
 | 6 | Validation at four levels | I17–I19 |
-| 7 | Money | I20–I25 |
-| 7a | Operations between tills | I105–I107 |
-| 8 | Devices | I26–I31, I141–I142 |
+| 7 | Money | I20–I25, I172 |
+| 7a | Operations between tills | I105–I107, I156–I165, I168, I173 |
+| 8 | Devices | I26–I31, I141–I142, I167, I169 |
 | 9 | Point-of-sale modes | I32–I35, I139 |
 | 9a | Reporting and accounting | I108–I110 |
 | 10 | Video and events | I41–I43 |
@@ -2982,11 +3338,11 @@ observability do not work.
 | 14 | Remote access | I61–I65 |
 | 15 | Journalling | I66–I70 |
 | 16 | Information security | I71–I77 |
-| 17 | Observability and diagnostics | I78–I81 |
+| 17 | Observability and diagnostics | I78–I81, I170 |
 | 18 | Updates and compatibility | I82–I86 |
 | 18a | Capacity and latency | I111–I113 |
 | 19 | The interface as the means of control | I87–I89 |
-| 20 | Regulation | I90–I92, I124–I128 |
+| 20 | Regulation | I90–I92, I124–I128, I171, I174 |
 | 21 | Personal data | I93–I96 |
 | 21a | Accessibility and languages | I114–I117 |
 | 21b | End of life | I118–I122 |
@@ -2995,6 +3351,47 @@ observability do not work.
 | 22b | How invariants are checked | I123, I129–I133 |
 | 22c | Guarding against gaps | I134–I138 |
 
-That is 155 invariants in total (I1–I153 plus I11a and I55a). They are the
-contract: each names its kind of check (section 22b), and the refactor counts as
-done when the checks exist and pass.
+That is 175 invariants in total: I1–I165 and I167–I174 with no gaps, plus I11a
+and I55a. **I166 is the one number that is reserved and not written**; the
+reason is below. The count is stated because it was wrong for ten of them — the
+line said 155 (I1–I153) long after I154–I163 had been written, and a stale total
+is how a missing invariant hides. Recount it with
+`grep -ohE "^- \*\*I[0-9]+[a-z]?\.\*\*" docs/system-architecture.md | sort -u |
+wc -l` rather than by hand.
+
+**What happened to I166–I174, measured rather than remembered (2026-09-19).**
+The sale-completeness plan
+(`docs/internal/superpowers/plans/2026-09-07-sale-completeness.md`) reserved
+**nine** numbers, I164–I172, one per task, up front — so that parallel branches
+could not claim the same number. Three were written with their work (I164, I165
+by task 12; I168 by the envelope task). The other six were never written, and
+the reason is the same in every case: the number was handed out at planning
+time, the work landed, and the declaration was nobody's step. That is the same
+failure the revision of this plan names for its own checkboxes — a record
+updated later than the work is a record that lies in between.
+
+The six were then measured one at a time, not recovered from memory:
+
+* **I172 existed as a rule all along** — four probes have cited the number since
+  2026-09-08. Only the declaration was missing, and it is now written in
+  section 7 with its reserved meaning.
+* **I167, I169, I170, I171 are new declarations** for rules that the code and
+  the probes have held since 2026-09-19: emulators reached by address, the
+  operator emulator forbidden on a live till, a diagnostic screen shown ready
+  values, and the composition of a receipt deciding fiscalisation. Their
+  reserved meanings were never recorded anywhere, so nothing was overwritten.
+* **I173 and I174 are past the reserved block** — the six subjects needed six
+  free numbers, and only four were free once I166 and I172 were accounted for.
+  Continuing the numbering is cheaper than renumbering a cited invariant.
+* **I166 stays reserved, and deliberately so.** Its subject is the senior's
+  confirmation of an over-limit discount — one-time, bound to the line and to
+  the moment, produced by `RoleIdentificationService`. That mechanism is
+  **dead code**: the threshold is read and refuses with `approval_required`, but
+  nothing can satisfy it. Declaring the invariant now would give this document a
+  rule with no passing check, which is exactly the prose section 22b forbids.
+  The number is cited by three docstrings (`discount_tables.dart`,
+  `cart_service.dart`) as a forward reference, and it is kept free for the work
+  that builds the mechanism.
+
+They are the contract: each names its kind of check (section 22b), and the
+refactor counts as done when the checks exist and pass.

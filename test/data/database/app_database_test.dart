@@ -406,7 +406,7 @@ void main() {
           .into(db.webkassaReceipts)
           .insert(
             WebkassaReceiptsCompanion.insert(
-              operationId: const Value(1),
+              operationId: 1,
               receiptNo: const Value(1001),
               fiscalNo: const Value('WK-2024-001'),
               isSale: const Value(true),
@@ -425,7 +425,7 @@ void main() {
           .into(db.webkassaReceipts)
           .insert(
             WebkassaReceiptsCompanion.insert(
-              operationId: const Value(1),
+              operationId: 1,
               ticketUrl: const Value(ticketUrl),
               isSale: const Value(true),
             ),

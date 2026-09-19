@@ -9,7 +9,16 @@ abstract class SaleRepository {
 
   Future<int?> findLastReceiptNo();
 
-  Future<SaleEntity?> findInProgress();
+  /// Чек в работе **этого** рабочего места ([terminalId]) **на этой кассе**
+  /// ([posId]) — не кассы вообще и не сети вообще. Оба довода обязательны,
+  /// и почему именно оба — в докстринге `SaleDao.findInProgress`
+  /// (`lib/data/database/daos/sale_dao.dart`): без кассы выборка отбирает
+  /// по двум третям составного ключа владения и находит чек соседней
+  /// кассы, попавший в базу обменом.
+  Future<SaleEntity?> findInProgress({
+    required int posId,
+    required int terminalId,
+  });
 
   Future<List<SaleEntity>> findByState(int state);
 

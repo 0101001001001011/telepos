@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:telepos/domain/payment/payment_kind.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/sale/sale_initiation_use_case.dart';
 import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
@@ -31,6 +32,22 @@ void main() {
     )..where((a) => a.type.equals(1))).get();
     posAccId = pos.first.id;
     bankAccId = bank.first.id;
+
+    // Задача 5: `SaleInitiationUseCaseImpl.initiate()` больше не открывает
+    // смену сама, когда её нет, — она отвечает отказом `shift_not_open`.
+    // Этот журнал никогда не открывал смену сам и молча полагался на
+    // прежнее самооткрытие; теперь открываем её явно, как это делает касса
+    // перед продажей.
+    await h.db
+        .into(h.db.shifts)
+        .insert(
+          ShiftsCompanion.insert(
+            userId: 1,
+            openTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            isOpened: true,
+            isSynced: false,
+          ),
+        );
   });
   tearDownAll(() => h.tearDown());
 
@@ -41,7 +58,7 @@ void main() {
     required List<PaymentEntry> Function(Decimal total) payments,
     Decimal? change,
   }) async {
-    final sale = await initiation.initiate(userId: 1) as Sale?;
+    final sale = (await initiation.initiate(terminalId: 0)).sale;
     expect(sale, isNotNull, reason: 'initiate() must create a sale');
     final receiptNo = sale!.receiptNo;
     final posId = sale.posId;
@@ -62,6 +79,10 @@ void main() {
       receiptNo: receiptNo,
       posId: posId,
       amount: total,
+      // Строки чека этот журнал кладёт в базу сам, с уже готовыми ценами:
+      // переписывать `perform` нечего. Пустой список — не заглушка, а
+      // утверждение «формат уже верен» (задача 9).
+      lines: const [],
       payments: payments(total),
       change: change ?? Decimal.zero,
       selectiveOfd: false,
@@ -79,7 +100,7 @@ void main() {
       qty: d('2'),
       price: d('450'),
       payments: (total) => [
-        PaymentEntry(payeeAccountId: posAccId, amount: total),
+        PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: total),
       ],
     );
     final pays = await paymentsOf(r.receiptNo, r.posId);
@@ -94,7 +115,7 @@ void main() {
       qty: d('3'),
       price: d('150'),
       payments: (total) => [
-        PaymentEntry(payeeAccountId: bankAccId, amount: total),
+        PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: bankAccId, amount: total),
       ],
     );
     final pays = await paymentsOf(r.receiptNo, r.posId);
@@ -109,8 +130,8 @@ void main() {
       qty: d('1'),
       price: d('890'),
       payments: (total) => [
-        PaymentEntry(payeeAccountId: posAccId, amount: d('400')),
-        PaymentEntry(payeeAccountId: bankAccId, amount: total - d('400')),
+        PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: d('400')),
+        PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: bankAccId, amount: total - d('400')),
       ],
     );
     final pays = await paymentsOf(r.receiptNo, r.posId);
@@ -151,7 +172,7 @@ void main() {
         qty: d('1'),
         price: d('1000'),
         payments: (total) => [
-          PaymentEntry(payeeAccountId: posAccId, amount: total),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: total),
         ],
       );
       final pays = await paymentsOf(r.receiptNo, r.posId);

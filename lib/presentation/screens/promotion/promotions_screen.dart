@@ -120,8 +120,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen> {
                           ),
                           Text(
                             '${p.type == 0 ? "1+1" : l10n.promoTypeGift} · '
-                            '${l10n.promoBuyGetFree(p.triggerQty, p.rewardQty)}'
-                            '${p.supplierFunded ? " · ${l10n.promoSupplierTag}" : ""}',
+                            '${l10n.promoBuyGetFree(p.triggerQty, p.rewardQty)}',
                             style: TextStyle(
                               fontSize: 12,
                               color: Theme.of(
@@ -175,7 +174,6 @@ class _PromotionFormState extends ConsumerState<_PromotionForm> {
   int _type = 0;
   int? _triggerUcode;
   int? _rewardUcode;
-  bool _supplierFunded = false;
   bool _saving = false;
 
   @override
@@ -202,7 +200,6 @@ class _PromotionFormState extends ConsumerState<_PromotionForm> {
         triggerQty: Value(_type == 0 ? 2 : 1),
         rewardUcode: reward,
         rewardQty: const Value(1),
-        supplierFunded: Value(_supplierFunded),
       ),
     );
     widget.onSaved();
@@ -297,13 +294,16 @@ class _PromotionFormState extends ConsumerState<_PromotionForm> {
                 onChanged: (v) => setState(() => _rewardUcode = v),
               ),
             ],
-            const SizedBox(height: 4),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              value: _supplierFunded,
-              onChanged: (v) => setState(() => _supplierFunded = v ?? false),
-              title: Text(l10n.promoSupplierFunded),
-            ),
+            // Задача 19 плана «полнота продажи» (2026-09-07), шаг 4.
+            // Здесь стояла галочка «акцию оплачивает поставщик»
+            // (ключ перевода снят из пяти .arb вместе с ней). Она писалась в
+            // `Promotions.supplierFunded` и показывалась ярлыком в списке —
+            // и не читалась НИГДЕ: ни `_applyPromotions`, ни отчётами, ни
+            // выгрузкой. Владелец, поставивший её, решил бы, что расход
+            // ложится на поставщика; он не ложится никуда. Такой выбор не
+            // бездействует, он врёт, — поэтому снят, а не отключён.
+            // Сторож: `test/architecture/
+            // promotion_form_offers_only_live_fields_test.dart`.
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,

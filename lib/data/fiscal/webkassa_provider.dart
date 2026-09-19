@@ -137,6 +137,27 @@ class WebKassaProvider implements FiscalProvider {
     final invalid = validateConfig(settings);
     if (invalid != null) return FiscalResult.notConfigured();
 
+    // A5: виды оплаты, исключённые протоколом ОФД 2.0.2, — отказ **до**
+    // авторизации и отправки, названным кодом. Раньше они уходили молча
+    // типами 2 и 3 (эмулятор такой документ принимал — измерено), и что с
+    // ними делает настоящий `/api/v4/check`, не известно: вопрос к поддержке
+    // WebKassa в отчёте дорожки D.
+    final removed = {
+      for (final p in req.payments)
+        if (_removedByProtocol(p.kind)) p.kind.name,
+    };
+    if (removed.isNotEmpty) {
+      _logger.error(
+        'WebKassa: документ ${req.idempotencyKey} несёт виды оплаты '
+        '${removed.join(', ')}, исключённые протоколом ОФД 2.0.2 — оператору '
+        'не отправлен',
+      );
+      return FiscalResult.failure(
+        'Виды оплаты ${removed.join(', ')} исключены протоколом ОФД 2.0.2',
+        code: FiscalErrorCode.paymentTypeNotAccepted,
+      );
+    }
+
     return _withReauthRetry(() async {
       final body = buildCheckPayload(
         req,
@@ -236,21 +257,112 @@ class WebKassaProvider implements FiscalProvider {
         .toList();
   }
 
+  /// Исключены протоколом ОФД 2.0.2: `PaymentType` 2 «кредит» и 3 «тара».
+  /// `switch` исчерпывающий: новый вид оплаты не соберётся без ответа.
+  static bool _removedByProtocol(FiscalPaymentKind kind) => switch (kind) {
+    FiscalPaymentKind.cash => false,
+    FiscalPaymentKind.card => false,
+    FiscalPaymentKind.mobile => false,
+    FiscalPaymentKind.credit => true,
+    FiscalPaymentKind.tare => true,
+  };
+
   int _paymentType(FiscalPaymentKind kind) {
     switch (kind) {
       case FiscalPaymentKind.cash:
         return 0;
       case FiscalPaymentKind.card:
         return 1;
-      case FiscalPaymentKind.credit:
-        return 2;
-      case FiscalPaymentKind.tare:
-        return 3;
       case FiscalPaymentKind.mobile:
         return 4;
+      case FiscalPaymentKind.credit:
+      case FiscalPaymentKind.tare:
+        // Типы 2 и 3 больше не выдаются: `_sendCheck` отказывает раньше.
+        // Сюда можно попасть только прямым вызовом `buildCheckPayload` —
+        // и тогда бросок честнее конверта, который оператор не примет.
+        throw ArgumentError.value(
+          kind,
+          'kind',
+          'исключён протоколом ОФД 2.0.2 (PaymentType 2/3)',
+        );
     }
   }
 
+  /// **Код 14 — «документ с этим `ExternalCheckNumber` уже зарегистрирован» —
+  /// это отказ, а не успех.**
+  ///
+  /// Ветки `if (resp.errorCode == 14) return FiscalResult.ok(fiscalSign: '')`
+  /// больше нет — ни здесь, ни в [_moneyOp]. Разбор кода 14 теперь один:
+  /// `_failure` → `_mapError(14)` → [FiscalErrorCode.duplicate],
+  /// нетранзиентный.
+  ///
+  /// # Что ломала прежняя ветка
+  ///
+  /// Жизненный случай (найден живой приёмкой 2026-09-17): первая отправка
+  /// **дошла** до оператора и зарегистрировалась, а ответ потерялся в сети.
+  /// Касса повторяет тем же ключом — это правильно, ключ на то и заведён, —
+  /// получает код 14 и раньше принимала его за успех. Дальше:
+  ///
+  /// * чек печатался **с пустым фискальным признаком**: покупатель уносил
+  ///   бумажку, по которой документ у оператора не найти;
+  /// * следа не оставалось вовсе: `FiscalServiceImpl._persistReceipt`
+  ///   (`fiscal_service_impl.dart:718`) выходит по `!result.hasFiscalSign`,
+  ///   и строки в `WebkassaReceipts` не появлялось;
+  /// * кассир видел «фискализовано».
+  ///
+  /// То есть худший из возможных исходов: ложь, не оставляющая следа.
+  ///
+  /// # Почему признак не дозапрашивается
+  ///
+  /// Потому что **протокол его не отдаёт**, а не потому, что лень. Касса
+  /// знает у WebKassa девять путей (`WebKassaApiClient`): `Authorize`,
+  /// `check`, `MoneyOperation`, `ZReport`, `XReport`, `Cashboxes`, `Esf`,
+  /// `Snt`, `MarkCheck`. Ни один не принимает `ExternalCheckNumber` и не
+  /// возвращает по нему зарегистрированный документ; отчёты Z и X дают
+  /// сводку смены, а не признак документа. Тело самого кода 14 несёт
+  /// **ключ**, а не `CheckNumber`: `{"Errors":[{"Code":14,"Text":"Документ с
+  /// ExternalCheckNumber «…» уже зарегистрирован"}]}` — признака в нём нет.
+  ///
+  /// Завести здесь путь вида `/api/v4/GetCheckByExternalNumber` значило бы
+  /// выдумать ответ оператора: эмулятор отвечал бы на него бодро, проба
+  /// зеленела бы, а настоящая WebKassa ответила бы 404 — и починка
+  /// обнаружилась бы ложной на кассе, у покупателя. Правило заказчика
+  /// (2026-09-15) «главное, чтобы работал протокол ОФД» разрешает решать на
+  /// уровне протокола, но не разрешает дописывать протоколу методы.
+  ///
+  /// # Что вместо этого получает касса
+  ///
+  /// Названную беду вместо тихой лжи, по ярусам:
+  ///
+  /// * **первая линия** (`LocalPaymentService._fiscalize`): отказ
+  ///   нетранзиентный, `OfflineQueueingProvider._guard` его не прячет в
+  ///   очередь, и продажа уходит в `_unfiscalized` → `SaleFiscalization`
+  ///   `failed` с причиной `fiscal(duplicate#14)`. Чек помечен
+  ///   непрофискализованным, строка видна на экране нефискализованных чеков,
+  ///   кассир читает фразу словаря `fiscalReasonDuplicate` — она и называет,
+  ///   что документ у оператора есть, а признак кассе не выдан и берётся в
+  ///   кабинете оператора;
+  /// * **очередь** (`OfflineQueueingProvider.replay` / `retryFailed`): ветка
+  ///   `errorCode == duplicate` там была с самого начала и до правки
+  ///   2026-09-18 была **недостижима** для продаж и денежных операций —
+  ///   `_checkResult` успевал сказать `success` раньше. Заработав, она
+  ///   первым делом **убирала** строку («дедуп»), и это была вторая
+  ///   половина той же лжи, снятая 2026-09-19: у оператора документ есть,
+  ///   у кассы признака нет, а строки, которой больше нет в очереди, не
+  ///   видит ни один экран. Теперь строка переводится в `failed` с той же
+  ///   причиной `fiscal(duplicate#14)` и ждёт человека — разбор в
+  ///   докстринге `FiscalReplayReport.duplicates`.
+  ///
+  /// Признака исходного документа касса не узнаёт ни на одном из ярусов — и
+  /// именно это она теперь и говорит, вместо того чтобы печатать пустоту.
+  ///
+  /// # Чего это НЕ доказывает
+  ///
+  /// Что у оператора и правда лежит **тот самый** документ. Код 14 говорит
+  /// ровно одно: ключ занят. Занять его мог и чужой документ — ровно это
+  /// случается после уборки продаж со старым форматом ключа (разбор —
+  /// `FiscalIdempotency`). Различить эти два случая касса не может ничем, и
+  /// потому оба идут к человеку, а не в счётчик успехов.
   FiscalResult _checkResult(WebKassaResponse resp) {
     if (resp.success) {
       final d = resp.data ?? const {};
@@ -263,9 +375,6 @@ class WebKassaProvider implements FiscalProvider {
         fiscalizedAt: _parseDate(d['DateTime'] ?? d['DateTimeUTC']),
         offlineMode: d['OfflineMode'] as bool? ?? false,
       );
-    }
-    if (resp.errorCode == 14) {
-      return FiscalResult.ok(fiscalSign: '', offlineMode: false);
     }
     return _failure(resp);
   }
@@ -307,7 +416,9 @@ class WebKassaProvider implements FiscalProvider {
           offlineMode: d['OfflineMode'] as bool? ?? false,
         );
       }
-      if (resp.errorCode == 14) return FiscalResult.ok(fiscalSign: '');
+      // Код 14 разбирается наравне со всеми — см. [_checkResult]. Внесение и
+      // изъятие тоже ходят с `ExternalCheckNumber`, и «успех без признака»
+      // врал здесь так же, как в чеке.
       return _failure(resp);
     });
   }
@@ -436,10 +547,15 @@ class WebKassaProvider implements FiscalProvider {
     return first;
   }
 
+  /// `rawErrorCode` у «оператор недоступен» — **HTTP-статус**, а не −5:
+  /// человеку на экране нужен 503, а не номер ветки транспорта.
   FiscalResult _failure(WebKassaResponse resp) => FiscalResult.failure(
     resp.errorMessage ?? 'Ошибка WebKassa',
     code: _mapError(resp.errorCode),
-    rawErrorCode: resp.errorCode,
+    rawErrorCode:
+        resp.errorCode == WebKassaApiClient.operatorUnavailableCode
+        ? resp.statusCode
+        : resp.errorCode,
   );
 
   FiscalErrorCode _mapError(int? code) {
@@ -465,6 +581,11 @@ class WebKassaProvider implements FiscalProvider {
       case 15:
         return FiscalErrorCode.shiftError;
       case 14:
+        // Документ у оператора уже есть, а признака его касса не узнаёт:
+        // разбор и его цена — в докстринге [_checkResult]. Число здесь
+        // остаётся числом намеренно: сторож `emulator_test.dart` вынимает
+        // числовые `case` из этого исходника регулярным выражением, и
+        // именованная константа увела бы ветку 14 у него из-под носа.
         return FiscalErrorCode.duplicate;
       case 18:
         return FiscalErrorCode.offlineLimitExceeded;
@@ -475,6 +596,20 @@ class WebKassaProvider implements FiscalProvider {
       case -2:
       case -3:
         return FiscalErrorCode.network;
+      case -4:
+        // `WebKassaApiClient.requestNotBuiltCode`: запрос не собран кассой,
+        // до сети не дошёл, повтор повторит отказ. Не очередь — человек.
+        return FiscalErrorCode.requestNotBuilt;
+      case -5:
+        // `WebKassaApiClient.operatorUnavailableCode`: 5xx/408/429 без кода
+        // оператора — документ не рассматривался. Очередь.
+        return FiscalErrorCode.operatorUnavailable;
+      case -6:
+        // `WebKassaApiClient.tlsRejectedCode`: схема/сертификат/часы. Человек.
+        return FiscalErrorCode.tlsRejected;
+      case -7:
+        // `WebKassaApiClient.clientFaultCode`: сбой кода кассы. Человек.
+        return FiscalErrorCode.clientFault;
       default:
         return FiscalErrorCode.unknown;
     }

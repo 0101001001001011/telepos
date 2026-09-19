@@ -81,6 +81,33 @@ Future<String> _readTerminalsCreateSql() async {
   return sql;
 }
 
+/// `sales` без `terminal_id`/`cart_version`/`last_command_key` — задача 2
+/// плана «продажа с браузерного терминала» добавила их миграцией v36→v37,
+/// которая трогает существующую таблицу и требует, чтобы она уже была: без
+/// неё подъём этой фикстуры выше v36 падает на `no such table: sales`, хотя
+/// настоящая база апгрейда таблицу `sales` имеет с самой первой схемы. Тот
+/// же приём, что `_readTerminalsCreateSql` выше.
+Future<String> _readSalesCreateSql() async {
+  final probe = AppDatabase(NativeDatabase.memory());
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final row = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
+  final sql = row.read<String>('sql');
+  await probe.close();
+  return sql;
+}
+
 /// Открывает базу, выглядящую как схема 31: таблица создана сырым SQL до
 /// того, как drift возьмётся за миграции, `user_version` принудительно 31.
 /// Открытие через [AppDatabase] запускает ветки `if (from < 32)` и
@@ -88,7 +115,8 @@ Future<String> _readTerminalsCreateSql() async {
 AppDatabase _openAsIfMigratingFromV31(
   String thisPosCreateSql,
   String usersCreateSql,
-  String terminalsCreateSql, {
+  String terminalsCreateSql,
+  String salesCreateSql, {
   void Function(sqlite3.Database raw)? seed,
 }) {
   return AppDatabase(
@@ -97,6 +125,7 @@ AppDatabase _openAsIfMigratingFromV31(
         raw.execute(thisPosCreateSql);
         raw.execute(usersCreateSql);
         raw.execute(terminalsCreateSql);
+        raw.execute(salesCreateSql);
         raw.execute('PRAGMA user_version = 31');
         if (seed != null) seed(raw);
       },
@@ -189,10 +218,12 @@ void main() {
       final sql = await _readV31ThisPosCreateSql();
       final usersSql = await _readUsersCreateSql();
       final terminalsSql = await _readTerminalsCreateSql();
+      final salesSql = await _readSalesCreateSql();
       final db = _openAsIfMigratingFromV31(
         sql,
         usersSql,
         terminalsSql,
+        salesSql,
         seed: (raw) {
           // Строка засеяна непустыми значениями соседних полей: убрать бы
           // умела и сломанная миграция, если бы перестраивала таблицу — здесь

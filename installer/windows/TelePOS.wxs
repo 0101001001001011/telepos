@@ -93,12 +93,12 @@
       ссылка не украшение: по ней человек находит исходники и трекер, из
       которого мы ждём отчёты.
     -->
-    <Property Id="ARPURLINFOABOUT" Value="https://github.com/kvgosu/telepos" />
-    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/kvgosu/telepos/releases" />
-    <Property Id="ARPCONTACT" Value="https://github.com/kvgosu/telepos/issues" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/0101001001001011/telepos" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/0101001001001011/telepos/releases" />
+    <Property Id="ARPCONTACT" Value="https://github.com/0101001001001011/telepos/issues" />
     <Property Id="ARPCOMMENTS" Value="Офлайн-первая касса: розница, общепит, услуги, склад. Лицензия GNU AGPL v3 или новее." />
     <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALLFOLDER]" After="CostFinalize" />
-    <Property Id="ARPHELPLINK" Value="https://github.com/kvgosu/telepos" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/0101001001001011/telepos" />
     <Property Id="ARPNOREPAIR" Value="1" />
 
     <!-- ── Куда ставим ──────────────────────────────────────────────────── -->

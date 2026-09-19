@@ -1,3 +1,5 @@
+import 'package:telepos/core/errors/named_refusal.dart';
+
 /// Сеанс терминала не назван токеном вовсе или неизвестен/истёк кассе — код
 /// [WireDenied.unauthorized] (`lib/domain/wire/wire_guard.dart`).
 ///
@@ -33,12 +35,30 @@
 /// смысле: оба формулирует касса для терминала, оба безопасны по построению
 /// (см. докстринг [WireRefusal]), и `lib/web/*.dart` его лишь бросает и
 /// ловит, не владея им.
-final class SessionLost implements Exception {
-  const SessionLost(this.detail);
+///
+/// # Код, а не только тип (2026-09-13)
+///
+/// Не каждый экран ловит [SessionLost] отдельно: поиск, сохранение и прочие
+/// голые `catch` пишут `'error.<ключ>:${safeErrorText(e)}'`. До этой правки
+/// `safeErrorText` видел здесь только имя типа, в dart2js минифицированное, и
+/// кассир читал «неизвестная причина» там, где причина известна точно. Тип
+/// теперь [NamedRefusal] и несёт **код кассы**, из-за которого заведён:
+/// `unauthorized` (по умолчанию), `terminal_changed` (`WtDispatcher`) или
+/// `unknown_terminal` (`WtRefundService`) — и словарь показывает фразу этого
+/// кода. Экраны, ловящие тип отдельно, не меняются: тип остался тем же.
+final class SessionLost implements Exception, NamedRefusal {
+  const SessionLost(this.detail, {this.code = 'unauthorized'});
 
   /// Текст кассы: `'${op}: ${verdict.reason}'` — например
   /// `'terminals.deviceCheck: сеанс неизвестен или истёк'`.
   final String detail;
+
+  /// Код кассы, которым сеанс потерян.
+  @override
+  final String code;
+
+  @override
+  String get reasonText => detail;
 
   @override
   String toString() => 'SessionLost($detail)';

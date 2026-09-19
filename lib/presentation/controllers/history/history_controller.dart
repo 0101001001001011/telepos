@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart' show Variable;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:telepos/presentation/controllers/app/money_ledger_revision.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/database/app_database.dart';
@@ -178,6 +179,8 @@ class HistoryState {
 class HistoryNotifier extends Notifier<HistoryState> {
   @override
   HistoryState build() {
+    // См. `ShiftNotifier.build` и докстринг `MoneyLedgerRevision`.
+    ref.watch(moneyLedgerRevisionProvider);
     Future.microtask(() => _loadPage(1));
     return HistoryState(isLoading: true);
   }

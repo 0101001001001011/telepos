@@ -11,7 +11,19 @@ import 'package:telepos/domain/auth/session_admin.dart';
 import 'package:telepos/domain/auth/terminal_session_check.dart';
 import 'package:telepos/domain/device/device_check.dart';
 import 'package:telepos/domain/device/device_discovery.dart';
+import 'package:telepos/domain/diagnostics/hardware_diagnostics.dart';
 import 'package:telepos/domain/network/network_repository.dart';
+import 'package:telepos/domain/sale/cart_service.dart';
+import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
+import 'package:telepos/domain/sale/expiry_warning.dart';
+import 'package:telepos/domain/stock/stock_changes.dart';
+import 'package:telepos/domain/sale/quick_product_catalog.dart';
+import 'package:telepos/domain/sale/sale_edit_terms.dart';
+import 'package:telepos/domain/payment/certificate_issuer.dart';
+import 'package:telepos/domain/payment/certificate_slip_printer.dart';
+import 'package:telepos/domain/payment/prepayment_intake.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
+import 'package:telepos/domain/refund/refund_service.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
@@ -21,6 +33,8 @@ import 'package:telepos/domain/wire/till_ops.dart';
 import 'package:telepos/domain/wire/wire_access.dart';
 
 import 'api_security.dart';
+import 'bundle_caching.dart';
+import 'certificate_throttle.dart';
 import 'pairing_invites.dart';
 import 'till_operations.dart';
 import 'web_bundle.dart';
@@ -78,6 +92,12 @@ class ApiServer {
     // приёмом опционального довода, что и [deviceDiscovery]/[deviceCheck]
     // выше — прокидывается в [TillOperations] как есть, докстринг там.
     NetworkRepository? network,
+    // Задача 19 плана «Продажа с браузерного терминала»: тем же приёмом
+    // опционального довода, что и [network] выше — прокидывается в
+    // [TillOperations] как есть, докстринг там. `null` в голом
+    // Dart-процессе (`bin/telepos_backend.dart`), у которого нет контейнера
+    // зависимостей, чтобы собрать `LocalRefundService`.
+    RefundService? refund,
     // Довесок фазы 3/4 закрытия долга, часть Б: прокидывается в
     // [TillOperations] как есть, тем же приёмом опционального довода — см.
     // докстринг у неё.
@@ -86,6 +106,67 @@ class ApiServer {
     // довода, что и [terminalSessions] выше — прокидывается в
     // [TillOperations] как есть.
     SessionAdmin? sessionAdmin,
+    // Задача 10 плана «Продажа с браузерного терминала»: касса исполняет
+    // команды корзины. Тем же приёмом опционального довода, что и
+    // [sessionAdmin] выше, но с другим смыслом `null` — прокидывается в
+    // [TillOperations] как есть, докстринг там: отсутствие означает «вести
+    // корзину нечем», и операции продажи отказывают названной причиной.
+    CartService? cart,
+    // Задача 44: условия правки строки. Тем же приёмом и с тем же смыслом
+    // `null`, что [cart] строкой выше, — прокидывается в [TillOperations].
+    SaleEditTermsReader? editTerms,
+    // Задача 45: быстрые товары и правила сканера — тем же приёмом, что
+    // [editTerms], прокидываются в [TillOperations].
+    QuickProductCatalog? quickProducts,
+    // Пишущий договор с пункта 11 ревизии 2026-09-19 — довод в
+    // [TillOperations], куда он и прокидывается.
+    ScannerRulesRepository? scannerRules,
+    // Пункт 11 ревизии 2026-09-19: «партия просрочена?» — тем же приёмом,
+    // что [scannerRules], прокидывается в [TillOperations].
+    ExpiryWarningReader? expiryWarning,
+    // Пункт 12 ревизии 2026-09-19: «остатки кассы изменились» — тем же
+    // приёмом, что [expiryWarning], прокидывается в [TillOperations].
+    StockChanges? stockChanges,
+    // Задача 14 плана «Продажа с браузерного терминала»: пять денежных
+    // операций оплаты. Тем же приёмом опционального довода, что и
+    // [sessionAdmin] выше, но с другим смыслом `null` — прокидывается в
+    // [TillOperations] как есть, докстринг там: отсутствие означает «принять
+    // деньги нечем», и операции отказывают названной причиной.
+    PaymentService? payments,
+    // Задача 21 плана «Полнота продажи»: выпуск подарочных сертификатов.
+    // Тем же приёмом опционального довода и с тем же смыслом `null`, что и
+    // [payments] строкой выше: отсутствие означает «выпускать нечем», и
+    // операция отказывает названной причиной, а не изображает выпуск.
+    CertificateIssuer? certificates,
+    // Решение заказчика 2026-09-18: повтор печати слипа с планшета. Тем же
+    // приёмом опционального довода и с тем же смыслом `null`, что и
+    // [certificates] строкой выше.
+    CertificateSlipReprinter? certificateSlips,
+    // Требование заказчика 2026-09-18: приём аванса покупателя с
+    // браузерного терминала. Тем же приёмом опционального довода и с тем же
+    // смыслом `null`, что и [certificates] строкой выше: отсутствие
+    // означает «принять аванс нечем», и операция отказывает названной
+    // причиной, а не изображает приём.
+    PrepaymentIntakeService? prepaymentIntake,
+    // Решение заказчика 2026-09-18: выдача аванса деньгами с браузерного
+    // терминала. Тем же приёмом опционального довода и с тем же смыслом
+    // `null`, что и [prepaymentIntake] строкой выше: отсутствие означает
+    // «выдавать нечем», и операция отказывает названной причиной, а не
+    // изображает выдачу.
+    PrepaymentRefundService? prepaymentRefund,
+    // Диагностика оборудования с планшета — план 2026-09-19, пункт
+    // «Достижимость с браузерного терминала». Тем же приёмом опционального
+    // довода и с тем же смыслом `null`, что и [prepaymentIntake] строкой
+    // выше: отсутствие означает «показывать нечем», и обе операции
+    // отказывают названной причиной, а не отдают пустой список. Пустой
+    // список здесь читался бы как «касса ничего не отправляла».
+    HardwareDiagnosticsRepository? diagnostics,
+    // Пункт 5 A7 (2026-09-15): замок перебора сертификатов — **обязателен**,
+    // тем же доводом, что [invites]. Умолчание внутри `TillOperations` завело
+    // бы второй счёт номера рядом с замком экрана оплаты кассы
+    // (`ThrottledPaymentService`), и без журнала: пять неудач с планшета не
+    // запирали бы номер для кассы, и срабатывание не оставляло бы следа.
+    required CertificateThrottle certificateThrottle,
     this.port = 8787,
     this.scope = ListenScope.loopback,
     String? publicHost,
@@ -120,6 +201,7 @@ class ApiServer {
          deviceDiscovery: deviceDiscovery,
          deviceCheck: deviceCheck,
          network: network,
+         refund: refund,
          auth: auth,
          sessions: terminalSessions,
          sessionAdmin: sessionAdmin,
@@ -131,6 +213,19 @@ class ApiServer {
          // потрачен раньше, при доставке корня); список один — коды разные,
          // мятые тем же `mint()` на том же экране.
          invites: invites,
+         cart: cart,
+         editTerms: editTerms,
+         quickProducts: quickProducts,
+         scannerRules: scannerRules,
+         expiryWarning: expiryWarning,
+         stockChanges: stockChanges,
+         payments: payments,
+         certificates: certificates,
+         certificateSlips: certificateSlips,
+         prepaymentIntake: prepaymentIntake,
+         prepaymentRefund: prepaymentRefund,
+         diagnostics: diagnostics,
+         certificateThrottle: certificateThrottle,
        );
 
   /// Порт, который просят у системы. `0` означает «любой свободный», и тогда
@@ -410,16 +505,24 @@ class ApiServer {
       return (Request request) => Response.notFound(reason);
     }
 
-    final static = createStaticHandler(
+    final files = createStaticHandler(
       _frontendDirectory,
       defaultDocument: 'index.html',
     );
+    // Задача 42: `no-cache` и своё сравнение времени — см. `cachingBundle`.
+    final bundle = cachingBundle(files);
 
     return (Request request) async {
-      final response = await static(request);
       final isDocument =
           request.url.path.isEmpty || request.url.path.endsWith('.html');
-      if (!isDocument || response.statusCode != 200) return response;
+      if (!isDocument) return bundle(request);
+
+      // Документ спрашивается без условия: собранный на лету, он всегда
+      // целиком, и `304` на него отдал бы браузеру прежний токен.
+      final response = await files(
+        request.change(headers: {HttpHeaders.ifModifiedSinceHeader: null}),
+      );
+      if (response.statusCode != 200) return response;
 
       final html = await response.readAsString();
 
@@ -439,7 +542,10 @@ class ApiServer {
       );
       return Response.ok(
         injected,
-        headers: {'content-type': 'text/html; charset=utf-8'},
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          HttpHeaders.cacheControlHeader: kDocumentCacheControl,
+        },
       );
     };
   }

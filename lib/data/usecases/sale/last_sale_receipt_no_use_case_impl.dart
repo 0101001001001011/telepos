@@ -33,15 +33,47 @@ class LastSaleReceiptNoUseCaseImpl implements LastSaleReceiptNoUseCase {
     return null;
   }
 
+  /// **Предел, названный кругом правки 5 задачи 7: перенумерация теряет
+  /// состояние корзины.** Метод пересоздаёт строку чека под новым номером
+  /// и переносит товары — но `cartVersion`, `lastCommandKey` и оба типа
+  /// округления в новую строку не переносятся. Для браузерного терминала
+  /// это значит: версия у чека внезапно ноль (все команды в полёте
+  /// получат `cart_stale` — безопасно, но необъяснимо), ключ повтора
+  /// потерян (честный повтор применится вторым разом), а замороженные
+  /// правила округления заменятся умолчанием — то есть **цены строк могут
+  /// измениться**.
+  ///
+  /// Не чинится здесь по решению координатора: код сегодня недостижим —
+  /// `_fetchLastReceiptNoFromServer()` возвращает `null` всегда (сервер
+  /// снят вместе с Go-бэкендом), и до перенумерации исполнение не
+  /// доходит. Оживёт этот путь — правку делать здесь, вместе с переносом
+  /// трёх колонок.
   Future<void> _renumberInProgressSale(int serverLastReceiptNo) async {
-    final inProgressSale = await _db.saleDao.findInProgress();
-    if (inProgressSale == null) {
-      return;
-    }
+    // Перенумеровывается чек **этого** рабочего места. До v37 рабочее место
+    // было одно и `findInProgress()` не могло взять чужое; с браузерным
+    // терминалом это стало возможно — без довода этот код перенумеровал бы
+    // (и переносил бы товары) чек, который в этот момент набирает другое
+    // рабочее место, из-под него. Единственный вызывающий этот код сегодня —
+    // сама касса (её терминал — `terminals.self`, тот же сентинел `?? 0`,
+    // что и в `SaleInitiationUseCaseImpl`).
+    final terminalId = (await _db.terminalDao.self())?.id ?? 0;
 
-    final thisPos = await _db.thisPosDao.get();
-    if (thisPos == null) {
-      _logger.warning('LastSaleReceiptNo: thisPos not found');
+    // Касса читается до поиска: чек ищется по паре «касса + место», а не
+    // по одному месту (круг правки 3 задачи 7 — иначе нашёлся бы чек
+    // соседней кассы, попавший в базу обменом, и перенумерован был бы он).
+    // Единая политика номера кассы (`ThisPosDao.requireId`, круг правки 4
+    // задачи 7): ноль не подставляется — он настоящий номер кассы, и
+    // запрос с ним нашёл бы чужие строки. Ненастроенная касса роняет эту
+    // задачу броском; единственный вызывающий (`initialization_task`) уже
+    // ловит и пишет в журнал, то есть наблюдаемый исход тот же, что был у
+    // прежнего раннего выхода, но без тихой подстановки чужого номера.
+    final posId = await _db.thisPosDao.requireId();
+
+    final inProgressSale = await _db.saleDao.findInProgress(
+      posId: posId,
+      terminalId: terminalId,
+    );
+    if (inProgressSale == null) {
       return;
     }
 
@@ -59,7 +91,7 @@ class LastSaleReceiptNoUseCaseImpl implements LastSaleReceiptNoUseCase {
           ))
           .go();
 
-      final newPosId = thisPos.id ?? oldPosId;
+      final newPosId = posId;
       final saleProducts = await _db.saleProductDao.findBySale(
         oldReceiptNo,
         oldPosId,
@@ -111,6 +143,10 @@ class LastSaleReceiptNoUseCaseImpl implements LastSaleReceiptNoUseCase {
               state: Value(0),
               isOfd: Value(inProgressSale.isOfd),
               isWholesale: Value(inProgressSale.isWholesale),
+              // Владелец переносится вместе с чеком: перенумерованная
+              // строка остаётся чеком того же рабочего места (I156), а не
+              // чеком-сиротой, который завтра найдёт себе кто попало.
+              terminalId: Value(inProgressSale.terminalId),
             ),
           );
     });

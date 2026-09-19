@@ -36,7 +36,57 @@ String _text(Map<String, Object?> body) => body['text']! as String;
 int _n(Map<String, Object?> body) => body['n']! as int;
 bool _ok(Map<String, Object?> body) => body['ok'] == true;
 
+/// Поток, который рвёт браузер: исключение без кода на выбранном шаге.
+final class _BrowserBreaks implements WtStreams, WtStream {
+  _BrowserBreaks({this.onOpen = false, this.onSend = false, this.onFrames = false});
+
+  final bool onOpen;
+  final bool onSend;
+  final bool onFrames;
+
+  /// То, что бросает браузер: не `WtProtocolError` и не `StateError`.
+  static final _raw = Exception('WebTransportError: connection lost');
+
+  @override
+  Future<WtStream> openStream() async => onOpen ? throw _raw : this;
+
+  @override
+  Future<void> send(String frame) async {
+    if (onSend) throw _raw;
+  }
+
+  @override
+  Future<void> finishSending() async {}
+
+  @override
+  Stream<String> get frames =>
+      onFrames ? Stream<String>.error(_raw) : const Stream<String>.empty();
+
+  @override
+  Future<void> get closed => Completer<void>().future;
+
+  @override
+  Future<void> close() async {}
+}
+
 void main() {
+  group('ask — сырой обрыв браузера получает код в месте возникновения', () {
+    // До 2026-09-13 эти три обрыва уходили из `ask` исключением без кода, и
+    // кассир читал «неизвестная причина» на обычной потере связи.
+    for (final (name, streams, code) in [
+      ('поток не открылся', _BrowserBreaks(onOpen: true), 'no_session'),
+      ('запрос не ушёл', _BrowserBreaks(onSend: true), 'stream_failed'),
+      ('ответ сорвался', _BrowserBreaks(onFrames: true), 'stream_failed'),
+    ]) {
+      test(name, () async {
+        await expectLater(
+          WtDispatcher(streams).ask(_echo, null),
+          throwsA(isA<WtProtocolError>().having((e) => e.code, 'code', code)),
+        );
+      });
+    }
+  });
+
   group('ask', () {
     test('отдаёт разобранный ответ и закрывает поток', () async {
       final session = FakeWtSession()
@@ -108,6 +158,27 @@ void main() {
         final session = FakeWtSession()
           ..replyWith(
             '{"ok":false,"code":"unauthorized","detail":"сеанс неизвестен или истёк"}',
+          );
+
+        await expectLater(
+          WtDispatcher(session).ask(_echo, null),
+          throwsA(isA<SessionLost>()),
+        );
+      },
+    );
+
+    test(
+      'код terminal_changed становится SessionLost — круг правки 4 задачи 19',
+      () async {
+        // Лечится он ровно тем же единственным действием, что и
+        // `unauthorized`: войти заново. Пока его здесь не было, вкладка
+        // оставалась «вошедшей» с токеном, который отказывает на каждой
+        // операции, показывала рядовую ошибку провода и входа не предлагала —
+        // то есть код был заведён ради действия, к которому не вёл.
+        final session = FakeWtSession()
+          ..replyWith(
+            '{"ok":false,"code":"terminal_changed",'
+            '"detail":"сеанс выписан на рабочее место 2"}',
           );
 
         await expectLater(
@@ -260,6 +331,29 @@ void main() {
         );
       },
     );
+
+    test('законно кончившаяся подписка доезжает СОСТОЯНИЕМ, а не отказом', () async {
+      // Найдено живой приёмкой 2026-09-19 на планшете. Касса отдаёт вопросу
+      // о неподключённом приборе одно значение и закрывает поток намеренно
+      // — «прибора на этой кассе нет», окончательный ответ (И144). До этой
+      // правки планшет читал такой конец как обрыв и показывал «касса не
+      // ответила: stream_ended», то есть названное состояние не доезжало
+      // вовсе, а наладчик видел отказ там, где был ответ.
+      //
+      // Различает их **касса**, кадром `done`: только она знает, кончился
+      // источник сам или порвалась связь. Проба рядом с соседней не
+      // случайно: вместе они держат обе половины различения, и пропажа
+      // одной сразу видна.
+      final session = FakeWtSession()
+        ..replyWith('{"kind":"update","body":{"n":7}}')
+        ..replyWith('{"kind":"done","body":{}}')
+        ..endAfterScript = true;
+
+      await expectLater(
+        WtDispatcher(session).watch(_counter, null),
+        emitsInOrder([7, emitsDone]),
+      );
+    });
   });
 
   group('run', () {

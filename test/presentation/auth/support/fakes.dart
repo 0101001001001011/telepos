@@ -19,6 +19,7 @@ import 'package:telepos/domain/auth/auth_outcome.dart';
 import 'package:telepos/domain/auth/auth_repository.dart';
 import 'package:telepos/domain/auth/auth_user.dart';
 import 'package:telepos/domain/auth/session_token_storage.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_identity.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
@@ -306,6 +307,12 @@ class FakeTerminalRepository implements TerminalRepository {
 
   @override
   Future<void> rename(int terminalId, String name) async {}
+
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) async {}
 
   @override
   Future<void> delete(int terminalId) async {}

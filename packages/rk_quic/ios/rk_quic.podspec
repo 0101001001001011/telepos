@@ -5,7 +5,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'rk_quic'
-  s.version          = '0.2.1'
+  s.version          = '0.2.2'
   s.summary          = 'QUIC and WebTransport for Dart over a native library.'
   s.description      = <<-DESC
 Native part of the rk_quic Dart package. Rust behind a C ABI, linked into the

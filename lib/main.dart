@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/backend/api_server.dart';
 import 'package:telepos/backend/api_server_reachability.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
 import 'package:telepos/backend/security_journal.dart';
 import 'package:telepos/backend/session_registry.dart';
@@ -19,14 +20,28 @@ import 'package:telepos/backend/web_bundle.dart';
 import 'package:telepos/core/net/listen_scope.dart';
 import 'package:telepos/core/net/till_network_name.dart';
 import 'package:telepos/core/settings/terminal_service_settings.dart';
+import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/device/device_check_local.dart';
+import 'package:telepos/data/payment/qr_payment_desk.dart';
 import 'package:telepos/data/device/device_discovery_local.dart';
 import 'package:telepos/domain/device/device_check.dart';
 import 'package:telepos/domain/device/device_discovery.dart';
 import 'package:telepos/domain/device/device_profile_catalog.dart';
+import 'package:telepos/domain/payment/certificate_issuer.dart';
+import 'package:telepos/domain/payment/certificate_slip_printer.dart';
+import 'package:telepos/domain/usecases/payment/customer_payment_use_case.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/network/network_repository.dart';
+import 'package:telepos/domain/sale/cart_service.dart';
+import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
+import 'package:telepos/domain/sale/expiry_warning.dart';
+import 'package:telepos/domain/stock/stock_changes.dart';
+import 'package:telepos/domain/sale/quick_product_catalog.dart';
+import 'package:telepos/domain/sale/sale_edit_terms.dart';
+import 'package:telepos/domain/refund/refund_service.dart';
 import 'package:telepos/domain/auth/auth_repository.dart';
 import 'package:telepos/domain/host/host_capabilities.dart';
+import 'package:telepos/domain/diagnostics/hardware_diagnostics.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
@@ -208,6 +223,12 @@ void main(List<String> args) {
       await configureDependencies(logger: talker);
       talker.info('DI configured');
 
+      // Повтор очереди фискализации — сразу и кругом, а не один раз при
+      // подъёме: чек, легший в очередь днём, иначе ждал перезапуска кассы.
+      // Здесь, а не в `configureDependencies`: тот же граф собирает сквозной
+      // стенд набора, и периодический таймер ему не нужен.
+      startFiscalReplay();
+
       // Пункт 6 брифа закрытия долга безопасности (2026-08-22): журналу не
       // было ни одного читателя — findAll/firstBrokenLinkId не звала ни
       // одна строка `lib/`, проверка И67 в продукте не выполнялась никогда.
@@ -220,10 +241,29 @@ void main(List<String> args) {
         checkSecurityJournalIntegrityAtBoot(
           dao: GetIt.I<AppDatabase>().securityEventDao,
           journal: GetIt.I<SecurityJournal>(),
-          terminalId: (await GetIt.I<AppDatabase>().terminalDao.self())?.id ?? 0,
+          terminalId:
+              (await GetIt.I<AppDatabase>().terminalDao.self())?.id ?? 0,
           logger: talker,
         ),
       );
+
+      // Разбор намерений QR при подъёме — **до** первого чека. «Касса
+      // перезагрузилась, пока покупатель платил» — не экзотика, а вечер
+      // пятницы: подтверждение лежит у провайдера и узнаётся только
+      // вопросом. Заодно отменяются коды, чьё терпение вышло без
+      // присмотра (вкладка закрылась посреди ожидания). Не ожидается: без
+      // связи с провайдером касса обязана подняться, а неразобранное
+      // останется неразобранным до следующего круга, а не пропадёт.
+      if (GetIt.I.isRegistered<QrPaymentDesk>()) {
+        unawaited(
+          GetIt.I<QrPaymentDesk>().reconcile().then(
+            (orphans) =>
+                talker.info('QR: boot reconcile, orphan money ${orphans.length}'),
+            onError: (Object e) =>
+                talker.warning('QR: boot reconcile failed: ${safeErrorText(e)}'),
+          ),
+        );
+      }
 
       // The image declares itself here and does not change afterwards (I10).
       // --kiosk means our image, where the machine is entirely ours; --server
@@ -273,6 +313,11 @@ void main(List<String> args) {
         headless: _headless,
       );
       await _startLocalApi(terminalService);
+
+      // Встроенные эмуляторы — после сервера и до окна: привязка прибора
+      // пережила перезагрузку, а сокет нет, и касса не должна начинать утро
+      // с адреса, которого никто не слушает.
+      await startBuiltinEmulators(prefs);
 
       talker.info('TelePOS ready, launching app');
 
@@ -568,6 +613,64 @@ Future<void> _startLocalApi(TerminalServiceChoice terminalService) async {
       // см. докстринг у `invites` в `ApiServer` и у `PairingInvites` в
       // `pairing_invites.dart`.
       invites: GetIt.I<PairingInvites>(),
+      // Задача 14 плана «Продажа с браузерного терминала»: та же кассовая
+      // реализация, что стоит под экраном оплаты на десктопе
+      // (`service_locator.dart`), а не вторая рядом — иначе повтор,
+      // посчитанный памятью одной, был бы неизвестен другой.
+      payments: GetIt.I.isRegistered<PaymentService>()
+          ? GetIt.I<PaymentService>()
+          : null,
+      // Задача 21 плана «Полнота продажи»: та же кассовая реализация, что
+      // зарегистрирована в контейнере, — резолвится, а не строится заново,
+      // тем же приёмом и по тому же доводу, что `payments` выше.
+      //
+      // Своего состояния у выпускающего нет (счёт обязательства он ищет в
+      // базе по роду, а не помнит), поэтому вторая копия не развела бы
+      // обязательства по двум счетам — но она развела бы **источник
+      // правды**: следующая правка, заведи она в нём память, сломала бы
+      // ровно тот путь, который никто не проверяет.
+      certificates: GetIt.I.isRegistered<CertificateIssuer>()
+          ? GetIt.I<CertificateIssuer>()
+          : null,
+      // Решение заказчика 2026-09-18: повтор печати слипа с планшета. **Тот
+      // же синглтон**, что стоит под кассовым экраном выпуска, — он держит
+      // ту же очередь печати; вторая копия печатала бы во вторую очередь, то
+      // есть в никуда.
+      certificateSlips: GetIt.I.isRegistered<CertificateSlipReprinter>()
+          ? GetIt.I<CertificateSlipReprinter>()
+          : null,
+      // Требование заказчика 2026-09-18: приём аванса с браузерного
+      // терминала. Резолвится **тот же синглтон**, что стоит под кассовым
+      // диалогом приёма (`CustomerPaymentUseCase` в `service_locator.dart`),
+      // — он и есть `PrepaymentIntakeService`, потому что контракт объявлен
+      // на самом юзкейсе. Строить вторую реализацию здесь значило бы завести
+      // второй путь к деньгам: приём пишет три строки (счёт покупателя, счёт
+      // кассы, проводку), и разойтись им негде, пока код один.
+      prepaymentIntake: GetIt.I.isRegistered<CustomerPaymentUseCase>()
+          ? GetIt.I<CustomerPaymentUseCase>()
+          : null,
+      // Решение заказчика 2026-09-18, вторая половина: выдача аванса
+      // деньгами. **Тот же самый синглтон**, что строкой выше, и это не
+      // копирование строки: `CustomerPaymentUseCase` объявлен реализующим
+      // оба контракта сразу, и потому приём и выдача ходят в одну и ту же
+      // память заявок и в одну и ту же базу. Две регистрации развели бы
+      // ключи повторов по двум экземплярам.
+      prepaymentRefund: GetIt.I.isRegistered<CustomerPaymentUseCase>()
+          ? GetIt.I<CustomerPaymentUseCase>()
+          : null,
+      // Диагностика оборудования с планшета — план 2026-09-19. **Тот же
+      // синглтон**, что стоит под кассовыми вкладками диагностики
+      // (`service_locator.dart`), а не вторая копия: копия читала бы вторую
+      // очередь печати, то есть показывала бы пустой экран при работающем
+      // принтере.
+      diagnostics: GetIt.I.isRegistered<HardwareDiagnosticsRepository>()
+          ? GetIt.I<HardwareDiagnosticsRepository>()
+          : null,
+      // Пункт 5 A7 (2026-09-15): тот же замок перебора сертификатов, что
+      // стоит под экраном оплаты кассы (`ThrottledPaymentService`,
+      // `service_locator.dart`), — один счёт номера на кассу и провод, и
+      // срабатывание пишется в журнал безопасности.
+      certificateThrottle: GetIt.I<CertificateThrottle>(),
       // Absent on an installation with no Telegram transport — the offline
       // deployment. The endpoints that need it say so rather than pretending
       // there are no backups.
@@ -584,6 +687,42 @@ Future<void> _startLocalApi(TerminalServiceChoice terminalService) async {
       // резолвится из get_it, не строится заново, чтобы экран настроек и
       // операция провода делили одну реализацию.
       network: _localNetwork(),
+      // Задача 10 плана «Продажа с браузерного терминала»: та же кассовая
+      // корзина, что стоит под экраном продажи на десктопе
+      // (`service_locator.dart` регистрирует `LocalCartService` синглтоном и
+      // отдаёт его же под доменным типом), а не вторая рядом — иначе у
+      // кассы было бы две корзины и две цепочки уведомлений об одном чеке.
+      cart: GetIt.I.isRegistered<CartService>() ? GetIt.I<CartService>() : null,
+      // Задача 44: условия правки строки для браузерного терминала — тот же
+      // синглтон, что читает экран продажи на десктопе. Резолвится прямо, как
+      // `refund` ниже: незаведённая привязка обязана падать при подъёме, а не
+      // отказывать кассиру на первом «Редактировать».
+      editTerms: GetIt.I<SaleEditTermsReader>(),
+      // Задача 45: те же синглтоны, что читают сетка и сканер экрана продажи
+      // на десктопе. Резолвятся прямо, как [editTerms]: незаведённая привязка
+      // падает при подъёме, а не отказывает кассиру на первом нажатии.
+      quickProducts: GetIt.I<QuickProductCatalog>(),
+      // Пишущий синглтон (`LocalScannerRulesRepository`), а не читающий:
+      // с пункта 11 ревизии 2026-09-19 касса ещё и **записывает** правила
+      // по просьбе планшета. Это тот же экземпляр — читатель в
+      // `service_locator.dart` зарегистрирован как ссылка на него.
+      scannerRules: GetIt.I<ScannerRulesRepository>(),
+      // Пункт 11 ревизии 2026-09-19: тот же синглтон, которым спрашивает
+      // про партию экран продажи на десктопе. Резолвится прямо, как
+      // [quickProducts]: незаведённая привязка обязана падать при подъёме.
+      expiryWarning: GetIt.I<ExpiryWarningReader>(),
+      // Пункт 12 ревизии 2026-09-19: тот же одиночка, что поднимает счётчик
+      // экранов самой кассы. Один на процесс — иначе у кассы было бы две
+      // ревизии остатков, и половина рабочих мест не узнавала бы об
+      // изменении.
+      stockChanges: GetIt.I<StockChanges>(),
+      // Задача 19 плана «Продажа с браузерного терминала»: тот же синглтон
+      // get_it, что резолвит экран возврата, — не вторая реализация рядом.
+      // Резолвится **здесь**, при сборке кассы, а не лениво при первом
+      // кадре: граф `LocalRefundService` собирается из трёх юзкейсов, и
+      // несобираемость обязана падать при подъёме, где её видно, а не в
+      // ответ на первую команду терминала.
+      refund: GetIt.I<RefundService>(),
       frontendDirectory: switch (bundle) {
         WebBundleFound(:final directory) => directory,
         WebBundleMissing() => null,
@@ -682,6 +821,11 @@ Future<void> _startLocalApi(TerminalServiceChoice terminalService) async {
         // Один реестр сеансов на процесс (задача 9) — тот же синглтон, что
         // получил `AuthRepository` парой строк выше.
         sessions: GetIt.I<SessionRegistry>(),
+        // Круг правки 3 задачи 19: сторож сверяет место сеанса с местом,
+        // привязанным к этой QUIC-сессии сейчас. Карта привязок одна на
+        // кассу и живёт в `TillOperations` — та же, из которой `auth.login`
+        // берёт терминал, а не вторая рядом.
+        boundTerminalId: server.operations.terminalForSessionKey,
       );
       // One wire per listener, because a wire holds a `QuicServer` and answers
       // on it: a session opened on the family this one is not bound to would
@@ -847,7 +991,6 @@ DeviceCheck? _localDeviceCheck() =>
 /// from get_it rather than constructed here, so the settings screen's own
 /// controller (`network_controller.dart`) and this operation share one
 /// `NetworkRepositoryLocal`, not two.
-NetworkRepository? _localNetwork() =>
-    GetIt.I.isRegistered<NetworkRepository>()
+NetworkRepository? _localNetwork() => GetIt.I.isRegistered<NetworkRepository>()
     ? GetIt.I<NetworkRepository>()
     : null;

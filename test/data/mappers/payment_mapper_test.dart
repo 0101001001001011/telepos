@@ -18,6 +18,7 @@ void main() {
         amount: Decimal.parse('1500.500'),
         time: 1700000000,
         state: 1,
+        seq: 0,
       );
 
       final entity = PaymentMapper.fromDrift(driftPayment);
@@ -64,6 +65,7 @@ void main() {
           payeeAccountId: 200,
           amount: Decimal.parse('100.000'),
           time: 1700000000,
+          seq: 0,
         ),
         Payment(
           id: 2,
@@ -71,6 +73,7 @@ void main() {
           payeeAccountId: 201,
           amount: Decimal.parse('200.000'),
           time: 1700000001,
+          seq: 0,
         ),
       ];
 
@@ -107,6 +110,7 @@ void main() {
         amount: companion.amount.value,
         time: companion.time.value,
         state: companion.state.value,
+        seq: 0,
       );
 
       final restored = PaymentMapper.fromDrift(driftPayment);

@@ -34,6 +34,9 @@ void registerPrintQueue(GetIt getIt) {
       store: getIt<PrintJobStore>(),
       transport: (payloadBytes) =>
           printToBoundPrinter(getIt, payloadBytes: payloadBytes),
+      // Журнал: без него непредвиденный отказ очереди оставлял кассе одно
+      // имя типа исключения — разбор в докстринге `PrintQueueLocal._logger`.
+      logger: getIt.isRegistered<Talker>() ? getIt<Talker>() : null,
     ),
     // Смена длится двенадцать часов; очередь, пережившая свой `GetIt`, уносит
     // с собой таймер пробуждения. `dispose` снимает его и дожидается задания,

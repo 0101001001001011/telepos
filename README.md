@@ -13,14 +13,6 @@ when the internet does not.
 [![Status](https://img.shields.io/badge/status-alpha-E67E22.svg)](#project-status)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Android%20%7C%20iOS%20%7C%20Web-lightgrey.svg)](#building)
 
-<!-- infostart-moderation: временный блок, требование правил площадки (п. 2.2.25). Снять после прохождения модерации. -->
-
-<a href="https://infostart.ru/1c/articles/2775635/"><img src="docs/infostart-logo.svg" width="184" alt="Infostart"></a>
-
-<sub>Публикация о проекте на Инфостарте — <a href="https://infostart.ru/1c/articles/2775635/">TelePOS (Telegram Point Of Sale): открываем код кассы</a></sub>
-
-<!-- /infostart-moderation -->
-
 <img src="docs/screenshots/02-sale.png" width="820" alt="TelePOS sale screen">
 
 </div>
@@ -226,7 +218,7 @@ graph TD
 Requires [Flutter](https://docs.flutter.dev/get-started/install) 3.47 or newer.
 
 ```bash
-git clone https://github.com/kvgosu/telepos.git
+git clone https://github.com/0101001001001011/telepos.git
 cd telepos
 flutter pub get
 flutter gen-l10n

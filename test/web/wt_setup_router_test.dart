@@ -31,6 +31,7 @@ import 'package:telepos/domain/auth/auth_repository.dart';
 import 'package:telepos/domain/auth/live_session.dart';
 import 'package:telepos/domain/auth/session_admin.dart';
 import 'package:telepos/domain/network/network_repository.dart';
+import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
 import 'package:telepos/domain/network/network_status.dart';
 import 'package:telepos/domain/network/wifi_network.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
@@ -261,7 +262,13 @@ void main() {
       // (`network_controller.dart`) — без регистрации экран упал бы в
       // микрозадаче, тем же приёмом, каким `LoginScreen` не построится без
       // `AuthRepository`/`TerminalIdentity`/`TerminalRepository` выше.
-      ..registerSingleton<NetworkRepository>(_FakeNetworkRepository());
+      ..registerSingleton<NetworkRepository>(_FakeNetworkRepository())
+      // Пункт 11 ревизии 2026-09-19: правила сканера с планшета задаются, и
+      // `HardwareSettingsScreen` резолвит писателя **прямо**, а не через
+      // `isRegistered`. Отсутствие привязки стало ошибкой сборки — ровно
+      // то, чего сторож `presentation_is_registered_test` и добивался; эта
+      // фальшивка и есть цена такого решения в пробах.
+      ..registerSingleton<ScannerRulesRepository>(_FakeScannerRules());
   });
 
   tearDown(() async => GetIt.I.reset());
@@ -584,4 +591,16 @@ void _logIn(WidgetTester tester, {Set<String> permissions = const {}}) {
   ProviderScope.containerOf(context, listen: false)
       .read(appStateProvider.notifier)
       .setUserInfo(id: 7, name: 'Айгуль', role: 0, permissions: permissions);
+}
+
+/// Правила сканера в памяти — экран настроек резолвит писателя прямо
+/// (пункт 11 ревизии 2026-09-19), и без привязки он не построится.
+class _FakeScannerRules implements ScannerRulesRepository {
+  ScannerRules? _saved;
+
+  @override
+  Future<ScannerRules> read() async => _saved ?? ScannerRules.unset;
+
+  @override
+  Future<void> save(ScannerRules rules) async => _saved = rules;
 }

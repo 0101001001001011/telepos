@@ -260,7 +260,8 @@ void main() {
     });
 
     test(
-      'duplicate on replay is treated as done (no double fiscalization)',
+      'duplicate on replay goes to a human, not to the bin '
+      '(no double fiscalization either)',
       () async {
         final inner = _ControllableProvider()..online = false;
         final store = InMemoryFiscalQueueStore();
@@ -275,9 +276,15 @@ void main() {
 
         final report = await provider.replay();
 
-        expect(report.deduped, 1);
+        expect(report.duplicates, 1);
         expect(report.fiscalized, 0);
         expect(await store.pendingCount(), 0);
+        // Правка 2026-09-19: строка остаётся следом для человека. Документ
+        // у оператора есть, фискального признака у кассы нет, и удалить
+        // строку значило бы стереть единственную запись об этом.
+        final left = await store.failed();
+        expect(left.map((e) => e.idempotencyKey), ['G-DEDUP']);
+        expect(left.single.lastError, 'fiscal(duplicate)');
       },
     );
 

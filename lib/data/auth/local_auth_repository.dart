@@ -406,23 +406,28 @@ class LocalAuthRepository implements AuthRepository {
         .map((u) => (id: u.id, stored: u.passwordEnc!))
         .toList();
 
-    return _pbkdf2Gate.run(() => Isolate.run(() {
-      final results =
-          <({int userId, PinCheckOutcome outcome, String? upgradedStorage})>[];
-      for (final probe in probes) {
-        final result = PinCredential.check(
-          pin: pin,
-          stored: probe.stored,
-          legacyPublicKeyBase64: legacyKey,
-        );
-        results.add((
-          userId: probe.id,
-          outcome: result.outcome,
-          upgradedStorage: result.upgradedStorage,
-        ));
-      }
-      return results;
-    }), key: sessionKey);
+    return _pbkdf2Gate.run(
+      () => Isolate.run(() {
+        final results =
+            <
+              ({int userId, PinCheckOutcome outcome, String? upgradedStorage})
+            >[];
+        for (final probe in probes) {
+          final result = PinCredential.check(
+            pin: pin,
+            stored: probe.stored,
+            legacyPublicKeyBase64: legacyKey,
+          );
+          results.add((
+            userId: probe.id,
+            outcome: result.outcome,
+            upgradedStorage: result.upgradedStorage,
+          ));
+        }
+        return results;
+      }),
+      key: sessionKey,
+    );
   }
 
   /// Выписывает сеанс с уже посчитанным действующим правом.
@@ -474,6 +479,15 @@ class LocalAuthRepository implements AuthRepository {
       operatingMode: thisPos?.operatingMode ?? 0,
       pointMode: pointMode.name,
       shiftOpen: openShift != null,
+      // Круг правки 4: исключения для `isSelf` здесь **нет**, и это правка
+      // круга 3, снятая целиком. Оно заводилось затем, чтобы вкладка,
+      // вошедшая на строку самой кассы через открытый `terminals.selfEnsure`,
+      // не выбивала кассира с экрана кассы, — но тем же движением возвращало
+      // на эту строку двух человек сразу, а с ними и общий черновик возврата
+      // (блокер 1 круга 4). Причина вырезана в другом месте: `selfEnsure`
+      // больше не привязывает место к сессии, и войти по проводу на строку
+      // кассы теперь нельзя вовсе. Правило «за одним местом один человек»
+      // снова действует без исключений.
       terminalId: terminalId,
     );
   }

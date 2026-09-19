@@ -68,6 +68,11 @@ void main() {
         PermissionKeys.opCashInOut,
         PermissionKeys.opDeferSale,
         PermissionKeys.opRefund,
+        // Задача 24: погашение рассрочки. Деньги по договору приносят на
+        // кассу, и принимать их некому, кроме кассира. Список здесь
+        // выписан **независимо**, а не собран из `roleDefaults`, — потому
+        // покраснение при добавлении ключа и есть смысл этой пробы.
+        PermissionKeys.opCreditRepay,
       };
 
       expect(PermissionKeys.roleDefaults[UserRole.cashier], expectedCashier);

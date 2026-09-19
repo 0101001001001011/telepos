@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:telepos/domain/auth/auth_rejection.dart';
 import 'package:telepos/domain/auth/auth_session.dart';
 import 'package:telepos/domain/auth/auth_user.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 import 'package:telepos/domain/wire/auth_wire.dart';
 
 void main() {
@@ -36,7 +37,7 @@ void main() {
       permissions: const {'nav.sale', 'op.editPrice'},
       operatingMode: 1,
       pointMode: 'cashier',
-      shiftOpen: true,
+      shift: ShiftStatus.open,
       issuedAt: DateTime.utc(2026, 8, 20, 10),
       expiresAt: DateTime.utc(2026, 8, 20, 10, 30),
       terminalId: 42,
@@ -51,7 +52,7 @@ void main() {
     expect(back.permissions, {'nav.sale', 'op.editPrice'});
     expect(back.operatingMode, 1);
     expect(back.pointMode, 'cashier');
-    expect(back.shiftOpen, isTrue);
+    expect(back.shift, ShiftStatus.open);
     expect(back.issuedAt, session.issuedAt);
     expect(back.expiresAt, session.expiresAt);
     // Задача 9 закрытия долга: без этой строки тест не заметил бы, если
@@ -59,6 +60,42 @@ void main() {
     // или раскодировать `terminalId` — обе половины проверены и на
     // `test/backend/session_registry_test.dart`.
     expect(back.terminalId, 42);
+  });
+
+  test('признак смены — три состояния, и неизвестное не читается закрытым', () {
+    // Задача 47: `json['shiftOpen'] == true` делал «ключа нет» (касса
+    // старше терминала, испорченный кадр) неотличимым от «смена закрыта».
+    // Касса пишет только то, что измерила: открыта или закрыта.
+    AuthSession session(ShiftStatus shift) => AuthSession(
+      token: 'tok',
+      userId: 7,
+      name: 'Айгуль',
+      role: 'Кассир',
+      permissions: const {'nav.sale'},
+      operatingMode: 0,
+      pointMode: 'cashier',
+      shift: shift,
+      issuedAt: DateTime.utc(2026, 9, 15, 10),
+      expiresAt: DateTime.utc(2026, 9, 15, 10, 30),
+      terminalId: 42,
+    );
+    ShiftStatus roundTrip(ShiftStatus s) =>
+        authSessionFromWireJson(authSessionToWireJson(session(s)))!.shift;
+
+    expect(roundTrip(ShiftStatus.open), ShiftStatus.open);
+    expect(roundTrip(ShiftStatus.closed), ShiftStatus.closed);
+    expect(roundTrip(ShiftStatus.unknown), ShiftStatus.unknown);
+
+    final withoutKey = authSessionToWireJson(session(ShiftStatus.open))
+      ..remove('shiftOpen');
+    expect(
+      authSessionFromWireJson(withoutKey)!.shift,
+      ShiftStatus.unknown,
+      reason: 'кадр без признака — «не знаю», а не «закрыта»',
+    );
+    final garbage = authSessionToWireJson(session(ShiftStatus.open))
+      ..['shiftOpen'] = 'yes';
+    expect(authSessionFromWireJson(garbage)!.shift, ShiftStatus.unknown);
   });
 
   test('отсутствие сеанса на проводе — null, а не выдуманный', () {
@@ -128,7 +165,7 @@ void main() {
       permissions: const {'nav.reports'},
       operatingMode: 0,
       pointMode: 'manager',
-      shiftOpen: false,
+      shift: ShiftStatus.closed,
       issuedAt: DateTime.utc(2026, 8, 20),
       expiresAt: DateTime.utc(2026, 8, 20, 1),
       terminalId: 5,

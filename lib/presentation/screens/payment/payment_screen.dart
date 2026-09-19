@@ -4,26 +4,25 @@ import 'dart:math' as math;
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telepos/app/router/app_routes.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_semantic_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
-import 'package:telepos/data/database/app_database.dart';
-import 'package:telepos/domain/services/receipt_print_service.dart';
-import 'package:telepos/presentation/screens/payment/receipt_data_enricher.dart';
-import 'package:telepos/hardware/cash_drawer/cash_drawer_service.dart';
+import 'package:telepos/domain/sale/payment_service.dart'
+    show CompletionTroubleKind;
 import 'package:telepos/l10n/app_localizations.dart';
-import 'package:telepos/core/logging/app_talker.dart';
+import 'package:telepos/presentation/common/utils/error_localizer.dart';
 import 'package:telepos/presentation/controllers/payment/payment_controller.dart';
 import 'package:telepos/presentation/controllers/sale/sale_controller.dart';
 import 'package:telepos/presentation/screens/payment/widgets/account_selector.dart';
 import 'package:telepos/presentation/screens/payment/widgets/denomination_grid.dart';
 import 'package:telepos/presentation/screens/payment/widgets/iin_input.dart';
 import 'package:telepos/presentation/screens/payment/widgets/loyalty_panel.dart';
+import 'package:telepos/presentation/screens/payment/widgets/offsets_panel.dart';
 import 'package:telepos/presentation/screens/payment/widgets/payment_amount_panel.dart';
+import 'package:telepos/presentation/screens/payment/widgets/qr_panel.dart';
 import 'package:telepos/presentation/common/widgets/keyboards/payment_num_pad.dart';
 import 'package:telepos/presentation/screens/payment/widgets/payment_type_selector.dart';
 
@@ -39,6 +38,39 @@ class PaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
+  /// Свой `ScaffoldMessenger` экрана оплаты — для **отказов**.
+  ///
+  /// # Дефект живой приёмки браузерного терминала (2026-09-13)
+  ///
+  /// «Рассрочка» без покупателя → «Оплатить» → отказ появился внизу окна, на
+  /// затемнении, частично под карточкой — кассир его почти не видел.
+  ///
+  /// Измерено стендом: полосу показывал **корневой** `ScaffoldMessenger`
+  /// (`MaterialApp` над навигатором, один на все маршруты), а рисовал её
+  /// `Scaffold` настольной раскладки — растянутый **на всё окно**, с фоном
+  /// `AppColors.modalOverlay`. Карточка оплаты — лишь `Center` в его теле, и
+  /// полоса ложилась к низу окна: вне карточки, на затемнение и — на окне
+  /// 1920×937 — прямо на кнопку «Оплатить».
+  ///
+  /// # Как устроено теперь
+  ///
+  /// Настольная раскладка держит этот `ScaffoldMessenger` и свой `Scaffold`
+  /// **внутри карточки**, с подвалом как `bottomNavigationBar`: отказ
+  /// показывается в карточке, над «Оплатить». Планшетная и узкая — вокруг
+  /// своего `Scaffold`, там он и так на всё окно. Отказы из виджетов
+  /// раскладки (`PaymentTypeSelector`, панели зачётов и QR) находят этот
+  /// `ScaffoldMessenger` сами — по своему контексту; отказы, которые
+  /// показывает само состояние (`_refusalMessenger`), — через ключ: контекст
+  /// состояния стоит **над** раскладкой и нашёл бы корневой.
+  ///
+  /// # Чего сюда не переносится
+  ///
+  /// Сообщения **об успехе** и о бедах железа (`_onPaymentRecorded`). Они
+  /// показываются перед уходом с экрана и читаются уже на продаже, а этот
+  /// `ScaffoldMessenger` уходит вместе с маршрутом. Они по-прежнему берут
+  /// корневой — `ScaffoldMessenger.of(context)` контекста состояния.
+  final _refusals = GlobalKey<ScaffoldMessengerState>();
+
   @override
   void initState() {
     super.initState();
@@ -56,17 +88,32 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
     ref.listen<PaymentState>(paymentControllerProvider, (prev, next) {
       if (next.error != null && next.error != prev?.error && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error!),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        // Новый отказ **вытесняет** прежнюю полосу, а не ждёт в очереди за
+        // ней: приёмка 2026-09-17 видела ответ кассы с опозданием на
+        // секунды — кассир успевал нажать ещё раз.
+        _refusalMessenger()
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              // Ключ, а не фраза, — так здесь было до задачи 23: экран
+              // печатал `PaymentState.error` сырьём, и `ErrorLocalizer` во
+              // всём каталоге оплаты не звался ни разу. Регресса задача не
+              // внесла, но и заголовок её («на его языке») на этом пути не
+              // выполнялся: `PaymentNotifier.processPayment` кладёт сюда
+              // `saleController.error`, то есть с задачи 23 — именно ключ
+              // отказа кассы, и кассир читал бы `error.shift_not_open`
+              // буквально во всех пяти локалях.
+              content: Text(ErrorLocalizer.localize(context, next.error!)),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
       }
     });
 
     if (isDesktop) {
+      // Настольная держит `_refusals` сама — внутри карточки.
       return _DesktopLayout(
+        refusals: _refusals,
         isRefund: widget.isRefund,
         onComplete: _handleComplete,
         onCancel: _handleCancel,
@@ -74,17 +121,23 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     }
 
     if (isTablet) {
-      return _TabletLayout(
-        isRefund: widget.isRefund,
-        onComplete: _handleComplete,
-        onCancel: _handleCancel,
+      return ScaffoldMessenger(
+        key: _refusals,
+        child: _TabletLayout(
+          isRefund: widget.isRefund,
+          onComplete: _handleComplete,
+          onCancel: _handleCancel,
+        ),
       );
     }
 
-    return _MobileLayout(
-      isRefund: widget.isRefund,
-      onComplete: _handleComplete,
-      onCancel: _handleCancel,
+    return ScaffoldMessenger(
+      key: _refusals,
+      child: _MobileLayout(
+        isRefund: widget.isRefund,
+        onComplete: _handleComplete,
+        onCancel: _handleCancel,
+      ),
     );
   }
 
@@ -93,6 +146,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     final preState = ref.read(paymentControllerProvider);
 
     if (preState.isProcessing) return;
+    // **Признак обработки ставится до всего остального** (круг правки 5).
+    // Он стоял только перед `processPayment`, то есть кнопка жила весь
+    // обмен с устройством, а сторож строкой выше читал тот же ложный
+    // признак: два нажатия подряд давали **два настоящих списания**
+    // (`terminal.calls == [50000, 50000]`). Круг 3 поднял цену — эквайринг
+    // зовётся теперь и в смешанной оплате, и в долге.
+    //
+    // Кнопка гаснет тем же признаком (`PaymentState.canComplete`), так что
+    // защита двойная: и виджет, и сторож.
+    notifier.setProcessing(true);
     var popped = false;
     try {
       await _handleCompleteInner(notifier, preState, () => popped = true);
@@ -106,230 +169,201 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     PaymentState preState,
     void Function() markPopped,
   ) async {
-    if (!widget.isRefund && preState.paymentType == PaymentType.card) {
+    // **Предел, названный замером (круг правки 4):** `widget.isRefund`
+    // нигде в дереве не выставляется в истину — `PaymentScreen` заводится
+    // только из продажи (`sale_screen.dart`), возврат ходит своим экраном.
+    // То есть условие ниже сегодня ничего не охраняет, и ветка возврата
+    // этого экрана — мёртвая. Не снята: возврат оплаченного картой чека
+    // рано или поздно придёт сюда же, и снять условие сейчас значит
+    // завести дефект тогда.
+    //
+    // Эквайринг зовётся при **любой** безналичной части, а не только при
+    // чистой карте (круг правки 3 задачи 14). Касса требует
+    // доказательства проведения на всю безналичную часть, и пока экран
+    // звал терминал только для карты, смешанная оплата и долг с картой на
+    // кассе с привязанным Kaspi отвергались `card_charge_unproven` — то
+    // есть не работали вовсе.
+    if (!widget.isRefund && preState.cardPortion > Decimal.zero) {
       final terminalResult = await notifier.chargeCardViaTerminal(
-        preState.amountToPay,
+        preState.cardPortion,
       );
 
       if (terminalResult.isDeclined) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                terminalResult.message ??
-                    AppLocalizations.of(context)!.kaspiNoConnection,
+          _refusalMessenger()
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                // Через словарь, как `PaymentState.error` выше: отказ кассы
+                // приходит ключом (`PaymentNotifier.chargeCardViaTerminal`).
+                // Текст отказа от самого устройства словарь не узнаёт и
+                // возвращает как есть — он и так написан для человека.
+                content: Text(
+                  terminalResult.message == null
+                      ? AppLocalizations.of(context)!.kaspiNoConnection
+                      : ErrorLocalizer.localize(
+                          context,
+                          terminalResult.message!,
+                        ),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
               ),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+            );
         }
         return;
       }
     }
 
-    final paymentState = ref.read(paymentControllerProvider);
     final success = await notifier.processPayment();
 
     if (success && mounted) {
-      notifier.setProcessing(true);
-      await _onPaymentRecorded(paymentState);
+      // Признак уже поднят в `_handleComplete` — здесь он держится до
+      // ухода с экрана, чтобы кнопка не ожила между записью денег и
+      // навигацией.
+      await _onPaymentRecorded(notifier, notifier.lastOutcome);
       markPopped();
     }
   }
 
-  Future<void> _onPaymentRecorded(PaymentState paymentState) async {
+  /// Оплата записана — сказать кассиру и уйти с экрана.
+  ///
+  /// # Чего здесь больше нет (задача 16)
+  ///
+  /// Печати чека и денежного ящика. Оба жили тут — `_printSaleReceipt`
+  /// собирал чек из состояния экрана и звал очередь печати,
+  /// `_openCashDrawer` открывал ящик через последовательный порт с
+  /// запасным путём через принтер. Оба ушли на кассу
+  /// (`LocalPaymentService`), и это не перестановка ради порядка:
+  /// решение заказчика №1 говорит, что терминал продаёт полностью, но
+  /// **железо и база остаются кассой**, а у вкладки браузера нет ни
+  /// принтера, ни ящика, ни `AppDatabase`, из которого этот экран читал
+  /// реквизиты чека.
+  ///
+  /// Правило «оплата не ждёт железа» переехало вместе с ними и стало
+  /// строже: касса отправляет печать, а не ожидает её, потому что по
+  /// проводу к задержке принтера прибавилась бы ещё и сеть.
+  ///
+  /// # Что здесь вернулось (круг правки 1)
+  ///
+  /// Первая редакция задачи 16 унесла вместе с печатью **и сигнал о её
+  /// отказе**: оранжевое «Ошибка печати» показывалось и при отказе
+  /// очереди, и при исключении, а после переноса не осталось ничего,
+  /// кроме строки в журнале. Это была не «названная граница», а снятая
+  /// обратная связь. Сигнал возвращён и остался тем же по виду —
+  /// оранжевый снек на том же `ScaffoldMessenger`.
+  ///
+  /// Порядок сохранён от прежнего кода: сообщение берётся **до** ухода
+  /// с экрана, а `ScaffoldMessenger` живёт выше маршрута и переживает
+  /// его. Ожидание бед железа уходит `unawaited` — оплата их не ждёт, их
+  /// ждёт только снек.
+  Future<void> _onPaymentRecorded(
+    PaymentNotifier notifier,
+    SaleOutcome? outcome,
+  ) async {
     if (!mounted) return;
     final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    // Красный — **роль из темы**, а не константа: `AppColors.error`
+    // одинаков в светлой и тёмной, и в ночной теме полоса вышла бы
+    // нечитаемой. Сторож `no_baked_theme_colors_test` это и поймал.
+    final errorColor = Theme.of(context).colorScheme.error;
 
-    if (!widget.isRefund) {
-      // Deliberately not awaited. The money is already recorded; a receipt that
-      // did not print is a reprint, not a lost sale, and making the cashier
-      // wait on a printer that may be absent or busy is what this used to do.
-      // The synchronous prefix of _printSaleReceipt captures the sale state
-      // before the navigation below tears this screen down.
-      unawaited(
-        _printSaleReceipt(
-          paymentState,
-          ScaffoldMessenger.of(context),
-          l10n.printerPrintError,
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          widget.isRefund ? l10n.refundSuccess : l10n.paymentSuccessMessage,
         ),
-      );
-    }
+        backgroundColor: AppColors.success,
+      ),
+    );
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            widget.isRefund ? l10n.refundSuccess : l10n.paymentSuccessMessage,
-          ),
-          backgroundColor: AppColors.success,
-        ),
-      );
-
-      if (context.canPop()) {
-        context.pop(true);
-      } else {
-        context.go(AppRoutes.sale);
-      }
-    }
-  }
-
-  Future<void> _printSaleReceipt(
-    PaymentState paymentState,
-    ScaffoldMessengerState messenger,
-    String printErrorText,
-  ) async {
-    try {
-      if (!GetIt.I.isRegistered<ReceiptPrintService>()) return;
-      final printService = GetIt.I<ReceiptPrintService>();
-
-      final saleState = ref.read(saleControllerProvider);
-      final db = GetIt.I<AppDatabase>();
-      final thisPos = await db.thisPosDao.get();
-      final shift = await db.shiftDao.findOpenedShift();
-
-      String cashierName = 'Cashier';
-      if (shift != null) {
-        final users = await (db.select(
-          db.users,
-        )..where((u) => u.id.equals(shift.userId))).get();
-        if (users.isNotEmpty) {
-          cashierName = users.first.name ?? 'Cashier';
-        }
-      }
-
-      final products = saleState.items.map((item) {
-        return ReceiptProductLine(
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          total: item.total,
-          discountAmount: item.discount,
-          originalPrice: item.discount > Decimal.zero ? item.price : null,
-        );
-      }).toList();
-
-      final payments = <ReceiptPaymentLine>[];
-      final isCashPayment = paymentState.paymentType == PaymentType.cash;
-      final isMixed = paymentState.paymentType == PaymentType.mixed;
-
-      if (isCashPayment) {
-        payments.add(
-          ReceiptPaymentLine(
-            name: 'Cash',
-            amount: paymentState.amountToPay,
-            isCash: true,
-          ),
-        );
-      } else if (paymentState.paymentType == PaymentType.card) {
-        final cardLabel = paymentState.terminalCardMask != null
-            ? 'Card ${paymentState.terminalCardMask}'
-            : 'Card';
-        payments.add(
-          ReceiptPaymentLine(
-            name: cardLabel,
-            amount: paymentState.amountToPay,
-            isCash: false,
-          ),
-        );
-      } else if (isMixed) {
-        final cashPortion = paymentState.amountToPay - paymentState.cardAmount;
-        if (cashPortion > Decimal.zero) {
-          payments.add(
-            ReceiptPaymentLine(name: 'Cash', amount: cashPortion, isCash: true),
-          );
-        }
-        if (paymentState.cardAmount > Decimal.zero) {
-          payments.add(
-            ReceiptPaymentLine(
-              name: 'Card',
-              amount: paymentState.cardAmount,
-              isCash: false,
-            ),
-          );
-        }
-      }
-
-      final req = await buildReceiptRequisites(
-        db,
-        posId: saleState.posId ?? thisPos?.id,
-        operationId: saleState.receiptNo,
-        isSale: true,
-      );
-
-      final receiptData = SaleReceiptData(
-        receiptNo: saleState.receiptNo ?? 0,
-        posId: saleState.posId ?? thisPos?.id ?? 1,
-        posName: thisPos?.cashBoxName ?? 'POS',
-        storeName: thisPos?.companyName ?? '',
-        dateTime: DateTime.now(),
-        cashierName: cashierName,
-        products: products,
-        payments: payments,
-        totalAmount: saleState.total,
-        change: paymentState.change > Decimal.zero ? paymentState.change : null,
-        customerName: paymentState.loyaltyCustomer?.name,
-        seller: req.seller,
-        fiscal: req.fiscal,
-        isVatPayer: req.isVatPayer,
-        vatAmount: req.vatFromGross(saleState.total),
-        vatRatePercent: req.vatRatePercent,
-        currencySymbol: req.currencySymbol,
-      );
-
-      // Сдача в очередь, а не запись в принтер. «Принято» здесь означает, что
-      // чек будет напечатан, когда принтер сможет, — и что при недоступном
-      // принтере он **остался заданием в хранилище**, а не исчез вместе с
-      // локальными переменными этой функции, как было до очереди. Предупреждать
-      // оператора надо только об отказе принять задание: снимок «бумаги нет
-      // прямо сейчас» — это уже не отказ.
-      final outcome = await printService.printSaleReceipt(receiptData);
-      if (outcome.isRejected) {
-        talker.warning('Чек не принят в очередь печати: ${outcome.message}');
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(printErrorText),
-            backgroundColor: AppColors.warning,
-          ),
-        );
-      }
-
-      final hasCash = isCashPayment || isMixed;
-      if (hasCash) {
-        await _openCashDrawer(printService);
-      }
-    } catch (e, stack) {
-      talker.warning('Receipt print failed (non-blocking): $e', e, stack);
-      // The sale succeeded, so this must not look like a failed payment — but
-      // it must not be invisible either, or the cashier hands over goods
-      // believing a receipt was produced.
+    // Деньги взяты, чек не фискален. Не отказ оплаты — предупреждение:
+    // разбор решения в докстринге `SaleOutcome.fiscal`.
+    if (outcome != null && outcome.fiscal.isFailed) {
       messenger.showSnackBar(
         SnackBar(
-          content: Text(printErrorText),
+          content: Text(l10n.paymentNotFiscalized),
           backgroundColor: AppColors.warning,
         ),
       );
     }
+
+    // Касса собрана без узла фискализации (задача 5) — **красная полоса**,
+    // и на каждой продаже.
+    //
+    // Разница с `operatorAbsent` здесь и есть весь смысл разделения:
+    //
+    // * ненастроенный оператор — **выбор владельца**, положение штатное, и
+    //   окно на каждой продаже кассир отучится замечать за день. Его место
+    //   — строка в подвале чека (`noFiscalDocumentReason`), а на этом
+    //   экране он не показывается вовсе;
+    // * отсутствующий узел — **сломанная сборка**. Никто её не выбирал,
+    //   настройками она не лечится, и молчать о ней нельзя: касса берёт
+    //   деньги и не может выдать документ ни одному чеку.
+    if (outcome != null && outcome.fiscal.isModuleAbsent) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.paymentFiscalModuleAbsent),
+          backgroundColor: errorColor,
+        ),
+      );
+    }
+
+    if (outcome != null) {
+      unawaited(
+        _reportHardwareTroubles(notifier, outcome.receiptNo, messenger, {
+          CompletionTroubleKind.print: l10n.printerPrintError,
+          CompletionTroubleKind.drawer: l10n.cashDrawerOpenError,
+        }),
+      );
+    }
+
+    if (context.canPop()) {
+      context.pop(true);
+    } else {
+      context.go(AppRoutes.sale);
+    }
   }
 
-  Future<void> _openCashDrawer(ReceiptPrintService printService) async {
+  /// Оранжевый снек о том, что железо не сработало, — после успеха
+  /// оплаты и уже без экрана.
+  ///
+  /// **Заголовок берётся по виду беды** (круг правки 2). Первая редакция
+  /// подписывала «Ошибкой печати» всё подряд, и отказ ящика читался как
+  /// «Ошибка печати: денежный ящик не открылся» — сообщение, которое
+  /// само себе противоречит.
+  Future<void> _reportHardwareTroubles(
+    PaymentNotifier notifier,
+    int receiptNo,
+    ScaffoldMessengerState messenger,
+    Map<CompletionTroubleKind, String> titles,
+  ) async {
     try {
-      if (GetIt.I.isRegistered<CashDrawerService>()) {
-        final drawer = GetIt.I<CashDrawerService>();
-        if (drawer.mode == CashDrawerMode.serialPort) {
-          final result = await drawer.open();
-          if (result.success) return;
-          talker.warning(
-            'Cash drawer serial open failed, falling back to printer: '
-            '${result.errorMessage}',
-          );
-        }
+      final troubles = await notifier.hardwareTroubles(receiptNo);
+      for (final trouble in troubles) {
+        final title = titles[trouble.kind];
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              title == null ? trouble.message : '$title: ${trouble.message}',
+            ),
+            backgroundColor: AppColors.warning,
+          ),
+        );
       }
-    } catch (e, stack) {
-      talker.warning('Cash drawer service error (non-blocking): $e', e, stack);
+    } catch (_) {
+      // Спросить не удалось — оплата от этого не становится неудачной, и
+      // ронять снек-сообщение поверх ушедшего экрана незачем.
     }
-    await printService.openCashDrawer();
   }
+
+  /// Куда показывать отказ оплаты — см. [_refusals].
+  ///
+  /// Корневой — только до первой сборки раскладки, когда ключ ещё не
+  /// привязан; отказов в этот миг не бывает, но упасть здесь хуже, чем
+  /// показать не там.
+  ScaffoldMessengerState _refusalMessenger() =>
+      _refusals.currentState ?? ScaffoldMessenger.of(context);
 
   void _handleCancel() {
     if (context.canPop()) {
@@ -342,10 +376,15 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
 class _DesktopLayout extends ConsumerWidget {
   const _DesktopLayout({
+    required this.refusals,
     required this.isRefund,
     required this.onComplete,
     required this.onCancel,
   });
+
+  /// `ScaffoldMessenger` отказов — ставится внутрь карточки
+  /// (`_PaymentScreenState._refusals`).
+  final GlobalKey<ScaffoldMessengerState> refusals;
 
   final bool isRefund;
   final VoidCallback onComplete;
@@ -367,9 +406,13 @@ class _DesktopLayout extends ConsumerWidget {
       backgroundColor: AppColors.modalOverlay,
       body: Center(
         child: Container(
+          key: const Key('payment_card'),
           width: cardWidth,
           constraints: BoxConstraints(maxHeight: cardMaxH),
           margin: const EdgeInsets.all(AppTheme.spacingLarge),
+          // Полоса отказа живёт теперь внутри карточки — скругление обязано
+          // резать и её.
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: context.semantic.canvas,
             borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
@@ -381,65 +424,101 @@ class _DesktopLayout extends ConsumerWidget {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              _Header(
-                title: isRefund ? l10n.refundTitle : l10n.paymentTitle,
-                amount: state.totalAmount,
-                color: isRefund ? AppColors.warning : AppColors.primary,
-                onClose: onCancel,
-              ),
-
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          // Отказы — в карточке, над подвалом (`_PaymentScreenState._refusals`).
+          //
+          // Отступы окна снимаются: карточка стоит посреди внешнего
+          // `Scaffold`, который их уже учёл, и второй учёт сдвинул бы подвал.
+          // Клавиатуру по той же причине отрабатывает внешний, а не этот.
+          child: MediaQuery.removePadding(
+            context: context,
+            removeLeft: true,
+            removeTop: true,
+            removeRight: true,
+            removeBottom: true,
+            child: ScaffoldMessenger(
+              key: refusals,
+              child: Scaffold(
+                backgroundColor: context.semantic.canvas,
+                resizeToAvoidBottomInset: false,
+                body: Column(
                   children: [
-                    Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppTheme.spacing),
-                        child: Column(
-                          children: [
-                            const PaymentTypeSelector(),
-                            const SizedBox(height: AppTheme.spacing),
-                            const PaymentAmountPanel(),
-                            const SizedBox(height: AppTheme.spacing),
-                            if (state.paymentType != PaymentType.card)
-                              const Expanded(child: _PaymentInputTabs())
-                            else
-                              const Spacer(),
-                          ],
-                        ),
-                      ),
+                    _Header(
+                      title: isRefund ? l10n.refundTitle : l10n.paymentTitle,
+                      amount: state.totalAmount,
+                      color: isRefund ? AppColors.warning : AppColors.primary,
+                      onClose: onCancel,
                     ),
 
                     Expanded(
-                      flex: 4,
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(AppTheme.spacing),
-                        child: Column(
-                          children: [
-                            const AccountSelector(),
-                            const SizedBox(height: AppTheme.spacing),
-                            const LoyaltyPanel(),
-                            const SizedBox(height: AppTheme.spacing),
-                            const IinInput(),
-                          ],
-                        ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(AppTheme.spacing),
+                              child: Column(
+                                children: [
+                                  const PaymentTypeSelector(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  const PaymentAmountPanel(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  if (state.paymentType != PaymentType.card)
+                                    const Expanded(child: _PaymentInputTabs())
+                                  else
+                                    const Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          Expanded(
+                            flex: 4,
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(AppTheme.spacing),
+                              child: Column(
+                                children: [
+                                  const AccountSelector(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  const LoyaltyPanel(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  // Вход в зачёты — сразу под покупателем:
+                                  // аванс принадлежит тому, кого нашла панель
+                                  // лояльности, и читать их кассир должен
+                                  // подряд.
+                                  //
+                                  // QR — первым из зачётов после бонуса, в том
+                                  // же порядке, в каком их раскладывает касса
+                                  // (`OffsetChain`): бонус → QR → сертификат →
+                                  // аванс.
+                                  const QrPanel(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  const PrepaymentPanel(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  const CertificatePanel(),
+                                  const SizedBox(height: AppTheme.spacing),
+                                  const IinInput(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
+                // Подвал — `bottomNavigationBar`, а не последний ребёнок
+                // колонки: плавающую полосу `Scaffold` ставит **над** ним,
+                // и отказ не ложится на «Оплатить».
+                bottomNavigationBar: _Footer(
+                  canComplete: state.canComplete,
+                  isProcessing: state.isProcessing,
+                  isRefund: isRefund,
+                  onComplete: onComplete,
+                  onCancel: onCancel,
+                ),
               ),
-
-              _Footer(
-                canComplete: state.canComplete,
-                isProcessing: state.isProcessing,
-                isRefund: isRefund,
-                onComplete: onComplete,
-                onCancel: onCancel,
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -518,6 +597,12 @@ class _TabletLayout extends ConsumerWidget {
                   const SizedBox(height: AppTheme.spacing),
                   const LoyaltyPanel(),
                   const SizedBox(height: AppTheme.spacing),
+                  const QrPanel(),
+                  const SizedBox(height: AppTheme.spacing),
+                  const PrepaymentPanel(),
+                  const SizedBox(height: AppTheme.spacing),
+                  const CertificatePanel(),
+                  const SizedBox(height: AppTheme.spacing),
                   const IinInput(),
                 ],
               ),
@@ -588,6 +673,8 @@ class _MobileLayout extends ConsumerWidget {
             const AccountSelector(),
             const SizedBox(height: AppTheme.spacing),
             const LoyaltyPanelCompact(),
+            const SizedBox(height: AppTheme.spacing),
+            const OffsetsPanelCompact(),
             const SizedBox(height: AppTheme.spacing),
             const IinInputCompact(),
             if (state.paymentType != PaymentType.card) ...[
@@ -702,6 +789,11 @@ class _Footer extends StatelessWidget {
           Expanded(
             flex: 2,
             child: ElevatedButton(
+              // Ключ заведён кругом правки 3: без него проба «эквайринг
+              // зовётся при смешанной оплате» пришлось бы писать поверх
+              // контракта, а расхождение было именно между экраном и
+              // контрактом — такая проба его снова не увидела бы.
+              key: const Key('payment_complete'),
               onPressed: canComplete && !isProcessing ? onComplete : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: isRefund
@@ -915,6 +1007,7 @@ class _FooterCompact extends StatelessWidget {
               child: SizedBox(
                 height: 56,
                 child: ElevatedButton(
+                  key: const Key('payment_complete'),
                   onPressed: canComplete && !isProcessing ? onComplete : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isRefund

@@ -31,6 +31,7 @@ import 'package:telepos/core/settings/terminal_service_settings.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/presentation/screens/settings/terminal_pairing_screen.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Тот же приём, что у `terminal_home_screen_test.dart` и у
 /// `general_settings_screen_permissions_test.dart`: `AppStateNotifier.build()`
@@ -70,8 +71,8 @@ class _TestAppStateNotifier extends Notifier<AppState>
   }
 
   @override
-  void setShiftOpened(bool isOpened) {
-    state = state.copyWith(isShiftOpened: isOpened);
+  void setShift(ShiftStatus shift) {
+    state = state.copyWith(shift: shift);
   }
 
   @override

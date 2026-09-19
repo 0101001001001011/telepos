@@ -78,6 +78,33 @@ Future<String> _readTerminalsCreateSql() async {
   return sql;
 }
 
+/// `sales` без `terminal_id`/`cart_version`/`last_command_key` — задача 2
+/// плана «продажа с браузерного терминала» добавила их миграцией v36→v37,
+/// которая трогает существующую таблицу и требует, чтобы она уже была: без
+/// неё подъём фикстур этого файла падает на `no such table: sales`, хотя
+/// настоящая база апгрейда таблицу `sales` имеет с самой первой схемы. Тот
+/// же приём, что `_readTerminalsCreateSql` выше.
+Future<String> _readSalesCreateSql() async {
+  final probe = AppDatabase(NativeDatabase.memory());
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final row = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
+  final sql = row.read<String>('sql');
+  await probe.close();
+  return sql;
+}
+
 /// Открывает базу, выглядящую как схема 32: обе таблицы созданы сырым SQL до
 /// того, как drift возьмётся за миграции, `user_version` принудительно 32.
 /// Открытие через [AppDatabase] запускает ровно ветку `if (from < 33)` — и,
@@ -86,7 +113,8 @@ Future<String> _readTerminalsCreateSql() async {
 AppDatabase _openAsIfMigratingFromV32(
   String usersSql,
   String permsSql,
-  String terminalsSql, {
+  String terminalsSql,
+  String salesSql, {
   required void Function(sqlite3.Database raw) seed,
 }) {
   return AppDatabase(
@@ -95,6 +123,7 @@ AppDatabase _openAsIfMigratingFromV32(
         raw.execute(usersSql);
         raw.execute(permsSql);
         raw.execute(terminalsSql);
+        raw.execute(salesSql);
         raw.execute('PRAGMA user_version = 32');
         seed(raw);
       },
@@ -120,6 +149,7 @@ void main() {
     // с самого начала, — то есть доказывали бы, что миграция не нужна.
     final (usersSql, permsSql) = await _readV32TableSql();
     final terminalsSql = await _readTerminalsCreateSql();
+    final salesSql = await _readSalesCreateSql();
     expect(usersSql, contains('CREATE TABLE'));
     expect(permsSql, contains('CREATE TABLE'));
 
@@ -127,6 +157,7 @@ void main() {
       usersSql,
       permsSql,
       terminalsSql,
+      salesSql,
       seed: (raw) {
         raw.execute('PRAGMA user_version = 33'); // не мигрировать здесь
       },
@@ -149,11 +180,13 @@ void main() {
       'ключи, все разрешены', () async {
     final (usersSql, permsSql) = await _readV32TableSql();
     final terminalsSql = await _readTerminalsCreateSql();
+    final salesSql = await _readSalesCreateSql();
     const cashierId = 7;
     final db = _openAsIfMigratingFromV32(
       usersSql,
       permsSql,
       terminalsSql,
+      salesSql,
       seed: (raw) {
         raw.execute(
           'INSERT INTO users (id, name, role, status, edit_time) '
@@ -190,6 +223,7 @@ void main() {
       'два запрещены, остальные разрешены', () async {
     final (usersSql, permsSql) = await _readV32TableSql();
     final terminalsSql = await _readTerminalsCreateSql();
+    final salesSql = await _readSalesCreateSql();
     const cashierId = 11;
     final deniedKeys = {
       PermissionKeys.opEditPrice,
@@ -199,6 +233,7 @@ void main() {
       usersSql,
       permsSql,
       terminalsSql,
+      salesSql,
       seed: (raw) {
         raw.execute(
           'INSERT INTO users (id, name, role, status, edit_time) '
@@ -256,6 +291,7 @@ void main() {
       'существующие не трогает', () async {
     final (usersSql, permsSql) = await _readV32TableSql();
     final terminalsSql = await _readTerminalsCreateSql();
+    final salesSql = await _readSalesCreateSql();
     const cashierId = 13;
     // До правки Б-1 этот сценарий описывался как «заведён мастером после
     // задачи 13» и ожидал, что миграция ничего не допишет — но такой
@@ -276,6 +312,7 @@ void main() {
       usersSql,
       permsSql,
       terminalsSql,
+      salesSql,
       seed: (raw) {
         raw.execute(
           'INSERT INTO users (id, name, role, status, edit_time) '
@@ -334,6 +371,7 @@ void main() {
     // отказ, хотя `roleDefaults[administrator]` их даёт.
     final (usersSql, permsSql) = await _readV32TableSql();
     final terminalsSql = await _readTerminalsCreateSql();
+    final salesSql = await _readSalesCreateSql();
     const adminId = 21;
     const cashierId = 22;
 
@@ -352,6 +390,7 @@ void main() {
           raw.execute(usersSql);
           raw.execute(permsSql);
           raw.execute(terminalsSql);
+          raw.execute(salesSql);
           raw.execute(
             'INSERT INTO users (id, name, role, status, edit_time) '
             "VALUES ($adminId, 'Администратор Гульнара', 1, 'active', 1000)",
@@ -416,11 +455,13 @@ void main() {
       'user_permissions вообще не тронуты', () async {
     final (usersSql, permsSql) = await _readV32TableSql();
     final terminalsSql = await _readTerminalsCreateSql();
+    final salesSql = await _readSalesCreateSql();
     const ownerId = 1;
     final db = _openAsIfMigratingFromV32(
       usersSql,
       permsSql,
       terminalsSql,
+      salesSql,
       seed: (raw) {
         raw.execute(
           'INSERT INTO users (id, name, role, status, edit_time) '

@@ -12,9 +12,13 @@ class ShiftReceipt {
     required this.cashPaymentsSum,
     required this.paymentSums,
     Decimal? openingCash,
+    Decimal? certificatesIssued,
+    Decimal? certificatesRedeemed,
     this.posName,
     this.companyName,
-  }) : openingCash = openingCash ?? Decimal.zero;
+  }) : openingCash = openingCash ?? Decimal.zero,
+       certificatesIssued = certificatesIssued ?? Decimal.zero,
+       certificatesRedeemed = certificatesRedeemed ?? Decimal.zero;
 
   final int shiftId;
 
@@ -36,6 +40,44 @@ class ShiftReceipt {
 
   final List<PaymentSumEntry> paymentSums;
 
+  /// Сумма **номиналов** сертификатов, выпущенных за смену.
+  ///
+  /// # Зачем это отдельное число рядом с выручкой
+  ///
+  /// Деньги, полученные за проданный сертификат, — **не выручка**, а
+  /// обязательство магазина (`AccountType.certificateLiability`). Они лежат
+  /// в ящике, и кассир, сводящий кассу, обязан знать, что часть денег в
+  /// ящике — чужие: товара на них ещё не отдано. Без этой строки X/Z-отчёт
+  /// показывал их неотличимо от выручки, и владелец снимал их как прибыль.
+  ///
+  /// Источник и довод, почему именно он, — `CertificateDao
+  /// .issuedNominalBetween`. Коротко: номинал бумажки, а не цена, за
+  /// которую её продали, и не строки оплаты того чека.
+  ///
+  /// # Чего это число НЕ значит
+  ///
+  /// Не значит «столько наличных в ящике за сертификаты»: бумажку могли
+  /// оплатить картой или завести переносом тиража вовсе без чека. И не
+  /// значит «столько магазин должен на конец смены»: обязательство копится
+  /// годами, а здесь движение одной смены.
+  final Decimal certificatesIssued;
+
+  /// Сумма строк оплаты **сертификатом** за смену.
+  ///
+  /// Зеркало [certificatesIssued] и ответ на другой вопрос: столько товара
+  /// отдано **без живых денег**. Гашение — `FiscalTreatment.offsetNotFiscal`
+  /// (решение заказчика 2026-09-14): не оплата ни для ОФД, ни для ящика, а
+  /// закрытие ранее взятого обязательства товаром.
+  ///
+  /// Источник и довод — `PaymentDao.sumCertificateRedemptionsBetween`.
+  ///
+  /// # Чего это число НЕ значит
+  ///
+  /// Не уменьшает [saleAmount]: цена товара входит в выручку целиком, и
+  /// вычитать одно из другого нельзя — чек мог быть доплачен наличными,
+  /// которые в ящике есть.
+  final Decimal certificatesRedeemed;
+
   final String? posName;
 
   final String? companyName;
@@ -47,6 +89,8 @@ class PaymentSumEntry {
     required this.accountName,
     required this.accountType,
     required this.amount,
+    this.kindId,
+    this.kindName,
   });
 
   final int accountId;
@@ -56,4 +100,19 @@ class PaymentSumEntry {
   final int accountType;
 
   final Decimal amount;
+
+  /// Вид оплаты — **второе измерение отчёта**, заведённое задачей 14.
+  ///
+  /// До неё строка отчёта отвечала на вопрос «сколько пришло на этот
+  /// счёт», и этого хватало ровно потому, что старый уникальный ключ
+  /// `Payments` запрещал двум строкам одного чека лечь на один счёт.
+  /// Ключ снят, запрет вместе с ним, и без этого поля отчёт слил бы
+  /// наличные и карту, обе упавшие на счёт кассы, в одну строку.
+  ///
+  /// `null` — вид не записан (строки до v41) или счёт снесён. Такая
+  /// строка приходит **отдельно**, а не подмешанной к наличным.
+  final int? kindId;
+
+  /// Имя вида **из справочника**, то есть настроенное оператором.
+  final String? kindName;
 }

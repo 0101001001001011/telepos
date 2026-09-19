@@ -9,6 +9,7 @@ import 'package:telepos/data/database/daos/account_dao.dart';
 import 'package:telepos/data/usecases/cash_operation/cash_in_out_controller_impl.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
+import 'package:telepos/domain/fiscal/fiscal_offset_settings.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
 
 import '../support/harness.dart';
@@ -64,6 +65,11 @@ class _FakeFiscalService implements FiscalService {
     required Decimal amount,
     required Decimal cashAmount,
     required Decimal cardAmount,
+    required Decimal mobileAmount,
+    required Decimal bonusAmount,
+    required Decimal offsetAmount,
+    required OffsetFiscalLayout offsetLayout,
+    required bool excludeCertificatePositions,
     String? customerBin,
   }) => throw UnimplementedError();
   @override
@@ -71,6 +77,29 @@ class _FakeFiscalService implements FiscalService {
     required int refundLocalId,
     required int? originalSaleReceiptNo,
     required Decimal amount,
+    required Decimal cashAmount,
+    required Decimal cardAmount,
+    required Decimal mobileAmount,
+    required Decimal bonusAmount,
+    required Decimal creditAmount,
+    required Decimal offsetAmount,
+    required OffsetFiscalLayout offsetLayout,
+    required bool excludeCertificatePositions,
+  }) => throw UnimplementedError();
+  @override
+  Future<FiscalResult> fiscalizePrepayment({
+    required int operationId,
+    required Decimal amount,
+    required FiscalPaymentKind paymentKind,
+    required String positionName,
+  }) => throw UnimplementedError();
+  @override
+  Future<FiscalResult> fiscalizePrepaymentRefund({
+    required int operationId,
+    required int? intakeOperationId,
+    required Decimal amount,
+    required FiscalPaymentKind paymentKind,
+    required String positionName,
   }) => throw UnimplementedError();
   @override
   Future<FiscalResult> fiscalizePurchase(FiscalSaleRequest req) =>

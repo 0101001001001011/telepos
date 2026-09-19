@@ -15,6 +15,8 @@ import 'package:telepos/presentation/controllers/auth/login_controller.dart';
 import 'package:telepos/presentation/screens/auth/widgets/pin_display.dart';
 import 'package:telepos/presentation/screens/auth/widgets/pin_keypad.dart';
 import 'package:telepos/presentation/screens/auth/widgets/user_selector.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
+import 'package:telepos/app/theme/app_typography.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -47,6 +49,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final state = ref.read(loginControllerProvider);
 
     if (state.selectedUser != null && state.userHasNoPassword) return;
+
+    // Гейт привязки поднят — клавиатура принадлежит **ему**, а не PIN-панели.
+    //
+    // Найдено живой приёмкой задачи 21 и изолировано измерением: цифры,
+    // набранные в поле кода привязки, доходили сюда и дописывались в буфер
+    // PIN. `KeyboardListener` обёрнут вокруг всего `Scaffold` и слушает с
+    // `autofocus`, а поле кода — его потомок; цифру поле не съедает, и она
+    // всплывает к предку. Тело экрана при поднятом гейте не отрисовано
+    // вовсе (`_EnrolmentGate` подменяет его целиком), поэтому единственным
+    // путём в буфер оставался этот обработчик.
+    //
+    // Цена была не косметической. Код привязки — Crockford base32
+    // (`pairing_invites.dart`), цифр в нём случайное число, и когда их
+    // набиралось четыре, автопроверка отправляла **цифры кода привязки в
+    // качестве PIN**: касса отвечала `wrongPin`, счётчик неудач настоящего
+    // кассира щёлкал (`LoginThrottle.penalizeFailure` зовётся до всякой
+    // проверки PIN), а кассир видел заполненный индикатор и никакой ошибки.
+    //
+    // Измерено на живом стенде 2026-09-07, причина изолирована сменой
+    // только состава кода при неизменном способе ввода: код с двумя
+    // цифрами дал две точки, код без цифр — ноль.
+    if (state.needsEnrolmentCode) return;
 
     final key = event.logicalKey;
 
@@ -237,7 +261,7 @@ class _DesktopLoginLayout extends ConsumerWidget {
                     children: [
                       PinDisplayLarge(
                         enteredCount: state.enteredPin.length,
-                        maxLength: LoginState.minPinLength,
+                        maxLength: LoginState.maxPinLength,
                         errorMessage: state.error != null
                             ? ErrorLocalizer.localize(context, state.error!)
                             : null,
@@ -346,19 +370,36 @@ class _DesktopLoginLayout extends ConsumerWidget {
   }
 
   Widget _buildShiftStatus(BuildContext context, LoginState state) {
-    final isOpened = state.isShiftOpened;
+    // Задача 47: три состояния. «Не знаю» — цветом темы, без замка: это не
+    // утверждение о смене, а его отсутствие.
+    final shiftL10n = AppLocalizations.of(context)!;
+    final (shiftColor, shiftIcon, shiftLabel) = switch (state.shift) {
+      ShiftStatus.open => (
+        AppColors.success,
+        Icons.lock_open,
+        shiftL10n.loginShiftOpen,
+      ),
+      ShiftStatus.closed => (
+        AppColors.warning,
+        TeleposIcons.lock,
+        shiftL10n.loginShiftClosed,
+      ),
+      ShiftStatus.unknown => (
+        Theme.of(context).colorScheme.onSurfaceVariant,
+        Icons.help_outline,
+        shiftL10n.loginShiftUnknown,
+      ),
+    };
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppTheme.spacing,
         vertical: AppTheme.spacingSmall,
       ),
       decoration: BoxDecoration(
-        color: isOpened
-            ? AppColors.success.withValues(alpha: 0.1)
-            : AppColors.warning.withValues(alpha: 0.1),
+        color: shiftColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusSmall),
         border: Border.all(
-          color: isOpened ? AppColors.success : AppColors.warning,
+          color: shiftColor,
           width: 1,
         ),
       ),
@@ -366,17 +407,15 @@ class _DesktopLoginLayout extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isOpened ? Icons.lock_open : TeleposIcons.lock,
+            shiftIcon,
             size: 16,
-            color: isOpened ? AppColors.success : AppColors.warning,
+            color: shiftColor,
           ),
           const SizedBox(width: 8),
           Text(
-            isOpened
-                ? AppLocalizations.of(context)!.loginShiftOpen
-                : AppLocalizations.of(context)!.loginShiftClosed,
+            shiftLabel,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isOpened ? AppColors.success : AppColors.warning,
+              color: shiftColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -423,7 +462,7 @@ class _MobileLoginLayout extends ConsumerWidget {
                   PinDisplay(
                     length: state.enteredPin.length,
                     enteredCount: state.enteredPin.length,
-                    maxLength: LoginState.minPinLength,
+                    maxLength: LoginState.maxPinLength,
                     hasError: state.hasError,
                   ),
 
@@ -542,19 +581,36 @@ class _MobileLoginLayout extends ConsumerWidget {
   }
 
   Widget _buildShiftStatus(BuildContext context, LoginState state) {
-    final isOpened = state.isShiftOpened;
+    // Задача 47: три состояния. «Не знаю» — цветом темы, без замка: это не
+    // утверждение о смене, а его отсутствие.
+    final shiftL10n = AppLocalizations.of(context)!;
+    final (shiftColor, shiftIcon, shiftLabel) = switch (state.shift) {
+      ShiftStatus.open => (
+        AppColors.success,
+        Icons.lock_open,
+        shiftL10n.loginShiftOpen,
+      ),
+      ShiftStatus.closed => (
+        AppColors.warning,
+        TeleposIcons.lock,
+        shiftL10n.loginShiftClosed,
+      ),
+      ShiftStatus.unknown => (
+        Theme.of(context).colorScheme.onSurfaceVariant,
+        Icons.help_outline,
+        shiftL10n.loginShiftUnknown,
+      ),
+    };
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppTheme.spacing,
         vertical: AppTheme.spacingSmall,
       ),
       decoration: BoxDecoration(
-        color: isOpened
-            ? AppColors.success.withValues(alpha: 0.1)
-            : AppColors.warning.withValues(alpha: 0.1),
+        color: shiftColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusSmall),
         border: Border.all(
-          color: isOpened ? AppColors.success : AppColors.warning,
+          color: shiftColor,
           width: 1,
         ),
       ),
@@ -562,17 +618,15 @@ class _MobileLoginLayout extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isOpened ? Icons.lock_open : TeleposIcons.lock,
+            shiftIcon,
             size: 16,
-            color: isOpened ? AppColors.success : AppColors.warning,
+            color: shiftColor,
           ),
           const SizedBox(width: 8),
           Text(
-            isOpened
-                ? AppLocalizations.of(context)!.loginShiftOpen
-                : AppLocalizations.of(context)!.loginShiftClosed,
+            shiftLabel,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isOpened ? AppColors.success : AppColors.warning,
+              color: shiftColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -713,7 +767,7 @@ class _EnrolmentGateState extends ConsumerState<_EnrolmentGate> {
                 enabled: !_submitting,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontFamily: 'monospace',
+                  fontFamily: AppTypography.familyMono,
                   fontSize: 18,
                   letterSpacing: 1.2,
                 ),

@@ -1,3 +1,4 @@
+import 'package:talker/talker.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -139,6 +140,11 @@ class _FlakyStore implements PrintJobStore {
   /// Отказывать, пока не выключат.
   bool jobsFail;
 
+  /// Отказывать на записи задания — то есть на самой сдаче в очередь.
+  /// Заведён кругом правки 3 задачи 16: отказ приёма и отказ прохода —
+  /// разные беды, и след они оставляют в разных местах.
+  bool putFails = false;
+
   /// Отказать столько ближайших вызовов [failInterruptedPrinting] — то есть
   /// столько ближайших запусков очереди. Отдельно от [failNextJobsCalls]
   /// потому, что отказ **на старте** имеет свою цену: пока он кешировался,
@@ -159,7 +165,10 @@ class _FlakyStore implements PrintJobStore {
   int failNextJobsCalls;
 
   @override
-  Future<List<PrintJob>> jobs({int? terminalId, bool activeOnly = false}) async {
+  Future<List<PrintJob>> jobs({
+    int? terminalId,
+    bool activeOnly = false,
+  }) async {
     if (failNextJobsCalls > 0) {
       failNextJobsCalls--;
       throw StateError('база печати недоступна');
@@ -169,7 +178,10 @@ class _FlakyStore implements PrintJobStore {
   }
 
   @override
-  Future<void> put(PrintJob job) => _inner.put(job);
+  Future<void> put(PrintJob job) {
+    if (putFails) throw StateError('база печати недоступна');
+    return _inner.put(job);
+  }
 
   @override
   Future<PrintJob?> jobById(String jobId) => _inner.jobById(jobId);
@@ -179,8 +191,10 @@ class _FlakyStore implements PrintJobStore {
       _inner.isConfirmedPrinted(jobId);
 
   @override
-  Stream<List<PrintJob>> watchJobs({int? terminalId, bool activeOnly = false}) =>
-      _inner.watchJobs(terminalId: terminalId, activeOnly: activeOnly);
+  Stream<List<PrintJob>> watchJobs({
+    int? terminalId,
+    bool activeOnly = false,
+  }) => _inner.watchJobs(terminalId: terminalId, activeOnly: activeOnly);
 
   @override
   Future<List<PrintJob>> failInterruptedPrinting(String reason) async {
@@ -286,9 +300,7 @@ void main() {
     int attempts = 0,
     String? failureReason,
   }) {
-    final createdAt = _t0
-        .subtract(age)
-        .add(Duration(milliseconds: made++));
+    final createdAt = _t0.subtract(age).add(Duration(milliseconds: made++));
     return PrintJob(
       id: id,
       terminalId: terminalId,
@@ -337,213 +349,241 @@ void main() {
   });
 
   group('неделимость: между байтами одного чека не встаёт чужой', () {
-    test('два задания, сданные разом, доходят до принтера целыми и подряд', () async {
-      final store = openStore();
-      final queue = openQueue(store);
-      printer.pauseMidWrite = true;
+    test(
+      'два задания, сданные разом, доходят до принтера целыми и подряд',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
+        printer.pauseMidWrite = true;
 
-      final first = job('sale-7-000101', receipt: _receiptKz);
-      final second = job(
-        'sale-42-000201',
-        receipt: _receiptUz,
-        terminalId: 42,
-        posId: 9,
-      );
+        final first = job('sale-7-000101', receipt: _receiptKz);
+        final second = job(
+          'sale-42-000201',
+          receipt: _receiptUz,
+          terminalId: 42,
+          posId: 9,
+        );
 
-      // Оба сдаются одновременно — именно так это выглядит с двух касс. Сдача
-      // по очереди перемешивания не проверяет: гонка возникает при
-      // одновременности.
-      final outcomes = await Future.wait([
-        queue.submit(first),
-        queue.submit(second),
-      ]);
-      expect(outcomes.map((o) => o.status), everyElement(PrintSubmitStatus.accepted));
+        // Оба сдаются одновременно — именно так это выглядит с двух касс. Сдача
+        // по очереди перемешивания не проверяет: гонка возникает при
+        // одновременности.
+        final outcomes = await Future.wait([
+          queue.submit(first),
+          queue.submit(second),
+        ]);
+        expect(
+          outcomes.map((o) => o.status),
+          everyElement(PrintSubmitStatus.accepted),
+        );
 
-      await _pumpUntil(() => printer.pausedWrites > 0);
-      await _pumpEventLoop();
+        await _pumpUntil(() => printer.pausedWrites > 0);
+        await _pumpEventLoop();
 
-      // Вот проверка неделимости: пока первый чек не дописан, второй не начат.
-      // Не «замок взят», а «чужих байтов на приёмнике нет».
-      expect(
-        printer.calls,
-        hasLength(1),
-        reason:
-            'пока байты первого задания уходят в принтер, второе задание не '
-            'может начаться (И29, раздел 8 архитектуры)',
-      );
-      final firstBytes = _bytes(_receiptKz);
-      expect(
-        printer.received,
-        orderedEquals(firstBytes.sublist(0, firstBytes.length ~/ 2)),
-        reason:
-            'на приёмнике ровно начало первого чека и ни одного чужого байта',
-      );
+        // Вот проверка неделимости: пока первый чек не дописан, второй не начат.
+        // Не «замок взят», а «чужих байтов на приёмнике нет».
+        expect(
+          printer.calls,
+          hasLength(1),
+          reason:
+              'пока байты первого задания уходят в принтер, второе задание не '
+              'может начаться (И29, раздел 8 архитектуры)',
+        );
+        final firstBytes = _bytes(_receiptKz);
+        expect(
+          printer.received,
+          orderedEquals(firstBytes.sublist(0, firstBytes.length ~/ 2)),
+          reason:
+              'на приёмнике ровно начало первого чека и ни одного чужого байта',
+        );
 
-      printer.releaseOldestWrite();
-      await _pumpUntil(() => printer.pausedWrites > 0);
-      printer.releaseOldestWrite();
-      await queue.whenIdle();
+        printer.releaseOldestWrite();
+        await _pumpUntil(() => printer.pausedWrites > 0);
+        printer.releaseOldestWrite();
+        await queue.whenIdle();
 
-      expect(
-        printer.received,
-        orderedEquals(<int>[..._bytes(_receiptKz), ..._bytes(_receiptUz)]),
-        reason:
-            'один чек целиком, следом второй целиком — перемешанные байты '
-            'здесь и есть тот отказ, который архитектура называет прямо',
-      );
-      expect(
-        printer.maxInFlight,
-        1,
-        reason: 'вспомогательная проверка формы: писатель ровно один',
-      );
-    });
+        expect(
+          printer.received,
+          orderedEquals(<int>[..._bytes(_receiptKz), ..._bytes(_receiptUz)]),
+          reason:
+              'один чек целиком, следом второй целиком — перемешанные байты '
+              'здесь и есть тот отказ, который архитектура называет прямо',
+        );
+        expect(
+          printer.maxInFlight,
+          1,
+          reason: 'вспомогательная проверка формы: писатель ровно один',
+        );
+      },
+    );
 
-    test('чужое задание между двумя своими не разрывает ни одно из трёх', () async {
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'чужое задание между двумя своими не разрывает ни одно из трёх',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.submit(
-        job('sale-42-000201', receipt: _receiptUz, terminalId: 42, posId: 9),
-      );
-      await queue.submit(job('sale-7-000102', receipt: _receiptRu));
-      await queue.whenIdle();
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.submit(
+          job('sale-42-000201', receipt: _receiptUz, terminalId: 42, posId: 9),
+        );
+        await queue.submit(job('sale-7-000102', receipt: _receiptRu));
+        await queue.whenIdle();
 
-      expect(
-        printer.received,
-        orderedEquals(<int>[
-          ..._bytes(_receiptKz),
-          ..._bytes(_receiptUz),
-          ..._bytes(_receiptRu),
-        ]),
-        reason:
-            'порядок — тот, в каком чеки выбиты; каждый чек целиком, включая '
-            'тот, что пришёл с другой кассы',
-      );
-    });
+        expect(
+          printer.received,
+          orderedEquals(<int>[
+            ..._bytes(_receiptKz),
+            ..._bytes(_receiptUz),
+            ..._bytes(_receiptRu),
+          ]),
+          reason:
+              'порядок — тот, в каком чеки выбиты; каждый чек целиком, включая '
+              'тот, что пришёл с другой кассы',
+        );
+      },
+    );
   });
 
   group('идемпотентность: подтверждённое задание не печатается второй раз', () {
-    test('повтор сдачи с тем же идентификатором отвечает duplicate и не печатает', () async {
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'повтор сдачи с тем же идентификатором отвечает duplicate и не печатает',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
 
-      final first = await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
-      expect(first.status, PrintSubmitStatus.accepted);
-      expect(printer.calls, hasLength(1));
+        final first = await queue.submit(
+          job('sale-7-000101', receipt: _receiptKz),
+        );
+        await queue.whenIdle();
+        expect(first.status, PrintSubmitStatus.accepted);
+        expect(printer.calls, hasLength(1));
 
-      final again = await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
+        final again = await queue.submit(
+          job('sale-7-000101', receipt: _receiptKz),
+        );
+        await queue.whenIdle();
 
-      expect(
-        again.status,
-        PrintSubmitStatus.duplicate,
-        reason:
-            'корректный повтор после потерянного подтверждения — это успех '
-            'вызывающего, а не отказ',
-      );
-      expect(
-        printer.calls,
-        hasLength(1),
-        reason: 'второй чек покупателю не выдаётся ни при каких условиях',
-      );
-    });
+        expect(
+          again.status,
+          PrintSubmitStatus.duplicate,
+          reason:
+              'корректный повтор после потерянного подтверждения — это успех '
+              'вызывающего, а не отказ',
+        );
+        expect(
+          printer.calls,
+          hasLength(1),
+          reason: 'второй чек покупателю не выдаётся ни при каких условиях',
+        );
+      },
+    );
 
-    test('повтор узнан и после того, как само задание убрано уборкой', () async {
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'повтор узнан и после того, как само задание убрано уборкой',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
 
-      // Уборка выполненных заданий — та самая, которая **не** трогает память
-      // подтверждений. Если бы трогала, идемпотентность жила бы до первой
-      // уборки.
-      final removed = await store.removeFinishedBefore(
-        now.add(const Duration(days: 1)),
-      );
-      expect(removed, 1);
-      expect(await store.jobById('sale-7-000101'), isNull);
+        // Уборка выполненных заданий — та самая, которая **не** трогает память
+        // подтверждений. Если бы трогала, идемпотентность жила бы до первой
+        // уборки.
+        final removed = await store.removeFinishedBefore(
+          now.add(const Duration(days: 1)),
+        );
+        expect(removed, 1);
+        expect(await store.jobById('sale-7-000101'), isNull);
 
-      final again = await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
+        final again = await queue.submit(
+          job('sale-7-000101', receipt: _receiptKz),
+        );
+        await queue.whenIdle();
 
-      expect(again.status, PrintSubmitStatus.duplicate);
-      expect(printer.calls, hasLength(1));
-    });
+        expect(again.status, PrintSubmitStatus.duplicate);
+        expect(printer.calls, hasLength(1));
+      },
+    );
 
-    test('ручной повтор подтверждённого задания тоже не печатает второй раз', () async {
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'ручной повтор подтверждённого задания тоже не печатает второй раз',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
 
-      final outcome = await queue.retry(
-        'sale-7-000101',
-        extendBy: const Duration(minutes: 5),
-      );
-      await queue.whenIdle();
+        final outcome = await queue.retry(
+          'sale-7-000101',
+          extendBy: const Duration(minutes: 5),
+        );
+        await queue.whenIdle();
 
-      expect(outcome.status, PrintSubmitStatus.duplicate);
-      expect(printer.calls, hasLength(1));
-    });
+        expect(outcome.status, PrintSubmitStatus.duplicate);
+        expect(printer.calls, hasLength(1));
+      },
+    );
 
-    test('ручной повтор после уборки задания тоже узнан по памяти подтверждений', () async {
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'ручной повтор после уборки задания тоже узнан по памяти подтверждений',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
-      await store.removeFinishedBefore(now.add(const Duration(days: 1)));
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
+        await store.removeFinishedBefore(now.add(const Duration(days: 1)));
 
-      final outcome = await queue.retry(
-        'sale-7-000101',
-        extendBy: const Duration(minutes: 5),
-      );
-      await queue.whenIdle();
+        final outcome = await queue.retry(
+          'sale-7-000101',
+          extendBy: const Duration(minutes: 5),
+        );
+        await queue.whenIdle();
 
-      expect(
-        outcome.status,
-        PrintSubmitStatus.duplicate,
-        reason:
-            'строки задания уже нет — ответ «печаталось ли» даёт только память '
-            'подтверждений; «неизвестно» здесь означало бы второй чек по '
-            'кнопке «повторить»',
-      );
-      expect(printer.calls, hasLength(1));
-    });
+        expect(
+          outcome.status,
+          PrintSubmitStatus.duplicate,
+          reason:
+              'строки задания уже нет — ответ «печаталось ли» даёт только память '
+              'подтверждений; «неизвестно» здесь означало бы второй чек по '
+              'кнопке «повторить»',
+        );
+        expect(printer.calls, hasLength(1));
+      },
+    );
 
-    test('задание, подтверждённое чужой записью, выпадает из очереди и в принтер не уходит', () async {
-      // Что именно здесь доказано, названо честно: подтверждение делает
-      // задание терминальным, и очередь его больше не берёт. Проверку
-      // подтверждения **внутри** [_runOne] это не доказывает — она защищает от
-      // подтверждения, случившегося уже после выбора задания, а при
-      // единственном писателе такого случиться некому. Написать «эта проверка
-      // проверяет ту строку» значило бы завести зелёный тест, который ничего
-      // не держит.
-      final store = openStore();
-      final queue = openQueue(store);
-      printer.pauseMidWrite = true;
+    test(
+      'задание, подтверждённое чужой записью, выпадает из очереди и в принтер не уходит',
+      () async {
+        // Что именно здесь доказано, названо честно: подтверждение делает
+        // задание терминальным, и очередь его больше не берёт. Проверку
+        // подтверждения **внутри** [_runOne] это не доказывает — она защищает от
+        // подтверждения, случившегося уже после выбора задания, а при
+        // единственном писателе такого случиться некому. Написать «эта проверка
+        // проверяет ту строку» значило бы завести зелёный тест, который ничего
+        // не держит.
+        final store = openStore();
+        final queue = openQueue(store);
+        printer.pauseMidWrite = true;
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.submit(job('sale-7-000102', receipt: _receiptRu));
-      await _pumpUntil(() => printer.pausedWrites > 0);
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.submit(job('sale-7-000102', receipt: _receiptRu));
+        await _pumpUntil(() => printer.pausedWrites > 0);
 
-      // Пока печатается первое, второе объявляется напечатанным мимо очереди.
-      final second = await store.jobById('sale-7-000102');
-      await store.put(second!.confirmPrinted());
+        // Пока печатается первое, второе объявляется напечатанным мимо очереди.
+        final second = await store.jobById('sale-7-000102');
+        await store.put(second!.confirmPrinted());
 
-      printer.releaseOldestWrite();
-      await queue.whenIdle();
+        printer.releaseOldestWrite();
+        await queue.whenIdle();
 
-      expect(
-        printer.calls.map((c) => utf8.decode(c)),
-        [_receiptKz],
-        reason: 'второе задание уже подтверждено — в принтер оно не уходит',
-      );
-    });
+        expect(printer.calls.map((c) => utf8.decode(c)), [
+          _receiptKz,
+        ], reason: 'второе задание уже подтверждено — в принтер оно не уходит');
+      },
+    );
   });
 
   group('срок: задание становится видимой проблемой и перестаёт повторяться', () {
@@ -573,79 +613,89 @@ void main() {
       );
     });
 
-    test('после срока задание переходит в expired, сохраняет причину и больше не идёт в принтер', () async {
-      final store = openStore();
-      final queue = openQueue(store, maxAttemptsPerOpportunity: 2);
-      printer.succeeds = (_) => false;
+    test(
+      'после срока задание переходит в expired, сохраняет причину и больше не идёт в принтер',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store, maxAttemptsPerOpportunity: 2);
+        printer.succeeds = (_) => false;
 
-      await queue.submit(
-        job('sale-7-000101', receipt: _receiptKz, lifetime: const Duration(seconds: 30)),
-      );
-      await queue.whenIdle();
-      expect(printer.calls, hasLength(2));
+        await queue.submit(
+          job(
+            'sale-7-000101',
+            receipt: _receiptKz,
+            lifetime: const Duration(seconds: 30),
+          ),
+        );
+        await queue.whenIdle();
+        expect(printer.calls, hasLength(2));
 
-      now = _t0.add(const Duration(seconds: 31));
-      await queue.sweep();
+        now = _t0.add(const Duration(seconds: 31));
+        await queue.sweep();
 
-      final expired = await store.jobById('sale-7-000101');
-      expect(
-        expired!.state,
-        PrintJobState.expired,
-        reason: '«висит вечно» и «тихо выброшено» одинаково неверны (И29)',
-      );
-      expect(
-        expired.failureReason,
-        'В принтере закончилась бумага',
-        reason: 'оператору нужна причина, а не только факт истечения',
-      );
-      expect(printer.calls, hasLength(2));
+        final expired = await store.jobById('sale-7-000101');
+        expect(
+          expired!.state,
+          PrintJobState.expired,
+          reason: '«висит вечно» и «тихо выброшено» одинаково неверны (И29)',
+        );
+        expect(
+          expired.failureReason,
+          'В принтере закончилась бумага',
+          reason: 'оператору нужна причина, а не только факт истечения',
+        );
+        expect(printer.calls, hasLength(2));
 
-      now = _t0.add(const Duration(minutes: 5));
-      await queue.sweep();
-      expect(
-        printer.calls,
-        hasLength(2),
-        reason: 'истёкшее задание само себя больше не повторяет',
-      );
-    });
+        now = _t0.add(const Duration(minutes: 5));
+        await queue.sweep();
+        expect(
+          printer.calls,
+          hasLength(2),
+          reason: 'истёкшее задание само себя больше не повторяет',
+        );
+      },
+    );
 
-    test('задание, до которого очередь не дошла, тоже истекает — а не ждёт вечно', () async {
-      // Третий вход в «висит вечно»: не printing (перезапуск) и не failed
-      // (была попытка), а просто queued — задание, у которого срок вышел
-      // раньше, чем до него дошла очередь. Двигать его тоже некому, кроме
-      // очереди: у хранилища такого метода нет.
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'задание, до которого очередь не дошла, тоже истекает — а не ждёт вечно',
+      () async {
+        // Третий вход в «висит вечно»: не printing (перезапуск) и не failed
+        // (была попытка), а просто queued — задание, у которого срок вышел
+        // раньше, чем до него дошла очередь. Двигать его тоже некому, кроме
+        // очереди: у хранилища такого метода нет.
+        final store = openStore();
+        final queue = openQueue(store);
 
-      final outcome = await queue.submit(
-        job(
-          'sale-7-000101',
-          receipt: _receiptKz,
-          age: const Duration(minutes: 2),
-          lifetime: const Duration(seconds: 30),
-        ),
-      );
-      await queue.whenIdle();
+        final outcome = await queue.submit(
+          job(
+            'sale-7-000101',
+            receipt: _receiptKz,
+            age: const Duration(minutes: 2),
+            lifetime: const Duration(seconds: 30),
+          ),
+        );
+        await queue.whenIdle();
 
-      expect(
-        outcome.status,
-        PrintSubmitStatus.accepted,
-        reason:
-            'задание принимается и становится видимой проблемой; отказ при '
-            'сдаче не оставил бы вызывающему ничего',
-      );
-      final expired = await store.jobById('sale-7-000101');
-      expect(expired!.state, PrintJobState.expired);
-      expect(expired.attempts, 0);
-      expect(
-        printer.calls,
-        isEmpty,
-        reason: 'печатать чек, чей срок вышел, уже поздно',
-      );
+        expect(
+          outcome.status,
+          PrintSubmitStatus.accepted,
+          reason:
+              'задание принимается и становится видимой проблемой; отказ при '
+              'сдаче не оставил бы вызывающему ничего',
+        );
+        final expired = await store.jobById('sale-7-000101');
+        expect(expired!.state, PrintJobState.expired);
+        expect(expired.attempts, 0);
+        expect(
+          printer.calls,
+          isEmpty,
+          reason: 'печатать чек, чей срок вышел, уже поздно',
+        );
 
-      await queue.sweep();
-      expect(printer.calls, isEmpty);
-    });
+        await queue.sweep();
+        expect(printer.calls, isEmpty);
+      },
+    );
 
     test('истёкшее задание видно в потоке очереди вместе с причиной', () async {
       final store = openStore();
@@ -686,78 +736,85 @@ void main() {
       expect(all.map((j) => j.id), ['sale-7-000101', 'sale-42-000201']);
     });
 
-    test('удачная печать открывает новую возможность исчерпавшему попытки', () async {
-      final store = openStore();
-      final queue = openQueue(store, maxAttemptsPerOpportunity: 1);
-      printer.succeeds = (index) => index > 0;
+    test(
+      'удачная печать открывает новую возможность исчерпавшему попытки',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store, maxAttemptsPerOpportunity: 1);
+        printer.succeeds = (index) => index > 0;
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
-      expect(printer.calls, hasLength(1));
-      expect((await store.jobById('sale-7-000101'))!.state, PrintJobState.failed);
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
+        expect(printer.calls, hasLength(1));
+        expect(
+          (await store.jobById('sale-7-000101'))!.state,
+          PrintJobState.failed,
+        );
 
-      // Другой чек печатается успешно — значит принтер жив, и это новая
-      // возможность для того, кто ждал.
-      await queue.submit(job('sale-7-000102', receipt: _receiptRu));
-      await queue.whenIdle();
+        // Другой чек печатается успешно — значит принтер жив, и это новая
+        // возможность для того, кто ждал.
+        await queue.submit(job('sale-7-000102', receipt: _receiptRu));
+        await queue.whenIdle();
 
-      expect(
-        (await store.jobById('sale-7-000101'))!.state,
-        PrintJobState.printed,
-        reason: 'ожидание следующей возможности, а не отказ навсегда',
-      );
-      expect(
-        printer.received,
-        orderedEquals(<int>[
-          ..._bytes(_receiptKz),
-          ..._bytes(_receiptRu),
-          ..._bytes(_receiptKz),
-        ]),
-        reason:
-            'неудачная отправка тоже дошла до принтера целиком: транспорт '
-            'не рвёт чек, он лишь не подтверждает его',
-      );
-    });
+        expect(
+          (await store.jobById('sale-7-000101'))!.state,
+          PrintJobState.printed,
+          reason: 'ожидание следующей возможности, а не отказ навсегда',
+        );
+        expect(
+          printer.received,
+          orderedEquals(<int>[
+            ..._bytes(_receiptKz),
+            ..._bytes(_receiptRu),
+            ..._bytes(_receiptKz),
+          ]),
+          reason:
+              'неудачная отправка тоже дошла до принтера целиком: транспорт '
+              'не рвёт чек, он лишь не подтверждает его',
+        );
+      },
+    );
 
-    test('чек покупателя у кассы не ждёт за повтором обречённого задания', () async {
-      // Удачная печать открывает новую возможность тем, кто исчерпал попытки.
-      // Обречённое задание при этом почти всегда **старше** только что
-      // выбитого чека, и в один проход выбора оно вставало бы перед ним при
-      // каждой продаже.
-      final store = openStore();
-      final queue = openQueue(store, maxAttemptsPerOpportunity: 1);
-      printer.refuses.add(_receiptRu);
+    test(
+      'чек покупателя у кассы не ждёт за повтором обречённого задания',
+      () async {
+        // Удачная печать открывает новую возможность тем, кто исчерпал попытки.
+        // Обречённое задание при этом почти всегда **старше** только что
+        // выбитого чека, и в один проход выбора оно вставало бы перед ним при
+        // каждой продаже.
+        final store = openStore();
+        final queue = openQueue(store, maxAttemptsPerOpportunity: 1);
+        printer.refuses.add(_receiptRu);
 
-      await queue.submit(job('sale-7-000001', receipt: _receiptRu));
-      await queue.whenIdle();
-      expect(
-        printer.calls.map(utf8.decode),
-        [_receiptRu],
-        reason: 'обречённое задание исчерпало свою единственную попытку',
-      );
+        await queue.submit(job('sale-7-000001', receipt: _receiptRu));
+        await queue.whenIdle();
+        expect(printer.calls.map(utf8.decode), [
+          _receiptRu,
+        ], reason: 'обречённое задание исчерпало свою единственную попытку');
 
-      // Следующий чек печатается и **держит принтер**, пока идёт запись.
-      printer.pauseMidWrite = true;
-      await queue.submit(job('sale-7-000002', receipt: _receiptKz));
-      await _pumpUntil(() => printer.pausedWrites > 0);
+        // Следующий чек печатается и **держит принтер**, пока идёт запись.
+        printer.pauseMidWrite = true;
+        await queue.submit(job('sale-7-000002', receipt: _receiptKz));
+        await _pumpUntil(() => printer.pausedWrites > 0);
 
-      // Покупатель у кассы: его чек сдан, пока печатается предыдущий. Значит к
-      // моменту, когда очередь освободится, в ней будут стоять оба — оживлённое
-      // обречённое (старше) и этот (свежее).
-      await queue.submit(job('sale-7-000003', receipt: _receiptUz));
-      printer.pauseMidWrite = false;
-      printer.releaseOldestWrite();
-      await queue.whenIdle();
+        // Покупатель у кассы: его чек сдан, пока печатается предыдущий. Значит к
+        // моменту, когда очередь освободится, в ней будут стоять оба — оживлённое
+        // обречённое (старше) и этот (свежее).
+        await queue.submit(job('sale-7-000003', receipt: _receiptUz));
+        printer.pauseMidWrite = false;
+        printer.releaseOldestWrite();
+        await queue.whenIdle();
 
-      expect(
-        printer.calls.map(utf8.decode).toList(),
-        [_receiptRu, _receiptKz, _receiptUz, _receiptRu],
-        reason:
-            'после удачной печати обречённое задание оживает, но встаёт '
-            'позади чека, которого ещё не пробовали; иначе покупатель ждёт, '
-            'пока принтер ещё раз провалит то, что уже провалил',
-      );
-    });
+        expect(
+          printer.calls.map(utf8.decode).toList(),
+          [_receiptRu, _receiptKz, _receiptUz, _receiptRu],
+          reason:
+              'после удачной печати обречённое задание оживает, но встаёт '
+              'позади чека, которого ещё не пробовали; иначе покупатель ждёт, '
+              'пока принтер ещё раз провалит то, что уже провалил',
+        );
+      },
+    );
 
     test('отступ между попытками растёт и не даёт крутить принтер', () async {
       final store = openStore();
@@ -823,130 +880,152 @@ void main() {
       expect(printer.calls.map(utf8.decode), [_receiptKz]);
     });
 
-    test('поднятое задание с уже вышедшим сроком становится expired с причиной обрыва', () async {
-      final store = openStore();
-      await store.put(
-        job(
-          'sale-7-000101',
-          receipt: _receiptKz,
-          state: PrintJobState.printing,
-          attempts: 3,
-          age: const Duration(minutes: 2),
-          lifetime: const Duration(seconds: 30),
-        ),
-      );
+    test(
+      'поднятое задание с уже вышедшим сроком становится expired с причиной обрыва',
+      () async {
+        final store = openStore();
+        await store.put(
+          job(
+            'sale-7-000101',
+            receipt: _receiptKz,
+            state: PrintJobState.printing,
+            attempts: 3,
+            age: const Duration(minutes: 2),
+            lifetime: const Duration(seconds: 30),
+          ),
+        );
 
-      final queue = openQueue(store);
-      await queue.start();
-      await queue.whenIdle();
+        final queue = openQueue(store);
+        await queue.start();
+        await queue.whenIdle();
 
-      final recovered = await store.jobById('sale-7-000101');
-      expect(recovered!.state, PrintJobState.expired);
-      expect(
-        recovered.failureReason,
-        PrintQueueLocal.interruptedByRestartReason,
-        reason:
-            'в журнале остаётся, что именно произошло, а не тихо появившееся '
-            'заново задание',
-      );
-      expect(
-        printer.calls,
-        isEmpty,
-        reason: 'задание с вышедшим сроком в принтер не уходит',
-      );
-    });
+        final recovered = await store.jobById('sale-7-000101');
+        expect(recovered!.state, PrintJobState.expired);
+        expect(
+          recovered.failureReason,
+          PrintQueueLocal.interruptedByRestartReason,
+          reason:
+              'в журнале остаётся, что именно произошло, а не тихо появившееся '
+              'заново задание',
+        );
+        expect(
+          printer.calls,
+          isEmpty,
+          reason: 'задание с вышедшим сроком в принтер не уходит',
+        );
+      },
+    );
 
-    test('очередь, у которой забыли позвать start, всё равно поднимает застрявшее', () async {
-      final store = openStore();
-      await store.put(
-        job(
-          'sale-7-000101',
-          receipt: _receiptKz,
-          state: PrintJobState.printing,
-          attempts: 1,
-          lifetime: const Duration(minutes: 10),
-        ),
-      );
+    test(
+      'очередь, у которой забыли позвать start, всё равно поднимает застрявшее',
+      () async {
+        final store = openStore();
+        await store.put(
+          job(
+            'sale-7-000101',
+            receipt: _receiptKz,
+            state: PrintJobState.printing,
+            attempts: 1,
+            lifetime: const Duration(minutes: 10),
+          ),
+        );
 
-      final queue = openQueue(store);
-      // Никакого start() — только обычная сдача нового задания.
-      await queue.submit(job('sale-7-000102', receipt: _receiptRu));
-      await queue.whenIdle();
+        final queue = openQueue(store);
+        // Никакого start() — только обычная сдача нового задания.
+        await queue.submit(job('sale-7-000102', receipt: _receiptRu));
+        await queue.whenIdle();
 
-      expect(
-        (await store.jobById('sale-7-000101'))!.state,
-        PrintJobState.printed,
-        reason: 'очередь без восстановления молча не печатала бы застрявшее',
-      );
-    });
+        expect(
+          (await store.jobById('sale-7-000101'))!.state,
+          PrintJobState.printed,
+          reason: 'очередь без восстановления молча не печатала бы застрявшее',
+        );
+      },
+    );
   });
 
   group('ручной повтор: длительность, а не момент', () {
-    test('новый срок строится часами очереди, а не часами вызывающего', () async {
-      final store = openStore();
-      final queue = openQueue(store, maxAttemptsPerOpportunity: 1);
-      printer.succeeds = (_) => false;
+    test(
+      'новый срок строится часами очереди, а не часами вызывающего',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store, maxAttemptsPerOpportunity: 1);
+        printer.succeeds = (_) => false;
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
-      now = _t0.add(const Duration(seconds: 31));
-      await queue.sweep();
-      expect((await store.jobById('sale-7-000101'))!.state, PrintJobState.expired);
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
+        now = _t0.add(const Duration(seconds: 31));
+        await queue.sweep();
+        expect(
+          (await store.jobById('sale-7-000101'))!.state,
+          PrintJobState.expired,
+        );
 
-      // Часы вызывающего здесь не участвуют вовсе: по проводу едет
-      // длительность. Браузер с отстающими часами не может прислать срок,
-      // который на кассе уже прошёл.
-      now = _t0.add(const Duration(minutes: 10));
-      final outcome = await queue.retry(
-        'sale-7-000101',
-        extendBy: const Duration(minutes: 5),
-      );
-      await queue.whenIdle();
+        // Часы вызывающего здесь не участвуют вовсе: по проводу едет
+        // длительность. Браузер с отстающими часами не может прислать срок,
+        // который на кассе уже прошёл.
+        now = _t0.add(const Duration(minutes: 10));
+        final outcome = await queue.retry(
+          'sale-7-000101',
+          extendBy: const Duration(minutes: 5),
+        );
+        await queue.whenIdle();
 
-      expect(outcome.status, PrintSubmitStatus.accepted);
-      final renewed = await store.jobById('sale-7-000101');
-      expect(
-        renewed!.expiresAt.isAtSameMomentAs(
-          _t0.add(const Duration(minutes: 15)),
-        ),
-        isTrue,
-        reason:
-            'срок = часы очереди + extendBy; получилось '
-            '${renewed.expiresAt.toIso8601String()}',
-      );
-      expect(
-        printer.calls,
-        hasLength(2),
-        reason: 'повтор — новая возможность: счётчик попыток начинается заново',
-      );
-    });
+        expect(outcome.status, PrintSubmitStatus.accepted);
+        final renewed = await store.jobById('sale-7-000101');
+        expect(
+          renewed!.expiresAt.isAtSameMomentAs(
+            _t0.add(const Duration(minutes: 15)),
+          ),
+          isTrue,
+          reason:
+              'срок = часы очереди + extendBy; получилось '
+              '${renewed.expiresAt.toIso8601String()}',
+        );
+        expect(
+          printer.calls,
+          hasLength(2),
+          reason:
+              'повтор — новая возможность: счётчик попыток начинается заново',
+        );
+      },
+    );
 
-    test('неположительная длительность отвергается с названной причиной', () async {
-      final store = openStore();
-      final queue = openQueue(store);
-      printer.succeeds = (_) => false;
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
+    test(
+      'неположительная длительность отвергается с названной причиной',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
+        printer.succeeds = (_) => false;
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
 
-      for (final extendBy in [Duration.zero, const Duration(seconds: -5)]) {
-        final outcome = await queue.retry('sale-7-000101', extendBy: extendBy);
+        for (final extendBy in [Duration.zero, const Duration(seconds: -5)]) {
+          final outcome = await queue.retry(
+            'sale-7-000101',
+            extendBy: extendBy,
+          );
+          expect(outcome.status, PrintSubmitStatus.rejected);
+          expect(outcome.message, contains('просрочить'));
+        }
+      },
+    );
+
+    test(
+      'неизвестное задание отвергается с названной причиной, а не молча',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
+
+        final outcome = await queue.retry(
+          'нет-такого-задания',
+          extendBy: const Duration(minutes: 1),
+        );
+
         expect(outcome.status, PrintSubmitStatus.rejected);
-        expect(outcome.message, contains('просрочить'));
-      }
-    });
-
-    test('неизвестное задание отвергается с названной причиной, а не молча', () async {
-      final store = openStore();
-      final queue = openQueue(store);
-
-      final outcome = await queue.retry(
-        'нет-такого-задания',
-        extendBy: const Duration(minutes: 1),
-      );
-
-      expect(outcome.status, PrintSubmitStatus.rejected);
-      expect(outcome.message, contains('неизвестно'));
-    });
+        expect(outcome.message, contains('неизвестно'));
+      },
+    );
 
     test('отменённое задание не повторяется и причина названа', () async {
       final store = openStore();
@@ -971,25 +1050,28 @@ void main() {
       );
     });
 
-    test('печатающееся сейчас задание не повторяется и причина названа', () async {
-      final store = openStore();
-      final queue = openQueue(store);
-      printer.pauseMidWrite = true;
+    test(
+      'печатающееся сейчас задание не повторяется и причина названа',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
+        printer.pauseMidWrite = true;
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await _pumpUntil(() => printer.pausedWrites > 0);
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await _pumpUntil(() => printer.pausedWrites > 0);
 
-      final outcome = await queue.retry(
-        'sale-7-000101',
-        extendBy: const Duration(minutes: 1),
-      );
-      expect(outcome.status, PrintSubmitStatus.rejected);
-      expect(outcome.message, contains('печатается'));
+        final outcome = await queue.retry(
+          'sale-7-000101',
+          extendBy: const Duration(minutes: 1),
+        );
+        expect(outcome.status, PrintSubmitStatus.rejected);
+        expect(outcome.message, contains('печатается'));
 
-      printer.releaseOldestWrite();
-      await queue.whenIdle();
-      expect(printer.calls, hasLength(1));
-    });
+        printer.releaseOldestWrite();
+        await queue.whenIdle();
+        expect(printer.calls, hasLength(1));
+      },
+    );
   });
 
   group('сдача задания и отмена', () {
@@ -1051,25 +1133,85 @@ void main() {
 
       printer.releaseOldestWrite();
       await queue.whenIdle();
-      expect((await store.jobById('sale-7-000101'))!.state, PrintJobState.printed);
+      expect(
+        (await store.jobById('sale-7-000101'))!.state,
+        PrintJobState.printed,
+      );
     });
 
-    test('отмена неизвестного и уже завершённого задания возвращает false', () async {
-      final store = openStore();
-      final queue = openQueue(store);
+    test(
+      'отмена неизвестного и уже завершённого задания возвращает false',
+      () async {
+        final store = openStore();
+        final queue = openQueue(store);
 
-      expect(await queue.cancel('нет-такого-задания'), isFalse);
+        expect(await queue.cancel('нет-такого-задания'), isFalse);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle();
-      expect(await queue.cancel('sale-7-000101'), isFalse);
-    });
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
+        expect(await queue.cancel('sale-7-000101'), isFalse);
+      },
+    );
 
-    test('транспорт, бросивший исключение, не оставляет задание в printing', () async {
-      final store = openStore();
+    /// **Задача 16, круг правки 3.** Круг правки 2 завернул сообщение
+    /// отказа в `safeErrorText` — текст исключения уезжал на провод в
+    /// `CompletionTrouble.message`. Но у очереди журнала не было вовсе, и
+    /// то же сообщение было **единственным** местом, где исключение
+    /// вообще оставалось: вызывающий на ветке отказа пишет сообщение без
+    /// исключения и стека. То есть заворачивание чинило утечку и молча
+    /// съедало сведения — кассе оставалась бы строка «Очередь печати не
+    /// приняла задание: StateError».
+    ///
+    /// Теперь исключение и стек остаются в журнале кассы целиком, а на
+    /// провод по-прежнему едет только имя типа.
+    test('непринятое задание оставляет исключение в журнале кассы', () async {
+      final observer = _CapturingLog();
+      final store = _FlakyStore(openStore())..putFails = true;
       final queue = PrintQueueLocal(
         store: store,
+        transport: printer.send,
+        logger: Talker(observer: observer),
+        clock: clock,
+        maxAttemptsPerOpportunity: 1,
+        firstBackoff: Duration.zero,
+        maxBackoff: Duration.zero,
+      );
+      openQueues.add(queue);
+
+      final outcome = await queue.submit(
+        job('sale-7-000101', receipt: _receiptKz),
+      );
+
+      expect(outcome.isRejected, isTrue);
+      // На провод — имя типа, без нутра.
+      expect(outcome.message, contains('StateError'));
+      expect(outcome.message, isNot(contains('база печати недоступна')));
+      // В журнал кассы — само исключение.
+      expect(
+        observer.errors.where(
+          (e) =>
+              e.contains('sale-7-000101') &&
+              e.contains('база печати недоступна'),
+        ),
+        isNotEmpty,
+        reason: 'иначе отказ очереди не оставляет следа нигде',
+      );
+    });
+
+    /// Вторая ветвь перехвата — **повтор**. Круг правки 4: диверсия
+    /// круга 3 трогала только сдачу, и удаление записи из ветви повтора
+    /// оставляло прогон зелёным. «Оба перехвата» было наполовину правдой.
+    test('неудавшийся повтор оставляет исключение в журнале кассы', () async {
+      final observer = _CapturingLog();
+      final inner = openStore();
+      final store = _FlakyStore(inner);
+      final queue = PrintQueueLocal(
+        store: store,
+        // Транспорт бросает: иначе задание уходит в `printed`, повтор
+        // отвечает «уже печаталось» и до хранилища не доходит — проба
+        // мерила бы не ту ветку.
         transport: (_) => throw StateError('принтер оторвался'),
+        logger: Talker(observer: observer),
         clock: clock,
         maxAttemptsPerOpportunity: 1,
         firstBackoff: Duration.zero,
@@ -1080,10 +1222,48 @@ void main() {
       await queue.submit(job('sale-7-000101', receipt: _receiptKz));
       await queue.whenIdle();
 
-      final stuck = await store.jobById('sale-7-000101');
-      expect(stuck!.state, PrintJobState.failed);
-      expect(stuck.failureReason, contains('принтер оторвался'));
+      store.putFails = true;
+      final outcome = await queue.retry(
+        'sale-7-000101',
+        extendBy: const Duration(minutes: 5),
+      );
+
+      expect(outcome.isRejected, isTrue);
+      expect(outcome.message, contains('StateError'));
+      expect(outcome.message, isNot(contains('база печати недоступна')));
+      expect(
+        observer.errors.where(
+          (e) =>
+              e.contains('повтор задания sale-7-000101') &&
+              e.contains('база печати недоступна'),
+        ),
+        isNotEmpty,
+        reason: 'повтор, не удавшийся из-за хранилища, не оставляет следа',
+      );
     });
+
+    test(
+      'транспорт, бросивший исключение, не оставляет задание в printing',
+      () async {
+        final store = openStore();
+        final queue = PrintQueueLocal(
+          store: store,
+          transport: (_) => throw StateError('принтер оторвался'),
+          clock: clock,
+          maxAttemptsPerOpportunity: 1,
+          firstBackoff: Duration.zero,
+          maxBackoff: Duration.zero,
+        );
+        openQueues.add(queue);
+
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle();
+
+        final stuck = await store.jobById('sale-7-000101');
+        expect(stuck!.state, PrintJobState.failed);
+        expect(stuck.failureReason, contains('принтер оторвался'));
+      },
+    );
   });
 
   group('упавший проход не оставляет очередь без будильника', () {
@@ -1126,7 +1306,9 @@ void main() {
             'что его предотвращает',
       );
       expect(
-        queue.nextWakeAt!.isAtSameMomentAs(_t0.add(const Duration(seconds: 30))),
+        queue.nextWakeAt!.isAtSameMomentAs(
+          _t0.add(const Duration(seconds: 30)),
+        ),
         isTrue,
         reason:
             'спросить у базы, чего ждать, вышло — будильник на срок задания; '
@@ -1134,39 +1316,45 @@ void main() {
       );
     });
 
-    test('когда не вышло даже спросить, чего ждать, будильник всё равно есть', () async {
-      final store = _FlakyStore(openStore(), jobsFail: true);
-      final queue = openQueue(store);
+    test(
+      'когда не вышло даже спросить, чего ждать, будильник всё равно есть',
+      () async {
+        final store = _FlakyStore(openStore(), jobsFail: true);
+        final queue = openQueue(store);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      await queue.whenIdle().then<void>((_) {}, onError: (Object _) {});
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.whenIdle().then<void>((_) {}, onError: (Object _) {});
 
-      expect(
-        queue.nextWakeAt,
-        isNotNull,
-        reason: 'возвращаемся через известный срок, а не никогда',
-      );
-      expect(
-        queue.nextWakeAt!.isAtSameMomentAs(
-          _t0.add(PrintQueueLocal.wakeAfterFailure),
-        ),
-        isTrue,
-        reason: 'получилось ${queue.nextWakeAt!.toIso8601String()}',
-      );
-    });
+        expect(
+          queue.nextWakeAt,
+          isNotNull,
+          reason: 'возвращаемся через известный срок, а не никогда',
+        );
+        expect(
+          queue.nextWakeAt!.isAtSameMomentAs(
+            _t0.add(PrintQueueLocal.wakeAfterFailure),
+          ),
+          isTrue,
+          reason: 'получилось ${queue.nextWakeAt!.toIso8601String()}',
+        );
+      },
+    );
 
-    test('отказ прохода виден тому, кто дождался простоя, а не проглочен', () async {
-      final store = _FlakyStore(openStore(), jobsFail: true);
-      final queue = openQueue(store);
+    test(
+      'отказ прохода виден тому, кто дождался простоя, а не проглочен',
+      () async {
+        final store = _FlakyStore(openStore(), jobsFail: true);
+        final queue = openQueue(store);
 
-      await queue.submit(job('sale-7-000101', receipt: _receiptKz));
+        await queue.submit(job('sale-7-000101', receipt: _receiptKz));
 
-      await expectLater(
-        queue.whenIdle(),
-        throwsA(isA<StateError>()),
-        reason: 'отказ не выбрасывается из submit (И30), но и не теряется',
-      );
-    });
+        await expectLater(
+          queue.whenIdle(),
+          throwsA(isA<StateError>()),
+          reason: 'отказ не выбрасывается из submit (И30), но и не теряется',
+        );
+      },
+    );
 
     test('оправившись, очередь доводит задание до печати', () async {
       final store = _FlakyStore(openStore(), jobsFail: true);
@@ -1179,62 +1367,67 @@ void main() {
       store.jobsFail = false;
       await queue.sweep();
 
-      expect(
-        printer.calls.map(utf8.decode),
-        [_receiptKz],
-        reason: 'задание пережило отказ прохода — ради этого очередь и есть',
-      );
+      expect(printer.calls.map(utf8.decode), [
+        _receiptKz,
+      ], reason: 'задание пережило отказ прохода — ради этого очередь и есть');
     });
   });
 
   group('отказ при старте не выключает печать до перезапуска программы', () {
-    test('после упавшего старта следующий чек принимается и печатается', () async {
-      final store = _FlakyStore(openStore(), failNextStartCalls: 1);
-      final queue = openQueue(store);
+    test(
+      'после упавшего старта следующий чек принимается и печатается',
+      () async {
+        final store = _FlakyStore(openStore(), failNextStartCalls: 1);
+        final queue = openQueue(store);
 
-      // Первый чек теряется, и это честная цена отказа базы: задание некуда
-      // записать. Проверяется он затем, что без него тест не отличал бы
-      // «старт упал» от «старт не понадобился».
-      final lost = await queue.submit(job('sale-7-000101', receipt: _receiptKz));
-      expect(
-        lost.status,
-        PrintSubmitStatus.rejected,
-        reason: 'база отказала — задание записать было некуда',
-      );
-      expect(store.startCalls, 1);
+        // Первый чек теряется, и это честная цена отказа базы: задание некуда
+        // записать. Проверяется он затем, что без него тест не отличал бы
+        // «старт упал» от «старт не понадобился».
+        final lost = await queue.submit(
+          job('sale-7-000101', receipt: _receiptKz),
+        );
+        expect(
+          lost.status,
+          PrintSubmitStatus.rejected,
+          reason: 'база отказала — задание записать было некуда',
+        );
+        expect(store.startCalls, 1);
 
-      // Второй чек — уже после того, как база оправилась. Он обязан пройти:
-      // очередь, запомнившая отказавший старт, отвечала бы отказом каждому
-      // следующему чеку до перезапуска программы, то есть воспроизводила бы
-      // ровно тот дефект, ради устранения которого написана.
-      final next = await queue.submit(job('sale-7-000102', receipt: _receiptRu));
-      expect(
-        next.status,
-        PrintSubmitStatus.accepted,
-        reason:
-            'кешированный отказ старта выключил бы приём заданий целиком: '
-            '${next.message}',
-      );
-      expect(
-        store.startCalls,
-        2,
-        reason:
-            'очередь обязана попробовать восстановление заново, а не отдать '
-            'запомненный отказ — со стороны submit это неразличимо',
-      );
+        // Второй чек — уже после того, как база оправилась. Он обязан пройти:
+        // очередь, запомнившая отказавший старт, отвечала бы отказом каждому
+        // следующему чеку до перезапуска программы, то есть воспроизводила бы
+        // ровно тот дефект, ради устранения которого написана.
+        final next = await queue.submit(
+          job('sale-7-000102', receipt: _receiptRu),
+        );
+        expect(
+          next.status,
+          PrintSubmitStatus.accepted,
+          reason:
+              'кешированный отказ старта выключил бы приём заданий целиком: '
+              '${next.message}',
+        );
+        expect(
+          store.startCalls,
+          2,
+          reason:
+              'очередь обязана попробовать восстановление заново, а не отдать '
+              'запомненный отказ — со стороны submit это неразличимо',
+        );
 
-      await queue.whenIdle();
+        await queue.whenIdle();
 
-      expect(
-        printer.calls.map(utf8.decode),
-        [_receiptRu],
-        reason: 'после отказа старта печать работает, а не ждёт перезапуска',
-      );
-      expect(
-        (await store.jobById('sale-7-000102'))!.state,
-        PrintJobState.printed,
-      );
-    });
+        expect(
+          printer.calls.map(utf8.decode),
+          [_receiptRu],
+          reason: 'после отказа старта печать работает, а не ждёт перезапуска',
+        );
+        expect(
+          (await store.jobById('sale-7-000102'))!.state,
+          PrintJobState.printed,
+        );
+      },
+    );
   });
 
   group('настройки повтора отвергают бессмысленное', () {
@@ -1267,4 +1460,23 @@ void main() {
       );
     });
   });
+}
+
+/// Журнал, из которого видно, что записано, — задача 16, круг правки 3.
+class _CapturingLog extends TalkerObserver {
+  final List<String> errors = [];
+
+  @override
+  void onError(TalkerError err) => errors.add(err.generateTextMessage());
+
+  @override
+  void onException(TalkerException err) =>
+      errors.add(err.generateTextMessage());
+
+  @override
+  void onLog(TalkerData log) {
+    if (log.logLevel == LogLevel.error) {
+      errors.add('${log.generateTextMessage()} ${log.exception ?? ''}');
+    }
+  }
 }

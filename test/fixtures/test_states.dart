@@ -11,6 +11,7 @@ import 'package:telepos/presentation/controllers/writeoff/writeoff_controller.da
 import 'package:telepos/presentation/controllers/inventory/inventory_controller.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/domain/usecases/writeoff/create_writeoff_use_case.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 class TestSaleStates {
   TestSaleStates._();
@@ -69,7 +70,6 @@ class TestSaleStates {
         price: Decimal.parse('500'),
         quantity: Decimal.fromInt(2),
         discount: Decimal.parse('100'),
-        discountPercent: Decimal.fromInt(10),
       ),
     ],
     selectedItemId: 'item_1',
@@ -105,8 +105,6 @@ class TestSaleStates {
         quantity: Decimal.one,
       ),
     ],
-    isDeferred: true,
-    deferredSaleId: '42',
   );
 
   static final withAgent = SaleState(
@@ -184,13 +182,10 @@ class TestRefundStates {
 
   static final byReceipt = RefundState(
     mode: RefundMode.byReceipt,
-    receiptInfo: ReceiptInfo(
-      receiptNo: 42,
-      posId: 1,
-      date: DateTime(2026, 2, 15, 10, 30),
-      total: Decimal.parse('1150'),
-      posName: 'Касса 1',
-    ),
+    // Дата и сумма чека из `ReceiptInfo` ушли (задача 20): по проводу они не
+    // едут — снимок возврата (`RefundView`) везёт номер чека и номер кассы, а
+    // экран ими и пользовался. Сумма к возврату считается по строкам.
+    receiptInfo: ReceiptInfo(receiptNo: 42, posId: 1, posName: 'Касса 1'),
     items: [
       RefundItem(
         id: 'refund_1',
@@ -460,7 +455,7 @@ class TestAppStates {
     userName: 'Кассир Тест',
     userRole: 0,
     posName: 'Касса 1',
-    isShiftOpened: true,
+    shift: ShiftStatus.open,
     permissions: {'SALE', 'REFUND', 'HISTORY', 'SHIFT'},
   );
 
@@ -469,7 +464,7 @@ class TestAppStates {
     userName: 'Администратор',
     userRole: 1,
     posName: 'Касса 1',
-    isShiftOpened: true,
+    shift: ShiftStatus.open,
     permissions: {
       'SALE',
       'REFUND',

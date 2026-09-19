@@ -1,3 +1,5 @@
+import 'package:talker/talker.dart';
+import 'package:telepos/core/errors/safe_error_text.dart';
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -80,6 +82,7 @@ class PrintQueueLocal implements PrintQueue {
   PrintQueueLocal({
     required PrintJobStore store,
     required PrintTransport transport,
+    Talker? logger,
     DateTime Function()? clock,
     int maxAttemptsPerOpportunity = defaultMaxAttemptsPerOpportunity,
     Duration firstBackoff = defaultFirstBackoff,
@@ -88,6 +91,7 @@ class PrintQueueLocal implements PrintQueue {
     Duration housekeepingInterval = defaultHousekeepingInterval,
   }) : _store = store,
        _transport = transport,
+       _logger = logger,
        _clock = clock ?? DateTime.now,
        _maxAttempts = maxAttemptsPerOpportunity,
        _firstBackoff = firstBackoff,
@@ -189,6 +193,24 @@ class PrintQueueLocal implements PrintQueue {
       'Печать прервана перезапуском программы';
 
   final PrintJobStore _store;
+
+  /// Журнал — **единственное место, где остаётся исключение** (задача 16,
+  /// круг правки 3).
+  ///
+  /// До неё у очереди журнала не было вовсе, и текст исключения жил
+  /// только в сообщении исхода. Круг правки 2 завернул это сообщение в
+  /// `safeErrorText` (утечка нутра на провод, сторож
+  /// `no_raw_exception_on_wire_test`) — и вместе с утечкой унёс бы
+  /// сведения: `safeErrorText` отдаёт **имя типа**, а вызывающий на
+  /// ветке отказа пишет сообщение без исключения и стека
+  /// (`LocalPaymentService._printReceipt`). Кассе осталась бы строка
+  /// «Очередь печати не приняла задание: StateError» — и больше нигде
+  /// ничего. Здесь исключение и стек остаются целиком: журнал кассы —
+  /// её собственный процесс, а не кадр на проводе.
+  ///
+  /// `null` — записывать некуда (проба без журнала); тот же приём
+  /// осторожной деградации, что у остальных необязательных портов.
+  final Talker? _logger;
   final PrintTransport _transport;
   final DateTime Function() _clock;
   final int _maxAttempts;
@@ -347,10 +369,11 @@ class PrintQueueLocal implements PrintQueue {
       await _store.put(job);
       _kick();
       return PrintSubmitOutcome.accepted(job.id);
-    } catch (e) {
+    } catch (e, st) {
+      _logger?.error('PrintQueue: задание ${job.id} не принято', e, st);
       return PrintSubmitOutcome.rejected(
         job.id,
-        'Очередь печати не приняла задание: $e',
+        'Очередь печати не приняла задание: ${safeErrorText(e)}',
       );
     }
   }
@@ -425,10 +448,11 @@ class PrintQueueLocal implements PrintQueue {
       _forget(jobId);
       _kick();
       return PrintSubmitOutcome.accepted(jobId);
-    } catch (e) {
+    } catch (e, st) {
+      _logger?.error('PrintQueue: повтор задания $jobId не удался', e, st);
       return PrintSubmitOutcome.rejected(
         jobId,
-        'Очередь печати не смогла повторить задание $jobId: $e',
+        'Очередь печати не смогла повторить задание $jobId: ${safeErrorText(e)}',
       );
     }
   }

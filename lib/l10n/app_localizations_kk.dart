@@ -33,7 +33,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get globalSave => 'Сақтау';
 
   @override
-  String get globalNew => 'Новый';
+  String get globalNew => 'Жаңа';
 
   @override
   String get globalDelete => 'Жою';
@@ -200,6 +200,11 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
+  String paymentCardChargeUnsettled(String amount) {
+    return 'Карта $amount сомасына өткізілді, бұл сома чекке кірмейді. Төлем терминалында операцияны болдырмаңыз.';
+  }
+
+  @override
   String get saleRemoveItem => 'Тауарды жою';
 
   @override
@@ -298,6 +303,13 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get refundCard => 'Картаға қайтару';
+
+  @override
+  String get refundConnectionLostHint =>
+      'Терминал кассаға өзі оралады — жұмыс сол жерден жалғасады';
+
+  @override
+  String get refundConnectionLost => 'Кассамен байланыс үзілді';
 
   @override
   String get refundNoItems => 'Қайтаруға тауарлар жоқ';
@@ -400,6 +412,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get paymentDebt => 'Қарызға';
 
   @override
+  String get paymentInstallment => 'Бөліп төлеу';
+
+  @override
   String get paymentMixed => 'Аралас';
 
   @override
@@ -479,6 +494,11 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get historyReprint => 'Қайта басып шығару';
+
+  @override
+  String certificateSlipPrintFailed(String number, String reason) {
+    return '$number сертификатының слипі басылмады: $reason';
+  }
 
   @override
   String get historyDetails => 'Толығырақ';
@@ -946,6 +966,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get loginShiftClosed => 'Ауысым жабық';
 
   @override
+  String get loginShiftUnknown => 'Ауысым: белгісіз';
+
+  @override
   String get saleQuickProducts => 'Жылдам тауарлар';
 
   @override
@@ -964,7 +987,15 @@ class AppLocalizationsKk extends AppLocalizations {
   String get saleHeld => 'Чек кейінге қалдырылды';
 
   @override
-  String get saleNoDeferredSales => 'Нет отложенных чеков';
+  String get saleNoDeferredSales => 'Кейінге қалдырылған чектер жоқ';
+
+  @override
+  String get saleDeferredListNotPermitted =>
+      'Кейінге қалдырылған чектер сізге ашық емес: «чекті кейінге қалдыру» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.';
+
+  @override
+  String get saleDeferNotPermitted =>
+      'Чекті кейінге қалдыруға болмайды: «чекті кейінге қалдыру» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.';
 
   @override
   String get saleReceiptNo => 'Чек №';
@@ -1067,11 +1098,15 @@ class AppLocalizationsKk extends AppLocalizations {
   String get shiftClosed => 'Ауысым жабылды';
 
   @override
-  String get shiftOverAgeTitle => 'Смена открыта более 24 часов';
+  String get shiftOverAgeTitle => 'Ауысым 24 сағаттан астам ашық';
 
   @override
   String get shiftOverAgeMessage =>
-      'Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.';
+      'Сату бұғатталды. Жұмысты жалғастыру үшін ағымдағы ауысымды жауып, жаңасын ашыңыз.';
+
+  @override
+  String get shiftOverAgeCloseAtTill =>
+      'Сату бұғатталды. Жұмысты жалғастыру үшін ауысымды кассада жауып, жаңасын ашыңыз.';
 
   @override
   String shiftSince(String time) {
@@ -1251,11 +1286,11 @@ class AppLocalizationsKk extends AppLocalizations {
   String get inventoryTitle => 'Инвентаризация';
 
   @override
-  String get inventoryFullCount => 'Полная инвентаризация';
+  String get inventoryFullCount => 'Толық түгендеу';
 
   @override
   String get inventoryFullCountSubtitle =>
-      'Обнулить остатки непросканированных товаров';
+      'Сканерленбеген тауарлардың қалдығын нөлдеу';
 
   @override
   String get inventoryStart => 'Бастау';
@@ -1491,6 +1526,16 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get printerPrintSuccess => 'Басып шығару сәтті';
+
+  @override
+  String get paymentNotFiscalized => 'Чек фискалданбады — төлем тіркелді';
+
+  @override
+  String get paymentFiscalModuleAbsent =>
+      'Фискалдау модулі қолжетімсіз — чектер фискалданбайды';
+
+  @override
+  String get cashDrawerOpenError => 'Ақша жәшігі ашылмады';
 
   @override
   String get printerPrintError => 'Басып шығару қатесі';
@@ -1810,7 +1855,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get valueCannotBeNegative => 'Мән теріс болуы мүмкін емес';
 
   @override
-  String maxPercent(int percent) {
+  String maxPercent(String percent) {
     return 'Максимум $percent%';
   }
 
@@ -1824,6 +1869,21 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get discountAmount => 'Жеңілдік сомасы:';
+
+  @override
+  String discountLimitPercent(String percent, String source) {
+    return '$percent % дейін рұқсат — $source';
+  }
+
+  @override
+  String discountLimitAmount(String amount, String source) {
+    return '$amount дейін рұқсат — $source';
+  }
+
+  @override
+  String discountApprovalAbove(String percent) {
+    return '$percent % жоғары аға қызметкердің растауы қажет';
+  }
 
   @override
   String get sumLabel => 'Сома';
@@ -2064,7 +2124,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get actionDefer => 'Кейінге қалдыру';
 
   @override
-  String get actionDeferredList => 'Отложенные';
+  String get actionDeferredList => 'Кейінге қалдырылғандар';
 
   @override
   String get actionMark => 'Маркировка';
@@ -2384,10 +2444,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get restaurantSplitApply => 'Қолдану';
 
   @override
-  String get restaurantSplitPaymentTitle => 'Оплата по гостям';
+  String get restaurantSplitPaymentTitle => 'Қонақтар бойынша төлем';
 
   @override
-  String get restaurantSplitPaymentProceed => 'К оплате';
+  String get restaurantSplitPaymentProceed => 'Төлемге';
 
   @override
   String get restaurantPreCheckPrinted =>
@@ -2581,7 +2641,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get terminalHomeSaleNote =>
-      'Браузерде сату — бөлек жұмыс: сату экраны кассаның дерекқорын тікелей оқиды және әзірге браузер үшін құрастырылмайды.';
+      'Себет, чек нөмірі және ауысым кассаға тиесілі — терминал чекті көрсетеді және сым арқылы басқарады. Чек басып шығару, фискалдау және ақша жәшігі кассада қалады.';
 
   @override
   String get wtNotPortedTitle => 'Бұл экран әзірге тек кассада';
@@ -4549,7 +4609,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get agentTypeCustomer => 'Клиент';
 
   @override
-  String get agentTypeSupplier => 'Поставщик';
+  String get agentTypeSupplier => 'Жеткізуші';
 
   @override
   String get agentNameHint => 'Клиент атын енгізіңіз';
@@ -5107,6 +5167,42 @@ class AppLocalizationsKk extends AppLocalizations {
   String get fiscalSettingsPrintVatSubtitle => 'Чекте ҚҚС сомасын көрсету';
 
   @override
+  String get fiscalOffsetSection => 'Сертификаттар және аванс';
+
+  @override
+  String get fiscalOffsetCertificateSale => 'Сертификат сатқанда чек';
+
+  @override
+  String get fiscalOffsetCertificateSaleSubtitle =>
+      'Сыйлық сертификаты сатылғанда фискалдық чек беру';
+
+  @override
+  String get fiscalOffsetLayout => 'Сертификатпен немесе аванспен төлеу';
+
+  @override
+  String get fiscalOffsetLayoutSubtitle =>
+      'Есепке алу сомасы ОФД чегіне қалай түседі';
+
+  @override
+  String get fiscalOffsetLayoutDiscount => 'Тауарларға жеңілдікпен';
+
+  @override
+  String get fiscalOffsetLayoutSurchargeOnly => 'Тек қосымша төлемге чек';
+
+  @override
+  String get fiscalOffsetPrepaymentReceipt => 'Аванс қабылдағанда чек';
+
+  @override
+  String get fiscalOffsetPrepaymentReceiptSubtitle =>
+      'Сатып алушы аванс енгізгенде фискалдық чек беру';
+
+  @override
+  String get fiscalOffsetSaveError => 'Баптауды сақтау мүмкін болмады';
+
+  @override
+  String get customerPaymentTender => 'Немен қабылданды';
+
+  @override
   String get fiscalSettingsVatRate =>
       'ҚҚС мөлшерлемесі: 12% (3/28 формуласы бойынша)';
 
@@ -5314,14 +5410,15 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get shiftZReportQueued =>
-      'Z-отчёт принят в очередь печати. Бумаги пока нет: она выйдет, когда принтер сможет. Задание ждёт 30 минут — посмотреть его можно в Настройках → Принтер';
+      'Z-есеп басып шығару кезегіне қабылданды. Қағаз әзірге жоқ: принтер мүмкіндік алғанда шығады. Тапсырма 30 минут күтеді — оны Баптаулар → Принтер бөлімінен көруге болады';
 
   @override
   String get shiftZReportAlreadyQueued =>
-      'Z-отчёт уже сдан в печать — второй раз он не печатается';
+      'Z-есеп басып шығаруға жіберілген — ол екінші рет басылмайды';
 
   @override
-  String get shiftZReportPrintFailed => 'Не удалось сдать Z-отчёт в печать';
+  String get shiftZReportPrintFailed =>
+      'Z-есепті басып шығаруға жіберу мүмкін болмады';
 
   @override
   String get shiftFinishAllSales => 'Барлық сатуларды аяқтаңыз';
@@ -5373,19 +5470,19 @@ class AppLocalizationsKk extends AppLocalizations {
   String get shiftCashOperations => 'Кассалық операциялар';
 
   @override
-  String get shiftSalesLabel => 'Продажи';
+  String get shiftSalesLabel => 'Сатылымдар';
 
   @override
-  String get shiftSalesTotal => 'Сумма продаж';
+  String get shiftSalesTotal => 'Сатылым сомасы';
 
   @override
-  String get shiftCashSales => 'Наличные';
+  String get shiftCashSales => 'Қолма-қол';
 
   @override
   String get shiftCardSales => 'Карта';
 
   @override
-  String get shiftRefundsTotal => 'Возвраты';
+  String get shiftRefundsTotal => 'Қайтарулар';
 
   @override
   String get shiftShortage => 'Тапшылық';
@@ -5927,6 +6024,11 @@ class AppLocalizationsKk extends AppLocalizations {
   String get syncPreparing => 'Дайындалуда...';
 
   @override
+  String refundRefused(String reason) {
+    return 'Қайтару орындалмады: $reason';
+  }
+
+  @override
   String errorSaveFailed(String details) {
     return 'Сақтау қатесі: $details';
   }
@@ -5952,6 +6054,14 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get errorUnknownGeneric => 'Белгісіз қате';
+
+  @override
+  String errorRefusalUnknownCode(String code) {
+    return 'белгісіз себеп (коды $code)';
+  }
+
+  @override
+  String get errorReasonUnknown => 'белгісіз себеп';
 
   @override
   String get errorFillRequired => 'Барлық міндетті өрістерді толтырыңыз';
@@ -5997,6 +6107,26 @@ class AppLocalizationsKk extends AppLocalizations {
       'Касса әлі бапталмаған — баптау шебері аяқталмайынша кіру мүмкін емес.';
 
   @override
+  String get errorTillNotConfiguredSale =>
+      'Касса бапталмаған — чекті бастау мүмкін емес. Әкімшіге хабарласыңыз: баптау шеберінен өту керек.';
+
+  @override
+  String get errorNotAllowed =>
+      'Бұл әрекетке құқық жеткіліксіз. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorNoSaleModule =>
+      'Бұл касса чек жүргізе алмайды: сату модулі жиналмаған. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorTerminalInBody =>
+      'Терминал кассаға дұрыс жүгінбеді. Жұмыс орнындағы қосымшаны жаңартыңыз.';
+
+  @override
+  String get errorWholesaleInStart =>
+      'Көтерме чек былай басталмайды. Кәдімгі чек бастап, көтермені бөлек түймемен қосыңыз.';
+
+  @override
   String get errorTerminalLimitReached =>
       'Бұл кассада терминалдардың ең көп саны тіркелген. Орын босату үшін әкімшіге хабарласыңыз.';
 
@@ -6022,6 +6152,45 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get errorDeferredNotFound => 'Кейінге қалдырылған чек табылмады';
+
+  @override
+  String get errorCartStale =>
+      'Сіз теріп жатқанда чек өзгерді. Экран жаңартылды — соңғы әрекетті қайталаңыз.';
+
+  @override
+  String get errorCartWrongReceipt =>
+      'Бұл чек енді жұмыста емес. Жаңа чек бастаңыз немесе кейінге қалдырылғанын алыңыз.';
+
+  @override
+  String get errorCartNotStarted =>
+      'Чек әлі басталмаған. Жаңа чек бастаңыз немесе кейінге қалдырылғанын алыңыз.';
+
+  @override
+  String get errorLineNotFound =>
+      'Бұл жол чекте жоқ. Чекті жаңартып, қайталап көріңіз.';
+
+  @override
+  String get errorInvalidAmount =>
+      'Жарамсыз мән. Сома теріс бола алмайды, жеңілдік 100%-дан аспауы керек.';
+
+  @override
+  String get errorDeferredTaken =>
+      'Бұл кейінге қалдырылған чекті басқа жұмыс орны алып қойған.';
+
+  @override
+  String get errorCartNotEmpty =>
+      'Алдымен ағымдағы чекті аяқтаңыз немесе кейінге қалдырыңыз — оның үстіне басқасын алу мүмкін емес.';
+
+  @override
+  String get errorSaleNotStarted =>
+      'Касса чекті бастай алмады және себебін айтпады. Қайталап көріңіз.';
+
+  @override
+  String get errorShiftNotOpen => 'Ауысым ашылмаған. Ауысымды кассада ашыңыз.';
+
+  @override
+  String get errorCardTerminalMisconfigured =>
+      'Осы жұмыс орнының төлем терминалы дұрыс бапталмаған. Жабдық баптауларындағы байланысты тексеріңіз.';
 
   @override
   String errorReceiptNotFound(String receiptNo) {
@@ -6991,42 +7160,42 @@ class AppLocalizationsKk extends AppLocalizations {
   String get hwTerminalTerminalId => 'Terminal ID';
 
   @override
-  String get catalogExportCsv => 'Экспорт CSV';
+  String get catalogExportCsv => 'CSV экспорты';
 
   @override
   String get catalogImport => 'Импорт';
 
   @override
-  String get catalogFilterColumn => 'Фильтр...';
+  String get catalogFilterColumn => 'Сүзгі...';
 
   @override
   String catalogExportSuccess(String path) {
-    return 'Экспортировано в $path';
+    return '$path файлына экспортталды';
   }
 
   @override
-  String get catalogExportFailed => 'Ошибка экспорта';
+  String get catalogExportFailed => 'Экспорт қатесі';
 
   @override
-  String get catalogImportResults => 'Результаты импорта';
+  String get catalogImportResults => 'Импорт нәтижелері';
 
   @override
   String catalogImportImported(int count) {
-    return 'Импортировано: $count';
+    return 'Импортталды: $count';
   }
 
   @override
   String catalogImportUpdated(int count) {
-    return 'Обновлено: $count';
+    return 'Жаңартылды: $count';
   }
 
   @override
   String catalogImportSkipped(int count) {
-    return 'Пропущено: $count';
+    return 'Өткізілді: $count';
   }
 
   @override
-  String get catalogImportErrors => 'Ошибки:';
+  String get catalogImportErrors => 'Қателер:';
 
   @override
   String get catalogTypeConsumable => 'Шығын материалы';
@@ -7053,36 +7222,37 @@ class AppLocalizationsKk extends AppLocalizations {
   String get serviceQuickServicesEmpty => 'Жылдам қызметтер жоқ';
 
   @override
-  String get serviceIntakeItems => 'Принимаемые предметы';
+  String get serviceIntakeItems => 'Қабылданатын заттар';
 
   @override
-  String get serviceItemName => 'Что принимаете (предмет, вещь, устройство)';
+  String get serviceItemName => 'Не қабылдайсыз (зат, бұйым, құрылғы)';
 
   @override
-  String get serviceItemDescription => 'Описание проблемы / пожелания клиента';
+  String get serviceItemDescription =>
+      'Ақаудың сипаттамасы / клиенттің тілектері';
 
   @override
-  String get serviceItemSerial => 'Серийный номер / маркировка';
+  String get serviceItemSerial => 'Сериялық нөмір / таңбалау';
 
   @override
-  String get serviceItemAdd => 'Добавить предмет';
+  String get serviceItemAdd => 'Зат қосу';
 
   @override
-  String get serviceItemEmpty => 'Добавьте хотя бы один предмет';
+  String get serviceItemEmpty => 'Кемінде бір зат қосыңыз';
 
   @override
   String serviceItemCount(int count) {
-    return '$count шт.';
+    return '$count дана';
   }
 
   @override
-  String get serviceClientQuickName => 'Имя клиента';
+  String get serviceClientQuickName => 'Клиенттің аты';
 
   @override
-  String get serviceClientQuickPhone => 'Телефон клиента';
+  String get serviceClientQuickPhone => 'Клиенттің телефоны';
 
   @override
-  String get serviceClientOrSearch => 'или найти в базе';
+  String get serviceClientOrSearch => 'немесе базадан табу';
 
   @override
   String get catalogTypeDish => 'Тағам';
@@ -7794,6 +7964,37 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get receiptTemplateDeleteTitle => 'Үлгіні жою';
+
+  @override
+  String get receiptTemplateHeaderHint =>
+      'Бірнеше жол: сәлемдесу, акция, байланыс';
+
+  @override
+  String get receiptTemplateFooterHint =>
+      'Бірнеше жол: алғыс, қайтару шарттары, сайт, әлеуметтік желілер';
+
+  @override
+  String get receiptTemplateAlignLeft => 'Сол жақта';
+
+  @override
+  String get receiptTemplateAlignCenter => 'Ортасында';
+
+  @override
+  String get receiptTemplateAlignRight => 'Оң жақта';
+
+  @override
+  String get receiptTemplateBold => 'Қалың';
+
+  @override
+  String get receiptTemplateDoubleSize => 'Ірі (екі есе өлшем)';
+
+  @override
+  String get receiptTemplatePaperWidthHint =>
+      'Таспа ені принтер баптауларында орнатылады';
+
+  @override
+  String get receiptTemplateMandatoryNote =>
+      'Міндетті деректемелер — чек нөмірі, жиынтық, төлемдер, ҚҚС, фискалдық белгі және QR — әрқашан тақырып пен төменгі бөліктің арасында басылады';
 
   @override
   String receiptTemplateDeleteConfirm(String name) {
@@ -10398,6 +10599,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get promoTitle => 'Акциялар';
 
   @override
+  String get promoSubtitle => '1+1 акциялары және сатып алуға сыйлықтар';
+
+  @override
   String get promoNew => 'Жаңа акция';
 
   @override
@@ -10420,9 +10624,6 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get promoSupplierTag => 'жеткізушіден';
-
-  @override
   String get promoDefaultName11 => '1+1 акциясы';
 
   @override
@@ -10433,9 +10634,6 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get promoRewardLabel => 'Сыйлық (не тегін)';
-
-  @override
-  String get promoSupplierFunded => 'Жеткізушіден акция';
 
   @override
   String get promoSaveButton => 'Акцияны сақтау';
@@ -10926,6 +11124,64 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
+  String get discountLimitsTitle => 'Жеңілдік шектеулері';
+
+  @override
+  String get discountLimitsSubtitle =>
+      'Кассир қолмен қанша жеңілдік бере алады';
+
+  @override
+  String get discountLimitsIntro =>
+      'Рөл шектеуі әдепкіден басым. Өз жолы жоқ рөлге «Әдепкі» қолданылады. Жүз пайыз «шектеусіз» дегенді білдіреді — бұл жарияланған мән, бос орын емес.';
+
+  @override
+  String get discountLimitsDefaultRow => 'Әдепкі (барлық рөлдер)';
+
+  @override
+  String get discountLimitsMaxPercent => 'Шектеу, %';
+
+  @override
+  String get discountLimitsApprovalAbove => 'Растау шегі, %';
+
+  @override
+  String get discountLimitsApprovalHint => 'бос — қажет емес';
+
+  @override
+  String get discountLimitsInheritHint => 'бос — әдепкідей';
+
+  @override
+  String get discountLimitsTwoDoors =>
+      'Назар аударыңыз: сату саясатындағы «бағаны төмендетуге тыйым салу» тек жолдың бағасын өңдеуді жабады. Жеңілдік 100 % шектеуде әлі де рұқсат етіледі — тіпті тегін жолға дейін. Бұл екі бөлек есік; екіншісін жабу үшін шектеуді жүзден төмен қойыңыз.';
+
+  @override
+  String get discountLimitsSaved => 'Шектеу сақталды';
+
+  @override
+  String get discountLimitsInherited => 'Жол алынды: рөл әдепкіні мұралайды';
+
+  @override
+  String get discountLimitsInvalid => 'Шектеу — 0-ден 100-ге дейінгі сан';
+
+  @override
+  String get discountLimitsApprovalNotYet =>
+      'Аға қызметкердің растауы әзірге іске асырылмаған: шектен асқан жеңілдік код сұрамай, аталған себеппен қабылданбайды.';
+
+  @override
+  String errorDeniedPolicy(String detail) {
+    return 'Касса баптауларымен тыйым салынған: $detail';
+  }
+
+  @override
+  String errorDeniedLimit(String detail) {
+    return 'Жеңілдік рұқсат етілгеннен артық: $detail';
+  }
+
+  @override
+  String errorApprovalRequired(String detail) {
+    return 'Аға қызметкердің растауы қажет: $detail';
+  }
+
+  @override
   String get errorBigAmountBlocked =>
       'Сату сомасы 1 млн ₸ асады. Касса баптауларында ірі сомаларға рұқсатты қосыңыз.';
 
@@ -11019,6 +11275,10 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get receiptInputNoRecent => 'Әзірге чектер жоқ';
+
+  @override
+  String get receiptInputRecentUnavailable =>
+      'Соңғы чектер тізімі бұл терминалда қолжетімсіз — чек нөмірін қолмен енгізіңіз';
 
   @override
   String get shiftHistoryTitle => 'Ауысымдар тарихы';
@@ -11297,10 +11557,6 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get scannerRulesUnavailable =>
-      'Бұл құрастырымда штрихкодты оқу ережелері қолжетімсіз.';
-
-  @override
   String get scannerRulesSaved => 'Штрихкодты оқу ережелері сақталды';
 
   @override
@@ -11401,4 +11657,1518 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get printQueueCancelRefused =>
       'Бұл тапсырманы енді тоқтату мүмкін емес: ол басылып жатыр немесе аяқталған';
+
+  @override
+  String get errorPayReceiptNotFound =>
+      'Чек енді жұмыста емес — оны төлеу мүмкін емес. Экранды жаңартып, қайта бастаңыз.';
+
+  @override
+  String get errorPayNotOwner =>
+      'Бұл чекті басқа жұмыс орны жүргізуде — оны осы жерден төлеу мүмкін емес.';
+
+  @override
+  String get errorPaymentAlreadyTaken =>
+      'Бұл чек төленіп қойған. Касса ақшаны екінші рет алмайды.';
+
+  @override
+  String get errorPaymentInsufficient =>
+      'Аталған сома чекке жетпейді. Соманы қайта енгізіңіз.';
+
+  @override
+  String get errorPaymentAccountMissing =>
+      'Кассада бұл төлем түріне арналған шот жоқ. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorPaymentAccountNotAllowed =>
+      'Мұндай шот төлемге ұсынылмаған. Шоттар тізімін жаңартып, қайта таңдаңыз.';
+
+  @override
+  String get errorPaymentUnbalanced =>
+      'Төлем жолдарының сомасы чек сомасына сәйкес келмейді. Төлемді қайта енгізіңіз.';
+
+  @override
+  String get errorPaymentKindInactive =>
+      'Бұл төлем түрі касса баптауларында өшірілген. Басқасын таңдаңыз немесе баптауларда қосыңыз.';
+
+  @override
+  String get errorPaymentKindUnknown =>
+      'Касса мұндай төлем түрін білмейді. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorCertificateUnknown =>
+      'Бұл кассада мұндай нөмірлі сертификат жоқ. Нөмірді тексеріңіз.';
+
+  @override
+  String get errorCertificatePinWrong =>
+      'Сертификаттың ПИН коды сәйкес келмеді. Қайта теріңіз.';
+
+  @override
+  String get errorCertificateRateLimited =>
+      'Сертификатты тексерудің сәтсіз әрекеттері тым көп. Бірнеше минут күтіп, қайталаңыз.';
+
+  @override
+  String get errorConnectionLost =>
+      'Кассамен байланыс үзілді. Желіні тексеріп, қайталаңыз.';
+
+  @override
+  String get errorRunIncomplete =>
+      'Касса операцияны аяқтамай тоқтатты. Қайталамас бұрын кассадағы нәтижені тексеріңіз.';
+
+  @override
+  String get errorWireMismatch =>
+      'Жұмыс орны мен касса бірін-бірі түсінбеді — нұсқалары сәйкес емес. Бетті жаңартыңыз; көмектеспесе, әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorTillFailed =>
+      'Касса операцияны орындай алмады. Қайталаңыз; қате қайталанса, әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorTerminalChanged =>
+      'Сіз жұмыс орнын ауыстырдыңыз — қайта кіріңіз.';
+
+  @override
+  String get errorUnknownTerminal =>
+      'Жұмыс орны кассаға байланыстырылмаған. Оны байланыстыру кодымен қайта байланыстырыңыз.';
+
+  @override
+  String get errorAlreadyConfigured =>
+      'Касса бапталып қойған — бастапқы баптау шебері енді қолжетімсіз.';
+
+  @override
+  String get errorCannotDeleteSelf => 'Кассаның өз жұмыс орнын жоюға болмайды.';
+
+  @override
+  String get errorNoDrivers =>
+      'Касса жабдық драйверлерінсіз жиналған — құрылғыларды іздеу мен тексеру қолжетімсіз. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorNoNetworkModule =>
+      'Бұл касса желі баптауларын басқармайды — жүйелік қызмет жоқ. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorNoSessionRegistry =>
+      'Бұл касса сеанстар тізімін жүргізбейді. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorNoBackupTransport =>
+      'Бұл кассада сақтық көшірмелер бапталмаған. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorBackupNotFound => 'Сақтық көшірме табылмады.';
+
+  @override
+  String get errorCertificatesUnavailable =>
+      'Бұл касса сыйлық сертификаттарын желі арқылы шығармайды. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorRefundStale =>
+      'Команда кассаға жеткенше қайтару өзгерді. Әрекетті қайталаңыз.';
+
+  @override
+  String get errorRefundWrongDraft =>
+      'Бұл қайтару жобасы енді жоқ. Қайтаруды қайта ашыңыз.';
+
+  @override
+  String get errorRefundNotStarted =>
+      'Қайтару басталмаған — чекті таңдаңыз немесе чексіз қайтаруды бастаңыз.';
+
+  @override
+  String get errorRefundEmpty =>
+      'Қайтаруда бірде-бір жол жоқ — қайтаратын ештеңе жоқ.';
+
+  @override
+  String get errorReceiptAlreadyRefunded =>
+      'Бұл чек бойынша қайтару жасалып қойған.';
+
+  @override
+  String get errorReceiptNotRefundable =>
+      'Бұл чекті мұнда қайтаруға болмайды: төлем басқа кассаның терминалы арқылы өтті. Қайтаруды төлеген жерде рәсімдеңіз.';
+
+  @override
+  String get errorLineNotInReceipt =>
+      'Бұл тауар чекте жоқ — чек бойынша тек онда сатылғаны қайтарылады.';
+
+  @override
+  String get errorSaleNotCompleted =>
+      'Бұл чек бойынша сату аяқталмаған — қайтаратын ештеңе жоқ.';
+
+  @override
+  String get errorRefundBusy =>
+      'Кассада басқа қайтару жүріп жатыр. Оны аяқтап, қайталаңыз.';
+
+  @override
+  String get errorRefundCannotStart =>
+      'Касса қайтаруды бастай алмады және себебін атамады. Ауысым мен касса баптауын тексеріңіз.';
+
+  @override
+  String get errorRefundInstallmentRefused =>
+      'Чек бөліп төлеуге сатылған — касса оны қайтармайды. Шартты бұзуды әкімші рәсімдейді.';
+
+  @override
+  String get errorRefundCashlessUnavailable =>
+      'Бұл ақшаны картаға немесе QR арқылы қайтару керек, бірақ қайтаратын құрал жоқ: терминал немесе провайдер қосылмаған. Касса мұндай қайтаруды жәшіктен қолма-қол бермейді.';
+
+  @override
+  String get errorRefundCashlessRefused =>
+      'Банк немесе провайдер қайтарудан бас тартты. Терминалды тексеріп, қайталаңыз — бұрын қайтарылғаны екінші рет қайтарылмайды.';
+
+  @override
+  String get errorRefundKindNotRefundable =>
+      'Бұл төлем түріне қайтаруға төлем түрлерінің анықтамалығында тыйым салынған.';
+
+  @override
+  String get errorRefundKindUnknown =>
+      'Чек осы кассаның анықтамалығында жоқ төлем түрімен төленген. Касса ол бойынша қайтаруды жүргізбейді: немен төлегені белгісіз, ал ол үшін қолма-қол ақша берілмейді.';
+
+  @override
+  String get refundDestinationsTitle => 'Ақша қайда кетеді';
+
+  @override
+  String get refundRouteDrawer => 'Жәшіктен қолма-қол';
+
+  @override
+  String get refundRouteCard => 'Терминал арқылы картаға';
+
+  @override
+  String get refundRouteManual => 'Кассадан тыс — төлеген тәсілмен';
+
+  @override
+  String get refundRouteProvider => 'QR провайдері арқылы';
+
+  @override
+  String get refundRouteCertificate =>
+      'Жаңа сертификатпен (ескісі өтелген күйінде қалады)';
+
+  @override
+  String get refundRouteAdvance => 'Сатып алушының алдын ала төлеміне';
+
+  @override
+  String get refundRouteBonus => 'Бонустық шотқа';
+
+  @override
+  String get refundRouteDebt => 'Сатып алушының қарызы есебіне';
+
+  @override
+  String get errorCertificateRefundNoSource =>
+      'Чек жолы сертификатпен қайтарылады, бірақ оның сертификат нөмірі жоқ. Касса ол бойынша қайтаруды жүргізбейді: жаңа сертификатты не негізде жазу белгісіз, ал кассаның міндеттемесі бекер өсер еді.';
+
+  @override
+  String get errorCertificateCashRefundRefused =>
+      'Сертификат үшін қолма-қол ақшамен қайтаруға болмайды — қолма-қол ақшасыз қайтару деректемелерін көрсетіңіз.';
+
+  @override
+  String get errorCertificatePaysCertificate =>
+      'Сертификатпен басқа сертификаттың сатып алуын төлеуге болмайды.';
+
+  @override
+  String get errorCreditContractUnknown =>
+      'Мұндай нөмірлі бөліп төлеу шарты жоқ. Нөмірді тексеріңіз.';
+
+  @override
+  String get errorCreditContractNotActive =>
+      'Бөліп төлеу шарты өтелген немесе қайтарылып алынған — ол бойынша төлейтін ештеңе жоқ.';
+
+  @override
+  String get errorCreditOverpayment =>
+      'Сома шарт бойынша қалдықтан көп. Соманы тексеріңіз.';
+
+  @override
+  String get errorCreditRepaymentInvalid =>
+      'Өтеу сомасы нөлден көп болуы керек.';
+
+  @override
+  String get errorCreditAllocationRace =>
+      'Дәл сол сәтте шарт бойынша басқа кассадан төлеген. Төлемді қайта қабылдаңыз.';
+
+  @override
+  String get errorKindTenderCannotDiscount =>
+      'Нақты ақша әкелетін төлем түрін чекте «төлем емес» деп жариялауға болмайды.';
+
+  @override
+  String get errorKindAccountMissing =>
+      'Төлем түріне алушы шот тағайындалмаған.';
+
+  @override
+  String get errorKindCounterpartyRequired =>
+      'Кейінге қалдырылған төлем түрі аталған сатып алушыны талап етеді.';
+
+  @override
+  String get errorKindProviderRequired =>
+      'Провайдер (QR) арқылы төлем түріне провайдер қажет.';
+
+  @override
+  String get errorKindFiscalKindRequired =>
+      'Төлем түрінің фискалдық түсіндірмесі көрсетілмеген.';
+
+  @override
+  String get errorKindChangeNotATender =>
+      'Қайтарымды тек нақты ақша әкелетін түр береді.';
+
+  @override
+  String get errorKindSystemImmutable =>
+      'Жүйелік төлем түрінің коды мен идентификаторын өзгертуге де, басқа түрге беруге де болмайды.';
+
+  @override
+  String get errorCertificateExpired =>
+      'Сертификаттың мерзімі өтіп кеткен. Дүкен иесіне хабарласыңыз.';
+
+  @override
+  String get errorCertificateExhausted => 'Сертификатта қаражат қалмаған.';
+
+  @override
+  String get errorCertificateDuplicate =>
+      'Бір сертификат төлемде екі рет аталған. Қайталауды алып тастаңыз.';
+
+  @override
+  String get errorCertificateRace =>
+      'Сертификаттың қалдығы өзгерді. Төлемді қайталаңыз.';
+
+  @override
+  String get errorCertificateAccountMissing =>
+      'Кассада сертификаттар бойынша міндеттеме шоты жоқ. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorCertificateNumberTaken =>
+      'Мұндай нөмірлі сертификат бұрын шығарылған.';
+
+  @override
+  String get errorCertificateNominalInvalid =>
+      'Сертификаттың номиналы нөлден үлкен болуы керек.';
+
+  @override
+  String get errorDebtCustomerRequired =>
+      'Қарызға сату сатып алушысыз мүмкін емес — сатып алушыны таңдаңыз.';
+
+  @override
+  String get errorDebtNotSoldHere =>
+      'Бұл кассада қарызға саудаласпайды — несиеге сату касса параметрлерінде өшірілген.';
+
+  @override
+  String get errorDebtAccountMissing =>
+      'Сатып алушыда есеп шоты жоқ — қарызды жазатын жер жоқ.';
+
+  @override
+  String get errorBonusAccountMissing =>
+      'Сатып алушыда бонустық шот жоқ — бонусты есептен шығаратын ештеңе жоқ.';
+
+  @override
+  String get errorPrepaymentCustomerRequired =>
+      'Аванстық есепке алу үшін сатып алушы қажет — оны таңдаңыз.';
+
+  @override
+  String get errorCreditTermInvalid =>
+      'Бөліп төлеудің мұндай мерзімін касса ресімдемейді';
+
+  @override
+  String get errorCreditPrincipalInvalid =>
+      'Бөліп төлеуге сома жоқ: чек толық өтелген';
+
+  @override
+  String get errorCreditFeeInvalid => 'Шарт бойынша үстеме дұрыс емес';
+
+  @override
+  String get errorCreditSchemeUnknown =>
+      'Кестенің мұндай сұлбасын касса білмейді';
+
+  @override
+  String get errorCreditOverdue =>
+      'Сатып алушының басқа бөліп төлеу шарты мерзімі өткен';
+
+  @override
+  String get errorCreditContractDuplicate =>
+      'Бұл чекке бөліп төлеу шарты бұрыннан ресімделген';
+
+  @override
+  String get errorPrepaymentAccountMissing =>
+      'Сатып алушыда есеп шоты жоқ — онда аванс бола алмайды.';
+
+  @override
+  String get errorPrepaymentInsufficient =>
+      'Енгізілген аванс жетпеді: ол басқа чекпен есепке алынған.';
+
+  @override
+  String get errorLoyaltyCustomerUnknown =>
+      'Сатып алушы картотекадан табылмады. Сатып алушыны қайта таңдаңыз.';
+
+  @override
+  String get errorAmountExceedsReceipt =>
+      'Сома чек құнынан асып тұр. Соманы қайта енгізіңіз.';
+
+  @override
+  String get errorCardChargeUnproven =>
+      'Касса карта арқылы төлемді растамады. Төлем терминалын тексеріңіз.';
+
+  @override
+  String get errorPaymentTypeNotAllowed =>
+      'Бұл төлем түрі осы жұмыс орнында рұқсат етілмеген.';
+
+  @override
+  String get errorPaymentsUnavailable =>
+      'Бұл касса сым арқылы төлемді қабылдамайды. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorNoRefundService =>
+      'Бұл касса сым арқылы қайтаруды жүргізбейді. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorRefundAbandonIsTillSide =>
+      'Қайтару жобасын жұмыс орны емес, касса алып тастайды.';
+
+  @override
+  String get errorNoAnswer =>
+      'Касса жауап бермеді. Байланысты тексеріп, қайталаңыз.';
+
+  @override
+  String paymentTypeNotAllowedHere(String type) {
+    return '«$type» осы жұмыс орнына рұқсат етілмеген. Төлем түрлері жабдық баптауларында өзгертіледі; басқанмен де касса рұқсат етілмеген түрден бас тартады.';
+  }
+
+  @override
+  String paymentTypesLimitedHere(String types) {
+    return 'Жұмыс орны қабылдайды: $types.';
+  }
+
+  @override
+  String get paymentDebtNotSoldHere =>
+      'Бұл кассада қарызға сатпайды: несиеге сату касса параметрлерінде өшірілген. Түймені бассаңыз да, касса бас тартады.';
+
+  @override
+  String get paymentDebtNotPermitted =>
+      'Сізге қарызға сатуға рұқсат жоқ: «қарызға сату» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.';
+
+  @override
+  String get saleDiscountNotPermitted =>
+      'Сізге жеңілдік беруге рұқсат жоқ: «жеңілдікпен сату» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.';
+
+  @override
+  String get paymentDebtPolicyUnknown =>
+      'Касса әзірге мұнда қарызға сатылатынын жауап берген жоқ. Кассамен байланысты тексеріп, қайталап көріңіз.';
+
+  @override
+  String get paymentOffsetsTitle => 'Аванс және сертификаттар';
+
+  @override
+  String get paymentPrepaymentTitle => 'Сатып алушының авансы';
+
+  @override
+  String get paymentPrepaymentNeedsCustomer =>
+      'Авансты есепке алу үшін сатып алушыны телефон нөмірі бойынша табыңыз.';
+
+  @override
+  String get paymentPrepaymentLoading =>
+      'Касса әзірге қанша аванс енгізілгенін жауап берген жоқ.';
+
+  @override
+  String get paymentPrepaymentNone => 'Сатып алушының енгізілген авансы жоқ.';
+
+  @override
+  String get paymentPrepaymentBalance => 'Алдын ала енгізілген:';
+
+  @override
+  String get paymentPrepaymentUse => 'Авансты есепке алу';
+
+  @override
+  String paymentPrepaymentApplied(String amount) {
+    return 'Есепке алынады: $amount';
+  }
+
+  @override
+  String get paymentCertificateTitle => 'Сыйлық сертификаты';
+
+  @override
+  String get paymentCertificateNumber => 'Сертификат нөмірі';
+
+  @override
+  String get paymentCertificatePin => 'PIN, бар болса';
+
+  @override
+  String get paymentCertificatePresent => 'Тексеру';
+
+  @override
+  String paymentCertificateBalance(String amount) {
+    return 'Сертификаттағы қалдық: $amount';
+  }
+
+  @override
+  String paymentCertificateApplied(String amount, String rest) {
+    return '$amount есептен шығарылады, $rest қалады';
+  }
+
+  @override
+  String get paymentCertificateNotNeeded =>
+      'Чек толық жабылды — бұл сертификат қажет емес.';
+
+  @override
+  String get unfiscalizedTitle => 'Фискалданбаған чектер';
+
+  @override
+  String get unfiscalizedEmpty => 'Барлық чектер фискалданған';
+
+  @override
+  String get unfiscalizedEmptyHint =>
+      'Мұнда ақшасы алынған, бірақ оператор құжат бермеген чектер пайда болады';
+
+  @override
+  String unfiscalizedReceiptNo(int number) {
+    return 'Чек №$number';
+  }
+
+  @override
+  String unfiscalizedAgeHours(int hours) {
+    return '$hours сағ бұрын';
+  }
+
+  @override
+  String get unfiscalizedOverdue => '72 сағаттық мерзім өтіп кетті';
+
+  @override
+  String get unfiscalizedRetry => 'Қайталау';
+
+  @override
+  String unfiscalizedRetryDone(String sign) {
+    return 'Құжат алынды: $sign';
+  }
+
+  @override
+  String unfiscalizedRetryFailed(String message) {
+    return 'Оператор қайтадан бас тартты: $message';
+  }
+
+  @override
+  String get unfiscalizedNoDocument =>
+      'Жол бас тартулар құжат алып жүре бастағанға дейін жазылған: қайталайтын ештеңе жоқ, оны тек есептен шығаруға болады';
+
+  @override
+  String get unfiscalizedNoOperator =>
+      'Фискалдық оператор бапталмаған: қайталайтын жер жоқ';
+
+  @override
+  String get unfiscalizedWriteOff => 'Есептен шығару';
+
+  @override
+  String get unfiscalizedWriteOffTitle => 'Фискалданбаған чекті есептен шығару';
+
+  @override
+  String unfiscalizedWriteOffBy(String name) {
+    return 'Шешім мына атқа жазылады: $name';
+  }
+
+  @override
+  String get unfiscalizedWriteOffReason => 'Есептен шығару себебі';
+
+  @override
+  String get unfiscalizedWriteOffDone => 'Чек өңделді деп белгіленді';
+
+  @override
+  String unfiscalizedWrittenOff(String name, String reason) {
+    return '$name есептен шығарды: $reason';
+  }
+
+  @override
+  String get unfiscalizedUnknownUser => 'белгісіз пайдаланушы';
+
+  @override
+  String unfiscalizedAtShiftClose(int count, String numbers) {
+    return 'Ауысым фискалданбаған чектермен жабылды: $count. Нөмірлері: $numbers';
+  }
+
+  @override
+  String documentsOnTheWayAtShiftClose(int count, String numbers) {
+    return 'Ауысым құжаттары әлі операторда жоқ: $count (чектер $numbers). Жабу олардың жіберілуін күтеді; байланыс оралмаса, Z-есеп жіберілмейді — әйтпесе оператор есебі кассамен сәйкес келмейді.';
+  }
+
+  @override
+  String qrPaidPartial(String paid, String amount) {
+    return 'Оплачено частично: $paid из $amount';
+  }
+
+  @override
+  String get qrOrphanTitle => 'Деньги без чека';
+
+  @override
+  String get qrOrphanHint =>
+      'Покупатель заплатил по QR, а чек этими деньгами не закрыт.';
+
+  @override
+  String qrOrphanLine(String amount, String provider, String key) {
+    return '$amount · $provider · $key';
+  }
+
+  @override
+  String get qrOrphanAfterGiveUp =>
+      'Подтверждение пришло после того, как касса перестала ждать';
+
+  @override
+  String get errorQrIntentUnknown =>
+      'Касса бұл QR төлемін білмейді. Чекті жаңартып, қайталаңыз.';
+
+  @override
+  String get errorQrIntentNotPaid =>
+      'QR төлемін банк әлі растаған жоқ. Растауды күтіңіз немесе басқа тәсілді таңдаңыз.';
+
+  @override
+  String errorQrIntentAlreadySettled(String message) {
+    return 'Бұл ақша басқа чекті жауып қойған: $message';
+  }
+
+  @override
+  String get paymentQrTitle => 'QR арқылы төлеу';
+
+  @override
+  String get paymentQrAmount => 'QR сомасы';
+
+  @override
+  String get paymentQrStart => 'QR көрсету';
+
+  @override
+  String paymentQrWaiting(int seconds) {
+    return 'Төлемді күтудеміз · $seconds с қалды';
+  }
+
+  @override
+  String get paymentQrScanHint =>
+      'Сатып алушы кодты банк қосымшасында сканерлейді';
+
+  @override
+  String get paymentQrCancel => 'Күтуді болдырмау';
+
+  @override
+  String get paymentQrNoLink =>
+      'Провайдермен байланыс жоқ — касса сұрауды өзі қайталайды';
+
+  @override
+  String paymentQrPaid(String amount) {
+    return 'QR арқылы төленді: $amount';
+  }
+
+  @override
+  String paymentQrPaidAfterCancel(String amount) {
+    return 'Сатып алушы болдырмауға дейін төлеп үлгерді — $amount осы чекке түседі';
+  }
+
+  @override
+  String get paymentQrCancelled => 'Күту болдырылмады, провайдер растады';
+
+  @override
+  String get paymentQrPatienceSpent =>
+      'Сатып алушы белгіленген уақытта төлемеді — касса күтуді тоқтатты';
+
+  @override
+  String get paymentQrExpired => 'QR кодтың мерзімі провайдерде бітті';
+
+  @override
+  String get paymentQrFailed => 'Провайдер QR төлемінен бас тартты';
+
+  @override
+  String get paymentQrCancelUnconfirmed =>
+      'Болдырмау расталмады — ақша әлі келуі мүмкін. Касса анықтағанша басқа төлемді қабылдамаңыз.';
+
+  @override
+  String get paymentQrRecheck => 'Қайта тексеру';
+
+  @override
+  String get paymentQrRestart => 'Жаңа код';
+
+  @override
+  String paymentQrOverReceipt(String amount) {
+    return 'QR төлемінің $amount сомасы чекке сыймайды';
+  }
+
+  @override
+  String get paymentQrNothingToPay =>
+      'Чек толық жабылған — код көрсетуге негіз жоқ';
+
+  @override
+  String get errorQrNotConfigured => 'Кассада QR провайдері бапталмаған';
+
+  @override
+  String get errorQrNetwork => 'QR провайдерімен байланыс жоқ';
+
+  @override
+  String get errorQrTimeout => 'QR провайдері уақытында жауап бермеді';
+
+  @override
+  String get errorQrProviderBusy => 'QR провайдері бос емес — касса қайталайды';
+
+  @override
+  String get errorQrMalformedReply =>
+      'QR провайдері түсініксіз жауап берді — касса әкімшісіне хабарласыңыз';
+
+  @override
+  String get errorQrUnknownIntent => 'QR провайдері бұл төлемді білмейді';
+
+  @override
+  String get errorQrRejected => 'QR провайдері сұрауды қабылдамады';
+
+  @override
+  String get errorQrReverseUnsupported =>
+      'QR провайдері ақшаны қайтара алмайды';
+
+  @override
+  String get errorQrIntentLive =>
+      'Бұл чекте QR төлемі күтуде — жаңа код көрсетпес бұрын оны болдырмаңыз';
+
+  @override
+  String get fiscalReasonNetwork => 'Фискалдық оператормен байланыс жоқ';
+
+  @override
+  String get fiscalReasonOperatorUnavailable =>
+      'Фискалдық оператор қолжетімсіз';
+
+  @override
+  String get fiscalReasonTokenExpired =>
+      'Оператор кассаның авторизациясын қабылдамады';
+
+  @override
+  String get fiscalReasonRequestNotBuilt =>
+      'Операторға сұрау құрастырылмады: фискалдық баптаулардағы сервер мекенжайын тексеріңіз';
+
+  @override
+  String get fiscalReasonTlsRejected =>
+      'Оператормен қорғалған байланыс орнатылмады: сервер мекенжайын және кассаның сағатын тексеріңіз';
+
+  @override
+  String get fiscalReasonClientFault =>
+      'Оператормен алмасу кезінде касса ақаулығы';
+
+  @override
+  String get fiscalReasonBadCredentials =>
+      'Оператордың логині немесе құпиясөзі қате';
+
+  @override
+  String get fiscalReasonCashboxNotFound =>
+      'Оператор бұл кассаны таппады: зауыттық нөмірді тексеріңіз';
+
+  @override
+  String get fiscalReasonCashboxBlocked => 'Касса оператормен бұғатталған';
+
+  @override
+  String get fiscalReasonOfflineLimitExceeded =>
+      'Автономды құжаттар лимиті асып кетті';
+
+  @override
+  String get fiscalReasonOfflineNotSupported =>
+      'Бұл кассаға автономды режимге рұқсат жоқ';
+
+  @override
+  String get fiscalReasonDuplicate =>
+      'Құжат операторда әлдеқашан тіркелген, бірақ фискалдық белгі кассаға берілмеді — оны оператор кабинетінен алыңыз';
+
+  @override
+  String get fiscalReasonValidation =>
+      'Оператор құжатты қабылдамады: сомалар немесе деректер сәйкес емес';
+
+  @override
+  String get fiscalReasonNotEnoughMoney =>
+      'Оператор деректері бойынша кассада қолма-қол ақша жеткіліксіз';
+
+  @override
+  String get fiscalReasonShiftError => 'Операторда ауысым қатесі';
+
+  @override
+  String get fiscalReasonUnsupported => 'Операцияны оператор қолдамайды';
+
+  @override
+  String get fiscalReasonNotConfigured => 'Фискализация бапталмаған';
+
+  @override
+  String get fiscalReasonUnknown => 'Оператор белгісіз себеппен бас тартты';
+
+  @override
+  String get fiscalReasonOfflineWindowExpired =>
+      '72 сағаттық автономды терезе аяқталды — құжат берілмеді';
+
+  @override
+  String get fiscalReasonRowUnreadable =>
+      'Кезек жолы бүлінген: құжат оқылмайды';
+
+  @override
+  String fiscalReasonWithCode(String reason, int code) {
+    return '$reason (код $code)';
+  }
+
+  @override
+  String fiscalReasonLegacy(String text) {
+    return 'Себеп аудармаға дейін жазылған: $text';
+  }
+
+  @override
+  String get fiscalReasonNotRecorded => 'Себеп жазылмаған';
+
+  @override
+  String get fiscalReasonPaymentTypeNotAccepted =>
+      'Төлем түрін оператор қабылдамайды: «несие» және «ыдыс» ОФД 2.0.2 хаттамасынан алынып тасталған';
+
+  @override
+  String get errorDeferredListUnavailable =>
+      'Кейінге қалдырылған чектер тізімі қолжетімсіз';
+
+  @override
+  String errorDeferredListUnavailableReason(String reason) {
+    return 'Кейінге қалдырылған чектер тізімі қолжетімсіз: $reason';
+  }
+
+  @override
+  String get errorRefundSearchUnavailable =>
+      'Бұл терминалда қайтару үшін тауар іздеу әлі қосылмаған';
+
+  @override
+  String get errorRefundNothingSelected =>
+      'Жоба өзгерді — қайтаратын ештеңе жоқ. Белгіленген жолдарды тексеріңіз.';
+
+  @override
+  String get errorRefundInvalidAmount =>
+      'Мұнша қайтаруға болмайды: саны чек бойынша сатылғаннан көп немесе нөлден аз бола алмайды.';
+
+  @override
+  String get errorCertificatePinRequired =>
+      'Сертификаттың PIN-коды бар. Сертификаттағы PIN-кодты теріңіз.';
+
+  @override
+  String get qrSettingsTitle => 'QR арқылы төлем';
+
+  @override
+  String get qrSettingsSubtitle => 'QR провайдері: мекенжай, код, кілт, күту';
+
+  @override
+  String get qrSettingsKindTitle => 'QR арқылы төлем қабылдау';
+
+  @override
+  String get qrSettingsKindSubtitle => 'Төлем экранындағы «QR» төлем түрі';
+
+  @override
+  String get qrSettingsUrl => 'Провайдер мекенжайы';
+
+  @override
+  String get qrSettingsCode => 'Провайдер коды';
+
+  @override
+  String get qrSettingsKey => 'Қолжетімділік кілті';
+
+  @override
+  String get qrSettingsKeyStoredHint =>
+      'Кілт сақталған. Ауыстыру үшін жаңасын енгізіңіз';
+
+  @override
+  String get qrSettingsKeyEmptyHint => 'Кілт берілмеген';
+
+  @override
+  String get qrSettingsClearKey => 'Сақталған кілтті өшіру';
+
+  @override
+  String get qrSettingsPatience => 'Төлемді күту, секунд';
+
+  @override
+  String get qrSettingsSave => 'Сақтау';
+
+  @override
+  String get qrSettingsSaved => 'QR баптауы сақталды';
+
+  @override
+  String get qrSettingsRemove => 'Баптауды алып тастау';
+
+  @override
+  String get qrSettingsStatusReady => 'Провайдер бапталған';
+
+  @override
+  String get qrSettingsStatusNotConfigured =>
+      'Провайдер бапталмаған — QR арқылы төлем қолжетімсіз';
+
+  @override
+  String get qrSettingsInvalidUrl =>
+      'Мекенжай http:// немесе https:// деп басталуы керек';
+
+  @override
+  String get qrSettingsCodeRequired => 'Провайдер кодын көрсетіңіз';
+
+  @override
+  String qrSettingsInvalidPatience(String min, String max) {
+    return 'Күту — $min секундтан $max секундқа дейін';
+  }
+
+  @override
+  String get qrSettingsSaveFailed => 'QR баптауын сақтау мүмкін болмады';
+
+  @override
+  String get qrSettingsTillOnly =>
+      'QR провайдерін баптау тек кассаның өзінде қолжетімді';
+
+  @override
+  String get installmentTermsTitle => 'Бөліп төлеу';
+
+  @override
+  String get installmentTermsMonths => 'Мерзімі, ай';
+
+  @override
+  String get installmentTermsScheme => 'Кесте түрі';
+
+  @override
+  String get installmentTermsContinue => 'Жалғастыру';
+
+  @override
+  String get customerPaymentTitle => 'Төлем қабылдау / қарызды өтеу';
+
+  @override
+  String customerPaymentCurrentDebt(String amount) {
+    return 'Ағымдағы қарыз: $amount';
+  }
+
+  @override
+  String customerPaymentBalance(String amount) {
+    return 'Баланс: $amount';
+  }
+
+  @override
+  String get customerPaymentAmount => 'Төлем сомасы';
+
+  @override
+  String get customerPaymentAmountInvalid => '0-ден үлкен соманы енгізіңіз';
+
+  @override
+  String get customerPaymentFailed => 'Төлемді жүргізу қатесі';
+
+  @override
+  String get customerPaymentSubmit => 'Төлем қабылдау';
+
+  @override
+  String get errorPrepaymentAmountInvalid =>
+      'Аванс сомасы нөлден үлкен болуы керек. Соманы қайта енгізіңіз.';
+
+  @override
+  String get errorPrepaymentTenderInvalid =>
+      'Аванс қолма-қол ақшамен, картамен немесе QR арқылы қабылданады. Басқа төлем түрін таңдаңыз.';
+
+  @override
+  String get errorPrepaymentTillAccountMissing =>
+      'Бұл кассада осы төлем түрін қабылдайтын шот жоқ. Қабылдау шотын баптап, қайталаңыз.';
+
+  @override
+  String get errorPrepaymentIntakeFailed =>
+      'Авансты қабылдау мүмкін болмады. Сатып алушыны тексеріп, қайталаңыз.';
+
+  @override
+  String get errorPrepaymentRefundExceedsBalance =>
+      'Сатып алушының шотындағы аванс сіз беріп жатқан сомадан аз. Қалдықты тексеріп, соманы азайтыңыз.';
+
+  @override
+  String get errorPrepaymentRefundKeyMissing =>
+      'Аванс беру өтінімінде қайталау кілті жоқ — касса қайталауды екінші берумен шатастырады. Экранды қайта ашып, соманы қайтадан теріңіз.';
+
+  @override
+  String get errorPrepaymentRefundFailed =>
+      'Авансты беру мүмкін болмады. Сатып алушыны тексеріп, қайталаңыз.';
+
+  @override
+  String get errorPrepaymentRefundUnavailable =>
+      'Бұл касса сатып алушының авансын сым арқылы бермейді. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorPrepaymentIntakeUnavailable =>
+      'Бұл касса сатып алушының авансын желі арқылы қабылдамайды. Әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorPrepaymentIntakeKeyMissing =>
+      'Бұл аванс өтінімінде қайталау кілті жоқ, сондықтан касса қайталауды екінші төлемнен ажырата алмайды. Экранды қайта ашып, соманы қайта енгізіңіз.';
+
+  @override
+  String get errorQrSetupUnavailable =>
+      'Бұл кассада QR провайдерінің баптауы сақталмайды. QR арқылы төлемді кассаның өзінде баптаңыз немесе әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorReceiptTemplatesUnavailable =>
+      'Бұл кассада чек үлгілері сақталмайды. Үлгіні кассаның өзінде баптаңыз немесе әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorReceiptTemplateNameless =>
+      'Чек үлгісінің атауы болуы тиіс. Атауын теріп, қайта сақтаңыз.';
+
+  @override
+  String get shiftDeskTitle => 'Ауысым';
+
+  @override
+  String get shiftDeskOverAgeWarning =>
+      'Ауысым 24 сағаттан астам ашық — сату бұғатталған. Оны жауып, жаңасын ашыңыз.';
+
+  @override
+  String shiftDeskOpenedAt(String when) {
+    return 'Ашылған: $when';
+  }
+
+  @override
+  String get shiftDeskCountedLabel => 'Жәшікте саналған';
+
+  @override
+  String get shiftDeskCountedHint =>
+      'Ешкім санамаса, бос қалдырыңыз — касса өз қорытындысын алады.';
+
+  @override
+  String get shiftDeskOpeningCashLabel => 'Басында жәшіктегі ақша';
+
+  @override
+  String get shiftDeskClosedNow => 'Ауысым жабылды.';
+
+  @override
+  String get shiftDeskOpenedNow => 'Ауысым ашылды.';
+
+  @override
+  String get shiftDeskNoShift => 'Кассада ашық ауысым жоқ.';
+
+  @override
+  String shiftDeskUnfiscalizedCount(int count) {
+    return 'Фискалдық құжатсыз чектер: $count';
+  }
+
+  @override
+  String shiftDeskUnfinishedCount(int count) {
+    return 'Аяқталмаған чектер: $count — жабу оларды тазалайды';
+  }
+
+  @override
+  String get errorShiftDeskNotOpen =>
+      'Бұл кассада ашық ауысым жоқ — жабатын ештеңе жоқ.';
+
+  @override
+  String get errorShiftDeskAlreadyOpen => 'Бұл кассада ауысым әлдеқашан ашық.';
+
+  @override
+  String get errorShiftDeskUnavailable =>
+      'Бұл касса ауысымдарды сым арқылы жүргізбейді. Ауысымды кассаның өзінде жабыңыз немесе әкімшіге хабарласыңыз.';
+
+  @override
+  String get errorShiftDeskActorUnknown =>
+      'Ауысымды кассир ашады, ал бұл өтінімде кассир аталмаған. Қайта кіріңіз.';
+
+  @override
+  String get prepaymentIntakeTitle => 'Аванс қабылдау';
+
+  @override
+  String get prepaymentIntakeFind => 'Сатып алушыны табу';
+
+  @override
+  String get prepaymentIntakeNotFound =>
+      'Мұндай нөмірмен сатып алушы табылмады.';
+
+  @override
+  String get prepaymentIntakeSubmit => 'Авансты қабылдау';
+
+  @override
+  String prepaymentIntakeAccepted(String amount) {
+    return 'Аванс қабылданды. Алдын ала енгізілген: $amount';
+  }
+
+  @override
+  String get prepaymentIntakeFiscalFailed =>
+      'Ақша қабылданды, бірақ аванстың фискалдық чегі жазылмады.';
+
+  @override
+  String get emulatorSettingsTitle => 'Кірістірілген эмуляторлар';
+
+  @override
+  String get emulatorSettingsHint =>
+      'Аспаптарды қоспай-ақ басып шығару мен диагностиканы тексеру';
+
+  @override
+  String get emulatorReceiptPrinter => 'Чек принтері және ақша жәшігі';
+
+  @override
+  String get emulatorEnabledNote =>
+      'Сокет ашық. Касса оған тек байланыстағы мекенжай арқылы жетеді';
+
+  @override
+  String get emulatorDisabledNote => 'Өшірулі: сокет ашылмаған';
+
+  @override
+  String get emulatorAddress => 'Эмулятор мекенжайы';
+
+  @override
+  String get emulatorAddressHint =>
+      'Осы IP мен портты принтер баптауларына жазыңыз';
+
+  @override
+  String get emulatorBindAction => 'Принтер байланысына жазу';
+
+  @override
+  String get emulatorBindDone => 'Принтер байланысы енді эмуляторға қарайды';
+
+  @override
+  String get emulatorBindingStale =>
+      'Принтер байланысы өшірілген эмуляторға қарайды — басып шығару орындалмайды';
+
+  @override
+  String get emulatorStartFailed => 'Эмуляторды іске қосу мүмкін болмады';
+
+  @override
+  String get emulatorFiscalOperator => 'Фискалдық оператор (ОФД)';
+
+  @override
+  String get emulatorFiscalAddressHint =>
+      'Бұл мекенжайды фискалдық баптаулардың «Сервер мекенжайы» өрісіне жазыңыз';
+
+  @override
+  String get emulatorFiscalBindAction => 'Фискалдық баптауларға жазу';
+
+  @override
+  String get emulatorFiscalBindNote =>
+      'Эмулятордың мекенжайын, логинін, паролін, кілтін және зауыттық нөмірін жазады әрі кассаны сынақтық деп жариялайды. Тіркеу нөміріне тиіспейді';
+
+  @override
+  String get emulatorFiscalBindDone =>
+      'Фискалдық баптаулар енді эмуляторға қарайды';
+
+  @override
+  String get emulatorFiscalBindingStale =>
+      'Фискалдық баптаулар өшірілген эмуляторға қарайды — фискалдау орындалмайды';
+
+  @override
+  String get emulatorFiscalLocalModuleWarning =>
+      '«Жергілікті модуль» өрісі толтырылған — ол сервер мекенжайын басып озады, касса эмуляторға бармайды';
+
+  @override
+  String get emulatorFiscalBlockedLive =>
+      'Касса нақты жұмыс істейді: оператор деректемелері толтырылған. Мұнда ОФД эмуляторына тыйым салынады — жалғанға кеткен чек шынайы көрінеді, бірақ сатып алушыға құжат бермейді';
+
+  @override
+  String get emulatorFiscalBlockedUnknown =>
+      'Фискалдық баптаулар оқылмады — ОФД эмуляторын қосу мүмкін емес';
+
+  @override
+  String get diagnosticsFiscalEmulatorBanner =>
+      'Оператор мекенжайы осы компьютерге қарайды — құжаттар эмуляторға кетеді және фискалдық болып саналмайды';
+
+  @override
+  String get diagnosticsTitle => 'Жабдық диагностикасы';
+
+  @override
+  String get diagnosticsSubtitle => 'Касса аспаптарға шын мәнінде не жібергені';
+
+  @override
+  String get diagnosticsTabPrinter => 'Принтер';
+
+  @override
+  String get diagnosticsTabFiscal => 'Фискалдау';
+
+  @override
+  String get errorDiagnosticsUnavailable =>
+      'Бұл кассада диагностиканы сұрайтын ешкім жоқ';
+
+  @override
+  String get diagnosticsPrinterQueueMissing =>
+      'Бұл жұмыс орнында басып шығару кезегі бапталмаған';
+
+  @override
+  String get diagnosticsPrinterNothingSent =>
+      'Касса принтерге әзірге ештеңе жіберген жоқ';
+
+  @override
+  String diagnosticsAskFailed(String reason) {
+    return 'Касса бұл сұраққа жауап бермеді: $reason';
+  }
+
+  @override
+  String diagnosticsAttempts(int count) {
+    return 'әрекет $count';
+  }
+
+  @override
+  String get diagnosticsJobQueued => 'кезекте тұр';
+
+  @override
+  String get diagnosticsJobPrinting => 'басылып жатыр';
+
+  @override
+  String get diagnosticsJobPrinted => 'басылды';
+
+  @override
+  String get diagnosticsJobFailed => 'басылмады';
+
+  @override
+  String get diagnosticsJobExpired => 'мерзімі өтті';
+
+  @override
+  String get diagnosticsJobCancelled => 'бас тартылды';
+
+  @override
+  String get diagnosticsFiscalNotConfigured =>
+      'Бұл кассада фискалдық оператор бапталмаған';
+
+  @override
+  String get diagnosticsFiscalAccepted => 'Оператор қабылдады';
+
+  @override
+  String get diagnosticsFiscalAcceptedEmpty =>
+      'Оператор әзірге бірде-бір құжат қабылдаған жоқ';
+
+  @override
+  String get diagnosticsFiscalQueued => 'Кезекте';
+
+  @override
+  String get diagnosticsFiscalQueuedEmpty =>
+      'Кезек бос — жіберілгеннің бәрін оператор қабылдады';
+
+  @override
+  String diagnosticsFiscalSign(String value) {
+    return 'Фискалдық белгі $value';
+  }
+
+  @override
+  String diagnosticsFiscalOperatorDoc(String value) {
+    return 'оператор құжаты $value';
+  }
+
+  @override
+  String diagnosticsFiscalReceiptNo(String value) {
+    return 'чек $value';
+  }
+
+  @override
+  String get diagnosticsFiscalOffline => 'дербес берілген';
+
+  @override
+  String get diagnosticsEmulatorBanner =>
+      'Принтер байланысы осы компьютерге қарайды — порттың артында қағаз емес, эмулятор';
+
+  @override
+  String get diagnosticsTabDrawer => 'Ақша жәшігі';
+
+  @override
+  String get drawerDiagnosticsEmpty =>
+      'Касса іске қосылғаннан бері жәшік бір рет те ашылған жоқ';
+
+  @override
+  String get drawerDiagnosticsUnavailable =>
+      'Бұл кассада жәшік импульстерінің жазбасы жоқ — сұрайтын дерек жоқ. Бұл жәшік ашылмады дегенді білдірмейді.';
+
+  @override
+  String get drawerDiagnosticsCaveat =>
+      'Касса команданың қабылданғанын ғана біледі. Жәшіктің шынымен ашылғаны туралы кері байланыс екі жолда да жоқ.';
+
+  @override
+  String get drawerDiagnosticsAccepted => 'Команда қабылданды';
+
+  @override
+  String get drawerDiagnosticsRefused => 'Команда қабылданбады';
+
+  @override
+  String get drawerDiagnosticsViaSerial => 'тізбекті порт';
+
+  @override
+  String get drawerDiagnosticsViaPrinter => 'принтер арқылы (ESC p)';
+
+  @override
+  String get diagnosticsTabScales => 'Таразы';
+
+  @override
+  String get diagnosticsTabDisplay => 'Дисплей';
+
+  @override
+  String get scalesDiagnosticsUnbound =>
+      'Бұл кассаға таразы байланбаған.\nОны жабдық баптауларында байланыстырыңыз — сонда мұнда көрсеткіш шығады.';
+
+  @override
+  String get scalesDiagnosticsWeight => 'Таразы көрсеткіші';
+
+  @override
+  String get scalesDiagnosticsSilent => 'Таразы әлі ештеңе жіберген жоқ';
+
+  @override
+  String get scalesDiagnosticsStable => 'Салмақ тұрақталды';
+
+  @override
+  String get scalesDiagnosticsSettling => 'Салмақ өзгеруде';
+
+  @override
+  String get scalesDiagnosticsOverload => 'Шамадан тыс жүктеме';
+
+  @override
+  String get scalesDiagnosticsPort => 'Таразы порты';
+
+  @override
+  String get scalesDiagnosticsBaudSuffix => 'бод';
+
+  @override
+  String get scalesDiagnosticsConnected => 'Порт ашық';
+
+  @override
+  String get scalesDiagnosticsDisconnected => 'Порт жабық';
+
+  @override
+  String get scalesDiagnosticsCaveat =>
+      'Бұл — аспап жібергені. Көрсеткіштің дұрыстығын касса тексермейді, ол үшін тексеру бар.';
+
+  @override
+  String get displayDiagnosticsEmpty =>
+      'Касса іске қосылғаннан бері дисплейге ештеңе жіберілмеді';
+
+  @override
+  String get displayDiagnosticsUnavailable =>
+      'Бұл кассада дисплей жолдарының жазбасы жоқ — сұрайтын дерек жоқ. Бұл дисплейге ештеңе жіберілмеді дегенді білдірмейді.';
+
+  @override
+  String get displayDiagnosticsCurrent => 'Қазір дисплейде';
+
+  @override
+  String get displayDiagnosticsCaveat =>
+      'Касса жолдың портқа кеткенін ғана біледі. Сөнген не ажыратылған дисплей мұнда жұмыс істеп тұрғаннан ажыратылмайды.';
+
+  @override
+  String get displayDiagnosticsCallPrice => 'баға';
+
+  @override
+  String get displayDiagnosticsCallTotal => 'жиыны';
+
+  @override
+  String get displayDiagnosticsCallChange => 'қайтарым';
+
+  @override
+  String get displayDiagnosticsCallText => 'мәтін';
+
+  @override
+  String get displayDiagnosticsCallWelcome => 'сәлемдесу';
+
+  @override
+  String get displayDiagnosticsCallClear => 'тазалау';
+
+  @override
+  String get emulatorScaleWeight => 'Табақтағы салмақ';
+
+  @override
+  String get emulatorScaleWeightHint =>
+      'Эмулятор пульті: таразы кассаға осы санды жібереді';
+
+  @override
+  String get emulatorQrProvider => 'QR төлем провайдері';
+
+  @override
+  String get emulatorQrAddressHint =>
+      'Бұл мекенжайды QR провайдерінің баптауына жазыңыз';
+
+  @override
+  String get emulatorQrBindAction => 'QR баптауына жазу';
+
+  @override
+  String get emulatorQrBindDone => 'QR баптауы енді эмуляторға қарайды';
+
+  @override
+  String get emulatorQrBindingStale =>
+      'QR баптауы сөндірілген эмуляторға қарайды — код бойынша төлем қабылданбайды';
+
+  @override
+  String get diagnosticsTabPayment => 'Төлем';
+
+  @override
+  String get diagnosticsPaymentEmulatorBanner =>
+      'QR провайдері осы компьютерде: мекенжайдың артында банк емес, эмулятор';
+
+  @override
+  String get paymentDiagnosticsUnavailable =>
+      'Бұл жұмыс орнында төлем туралы дерек жоқ';
+
+  @override
+  String get paymentDiagnosticsQrSection => 'QR арқылы төлем';
+
+  @override
+  String get paymentDiagnosticsQrEmpty =>
+      'Касса әзірге бірде-бір төлем кодын жасаған жоқ';
+
+  @override
+  String get paymentDiagnosticsQrNotConfigured =>
+      'Бұл кассада QR провайдері бапталмаған';
+
+  @override
+  String paymentDiagnosticsQrAddress(String address) {
+    return 'Провайдер: $address';
+  }
+
+  @override
+  String get paymentDiagnosticsQrUnknown =>
+      'Провайдерге жіберілген сұрау денелерін касса сақтамайды. Көрінетіні — ниетте қалғаны: сома, күй, ол жақтағы сәйкестендіргіш және бас тарту себебі.';
+
+  @override
+  String get paymentDiagnosticsTerminalSection => 'Төлем терминалы';
+
+  @override
+  String get paymentDiagnosticsTerminalEmpty =>
+      'Касса қосылғаннан бері төлем терминалына бірде-бір кадр кеткен жоқ';
+
+  @override
+  String get paymentDiagnosticsTerminalUnknown =>
+      'Терминал журналы жадта тұрады: қайта қосуға дейінгі алмасулар сақталмайды, ал терминалдың өзінде жасалған операцияларды касса мүлде көрмейді.';
+
+  @override
+  String get paymentDiagnosticsRequest => 'Сұрау';
+
+  @override
+  String get paymentDiagnosticsReply => 'Жауап';
+
+  @override
+  String get paymentDiagnosticsNoReply => 'Жауап болмады';
+
+  @override
+  String paymentDiagnosticsApproval(String value) {
+    return 'Мақұлдау коды $value';
+  }
+
+  @override
+  String paymentDiagnosticsTransaction(String value) {
+    return 'транзакция $value';
+  }
+
+  @override
+  String paymentDiagnosticsRefusal(String value) {
+    return 'Бас тарту: $value';
+  }
+
+  @override
+  String paymentDiagnosticsConfirmations(int count) {
+    return 'растау саны $count';
+  }
+
+  @override
+  String get paymentDiagnosticsOrphanMoney => 'чегі жоқ ақша';
+
+  @override
+  String get paymentDiagnosticsAfterGiveUp =>
+      'касса күтуді тоқтатқаннан кейін расталды';
+
+  @override
+  String get paymentDiagnosticsApproved => 'Мақұлданды';
+
+  @override
+  String get paymentDiagnosticsDeclined => 'Бас тартылды';
+
+  @override
+  String get paymentDiagnosticsOpPurchase => 'сатып алу';
+
+  @override
+  String get paymentDiagnosticsOpReversal => 'сторно';
+
+  @override
+  String get paymentDiagnosticsOpRefund => 'қайтару';
+
+  @override
+  String get paymentDiagnosticsOpUnknown => 'белгісіз түрдегі кадр';
+
+  @override
+  String get certificateIssueTitle => 'Сыйлық сертификатын шығару';
+
+  @override
+  String get certificateIssueHint =>
+      'Қағаз үшін ақшаны сату чегі қабылдайды. Мұнда қағазға қалдық ашылады, касса міндеттеме алады.';
+
+  @override
+  String get certificateIssueNumber => 'Қағаз нөмірі';
+
+  @override
+  String get certificateIssueNominal => 'Номинал';
+
+  @override
+  String get certificateIssuePin => 'ПИН (міндетті емес)';
+
+  @override
+  String get certificateIssueExpiresDays =>
+      'Жарамдылық мерзімі, күн (міндетті емес)';
+
+  @override
+  String get certificateIssueReceipt => 'Сату чегінің нөмірі (міндетті емес)';
+
+  @override
+  String get certificateIssueSubmit => 'Сертификат шығару';
+
+  @override
+  String certificateIssueDone(String number, String amount) {
+    return '$number сертификаты $amount сомасына шығарылды';
+  }
+
+  @override
+  String get certificateIssueFailed => 'Сертификат шығарылмады';
+
+  @override
+  String get certificateIssueNumberRequired => 'Қағаз нөмірін енгізіңіз';
+
+  @override
+  String get certificateIssueNominalInvalid =>
+      'Номинал нөлден үлкен болуы керек';
+
+  @override
+  String get certificateIssueNotPermitted =>
+      'Бұл кассирге сертификат шығаруға рұқсат жоқ';
+
+  @override
+  String get certificateSlipTitle => 'Слипті қайта басып шығару';
+
+  @override
+  String get certificateSlipHint =>
+      'Шығару кезінде слип басылмады — қағазды қайталама слип бойынша беруге болады.';
+
+  @override
+  String get certificateSlipNumber => 'Сертификат нөмірі';
+
+  @override
+  String get certificateSlipPin => 'ПИН, егер бар болса';
+
+  @override
+  String get certificateSlipSubmit => 'Слипті басып шығару';
+
+  @override
+  String certificateSlipDone(String number) {
+    return '$number сертификатының слипі басып шығаруға жіберілді';
+  }
+
+  @override
+  String get certificateSlipFailed => 'Слип басып шығаруға жіберілмеді';
+
+  @override
+  String get certificateSlipUnavailable =>
+      'Бұл кассада слип басатын құрылғы жоқ';
+
+  @override
+  String get prepaymentRefundTitle => 'Авансты қайтару';
+
+  @override
+  String get prepaymentRefundHint =>
+      'Сатып алушы алдын ала енгізген ақша қайтарылады. Қарыз бұнымен өтелмейді, бонустар қозғалмайды.';
+
+  @override
+  String prepaymentRefundBalance(String amount) {
+    return 'Алдын ала енгізілген: $amount';
+  }
+
+  @override
+  String get prepaymentRefundNothing =>
+      'Сатып алушының шотында аванс жоқ — қайтаратын ештеңе жоқ';
+
+  @override
+  String get prepaymentRefundAmount => 'Қайтарылатын сома';
+
+  @override
+  String get prepaymentRefundTender => 'Немен қайтарылады';
+
+  @override
+  String get prepaymentRefundIntake =>
+      'Қабылдау жазбасының нөмірі (міндетті емес)';
+
+  @override
+  String get prepaymentRefundSubmit => 'Авансты қайтару';
+
+  @override
+  String prepaymentRefundDone(String amount) {
+    return 'Аванс қайтарылды. Шотта қалғаны: $amount';
+  }
+
+  @override
+  String get prepaymentRefundFailed => 'Аванс қайтарылмады';
+
+  @override
+  String get prepaymentRefundAmountInvalid => 'Сома нөлден үлкен болуы керек';
+
+  @override
+  String get prepaymentRefundNotPermitted =>
+      'Бұл кассирге авансты қайтаруға рұқсат жоқ';
+
+  @override
+  String get prepaymentRefundFiscalFailed =>
+      'Ақша берілді, бірақ аванс қайтарымының фискалдық чегі жазылмады.';
+
+  @override
+  String get agentRefundPrepayment => 'Авансты қайтару';
 }

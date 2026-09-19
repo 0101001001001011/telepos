@@ -36,6 +36,8 @@ import 'package:telepos/domain/setup/setup_draft.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
 import 'package:telepos/domain/terminal/device_binding.dart';
+import 'package:telepos/domain/wire/sale_ops.dart';
+import 'package:telepos/domain/wire/refund_ops.dart';
 import 'package:telepos/domain/wire/till_ops.dart';
 import 'package:telepos/domain/wire/wire_frame.dart';
 import 'package:telepos/domain/wire/wire_guard.dart';
@@ -177,11 +179,14 @@ void main() {
     return wire;
   }
 
-  test('семь подписок объявлены на кассе', () {
+  test('шестнадцать подписок объявлены на кассе', () {
     // Пока их нет, провод отвечает `unknown_op`, и терминал не может узнать
     // об изменении иначе как вопросом. `auth.users`/`auth.session` — задача
     // 9; `auth.sessions` — задача 19 закрытия долга безопасности (экран
-    // списка сеансов).
+    // списка сеансов); `sale.cart`/`sale.deferredList` — задача 10 плана
+    // «Продажа с браузерного терминала» (обе живут в отдельной карте
+    // `_saleWatchHandlers`, потому что накрыты общим запретом называть
+    // рабочее место в теле — см. докстринг там).
     final names = build().watchHandlers.keys.toSet();
 
     expect(names, {
@@ -192,6 +197,41 @@ void main() {
       TillOps.authUsers.name,
       TillOps.authSession.name,
       TillOps.authSessions.name,
+      SaleOps.cart.name,
+      SaleOps.deferredList.name,
+      // Задача 19 плана «Продажа с браузерного терминала»: черновик
+      // возврата. Единственная подписка провода, которая берёт имя рабочего
+      // места из сеанса, а не из тела.
+      RefundOps.view.name,
+      // Решение заказчика 2026-09-18: состояние смены. Подписка, а не
+      // вопрос, — и это починка измеренного дефекта: дом браузерного
+      // терминала показывал «Смена открыта» зелёным значком часами после
+      // того, как смену закрыли, потому что состояние приезжало один раз в
+      // `AuthSession` при входе.
+      TillOps.shiftState.name,
+      // Пункт 12 ревизии 2026-09-19: остатки кассы. Подписка, а не вопрос,
+      // — предел прежнего счётчика был назван прямо в его коде: продажа,
+      // проведённая другим рабочим местом, до соседнего экрана не доходила
+      // вовсе, и остаток там устаревал молча.
+      TillOps.stockRevision.name,
+      // Пункт «Достижимость с браузерного терминала» плана
+      // `2026-09-19-hardware-diagnostics.md`: задания печати. Подписка, а не
+      // вопрос, потому что наладчик держит вкладку открытой и печатает
+      // пробный чек с соседнего экрана — вопрос был бы верен ровно в миг
+      // постройки экрана. Соседняя `diagnostics.fiscal` намеренно вопрос и
+      // здесь не значится.
+      TillOps.diagnosticsPrinter.name,
+      // Пункт 4 того же плана: ящик, дисплей покупателя и весы. У ящика и
+      // дисплея довод принтерный дословно — наладчик держит вкладку
+      // открытой и жмёт кнопку на кассе, а сигнал у кассы уже есть
+      // (`CashDrawerJournal.watch`, `CustomerDisplayJournal.watch`).
+      TillOps.diagnosticsDrawer.name,
+      TillOps.diagnosticsDisplay.name,
+      // У весов довод сильнее: вопрос там неверен по предмету — смотрят не
+      // число, а то, как оно едет, пока груз ложится на чашу. Единственная
+      // подписка, у которой данные поток, а не события, и потому кадры
+      // прореживает кассовая реализация порта, до провода.
+      TillOps.diagnosticsScales.name,
     });
   });
 
@@ -496,12 +536,9 @@ void main() {
 
     test('касса без драйверов отказывает названной причиной', () async {
       // «Искать было нечем» и «ничего не нашлось» для оператора разные вещи.
-      final frame = await ask(
-        build(),
-        TillOps.deviceDiscovery.name,
-        {'deviceClass': DeviceClass.receiptPrinter.name},
-        sessionToken(permissions: {PermissionKeys.settingsHardware}),
-      );
+      final frame = await ask(build(), TillOps.deviceDiscovery.name, {
+        'deviceClass': DeviceClass.receiptPrinter.name,
+      }, sessionToken(permissions: {PermissionKeys.settingsHardware}));
 
       // `no_drivers`, а не общий `handler_failed`: касса, а не тело запроса,
       // не умеет искать устройства — «искать было нечем», код обязан

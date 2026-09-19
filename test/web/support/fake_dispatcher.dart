@@ -60,13 +60,65 @@ class DeadStreams implements WtStreams {
   Future<void> close() async {}
 }
 
+/// Касса, которая **приняла запрос и не ответила**.
+///
+/// Поток открывается, кадр уходит, и дальше — тишина: ни ответа, ни закрытия
+/// потока. Это не выдумка теста, а измеренная форма отказа провода: у обмена
+/// с кассой нет ни таймаута, ни отмены (докстринг `LoginNotifier.logout`), и
+/// вызывающий висит вечно. Живой прогон 2026-09-07 показал ровно эту картину
+/// на кнопке денег — ни успеха, ни отказа, ни строки в журнале.
+class SilentStreams implements WtStreams {
+  /// Кадры, ушедшие на кассу: запрос **уходит**, молчит ответ.
+  final sent = <String>[];
+
+  @override
+  Future<WtStream> openStream() async => SilentStream(sent);
+
+  @override
+  Future<void> get closed => Completer<void>().future;
+
+  @override
+  Future<void> close() async {}
+}
+
+class SilentStream implements WtStream {
+  SilentStream(this._sent);
+
+  final List<String> _sent;
+  final _controller = StreamController<String>();
+
+  @override
+  Stream<String> get frames => _controller.stream;
+
+  @override
+  Future<void> send(String frame) async => _sent.add(frame);
+
+  @override
+  Future<void> finishSending() async {}
+
+  @override
+  Future<void> close() async {
+    if (!_controller.isClosed) await _controller.close();
+  }
+}
+
 class ScriptedStreams implements WtStreams {
   ScriptedStreams(this._script);
 
   final List<String> _script;
 
+  /// Кадры, ушедшие на кассу, — в порядке отправки.
+  ///
+  /// Заведено задачей 20: там проверяется не только то, что ответ разобран,
+  /// но и **что именно уехало** — имя операции (иначе касса выберет другой
+  /// обработчик) и вид, в котором уехали деньги (строкой, И159). Без записи
+  /// отправленного проверить это нечем: `send` раньше молча выбрасывал кадр,
+  /// и подделка «уехало не то» выглядела бы точно так же, как исправный
+  /// обмен.
+  final sent = <String>[];
+
   @override
-  Future<WtStream> openStream() async => ScriptedStream(_script);
+  Future<WtStream> openStream() async => ScriptedStream(_script, sent);
 
   @override
   Future<void> get closed => Completer<void>().future;
@@ -76,7 +128,7 @@ class ScriptedStreams implements WtStreams {
 }
 
 class ScriptedStream implements WtStream {
-  ScriptedStream(this._script) {
+  ScriptedStream(this._script, [List<String>? sent]) : _sent = sent ?? [] {
     _controller = StreamController<String>(
       onListen: () {
         for (final frame in _script) {
@@ -91,13 +143,14 @@ class ScriptedStream implements WtStream {
   }
 
   final List<String> _script;
+  final List<String> _sent;
   late final StreamController<String> _controller;
 
   @override
   Stream<String> get frames => _controller.stream;
 
   @override
-  Future<void> send(String frame) async {}
+  Future<void> send(String frame) async => _sent.add(frame);
 
   @override
   Future<void> finishSending() async {}

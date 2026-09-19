@@ -17,6 +17,8 @@ class PaymentMapper {
       amount: payment.amount,
       time: payment.time,
       state: payment.state,
+      kindId: payment.kindId,
+      seq: payment.seq,
     );
   }
 
@@ -32,6 +34,8 @@ class PaymentMapper {
       amount: Value(entity.amount),
       time: Value(entity.time),
       state: Value(entity.state),
+      kindId: Value(entity.kindId),
+      seq: Value(entity.seq),
     );
   }
 

@@ -10,9 +10,10 @@ import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 import 'package:telepos/domain/entities/agent/agent_entity.dart';
 import 'package:telepos/domain/entities/supply/supply_entity.dart';
 import 'package:telepos/domain/entities/supply/supply_product_entity.dart';
-import 'package:telepos/domain/snt/noop_snt_provider.dart';
+import 'package:telepos/domain/snt/refusing_snt_provider.dart';
 import 'package:telepos/domain/snt/snt_assembly.dart';
 import 'package:telepos/domain/snt/snt_models.dart';
+import 'package:telepos/domain/snt/snt_provider.dart';
 import 'package:telepos/domain/snt/snt_provider_registry.dart';
 import 'package:telepos/domain/snt/snt_settings.dart';
 import 'package:telepos/domain/snt/snt_store.dart';
@@ -141,7 +142,7 @@ void main() {
 
       final store = InMemorySntDocumentStore();
       final service = SntService(
-        provider: const NoOpSntProvider(),
+        provider: const RefusingSntProvider(),
         store: store,
         warehouse: InMemoryVirtualWarehouseStore(),
       );
@@ -162,7 +163,7 @@ void main() {
     () async {
       final store = InMemorySntDocumentStore();
       final service = SntService(
-        provider: const NoOpSntProvider(),
+        provider: const RefusingSntProvider(),
         store: store,
         warehouse: InMemoryVirtualWarehouseStore(),
         isReachable: () async => false,
@@ -194,7 +195,7 @@ void main() {
       final store = InMemorySntDocumentStore();
       final warehouse = InMemoryVirtualWarehouseStore();
       final service = SntService(
-        provider: const NoOpSntProvider(),
+        provider: const _ConfirmingSntProvider(),
         store: store,
         warehouse: warehouse,
       );
@@ -236,7 +237,7 @@ void main() {
       final store = InMemorySntDocumentStore();
       final warehouse = InMemoryVirtualWarehouseStore();
       final service = SntService(
-        provider: const NoOpSntProvider(),
+        provider: const _ConfirmingSntProvider(),
         store: store,
         warehouse: warehouse,
       );
@@ -263,7 +264,7 @@ void main() {
       final store = InMemorySntDocumentStore();
       final warehouse = InMemoryVirtualWarehouseStore();
       final service = SntService(
-        provider: const NoOpSntProvider(),
+        provider: const _ConfirmingSntProvider(),
         store: store,
         warehouse: warehouse,
       );
@@ -346,6 +347,94 @@ void main() {
     expect((await store.outbox()).length, 1);
 
     final off = SntProviderRegistry().resolve(SntSettings.disabled());
-    expect(off.id, 'noop');
+    expect(off.id, 'refusing');
   });
+
+  // Изменение поведения, введённое задачей 2, закреплено здесь, а не
+  // оставлено на веру.
+  //
+  // Раньше эти же пробы про Виртуальный склад ходили через
+  // `NoOpSntProvider`: он объявлял `canConfirmInbound: true` и его
+  // `confirmInbound` отвечал `ok(status: confirmed)`. То есть на кассе БЕЗ
+  // оператора СНТ входящая накладная отмечалась принятой, а в ИС ЭСФ не
+  // уходило ничего: подтверждалась накладная, которой никто не видел.
+  // Теперь такая касса получает отказ. Пользователь увидит **изменение** —
+  // приёмка входящих без оператора перестанет работать, — но работала она
+  // только на бумаге.
+  test(
+    'без оператора СНТ приёмка входящей НЕ подтверждается и склад не двигается',
+    () async {
+      final store = InMemorySntDocumentStore();
+      final warehouse = InMemoryVirtualWarehouseStore();
+      final service = SntService(
+        provider: const RefusingSntProvider(),
+        store: store,
+        warehouse: warehouse,
+      );
+
+      // Возможность больше не объявляется — именно она заводила
+      // вызывающего в этот путь.
+      expect(const RefusingSntProvider().capabilities.canConfirmInbound, isFalse);
+
+      final doc = buildInboundSnt(
+        key: 'snt-G',
+        ucode: 7003,
+        qty: '5',
+        price: '250000',
+      );
+      await service.saveDraft(doc);
+
+      final booked = await service.confirmInbound(doc);
+      expect(booked, isEmpty, reason: 'ничего не приходуем');
+      expect(await warehouse.balanceOf(7003), isNull, reason: 'склад не тронут');
+
+      final stored = await store.findByKey('snt-G');
+      expect(stored!.status, SntStatus.failed);
+      expect(
+        stored.status.isConfirmed,
+        isFalse,
+        reason: 'накладная НЕ отмечена принятой',
+      );
+      expect(stored.lastError, isNotNull, reason: 'причина названа словами');
+    },
+  );
+}
+
+/// Настроенный оператор СНТ — тот, у кого приёмка действительно проходит.
+///
+/// Нужен пробам про Виртуальный склад: их предмет — арифметика прихода и
+/// расхода, а не заглушка. Раньше эту роль исполнял `NoOpSntProvider`, и
+/// исполнял враньём: подтверждал, ничего никуда не отправив. Здесь роль
+/// названа своим именем, и `RefusingSntProvider` из этих проб убран.
+class _ConfirmingSntProvider implements SntProvider {
+  const _ConfirmingSntProvider();
+
+  @override
+  String get id => 'confirming-fake';
+
+  @override
+  SntCapabilities get capabilities =>
+      const SntCapabilities(canSubmit: true, canConfirmInbound: true);
+
+  @override
+  String? validateConfig(SntSettings config) => null;
+
+  @override
+  Future<SntResult> authorize(SntSettings config) async => SntResult.ok();
+
+  @override
+  Future<SntResult> submit(SntDocument doc) async =>
+      SntResult.ok(status: SntStatus.registered, registrationNumber: 'KGD-FAKE');
+
+  @override
+  Future<SntResult> confirmInbound(SntDocument doc) async =>
+      SntResult.ok(status: SntStatus.confirmed);
+
+  @override
+  Future<SntResult> rejectInbound(SntDocument doc, {String? reason}) async =>
+      SntResult.ok(status: SntStatus.rejected);
+
+  @override
+  Future<SntResult> revoke(SntDocument doc, {String? reason}) async =>
+      SntResult.ok(status: SntStatus.revoked);
 }

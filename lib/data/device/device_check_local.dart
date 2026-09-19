@@ -274,18 +274,17 @@ class DeviceCheckLocal implements DeviceCheck {
     }
   }
 
-  /// Uses `PrintUtility.testPrint` (`lib/hardware/printer/print_utility.dart:130`)
-  /// rather than `ReceiptPrinter.printTest`
-  /// (`lib/hardware/printer/receipt_printer.dart:96`) — both exist and both
-  /// do the same job (connect if needed, print a test page), but neither is
-  /// on the live receipt-printing path today: `ReceiptPrintServiceImpl`
-  /// (`lib/data/services/receipt_print_service_impl.dart`) talks to
-  /// [PrinterManager] directly through its own `ReceiptBuilder`, and its
-  /// settings-screen "test print" instead prints a full sample sale receipt.
-  /// `PrintUtility.testPrint` needs only a bare [PrinterManager] — no
-  /// [ReceiptPrinter]'s profile/settings collaborators — so it is the
-  /// smaller dependency for this class. See task-2-report.md for this
-  /// measured discrepancy.
+  /// Uses `PrintUtility.testPrint` (`lib/hardware/printer/print_utility.dart:130`),
+  /// which needs only a bare [PrinterManager].
+  ///
+  /// **2026-09-19:** the alternative this note used to weigh — `ReceiptPrinter
+  /// .printTest` — is gone. It sat in a closed island (`receipt_printer.dart`
+  /// ↔ `receipt_templates.dart` ↔ `last_receipt_store.dart`) that nothing
+  /// outside imported, and the island was deleted. The live receipt path is
+  /// `ReceiptPrintServiceImpl`
+  /// (`lib/data/services/receipt_print_service_impl.dart`), which builds bytes
+  /// with its own `ReceiptBuilder` and submits them to the print queue; the
+  /// settings-screen "test print" prints a full sample sale receipt.
   ///
   /// **Fix round 1:** the connect step is now done here, not left to
   /// `PrintUtility.testPrint`'s own internal connect-or-skip — the two

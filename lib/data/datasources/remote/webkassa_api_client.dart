@@ -83,52 +83,173 @@ class WebKassaApiClient {
     return post('/api/v4/MarkCheck', body);
   }
 
+  /// Код отказа «касса не смогла собрать запрос» — адрес без узла, схема не
+  /// `http`/`https`, неразборный адрес или тело, которое не кодируется в
+  /// JSON.
+  ///
+  /// # Почему отдельный код, а не `-3`
+  ///
+  /// `-3` отображается в `network`, а `network` — транзиентный отказ:
+  /// очередь кладёт чек в `pending` и докладывает `success: true`. Для
+  /// обрыва связи это верно. Для запроса, который **не собирается**, повтор
+  /// детерминированно повторит отказ: очередь остановится на нём при каждом
+  /// повторе (`replay` на `network` прекращает обход целиком и попыток не
+  /// считает), загородит всех, кто за ним, а кассир и отчёт смены увидят
+  /// «в очереди» вместо «документ не выдан». Лечит это человек, исправив
+  /// настройки, — значит строка обязана попасть на экран нефискализованных
+  /// чеков с названной причиной.
+  static const int requestNotBuiltCode = -4;
+
+  /// Коды отказа, которые производит **транспорт**, а не тело ответа.
+  ///
+  /// | Код | Откуда | Разбор провайдера | Повторимо |
+  /// | ---: | --- | --- | :---: |
+  /// | −1 | `IOException` по дороге: `SocketException`, `HttpException` (сокет закрыт без ответа) | `network` | да |
+  /// | −2 | `TimeoutException` | `network` | да |
+  /// | −3 | ответ 1xx–3xx, не JSON — ответ потерян, документ мог лечь | `network` | да |
+  /// | −4 | [requestNotBuiltCode] | `requestNotBuilt` | нет |
+  /// | −5 | [operatorUnavailableCode] | `operatorUnavailable` | да |
+  /// | −6 | [tlsRejectedCode] | `tlsRejected` | нет |
+  /// | −7 | [clientFaultCode] | `clientFault` | нет |
+  ///
+  /// Повторимость решает не этот файл, а `FiscalErrorCode.isTransient`;
+  /// здесь — только различение причин, которых после строки уже не различить.
+  static const int connectionLostCode = -1;
+  static const int timeoutCode = -2;
+  static const int unreadableResponseCode = -3;
+
+  /// HTTP 5xx, 408 или 429 **без кода оператора в теле**.
+  ///
+  /// Раньше такой ответ шёл как `errorCode = статус` → `_mapError` default →
+  /// `unknown`: нетранзиентно, мимо очереди. 503 от балансировщика перед
+  /// оператором — самый обычный вид «оператор недоступен», и чек с ним
+  /// ложился на экран нефискализованных чеков, как отвергнутый по существу
+  /// (измерено пробой `webkassa_failure_classification_test.dart`: `unknown`,
+  /// raw 503). Сам статус сохраняется в [WebKassaResponse.statusCode].
+  static const int operatorUnavailableCode = -5;
+
+  /// `TlsException` (и `HandshakeException`): TLS не сошёлся.
+  ///
+  /// До этой правки падал в общий `catch` → −3 → `network` → **в очередь**:
+  /// `https` к порту без TLS давал `success: true, queued: true` (измерено).
+  /// Чужая схема, сертификат, часы кассы от времени не лечатся, а строка в
+  /// `pending` не видна ни одному экрану.
+  static const int tlsRejectedCode = -6;
+
+  /// Исключение, **не являющееся вводом-выводом** (`StateError`, `TypeError`
+  /// …) — сбой кода кассы. Раньше тоже −3 → `network` → очередь навсегда.
+  static const int clientFaultCode = -7;
+
+  static bool _operatorUnavailableStatus(int status) =>
+      status >= 500 || status == 408 || status == 429;
+
   Future<WebKassaResponse> post(String path, Map<String, dynamic> body) async {
-    final uri = Uri.parse('$baseUrl$path');
     final headers = <String, String>{
-      'Content-Type': 'application/json',
+      // `charset` назван явно: тело уходит байтами UTF-8 (см. `_defaultSend`),
+      // и тип обязан говорить то же самое.
+      'Content-Type': 'application/json; charset=utf-8',
       'Accept': 'application/json',
       if (apiKey != null && apiKey!.isNotEmpty) 'X-API-Key': apiKey!,
     };
-    final encoded = jsonEncode(body);
 
-    _logger.debug('WebKassa POST: $uri');
-
+    // Адрес и тело собираются ВНУТРИ try: их отказ — это отказ запроса, и он
+    // обязан вернуться значением, а не броском мимо очереди.
     try {
+      final uri = Uri.parse('$baseUrl$path');
+      final encoded = jsonEncode(body);
+      _logger.debug('WebKassa POST: $uri');
       final raw = await (_send ?? _defaultSend)(uri, headers, encoded);
       _logger.debug('WebKassa response: ${raw.statusCode}');
       return WebKassaResponse.parse(raw.statusCode, raw.body);
     } on SocketException catch (e) {
       _logger.error('WebKassa connection error', e);
       return WebKassaResponse.transport(
-        code: -1,
+        code: connectionLostCode,
         message: 'Нет соединения с сервером WebKassa',
       );
     } on TimeoutException catch (e) {
       _logger.error('WebKassa timeout', e);
       return WebKassaResponse.transport(
-        code: -2,
+        code: timeoutCode,
         message: 'Таймаут соединения с WebKassa',
       );
-    } catch (e) {
-      _logger.error('WebKassa error', e);
+    } on TlsException catch (e) {
+      // Раньше `IOException`: `TlsException` его реализует, и общая ветка
+      // ввода-вывода проглотила бы его как обрыв.
+      _logger.error('WebKassa TLS rejected on $path: ${e.runtimeType}');
       return WebKassaResponse.transport(
-        code: -3,
-        message: 'Ошибка WebKassa: $e',
+        code: tlsRejectedCode,
+        message:
+            'TLS с сервером WebKassa не сошёлся (${e.runtimeType}): проверьте '
+            'схему адреса, сертификат и часы кассы',
+      );
+    } on IOException catch (e) {
+      // `HttpException` — сокет закрыт до заголовков ответа (`/_emul/kill`
+      // производит именно его, а не `SocketException`). Документ мог лечь у
+      // оператора; повтор тем же ключом безопасен.
+      _logger.error('WebKassa I/O error on $path: ${e.runtimeType}');
+      return WebKassaResponse.transport(
+        code: connectionLostCode,
+        message: 'Связь с WebKassa прервана (${e.runtimeType})',
+      );
+    } on ArgumentError catch (e) {
+      return _notBuilt(path, e);
+    } on FormatException catch (e) {
+      return _notBuilt(path, e);
+    } on JsonUnsupportedObjectError catch (e) {
+      return _notBuilt(path, e);
+    } catch (e) {
+      // Текст исключения в отказ не идёт: у `ArgumentError` из `write` в нём
+      // лежало всё тело — токен, названия, ИИН покупателя, — и он уезжал в
+      // журнал и в `lastError` строки очереди.
+      _logger.error('WebKassa client fault on $path: ${e.runtimeType}');
+      return WebKassaResponse.transport(
+        code: clientFaultCode,
+        message: 'Сбой кассы при обмене с WebKassa: ${e.runtimeType}',
       );
     }
   }
 
+  WebKassaResponse _notBuilt(String path, Object e) {
+    _logger.error(
+      'WebKassa: запрос $path не собран кассой (${e.runtimeType}) — '
+      'повтор без исправления настроек не поможет',
+    );
+    return WebKassaResponse.transport(
+      code: requestNotBuiltCode,
+      message:
+          'Запрос к WebKassa не собран кассой (${e.runtimeType}): проверьте '
+          'адрес сервера в фискальных настройках и повторите чек',
+    );
+  }
+
+  /// Единственное место, где тело попадает в сокет.
+  ///
+  /// Тело пишется **байтами UTF-8** с `contentLength`, а не
+  /// `request.write(body)`: `HttpClientRequest.write` кодирует строку
+  /// кодировкой из `charset` типа, а без него — latin1, и первая русская
+  /// буква бросала `Contains invalid characters` до сокета. Так касса не
+  /// отправила оператору ни одного чека с кириллицей. Запрет `write`
+  /// строкой сторожится `test/architecture/http_body_is_bytes_test.dart`.
+  ///
+  /// Ответ читается декодером с `allowMalformed`: битые байты в ответе —
+  /// это отказ **после** отправки (документ у оператора мог появиться), и
+  /// он должен дойти до разбора как «неразборный ответ» (`-3`), а не
+  /// выглядеть как `FormatException` несобранного запроса.
   Future<WebKassaRawResponse> _defaultSend(
     Uri uri,
     Map<String, String> headers,
     String body,
   ) async {
+    final bytes = utf8.encode(body);
     final request = await _httpClient.postUrl(uri);
     headers.forEach(request.headers.set);
-    request.write(body);
+    request.contentLength = bytes.length;
+    request.add(bytes);
     final response = await request.close().timeout(timeout);
-    final responseBody = await response.transform(utf8.decoder).join();
+    final responseBody = await response
+        .transform(const Utf8Decoder(allowMalformed: true))
+        .join();
     return WebKassaRawResponse(
       statusCode: response.statusCode,
       body: responseBody,
@@ -172,7 +293,11 @@ class WebKassaResponse {
     if (json == null) {
       return WebKassaResponse(
         success: false,
-        errorCode: statusCode >= 400 ? statusCode : -3,
+        errorCode: WebKassaApiClient._operatorUnavailableStatus(statusCode)
+            ? WebKassaApiClient.operatorUnavailableCode
+            : (statusCode >= 400
+                  ? statusCode
+                  : WebKassaApiClient.unreadableResponseCode),
         errorMessage: 'Некорректный ответ WebKassa (HTTP $statusCode)',
         statusCode: statusCode,
       );
@@ -202,7 +327,9 @@ class WebKassaResponse {
       success: statusCode >= 200 && statusCode < 300,
       data: json,
       statusCode: statusCode,
-      errorCode: statusCode >= 400 ? statusCode : null,
+      errorCode: WebKassaApiClient._operatorUnavailableStatus(statusCode)
+          ? WebKassaApiClient.operatorUnavailableCode
+          : (statusCode >= 400 ? statusCode : null),
       errorMessage: statusCode >= 400 ? 'HTTP $statusCode' : null,
     );
   }

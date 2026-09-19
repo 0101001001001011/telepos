@@ -1,21 +1,29 @@
 import 'package:decimal/decimal.dart';
 
+/// Бонусы покупателя.
+///
+/// # Чего здесь больше нет — и почему это удаление, а не потеря
+///
+/// **`deductBonuses`** списывала бонусы своим путём: сама проверяла остаток,
+/// сама писала новый. Вызывающих в продукте у неё не было ни одного —
+/// списание в кассе идёт строкой `Payments` на бонусный счёт, а потолок
+/// («не больше остатка», «не больше суммы чека») стоит в
+/// `LocalPaymentService._plan`, где о чеке известно. То есть это был второй
+/// способ двинуть те же деньги, с собственной копией правила остатка, —
+/// ровно то, что задача 13 из дерева убирает. Удалён вместе со своим
+/// [BonusDeductResult].
+///
+/// **`cancelTransaction`** была пустым `return;` и не вызывалась ниоткуда.
+/// Отмену начисления делает `BonusEntryDao.reverseForRefund` — журналом, а
+/// не пересчётом по нынешней ставке.
 abstract class BonusService {
   Future<BonusBalance> getBonusBalance(int phone);
-
-  Future<BonusDeductResult> deductBonuses({
-    required int phone,
-    required Decimal amount,
-    required int saleReceiptNo,
-  });
 
   Future<BonusAccrualResult> accrualBonuses({
     required int phone,
     required Decimal saleAmount,
     required int saleReceiptNo,
   });
-
-  Future<void> cancelTransaction(String transactionId);
 }
 
 class BonusBalance {
@@ -30,22 +38,6 @@ class BonusBalance {
   final Decimal balance;
   final String? name;
   final String? cardNumber;
-}
-
-class BonusDeductResult {
-  const BonusDeductResult({
-    required this.success,
-    required this.transactionId,
-    required this.deductedAmount,
-    required this.remainingBalance,
-    this.errorMessage,
-  });
-
-  final bool success;
-  final String transactionId;
-  final Decimal deductedAmount;
-  final Decimal remainingBalance;
-  final String? errorMessage;
 }
 
 class BonusAccrualResult {

@@ -18,6 +18,7 @@ import 'package:telepos/domain/wire/wire_guard.dart';
 
 import 'fake_quic_server.dart';
 import 'open_guard.dart' show NoSession;
+import 'package:telepos/domain/shift/shift_status.dart';
 
 Future<bool> _neverConfigured() async => false;
 
@@ -41,7 +42,7 @@ AuthSession _sessionWithoutHardware() => AuthSession(
   permissions: const {PermissionKeys.navSale},
   operatingMode: 0,
   pointMode: 'cashier',
-  shiftOpen: false,
+  shift: ShiftStatus.closed,
   issuedAt: DateTime.utc(2026, 8, 21, 10),
   expiresAt: DateTime.utc(2026, 8, 21, 10, 30),
   terminalId: 1,
@@ -110,7 +111,7 @@ void main() {
       var called = false;
       wire = wireWith(
         handlers: {
-          'terminals.rename': (_, [_]) async {
+          'terminals.rename': (_, [_, _]) async {
             called = true;
             return {};
           },
@@ -131,7 +132,7 @@ void main() {
     var called = false;
     wire = wireWith(
       watchHandlers: {
-        'terminals.list': (_) {
+        'terminals.list': (_, [_, _]) {
           called = true;
           return const Stream.empty();
         },
@@ -175,7 +176,7 @@ void main() {
   test('открытая операция проходит без токена', () async {
     wire = wireWith(
       handlers: {
-        'startup.boot': (_, [_]) async => {'ok': true},
+        'startup.boot': (_, [_, _]) async => {'ok': true},
       },
       access: {'startup.boot': const OpenAccess()},
     );
@@ -200,7 +201,7 @@ void main() {
       var called = false;
       wire = wireWith(
         handlers: {
-          'setup.restore': (_, [_]) async {
+          'setup.restore': (_, [_, _]) async {
             called = true;
             return {};
           },
@@ -233,7 +234,7 @@ void main() {
         var called = false;
         wire = wireWith(
           handlers: {
-            'terminals.deviceCheck': (_, [_]) async {
+            'terminals.deviceCheck': (_, [_, _]) async {
               called = true;
               return {};
             },
@@ -266,7 +267,7 @@ void main() {
       var called = false;
       wire = wireWith(
         handlers: {
-          'setup.complete': (_, [_]) async {
+          'setup.complete': (_, [_, _]) async {
             called = true;
             return {};
           },
@@ -339,7 +340,7 @@ void main() {
       var calls = 0;
       wire = wireWith(
         handlers: {
-          'startup.boot': (_, [_]) async => {'ok': true},
+          'startup.boot': (_, [_, _]) async => {'ok': true},
         },
         access: {'startup.boot': const OpenAccess()},
         onDenied: (_, _, _, _) => calls++,
@@ -357,7 +358,7 @@ void main() {
         WireDenied? denied;
         wire = wireWith(
           handlers: {
-            'terminals.deviceCheck': (_, [_]) async => {},
+            'terminals.deviceCheck': (_, [_, _]) async => {},
           },
           access: {
             'terminals.deviceCheck': const SessionAccess(

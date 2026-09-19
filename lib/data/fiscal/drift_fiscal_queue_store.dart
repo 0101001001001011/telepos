@@ -30,6 +30,16 @@ class DriftFiscalQueueStore implements FiscalQueueStore {
   }
 
   @override
+  Future<List<FiscalQueueEntry>> failed() async {
+    final rows =
+        await (_db.select(_t)
+              ..where((r) => r.status.equals(FiscalQueueStatus.failed.index))
+              ..orderBy([(r) => OrderingTerm.asc(r.occurredAt)]))
+            .get();
+    return rows.map(_fromRow).toList();
+  }
+
+  @override
   Future<void> update(FiscalQueueEntry entry) async {
     await (_db.update(
       _t,
@@ -61,6 +71,15 @@ class DriftFiscalQueueStore implements FiscalQueueStore {
     final row = await q.getSingle();
     return row.read(count) ?? 0;
   }
+
+  /// Счёт **не** делается запросом `count(*)`: списанные строки остаются в
+  /// таблице (тихой чистки у этой очереди нет), а отметка о списании живёт
+  /// внутри JSON-payload, и SQL про неё ничего не знает. Считать столбцом
+  /// значило бы назвать закрытию смены число, в котором уже разобранные
+  /// чеки считаются заново.
+  @override
+  Future<int> failedCount() async =>
+      (await failed()).where((e) => e.writeOff == null).length;
 
   db.FiscalQueueEntriesCompanion _toCompanion(FiscalQueueEntry e) =>
       db.FiscalQueueEntriesCompanion.insert(

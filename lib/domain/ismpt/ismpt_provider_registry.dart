@@ -1,5 +1,5 @@
 import 'package:telepos/domain/ismpt/ismpt_service.dart';
-import 'package:telepos/domain/ismpt/noop_ismpt_provider.dart';
+import 'package:telepos/domain/ismpt/refusing_ismpt_provider.dart';
 
 enum IsMptBackend {
   none(value: 0, label: 'Без интеграции ИС МПТ', id: 'none'),
@@ -41,9 +41,9 @@ class IsMptProviderRegistry {
   bool isRegistered(IsMptBackend backend) => _builders.containsKey(backend);
 
   IsMptService resolve(IsMptBackend backend) {
-    if (backend == IsMptBackend.none) return const NoOpIsMptProvider();
+    if (backend == IsMptBackend.none) return const RefusingIsMptProvider();
     final builder = _builders[backend];
-    if (builder == null) return const NoOpIsMptProvider();
+    if (builder == null) return const RefusingIsMptProvider();
     return builder();
   }
 }

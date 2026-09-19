@@ -13,7 +13,7 @@ class RefundItemsList extends ConsumerWidget {
     final state = ref.watch(refundControllerProvider);
 
     if (!state.hasItems) {
-      return const _EmptyState();
+      return _EmptyState(connectionLost: state.connectionLost);
     }
 
     return ListView.builder(
@@ -222,7 +222,14 @@ class _RefundItemCard extends StatelessWidget {
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState();
+  const _EmptyState({required this.connectionLost});
+
+  /// Подписка оборвалась — сказать про товары нечего.
+  ///
+  /// Найдено живым прогоном 2026-09-07: экран показывал «Нет товаров для
+  /// возврата» при `stream_ended` в консоли, то есть **утверждал** про чек
+  /// там, где кассы просто не было слышно.
+  final bool connectionLost;
 
   @override
   Widget build(BuildContext context) {
@@ -235,20 +242,26 @@ class _EmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.assignment_return_outlined,
+              connectionLost
+                  ? Icons.cloud_off_outlined
+                  : Icons.assignment_return_outlined,
               size: 48,
               color: Theme.of(context).colorScheme.outline,
             ),
             const SizedBox(height: AppTheme.spacing),
             Text(
-              l10n.refundNoItemsShort,
+              connectionLost
+                  ? l10n.refundConnectionLost
+                  : l10n.refundNoItemsShort,
               style: AppTextStyles.h3.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppTheme.spacingSmall),
             Text(
-              l10n.refundEmptyHintShort,
+              connectionLost
+                  ? l10n.refundConnectionLostHint
+                  : l10n.refundEmptyHintShort,
               style: AppTextStyles.body.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

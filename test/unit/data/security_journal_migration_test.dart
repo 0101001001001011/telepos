@@ -55,6 +55,31 @@ Future<String> _readTerminalsCreateSql() async {
   return sql;
 }
 
+/// `sales` без `terminal_id`/`cart_version`/`last_command_key` — задача 2
+/// плана «продажа с браузерного терминала» (миграция v36→v37) трогает
+/// существующую таблицу и требует, чтобы она уже была: та же причина, что и
+/// у `terminals` выше.
+Future<String> _readSalesCreateSql() async {
+  final probe = AppDatabase(NativeDatabase.memory());
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final row = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
+  final sql = row.read<String>('sql');
+  await probe.close();
+  return sql;
+}
+
 void main() {
   test(
     'фикстура v33 действительно не содержит security_events — иначе тест '
@@ -83,6 +108,7 @@ void main() {
     () async {
       final (usersSql, permsSql) = await _readV33TableSql();
       final terminalsSql = await _readTerminalsCreateSql();
+      final salesSql = await _readSalesCreateSql();
       const terminalId = 1;
       const userId = 5;
 
@@ -92,6 +118,7 @@ void main() {
             raw.execute(usersSql);
             raw.execute(permsSql);
             raw.execute(terminalsSql);
+            raw.execute(salesSql);
             raw.execute(
               'INSERT INTO users (id, name, role, status, edit_time) '
               "VALUES ($userId, 'Кассир Алия', 3, 'active', 1000)",

@@ -8,19 +8,19 @@ blank_issues_enabled: true
 
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/kvgosu/telepos/blob/main/SECURITY.md
+    url: https://github.com/0101001001001011/telepos/blob/main/SECURITY.md
     about: >-
       Do not open a public issue. Report it privately — the process and the
       scope are described here.
 
   - name: Testing TelePOS — what is most useful to report
-    url: https://github.com/kvgosu/telepos/blob/main/CONTRIBUTING.md
+    url: https://github.com/0101001001001011/telepos/blob/main/CONTRIBUTING.md
     about: >-
       The paths nobody has hammered yet, and what makes a report reproducible.
       No Dart required.
 
   - name: Thinking of sending a pull request?
-    url: https://github.com/kvgosu/telepos/blob/main/CONTRIBUTING.md
+    url: https://github.com/0101001001001011/telepos/blob/main/CONTRIBUTING.md
     about: >-
       We do not accept them, and an outside pull request is closed
       automatically. Fork freely; open an issue instead. The reasoning is here.

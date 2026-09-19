@@ -10,6 +10,7 @@ import 'package:telepos/domain/auth/auth_rejection.dart';
 import 'package:telepos/domain/auth/auth_session.dart';
 import 'package:telepos/domain/auth/auth_user.dart';
 import 'package:telepos/domain/auth/live_session.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Пишет [AuthUser] в форму провода. Обратная — [authUserFromWireJson].
 ///
@@ -44,7 +45,10 @@ Map<String, Object?> authSessionToWireJson(AuthSession session) => {
   // Режим — именем, никогда индексом: вставка члена в PointMode иначе
   // поменяла бы смысл уже выписанного сеанса.
   'pointMode': session.pointMode,
-  'shiftOpen': session.shiftOpen,
+  // Задача 47: пишется только измеренное. «Не знаю» не пишется вовсе, и
+  // отсутствие ключа на той стороне читается «не знаю», а не «закрыта».
+  if (session.shift != ShiftStatus.unknown)
+    'shiftOpen': session.shift == ShiftStatus.open,
   'issuedAt': session.issuedAt.toUtc().toIso8601String(),
   'expiresAt': session.expiresAt.toUtc().toIso8601String(),
   'terminalId': session.terminalId,
@@ -64,7 +68,13 @@ AuthSession? authSessionFromWireJson(Map<String, Object?>? json) {
     permissions: {...?(json['permissions'] as List?)?.cast<String>()},
     operatingMode: json['operatingMode'] as int? ?? 0,
     pointMode: json['pointMode'] as String? ?? 'selfService',
-    shiftOpen: json['shiftOpen'] == true,
+    // Прежде `== true`: ключа нет — «закрыта». Касса старше терминала или
+    // испорченный кадр выдавали незнание за измерение (задача 47).
+    shift: switch (json['shiftOpen']) {
+      true => ShiftStatus.open,
+      false => ShiftStatus.closed,
+      _ => ShiftStatus.unknown,
+    },
     issuedAt: DateTime.parse(json['issuedAt']! as String),
     expiresAt: DateTime.parse(json['expiresAt']! as String),
     // Обязательное на `AuthSession` — тот же non-null assert, что и у

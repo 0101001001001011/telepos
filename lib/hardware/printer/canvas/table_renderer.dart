@@ -31,14 +31,14 @@ class TableRenderer extends DrawingAction {
   final Color? alternateRowColor;
 
   static const TextStyle defaultHeaderStyle = TextStyle(
-    fontFamily: 'Arial',
+    fontFamily: 'Roboto',
     fontSize: 8.4,
     fontWeight: FontWeight.bold,
     color: Colors.black,
   );
 
   static const TextStyle defaultCellStyle = TextStyle(
-    fontFamily: 'Arial',
+    fontFamily: 'Roboto',
     fontSize: 8.4,
     color: Colors.black,
   );

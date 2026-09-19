@@ -3,8 +3,8 @@
 /// `ThisPosEntries.paperWidth`/`printerPort`, and the v26 `Terminals` raw
 /// columns — into `DeviceBinding`s (docs/system-architecture.md, section 8,
 /// И141/И142). See `lib/data/database/app_database.dart`'s `from < 27` block
-/// for where this is called, and task-2-report.md for the reasoning behind
-/// every mapping decision below.
+/// for where this is called; the table below carries the reasoning behind
+/// every mapping decision.
 ///
 /// Deliberately pure Dart — no `shared_preferences`, no `drift`.
 /// `AppDatabase` (lib/data/database/app_database.dart) is imported by
@@ -31,7 +31,7 @@
 /// | `scannerMode` | Scanner binding selection — [_inferScannerBinding]. |
 /// | `drawerMode`, `drawerPort` | Cash drawer binding — [_inferCashDrawerBinding]. |
 /// | `kaspiEnabled`, `kaspiIp`, `kaspiPort` | Payment terminal binding (`payment.kaspi.pos`) — [_inferPaymentTerminalBinding]. |
-/// | `rahmetEnabled`, `rahmetMerchant`, `rahmetTerminal` | **Deliberately ignored.** Rahmet is being removed from the product entirely (product owner, mid fix-round-1 on this task — see task-2-report.md). Migrating a payment integration that is about to stop existing would create a binding pointing at a catalogue profile the wider removal is about to delete. That wider removal — `lib/hardware/rahmet/*`, the payment widget, setup-draft fields, the permission entry, localisation strings, `ThisPosEntries.isRahmetPaymentEnabled`, the catalogue profile itself — is a separate, already-dispatched task with its own ownership; this migration only stops *reading* these three keys, nothing else. |
+/// | `rahmetEnabled`, `rahmetMerchant`, `rahmetTerminal` | **Deliberately ignored.** Rahmet is being removed from the product entirely (product owner, mid fix-round-1 on this task). Migrating a payment integration that is about to stop existing would create a binding pointing at a catalogue profile the wider removal is about to delete. That wider removal — `lib/hardware/rahmet/*`, the payment widget, setup-draft fields, the permission entry, localisation strings, `ThisPosEntries.isRahmetPaymentEnabled`, the catalogue profile itself — is a separate, already-dispatched task with its own ownership; this migration only stops *reading* these three keys, nothing else. |
 /// | `scannerTimeout` | **Now carried forward, from schema v28 (task 5(c), plan 2b, fix round 1).** Not a connection parameter any scanner profile declares (И141), and — same as the barcode-length pair right above this row — a business rule about how to interpret a keyboard-wedge scanner's input, not a device setting (И142). Lands on `ThisPosEntries.scannerTimeoutMs`. Read by [migrateLegacyScannerTimeoutMs], called from `app_database.dart`'s `from < 28` step directly (not from [inferLegacyDeviceMigration]/this function — see that function's doc comment for why: it must work whether an installation crosses v27 and v28 in the same launch or crossed v27 in an earlier one, and must not re-run binding inference either way). |
 /// | `displayEnabled`, `displayModel`, `displayPort`, `displayBaudRate` | **Deliberately ignored by this migration** — the customer-display class never resolves to one profile from these facts (`displayModel`'s taxonomy doesn't correspond to either catalogue profile's name). This no longer means the display goes unconfigured, though: the settings screen now saves a real `customerDisplay` binding directly through `DeviceBindingRepository` (`lib/presentation/screens/settings/hardware_settings_screen.dart`), which `hardware_module.dart`'s `_registerDisplayService` reads — a second, live path this migration does not need to cover. |
 /// | `receiptPrinterType`, `receiptPrinterAddress`, `receiptPrinterPort` | **The correction's central case.** Written directly by `printer_settings_screen.dart`'s pre-branch `_saveSettings`, in the same call as (and always in sync with) that screen's write to `ThisPosEntries.printerConnectionType`/`.printerAddress`/`.printerPort` — so this blob copy carries the same facts as those now-dropped columns, except this one was actually reachable and they were not (only the HTTP route ever wrote them, so they read `null` on any till that never had a browser terminal). [_inferReceiptPrinterBinding] now reads this blob copy first, falling back to the v26 `Terminals.printerType`/`.printerAddress` columns only when the blob has nothing. See [_transportPredicateForPrinterConnectionKind] for why `receiptPrinterType` (a `PrinterConnectionType.name` string: `usb`/`bluetooth`/`wifi`/`serial`) now selects a *transport*, not a protocol: every receipt-printer profile in the catalogue speaks ESC/POS, so protocol alone stopped being able to tell wifi from usb the moment USB/Bluetooth/serial profiles existed (docs/system-architecture.md, section 8). |
@@ -368,8 +368,8 @@ DeviceBinding? _inferScannerBinding(
 ///
 /// `rahmetEnabled`/`rahmetMerchant`/`rahmetTerminal` are deliberately **not**
 /// read — Rahmet is being removed from the product entirely (product owner,
-/// mid fix-round-1; see the blob-key inventory at the top of this file and
-/// task-2-report.md). This function used to also migrate a Rahmet binding
+/// mid fix-round-1; see the blob-key inventory at the top of this file).
+/// This function used to also migrate a Rahmet binding
 /// here, and — before that — the fact that both integrations could be
 /// enabled at once was this migration's original justification for
 /// `TerminalDeviceBindings` allowing more than one binding per class. That
@@ -507,7 +507,7 @@ DeviceBinding? _inferScaleBinding(
 /// Narrows [candidates] by every fact in [facts] that actually applies, and
 /// refuses only if the survivors are still not unique once every applicable
 /// fact has narrowed them — the general shape a "pick a profile from old
-/// raw values" ladder should take (fix round 1, task-2-report.md concern:
+/// raw values" ladder should take (fix round 1 concern:
 /// "narrow candidates by every fact the source provides; refuse only if the
 /// survivors are still not unique").
 ///
@@ -591,7 +591,7 @@ bool Function(DeviceProfile) _transportPredicateForPrinterConnectionKind(
 /// fact, refuse only if still not unique": nothing in this migration's
 /// sources says whether a 58mm-configured installation owns a dual-width
 /// printer set to 58mm or a 58mm-only model, so no binding is created for
-/// that value either — see task-2-report.md, fix round 1, for why the
+/// that value either — fix round 1 established why the
 /// original "58mm binds to the 58mm-compact profile" example could not be
 /// implemented against the real catalogue without inventing a preference
 /// rule nobody asked for. The same reasoning now also means **paper width

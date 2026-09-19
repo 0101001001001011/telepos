@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:telepos/hardware/printer/printer_manager.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 import 'package:telepos/hardware/printer/receipt/receipt_builder.dart'
-    show Cp866Encoder, TextAlign, TextSize;
+    show TextAlign, TextSize;
 
 class TextFormatter {
   TextFormatter();
@@ -22,7 +23,7 @@ class TextFormatter {
       if (text[i] == '<') {
         final closeIdx = text.indexOf('>', i);
         if (closeIdx == -1) {
-          buffer.addAll(Cp866Encoder.encode(text[i]));
+          buffer.addAll(_cp866(text[i]));
           i++;
           continue;
         }
@@ -119,7 +120,7 @@ class TextFormatter {
             buffer.addAll(EscPosCommands.newLine);
           case 'hr':
           case 'hr/':
-            buffer.addAll(Cp866Encoder.encode('-' * 32));
+            buffer.addAll(_cp866('-' * 32));
             buffer.addAll(EscPosCommands.newLine);
           case 'cut':
           case 'cut/':
@@ -134,7 +135,7 @@ class TextFormatter {
           case 'init/':
             buffer.addAll(EscPosCommands.init);
           default:
-            buffer.addAll(Cp866Encoder.encode('<$tag>'));
+            buffer.addAll(_cp866('<$tag>'));
         }
 
         i = closeIdx + 1;
@@ -142,7 +143,7 @@ class TextFormatter {
         buffer.addAll(EscPosCommands.newLine);
         i++;
       } else {
-        buffer.addAll(Cp866Encoder.encode(text[i]));
+        buffer.addAll(_cp866(text[i]));
         i++;
       }
     }
@@ -151,13 +152,13 @@ class TextFormatter {
   }
 
   Uint8List formatPlain(String text) {
-    return Cp866Encoder.encode(text);
+    return _cp866(text);
   }
 
   static Uint8List bold(String text) {
     return Uint8List.fromList([
       ...EscPosCommands.boldOn,
-      ...Cp866Encoder.encode(text),
+      ..._cp866(text),
       ...EscPosCommands.boldOff,
     ]);
   }
@@ -165,7 +166,7 @@ class TextFormatter {
   static Uint8List centered(String text) {
     return Uint8List.fromList([
       ...EscPosCommands.alignCenter,
-      ...Cp866Encoder.encode(text),
+      ..._cp866(text),
       ...EscPosCommands.newLine,
       ...EscPosCommands.alignLeft,
     ]);
@@ -174,7 +175,7 @@ class TextFormatter {
   static Uint8List large(String text) {
     return Uint8List.fromList([
       ...EscPosCommands.sizeDouble,
-      ...Cp866Encoder.encode(text),
+      ..._cp866(text),
       ...EscPosCommands.sizeNormal,
     ]);
   }
@@ -183,14 +184,14 @@ class TextFormatter {
     final padding = width - label.length - value.length;
     final spaces = padding > 0 ? ' ' * padding : ' ';
     return Uint8List.fromList([
-      ...Cp866Encoder.encode('$label$spaces$value'),
+      ..._cp866('$label$spaces$value'),
       ...EscPosCommands.newLine,
     ]);
   }
 
   static Uint8List divider({int width = 32, String char = '-'}) {
     return Uint8List.fromList([
-      ...Cp866Encoder.encode(char * width),
+      ..._cp866(char * width),
       ...EscPosCommands.newLine,
     ]);
   }
@@ -206,20 +207,20 @@ class TextFormatBuilder {
   final _buffer = <int>[];
 
   TextFormatBuilder text(String text) {
-    _buffer.addAll(Cp866Encoder.encode(text));
+    _buffer.addAll(_cp866(text));
     return this;
   }
 
   TextFormatBuilder bold(String text) {
     _buffer.addAll(EscPosCommands.boldOn);
-    _buffer.addAll(Cp866Encoder.encode(text));
+    _buffer.addAll(_cp866(text));
     _buffer.addAll(EscPosCommands.boldOff);
     return this;
   }
 
   TextFormatBuilder underline(String text) {
     _buffer.addAll(EscPosCommands.underlineOn);
-    _buffer.addAll(Cp866Encoder.encode(text));
+    _buffer.addAll(_cp866(text));
     _buffer.addAll(EscPosCommands.underlineOff);
     return this;
   }
@@ -245,7 +246,7 @@ class TextFormatBuilder {
   }
 
   TextFormatBuilder divider({int width = 32}) {
-    _buffer.addAll(Cp866Encoder.encode('-' * width));
+    _buffer.addAll(_cp866('-' * width));
     _buffer.addAll(EscPosCommands.newLine);
     return this;
   }
@@ -253,7 +254,7 @@ class TextFormatBuilder {
   TextFormatBuilder row(String label, String value, {int width = 32}) {
     final padding = width - label.length - value.length;
     final spaces = padding > 0 ? ' ' * padding : ' ';
-    _buffer.addAll(Cp866Encoder.encode('$label$spaces$value'));
+    _buffer.addAll(_cp866('$label$spaces$value'));
     _buffer.addAll(EscPosCommands.newLine);
     return this;
   }
@@ -282,3 +283,9 @@ class TextFormatBuilder {
     return Uint8List.fromList(_buffer);
   }
 }
+
+/// Байты CP866 — общей таблицей бумаги (`hardware/paper_charset.dart`).
+///
+/// Своего кодировщика у форматировщика больше нет: тот, что здесь стоял,
+/// подставлял вместо `₸` латинскую `T`.
+Uint8List _cp866(String text) => encodePaper(text, PaperCharset.cp866);

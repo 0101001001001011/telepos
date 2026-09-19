@@ -39,8 +39,9 @@ class _OpenGuard extends WireGuard {
   Future<WireVerdict> check(
     String op,
     Map<String, Object?> body,
-    String? token,
-  ) async => const WireAllowed(null);
+    String? token, {
+    int? sessionKey,
+  }) async => const WireAllowed(null);
 }
 
 /// Один и тот же пропускающий сторож на оба набора — заводить второй незачем.

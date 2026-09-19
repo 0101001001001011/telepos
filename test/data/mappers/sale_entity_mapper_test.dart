@@ -27,6 +27,7 @@ void main() {
         customerBin: '123456789012',
         orderType: 0,
         serviceCharge: Decimal.parse('150.000'),
+        cartVersion: 0,
       );
 
       final entity = SaleMapper.fromDrift(driftSale);
@@ -82,6 +83,7 @@ void main() {
           time: 1700000000,
           isOfd: false,
           isWholesale: false,
+          cartVersion: 0,
         ),
         Sale(
           receiptNo: 2,
@@ -91,6 +93,7 @@ void main() {
           time: 1700000001,
           isOfd: false,
           isWholesale: false,
+          cartVersion: 0,
         ),
       ];
 
@@ -145,6 +148,7 @@ void main() {
         customerBin: companion.customerBin.value,
         orderType: companion.orderType.value,
         serviceCharge: companion.serviceCharge.value,
+        cartVersion: 0,
       );
 
       final restored = SaleMapper.fromDrift(driftSale);

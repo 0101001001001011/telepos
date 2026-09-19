@@ -10,6 +10,7 @@ import 'package:telepos/domain/usecases/service/service_order_transition_use_cas
 import 'package:telepos/domain/usecases/wms/claim_use_case.dart';
 
 import '../support/harness.dart';
+import '../support/seed_sequence.dart';
 
 void main() {
   final h = E2eHarness();
@@ -29,7 +30,7 @@ void main() {
   }) async {
     final id = await db.serviceOrderDao.insert(
       ServiceOrdersCompanion.insert(
-        orderNumber: 'SO-W-${DateTime.now().microsecondsSinceEpoch}',
+        orderNumber: 'SO-W-${nextSeed()}',
         status: drift.Value(status),
         userId: 1,
         intakeTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,

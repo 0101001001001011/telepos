@@ -8,6 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:talker/talker.dart';
 
+import 'package:telepos/domain/fiscal/refusing_fiscal_service.dart';
+import 'package:telepos/domain/payment/payment_kind.dart';
 import 'package:telepos/core/constants/permission_keys.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/usecases/sale/sale_initiation_use_case_impl.dart';
@@ -17,7 +19,6 @@ import 'package:telepos/data/usecases/refund/refund_use_case_impl.dart';
 import 'package:telepos/data/usecases/cash_operation/cash_in_out_controller_impl.dart';
 import 'package:telepos/data/usecases/shift/assemble_shift_receipt_use_case_impl.dart';
 import 'package:telepos/data/usecases/shift/custom_bank_payments_sum_use_case_impl.dart';
-import 'package:telepos/data/services/shift_service_impl.dart';
 import 'package:telepos/data/usecases/refund/refund_product_service_impl.dart';
 import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
 import 'package:telepos/domain/usecases/refund/refund_use_case.dart';
@@ -220,11 +221,14 @@ void main() {
       saleInitiation = SaleInitiationUseCaseImpl(
         db: db,
         logger: logger,
-        shiftService: ShiftServiceImpl(db: db, logger: logger),
       );
       saleUseCase = SaleUseCaseImpl(db: db, logger: logger);
       refundInitiation = RefundInitiationUseCaseImpl(db: db, logger: logger);
-      refundUseCase = RefundUseCaseImpl(db: db, logger: logger);
+      refundUseCase = RefundUseCaseImpl(
+        db: db,
+        logger: logger,
+        fiscal: const RefusingFiscalService(),
+      );
       cashCtrl = CashInOutControllerImpl(db);
       final paymentsSumUC = CustomBankPaymentsSumUseCaseImpl(
         db: db,
@@ -247,7 +251,7 @@ void main() {
       await db.accountDao.updateBalance(posAccId, _d('50000'));
       expect(await _accountBalance(db, posAccId), _d('50000'));
 
-      final sale1 = await saleInitiation.initiate();
+      final sale1 = (await saleInitiation.initiate(terminalId: 0)).sale;
       expect(sale1, isNotNull);
       expect(sale1!.state, 0);
 
@@ -267,7 +271,9 @@ void main() {
         receiptNo: sale1.receiptNo,
         posId: sale1.posId,
         amount: _d('1050'),
-        payments: [PaymentEntry(payeeAccountId: posAccId, amount: _d('1050'))],
+        // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+        lines: const [],
+        payments: [PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: _d('1050'))],
         change: _d('950'),
         selectiveOfd: false,
       );
@@ -290,7 +296,7 @@ void main() {
       expect(payments1.length, 1);
       expect(payments1.first.amount, _d('1050'));
 
-      final sale2 = await saleInitiation.initiate();
+      final sale2 = (await saleInitiation.initiate(terminalId: 0)).sale;
       expect(sale2, isNotNull);
       expect(sale2!.receiptNo, sale1.receiptNo + 1);
 
@@ -306,7 +312,9 @@ void main() {
         receiptNo: sale2.receiptNo,
         posId: sale2.posId,
         amount: _d('840'),
-        payments: [PaymentEntry(payeeAccountId: bankAccId, amount: _d('840'))],
+        // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+        lines: const [],
+        payments: [PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: bankAccId, amount: _d('840'))],
         change: Decimal.zero,
         selectiveOfd: false,
       );
@@ -393,15 +401,18 @@ void main() {
       final saleInit = SaleInitiationUseCaseImpl(
         db: db,
         logger: logger,
-        shiftService: ShiftServiceImpl(db: db, logger: logger),
       );
       final saleUC = SaleUseCaseImpl(db: db, logger: logger);
       final refundInit = RefundInitiationUseCaseImpl(db: db, logger: logger);
-      final refundUC = RefundUseCaseImpl(db: db, logger: logger);
+      final refundUC = RefundUseCaseImpl(
+        db: db,
+        logger: logger,
+        fiscal: const RefusingFiscalService(),
+      );
 
       await _openShift(db, userId: 1);
 
-      final sale = await saleInit.initiate();
+      final sale = (await saleInit.initiate(terminalId: 0)).sale;
       expect(sale, isNotNull);
 
       await _addSaleProducts(
@@ -419,9 +430,11 @@ void main() {
         receiptNo: sale.receiptNo,
         posId: sale.posId,
         amount: _d('1050'),
+        // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+        lines: const [],
         payments: [
-          PaymentEntry(payeeAccountId: posAccId, amount: _d('900')),
-          PaymentEntry(payeeAccountId: bankAccId, amount: _d('150')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: _d('900')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: bankAccId, amount: _d('150')),
         ],
         change: Decimal.zero,
         selectiveOfd: false,
@@ -452,7 +465,11 @@ void main() {
         ],
       );
 
-      expect(result.paymentCount, 2);
+      // Задача 26 (2026-09-16): возврат уходит тем видом, каким пришли деньги, а
+      // внутри одного вида — по порядку чека, не пропорцией. Обе строки этого
+      // чека — «наличные», поэтому 450 целиком берутся из первой (900), и
+      // строка сторно одна. Деньги сходятся — проверка ниже осталась прежней.
+      expect(result.paymentCount, 1);
 
       final posBalance = await _accountBalance(db, posAccId);
       final bankBalance = await _accountBalance(db, bankAccId);
@@ -462,7 +479,11 @@ void main() {
     test('refund without receipt goes to POS account', () async {
       final logger = GetIt.I<Talker>();
       final refundInit = RefundInitiationUseCaseImpl(db: db, logger: logger);
-      final refundUC = RefundUseCaseImpl(db: db, logger: logger);
+      final refundUC = RefundUseCaseImpl(
+        db: db,
+        logger: logger,
+        fiscal: const RefusingFiscalService(),
+      );
 
       await _openShift(db, userId: 1);
       await db.accountDao.updateBalance(posAccId, _d('5000'));
@@ -505,17 +526,15 @@ void main() {
         final saleInit1 = SaleInitiationUseCaseImpl(
           db: db1,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: db1, logger: logger),
         );
         final saleInit2 = SaleInitiationUseCaseImpl(
           db: db2,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: db2, logger: logger),
         );
         final saleUC1 = SaleUseCaseImpl(db: db1, logger: logger);
         final saleUC2 = SaleUseCaseImpl(db: db2, logger: logger);
 
-        final s1 = await saleInit1.initiate();
+        final s1 = (await saleInit1.initiate(terminalId: 0)).sale;
         await _addSaleProducts(
           db1,
           receiptNo: s1!.receiptNo,
@@ -527,14 +546,16 @@ void main() {
           receiptNo: s1.receiptNo,
           posId: s1.posId,
           amount: _d('2250'),
+          // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+          lines: const [],
           payments: [
-            PaymentEntry(payeeAccountId: ids1.posAccountId, amount: _d('2250')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids1.posAccountId, amount: _d('2250')),
           ],
           change: Decimal.zero,
           selectiveOfd: false,
         );
 
-        final s2 = await saleInit2.initiate();
+        final s2 = (await saleInit2.initiate(terminalId: 0)).sale;
         await _addSaleProducts(
           db2,
           receiptNo: s2!.receiptNo,
@@ -546,8 +567,10 @@ void main() {
           receiptNo: s2.receiptNo,
           posId: s2.posId,
           amount: _d('1500'),
+          // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+          lines: const [],
           payments: [
-            PaymentEntry(payeeAccountId: ids2.posAccountId, amount: _d('1500')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids2.posAccountId, amount: _d('1500')),
           ],
           change: Decimal.zero,
           selectiveOfd: false,
@@ -653,27 +676,35 @@ void main() {
 
     tearDown(() => db.close());
 
-    test('sale without opened shift auto-opens a shift', () async {
-      expect(await db.shiftDao.findOpenedShift(), isNull);
+    test(
+      'sale without opened shift refuses instead of auto-opening one '
+      '(задача 5: касса больше не открывает смену на выдуманного человека)',
+      () async {
+        expect(await db.shiftDao.findOpenedShift(), isNull);
 
-      final logger = GetIt.I<Talker>();
-      final saleInit = SaleInitiationUseCaseImpl(
-        db: db,
-        logger: logger,
-        shiftService: ShiftServiceImpl(db: db, logger: logger),
-      );
-      final sale = await saleInit.initiate();
+        final logger = GetIt.I<Talker>();
+        final saleInit = SaleInitiationUseCaseImpl(db: db, logger: logger);
+        final result = await saleInit.initiate(terminalId: 0);
 
-      expect(sale, isNotNull);
-      expect(sale!.state, 0);
-      expect(await db.shiftDao.findOpenedShift(), isNotNull);
-    });
+        expect(result.sale, isNull);
+        expect(result.refusal?.code, 'shift_not_open');
+        expect(
+          await db.shiftDao.findOpenedShift(),
+          isNull,
+          reason: 'смена не должна открыться сама',
+        );
+      },
+    );
 
     test('refund with zero amount throws InvalidRefundException', () async {
       await _openShift(db, userId: 1);
       final logger = GetIt.I<Talker>();
       final refundInit = RefundInitiationUseCaseImpl(db: db, logger: logger);
-      final refundUC = RefundUseCaseImpl(db: db, logger: logger);
+      final refundUC = RefundUseCaseImpl(
+        db: db,
+        logger: logger,
+        fiscal: const RefusingFiscalService(),
+      );
 
       final refund = await refundInit.initiate();
 
@@ -740,9 +771,8 @@ void main() {
         final saleInit = SaleInitiationUseCaseImpl(
           db: emptyDb,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: emptyDb, logger: logger),
         );
-        final sale = await saleInit.initiate();
+        final sale = (await saleInit.initiate(terminalId: 0)).sale;
         expect(sale, isNull);
       } finally {
         await emptyDb.close();
@@ -753,7 +783,11 @@ void main() {
       await _openShift(db, userId: 1);
       final logger = GetIt.I<Talker>();
       final refundInit = RefundInitiationUseCaseImpl(db: db, logger: logger);
-      final refundUC = RefundUseCaseImpl(db: db, logger: logger);
+      final refundUC = RefundUseCaseImpl(
+        db: db,
+        logger: logger,
+        fiscal: const RefusingFiscalService(),
+      );
 
       final refund = await refundInit.initiate();
 
@@ -785,7 +819,6 @@ void main() {
         final saleInit = SaleInitiationUseCaseImpl(
           db: db,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: db, logger: logger),
         );
         final saleUC = SaleUseCaseImpl(db: db, logger: logger);
         final paymentsSumUC = CustomBankPaymentsSumUseCaseImpl(
@@ -800,7 +833,7 @@ void main() {
 
         final shift = await _openShift(db, userId: 1);
 
-        final s1 = await saleInit.initiate();
+        final s1 = (await saleInit.initiate(terminalId: 0)).sale;
         await _addSaleProducts(
           db,
           receiptNo: s1!.receiptNo,
@@ -812,14 +845,16 @@ void main() {
           receiptNo: s1.receiptNo,
           posId: s1.posId,
           amount: _d('450'),
+          // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+          lines: const [],
           payments: [
-            PaymentEntry(payeeAccountId: ids.posAccountId, amount: _d('450')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids.posAccountId, amount: _d('450')),
           ],
           change: Decimal.zero,
           selectiveOfd: false,
         );
 
-        final s2 = await saleInit.initiate();
+        final s2 = (await saleInit.initiate(terminalId: 0)).sale;
         await _addSaleProducts(
           db,
           receiptNo: s2!.receiptNo,
@@ -831,14 +866,16 @@ void main() {
           receiptNo: s2.receiptNo,
           posId: s2.posId,
           amount: _d('280'),
+          // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+          lines: const [],
           payments: [
-            PaymentEntry(payeeAccountId: ids.bankAccountId, amount: _d('280')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids.bankAccountId, amount: _d('280')),
           ],
           change: Decimal.zero,
           selectiveOfd: false,
         );
 
-        final s3 = await saleInit.initiate();
+        final s3 = (await saleInit.initiate(terminalId: 0)).sale;
         await _addSaleProducts(
           db,
           receiptNo: s3!.receiptNo,
@@ -850,9 +887,11 @@ void main() {
           receiptNo: s3.receiptNo,
           posId: s3.posId,
           amount: _d('300'),
+          // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+          lines: const [],
           payments: [
-            PaymentEntry(payeeAccountId: ids.posAccountId, amount: _d('200')),
-            PaymentEntry(payeeAccountId: ids.bankAccountId, amount: _d('100')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids.posAccountId, amount: _d('200')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids.bankAccountId, amount: _d('100')),
           ],
           change: Decimal.zero,
           selectiveOfd: false,
@@ -891,7 +930,6 @@ void main() {
         final saleInit = SaleInitiationUseCaseImpl(
           db: db,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: db, logger: logger),
         );
         final saleUC = SaleUseCaseImpl(db: db, logger: logger);
         final ids = await db.thisPosDao.get();
@@ -900,7 +938,7 @@ void main() {
         final receiptNos = <int>[];
 
         for (var i = 0; i < 5; i++) {
-          final sale = await saleInit.initiate();
+          final sale = (await saleInit.initiate(terminalId: 0)).sale;
           expect(sale, isNotNull);
           receiptNos.add(sale!.receiptNo);
 
@@ -915,8 +953,10 @@ void main() {
             receiptNo: sale.receiptNo,
             posId: sale.posId,
             amount: _d('450'),
+            // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+            lines: const [],
             payments: [
-              PaymentEntry(payeeAccountId: posAccId, amount: _d('450')),
+              PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: _d('450')),
             ],
             change: Decimal.zero,
             selectiveOfd: false,
@@ -945,13 +985,12 @@ void main() {
         final saleInit = SaleInitiationUseCaseImpl(
           db: db,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: db, logger: logger),
         );
         final saleUC = SaleUseCaseImpl(db: db, logger: logger);
         final thisPos = await db.thisPosDao.get();
         final posAccId = thisPos!.accountId!;
 
-        final sale = await saleInit.initiate();
+        final sale = (await saleInit.initiate(terminalId: 0)).sale;
         await _addSaleProducts(
           db,
           receiptNo: sale!.receiptNo,
@@ -963,8 +1002,10 @@ void main() {
           receiptNo: sale.receiptNo,
           posId: sale.posId,
           amount: _d('1350'),
+          // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+          lines: const [],
           payments: [
-            PaymentEntry(payeeAccountId: posAccId, amount: _d('1350')),
+            PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccId, amount: _d('1350')),
           ],
           change: Decimal.zero,
           selectiveOfd: false,
@@ -1008,11 +1049,14 @@ void main() {
         final saleInit = SaleInitiationUseCaseImpl(
           db: db,
           logger: logger,
-          shiftService: ShiftServiceImpl(db: db, logger: logger),
         );
         final saleUC = SaleUseCaseImpl(db: db, logger: logger);
         final refundInit = RefundInitiationUseCaseImpl(db: db, logger: logger);
-        final refundUC = RefundUseCaseImpl(db: db, logger: logger);
+        final refundUC = RefundUseCaseImpl(
+          db: db,
+          logger: logger,
+          fiscal: const RefusingFiscalService(),
+        );
         final cashCtrl = CashInOutControllerImpl(db);
 
         var expectedPosBalance = Decimal.zero;
@@ -1020,7 +1064,7 @@ void main() {
 
         final saleReceipts = <int>[];
         for (var i = 0; i < 10; i++) {
-          final sale = await saleInit.initiate();
+          final sale = (await saleInit.initiate(terminalId: 0)).sale;
           await _addSaleProducts(
             db,
             receiptNo: sale!.receiptNo,
@@ -1032,8 +1076,10 @@ void main() {
             receiptNo: sale.receiptNo,
             posId: sale.posId,
             amount: _d('450'),
+            // Строки чека сеются напрямую, с готовыми ценами (задача 9).
+            lines: const [],
             payments: [
-              PaymentEntry(payeeAccountId: ids.posAccountId, amount: _d('450')),
+              PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: ids.posAccountId, amount: _d('450')),
             ],
             change: Decimal.zero,
             selectiveOfd: false,

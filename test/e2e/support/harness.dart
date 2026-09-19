@@ -92,6 +92,45 @@ class E2eHarness {
     await GetIt.I.reset();
   }
 
+  /// Открывает смену **явно** — на кассира, заведённого [seed].
+  ///
+  /// # Зачем это понадобилось: долг задачи 5
+  ///
+  /// До задачи 5 касса открывала смену сама, при первой же продаже, выбирая
+  /// человека как `userId ?? последний ?? 1`. Задача 5 это сняла: деньги
+  /// смены ложились бы на «последнего», которого никто не спрашивал, а с
+  /// браузерного терминала чек начинал бы вовсе неизвестно кто
+  /// (`SaleInitiationUseCaseImpl`: `no opened shift — refusing`).
+  ///
+  /// Девять сквозных сценариев на самооткрытие рассчитывали: они удаляют
+  /// смены в `setUp` и сразу продают. Правильный ход — открыть смену в
+  /// подготовке **названным** человеком, а не вернуть молчаливое
+  /// самооткрытие: именно от него задача 5 и избавлялась.
+  ///
+  /// [openTime] берётся текущим намеренно: `ShiftService.isShiftOverAge`
+  /// блокирует продажу на смене старше суток, и смена из 1970 года
+  /// («openTime: 1000») упирается в этот сторож вместо того, чтобы помочь.
+  /// Измерено пробой круга правки 1 задачи 8 — она на этом и споткнулась.
+  Future<int> openShift({Decimal? openingCash}) async {
+    final users = await db.userDao.findAll();
+    final cashier = users.firstWhere(
+      (u) => u.name == cashierName,
+      orElse: () => users.first,
+    );
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    return db
+        .into(db.shifts)
+        .insert(
+          ShiftsCompanion.insert(
+            userId: cashier.id,
+            openTime: now,
+            isOpened: true,
+            isSynced: false,
+            openingCash: Value(openingCash ?? Decimal.zero),
+          ),
+        );
+  }
+
   /// [theme] умолчанием остаётся светлой, чтобы не трогать три десятка
   /// сценариев. Параметр появился, когда тёмная тема была подключена: снимок
   /// оболочки обязан сниматься в обеих, и «работает в светлой» перестало быть
@@ -195,8 +234,7 @@ class E2eHarness {
   /// `harness.…` (`test/golden/shell_look_test.dart`) keep working
   /// unchanged. See the top-level [releaseLoginScreen] below for why this
   /// exists — that is the one real implementation; this method is not it.
-  Future<void> releaseScreen(WidgetTester tester) =>
-      releaseLoginScreen(tester);
+  Future<void> releaseScreen(WidgetTester tester) => releaseLoginScreen(tester);
 }
 
 /// Releases the widget tree deliberately, before a test body returns.

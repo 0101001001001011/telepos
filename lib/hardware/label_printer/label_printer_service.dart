@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:talker/talker.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 
 // LabelTransport.fromConnectionTypeIndex removed (schema v27, second
 // final-review round, finding raised alongside C4): its only caller,
@@ -147,8 +149,54 @@ class LabelPrinterService {
     _isConnected = false;
   }
 
+  /// Байты страницы — **в кодовой странице, которую страница объявила**.
+  ///
+  /// Было `Uint8List.fromList(page.codeUnits)`: коды UTF-16 обрезались до
+  /// байта, и «Молоко» уходило управляющими символами. Штрихкод из цифр
+  /// доезжал целым, поэтому дефект не был виден: сканер читал, имя — мусор.
+  ///
+  /// * ZPL — `^CI28` (UTF-8) в каждой этикетке, байты UTF-8. Держат прошивки
+  ///   Zebra x.14 и новее; шрифт `^CF0` масштабируемый и кириллицу знает.
+  /// * TSPL — `CODEPAGE UTF-8`, байты UTF-8. **Не проверено на железе:**
+  ///   встроенные шрифты TSC «1»–«8» — только ASCII, кириллицу печатает шрифт
+  ///   «0» или загруженный TTF; наши шаблоны берут «2»–«4». Вопрос наружу.
+  /// * EPL — `I8,C,001` (Windows-1251), байты Windows-1251: UTF-8 у EPL2 нет.
+  ///
+  /// ## Казахские буквы и ₸ на этикетке EPL
+  ///
+  /// В Windows-1251 из казахских букв есть **только** `І`/`і` (0xB2/0xB3) —
+  /// они и уезжают целыми. Остальные восемь пар и знак тенге страница не
+  /// содержит, и до правки 2026-09-19 уходили `?`: этикетка с ценой,
+  /// нечитаемая покупателем, — такой же брак, как нечитаемый чек.
+  ///
+  /// Теперь текст проходит через общую таблицу бумаги
+  /// (`hardware/paper_charset.dart`, `PaperCharset.windows1251`): казахские
+  /// буквы выходят русской основой, `₸` — сокращением `тг`. Обоснование
+  /// выбора — там же; коротко: кодовой страницы с казахским алфавитом у
+  /// принтеров этикеток нет, а отказ печатать ценник за товар с казахским
+  /// названием хуже, чем напечатать его русской буквой.
+  ///
+  /// Замена длиннее одного знака (`₸` → `тг`) здесь безопасна: EPL ставит
+  /// текст командой `A x,y,...`, то есть по точкам, а не по колонкам, —
+  /// разметке нечему съехать. У чека это не так, там замена идёт до
+  /// разметки.
+  ///
+  /// **ZPL и TSPL намеренно оставлены как есть.** У них UTF-8, и ограничение
+  /// не в кодировке, а в шрифте принтера — измерить его нечем. Заменить
+  /// букву там значило бы испортить текст, который принтер, возможно,
+  /// печатает верно.
+  ///
+  /// ## Чего это НЕ доказывает
+  ///
+  /// Ни одна из трёх ветвей не видела железа. Проверено, какие байты уходят,
+  /// а не что принтер нарисует.
+  Uint8List _encode(String page) => switch (language) {
+    LabelLanguage.zpl || LabelLanguage.tspl => utf8.encode(page),
+    LabelLanguage.epl => encodePaper(page, PaperCharset.windows1251),
+  };
+
   Future<LabelPrintResult> _send(String page) async {
-    final bytes = Uint8List.fromList(page.codeUnits);
+    final bytes = _encode(page);
     switch (transport) {
       case LabelTransport.network:
         if (_socket == null) {
@@ -329,6 +377,7 @@ class LabelPrinterService {
     final dotsH = (h * dpi / 25.4).round();
     final buf = StringBuffer()
       ..writeln('^XA')
+      ..writeln('^CI28')
       ..writeln('^PW$dotsW')
       ..writeln('^LL$dotsH');
 
@@ -364,6 +413,7 @@ class LabelPrinterService {
     final buf = StringBuffer()
       ..writeln('SIZE $w mm, $h mm')
       ..writeln('GAP 3 mm, 0 mm')
+      ..writeln('CODEPAGE UTF-8')
       ..writeln('CLS');
 
     for (final f in fields) {
@@ -389,7 +439,9 @@ class LabelPrinterService {
     int h,
     int copies,
   ) {
-    final buf = StringBuffer()..writeln('N');
+    final buf = StringBuffer()
+      ..writeln('N')
+      ..writeln('I8,C,001');
 
     for (final f in fields) {
       if (f.kind == LabelFieldKind.barcode) {
@@ -423,6 +475,7 @@ class LabelPrinterService {
 
     return '''
 ^XA
+^CI28
 ^PW$dotsW
 ^LL$dotsH
 ^CF0,28
@@ -442,6 +495,7 @@ ${nameLine2.isNotEmpty ? '^FO20,52^FD$nameLine2^FS' : ''}
   String _buildZplBarcodeLabel(String barcode, String text, int copies) {
     return '''
 ^XA
+^CI28
 ^CF0,24
 ^FO20,20^FD$text^FS
 ^FO20,55
@@ -469,6 +523,7 @@ ${nameLine2.isNotEmpty ? '^FO20,52^FD$nameLine2^FS' : ''}
     return '''
 SIZE $labelWidthMm mm, $labelHeightMm mm
 GAP 3 mm, 0 mm
+CODEPAGE UTF-8
 CLS
 TEXT 20,20,"3",0,1,1,"$nameLine1"
 ${nameLine2.isNotEmpty ? 'TEXT 20,50,"3",0,1,1,"$nameLine2"' : ''}
@@ -482,6 +537,7 @@ PRINT $copies
     return '''
 SIZE $labelWidthMm mm, $labelHeightMm mm
 GAP 3 mm, 0 mm
+CODEPAGE UTF-8
 CLS
 TEXT 20,20,"3",0,1,1,"$text"
 BARCODE 20,55,"128",80,1,0,2,2,"$barcode"
@@ -499,6 +555,7 @@ PRINT $copies
     final priceStr = '$currency ${price.toStringAsFixed(2)}';
     return '''
 N
+I8,C,001
 A20,20,0,3,1,1,N,"$name"
 A20,55,0,4,1,1,N,"$priceStr"
 B20,100,0,1,2,2,60,B,"$barcode"
@@ -509,6 +566,7 @@ P$copies
   String _buildEplBarcodeLabel(String barcode, String text, int copies) {
     return '''
 N
+I8,C,001
 A20,20,0,3,1,1,N,"$text"
 B20,55,0,1,2,2,80,B,"$barcode"
 P$copies

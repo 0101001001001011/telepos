@@ -24,6 +24,81 @@ enum FiscalErrorCode {
   notConfigured,
   network,
   unknown,
+
+  /// Касса не смогла **собрать** запрос: адрес без узла, чужая схема,
+  /// неразборный адрес, тело не кодируется. До оператора не дошло ничего,
+  /// и повтор детерминированно повторит отказ — поэтому это **не**
+  /// `network`: очередь его не берёт, чек ложится на экран
+  /// нефискализованных чеков с причиной. Стоит последним: порядок членов
+  /// нигде не хранится, но и сдвигать его незачем.
+  requestNotBuilt,
+
+  /// Ответил **не оператор**, а то, что стоит перед ним: HTTP 5xx, 408 или
+  /// 429 без кода оператора в теле (балансировщик со страницей HTML, шлюз,
+  /// ограничитель частоты). Документ оператор не рассматривал — лечится
+  /// временем.
+  operatorUnavailable,
+
+  /// TLS не сошёлся: чужая схема (`https` к порту без TLS), сертификат, часы
+  /// кассы. До оператора не дошло ничего, и повтор без человека сойдётся так
+  /// же.
+  tlsRejected,
+
+  /// Сбой **кода кассы** по дороге к оператору — исключение, не являющееся
+  /// вводом-выводом. Повтор повторит сбой.
+  clientFault,
+
+  /// В документе вид оплаты, которого **оператор не принимает**: у WebKassa
+  /// — `PaymentType` 2 «кредит» и 3 «тара», исключённые протоколом ОФД
+  /// 2.0.2. Отказ ставится **до отправки**, а не молча: документ с таким
+  /// видом оператор отвергнет или, хуже, примет и посчитает не так.
+  paymentTypeNotAccepted,
+}
+
+/// **Таблица повторимости — единственная.** Повторимо то, что лечится
+/// временем без человека; остальное — на экран нефискализованных чеков.
+///
+/// | Код | Повторимо | Почему |
+/// | --- | :---: | --- |
+/// | `network` | да | обрыв, тайм-аут, потерянный ответ; повтор тем же ключом оператор дедуплицирует (код 14) |
+/// | `operatorUnavailable` | да | 5xx/408/429 без кода оператора — документ не рассматривался |
+/// | `tokenExpired` | да | перевыпуск токена уже сделан внутри провайдера; второй отказ — сбой авторизации на стороне оператора |
+/// | `requestNotBuilt` | нет | адрес/тело не собираются — повтор повторит |
+/// | `tlsRejected` | нет | схема, сертификат, часы кассы — лечит человек |
+/// | `clientFault` | нет | сбой кода кассы — повтор повторит |
+/// | `paymentTypeNotAccepted` | нет | вид оплаты исключён протоколом — документ надо пересобрать |
+/// | `badCredentials`, `cashboxNotFound`, `cashboxBlocked` | нет | настройки или решение оператора |
+/// | `validation`, `notEnoughMoney`, `shiftError`, `offlineLimitExceeded`, `offlineNotSupported` | нет | документ отвергнут по существу |
+/// | `unsupported`, `notConfigured`, `unknown` | нет | слепой повтор — вечный цикл |
+/// | `duplicate` | нет | документ у оператора **уже есть** — не повтор, а успех |
+/// | `ok` | нет | не отказ |
+///
+/// `switch` исчерпывающий и без `default`: новый код не соберётся, пока ему
+/// не назван ответ. Пробы на каждую ветку транспорта —
+/// `test/data/fiscal/webkassa_failure_classification_test.dart`.
+extension FiscalErrorCodeRetry on FiscalErrorCode {
+  bool get isTransient => switch (this) {
+    FiscalErrorCode.network => true,
+    FiscalErrorCode.operatorUnavailable => true,
+    FiscalErrorCode.tokenExpired => true,
+    FiscalErrorCode.ok => false,
+    FiscalErrorCode.badCredentials => false,
+    FiscalErrorCode.cashboxNotFound => false,
+    FiscalErrorCode.cashboxBlocked => false,
+    FiscalErrorCode.offlineLimitExceeded => false,
+    FiscalErrorCode.offlineNotSupported => false,
+    FiscalErrorCode.duplicate => false,
+    FiscalErrorCode.validation => false,
+    FiscalErrorCode.notEnoughMoney => false,
+    FiscalErrorCode.shiftError => false,
+    FiscalErrorCode.unsupported => false,
+    FiscalErrorCode.notConfigured => false,
+    FiscalErrorCode.unknown => false,
+    FiscalErrorCode.requestNotBuilt => false,
+    FiscalErrorCode.tlsRejected => false,
+    FiscalErrorCode.clientFault => false,
+    FiscalErrorCode.paymentTypeNotAccepted => false,
+  };
 }
 
 class FiscalTax {
@@ -268,6 +343,7 @@ class FiscalRefundBasis {
     required this.originalRegistrationNumber,
     required this.originalTotal,
     this.originalWasOffline = false,
+    this.originalIdempotencyKey,
   });
 
   final String originalFiscalSign;
@@ -277,12 +353,49 @@ class FiscalRefundBasis {
   final Decimal originalTotal;
   final bool originalWasOffline;
 
+  /// Ключ идемпотентности **документа-основания** — того самого, чей
+  /// признак стоит в [originalFiscalSign].
+  ///
+  /// # Зачем он здесь, если оператору не уезжает
+  ///
+  /// Оператору уезжают пять полей, перечисленных поимённо в
+  /// `WebKassaProvider._sendCheck` (`CheckNumber`, `DateTime`,
+  /// `RegistrationNumber`, `Total`, `IsOffline`); это поле в их число не
+  /// входит и в конверт не попадает. Оно нужно **кассе**, и ровно в одном
+  /// месте: очередь автономной фискализации должна уметь ответить на
+  /// вопрос «застрявшая строка — это основание вот этого возврата или
+  /// чужой чек?».
+  ///
+  /// До 2026-09-19 ответа на этот вопрос не было ни у кого, и очередь
+  /// отвечала осторожностью: застряла **любая** строка — держались **все**
+  /// возвраты. У заказчика это выглядело так, что чек, который оператор
+  /// отказался принять, останавливал фискализацию посторонних документов.
+  /// Разбор правила — `FiscalQueueDependency`.
+  ///
+  /// # Почему это не «ещё один ключ идемпотентности»
+  ///
+  /// Это **ссылка** на чужой ключ, а не собственный. Своего ключа документ
+  /// возврата не меняет (`refund-<номер>-0`), формат ключа продажи
+  /// (`sale-<время чека>-<номер>-<касса>`) тоже не трогается: здесь просто
+  /// записано, какой из уже существующих ключей был основанием.
+  ///
+  /// # Чего это НЕ доказывает
+  ///
+  /// Что основание вообще проходило через очередь. Пусто означает «не
+  /// назвали»: возврат без чека, документ, собранный старым путём
+  /// (`WebKassaServiceImpl`), строка очереди, легшая до этой правки. На
+  /// пустом значении очередь возвращается к прежнему осторожному правилу —
+  /// разбор там же.
+  final String? originalIdempotencyKey;
+
   Map<String, dynamic> toJson() => {
     'originalFiscalSign': originalFiscalSign,
     'originalDateTime': originalDateTime.toIso8601String(),
     'originalRegistrationNumber': originalRegistrationNumber,
     'originalTotal': originalTotal.toString(),
     'originalWasOffline': originalWasOffline,
+    if (originalIdempotencyKey != null)
+      'originalIdempotencyKey': originalIdempotencyKey,
   };
 
   factory FiscalRefundBasis.fromJson(Map<String, dynamic> json) =>
@@ -295,6 +408,7 @@ class FiscalRefundBasis {
             json['originalRegistrationNumber'] as String? ?? '',
         originalTotal: Decimal.parse((json['originalTotal'] ?? '0').toString()),
         originalWasOffline: json['originalWasOffline'] as bool? ?? false,
+        originalIdempotencyKey: json['originalIdempotencyKey'] as String?,
       );
 }
 
@@ -388,6 +502,7 @@ class FiscalResult {
     this.errorMessage,
     this.errorCode = FiscalErrorCode.ok,
     this.rawErrorCode,
+    this.document,
   });
 
   final bool success;
@@ -413,6 +528,45 @@ class FiscalResult {
   final FiscalErrorCode errorCode;
 
   final int? rawErrorCode;
+
+  /// Конверт, который ушёл (или был собран и не ушёл) оператору, —
+  /// `FiscalSaleRequest.toJson()` **того самого** запроса.
+  ///
+  /// # Зачем документ едет обратно вместе с отказом
+  ///
+  /// Отказ фискализации значит «деньги взяты, документа нет». Лечит это
+  /// человек, и лечит **повтором того же документа**: `ExternalCheckNumber`
+  /// внутри — единственное, по чему дедупликация оператора узнаёт, что
+  /// продажа та же самая. Пересобрать запрос из базы чека позже нельзя:
+  /// он уедет с другим ключом, и на одну продажу приедут **два** фискальных
+  /// документа. Значит документ обязан пережить отказ, а пережить его он
+  /// может только уехав вместе с ним.
+  ///
+  /// Заполняется `FiscalServiceImpl` **только при отказе**: успеху документ
+  /// не нужен, а таскать его за каждым ответом значило бы держать в памяти
+  /// весь чек без причины.
+  ///
+  /// `null` — отказ случился раньше, чем запрос был собран (не разрешился
+  /// провайдер, не собрались позиции). Строка такого отказа повтору не
+  /// подлежит — см. `FiscalQueueEntry.carriesDocument`.
+  final Map<String, dynamic>? document;
+
+  /// Тот же ответ, но с приложенным документом.
+  FiscalResult withDocument(Map<String, dynamic>? doc) => FiscalResult(
+    success: success,
+    fiscalSign: fiscalSign,
+    registrationNumber: registrationNumber,
+    ticketUrl: ticketUrl,
+    shiftNumber: shiftNumber,
+    documentNumber: documentNumber,
+    fiscalizedAt: fiscalizedAt,
+    offlineMode: offlineMode,
+    queued: queued,
+    errorMessage: errorMessage,
+    errorCode: errorCode,
+    rawErrorCode: rawErrorCode,
+    document: doc,
+  );
 
   bool get hasFiscalSign => fiscalSign != null && fiscalSign!.isNotEmpty;
 

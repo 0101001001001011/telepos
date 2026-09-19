@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/tables/webkassa_tables.dart';
+import 'package:telepos/domain/fiscal/fiscal_doc_kind.dart';
 
 part 'webkassa_receipt_dao.g.dart';
 
@@ -9,13 +10,24 @@ class WebkassaReceiptDao extends DatabaseAccessor<AppDatabase>
     with _$WebkassaReceiptDaoMixin {
   WebkassaReceiptDao(super.db);
 
-  Future<WebkassaReceipt?> findByIsSaleAndOperationId(
-    bool isSale,
+  /// Строка документа — **по паре «номер и род»**, а не по номеру.
+  ///
+  /// [kind] обязателен с v50 и не имеет умолчания нарочно: `isSale` родом
+  /// не является. `true` носят и продажа, и приём аванса, `false` — и
+  /// возврат товара, и выдача аванса, и по номеру с `is_sale` эти пары
+  /// неразличимы. Запрос без рода вернул бы на новой кассе **две** строки
+  /// (у обеих номер 1) и упал бы прямо в `getSingleOrNull` — то есть
+  /// умолчание здесь было бы способом получить неверный ответ молча.
+  ///
+  /// Разбор столкновения целиком — в докстринге [FiscalDocKind].
+  Future<WebkassaReceipt?> findByKindAndOperationId(
+    FiscalDocKind kind,
     int operationId,
   ) =>
       (select(webkassaReceipts)..where(
             (wr) =>
-                wr.isSale.equals(isSale) & wr.operationId.equals(operationId),
+                wr.docKind.equals(kind.index) &
+                wr.operationId.equals(operationId),
           ))
           .getSingleOrNull();
 
@@ -58,6 +70,32 @@ class WebkassaReceiptDao extends DatabaseAccessor<AppDatabase>
     webkassaReceipts,
   )..where((wr) => wr.wkOfflineMode.equals(true))).get();
 
+  /// Последние документы, **которые оператор принял**, — для диагностики.
+  ///
+  /// # Зачем отдельное чтение, если есть очередь
+  ///
+  /// Очередь фискализации держит только то, что **не** уехало: ожидающие и
+  /// отказанные. Успешный документ из неё уходит, и по ней нельзя ответить
+  /// на главный вопрос наладчика — «а вообще хоть что-то фискализуется?».
+  /// Экран, показывающий одну очередь, на исправной кассе пуст, и пустота
+  /// эта неотличима от «оператор не настроен».
+  ///
+  /// Порядок — от новых к старым: диагностика начинается с последнего
+  /// документа, а не с первого за всю жизнь кассы. Сортировка по
+  /// `operationId`, а не по `wkTime`: время у оператора необязательное
+  /// (`wkTime` обнуляем), и строки без него уехали бы в конец, хотя они
+  /// такие же документы.
+  Future<List<WebkassaReceipt>> recentReceipts({int limit = 20}) =>
+      (select(webkassaReceipts)
+            ..orderBy([
+              (wr) => OrderingTerm(
+                expression: wr.operationId,
+                mode: OrderingMode.desc,
+              ),
+            ])
+            ..limit(limit))
+          .get();
+
   Future<int> countOfflineReceipts() async {
     final count =
         await (selectOnly(webkassaReceipts)
@@ -68,23 +106,28 @@ class WebkassaReceiptDao extends DatabaseAccessor<AppDatabase>
     return count ?? 0;
   }
 
-  Future<int> markAsSynced(int operationId, bool isSale) =>
+  /// Тем же ключом, что и [findByKindAndOperationId], и по той же причине:
+  /// `is_sale` в условии оставил бы обновление, задевающее **две** строки
+  /// разом — продажу и приём аванса с одним номером.
+  Future<int> markAsSynced(int operationId, FiscalDocKind kind) =>
       (update(webkassaReceipts)..where(
             (wr) =>
-                wr.operationId.equals(operationId) & wr.isSale.equals(isSale),
+                wr.operationId.equals(operationId) &
+                wr.docKind.equals(kind.index),
           ))
           .write(const WebkassaReceiptsCompanion(wkOfflineMode: Value(false)));
 
   Future<int> updateFromServer({
     required int operationId,
-    required bool isSale,
+    required FiscalDocKind kind,
     String? fiscalNo,
     String? wkReceiptNo,
     String? ticketUrl,
   }) =>
       (update(webkassaReceipts)..where(
             (wr) =>
-                wr.operationId.equals(operationId) & wr.isSale.equals(isSale),
+                wr.operationId.equals(operationId) &
+                wr.docKind.equals(kind.index),
           ))
           .write(
             WebkassaReceiptsCompanion(

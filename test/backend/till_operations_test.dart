@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
+import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:telepos/backend/api_server.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
 import 'package:telepos/backend/till_operations.dart';
 import 'package:telepos/backend/till_wire_guard.dart';
@@ -13,6 +16,7 @@ import 'package:telepos/domain/auth/session_lookup.dart';
 import 'package:telepos/domain/network/network_repository.dart';
 import 'package:telepos/domain/network/network_status.dart';
 import 'package:telepos/domain/network/wifi_network.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/setup/setup_draft.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
@@ -21,6 +25,7 @@ import 'package:telepos/domain/terminal/device_binding.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart' as domain;
 import 'package:telepos/domain/terminal/terminal_repository.dart';
+import 'package:telepos/domain/wire/sale_ops.dart';
 import 'package:telepos/domain/wire/till_ops.dart';
 import 'package:telepos/domain/wire/wire_access.dart';
 import 'package:telepos/domain/wire/wire_frame.dart';
@@ -132,6 +137,7 @@ void main() {
       // Пункт 3 волны правок «касса говорит, что набирать» (2026-08-23):
       // `invites` стал обязательным доводом.
       invites: PairingInvites(),
+      certificateThrottle: CertificateThrottle(),
     );
 
     expect(server.access, {for (final op in TillOps.all) op.name: op.access});
@@ -456,9 +462,10 @@ void main() {
       final operations = build(network: network);
 
       final body =
-          await operations.askHandlers[TillOps.networkWifiConnect.name]!(
-            const {'ssid': 'Кафе', 'password': 'секрет'},
-          );
+          await operations.askHandlers[TillOps.networkWifiConnect.name]!(const {
+            'ssid': 'Кафе',
+            'password': 'секрет',
+          });
 
       expect(network.connectCalls.single, ('Кафе', 'секрет'));
       expect(body['success'], isTrue);
@@ -469,32 +476,31 @@ void main() {
       final network = _FakeNetwork(disconnectResult: true);
       final operations = build(network: network);
 
-      final body =
-          await operations.askHandlers[TillOps.networkWifiDisconnect.name]!(
-            const {},
-          );
+      final body = await operations
+          .askHandlers[TillOps.networkWifiDisconnect.name]!(const {});
 
       expect(network.disconnectCalled, isTrue);
       expect(body['ok'], isTrue);
     });
 
-    test('подробности проводного интерфейса едут как отдала реализация', () async {
-      final network = _FakeNetwork(
-        ethernetStatus: const {
-          'interfaces': [
-            {'ifname': 'eth0'},
-          ],
-        },
-      );
-      final operations = build(network: network);
+    test(
+      'подробности проводного интерфейса едут как отдала реализация',
+      () async {
+        final network = _FakeNetwork(
+          ethernetStatus: const {
+            'interfaces': [
+              {'ifname': 'eth0'},
+            ],
+          },
+        );
+        final operations = build(network: network);
 
-      final body =
-          await operations.askHandlers[TillOps.networkEthernetStatus.name]!(
-            const {},
-          );
+        final body = await operations
+            .askHandlers[TillOps.networkEthernetStatus.name]!(const {});
 
-      expect(body['interfaces'], hasLength(1));
-    });
+        expect(body['interfaces'], hasLength(1));
+      },
+    );
 
     test('настройка Ethernet без iface — отказ до вызова реализации', () async {
       final network = _FakeNetwork();
@@ -514,9 +520,7 @@ void main() {
     });
 
     test('настройка Ethernet DHCP зовёт нужный метод реализации', () async {
-      final network = _FakeNetwork(
-        dhcpResult: (success: true, mode: 'dhcp'),
-      );
+      final network = _FakeNetwork(dhcpResult: (success: true, mode: 'dhcp'));
       final operations = build(network: network);
 
       final body =
@@ -530,23 +534,26 @@ void main() {
       expect(body['mode'], 'dhcp');
     });
 
-    test('статический Ethernet без ipCidr — отказ до вызова реализации', () async {
-      final network = _FakeNetwork();
-      final operations = build(network: network);
+    test(
+      'статический Ethernet без ipCidr — отказ до вызова реализации',
+      () async {
+        final network = _FakeNetwork();
+        final operations = build(network: network);
 
-      await expectLater(
-        operations.askHandlers[TillOps.networkEthernetConfigure.name]!(const {
-          'iface': 'eth0',
-          'mode': 'static',
-        }),
-        throwsA(
-          isA<WireRefusal>()
-              .having((r) => r.code, 'code', 'bad_request')
-              .having((r) => r.message, 'message', contains('ipCidr')),
-        ),
-      );
-      expect(network.staticCalls, isEmpty);
-    });
+        await expectLater(
+          operations.askHandlers[TillOps.networkEthernetConfigure.name]!(const {
+            'iface': 'eth0',
+            'mode': 'static',
+          }),
+          throwsA(
+            isA<WireRefusal>()
+                .having((r) => r.code, 'code', 'bad_request')
+                .having((r) => r.message, 'message', contains('ipCidr')),
+          ),
+        );
+        expect(network.staticCalls, isEmpty);
+      },
+    );
 
     test('статический Ethernet несёт адрес, шлюз и DNS реализации', () async {
       final network = _FakeNetwork(
@@ -574,6 +581,211 @@ void main() {
       expect(body['success'], isTrue);
       expect(body['mode'], 'static');
     });
+  });
+
+  group('sale.ping — задача 1 плана «Продажа с браузерного терминала»', () {
+    // Второй путь поиска не изобретается — тот же, каким уже пользуется
+    // экран «дополнительно» (`additional_screen.dart:_lookup`):
+    // `productInfoDao.findByBarcode` для товара, `productPriceDao.findByUcode`
+    // для цены.
+    Future<void> insertProduct({
+      required int ucode,
+      required int barcode,
+      required String name,
+      Decimal? sellingPrice,
+    }) async {
+      await db
+          .into(db.productInfos)
+          .insert(
+            ProductInfosCompanion(
+              ucode: Value(ucode),
+              barcode: Value(barcode),
+              name: Value(name),
+              type: const Value(0),
+              measure: const Value(0),
+              isDeleted: const Value(false),
+            ),
+          );
+      await db
+          .into(db.productPrices)
+          .insert(
+            ProductPricesCompanion(
+              ucode: Value(ucode),
+              barcode: Value(barcode),
+              sellingPrice: Value(sellingPrice),
+            ),
+          );
+    }
+
+    test('товар найден — имя и цена строкой, не числом', () async {
+      await insertProduct(
+        ucode: 1001,
+        barcode: 4607001,
+        name: 'Молоко 1л',
+        sellingPrice: Decimal.parse('450.5'),
+      );
+      final operations = build();
+
+      final body = await operations.askHandlers[SaleOps.salePing.name]!({
+        'barcode': '4607001',
+      });
+      final decoded = SaleOps.salePing.decode(body);
+
+      expect(decoded.found, isTrue);
+      expect(decoded.name, 'Молоко 1л');
+      // Инвариант I159: строка, а не число — `is String` было бы верно и
+      // для `4607001` (int), поэтому проверяется буквальное значение.
+      // Значение — `.5`, не `.500`: колонка хранится как `double`
+      // (`DecimalConverter`, `lib/data/database/converters/decimal_converter.dart`)
+      // и обратно читается через `Decimal.parse(fromDb.toString())` — лишние
+      // нули после запятой круглого рейса не переживают, это свойство
+      // хранения, а не задачи 1.
+      expect(decoded.price, '450.5');
+    });
+
+    test('товар не найден — found:false, имя и цена отсутствуют', () async {
+      final operations = build();
+
+      final body = await operations.askHandlers[SaleOps.salePing.name]!({
+        'barcode': '0000000000',
+      });
+      final decoded = SaleOps.salePing.decode(body);
+
+      expect(decoded.found, isFalse);
+      expect(decoded.name, isNull);
+      expect(decoded.price, isNull);
+    });
+
+    test(
+      'товар найден, но строки цены нет вовсе — цена не выдумывается',
+      () async {
+        // `productPriceDao.findByUcode` возвращает `null` — этому товару не
+        // вставлена ни одна строка в `product_prices`.
+        await db
+            .into(db.productInfos)
+            .insert(
+              ProductInfosCompanion(
+                ucode: Value(1002),
+                barcode: const Value(4607002),
+                name: const Value('Без цены'),
+                type: const Value(0),
+                measure: const Value(0),
+                isDeleted: const Value(false),
+              ),
+            );
+        final operations = build();
+
+        final body = await operations.askHandlers[SaleOps.salePing.name]!({
+          'barcode': '4607002',
+        });
+        final decoded = SaleOps.salePing.decode(body);
+
+        expect(decoded.found, isTrue);
+        expect(decoded.name, 'Без цены');
+        expect(decoded.price, isNull);
+      },
+    );
+
+    test('товар найден, строка цены есть, но sellingPrice в ней null — '
+        'не строка "null"', () async {
+      // Регрессия: `price?.sellingPrice.toString()` (один `?.`) отдавал бы
+      // здесь литеральную строку `"null"` вместо настоящего `null` —
+      // `price` (ProductPrice) не null, а `sellingPrice` внутри неё — да.
+      await insertProduct(
+        ucode: 1003,
+        barcode: 4607003,
+        name: 'Цена не задана',
+        sellingPrice: null,
+      );
+      final operations = build();
+
+      final body = await operations.askHandlers[SaleOps.salePing.name]!({
+        'barcode': '4607003',
+      });
+      final decoded = SaleOps.salePing.decode(body);
+
+      expect(decoded.found, isTrue);
+      expect(decoded.price, isNull);
+    });
+
+    test('пустое тело — barcode пуст, товар не найден', () async {
+      final operations = build();
+
+      final body = await operations.askHandlers[SaleOps.salePing.name]!(
+        const {},
+      );
+      final decoded = SaleOps.salePing.decode(body);
+
+      expect(decoded.found, isFalse);
+    });
+
+    test(
+      'sale.ping без сеанса — отказ сторожа, обработчик не вызван',
+      () async {
+        // Сквозная проверка, не по объявлению: настоящий `WireGuard` с
+        // настоящим словарём доступа (`_guardFor` строит его из
+        // `TillOps.all`, куда `sale.ping` попадает через `...SaleOps.all`),
+        // настоящий обработчик кассы — обёрнут только шпионом, само тело
+        // делегировано без изменений. Без токена сторож обязан отказать
+        // раньше обработчика (`WireGuard.check`, ветка `SessionAccess`:
+        // `token == null` уходит `unauthorized` до вызова `_sessions
+        // .sessionFor`) — `_NeverSession` этого файла остаётся безопасен,
+        // потому что до него дело в этой ветке не доходит вовсе.
+        await insertProduct(
+          ucode: 1004,
+          barcode: 4607004,
+          name: 'Товар под сторожем',
+          sellingPrice: Decimal.parse('100'),
+        );
+        final operations = build();
+        var handlerCalled = false;
+        final guardedHandlers = {
+          ...operations.askHandlers,
+          SaleOps.salePing.name:
+              (
+                Map<String, Object?> body, [
+                int? sessionId,
+                AuthSession? session,
+              ]) async {
+                handlerCalled = true;
+                return operations.askHandlers[SaleOps.salePing.name]!(
+                  body,
+                  sessionId,
+                  session,
+                );
+              },
+        };
+
+        final server = FakeQuicServer();
+        final wire = TillWire(server, guardedHandlers, guard: _guardFor(db))
+          ..start();
+
+        server.emitStreamOpened(sessionId: 1, streamId: 4);
+        server.emitStreamData(
+          sessionId: 1,
+          streamId: 4,
+          // Ни поля `token` в кадре вовсе — то самое «нет сеанса», не
+          // «сеанс неизвестен по токену»; оба случая устроены сторожем
+          // одинаково (`WireGuard.check`), но это заметно проще накрыть.
+          message:
+              '{"op":"${SaleOps.salePing.name}","body":{"barcode":"4607004"}}',
+        );
+        await Future<void>.delayed(Duration.zero);
+
+        final frame = WireFrame.decode(server.sentFrames.single);
+        expect(frame, isA<ErrorFrame>());
+        expect((frame as ErrorFrame).code, WireDenied.unauthorized);
+        expect(
+          handlerCalled,
+          isFalse,
+          reason:
+              'право проверяется до обработчика — обработчик, вызванный '
+              'раньше отказа, доказывал бы обратное тому, что заявлено',
+        );
+
+        await wire.stop();
+      },
+    );
   });
 }
 
@@ -605,6 +817,7 @@ class NoopSetup implements SetupRepository {
 class RecordingTerminals implements TerminalRepository {
   final List<(int, String)> renamed = [];
   final List<int> deleted = [];
+  final List<(int, Set<PaymentType>)> paymentTypes = [];
 
   @override
   Future<List<domain.Terminal>> list() async => const [];
@@ -639,6 +852,12 @@ class RecordingTerminals implements TerminalRepository {
   @override
   Future<void> rename(int terminalId, String name) async =>
       renamed.add((terminalId, name));
+
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) async => paymentTypes.add((terminalId, types));
 
   @override
   Future<void> delete(int terminalId) async => deleted.add(terminalId);
@@ -795,6 +1014,7 @@ class _FakeNetwork implements NetworkRepository {
       const [];
 
   @override
-  Future<({bool success, String message})> bluetoothPair(String address) async =>
-      (success: false, message: '');
+  Future<({bool success, String message})> bluetoothPair(
+    String address,
+  ) async => (success: false, message: '');
 }

@@ -90,6 +90,32 @@ Future<String> _readTerminalsCreateSql() async {
   return sql;
 }
 
+/// `sales` без `terminal_id`/`cart_version`/`last_command_key` — задача 2
+/// плана «продажа с браузерного терминала» добавила их миграцией v36→v37,
+/// которая трогает существующую таблицу и требует, чтобы она уже была: без
+/// неё подъём этой фикстуры выше v36 падает на `no such table: sales`, хотя
+/// настоящая база апгрейда таблицу `sales` имеет с самой первой схемы.
+Future<String> _readSalesCreateSql() async {
+  final probe = AppDatabase(NativeDatabase.memory());
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final row = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
+  final sql = row.read<String>('sql');
+  await probe.close();
+  return sql;
+}
+
 /// Открывает базу, выглядящую как схема 29: таблица создана сырым SQL до
 /// того, как drift возьмётся за миграции, `user_version` принудительно 29.
 /// Открытие через [AppDatabase] запускает ветки `if (from < 30)` и
@@ -97,7 +123,8 @@ Future<String> _readTerminalsCreateSql() async {
 AppDatabase _openAsIfMigratingFromV29(
   String thisPosCreateSql,
   String usersCreateSql,
-  String terminalsCreateSql, {
+  String terminalsCreateSql,
+  String salesCreateSql, {
   void Function(sqlite3.Database raw)? seed,
 }) {
   return AppDatabase(
@@ -106,6 +133,7 @@ AppDatabase _openAsIfMigratingFromV29(
         raw.execute(thisPosCreateSql);
         raw.execute(usersCreateSql);
         raw.execute(terminalsCreateSql);
+        raw.execute(salesCreateSql);
         raw.execute('PRAGMA user_version = 29');
         if (seed != null) seed(raw);
       },
@@ -149,10 +177,12 @@ void main() {
       final sql = await _readV29ThisPosCreateSql();
       final usersSql = await _readUsersCreateSql();
       final terminalsSql = await _readTerminalsCreateSql();
+      final salesSql = await _readSalesCreateSql();
       final db = _openAsIfMigratingFromV29(
         sql,
         usersSql,
         terminalsSql,
+        salesSql,
         seed: (raw) {
           // Колонки засеяны **непустыми** значениями: убрать пустую колонку
           // умеет и сломанная миграция. И соседи вокруг них — с национальными
@@ -232,12 +262,29 @@ void main() {
         )
         .getSingle();
     final terminalsSql = terminalsRow.read<String>('sql');
+    await probe.customStatement(
+      'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+    );
+    await probe.customStatement(
+      'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+    );
+    await probe.customStatement(
+      'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN '
+      'last_command_key',
+    );
+    final salesRow = await probe
+        .customSelect(
+          "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+        )
+        .getSingle();
+    final salesSql = salesRow.read<String>('sql');
     await probe.close();
 
     final db = _openAsIfMigratingFromV29(
       sqlWithoutRejectWindow,
       usersSql,
       terminalsSql,
+      salesSql,
     );
     addTearDown(db.close);
 

@@ -146,6 +146,13 @@ class _TableRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
+        // Задача 13, правки под касание. У строки с штрихкодом высота и так
+        // выходит около 50 точек, у строки **без** штрихкода — около 36:
+        // весовой товар, развес, любой товар, заведённый без кода. Выбор
+        // строки — это выбор того, чью цену сейчас поменяют, и промах здесь
+        // тише всего.
+        constraints: const BoxConstraints(minHeight: AppTheme.minButtonSize),
+        alignment: Alignment.centerLeft,
         padding: const EdgeInsets.symmetric(
           horizontal: AppTheme.spacing,
           vertical: AppTheme.spacingSmall,

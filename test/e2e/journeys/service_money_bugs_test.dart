@@ -11,6 +11,7 @@ import 'package:telepos/domain/usecases/service/approve_service_mark_use_case.da
 import 'package:telepos/domain/usecases/service/service_order_transition_use_case.dart';
 
 import '../support/harness.dart';
+import '../support/seed_sequence.dart';
 
 void main() {
   final h = E2eHarness();
@@ -24,7 +25,7 @@ void main() {
   Future<int> seedOrder(AppDatabase db, {int status = 0}) async {
     return db.serviceOrderDao.insert(
       ServiceOrdersCompanion.insert(
-        orderNumber: 'SO-TEST-${DateTime.now().microsecondsSinceEpoch}',
+        orderNumber: 'SO-TEST-${nextSeed()}',
         status: drift.Value(status),
         userId: 1,
         intakeTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,

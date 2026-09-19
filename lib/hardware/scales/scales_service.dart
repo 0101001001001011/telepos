@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:decimal/decimal.dart';
 import 'package:talker/talker.dart';
 
+import 'package:telepos/hardware/serial/serial_port_path.dart';
+
 class ScalesService {
   ScalesService({
     Talker? logger,
@@ -45,9 +47,7 @@ class ScalesService {
     }
 
     try {
-      final portPath = Platform.isWindows ? '\\\\.\\$port' : port!;
-      final file = File(portPath);
-      _portFile = await file.open(mode: FileMode.append);
+      _portFile = await openSerialPort(port!, mode: FileMode.append);
 
       _isConnected = true;
       _logger?.info('Scales connected on $port ($protocol)');

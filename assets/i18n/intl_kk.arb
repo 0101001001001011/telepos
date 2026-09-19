@@ -1,4 +1,12 @@
 {
+  "paymentCardChargeUnsettled": "Карта {amount} сомасына өткізілді, бұл сома чекке кірмейді. Төлем терминалында операцияны болдырмаңыз.",
+  "@paymentCardChargeUnsettled": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "@@locale": "kk",
   "navReports": "Есептер",
   "navStock": "Қойма",
@@ -12,6 +20,7 @@
   "globalYes": "Иә",
   "globalNo": "Жоқ",
   "globalSave": "Сақтау",
+  "globalNew": "Жаңа",
   "globalDelete": "Жою",
   "globalEdit": "Өңдеу",
   "globalAdd": "Қосу",
@@ -110,6 +119,9 @@
   "refundComplete": "Қайтару орындалды",
   "refundCash": "Қолма-қол қайтару",
   "refundCard": "Картаға қайтару",
+  "refundConnectionLost": "Кассамен байланыс үзілді",
+  "refundConnectionLostHint": "Терминал кассаға өзі оралады — жұмыс сол жерден жалғасады",
+  "refundRefused": "Қайтару орындалмады: {reason}",
   "refundNoItems": "Қайтаруға тауарлар жоқ",
   "refundAlreadyRefunded": "Тауар қайтарылған",
   "refundPartial": "Ішінара қайтару",
@@ -175,6 +187,7 @@
   "paymentKaspi": "Kaspi QR",
   "paymentBonus": "Бонустар",
   "paymentDebt": "Қарызға",
+  "paymentInstallment": "Бөліп төлеу",
   "paymentMixed": "Аралас",
   "paymentEnterAmount": "Соманы енгізіңіз",
   "paymentRemaining": "Қалды: {amount}",
@@ -221,6 +234,7 @@
     }
   },
   "historyReprint": "Қайта басып шығару",
+  "certificateSlipPrintFailed": "{number} сертификатының слипі басылмады: {reason}",
   "historyDetails": "Толығырақ",
   "historySale": "Сату",
   "historyRefund": "Қайтару",
@@ -432,12 +446,17 @@
   "loginWithoutPin": "PIN-сіз кіру",
   "loginShiftOpen": "Ауысым ашық",
   "loginShiftClosed": "Ауысым жабық",
+  "loginShiftUnknown": "Ауысым: белгісіз",
   "saleQuickProducts": "Жылдам тауарлар",
   "saleIncrease": "Көбейту",
   "saleDecrease": "Азайту",
   "saleMark": "Маркировка",
   "saleDataMatrix": "Маркировка (DataMatrix)",
   "saleHeld": "Чек кейінге қалдырылды",
+  "saleNoDeferredSales": "Кейінге қалдырылған чектер жоқ",
+  "saleDeferredListNotPermitted": "Кейінге қалдырылған чектер сізге ашық емес: «чекті кейінге қалдыру» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.",
+  "saleDeferNotPermitted": "Чекті кейінге қалдыруға болмайды: «чекті кейінге қалдыру» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.",
+  "saleReceiptNo": "Чек №",
   "salePositions": "Тауарлар",
   "saleSearchHint": "Тауар іздеу (атау немесе штрих-код)",
   "refundWithReceipt": "ЧЕКПЕН",
@@ -582,6 +601,8 @@
   "supplyInvalidQty": "Дұрыс санды енгізіңіз",
   "supplyInvalidPrice": "Дұрыс бағаны енгізіңіз",
   "inventoryTitle": "Инвентаризация",
+  "inventoryFullCount": "Толық түгендеу",
+  "inventoryFullCountSubtitle": "Сканерленбеген тауарлардың қалдығын нөлдеу",
   "inventoryStart": "Бастау",
   "inventoryFinish": "Аяқтау",
   "inventoryScanHint": "Штрих-кодты сканерлеңіз",
@@ -673,6 +694,9 @@
   "printerPrinting": "Басып шығару...",
   "printerCheckStatus": "Тексеру...",
   "printerPrintSuccess": "Басып шығару сәтті",
+  "paymentNotFiscalized": "Чек фискалданбады — төлем тіркелді",
+  "paymentFiscalModuleAbsent": "Фискалдау модулі қолжетімсіз — чектер фискалданбайды",
+  "cashDrawerOpenError": "Ақша жәшігі ашылмады",
   "printerPrintError": "Басып шығару қатесі",
   "printerCheckBtn": "Тексеру",
   "printerTestReceipt": "Тестілік чек",
@@ -814,7 +838,7 @@
   "@maxPercent": {
     "placeholders": {
       "percent": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -828,6 +852,9 @@
   },
   "enterValidNumber": "Дұрыс санды енгізіңіз",
   "discountAmount": "Жеңілдік сомасы:",
+  "discountLimitPercent": "{percent} % дейін рұқсат — {source}",
+  "discountLimitAmount": "{amount} дейін рұқсат — {source}",
+  "discountApprovalAbove": "{percent} % жоғары аға қызметкердің растауы қажет",
   "sumLabel": "Сома",
   "enterAmount": "Соманы енгізіңіз",
   "amountMustBePositive": "Сома оң болуы керек",
@@ -1014,6 +1041,7 @@
   "thankYouForPurchase": "Сатып алғаныңызға рахмет!",
   "searchProductHint": "Тауар іздеу (атау немесе штрих-код)",
   "actionDefer": "Кейінге қалдыру",
+  "actionDeferredList": "Кейінге қалдырылғандар",
   "actionMark": "Маркировка",
   "actionIncrease": "Көбейту",
   "actionDecrease": "Азайту",
@@ -1150,6 +1178,8 @@
     }
   },
   "restaurantSplitApply": "Қолдану",
+  "restaurantSplitPaymentTitle": "Қонақтар бойынша төлем",
+  "restaurantSplitPaymentProceed": "Төлемге",
   "restaurantPreCheckPrinted": "Алдын ала чек басып шығаруға жіберілді",
   "restaurantPreCheckFailed": "Алдын ала чекті басып шығару қатесі",
   "restaurantSubtotal": "Аралық сома",
@@ -1265,7 +1295,7 @@
   },
   "terminalHomeWhoHeader": "Кім кірді",
   "terminalHomeUserLabel": "Кассир",
-  "terminalHomeSaleNote": "Браузерде сату — бөлек жұмыс: сату экраны кассаның дерекқорын тікелей оқиды және әзірге браузер үшін құрастырылмайды.",
+  "terminalHomeSaleNote": "Себет, чек нөмірі және ауысым кассаға тиесілі — терминал чекті көрсетеді және сым арқылы басқарады. Чек басып шығару, фискалдау және ақша жәшігі кассада қалады.",
   "wtNotPortedTitle": "Бұл экран әзірге тек кассада",
   "wtNotPortedBody": "Браузер терминалы деректерді сым арқылы алады, және экран мұнда оның барлық келісімдері сым үстінен жұмыс істей алғанда пайда болады. Бұл әлі үйренген жоқ. Оны бос көрсеткеннен гөрі, тіке айтқан дұрыс.",
   "wtNotPortedLocation": "Бағыт: {location}",
@@ -2211,6 +2241,8 @@
     }
   },
   "agentNewCustomer": "Жаңа клиент",
+  "agentTypeCustomer": "Клиент",
+  "agentTypeSupplier": "Жеткізуші",
   "agentNameHint": "Клиент атын енгізіңіз",
   "agentBinHint": "12 сан",
   "agentCustomerFound": "Клиент табылды",
@@ -2449,6 +2481,17 @@
   "fiscalSettingsVatPayerSubtitle": "Ұйым ҚҚС төлеуші болып табылады (12%)",
   "fiscalSettingsPrintVat": "Чекте ҚҚС басып шығару",
   "fiscalSettingsPrintVatSubtitle": "Чекте ҚҚС сомасын көрсету",
+  "fiscalOffsetSection": "Сертификаттар және аванс",
+  "fiscalOffsetCertificateSale": "Сертификат сатқанда чек",
+  "fiscalOffsetCertificateSaleSubtitle": "Сыйлық сертификаты сатылғанда фискалдық чек беру",
+  "fiscalOffsetLayout": "Сертификатпен немесе аванспен төлеу",
+  "fiscalOffsetLayoutSubtitle": "Есепке алу сомасы ОФД чегіне қалай түседі",
+  "fiscalOffsetLayoutDiscount": "Тауарларға жеңілдікпен",
+  "fiscalOffsetLayoutSurchargeOnly": "Тек қосымша төлемге чек",
+  "fiscalOffsetPrepaymentReceipt": "Аванс қабылдағанда чек",
+  "fiscalOffsetPrepaymentReceiptSubtitle": "Сатып алушы аванс енгізгенде фискалдық чек беру",
+  "fiscalOffsetSaveError": "Баптауды сақтау мүмкін болмады",
+  "customerPaymentTender": "Немен қабылданды",
   "fiscalSettingsVatRate": "ҚҚС мөлшерлемесі: 12% (3/28 формуласы бойынша)",
   "historyProductUcode": "Тауар #{ucode}",
   "@historyProductUcode": {
@@ -2600,6 +2643,9 @@
   "historyFiscalNo": "Жоқ",
   "historyFiscalError": "Қате",
   "shiftPrintZReport": "Z-есепті басып шығару",
+  "shiftZReportQueued": "Z-есеп басып шығару кезегіне қабылданды. Қағаз әзірге жоқ: принтер мүмкіндік алғанда шығады. Тапсырма 30 минут күтеді — оны Баптаулар → Принтер бөлімінен көруге болады",
+  "shiftZReportAlreadyQueued": "Z-есеп басып шығаруға жіберілген — ол екінші рет басылмайды",
+  "shiftZReportPrintFailed": "Z-есепті басып шығаруға жіберу мүмкін болмады",
   "shiftFinishAllSales": "Барлық сатуларды аяқтаңыз",
   "shiftCannotClose": "Ауысымды жабу мүмкін емес",
   "shiftOpeningShift": "Ауысымды ашу",
@@ -2629,6 +2675,11 @@
   "shiftSystemTotal": "Жүйелік сома",
   "shiftEnteredTotal": "Енгізілген сома",
   "shiftCashOperations": "Кассалық операциялар",
+  "shiftSalesLabel": "Сатылымдар",
+  "shiftSalesTotal": "Сатылым сомасы",
+  "shiftCashSales": "Қолма-қол",
+  "shiftCardSales": "Карта",
+  "shiftRefundsTotal": "Қайтарулар",
   "shiftShortage": "Тапшылық",
   "shiftSurplus": "Артықшылық",
   "shiftBalances": "Сәйкес келеді",
@@ -3049,6 +3100,15 @@
   },
   "errorSearchFailedGeneric": "Іздеу қатесі",
   "errorUnknownGeneric": "Белгісіз қате",
+  "errorRefusalUnknownCode": "белгісіз себеп (коды {code})",
+  "@errorRefusalUnknownCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errorReasonUnknown": "белгісіз себеп",
   "errorFillRequired": "Барлық міндетті өрістерді толтырыңыз",
   "errorNoUsers": "Тіркелген пайдаланушылар жоқ",
   "errorSelectUser": "Пайдаланушыны таңдаңыз",
@@ -3061,6 +3121,11 @@
   "errorCredentialUnreadable": "PIN код жазбасы бүлінген. Әкімшіге хабарласыңыз — қайта теру көмектеспейді.",
   "errorAuthUnknown": "Касса кіру әрекетіне жауап бере алмады. Қайта көріңіз.",
   "errorTillNotConfigured": "Касса әлі бапталмаған — баптау шебері аяқталмайынша кіру мүмкін емес.",
+  "errorTillNotConfiguredSale": "Касса бапталмаған — чекті бастау мүмкін емес. Әкімшіге хабарласыңыз: баптау шеберінен өту керек.",
+  "errorNotAllowed": "Бұл әрекетке құқық жеткіліксіз. Әкімшіге хабарласыңыз.",
+  "errorNoSaleModule": "Бұл касса чек жүргізе алмайды: сату модулі жиналмаған. Әкімшіге хабарласыңыз.",
+  "errorTerminalInBody": "Терминал кассаға дұрыс жүгінбеді. Жұмыс орнындағы қосымшаны жаңартыңыз.",
+  "errorWholesaleInStart": "Көтерме чек былай басталмайды. Кәдімгі чек бастап, көтермені бөлек түймемен қосыңыз.",
   "errorTerminalLimitReached": "Бұл кассада терминалдардың ең көп саны тіркелген. Орын босату үшін әкімшіге хабарласыңыз.",
   "errorPairingCodeInvalid": "Байланыстыру коды сәйкес келмеді — мерзімі өткен, бұрын пайдаланылған немесе қате терілген. Кассадан жаңа код алыңыз.",
   "errorTerminalSecretInvalid": "Бұл құрылғының байланысы енді жарамсыз — терминал кассадан өшірілген болуы мүмкін. Жаңа байланыстыру кодын енгізіңіз.",
@@ -3069,6 +3134,16 @@
   "errorSaleNotInitialized": "Сатылым іске қосылмаған",
   "errorReceiptEmpty": "Чек бос",
   "errorDeferredNotFound": "Кейінге қалдырылған чек табылмады",
+  "errorCartStale": "Сіз теріп жатқанда чек өзгерді. Экран жаңартылды — соңғы әрекетті қайталаңыз.",
+  "errorCartWrongReceipt": "Бұл чек енді жұмыста емес. Жаңа чек бастаңыз немесе кейінге қалдырылғанын алыңыз.",
+  "errorCartNotStarted": "Чек әлі басталмаған. Жаңа чек бастаңыз немесе кейінге қалдырылғанын алыңыз.",
+  "errorLineNotFound": "Бұл жол чекте жоқ. Чекті жаңартып, қайталап көріңіз.",
+  "errorInvalidAmount": "Жарамсыз мән. Сома теріс бола алмайды, жеңілдік 100%-дан аспауы керек.",
+  "errorDeferredTaken": "Бұл кейінге қалдырылған чекті басқа жұмыс орны алып қойған.",
+  "errorCartNotEmpty": "Алдымен ағымдағы чекті аяқтаңыз немесе кейінге қалдырыңыз — оның үстіне басқасын алу мүмкін емес.",
+  "errorSaleNotStarted": "Касса чекті бастай алмады және себебін айтпады. Қайталап көріңіз.",
+  "errorShiftNotOpen": "Ауысым ашылмаған. Ауысымды кассада ашыңыз.",
+  "errorCardTerminalMisconfigured": "Осы жұмыс орнының төлем терминалы дұрыс бапталмаған. Жабдық баптауларындағы байланысты тексеріңіз.",
   "errorReceiptNotFound": "#{receiptNo} чек табылмады",
   "@errorReceiptNotFound": {
     "placeholders": {
@@ -3523,6 +3598,16 @@
   "hwTerminalPort": "Порт",
   "hwTerminalMerchantId": "Merchant ID",
   "hwTerminalTerminalId": "Terminal ID",
+  "catalogExportCsv": "CSV экспорты",
+  "catalogImport": "Импорт",
+  "catalogFilterColumn": "Сүзгі...",
+  "catalogExportSuccess": "{path} файлына экспортталды",
+  "catalogExportFailed": "Экспорт қатесі",
+  "catalogImportResults": "Импорт нәтижелері",
+  "catalogImportImported": "Импортталды: {count}",
+  "catalogImportUpdated": "Жаңартылды: {count}",
+  "catalogImportSkipped": "Өткізілді: {count}",
+  "catalogImportErrors": "Қателер:",
   "catalogTypeConsumable": "Шығын материалы",
   "catalogFilterConsumable": "Шығындар",
   "catalogFilterInner": "Ішкі",
@@ -3531,6 +3616,16 @@
   "serviceConsumableSelected": "Таңдалған тауар",
   "serviceQuickServicesTitle": "Жылдам қызметтер",
   "serviceQuickServicesEmpty": "Жылдам қызметтер жоқ",
+  "serviceIntakeItems": "Қабылданатын заттар",
+  "serviceItemName": "Не қабылдайсыз (зат, бұйым, құрылғы)",
+  "serviceItemDescription": "Ақаудың сипаттамасы / клиенттің тілектері",
+  "serviceItemSerial": "Сериялық нөмір / таңбалау",
+  "serviceItemAdd": "Зат қосу",
+  "serviceItemEmpty": "Кемінде бір зат қосыңыз",
+  "serviceItemCount": "{count} дана",
+  "serviceClientQuickName": "Клиенттің аты",
+  "serviceClientQuickPhone": "Клиенттің телефоны",
+  "serviceClientOrSearch": "немесе базадан табу",
   "catalogTypeDish": "Тағам",
   "catalogFilterDish": "Тағамдар",
   "dishCalculation": "Калькуляция",
@@ -3806,6 +3901,15 @@
   "receiptTemplateTestPrintOk": "Чек үлгісі басып шығаруға жіберілді",
   "receiptTemplateTestPrintFail": "Басып шығару сәтсіз (принтерді тексеріңіз)",
   "receiptTemplateDeleteTitle": "Үлгіні жою",
+  "receiptTemplateHeaderHint": "Бірнеше жол: сәлемдесу, акция, байланыс",
+  "receiptTemplateFooterHint": "Бірнеше жол: алғыс, қайтару шарттары, сайт, әлеуметтік желілер",
+  "receiptTemplateAlignLeft": "Сол жақта",
+  "receiptTemplateAlignCenter": "Ортасында",
+  "receiptTemplateAlignRight": "Оң жақта",
+  "receiptTemplateBold": "Қалың",
+  "receiptTemplateDoubleSize": "Ірі (екі есе өлшем)",
+  "receiptTemplatePaperWidthHint": "Таспа ені принтер баптауларында орнатылады",
+  "receiptTemplateMandatoryNote": "Міндетті деректемелер — чек нөмірі, жиынтық, төлемдер, ҚҚС, фискалдық белгі және QR — әрқашан тақырып пен төменгі бөліктің арасында басылады",
   "receiptTemplateDeleteConfirm": "«{name}» үлгісін жою керек пе?",
   "@receiptTemplateDeleteConfirm": {
     "placeholders": {
@@ -3825,8 +3929,9 @@
   "restaurantMergeConfirm": "Объединить ({count})",
   "restaurantMergeDone": "Столы объединены",
   "restaurantMergeNeedTarget": "На текущем столе нет открытого заказа",
-  "shiftOverAgeTitle": "Смена открыта более 24 часов",
-  "shiftOverAgeMessage": "Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.",
+  "shiftOverAgeTitle": "Ауысым 24 сағаттан астам ашық",
+  "shiftOverAgeMessage": "Сату бұғатталды. Жұмысты жалғастыру үшін ағымдағы ауысымды жауып, жаңасын ашыңыз.",
+  "shiftOverAgeCloseAtTill": "Сату бұғатталды. Жұмысты жалғастыру үшін ауысымды кассада жауып, жаңасын ашыңыз.",
   "supplierRepayTitle": "Погасить долг поставщику",
   "supplierRepayCurrentDebt": "Текущий долг: {amount}",
   "supplierRepayNoDebt": "Долга перед поставщиком нет",
@@ -4852,18 +4957,17 @@
   "prodNtin": "НКТ (НТИН)",
   "prodMarkable": "Таңбалауға жатады",
   "promoTitle": "Акциялар",
+  "promoSubtitle": "1+1 акциялары және сатып алуға сыйлықтар",
   "promoNew": "Жаңа акция",
   "promoError": "Қате: {error}",
   "promoEmpty": "Акциялар жоқ",
   "promoEmptyHint": "1+1 немесе Сыйлық акциясын жасаңыз",
   "promoTypeGift": "Сыйлық",
   "promoBuyGetFree": "{trigger} сатып ал → {reward} тегін",
-  "promoSupplierTag": "жеткізушіден",
   "promoDefaultName11": "1+1 акциясы",
   "promoNameLabel": "Атауы",
   "promoTriggerLabel": "Триггер-тауар (нені сатып алу)",
   "promoRewardLabel": "Сыйлық (не тегін)",
-  "promoSupplierFunded": "Жеткізушіден акция",
   "promoSaveButton": "Акцияны сақтау",
   "saleWeighingPlaceItem": "Өлшеу... тауарды таразыға қойыңыз",
   "saleWeightReadFailed": "Салмақты оқу мүмкін болмады — қолмен енгізіңіз",
@@ -5015,6 +5119,22 @@
   "navWmsMarking": "Таңбалау",
   "navWmsSettings": "WMS баптаулары",
   "errorInsufficientStock": "Қалдық жеткіліксіз: {name}",
+  "discountLimitsTitle": "Жеңілдік шектеулері",
+  "discountLimitsSubtitle": "Кассир қолмен қанша жеңілдік бере алады",
+  "discountLimitsIntro": "Рөл шектеуі әдепкіден басым. Өз жолы жоқ рөлге «Әдепкі» қолданылады. Жүз пайыз «шектеусіз» дегенді білдіреді — бұл жарияланған мән, бос орын емес.",
+  "discountLimitsDefaultRow": "Әдепкі (барлық рөлдер)",
+  "discountLimitsMaxPercent": "Шектеу, %",
+  "discountLimitsApprovalAbove": "Растау шегі, %",
+  "discountLimitsApprovalHint": "бос — қажет емес",
+  "discountLimitsInheritHint": "бос — әдепкідей",
+  "discountLimitsTwoDoors": "Назар аударыңыз: сату саясатындағы «бағаны төмендетуге тыйым салу» тек жолдың бағасын өңдеуді жабады. Жеңілдік 100 % шектеуде әлі де рұқсат етіледі — тіпті тегін жолға дейін. Бұл екі бөлек есік; екіншісін жабу үшін шектеуді жүзден төмен қойыңыз.",
+  "discountLimitsSaved": "Шектеу сақталды",
+  "discountLimitsInherited": "Жол алынды: рөл әдепкіні мұралайды",
+  "discountLimitsInvalid": "Шектеу — 0-ден 100-ге дейінгі сан",
+  "discountLimitsApprovalNotYet": "Аға қызметкердің растауы әзірге іске асырылмаған: шектен асқан жеңілдік код сұрамай, аталған себеппен қабылданбайды.",
+  "errorDeniedPolicy": "Касса баптауларымен тыйым салынған: {detail}",
+  "errorDeniedLimit": "Жеңілдік рұқсат етілгеннен артық: {detail}",
+  "errorApprovalRequired": "Аға қызметкердің растауы қажет: {detail}",
   "errorBigAmountBlocked": "Сату сомасы 1 млн ₸ асады. Касса баптауларында ірі сомаларға рұқсатты қосыңыз.",
   "errorMarkRequired": "Таңбалау коды қажет: {name}",
   "errorOrderNotFound": "Тапсырыс табылмады",
@@ -5043,6 +5163,7 @@
   "setUserPinNew": "Жаңа PIN",
   "receiptInputRecent": "Соңғы чектер",
   "receiptInputNoRecent": "Әзірге чектер жоқ",
+  "receiptInputRecentUnavailable": "Соңғы чектер тізімі бұл терминалда қолжетімсіз — чек нөмірін қолмен енгізіңіз",
   "shiftHistoryTitle": "Ауысымдар тарихы",
   "shiftHistoryEmpty": "Жабық ауысымдар әзірге жоқ",
   "shiftHistoryShiftNo": "Ауысым №{id}",
@@ -5148,7 +5269,6 @@
       }
     }
   },
-  "scannerRulesUnavailable": "Бұл құрастырымда штрихкодты оқу ережелері қолжетімсіз.",
   "scannerRulesSaved": "Штрихкодты оқу ережелері сақталды",
   "printQueueSectionTitle": "Басып шығару кезегі",
   "printQueueSubtitle": "Не басылуды күтуде, не басылмады және неліктен.",
@@ -5178,5 +5298,575 @@
   "printQueueCancelBody": "Тоқтатылған тапсырманы басып шығару мүмкін емес. Дәл сондай чек қажет болса, оны қайта шығару керек.",
   "printQueueCancelConfirm": "Тапсырманы тоқтату",
   "printQueueCancelDone": "Тапсырма тоқтатылды",
-  "printQueueCancelRefused": "Бұл тапсырманы енді тоқтату мүмкін емес: ол басылып жатыр немесе аяқталған"
+  "printQueueCancelRefused": "Бұл тапсырманы енді тоқтату мүмкін емес: ол басылып жатыр немесе аяқталған",
+  "errorPayReceiptNotFound": "Чек енді жұмыста емес — оны төлеу мүмкін емес. Экранды жаңартып, қайта бастаңыз.",
+  "errorPayNotOwner": "Бұл чекті басқа жұмыс орны жүргізуде — оны осы жерден төлеу мүмкін емес.",
+  "errorPaymentAlreadyTaken": "Бұл чек төленіп қойған. Касса ақшаны екінші рет алмайды.",
+  "errorPaymentInsufficient": "Аталған сома чекке жетпейді. Соманы қайта енгізіңіз.",
+  "errorPaymentAccountMissing": "Кассада бұл төлем түріне арналған шот жоқ. Әкімшіге хабарласыңыз.",
+  "errorPaymentAccountNotAllowed": "Мұндай шот төлемге ұсынылмаған. Шоттар тізімін жаңартып, қайта таңдаңыз.",
+  "errorPaymentUnbalanced": "Төлем жолдарының сомасы чек сомасына сәйкес келмейді. Төлемді қайта енгізіңіз.",
+  "errorPaymentKindInactive": "Бұл төлем түрі касса баптауларында өшірілген. Басқасын таңдаңыз немесе баптауларда қосыңыз.",
+  "errorPaymentKindUnknown": "Касса мұндай төлем түрін білмейді. Әкімшіге хабарласыңыз.",
+  "errorCertificateUnknown": "Бұл кассада мұндай нөмірлі сертификат жоқ. Нөмірді тексеріңіз.",
+  "errorCertificatePinWrong": "Сертификаттың ПИН коды сәйкес келмеді. Қайта теріңіз.",
+  "errorCertificateRateLimited": "Сертификатты тексерудің сәтсіз әрекеттері тым көп. Бірнеше минут күтіп, қайталаңыз.",
+  "errorConnectionLost": "Кассамен байланыс үзілді. Желіні тексеріп, қайталаңыз.",
+  "errorRunIncomplete": "Касса операцияны аяқтамай тоқтатты. Қайталамас бұрын кассадағы нәтижені тексеріңіз.",
+  "errorWireMismatch": "Жұмыс орны мен касса бірін-бірі түсінбеді — нұсқалары сәйкес емес. Бетті жаңартыңыз; көмектеспесе, әкімшіге хабарласыңыз.",
+  "errorTillFailed": "Касса операцияны орындай алмады. Қайталаңыз; қате қайталанса, әкімшіге хабарласыңыз.",
+  "errorTerminalChanged": "Сіз жұмыс орнын ауыстырдыңыз — қайта кіріңіз.",
+  "errorUnknownTerminal": "Жұмыс орны кассаға байланыстырылмаған. Оны байланыстыру кодымен қайта байланыстырыңыз.",
+  "errorAlreadyConfigured": "Касса бапталып қойған — бастапқы баптау шебері енді қолжетімсіз.",
+  "errorCannotDeleteSelf": "Кассаның өз жұмыс орнын жоюға болмайды.",
+  "errorNoDrivers": "Касса жабдық драйверлерінсіз жиналған — құрылғыларды іздеу мен тексеру қолжетімсіз. Әкімшіге хабарласыңыз.",
+  "errorNoNetworkModule": "Бұл касса желі баптауларын басқармайды — жүйелік қызмет жоқ. Әкімшіге хабарласыңыз.",
+  "errorNoSessionRegistry": "Бұл касса сеанстар тізімін жүргізбейді. Әкімшіге хабарласыңыз.",
+  "errorNoBackupTransport": "Бұл кассада сақтық көшірмелер бапталмаған. Әкімшіге хабарласыңыз.",
+  "errorBackupNotFound": "Сақтық көшірме табылмады.",
+  "errorCertificatesUnavailable": "Бұл касса сыйлық сертификаттарын желі арқылы шығармайды. Әкімшіге хабарласыңыз.",
+  "errorRefundStale": "Команда кассаға жеткенше қайтару өзгерді. Әрекетті қайталаңыз.",
+  "errorRefundWrongDraft": "Бұл қайтару жобасы енді жоқ. Қайтаруды қайта ашыңыз.",
+  "errorRefundNotStarted": "Қайтару басталмаған — чекті таңдаңыз немесе чексіз қайтаруды бастаңыз.",
+  "errorRefundEmpty": "Қайтаруда бірде-бір жол жоқ — қайтаратын ештеңе жоқ.",
+  "errorReceiptAlreadyRefunded": "Бұл чек бойынша қайтару жасалып қойған.",
+  "errorReceiptNotRefundable": "Бұл чекті мұнда қайтаруға болмайды: төлем басқа кассаның терминалы арқылы өтті. Қайтаруды төлеген жерде рәсімдеңіз.",
+  "errorLineNotInReceipt": "Бұл тауар чекте жоқ — чек бойынша тек онда сатылғаны қайтарылады.",
+  "errorSaleNotCompleted": "Бұл чек бойынша сату аяқталмаған — қайтаратын ештеңе жоқ.",
+  "errorRefundBusy": "Кассада басқа қайтару жүріп жатыр. Оны аяқтап, қайталаңыз.",
+  "errorRefundCannotStart": "Касса қайтаруды бастай алмады және себебін атамады. Ауысым мен касса баптауын тексеріңіз.",
+  "errorRefundInstallmentRefused": "Чек бөліп төлеуге сатылған — касса оны қайтармайды. Шартты бұзуды әкімші рәсімдейді.",
+  "errorRefundCashlessUnavailable": "Бұл ақшаны картаға немесе QR арқылы қайтару керек, бірақ қайтаратын құрал жоқ: терминал немесе провайдер қосылмаған. Касса мұндай қайтаруды жәшіктен қолма-қол бермейді.",
+  "errorRefundCashlessRefused": "Банк немесе провайдер қайтарудан бас тартты. Терминалды тексеріп, қайталаңыз — бұрын қайтарылғаны екінші рет қайтарылмайды.",
+  "errorRefundKindNotRefundable": "Бұл төлем түріне қайтаруға төлем түрлерінің анықтамалығында тыйым салынған.",
+  "errorRefundKindUnknown": "Чек осы кассаның анықтамалығында жоқ төлем түрімен төленген. Касса ол бойынша қайтаруды жүргізбейді: немен төлегені белгісіз, ал ол үшін қолма-қол ақша берілмейді.",
+  "refundDestinationsTitle": "Ақша қайда кетеді",
+  "refundRouteDrawer": "Жәшіктен қолма-қол",
+  "refundRouteCard": "Терминал арқылы картаға",
+  "refundRouteManual": "Кассадан тыс — төлеген тәсілмен",
+  "refundRouteProvider": "QR провайдері арқылы",
+  "refundRouteCertificate": "Жаңа сертификатпен (ескісі өтелген күйінде қалады)",
+  "refundRouteAdvance": "Сатып алушының алдын ала төлеміне",
+  "refundRouteBonus": "Бонустық шотқа",
+  "refundRouteDebt": "Сатып алушының қарызы есебіне",
+  "errorCertificateRefundNoSource": "Чек жолы сертификатпен қайтарылады, бірақ оның сертификат нөмірі жоқ. Касса ол бойынша қайтаруды жүргізбейді: жаңа сертификатты не негізде жазу белгісіз, ал кассаның міндеттемесі бекер өсер еді.",
+  "errorCertificateCashRefundRefused": "Сертификат үшін қолма-қол ақшамен қайтаруға болмайды — қолма-қол ақшасыз қайтару деректемелерін көрсетіңіз.",
+  "errorCertificatePaysCertificate": "Сертификатпен басқа сертификаттың сатып алуын төлеуге болмайды.",
+  "errorCreditContractUnknown": "Мұндай нөмірлі бөліп төлеу шарты жоқ. Нөмірді тексеріңіз.",
+  "errorCreditContractNotActive": "Бөліп төлеу шарты өтелген немесе қайтарылып алынған — ол бойынша төлейтін ештеңе жоқ.",
+  "errorCreditOverpayment": "Сома шарт бойынша қалдықтан көп. Соманы тексеріңіз.",
+  "errorCreditRepaymentInvalid": "Өтеу сомасы нөлден көп болуы керек.",
+  "errorCreditAllocationRace": "Дәл сол сәтте шарт бойынша басқа кассадан төлеген. Төлемді қайта қабылдаңыз.",
+  "errorKindTenderCannotDiscount": "Нақты ақша әкелетін төлем түрін чекте «төлем емес» деп жариялауға болмайды.",
+  "errorKindAccountMissing": "Төлем түріне алушы шот тағайындалмаған.",
+  "errorKindCounterpartyRequired": "Кейінге қалдырылған төлем түрі аталған сатып алушыны талап етеді.",
+  "errorKindProviderRequired": "Провайдер (QR) арқылы төлем түріне провайдер қажет.",
+  "errorKindFiscalKindRequired": "Төлем түрінің фискалдық түсіндірмесі көрсетілмеген.",
+  "errorKindChangeNotATender": "Қайтарымды тек нақты ақша әкелетін түр береді.",
+  "errorKindSystemImmutable": "Жүйелік төлем түрінің коды мен идентификаторын өзгертуге де, басқа түрге беруге де болмайды.",
+  "errorCertificateExpired": "Сертификаттың мерзімі өтіп кеткен. Дүкен иесіне хабарласыңыз.",
+  "errorCertificateExhausted": "Сертификатта қаражат қалмаған.",
+  "errorCertificateDuplicate": "Бір сертификат төлемде екі рет аталған. Қайталауды алып тастаңыз.",
+  "errorCertificateRace": "Сертификаттың қалдығы өзгерді. Төлемді қайталаңыз.",
+  "errorCertificateAccountMissing": "Кассада сертификаттар бойынша міндеттеме шоты жоқ. Әкімшіге хабарласыңыз.",
+  "errorCertificateNumberTaken": "Мұндай нөмірлі сертификат бұрын шығарылған.",
+  "errorCertificateNominalInvalid": "Сертификаттың номиналы нөлден үлкен болуы керек.",
+  "errorDebtCustomerRequired": "Қарызға сату сатып алушысыз мүмкін емес — сатып алушыны таңдаңыз.",
+  "errorDebtNotSoldHere": "Бұл кассада қарызға саудаласпайды — несиеге сату касса параметрлерінде өшірілген.",
+  "errorDebtAccountMissing": "Сатып алушыда есеп шоты жоқ — қарызды жазатын жер жоқ.",
+  "errorBonusAccountMissing": "Сатып алушыда бонустық шот жоқ — бонусты есептен шығаратын ештеңе жоқ.",
+  "errorPrepaymentCustomerRequired": "Аванстық есепке алу үшін сатып алушы қажет — оны таңдаңыз.",
+  "errorCreditTermInvalid": "Бөліп төлеудің мұндай мерзімін касса ресімдемейді",
+  "errorCreditPrincipalInvalid": "Бөліп төлеуге сома жоқ: чек толық өтелген",
+  "errorCreditFeeInvalid": "Шарт бойынша үстеме дұрыс емес",
+  "errorCreditSchemeUnknown": "Кестенің мұндай сұлбасын касса білмейді",
+  "errorCreditOverdue": "Сатып алушының басқа бөліп төлеу шарты мерзімі өткен",
+  "errorCreditContractDuplicate": "Бұл чекке бөліп төлеу шарты бұрыннан ресімделген",
+  "errorPrepaymentAccountMissing": "Сатып алушыда есеп шоты жоқ — онда аванс бола алмайды.",
+  "errorPrepaymentInsufficient": "Енгізілген аванс жетпеді: ол басқа чекпен есепке алынған.",
+  "errorLoyaltyCustomerUnknown": "Сатып алушы картотекадан табылмады. Сатып алушыны қайта таңдаңыз.",
+  "errorAmountExceedsReceipt": "Сома чек құнынан асып тұр. Соманы қайта енгізіңіз.",
+  "errorCardChargeUnproven": "Касса карта арқылы төлемді растамады. Төлем терминалын тексеріңіз.",
+  "errorPaymentTypeNotAllowed": "Бұл төлем түрі осы жұмыс орнында рұқсат етілмеген.",
+  "errorPaymentsUnavailable": "Бұл касса сым арқылы төлемді қабылдамайды. Әкімшіге хабарласыңыз.",
+  "errorNoRefundService": "Бұл касса сым арқылы қайтаруды жүргізбейді. Әкімшіге хабарласыңыз.",
+  "errorRefundAbandonIsTillSide": "Қайтару жобасын жұмыс орны емес, касса алып тастайды.",
+  "errorNoAnswer": "Касса жауап бермеді. Байланысты тексеріп, қайталаңыз.",
+  "paymentTypeNotAllowedHere": "«{type}» осы жұмыс орнына рұқсат етілмеген. Төлем түрлері жабдық баптауларында өзгертіледі; басқанмен де касса рұқсат етілмеген түрден бас тартады.",
+  "@paymentTypeNotAllowedHere": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentTypesLimitedHere": "Жұмыс орны қабылдайды: {types}.",
+  "@paymentTypesLimitedHere": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDebtNotSoldHere": "Бұл кассада қарызға сатпайды: несиеге сату касса параметрлерінде өшірілген. Түймені бассаңыз да, касса бас тартады.",
+  "paymentDebtNotPermitted": "Сізге қарызға сатуға рұқсат жоқ: «қарызға сату» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.",
+  "saleDiscountNotPermitted": "Сізге жеңілдік беруге рұқсат жоқ: «жеңілдікпен сату» құқығы қажет. Оны әкімші құқықтар параметрлерінде береді; құқығы жоқ адамға касса бас тартады.",
+  "paymentDebtPolicyUnknown": "Касса әзірге мұнда қарызға сатылатынын жауап берген жоқ. Кассамен байланысты тексеріп, қайталап көріңіз.",
+  "paymentOffsetsTitle": "Аванс және сертификаттар",
+  "paymentPrepaymentTitle": "Сатып алушының авансы",
+  "paymentPrepaymentNeedsCustomer": "Авансты есепке алу үшін сатып алушыны телефон нөмірі бойынша табыңыз.",
+  "paymentPrepaymentLoading": "Касса әзірге қанша аванс енгізілгенін жауап берген жоқ.",
+  "paymentPrepaymentNone": "Сатып алушының енгізілген авансы жоқ.",
+  "paymentPrepaymentBalance": "Алдын ала енгізілген:",
+  "paymentPrepaymentUse": "Авансты есепке алу",
+  "paymentPrepaymentApplied": "Есепке алынады: {amount}",
+  "@paymentPrepaymentApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateTitle": "Сыйлық сертификаты",
+  "paymentCertificateNumber": "Сертификат нөмірі",
+  "paymentCertificatePin": "PIN, бар болса",
+  "paymentCertificatePresent": "Тексеру",
+  "paymentCertificateBalance": "Сертификаттағы қалдық: {amount}",
+  "@paymentCertificateBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateApplied": "{amount} есептен шығарылады, {rest} қалады",
+  "@paymentCertificateApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "rest": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateNotNeeded": "Чек толық жабылды — бұл сертификат қажет емес.",
+  "unfiscalizedTitle": "Фискалданбаған чектер",
+  "unfiscalizedEmpty": "Барлық чектер фискалданған",
+  "unfiscalizedEmptyHint": "Мұнда ақшасы алынған, бірақ оператор құжат бермеген чектер пайда болады",
+  "unfiscalizedReceiptNo": "Чек №{number}",
+  "unfiscalizedAgeHours": "{hours} сағ бұрын",
+  "unfiscalizedOverdue": "72 сағаттық мерзім өтіп кетті",
+  "unfiscalizedRetry": "Қайталау",
+  "unfiscalizedRetryDone": "Құжат алынды: {sign}",
+  "unfiscalizedRetryFailed": "Оператор қайтадан бас тартты: {message}",
+  "unfiscalizedNoDocument": "Жол бас тартулар құжат алып жүре бастағанға дейін жазылған: қайталайтын ештеңе жоқ, оны тек есептен шығаруға болады",
+  "unfiscalizedNoOperator": "Фискалдық оператор бапталмаған: қайталайтын жер жоқ",
+  "unfiscalizedWriteOff": "Есептен шығару",
+  "unfiscalizedWriteOffTitle": "Фискалданбаған чекті есептен шығару",
+  "unfiscalizedWriteOffBy": "Шешім мына атқа жазылады: {name}",
+  "unfiscalizedWriteOffReason": "Есептен шығару себебі",
+  "unfiscalizedWriteOffDone": "Чек өңделді деп белгіленді",
+  "unfiscalizedWrittenOff": "{name} есептен шығарды: {reason}",
+  "unfiscalizedUnknownUser": "белгісіз пайдаланушы",
+  "unfiscalizedAtShiftClose": "Ауысым фискалданбаған чектермен жабылды: {count}. Нөмірлері: {numbers}",
+  "documentsOnTheWayAtShiftClose": "Ауысым құжаттары әлі операторда жоқ: {count} (чектер {numbers}). Жабу олардың жіберілуін күтеді; байланыс оралмаса, Z-есеп жіберілмейді — әйтпесе оператор есебі кассамен сәйкес келмейді.",
+  "qrPaidPartial": "Оплачено частично: {paid} из {amount}",
+  "@qrPaidPartial": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanTitle": "Деньги без чека",
+  "qrOrphanHint": "Покупатель заплатил по QR, а чек этими деньгами не закрыт.",
+  "qrOrphanLine": "{amount} · {provider} · {key}",
+  "@qrOrphanLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "provider": {
+        "type": "String"
+      },
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanAfterGiveUp": "Подтверждение пришло после того, как касса перестала ждать",
+  "errorQrIntentUnknown": "Касса бұл QR төлемін білмейді. Чекті жаңартып, қайталаңыз.",
+  "errorQrIntentNotPaid": "QR төлемін банк әлі растаған жоқ. Растауды күтіңіз немесе басқа тәсілді таңдаңыз.",
+  "errorQrIntentAlreadySettled": "Бұл ақша басқа чекті жауып қойған: {message}",
+  "@errorQrIntentAlreadySettled": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrTitle": "QR арқылы төлеу",
+  "paymentQrAmount": "QR сомасы",
+  "paymentQrStart": "QR көрсету",
+  "paymentQrWaiting": "Төлемді күтудеміз · {seconds} с қалды",
+  "@paymentQrWaiting": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentQrScanHint": "Сатып алушы кодты банк қосымшасында сканерлейді",
+  "paymentQrCancel": "Күтуді болдырмау",
+  "paymentQrNoLink": "Провайдермен байланыс жоқ — касса сұрауды өзі қайталайды",
+  "paymentQrPaid": "QR арқылы төленді: {amount}",
+  "@paymentQrPaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrPaidAfterCancel": "Сатып алушы болдырмауға дейін төлеп үлгерді — {amount} осы чекке түседі",
+  "@paymentQrPaidAfterCancel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrCancelled": "Күту болдырылмады, провайдер растады",
+  "paymentQrPatienceSpent": "Сатып алушы белгіленген уақытта төлемеді — касса күтуді тоқтатты",
+  "paymentQrExpired": "QR кодтың мерзімі провайдерде бітті",
+  "paymentQrFailed": "Провайдер QR төлемінен бас тартты",
+  "paymentQrCancelUnconfirmed": "Болдырмау расталмады — ақша әлі келуі мүмкін. Касса анықтағанша басқа төлемді қабылдамаңыз.",
+  "paymentQrRecheck": "Қайта тексеру",
+  "paymentQrRestart": "Жаңа код",
+  "paymentQrOverReceipt": "QR төлемінің {amount} сомасы чекке сыймайды",
+  "@paymentQrOverReceipt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrNothingToPay": "Чек толық жабылған — код көрсетуге негіз жоқ",
+  "errorQrNotConfigured": "Кассада QR провайдері бапталмаған",
+  "errorQrNetwork": "QR провайдерімен байланыс жоқ",
+  "errorQrTimeout": "QR провайдері уақытында жауап бермеді",
+  "errorQrProviderBusy": "QR провайдері бос емес — касса қайталайды",
+  "errorQrMalformedReply": "QR провайдері түсініксіз жауап берді — касса әкімшісіне хабарласыңыз",
+  "errorQrUnknownIntent": "QR провайдері бұл төлемді білмейді",
+  "errorQrRejected": "QR провайдері сұрауды қабылдамады",
+  "errorQrReverseUnsupported": "QR провайдері ақшаны қайтара алмайды",
+  "errorQrIntentLive": "Бұл чекте QR төлемі күтуде — жаңа код көрсетпес бұрын оны болдырмаңыз",
+  "fiscalReasonNetwork": "Фискалдық оператормен байланыс жоқ",
+  "fiscalReasonOperatorUnavailable": "Фискалдық оператор қолжетімсіз",
+  "fiscalReasonTokenExpired": "Оператор кассаның авторизациясын қабылдамады",
+  "fiscalReasonRequestNotBuilt": "Операторға сұрау құрастырылмады: фискалдық баптаулардағы сервер мекенжайын тексеріңіз",
+  "fiscalReasonTlsRejected": "Оператормен қорғалған байланыс орнатылмады: сервер мекенжайын және кассаның сағатын тексеріңіз",
+  "fiscalReasonClientFault": "Оператормен алмасу кезінде касса ақаулығы",
+  "fiscalReasonBadCredentials": "Оператордың логині немесе құпиясөзі қате",
+  "fiscalReasonCashboxNotFound": "Оператор бұл кассаны таппады: зауыттық нөмірді тексеріңіз",
+  "fiscalReasonCashboxBlocked": "Касса оператормен бұғатталған",
+  "fiscalReasonOfflineLimitExceeded": "Автономды құжаттар лимиті асып кетті",
+  "fiscalReasonOfflineNotSupported": "Бұл кассаға автономды режимге рұқсат жоқ",
+  "fiscalReasonDuplicate": "Құжат операторда әлдеқашан тіркелген, бірақ фискалдық белгі кассаға берілмеді — оны оператор кабинетінен алыңыз",
+  "fiscalReasonValidation": "Оператор құжатты қабылдамады: сомалар немесе деректер сәйкес емес",
+  "fiscalReasonNotEnoughMoney": "Оператор деректері бойынша кассада қолма-қол ақша жеткіліксіз",
+  "fiscalReasonShiftError": "Операторда ауысым қатесі",
+  "fiscalReasonUnsupported": "Операцияны оператор қолдамайды",
+  "fiscalReasonNotConfigured": "Фискализация бапталмаған",
+  "fiscalReasonUnknown": "Оператор белгісіз себеппен бас тартты",
+  "fiscalReasonOfflineWindowExpired": "72 сағаттық автономды терезе аяқталды — құжат берілмеді",
+  "fiscalReasonRowUnreadable": "Кезек жолы бүлінген: құжат оқылмайды",
+  "fiscalReasonWithCode": "{reason} (код {code})",
+  "fiscalReasonLegacy": "Себеп аудармаға дейін жазылған: {text}",
+  "fiscalReasonNotRecorded": "Себеп жазылмаған",
+  "fiscalReasonPaymentTypeNotAccepted": "Төлем түрін оператор қабылдамайды: «несие» және «ыдыс» ОФД 2.0.2 хаттамасынан алынып тасталған",
+  "errorDeferredListUnavailable": "Кейінге қалдырылған чектер тізімі қолжетімсіз",
+  "errorDeferredListUnavailableReason": "Кейінге қалдырылған чектер тізімі қолжетімсіз: {reason}",
+  "errorRefundSearchUnavailable": "Бұл терминалда қайтару үшін тауар іздеу әлі қосылмаған",
+  "errorRefundNothingSelected": "Жоба өзгерді — қайтаратын ештеңе жоқ. Белгіленген жолдарды тексеріңіз.",
+  "errorRefundInvalidAmount": "Мұнша қайтаруға болмайды: саны чек бойынша сатылғаннан көп немесе нөлден аз бола алмайды.",
+  "errorCertificatePinRequired": "Сертификаттың PIN-коды бар. Сертификаттағы PIN-кодты теріңіз.",
+  "qrSettingsTitle": "QR арқылы төлем",
+  "qrSettingsSubtitle": "QR провайдері: мекенжай, код, кілт, күту",
+  "qrSettingsKindTitle": "QR арқылы төлем қабылдау",
+  "qrSettingsKindSubtitle": "Төлем экранындағы «QR» төлем түрі",
+  "qrSettingsUrl": "Провайдер мекенжайы",
+  "qrSettingsCode": "Провайдер коды",
+  "qrSettingsKey": "Қолжетімділік кілті",
+  "qrSettingsKeyStoredHint": "Кілт сақталған. Ауыстыру үшін жаңасын енгізіңіз",
+  "qrSettingsKeyEmptyHint": "Кілт берілмеген",
+  "qrSettingsClearKey": "Сақталған кілтті өшіру",
+  "qrSettingsPatience": "Төлемді күту, секунд",
+  "qrSettingsSave": "Сақтау",
+  "qrSettingsSaved": "QR баптауы сақталды",
+  "qrSettingsRemove": "Баптауды алып тастау",
+  "qrSettingsStatusReady": "Провайдер бапталған",
+  "qrSettingsStatusNotConfigured": "Провайдер бапталмаған — QR арқылы төлем қолжетімсіз",
+  "qrSettingsInvalidUrl": "Мекенжай http:// немесе https:// деп басталуы керек",
+  "qrSettingsCodeRequired": "Провайдер кодын көрсетіңіз",
+  "qrSettingsInvalidPatience": "Күту — {min} секундтан {max} секундқа дейін",
+  "qrSettingsSaveFailed": "QR баптауын сақтау мүмкін болмады",
+  "qrSettingsTillOnly": "QR провайдерін баптау тек кассаның өзінде қолжетімді",
+  "installmentTermsTitle": "Бөліп төлеу",
+  "installmentTermsMonths": "Мерзімі, ай",
+  "installmentTermsScheme": "Кесте түрі",
+  "installmentTermsContinue": "Жалғастыру",
+  "customerPaymentTitle": "Төлем қабылдау / қарызды өтеу",
+  "customerPaymentCurrentDebt": "Ағымдағы қарыз: {amount}",
+  "customerPaymentBalance": "Баланс: {amount}",
+  "customerPaymentAmount": "Төлем сомасы",
+  "customerPaymentAmountInvalid": "0-ден үлкен соманы енгізіңіз",
+  "customerPaymentFailed": "Төлемді жүргізу қатесі",
+  "customerPaymentSubmit": "Төлем қабылдау",
+  "errorPrepaymentAmountInvalid": "Аванс сомасы нөлден үлкен болуы керек. Соманы қайта енгізіңіз.",
+  "errorPrepaymentTenderInvalid": "Аванс қолма-қол ақшамен, картамен немесе QR арқылы қабылданады. Басқа төлем түрін таңдаңыз.",
+  "errorPrepaymentTillAccountMissing": "Бұл кассада осы төлем түрін қабылдайтын шот жоқ. Қабылдау шотын баптап, қайталаңыз.",
+  "errorPrepaymentIntakeFailed": "Авансты қабылдау мүмкін болмады. Сатып алушыны тексеріп, қайталаңыз.",
+  "errorPrepaymentRefundExceedsBalance": "Сатып алушының шотындағы аванс сіз беріп жатқан сомадан аз. Қалдықты тексеріп, соманы азайтыңыз.",
+  "errorPrepaymentRefundKeyMissing": "Аванс беру өтінімінде қайталау кілті жоқ — касса қайталауды екінші берумен шатастырады. Экранды қайта ашып, соманы қайтадан теріңіз.",
+  "errorPrepaymentRefundFailed": "Авансты беру мүмкін болмады. Сатып алушыны тексеріп, қайталаңыз.",
+  "errorPrepaymentRefundUnavailable": "Бұл касса сатып алушының авансын сым арқылы бермейді. Әкімшіге хабарласыңыз.",
+  "errorPrepaymentIntakeUnavailable": "Бұл касса сатып алушының авансын желі арқылы қабылдамайды. Әкімшіге хабарласыңыз.",
+  "errorPrepaymentIntakeKeyMissing": "Бұл аванс өтінімінде қайталау кілті жоқ, сондықтан касса қайталауды екінші төлемнен ажырата алмайды. Экранды қайта ашып, соманы қайта енгізіңіз.",
+  "errorQrSetupUnavailable": "Бұл кассада QR провайдерінің баптауы сақталмайды. QR арқылы төлемді кассаның өзінде баптаңыз немесе әкімшіге хабарласыңыз.",
+  "errorReceiptTemplatesUnavailable": "Бұл кассада чек үлгілері сақталмайды. Үлгіні кассаның өзінде баптаңыз немесе әкімшіге хабарласыңыз.",
+  "errorReceiptTemplateNameless": "Чек үлгісінің атауы болуы тиіс. Атауын теріп, қайта сақтаңыз.",
+  "shiftDeskTitle": "Ауысым",
+  "shiftDeskOverAgeWarning": "Ауысым 24 сағаттан астам ашық — сату бұғатталған. Оны жауып, жаңасын ашыңыз.",
+  "shiftDeskOpenedAt": "Ашылған: {when}",
+  "@shiftDeskOpenedAt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftDeskCountedLabel": "Жәшікте саналған",
+  "shiftDeskCountedHint": "Ешкім санамаса, бос қалдырыңыз — касса өз қорытындысын алады.",
+  "shiftDeskOpeningCashLabel": "Басында жәшіктегі ақша",
+  "shiftDeskClosedNow": "Ауысым жабылды.",
+  "shiftDeskOpenedNow": "Ауысым ашылды.",
+  "shiftDeskNoShift": "Кассада ашық ауысым жоқ.",
+  "shiftDeskUnfiscalizedCount": "Фискалдық құжатсыз чектер: {count}",
+  "@shiftDeskUnfiscalizedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftDeskUnfinishedCount": "Аяқталмаған чектер: {count} — жабу оларды тазалайды",
+  "@shiftDeskUnfinishedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorShiftDeskNotOpen": "Бұл кассада ашық ауысым жоқ — жабатын ештеңе жоқ.",
+  "errorShiftDeskAlreadyOpen": "Бұл кассада ауысым әлдеқашан ашық.",
+  "errorShiftDeskUnavailable": "Бұл касса ауысымдарды сым арқылы жүргізбейді. Ауысымды кассаның өзінде жабыңыз немесе әкімшіге хабарласыңыз.",
+  "errorShiftDeskActorUnknown": "Ауысымды кассир ашады, ал бұл өтінімде кассир аталмаған. Қайта кіріңіз.",
+  "prepaymentIntakeTitle": "Аванс қабылдау",
+  "prepaymentIntakeFind": "Сатып алушыны табу",
+  "prepaymentIntakeNotFound": "Мұндай нөмірмен сатып алушы табылмады.",
+  "prepaymentIntakeSubmit": "Авансты қабылдау",
+  "prepaymentIntakeAccepted": "Аванс қабылданды. Алдын ала енгізілген: {amount}",
+  "@prepaymentIntakeAccepted": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentIntakeFiscalFailed": "Ақша қабылданды, бірақ аванстың фискалдық чегі жазылмады.",
+  "emulatorSettingsTitle": "Кірістірілген эмуляторлар",
+  "emulatorSettingsHint": "Аспаптарды қоспай-ақ басып шығару мен диагностиканы тексеру",
+  "emulatorReceiptPrinter": "Чек принтері және ақша жәшігі",
+  "emulatorEnabledNote": "Сокет ашық. Касса оған тек байланыстағы мекенжай арқылы жетеді",
+  "emulatorDisabledNote": "Өшірулі: сокет ашылмаған",
+  "emulatorAddress": "Эмулятор мекенжайы",
+  "emulatorAddressHint": "Осы IP мен портты принтер баптауларына жазыңыз",
+  "emulatorBindAction": "Принтер байланысына жазу",
+  "emulatorBindDone": "Принтер байланысы енді эмуляторға қарайды",
+  "emulatorBindingStale": "Принтер байланысы өшірілген эмуляторға қарайды — басып шығару орындалмайды",
+  "emulatorStartFailed": "Эмуляторды іске қосу мүмкін болмады",
+  "emulatorFiscalOperator": "Фискалдық оператор (ОФД)",
+  "emulatorFiscalAddressHint": "Бұл мекенжайды фискалдық баптаулардың «Сервер мекенжайы» өрісіне жазыңыз",
+  "emulatorFiscalBindAction": "Фискалдық баптауларға жазу",
+  "emulatorFiscalBindNote": "Эмулятордың мекенжайын, логинін, паролін, кілтін және зауыттық нөмірін жазады әрі кассаны сынақтық деп жариялайды. Тіркеу нөміріне тиіспейді",
+  "emulatorFiscalBindDone": "Фискалдық баптаулар енді эмуляторға қарайды",
+  "emulatorFiscalBindingStale": "Фискалдық баптаулар өшірілген эмуляторға қарайды — фискалдау орындалмайды",
+  "emulatorFiscalLocalModuleWarning": "«Жергілікті модуль» өрісі толтырылған — ол сервер мекенжайын басып озады, касса эмуляторға бармайды",
+  "emulatorFiscalBlockedLive": "Касса нақты жұмыс істейді: оператор деректемелері толтырылған. Мұнда ОФД эмуляторына тыйым салынады — жалғанға кеткен чек шынайы көрінеді, бірақ сатып алушыға құжат бермейді",
+  "emulatorFiscalBlockedUnknown": "Фискалдық баптаулар оқылмады — ОФД эмуляторын қосу мүмкін емес",
+  "diagnosticsFiscalEmulatorBanner": "Оператор мекенжайы осы компьютерге қарайды — құжаттар эмуляторға кетеді және фискалдық болып саналмайды",
+  "diagnosticsTitle": "Жабдық диагностикасы",
+  "diagnosticsSubtitle": "Касса аспаптарға шын мәнінде не жібергені",
+  "diagnosticsTabPrinter": "Принтер",
+  "diagnosticsTabFiscal": "Фискалдау",
+  "errorDiagnosticsUnavailable": "Бұл кассада диагностиканы сұрайтын ешкім жоқ",
+  "diagnosticsPrinterQueueMissing": "Бұл жұмыс орнында басып шығару кезегі бапталмаған",
+  "diagnosticsPrinterNothingSent": "Касса принтерге әзірге ештеңе жіберген жоқ",
+  "diagnosticsAskFailed": "Касса бұл сұраққа жауап бермеді: {reason}",
+  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "diagnosticsAttempts": "әрекет {count}",
+  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "diagnosticsJobQueued": "кезекте тұр",
+  "diagnosticsJobPrinting": "басылып жатыр",
+  "diagnosticsJobPrinted": "басылды",
+  "diagnosticsJobFailed": "басылмады",
+  "diagnosticsJobExpired": "мерзімі өтті",
+  "diagnosticsJobCancelled": "бас тартылды",
+  "diagnosticsFiscalNotConfigured": "Бұл кассада фискалдық оператор бапталмаған",
+  "diagnosticsFiscalAccepted": "Оператор қабылдады",
+  "diagnosticsFiscalAcceptedEmpty": "Оператор әзірге бірде-бір құжат қабылдаған жоқ",
+  "diagnosticsFiscalQueued": "Кезекте",
+  "diagnosticsFiscalQueuedEmpty": "Кезек бос — жіберілгеннің бәрін оператор қабылдады",
+  "diagnosticsFiscalSign": "Фискалдық белгі {value}",
+  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOperatorDoc": "оператор құжаты {value}",
+  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalReceiptNo": "чек {value}",
+  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOffline": "дербес берілген",
+  "diagnosticsEmulatorBanner": "Принтер байланысы осы компьютерге қарайды — порттың артында қағаз емес, эмулятор",
+  "diagnosticsTabDrawer": "Ақша жәшігі",
+  "drawerDiagnosticsEmpty": "Касса іске қосылғаннан бері жәшік бір рет те ашылған жоқ",
+  "drawerDiagnosticsUnavailable": "Бұл кассада жәшік импульстерінің жазбасы жоқ — сұрайтын дерек жоқ. Бұл жәшік ашылмады дегенді білдірмейді.",
+  "drawerDiagnosticsCaveat": "Касса команданың қабылданғанын ғана біледі. Жәшіктің шынымен ашылғаны туралы кері байланыс екі жолда да жоқ.",
+  "drawerDiagnosticsAccepted": "Команда қабылданды",
+  "drawerDiagnosticsRefused": "Команда қабылданбады",
+  "drawerDiagnosticsViaSerial": "тізбекті порт",
+  "drawerDiagnosticsViaPrinter": "принтер арқылы (ESC p)",
+  "diagnosticsTabScales": "Таразы",
+  "diagnosticsTabDisplay": "Дисплей",
+  "scalesDiagnosticsUnbound": "Бұл кассаға таразы байланбаған.\nОны жабдық баптауларында байланыстырыңыз — сонда мұнда көрсеткіш шығады.",
+  "scalesDiagnosticsWeight": "Таразы көрсеткіші",
+  "scalesDiagnosticsSilent": "Таразы әлі ештеңе жіберген жоқ",
+  "scalesDiagnosticsStable": "Салмақ тұрақталды",
+  "scalesDiagnosticsSettling": "Салмақ өзгеруде",
+  "scalesDiagnosticsOverload": "Шамадан тыс жүктеме",
+  "scalesDiagnosticsPort": "Таразы порты",
+  "scalesDiagnosticsBaudSuffix": "бод",
+  "scalesDiagnosticsConnected": "Порт ашық",
+  "scalesDiagnosticsDisconnected": "Порт жабық",
+  "scalesDiagnosticsCaveat": "Бұл — аспап жібергені. Көрсеткіштің дұрыстығын касса тексермейді, ол үшін тексеру бар.",
+  "displayDiagnosticsEmpty": "Касса іске қосылғаннан бері дисплейге ештеңе жіберілмеді",
+  "displayDiagnosticsUnavailable": "Бұл кассада дисплей жолдарының жазбасы жоқ — сұрайтын дерек жоқ. Бұл дисплейге ештеңе жіберілмеді дегенді білдірмейді.",
+  "displayDiagnosticsCurrent": "Қазір дисплейде",
+  "displayDiagnosticsCaveat": "Касса жолдың портқа кеткенін ғана біледі. Сөнген не ажыратылған дисплей мұнда жұмыс істеп тұрғаннан ажыратылмайды.",
+  "displayDiagnosticsCallPrice": "баға",
+  "displayDiagnosticsCallTotal": "жиыны",
+  "displayDiagnosticsCallChange": "қайтарым",
+  "displayDiagnosticsCallText": "мәтін",
+  "displayDiagnosticsCallWelcome": "сәлемдесу",
+  "displayDiagnosticsCallClear": "тазалау",
+  "emulatorScaleWeight": "Табақтағы салмақ",
+  "emulatorScaleWeightHint": "Эмулятор пульті: таразы кассаға осы санды жібереді",
+  "emulatorQrProvider": "QR төлем провайдері",
+  "emulatorQrAddressHint": "Бұл мекенжайды QR провайдерінің баптауына жазыңыз",
+  "emulatorQrBindAction": "QR баптауына жазу",
+  "emulatorQrBindDone": "QR баптауы енді эмуляторға қарайды",
+  "emulatorQrBindingStale": "QR баптауы сөндірілген эмуляторға қарайды — код бойынша төлем қабылданбайды",
+  "diagnosticsTabPayment": "Төлем",
+  "diagnosticsPaymentEmulatorBanner": "QR провайдері осы компьютерде: мекенжайдың артында банк емес, эмулятор",
+  "paymentDiagnosticsUnavailable": "Бұл жұмыс орнында төлем туралы дерек жоқ",
+  "paymentDiagnosticsQrSection": "QR арқылы төлем",
+  "paymentDiagnosticsQrEmpty": "Касса әзірге бірде-бір төлем кодын жасаған жоқ",
+  "paymentDiagnosticsQrNotConfigured": "Бұл кассада QR провайдері бапталмаған",
+  "paymentDiagnosticsQrAddress": "Провайдер: {address}",
+  "paymentDiagnosticsQrUnknown": "Провайдерге жіберілген сұрау денелерін касса сақтамайды. Көрінетіні — ниетте қалғаны: сома, күй, ол жақтағы сәйкестендіргіш және бас тарту себебі.",
+  "paymentDiagnosticsTerminalSection": "Төлем терминалы",
+  "paymentDiagnosticsTerminalEmpty": "Касса қосылғаннан бері төлем терминалына бірде-бір кадр кеткен жоқ",
+  "paymentDiagnosticsTerminalUnknown": "Терминал журналы жадта тұрады: қайта қосуға дейінгі алмасулар сақталмайды, ал терминалдың өзінде жасалған операцияларды касса мүлде көрмейді.",
+  "paymentDiagnosticsRequest": "Сұрау",
+  "paymentDiagnosticsReply": "Жауап",
+  "paymentDiagnosticsNoReply": "Жауап болмады",
+  "paymentDiagnosticsApproval": "Мақұлдау коды {value}",
+  "paymentDiagnosticsTransaction": "транзакция {value}",
+  "paymentDiagnosticsRefusal": "Бас тарту: {value}",
+  "paymentDiagnosticsConfirmations": "растау саны {count}",
+  "paymentDiagnosticsOrphanMoney": "чегі жоқ ақша",
+  "paymentDiagnosticsAfterGiveUp": "касса күтуді тоқтатқаннан кейін расталды",
+  "paymentDiagnosticsApproved": "Мақұлданды",
+  "paymentDiagnosticsDeclined": "Бас тартылды",
+  "paymentDiagnosticsOpPurchase": "сатып алу",
+  "paymentDiagnosticsOpReversal": "сторно",
+  "paymentDiagnosticsOpRefund": "қайтару",
+  "paymentDiagnosticsOpUnknown": "белгісіз түрдегі кадр",
+  "certificateIssueTitle": "Сыйлық сертификатын шығару",
+  "certificateIssueHint": "Қағаз үшін ақшаны сату чегі қабылдайды. Мұнда қағазға қалдық ашылады, касса міндеттеме алады.",
+  "certificateIssueNumber": "Қағаз нөмірі",
+  "certificateIssueNominal": "Номинал",
+  "certificateIssuePin": "ПИН (міндетті емес)",
+  "certificateIssueExpiresDays": "Жарамдылық мерзімі, күн (міндетті емес)",
+  "certificateIssueReceipt": "Сату чегінің нөмірі (міндетті емес)",
+  "certificateIssueSubmit": "Сертификат шығару",
+  "certificateIssueDone": "{number} сертификаты {amount} сомасына шығарылды",
+  "@certificateIssueDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateIssueFailed": "Сертификат шығарылмады",
+  "certificateIssueNumberRequired": "Қағаз нөмірін енгізіңіз",
+  "certificateIssueNominalInvalid": "Номинал нөлден үлкен болуы керек",
+  "certificateIssueNotPermitted": "Бұл кассирге сертификат шығаруға рұқсат жоқ",
+  "certificateSlipTitle": "Слипті қайта басып шығару",
+  "certificateSlipHint": "Шығару кезінде слип басылмады — қағазды қайталама слип бойынша беруге болады.",
+  "certificateSlipNumber": "Сертификат нөмірі",
+  "certificateSlipPin": "ПИН, егер бар болса",
+  "certificateSlipSubmit": "Слипті басып шығару",
+  "certificateSlipDone": "{number} сертификатының слипі басып шығаруға жіберілді",
+  "@certificateSlipDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateSlipFailed": "Слип басып шығаруға жіберілмеді",
+  "certificateSlipUnavailable": "Бұл кассада слип басатын құрылғы жоқ",
+  "prepaymentRefundTitle": "Авансты қайтару",
+  "prepaymentRefundHint": "Сатып алушы алдын ала енгізген ақша қайтарылады. Қарыз бұнымен өтелмейді, бонустар қозғалмайды.",
+  "prepaymentRefundBalance": "Алдын ала енгізілген: {amount}",
+  "@prepaymentRefundBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundNothing": "Сатып алушының шотында аванс жоқ — қайтаратын ештеңе жоқ",
+  "prepaymentRefundAmount": "Қайтарылатын сома",
+  "prepaymentRefundTender": "Немен қайтарылады",
+  "prepaymentRefundIntake": "Қабылдау жазбасының нөмірі (міндетті емес)",
+  "prepaymentRefundSubmit": "Авансты қайтару",
+  "prepaymentRefundDone": "Аванс қайтарылды. Шотта қалғаны: {amount}",
+  "@prepaymentRefundDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundFailed": "Аванс қайтарылмады",
+  "prepaymentRefundAmountInvalid": "Сома нөлден үлкен болуы керек",
+  "prepaymentRefundNotPermitted": "Бұл кассирге авансты қайтаруға рұқсат жоқ",
+  "prepaymentRefundFiscalFailed": "Ақша берілді, бірақ аванс қайтарымының фискалдық чегі жазылмады.",
+  "agentRefundPrepayment": "Авансты қайтару"
 }

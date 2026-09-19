@@ -4,14 +4,53 @@ import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker/talker.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/data/print/bound_receipt_paper_width.dart';
 import 'package:telepos/data/print/print_submission.dart';
 import 'package:telepos/domain/entities/receipt/receipt_options.dart';
 import 'package:telepos/domain/print/print_document_id.dart';
 import 'package:telepos/domain/print/print_queue.dart';
+import 'package:telepos/domain/print/receipt_paper_width_source.dart';
+import 'package:telepos/domain/sale/payment_service.dart' show FiscalState;
 import 'package:telepos/domain/services/receipt_print_service.dart';
 import 'package:telepos/domain/usecases/fiscal/vat_calculator.dart';
+import 'package:telepos/hardware/printer/escpos_text_preview.dart';
 import 'package:telepos/hardware/printer/printer_manager.dart';
 import 'package:telepos/hardware/printer/receipt_builder.dart';
+
+/// Строка подвала под «НЕФИСКАЛЬНЫЙ ЧЕК», называющая **причину**.
+///
+/// До задачи 5 подвал говорил «НЕФИСКАЛЬНЫЙ ЧЕК» и умолкал — одна строка
+/// на три разные причины, ровно тот же дефект, что жил в `FiscalState`,
+/// только на бумаге. Покупатель и кассир не могли отличить «так
+/// настроено» от «касса собрана без узла фискализации».
+///
+/// `null` — строки нет, и это не забывчивость:
+///
+/// * `null`-состояние — **«не спрашивали»** (дубликат из истории, чек,
+///   собранный не оплатой). Печатать по незнанию утверждение о причине
+///   значило бы соврать уверенно;
+/// * [FiscalState.notRequired] — документ не положен **этому чеку** по
+///   настройке кассы; «НЕФИСКАЛЬНЫЙ ЧЕК» уже сказал всё, и вторая строка
+///   про политику покупателю ничего не добавит;
+/// * [FiscalState.done] и [FiscalState.queued] сюда не доходят — у таких
+///   чеков есть фискальный блок;
+/// * [FiscalState.failed] и [FiscalState.unchanged] названы отдельно:
+///   первое — беда (деньги взяты, документа нет), и молчать о ней на
+///   бумаге нельзя.
+///
+/// Возвращается **строка, а не ключ локализации**: чек печатается на
+/// языке страны, а не интерфейса, и остальной подвал (`НЕФИСКАЛЬНЫЙ
+/// ЧЕК`, `ФИСК. ПРИЗНАК`, `ОФФЛАЙН`) устроен так же.
+String? noFiscalDocumentReason(FiscalState? state) => switch (state) {
+  null => null,
+  FiscalState.notRequired => null,
+  FiscalState.done => null,
+  FiscalState.queued => null,
+  FiscalState.operatorAbsent => 'Фискальный оператор не настроен',
+  FiscalState.fiscalModuleAbsent => 'Модуль фискализации недоступен',
+  FiscalState.failed => 'Документ не оформлен — обратитесь к кассиру',
+  FiscalState.unchanged => null,
+};
 
 /// Собирает чеки и **сдаёт их в очередь печати**, а не пишет в принтер.
 ///
@@ -31,16 +70,32 @@ import 'package:telepos/hardware/printer/receipt_builder.dart';
 /// Мимо очереди идут ровно две вещи, и обе — не документы: опрос состояния
 /// ([isPrinterAvailable]) и импульс денежного ящика ([openCashDrawer]);
 /// обоснование у каждой на месте.
+///
+/// ## Ширина ленты
+///
+/// Каждый документ собирается в ширину, которую при **этой** печати отдаёт
+/// [ReceiptPaperWidthSource] — привязка чекового принтера. Ни шаблон, ни
+/// конструктор, ни литерал ширину не несут: до правки их было четыре, и
+/// выбранная на экране принтера ширина не доходила ни до одного документа.
+///
+/// ## Шаблон чека
+///
+/// Шапка шаблона — первое, что выходит из принтера, подвал — последнее перед
+/// протяжкой и резом. Между ними обязательная часть, которую шаблон не
+/// выключает (см. [ReceiptOptions]). Предпросмотр на экране шаблона —
+/// [renderSalePreviewText] — это **те же байты**, разобранные в текст, а не
+/// вторая раскладка.
 class ReceiptPrintServiceImpl implements ReceiptPrintService {
-  ReceiptPrintServiceImpl({this.charWidth = 32, Talker? logger})
-    : _logger = logger,
+  ReceiptPrintServiceImpl({ReceiptPaperWidthSource? paperWidth, Talker? logger})
+    : _paperWidth = paperWidth ?? BoundReceiptPaperWidth(logger: logger),
+      _logger = logger,
       _submission = PrintSubmission(logger: logger);
 
   /// Срок задания — общий для всех документов, обоснование на
   /// [PrintSubmission.documentLifetime].
   static const Duration documentLifetime = PrintSubmission.documentLifetime;
 
-  final int charWidth;
+  final ReceiptPaperWidthSource _paperWidth;
 
   final Talker? _logger;
 
@@ -50,6 +105,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
   ReceiptOptions? _optionsCache;
 
+  /// Шаблон чека кассы — выбранный в «Шаблонах чеков». Кэш сбрасывают экраны
+  /// шаблонов ([invalidateReceiptOptionsCache]) при сохранении и выборе.
   Future<ReceiptOptions> _resolveOptions() async {
     if (_optionsCache != null) return _optionsCache!;
     try {
@@ -71,14 +128,26 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   void invalidateReceiptOptionsCache() => invalidateOptionsCache();
 
   @override
-  String renderSalePreviewText(SaleReceiptData data, ReceiptOptions options) {
-    return _PreviewTextRenderer(
-      options.paperWidth.charWidth,
-    ).renderSale(data, options);
+  Future<ReceiptPaperWidth> currentPaperWidth() => _paperWidth.current();
+
+  /// Число колонок для документа, собираемого **сейчас**.
+  Future<int> _columns() async => (await _paperWidth.current()).charWidth;
+
+  @override
+  String renderSalePreviewText(
+    SaleReceiptData data,
+    ReceiptOptions options, {
+    required ReceiptPaperWidth paperWidth,
+  }) {
+    return renderEscPosAsText(
+      _buildSaleReceipt(data, options, paperWidth.charWidth).build(),
+      width: paperWidth.charWidth,
+    );
   }
 
   @override
   String renderZReportPreview({
+    required ReceiptPaperWidth paperWidth,
     required String storeName,
     required String posName,
     required String cashierName,
@@ -92,9 +161,12 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) {
-    return _decodeReceipt(
+    return renderEscPosAsText(
       _buildZReport(
+        width: paperWidth.charWidth,
         storeName: storeName,
         posName: posName,
         cashierName: cashierName,
@@ -108,12 +180,16 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         cashEnd: cashEnd,
         cashIncome: cashIncome,
         cashExpense: cashExpense,
-      ),
+        certificatesIssued: certificatesIssued,
+        certificatesRedeemed: certificatesRedeemed,
+      ).build(),
+      width: paperWidth.charWidth,
     );
   }
 
   @override
   String renderXReportPreview({
+    required ReceiptPaperWidth paperWidth,
     required String storeName,
     required String posName,
     required String cashierName,
@@ -123,9 +199,12 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required int refundCount,
     required Decimal refundTotal,
     required Decimal cashInDrawer,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) {
-    return _decodeReceipt(
+    return renderEscPosAsText(
       _buildXReport(
+        width: paperWidth.charWidth,
         storeName: storeName,
         posName: posName,
         cashierName: cashierName,
@@ -135,63 +214,12 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         refundCount: refundCount,
         refundTotal: refundTotal,
         cashInDrawer: cashInDrawer,
-      ),
+        certificatesIssued: certificatesIssued,
+        certificatesRedeemed: certificatesRedeemed,
+      ).build(),
+      width: paperWidth.charWidth,
     );
   }
-
-  String _decodeReceipt(ReceiptBuilder receipt) {
-    final bytes = receipt.build();
-    final sb = StringBuffer();
-    var i = 0;
-    while (i < bytes.length) {
-      final b = bytes[i];
-      if (b == 0x1B) {
-        final cmd = i + 1 < bytes.length ? bytes[i + 1] : 0;
-        switch (cmd) {
-          case 0x40:
-          case 0x69:
-          case 0x6D:
-            i += 2;
-          case 0x70:
-            i += 5;
-          case 0x42:
-            i += 4;
-          default:
-            i += 3;
-        }
-        continue;
-      }
-      if (b == 0x1D) {
-        i += 3;
-        continue;
-      }
-      if (b == 0x0A) {
-        sb.write('\n');
-        i++;
-        continue;
-      }
-      if (b < 0x20) {
-        i++;
-        continue;
-      }
-      sb.write(_decodeCp866Byte(b));
-      i++;
-    }
-    return sb.toString();
-  }
-
-  String _decodeCp866Byte(int b) {
-    if (b < 0x80) return String.fromCharCode(b);
-    if (b >= 0x80 && b <= 0x9F) return String.fromCharCode(b - 0x80 + 0x410);
-    if (b >= 0xA0 && b <= 0xAF) return String.fromCharCode(b - 0xA0 + 0x430);
-    if (b >= 0xE0 && b <= 0xEF) return String.fromCharCode(b - 0xE0 + 0x440);
-    if (b == 0xF0) return 'Ё';
-    if (b == 0xF1) return 'ё';
-    if (b == 0xFC) return '№';
-    return '?';
-  }
-
-  int _charWidthFor(ReceiptOptions options) => options.paperWidth.charWidth;
 
   @override
   Future<PrintSubmitOutcome> printSaleReceipt(SaleReceiptData data) async {
@@ -206,7 +234,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         posIdHint: data.posId,
       );
       final options = await _resolveOptions();
-      return await _submit(_buildSaleReceipt(data, options), documentId);
+      return await _submit(
+        _buildSaleReceipt(data, options, await _columns()),
+        documentId,
+      );
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.sale, e);
     }
@@ -225,7 +256,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         posIdHint: data.posId,
       );
       final options = await _resolveOptions();
-      return await _submit(_buildSaleReceipt(data, options), documentId);
+      return await _submit(
+        _buildSaleReceipt(data, options, await _columns()),
+        documentId,
+      );
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.sample, e);
     }
@@ -241,7 +275,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         posIdHint: data.posId,
       );
       final options = await _resolveOptions();
-      return await _submit(_buildRefundReceipt(data, options), documentId);
+      return await _submit(
+        _buildRefundReceipt(data, options, await _columns()),
+        documentId,
+      );
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.refund, e);
     }
@@ -306,6 +343,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required int refundCount,
     required Decimal refundTotal,
     required Decimal cashInDrawer,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) async {
     try {
       final documentId = await _identify(
@@ -317,6 +356,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         copyIndex: 0,
       );
       final receipt = _buildXReport(
+        width: await _columns(),
         storeName: storeName,
         posName: posName,
         cashierName: cashierName,
@@ -326,6 +366,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         refundCount: refundCount,
         refundTotal: refundTotal,
         cashInDrawer: cashInDrawer,
+        certificatesIssued: certificatesIssued,
+        certificatesRedeemed: certificatesRedeemed,
       );
       return await _submit(receipt, documentId);
     } catch (e) {
@@ -334,6 +376,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   }
 
   ReceiptBuilder _buildXReport({
+    required int width,
     required String storeName,
     required String posName,
     required String cashierName,
@@ -343,8 +386,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required int refundCount,
     required Decimal refundTotal,
     required Decimal cashInDrawer,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) {
-    final receipt = ReceiptBuilder(charWidth: charWidth)..init();
+    final receipt = ReceiptBuilder(charWidth: width)..init();
     if (storeName.isNotEmpty) receipt.addCentered(storeName, bold: true);
     if (posName.isNotEmpty) receipt.addCentered(posName);
     receipt
@@ -361,7 +406,9 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       ..addLine()
       ..addLeft('ВОЗВРАТЫ')
       ..addRow('Количество:', '$refundCount')
-      ..addRow('Сумма:', _formatDecimal(refundTotal))
+      ..addRow('Сумма:', _formatDecimal(refundTotal));
+    _addCertificateBlock(receipt, certificatesIssued, certificatesRedeemed);
+    receipt
       ..addDoubleLine()
       ..addRow('ИТОГО В КАССЕ:', _formatDecimal(cashInDrawer), bold: true)
       ..addNewLines(3)
@@ -384,6 +431,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) async {
     try {
       final documentId = await _identify(
@@ -395,6 +444,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         copyIndex: 0,
       );
       final receipt = _buildZReport(
+        width: await _columns(),
         storeName: storeName,
         posName: posName,
         cashierName: cashierName,
@@ -408,6 +458,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         cashEnd: cashEnd,
         cashIncome: cashIncome,
         cashExpense: cashExpense,
+        certificatesIssued: certificatesIssued,
+        certificatesRedeemed: certificatesRedeemed,
       );
       return await _submit(receipt, documentId);
     } catch (e) {
@@ -416,6 +468,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   }
 
   ReceiptBuilder _buildZReport({
+    required int width,
     required String storeName,
     required String posName,
     required String cashierName,
@@ -429,8 +482,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) {
-    final receipt = ReceiptBuilder(charWidth: charWidth)..init();
+    final receipt = ReceiptBuilder(charWidth: width)..init();
     if (storeName.isNotEmpty) receipt.addCentered(storeName, bold: true);
     if (posName.isNotEmpty) receipt.addCentered(posName);
     receipt
@@ -448,7 +503,9 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       ..addLine()
       ..addLeft('ВОЗВРАТЫ')
       ..addRow('Количество:', '$refundCount')
-      ..addRow('Сумма:', _formatDecimal(refundTotal))
+      ..addRow('Сумма:', _formatDecimal(refundTotal));
+    _addCertificateBlock(receipt, certificatesIssued, certificatesRedeemed);
+    receipt
       ..addLine()
       ..addLeft('ДЕНЕЖНЫЕ ОПЕРАЦИИ')
       ..addRow('На начало:', _formatDecimal(cashStart))
@@ -469,8 +526,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   @override
   Future<bool> openCashDrawer() async {
     try {
+      // Импульс ящика — не текст: колонки ему не нужны, и ширину ленты ради
+      // него не читают.
       final bytes = (ReceiptBuilder(
-        charWidth: charWidth,
+        charWidth: ReceiptPaperWidth.mm58.charWidth,
       )..openDrawer()).build();
       final result = await _writeDirect(bytes);
       if (!result.success) {
@@ -524,13 +583,24 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     }
   }
 
+  /// Шапка шаблона — **до всего**, в том числе до отметки «ДУБЛИКАТ»: она
+  /// выше обязательной части по определению. Пустая шапка не даёт ни байта.
+  void _addTemplateHeader(ReceiptBuilder receipt, ReceiptOptions options) {
+    if (options.header.isEmpty) return;
+    receipt
+      ..addTextBlock(options.header)
+      ..addEmptyLine();
+  }
+
   ReceiptBuilder _buildSaleReceipt(
     SaleReceiptData data,
     ReceiptOptions options,
+    int width,
   ) {
-    final width = _charWidthFor(options);
     final receipt = ReceiptBuilder(charWidth: width)..init();
     final cur = data.currencySymbol;
+
+    _addTemplateHeader(receipt, options);
 
     if (data.isDuplicate) {
       receipt
@@ -538,14 +608,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         ..addEmptyLine();
     }
 
-    if (options.headerText != null && options.headerText!.trim().isNotEmpty) {
-      receipt.addCentered(options.headerText!.trim());
-    }
     _addSellerHeader(
       receipt,
       storeName: data.storeName,
       seller: data.seller,
-      isVatPayer: data.isVatPayer,
       options: options,
     );
 
@@ -614,7 +680,6 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       data.vatRatePercent,
       data.vatAmount,
       data.totalAmount,
-      options,
     );
 
     _addFiscalBlock(
@@ -623,7 +688,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       fallbackFiscalNumber: data.fiscalNumber,
       isFiscal: data.isFiscal,
       customerBin: null,
-      options: options,
+      fiscalState: data.fiscalState,
     );
 
     _addFooter(receipt, options);
@@ -634,9 +699,11 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   ReceiptBuilder _buildRefundReceipt(
     RefundReceiptData data,
     ReceiptOptions options,
+    int width,
   ) {
-    final width = _charWidthFor(options);
     final receipt = ReceiptBuilder(charWidth: width)..init();
+
+    _addTemplateHeader(receipt, options);
 
     if (data.isDuplicate) {
       receipt
@@ -644,14 +711,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         ..addEmptyLine();
     }
 
-    if (options.headerText != null && options.headerText!.trim().isNotEmpty) {
-      receipt.addCentered(options.headerText!.trim());
-    }
     _addSellerHeader(
       receipt,
       storeName: data.storeName,
       seller: data.seller,
-      isVatPayer: data.isVatPayer,
       options: options,
     );
 
@@ -695,7 +758,6 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       data.vatRatePercent,
       data.vatAmount,
       data.totalAmount,
-      options,
     );
 
     _addFiscalBlock(
@@ -704,12 +766,148 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       fallbackFiscalNumber: data.fiscalNumber,
       isFiscal: data.isFiscal,
       customerBin: null,
-      options: options,
     );
 
     _addFooter(receipt, options);
 
     return receipt;
+  }
+
+  @override
+  Future<PrintSubmitOutcome> printCertificateSlip(
+    CertificateSlipData data,
+  ) async {
+    try {
+      final documentId = await _identify(
+        kind: PrintDocumentKind.certificateSlip,
+        // Номер бумажки, а не чека: слип принадлежит сертификату и живёт
+        // столько же, сколько он. Разделитель из номера убирается — иначе
+        // бумажка `C-1/2` и бумажка `C-1` в копии 2 дали бы одну строку
+        // идентификатора (`PrintDocumentId.separator`).
+        number: _sanitizeNumber(data.number),
+        copyIndex: data.isDuplicate ? 1 : 0,
+        posIdHint: data.posId,
+      );
+      final options = await _resolveOptions();
+      return await _submit(
+        _buildCertificateSlip(data, options, await _columns()),
+        documentId,
+      );
+    } catch (e) {
+      return _cannotIdentify(PrintDocumentKind.certificateSlip, e);
+    }
+  }
+
+  @override
+  String renderCertificateSlipPreviewText(
+    CertificateSlipData data,
+    ReceiptOptions options, {
+    required ReceiptPaperWidth paperWidth,
+  }) {
+    return renderEscPosAsText(
+      _buildCertificateSlip(data, options, paperWidth.charWidth).build(),
+      width: paperWidth.charWidth,
+    );
+  }
+
+  /// Слип подарочного сертификата.
+  ///
+  /// # Номер — отдельной строкой, а не парой «подпись-значение»
+  ///
+  /// [ReceiptBuilder.addRow] отдаёт значению столько колонок, сколько в нём
+  /// символов, и вычитает их из подписи: номер длиной с ленту оставил бы
+  /// подписи отрицательную ширину. Номер — то единственное, ради чего
+  /// бумажку хранят, поэтому он стоит своей строкой и **переносится по
+  /// словам**, а не обрезается по 32 колонкам узкой ленты.
+  ///
+  /// # ПИН на бумагу не выходит ни одной веткой
+  ///
+  /// Печатается факт «ПИН задан», а не сам ПИН, и самого ПИНа у документа
+  /// нет даже полем. Номер и ПИН рядом на одной бумажке — это найденная
+  /// бумажка, отоваренная кем угодно; довод тот же, по которому `pinHash`
+  /// не едет на провод.
+  ///
+  /// # Пометка «не фискальный» обязательна
+  ///
+  /// Без неё слип с суммой и номером предъявляют как чек. Фискального
+  /// документа у выпуска нет: деньги за сертификат приходят обычной строкой
+  /// оплаты того чека, которым его продали.
+  ReceiptBuilder _buildCertificateSlip(
+    CertificateSlipData data,
+    ReceiptOptions options,
+    int width,
+  ) {
+    final receipt = ReceiptBuilder(charWidth: width)..init();
+
+    _addTemplateHeader(receipt, options);
+
+    if (data.isDuplicate) {
+      receipt
+        ..addCentered('*** ДУБЛИКАТ ***', bold: true)
+        ..addEmptyLine();
+    }
+
+    _addSellerHeader(
+      receipt,
+      storeName: data.storeName,
+      seller: data.seller,
+      options: options,
+    );
+
+    receipt
+      ..addLine()
+      ..addCentered('ПОДАРОЧНЫЙ СЕРТИФИКАТ', bold: true)
+      ..addEmptyLine()
+      ..addCentered('Сертификат №')
+      ..addCenteredWrapped(data.number, bold: true)
+      ..addEmptyLine()
+      ..addRow('Номинал:', '=${_formatDecimal(data.amount)}', bold: true);
+
+    // Срок — **словом**, а не молчанием: пустая строка читается как «срок
+    // забыли напечатать», и спорить об этом придётся у кассы.
+    final expiresAt = data.expiresAt;
+    receipt.addRow(
+      'Действует до:',
+      expiresAt == null ? 'без срока' : _formatDate(expiresAt),
+    );
+
+    if (data.hasPin) receipt.addCentered('ПИН задан');
+
+    // Бумажка, рождённая возвратом, обязана объяснить себя: старая погашена
+    // навсегда (решение 2, 2026-09-16), и без этих строк покупатель придёт
+    // со старой.
+    final refundLocalId = data.refundLocalId;
+    if (refundLocalId != null) {
+      receipt
+        ..addLine()
+        ..addRow('Выпущен возвратом №', '$refundLocalId');
+      final source = data.sourceNumber;
+      if (source != null && source.isNotEmpty) {
+        receipt
+          ..addCentered('Взамен сертификата')
+          ..addCenteredWrapped(source);
+      }
+    }
+
+    receipt.addLine();
+    receipt.addRow('Касса:', data.posName);
+    if (options.showCashier) receipt.addRow('Кассир:', data.cashierName);
+    receipt
+      ..addCentered(_formatDateTime(data.dateTime))
+      ..addLine()
+      ..addCentered('НЕ ФИСКАЛЬНЫЙ ДОКУМЕНТ', bold: true);
+
+    _addFooter(receipt, options);
+
+    return receipt;
+  }
+
+  /// Дата без времени — для срока годности бумажки: час и минута в нём
+  /// ничего не значат, а на 32 колонках стоят места.
+  String _formatDate(DateTime dt) {
+    final d = dt.day.toString().padLeft(2, '0');
+    final m = dt.month.toString().padLeft(2, '0');
+    return '$d.$m.${dt.year}';
   }
 
   String _cashboxId(ReceiptFiscalInfo? fiscal, String posName) {
@@ -737,65 +935,77 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
           '${_formatDecimal(product.quantity)} шт x ${_formatDecimal(product.price)}';
       receipt.addRow(qtyPrice, '=${_formatDecimal(product.total)}');
       if (product.hasDiscount) {
+        // Скидка называет **происхождение**, когда оно записано (задача
+        // 13): «подарок акции», а не безымянное число. Покупатель,
+        // которому пообещали «две пачки — третья даром», иначе не может
+        // проверить по чеку, что акцию ему применили вовсе.
+        //
+        // Чеки, проданные до v40, происхождения не несут — там остаётся
+        // прежнее «Скидка:». Выдумывать им имя нельзя.
         receipt.addRow(
-          '  Скидка:',
+          '  ${product.discountLabel ?? 'Скидка'}:',
           '-${_formatDecimal(product.discountAmount)}',
         );
       }
     }
   }
 
+  /// НДС плательщика — обязательный реквизит: шаблон его не выключает.
   void _addVatLines(
     ReceiptBuilder receipt,
     bool isVatPayer,
     int vatRatePercent,
     Decimal? vatAmount,
     Decimal total,
-    ReceiptOptions options,
   ) {
-    if (!options.showVat || !isVatPayer) return;
+    if (!isVatPayer) return;
     final vat = vatAmount ?? VatCalculator.extractVatFromGross(total);
     receipt
       ..addRow('ПО НАЛОГУ А:', '$vatRatePercent%')
       ..addRow('НДС-$vatRatePercent%:', '=${_formatDecimal(vat)}');
   }
 
+  /// Продавец: название и БИН/ИИН — всегда, адрес — по шаблону. Длинные
+  /// название и адрес переносятся, а не обрезаются.
   void _addSellerHeader(
     ReceiptBuilder receipt, {
     required String storeName,
     required ReceiptSellerInfo? seller,
-    required bool isVatPayer,
     required ReceiptOptions options,
   }) {
     if (storeName.isNotEmpty) {
-      receipt.addCentered(storeName, bold: true);
+      receipt.addCenteredWrapped(storeName, bold: true);
     }
-    if (options.showBin && (seller?.binIin?.isNotEmpty ?? false)) {
+    if (seller?.binIin?.isNotEmpty ?? false) {
       receipt.addCentered('БИН/ИИН: ${seller!.binIin}');
     }
     if (options.showAddress && (seller?.address?.isNotEmpty ?? false)) {
-      receipt.addCentered(seller!.address!);
+      receipt.addCenteredWrapped(seller!.address!);
     }
   }
 
+  /// Фискальный блок — целиком обязательный: ни одна его строка не зависит
+  /// от шаблона. QR печатается всегда, когда оператор дал ссылку проверки.
   void _addFiscalBlock(
     ReceiptBuilder receipt, {
     required ReceiptFiscalInfo? fiscal,
     required String? fallbackFiscalNumber,
     required bool isFiscal,
     required String? customerBin,
-    required ReceiptOptions options,
+    FiscalState? fiscalState,
   }) {
     if (!isFiscal || fiscal == null) {
       receipt
         ..addLine()
         ..addCentered('НЕФИСКАЛЬНЫЙ ЧЕК', bold: true);
+      final why = noFiscalDocumentReason(fiscalState);
+      if (why != null) receipt.addCenteredWrapped(why);
       return;
     }
 
     receipt.addLine(char: '*');
     if (fiscal.ofdName?.isNotEmpty ?? false) {
-      receipt.addCentered('ОФД ${fiscal.ofdName}');
+      receipt.addCenteredWrapped('ОФД ${fiscal.ofdName}');
     }
     if (fiscal.fiscalSign?.isNotEmpty ?? false) {
       receipt.addRow('ФИСК. ПРИЗНАК:', fiscal.fiscalSign!);
@@ -821,26 +1031,26 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     if (ticketUrl != null && ticketUrl.isNotEmpty) {
       receipt
         ..addEmptyLine()
-        ..addCentered('Для проверки чека зайдите на')
-        ..addCentered(ticketUrl);
+        ..addCenteredWrapped('Для проверки чека зайдите на')
+        ..addCenteredWrapped(ticketUrl);
     }
 
     receipt.addCentered('ФИСКАЛЬНЫЙ ЧЕК', bold: true);
 
-    if (options.showQr && ticketUrl != null && ticketUrl.isNotEmpty) {
+    if (ticketUrl != null && ticketUrl.isNotEmpty) {
       receipt
         ..addEmptyLine()
         ..qr(ticketUrl);
     }
   }
 
+  /// Подвал шаблона — после обязательной части, перед протяжкой и резом.
+  /// Пустой подвал не даёт ни одной строки.
   void _addFooter(ReceiptBuilder receipt, ReceiptOptions options) {
-    receipt.addEmptyLine();
-    if (options.footerText.trim().isNotEmpty) {
-      receipt.addCentered(options.footerText.trim());
-    }
-    for (final line in options.extraFooterLines) {
-      if (line.trim().isNotEmpty) receipt.addCentered(line.trim());
+    if (!options.footer.isEmpty) {
+      receipt
+        ..addEmptyLine()
+        ..addTextBlock(options.footer);
     }
     receipt
       ..addNewLines(3)
@@ -869,7 +1079,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
             '@${data.dateTime.millisecondsSinceEpoch}',
         copyIndex: 0,
       );
-      return await _submit(_buildPreCheck(data), documentId);
+      return await _submit(
+        _buildPreCheck(data, await _columns()),
+        documentId,
+      );
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.preCheck, e);
     }
@@ -883,7 +1096,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         number: _sanitizeNumber(data.orderNumber),
         copyIndex: 0,
       );
-      return await _submit(_buildServiceIntake(data), documentId);
+      return await _submit(
+        _buildServiceIntake(data, await _columns()),
+        documentId,
+      );
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.serviceIntake, e);
     }
@@ -899,14 +1115,17 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         number: _sanitizeNumber(data.orderNumber),
         copyIndex: 0,
       );
-      return await _submit(_buildServiceCompletion(data), documentId);
+      return await _submit(
+        _buildServiceCompletion(data, await _columns()),
+        documentId,
+      );
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.serviceCompletion, e);
     }
   }
 
-  ReceiptBuilder _buildPreCheck(PreCheckData data) {
-    final receipt = ReceiptBuilder(charWidth: charWidth)..init();
+  ReceiptBuilder _buildPreCheck(PreCheckData data, int width) {
+    final receipt = ReceiptBuilder(charWidth: width)..init();
 
     receipt
       ..addCentered(data.storeName, bold: true)
@@ -951,8 +1170,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     return receipt;
   }
 
-  ReceiptBuilder _buildServiceIntake(ServiceReceiptData data) {
-    final receipt = ReceiptBuilder(charWidth: charWidth)..init();
+  ReceiptBuilder _buildServiceIntake(ServiceReceiptData data, int width) {
+    final receipt = ReceiptBuilder(charWidth: width)..init();
 
     receipt
       ..addCentered(data.storeName, bold: true)
@@ -1005,8 +1224,8 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     return receipt;
   }
 
-  ReceiptBuilder _buildServiceCompletion(ServiceReceiptData data) {
-    final receipt = ReceiptBuilder(charWidth: charWidth)..init();
+  ReceiptBuilder _buildServiceCompletion(ServiceReceiptData data, int width) {
+    final receipt = ReceiptBuilder(charWidth: width)..init();
 
     receipt
       ..addCentered(data.storeName, bold: true)
@@ -1063,6 +1282,61 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       ..cut();
 
     return receipt;
+  }
+
+  /// Блок сертификатов X/Z-отчёта — **обязательство отдельно от выручки**.
+  ///
+  /// # Зачем он на бумаге
+  ///
+  /// Деньги за проданный сертификат — не выручка, а долг магазина
+  /// (`AccountType.certificateLiability`), а гашение — не оплата
+  /// (`FiscalTreatment.offsetNotFiscal`, решение заказчика 2026-09-14). До
+  /// этого блока в отчёте не было видно ни того, ни другого: кассир сводил
+  /// ящик и не знал, что часть денег в нём — чужие, а владелец снимал их
+  /// как прибыль.
+  ///
+  /// # Две строки, а не одна, и вычитать их друг из друга нельзя
+  ///
+  /// Они отвечают на разные вопросы и берутся **из разных источников**
+  /// (полный разбор — в докстринге `ReceiptPrintService.printXReport`):
+  ///
+  /// - «Выпущено» — номиналы бумажек, выпущенных за смену. Обязательство
+  ///   выросло; деньги лежат в ящике и товара на них не отдано.
+  /// - «Погашено» — строки оплаты сертификатом. Товар ушёл, живых денег за
+  ///   него не приходило.
+  ///
+  /// Разность этих двух чисел не значит ничего полезного кассиру: бумажку
+  /// выпускают в одну смену, а гасят через год. Поэтому строки стоят
+  /// **рядом**, без итога под ними, и итог смены их не трогает.
+  ///
+  /// # Молчит, когда сертификатов не было
+  ///
+  /// Оба нуля — блок не печатается вовсе. Магазин, который сертификатами не
+  /// торгует, не обязан читать про них две строки на каждом Z-отчёте, а
+  /// узнать по ним всё равно нечего: ноль здесь и отсутствие блока значат
+  /// одно и то же.
+  ///
+  /// # Чего этот блок НЕ доказывает
+  ///
+  /// Не доказывает, что выпущенное оплачено наличными: бумажку могли
+  /// оплатить картой. И не показывает, сколько магазин должен **всего**:
+  /// здесь движение одной смены, а обязательство копится годами и живёт на
+  /// счёте.
+  void _addCertificateBlock(
+    ReceiptBuilder receipt,
+    Decimal issued,
+    Decimal redeemed,
+  ) {
+    if (issued == Decimal.zero && redeemed == Decimal.zero) return;
+    receipt
+      ..addLine()
+      // Скобки, а не тире. Измерено на эмуляторе принтера: длинное тире в
+      // CP866 отсутствует и печатается «?» — строка «СЕРТИФИКАТЫ ? НЕ
+      // ВЫРУЧКА» вышла бы на ленту молча, без единой ошибки. Сторож —
+      // `certificate_shift_line_wire_test.dart`, случай «ни одного «?»».
+      ..addLeft('СЕРТИФИКАТЫ (НЕ ВЫРУЧКА)')
+      ..addRow('Выпущено (долг кассы):', _formatDecimal(issued))
+      ..addRow('Погашено (товаром):', _formatDecimal(redeemed));
   }
 
   String _formatDecimal(Decimal value) {
@@ -1122,161 +1396,5 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       }
     }
     return printerManager.printReceipt(bytes);
-  }
-}
-
-class _PreviewTextRenderer {
-  _PreviewTextRenderer(this.width);
-
-  final int width;
-  final StringBuffer _sb = StringBuffer();
-
-  String renderSale(SaleReceiptData data, ReceiptOptions options) {
-    _sb.clear();
-    final cur = data.currencySymbol;
-
-    if (data.isDuplicate) {
-      _center('*** ДУБЛИКАТ ***');
-      _empty();
-    }
-
-    if (options.headerText != null && options.headerText!.trim().isNotEmpty) {
-      _center(options.headerText!.trim());
-    }
-    if (data.storeName.isNotEmpty) _center(data.storeName);
-    if (options.showBin && (data.seller?.binIin?.isNotEmpty ?? false)) {
-      _center('БИН/ИИН: ${data.seller!.binIin}');
-    }
-    if (options.showAddress && (data.seller?.address?.isNotEmpty ?? false)) {
-      _center(data.seller!.address!);
-    }
-
-    _divider();
-
-    _row(
-      'Касса',
-      (data.fiscal?.znm?.isNotEmpty ?? false)
-          ? data.fiscal!.znm!
-          : data.posName,
-    );
-    _row('Чек №', '${data.receiptNo}');
-    if (options.showCashier) _row('Кассир:', data.cashierName);
-    if (data.customerName != null) _row('Клиент:', data.customerName!);
-    _center(_fmtDt(data.dateTime));
-    _center('ПРОДАЖА');
-
-    _divider();
-    var index = 0;
-    for (final p in data.products) {
-      index++;
-      final prefix = options.showItemNumbers ? '$index. ' : '';
-      _left('$prefix${p.name}');
-      _row('${_fmt(p.quantity)} шт x ${_fmt(p.price)}', '=${_fmt(p.total)}');
-      if (p.hasDiscount) _row('  Скидка:', '-${_fmt(p.discountAmount)}');
-    }
-    _divider();
-
-    if (data.totalDiscount > Decimal.zero) {
-      _row('Подытог:', _fmt(data.subtotal));
-      _row('Скидка:', '-${_fmt(data.totalDiscount)}');
-    }
-    if (data.serviceChargeAmount != null &&
-        data.serviceChargeAmount! > Decimal.zero) {
-      _row('Сервисный сбор:', _fmt(data.serviceChargeAmount!));
-    }
-    _row('ИТОГО:', '=${_fmt(data.totalAmount)}');
-    for (final pay in data.payments) {
-      _row(
-        pay.isCash ? 'НАЛИЧНЫМИ' : pay.name.toUpperCase(),
-        '=${_fmt(pay.amount)}',
-      );
-    }
-    if (data.change != null && data.change! > Decimal.zero) {
-      _row('Сдача:', '${_fmt(data.change!)} $cur');
-    }
-    if (options.showVat && data.isVatPayer) {
-      final vat =
-          data.vatAmount ?? VatCalculator.extractVatFromGross(data.totalAmount);
-      _row('ПО НАЛОГУ А:', '${data.vatRatePercent}%');
-      _row('НДС-${data.vatRatePercent}%:', '=${_fmt(vat)}');
-    }
-
-    final f = data.fiscal;
-    if (data.isFiscal && f != null) {
-      _sb.writeln('*' * width);
-      if (f.ofdName?.isNotEmpty ?? false) _center('ОФД ${f.ofdName}');
-      if (f.fiscalSign?.isNotEmpty ?? false)
-        _row('ФИСК. ПРИЗНАК:', f.fiscalSign!);
-      final fn = f.fiscalNumber ?? data.fiscalNumber;
-      if (fn != null && fn.isNotEmpty) _row('ФН:', fn);
-      if (f.rnm?.isNotEmpty ?? false) _row('РНМ:', f.rnm!);
-      if (f.znm?.isNotEmpty ?? false) _row('ЗНМ:', f.znm!);
-      _row('ВРЕМЯ:', _fmtDt(DateTime.now()));
-      if (f.isOffline) _center('*** ОФФЛАЙН ***');
-      if (f.ticketUrl?.isNotEmpty ?? false) {
-        _empty();
-        _center('Для проверки чека зайдите на');
-        _wrap(f.ticketUrl!);
-      }
-      _center('ФИСКАЛЬНЫЙ ЧЕК');
-      if (options.showQr && (f.ticketUrl?.isNotEmpty ?? false)) {
-        _empty();
-        _center('[ QR ]');
-      }
-    } else {
-      _divider();
-      _center('НЕФИСКАЛЬНЫЙ ЧЕК');
-    }
-
-    _empty();
-    if (options.footerText.trim().isNotEmpty)
-      _center(options.footerText.trim());
-    for (final line in options.extraFooterLines) {
-      if (line.trim().isNotEmpty) _center(line.trim());
-    }
-
-    return _sb.toString();
-  }
-
-  void _center(String text) {
-    final t = text.length > width ? text.substring(0, width) : text;
-    final pad = (width - t.length) ~/ 2;
-    _sb.writeln(' ' * pad + t);
-  }
-
-  void _left(String text) {
-    _sb.writeln(text.length > width ? text.substring(0, width) : text);
-  }
-
-  void _wrap(String text) {
-    var rest = text;
-    while (rest.length > width) {
-      _sb.writeln(rest.substring(0, width));
-      rest = rest.substring(width);
-    }
-    if (rest.isNotEmpty) _sb.writeln(rest);
-  }
-
-  void _row(String left, String right) {
-    final maxLeft = width - right.length - 1;
-    final l = left.length > maxLeft && maxLeft > 0
-        ? left.substring(0, maxLeft)
-        : left;
-    final pad = width - l.length - right.length;
-    _sb.writeln(l + ' ' * (pad > 0 ? pad : 1) + right);
-  }
-
-  void _divider() => _sb.writeln('-' * width);
-
-  void _empty() => _sb.writeln();
-
-  String _fmt(Decimal v) => v.toStringAsFixed(2);
-
-  String _fmtDt(DateTime dt) {
-    final d = dt.day.toString().padLeft(2, '0');
-    final m = dt.month.toString().padLeft(2, '0');
-    final h = dt.hour.toString().padLeft(2, '0');
-    final min = dt.minute.toString().padLeft(2, '0');
-    return '$d.$m.${dt.year} $h:$min';
   }
 }

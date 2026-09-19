@@ -8,7 +8,9 @@ import 'package:get_it/get_it.dart';
 
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
-import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
+import 'package:telepos/domain/sale/cart_view.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
+import 'package:telepos/domain/wire/wire_refusal.dart';
 import 'package:telepos/presentation/controllers/sale/sale_controller.dart';
 
 import '../support/harness.dart';
@@ -29,6 +31,22 @@ void main() {
     await h.db.delete(h.db.saleProducts).go();
     await h.db.delete(h.db.sales).go();
     await h.db.delete(h.db.shifts).go();
+
+    // Задача 5 плана «Продажа с браузерного терминала»:
+    // `SaleInitiationUseCaseImpl.initiate()` больше не открывает смену сама,
+    // когда её нет, — она отвечает отказом `shift_not_open`. Этот сценарий
+    // чистит смены перед каждой пробой и молча полагался на прежнее
+    // самооткрытие; теперь смена открывается **явно**, тем же действием, каким
+    // её открывает касса перед продажей, и **на названного человека** — того
+    // самого кассира, которого завёл харнесс, а не на выдуманный `userId: 1`.
+    //
+    // Посев вынесен в `E2eHarness.openShift()` при слиянии: те же девять
+    // сценариев чинились дважды и по-разному — ветвь `wire-sale` сеяла
+    // смену дословно в каждом файле, ветвь `browser-sale` завела помощник.
+    // Взято тело помощника; там же назван и довод про **текущее** время
+    // открытия (смена задним числом упёрлась бы в сторож «открыта более 24
+    // часов», `kShiftMaxAge`, и продажа отказала бы снова, другой причиной).
+    await h.openShift();
     container = ProviderContainer();
     addTearDown(container.dispose);
   });
@@ -75,6 +93,28 @@ void main() {
     return ucode;
   }
 
+  /// Оплатить набранный чек наличными — тем же путём, каким это делает
+  /// касса.
+  ///
+  /// Метка команды собирается из состояния экрана продажи ровно так же,
+  /// как её собирает `PaymentController._meta()`: чек и версия приходят
+  /// из снимка, который прислала касса, а не выдумываются здесь.
+  /// Владелец чека читается из базы — это тот терминал, за которым
+  /// набран чек, и другому касса откажет (`pay_not_owner`).
+  Future<SaleOutcome> payFor(AppDatabase db) async {
+    final state = container.read(saleControllerProvider);
+    final row = await db.saleDao.findByKey(state.receiptNo!, state.posId!);
+    return GetIt.I<PaymentService>().complete(
+      row!.terminalId ?? 0,
+      PaymentRequest(type: PaymentType.cash, cashReceived: state.total),
+      CartCommandMeta(
+        key: 'e2e-${state.receiptNo}',
+        baseVersion: state.version,
+        receiptNo: state.receiptNo,
+      ),
+    );
+  }
+
   test(
     'scanned DataMatrix mark is persisted to sale_product and retrievable via '
     'findMarksBySaleProduct (reaches the ОФД receipt)',
@@ -109,7 +149,11 @@ void main() {
         reason: 'sale must initialize before payment',
       );
 
-      sale.addProduct(
+      // Команда корзины асинхронна с задачи 7: она идёт в базу через
+      // контракт `CartService`, а не правит состояние на месте. Без
+      // `await` следующая строка читает снимок ДО команды — сумма 0, а
+      // продолжение работает поверх уже выброшенного нотифайера.
+      await sale.addProduct(
         ProductSearchResult(
           id: ucode,
           name: 'Сигареты Marlboro',
@@ -117,7 +161,7 @@ void main() {
         ),
       );
 
-      sale.setMark(dataMatrix);
+      await sale.setMark(dataMatrix);
       final scannedItem = container
           .read(saleControllerProvider)
           .items
@@ -131,21 +175,29 @@ void main() {
       final total = container.read(saleControllerProvider).total;
       expect(total, d('1200'), reason: 'sale total must be exactly 1200');
 
-      final ok = await sale.completeSale(
-        payments: [PaymentEntry(payeeAccountId: posAccId, amount: total)],
-        change: Decimal.zero,
-      );
+      // Ключ чека берётся **до** оплаты: путь `PaymentService.complete`
+      // уводит чек из работы, экран продажи это видит подпиской и
+      // начинает следующий чек — а прежний `completeSale` состояние
+      // экрана не трогал вовсе. Читать номер после оплаты значило бы
+      // спрашивать про уже другой чек.
+      final paidReceiptNo = container.read(saleControllerProvider).receiptNo!;
+      final paidPosId = container.read(saleControllerProvider).posId!;
+
+      // Задача 9 сняла `SaleNotifier.completeSale`: это был второй путь к
+      // деньгам, у которого в продукте не было ни одного вызывающего, а
+      // чек по нему уходил незафискализованным и ненапечатанным. Журнал
+      // идёт тем же путём, что и касса, — `PaymentService.complete`.
+      final outcome = await payFor(db);
       expect(
-        ok,
-        isTrue,
+        outcome.paid,
+        total,
         reason: 'a markable product WITH a scanned mark must complete',
       );
       expect(container.read(saleControllerProvider).error, isNull);
 
-      final saleState = container.read(saleControllerProvider);
       final lines = await db.saleProductDao.findBySale(
-        saleState.receiptNo!,
-        saleState.posId!,
+        paidReceiptNo,
+        paidPosId,
       );
       expect(lines.length, 1, reason: 'exactly one sale line persisted');
       final saleProductId = lines.first.id;
@@ -195,41 +247,65 @@ void main() {
       final posId = container.read(saleControllerProvider).posId;
       expect(receiptNo, isNotNull);
 
-      sale.addProduct(
+      // Команда корзины асинхронна с задачи 7: она идёт в базу через
+      // контракт `CartService`, а не правит состояние на месте. Без
+      // `await` следующая строка читает снимок ДО команды — сумма 0, а
+      // продолжение работает поверх уже выброшенного нотифайера.
+      await sale.addProduct(
         ProductSearchResult(id: ucode, name: 'Парфюм Chanel', price: d('9000')),
       );
 
       final total = container.read(saleControllerProvider).total;
       expect(total, d('9000'));
 
-      final ok = await sale.completeSale(
-        payments: [PaymentEntry(payeeAccountId: posAccId, amount: total)],
-        change: Decimal.zero,
-      );
+      // Отказ приходит **значением с именем** (I144), а не булевым `false`
+      // с ключом в состоянии экрана: путь оплаты ушёл за
+      // `PaymentService.complete` задачей 14, а задача 9 сняла второй,
+      // мёртвый (`SaleNotifier.completeSale`).
+      Object? refusal;
+      try {
+        await payFor(db);
+      } catch (e) {
+        refusal = e;
+      }
       expect(
-        ok,
-        isFalse,
+        refusal,
+        isA<WireRefusal>(),
         reason: 'a markable product without a mark must NOT be payable',
       );
-
-      final err = container.read(saleControllerProvider).error;
-      expect(err, isNotNull, reason: 'an honest error must be surfaced');
       expect(
-        err,
-        contains('error.mark_required'),
+        (refusal! as WireRefusal).code,
+        'mark_required',
         reason: 'the error names the missing-mark gate',
       );
       expect(
-        err,
+        (refusal as WireRefusal).message,
         contains('Парфюм Chanel'),
         reason: 'the error names the offending product',
       );
 
+      // До контракта корзины (задача 7) строки чека жили в состоянии экрана,
+      // и `completeSale` писала их в базу разом — отсюда прежнее утверждение
+      // «сторож срабатывает ДО любой записи в базу, строк нет». С задачи 7
+      // корзина **живёт в базе**: `addProduct` кладёт строку сразу, и она там
+      // законно есть — это чек в работе, а не половина проведённой продажи.
+      // Утверждение переписано по существу, а не ослаблено: половинчатой
+      // продажи по-прежнему нет — ни завершённого чека, ни оплаты, ни марки.
       final lines = await db.saleProductDao.findBySale(receiptNo!, posId!);
       expect(
         lines,
+        hasLength(1),
+        reason: 'the line lives in the working cart — the receipt is in work',
+      );
+      expect(
+        await db.saleDao.findByState(1),
         isEmpty,
-        reason: 'the gate runs BEFORE any DB write — no sale lines persisted',
+        reason: 'no sale may complete when the mark gate blocks it',
+      );
+      expect(
+        await db.paymentDao.findBySale(receiptNo, posId),
+        isEmpty,
+        reason: 'no payment lines written for a blocked sale',
       );
       final allMarks = await db.select(db.saleProductMarks).get();
       expect(

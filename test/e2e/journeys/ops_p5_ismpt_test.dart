@@ -12,7 +12,7 @@ import 'package:telepos/data/ismpt/marking_lifecycle_service.dart';
 import 'package:telepos/domain/ismpt/ismpt_models.dart';
 import 'package:telepos/domain/ismpt/ismpt_provider_registry.dart';
 import 'package:telepos/domain/ismpt/ismpt_service.dart';
-import 'package:telepos/domain/ismpt/noop_ismpt_provider.dart';
+import 'package:telepos/domain/ismpt/refusing_ismpt_provider.dart';
 
 import '../support/harness.dart';
 
@@ -102,7 +102,7 @@ void main() {
       final svc = MarkingLifecycleService(
         db: db,
         ismpt: IsMptOfflineQueueingProvider(
-          inner: const NoOpIsMptProvider(),
+          inner: const RefusingIsMptProvider(),
           store: InMemoryIsMptQueueStore(),
           isReachable: () async => false,
         ),
@@ -143,7 +143,7 @@ void main() {
       () async {
         final svc = MarkingLifecycleService(
           db: db,
-          ismpt: const NoOpIsMptProvider(),
+          ismpt: const RefusingIsMptProvider(),
         );
 
         await svc.acceptOnReceipt(ucode: 1, supplyId: 1, codes: const [_code1]);
@@ -253,7 +253,7 @@ void main() {
       () async {
         final svc = MarkingLifecycleService(
           db: db,
-          ismpt: const NoOpIsMptProvider(),
+          ismpt: const RefusingIsMptProvider(),
         );
 
         final res = await svc.recordWithdrawal(
@@ -317,7 +317,7 @@ void main() {
         'fake valid status (offline-safe, never throws)', () async {
       final svc = MarkingLifecycleService(
         db: db,
-        ismpt: const NoOpIsMptProvider(),
+        ismpt: const RefusingIsMptProvider(),
       );
       final res = await svc.verify([_code1]);
       expect(res.success, isFalse);
@@ -570,11 +570,11 @@ void main() {
     test('registry resolves backend → NoOp fallback when not registered '
         '(account-gated keeps POS selling offline)', () async {
       final registry = IsMptProviderRegistry();
-      expect(registry.resolve(IsMptBackend.none), isA<NoOpIsMptProvider>());
-      expect(registry.resolve(IsMptBackend.live), isA<NoOpIsMptProvider>());
+      expect(registry.resolve(IsMptBackend.none), isA<RefusingIsMptProvider>());
+      expect(registry.resolve(IsMptBackend.live), isA<RefusingIsMptProvider>());
 
-      registry.register(IsMptBackend.live, () => const NoOpIsMptProvider());
-      expect(registry.resolve(IsMptBackend.live), isA<NoOpIsMptProvider>());
+      registry.register(IsMptBackend.live, () => const RefusingIsMptProvider());
+      expect(registry.resolve(IsMptBackend.live), isA<RefusingIsMptProvider>());
     });
 
     test(
@@ -599,7 +599,7 @@ void main() {
         );
         expect(
           registry.resolve(IsMptBackend.live),
-          isNot(isA<NoOpIsMptProvider>()),
+          isNot(isA<RefusingIsMptProvider>()),
           reason: 'live resolves to the real provider, not NoOp',
         );
       },

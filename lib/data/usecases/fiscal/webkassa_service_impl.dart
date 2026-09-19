@@ -1,9 +1,11 @@
+import 'package:telepos/domain/fiscal/fiscal_doc_kind.dart';
 import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/fiscal/webkassa_provider.dart';
 import 'package:telepos/data/usecases/fiscal/fiscal_position_builder.dart';
+import 'package:telepos/domain/fiscal/fiscal_idempotency.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
@@ -56,6 +58,15 @@ class WebKassaServiceImpl implements WebKassaService {
     if (sale == null) {
       return FiscalizeResult.failed('Продажа не найдена: $saleId');
     }
+    // Эпоха ключа — время самой продажи, тем же правилом и тем же
+    // строителем, что и в первой линии (`FiscalServiceImpl`). Формат
+    // ключа здесь и там обязан совпадать буквально: два разных ключа на
+    // одну продажу дедупликация оператора не свяжет, и на неё приехали бы
+    // два фискальных документа. До этой правки совпадение держалось на
+    // двух одинаковых строковых литералах в разных файлах.
+    if (sale.time <= 0) {
+      return FiscalizeResult.failed(FiscalIdempotency.saleTimeMissing);
+    }
 
     try {
       final positions = await _salePositions(
@@ -64,12 +75,16 @@ class WebKassaServiceImpl implements WebKassaService {
         settings,
       );
       final req = FiscalSaleRequest(
-        idempotencyKey: 'sale-${sale.receiptNo}-${sale.posId}',
+        idempotencyKey: FiscalIdempotency.sale(
+          saleTime: sale.time,
+          receiptNo: sale.receiptNo,
+          posId: sale.posId,
+        ),
         localOperationId: saleId,
         positions: positions,
         payments: _payments(cashAmount, cardAmount),
-        totalDiscount: Decimal.zero,
-        totalMarkup: Decimal.zero,
+        totalDiscount: FiscalPositionBuilder.sumDiscounts(positions),
+        totalMarkup: FiscalPositionBuilder.sumMarkups(positions),
         occurredAt: DateTime.now(),
         customer: customerBin == null
             ? null
@@ -110,8 +125,8 @@ class WebKassaServiceImpl implements WebKassaService {
         localOperationId: refundId,
         positions: positions,
         payments: [FiscalPayment(kind: FiscalPaymentKind.cash, amount: amount)],
-        totalDiscount: Decimal.zero,
-        totalMarkup: Decimal.zero,
+        totalDiscount: FiscalPositionBuilder.sumDiscounts(positions),
+        totalMarkup: FiscalPositionBuilder.sumMarkups(positions),
         occurredAt: DateTime.now(),
         kind: FiscalOperationKind.saleReturn,
       );
@@ -239,7 +254,7 @@ class WebKassaServiceImpl implements WebKassaService {
           if (receipt.fiscalNo != null && receipt.fiscalNo!.isNotEmpty) {
             await _db.webkassaReceiptDao.markAsSynced(
               receipt.operationId,
-              receipt.isSale ?? true,
+              FiscalDocKind.byIndex(receipt.docKind),
             );
             syncedCount++;
           } else {
@@ -323,7 +338,7 @@ class WebKassaServiceImpl implements WebKassaService {
     var originalFiscalNo = '';
     if (originalSaleId != null) {
       final originalReceipt = await _db.webkassaReceiptDao
-          .findByIsSaleAndOperationId(true, originalSaleId);
+          .findByKindAndOperationId(FiscalDocKind.sale, originalSaleId);
       originalFiscalNo = originalReceipt?.fiscalNo ?? '';
     }
     return fiscalizeRefund(
@@ -337,8 +352,8 @@ class WebKassaServiceImpl implements WebKassaService {
     int operationId, {
     required bool isSale,
   }) async {
-    final receipt = await _db.webkassaReceiptDao.findByIsSaleAndOperationId(
-      isSale,
+    final receipt = await _db.webkassaReceiptDao.findByKindAndOperationId(
+      isSale ? FiscalDocKind.sale : FiscalDocKind.refund,
       operationId,
     );
     if (receipt == null) return null;
@@ -379,7 +394,9 @@ class WebKassaServiceImpl implements WebKassaService {
         _positions.build(
           name: product?.name ?? 'Товар ${sp.ucode}',
           quantity: sp.quantity,
-          unitPrice: sp.price,
+          // Цена ДО скидки — та же правка и тот же довод, что в
+          // `FiscalServiceImpl._buildSalePositions`.
+          unitPrice: sp.priceBefore,
           lineTotal: sp.quantity * sp.price,
           settings: settings,
           productVatRate: product?.vatRate,
@@ -405,7 +422,11 @@ class WebKassaServiceImpl implements WebKassaService {
         _positions.build(
           name: product?.name ?? 'Товар ${rp.ucode}',
           quantity: rp.quantity,
-          unitPrice: rp.price,
+          // `RefundProducts` не имеет колонки `priceBefore`: цену до
+          // скидки несёт `inSalePriceBefore`, и заполняет её только
+          // возврат по чеку. Пусто означает «скидки не было», а не «не
+          // знаем» — иначе скидка возврата была бы выдумана.
+          unitPrice: rp.inSalePriceBefore ?? rp.price,
           lineTotal: rp.quantity * rp.price,
           settings: settings,
           productVatRate: product?.vatRate,

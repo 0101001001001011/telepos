@@ -558,32 +558,49 @@ void main() {
       expect(await repo.findLastReceiptNo(), 5);
     });
 
-    test('findInProgress returns only state=0 sale', () async {
-      await repo.insert(
-        SaleEntity(
-          receiptNo: 1,
-          posId: 1,
-          userId: 1,
-          amount: _d('100'),
-          time: _nowSec(),
-          state: 0,
-        ),
-      );
-      await repo.insert(
-        SaleEntity(
-          receiptNo: 2,
-          posId: 1,
-          userId: 1,
-          amount: _d('200'),
-          time: _nowSec(),
-          state: 1,
-        ),
-      );
+    test(
+      'findInProgress returns only the state=0 sale of the asking terminal',
+      () async {
+        // `SaleMapper` не знает про `terminalId` (задача 3 плана «продажа с
+        // браузерного терминала» сознательно этого не требует) — владелец
+        // проставляется напрямую через drift, а не через `repo.insert`.
+        await repo.insert(
+          SaleEntity(
+            receiptNo: 1,
+            posId: 1,
+            userId: 1,
+            amount: _d('100'),
+            time: _nowSec(),
+            state: 0,
+          ),
+        );
+        await (db.update(db.sales)..where(
+              (s) => s.receiptNo.equals(1) & s.posId.equals(1),
+            ))
+            .write(const SalesCompanion(terminalId: Value(7)));
 
-      final inProgress = await repo.findInProgress();
-      expect(inProgress, isNotNull);
-      expect(inProgress!.receiptNo, 1);
-    });
+        await repo.insert(
+          SaleEntity(
+            receiptNo: 2,
+            posId: 1,
+            userId: 1,
+            amount: _d('200'),
+            time: _nowSec(),
+            state: 1,
+          ),
+        );
+
+        final inProgress = await repo.findInProgress(posId: 1, terminalId: 7);
+        expect(inProgress, isNotNull);
+        expect(inProgress!.receiptNo, 1);
+
+        expect(
+          await repo.findInProgress(posId: 1, terminalId: 9),
+          isNull,
+          reason: 'чужому рабочему месту чек не виден',
+        );
+      },
+    );
 
     test('updateState changes sale state', () async {
       await repo.insert(

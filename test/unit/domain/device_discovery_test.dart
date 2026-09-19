@@ -361,8 +361,7 @@ void main() {
   );
 
   // Fix round 1 — findings F1, F2, F3, F4. Each test below would fail
-  // against the pre-fix-round-1 implementation; see task-1-report.md for
-  // the mutation that confirms each one specifically.
+  // against the pre-fix-round-1 implementation.
 
   group('F1 — обнаружение по сети (WifiPrinterScanner)', () {
     test(

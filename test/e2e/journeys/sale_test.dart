@@ -34,6 +34,22 @@ void main() {
     await h.db.delete(h.db.saleProducts).go();
     await h.db.delete(h.db.sales).go();
     await h.db.delete(h.db.shifts).go();
+
+    // Задача 5 плана «Продажа с браузерного терминала»:
+    // `SaleInitiationUseCaseImpl.initiate()` больше не открывает смену сама,
+    // когда её нет, — она отвечает отказом `shift_not_open`. Этот сценарий
+    // чистит смены перед каждой пробой и молча полагался на прежнее
+    // самооткрытие; теперь смена открывается **явно**, тем же действием, каким
+    // её открывает касса перед продажей, и **на названного человека** — того
+    // самого кассира, которого завёл харнесс, а не на выдуманный `userId: 1`.
+    //
+    // Посев вынесен в `E2eHarness.openShift()` при слиянии: те же девять
+    // сценариев чинились дважды и по-разному — ветвь `wire-sale` сеяла
+    // смену дословно в каждом файле, ветвь `browser-sale` завела помощник.
+    // Взято тело помощника; там же назван и довод про **текущее** время
+    // открытия (смена задним числом упёрлась бы в сторож «открыта более 24
+    // часов», `kShiftMaxAge`, и продажа отказала бы снова, другой причиной).
+    await h.openShift();
   });
 
   Future<void> setDesktopSurface(WidgetTester tester) async {
@@ -136,8 +152,12 @@ void main() {
   }
 
   group('E2E Sale journey', () {
-    testWidgets('CASH sale: exact total, completes, shift auto-opens, '
-        'recorded to POS account', (tester) async {
+    // Имя пробы до задачи 5 обещало «shift auto-opens» — то самое молчаливое
+    // самооткрытие смены, которое снято из продукта. Проба, утверждающая
+    // снятое поведение своим именем, врёт даже когда зелена: следующий
+    // прочитает имя как описание кассы.
+    testWidgets('CASH sale: exact total, completes at the shift opened '
+        'beforehand, recorded to POS account', (tester) async {
       await setDesktopSurface(tester);
       await pumpAppAtSale(tester);
 
@@ -151,11 +171,18 @@ void main() {
         reason: 'Sale total must show the exact item price 450',
       );
 
+      // Утверждение осталось, но означает другое: смену открыли в `setUp`, и
+      // здесь проверяется, что продажа её не закрыла и не завела вторую.
       final openShift = await db.shiftDao.findOpenedShift();
       expect(
         openShift,
         isNotNull,
-        reason: 'Shift must auto-open on the first sale',
+        reason: 'the explicitly opened shift must still be the open one',
+      );
+      expect(
+        (await db.select(db.shifts).get()).length,
+        1,
+        reason: 'the sale must not open a second shift of its own',
       );
 
       await openPayment(tester);

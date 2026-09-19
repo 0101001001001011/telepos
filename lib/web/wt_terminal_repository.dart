@@ -1,3 +1,4 @@
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/wire/till_ops.dart';
@@ -117,6 +118,17 @@ class WtTerminalRepository implements TerminalRepository {
   @override
   Future<void> rename(int terminalId, String name) =>
       _wire.ask(TillOps.terminalRename, (terminalId: terminalId, name: name));
+
+  /// Задача 15: набор видов оплаты рабочего места. Тот же приём, что у
+  /// [rename] — операция провода, ничего не ловящая: `unknown_terminal` от
+  /// `LocalTerminalRepository.setAllowedPaymentTypes` доходит до вызывающего
+  /// нетронутым.
+  @override
+  Future<void> setAllowedPaymentTypes(int terminalId, Set<PaymentType> types) =>
+      _wire.ask(TillOps.terminalSetPaymentTypes, (
+        terminalId: terminalId,
+        types: types,
+      ));
 
   // Тот же приём, что у [rename]: `WireRefusal` (`unknown_terminal` от
   // `LocalTerminalRepository.delete`, `cannot_delete_self` от него же на

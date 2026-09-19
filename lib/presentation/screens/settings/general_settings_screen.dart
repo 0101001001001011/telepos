@@ -424,6 +424,17 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
           AppRoutes.fiscalSettings,
         ),
       ),
+      // Пункт 8 C (2026-09-15): провайдер QR и вид оплаты 6.
+      _NavItem(
+        title: l10n.qrSettingsTitle,
+        description: l10n.qrSettingsSubtitle,
+        icon: Icons.qr_code_2,
+        color: AppColors.primary,
+        onTap: () => context.push(AppRoutes.qrProviderSettings),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.qrProviderSettings,
+        ),
+      ),
       _NavItem(
         title: l10n.esfSettingsTitle,
         description: l10n.esfSettingsSubtitle,
@@ -459,6 +470,50 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
         color: const Color(0xFF00838F),
         onTap: () => context.push(AppRoutes.reorderRules),
       ),
+      // Задача 19 плана «полнота продажи» (2026-09-07): единственный вход на
+      // `/promotions`. Экран акций — 323 строки полного CRUD — существовал
+      // с маршрутом, зарегистрированным в таблице, и без единого перехода
+      // во всём `lib/`: `git grep -rn "AppRoutes.promotions" -- lib` давал
+      // только сам роутер. Завести акцию можно было, только набрав адрес
+      // руками или через SQL. Двенадцатая подсистема этой семьи; чтобы не
+      // появилась тринадцатая, рядом заведён сторож
+      // `test/presentation/router/route_navigation_coverage_test.dart`.
+      //
+      // Место — рядом с «Правилами перезаказа»: тот же класс экрана
+      // (правило, которое администратор задаёт один раз и которое дальше
+      // само влияет на работу кассы), тот же shell-маршрут.
+      //
+      // Право — `op.editPrice` через `PermissionKeys.routeToPermissionKey`,
+      // как у соседей, а не своим механизмом. Довод — в
+      // `permission_keys.dart`, над записью `'/promotions'`.
+      _NavItem(
+        title: l10n.promoTitle,
+        description: l10n.promoSubtitle,
+        icon: Icons.local_offer,
+        color: const Color(0xFFC2185B),
+        onTap: () => context.push(AppRoutes.promotions),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.promotions,
+        ),
+      ),
+      // Задача 12 плана «полнота продажи» (2026-09-07): единственный вход на
+      // `/discount-limits`. Пункт заведён **той же работой**, что и таблица
+      // пределов, — иначе `DiscountLimits` стала бы четвёртой колонкой без
+      // читателя вслед за тремя `usersAllowedTo*` в `ThisPosEntries`.
+      //
+      // Место — рядом с «Акциями»: тот же класс экрана (правило, которое
+      // администратор задаёт один раз и которое дальше само влияет на
+      // работу кассы) и тот же ключ права `op.editPrice`.
+      _NavItem(
+        title: l10n.discountLimitsTitle,
+        description: l10n.discountLimitsSubtitle,
+        icon: Icons.percent,
+        color: const Color(0xFF00695C),
+        onTap: () => context.push(AppRoutes.discountLimits),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.discountLimits,
+        ),
+      ),
       _NavItem(
         title: l10n.generalSettingsRestaurant,
         description: l10n.generalSettingsRestaurantSubtitle,
@@ -490,6 +545,30 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
         onTap: () => context.push(AppRoutes.terminalServiceSettings),
         permissionKey: PermissionKeys.routeToPermissionKey(
           AppRoutes.terminalServiceSettings,
+        ),
+      ),
+      // Диагностика рядом с эмуляторами не случайно: наладчик приходит сюда
+      // одним движением — включил прибор, посмотрел, что ушло.
+      _NavItem(
+        title: l10n.diagnosticsTitle,
+        description: l10n.diagnosticsSubtitle,
+        icon: Icons.monitor_heart_outlined,
+        color: const Color(0xFF455A64),
+        onTap: () => context.push(AppRoutes.diagnostics),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.diagnostics,
+        ),
+      ),
+      // Сразу за браузерными терминалами: оба — про сокеты ЭТОЙ машины, и оба
+      // нужны тому, кто настраивает рабочее место, а не обмен между магазинами.
+      _NavItem(
+        title: l10n.emulatorSettingsTitle,
+        description: l10n.emulatorSettingsHint,
+        icon: Icons.developer_board,
+        color: const Color(0xFF6D4C41),
+        onTap: () => context.push(AppRoutes.emulatorSettings),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.emulatorSettings,
         ),
       ),
       _NavItem(

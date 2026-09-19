@@ -45,6 +45,13 @@ class _FullTotalPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // `Expanded` вместо `Spacer` — задача 13. Измерено пробой
+          // «вёрстка планшета не переполняется»: в правой колонке
+          // планшета (307.6 точки) эта шапка переполнялась на **68
+          // точек**, и кассир видел жёлто-чёрную штриховку поверх слова
+          // «Итог чека». `Spacer` занимает **всё** свободное место и
+          // потому не даёт заголовку ужаться — заголовок обязан
+          // ужиматься сам.
           Row(
             children: [
               const Icon(
@@ -53,8 +60,15 @@ class _FullTotalPanel extends StatelessWidget {
                 color: AppColors.primary,
               ),
               const SizedBox(width: 8),
-              Text(l10n.saleReceiptTotal, style: AppTextStyles.h3),
-              const Spacer(),
+              Expanded(
+                child: Text(
+                  l10n.saleReceiptTotal,
+                  style: AppTextStyles.h3,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 8),
               _ModeChip(mode: state.mode),
             ],
           ),
@@ -239,34 +253,70 @@ class _TotalRow extends StatelessWidget {
   }
 }
 
-class _ModeChip extends StatelessWidget {
+/// Режим чека — **переключатель**, а не индикатор.
+///
+/// # Задача 8, находка 4: на кассе опта не было вовсе
+///
+/// Этот ярлык показывал `SaleMode` с самого редизайна и **всегда**
+/// «Розница»: метод `SaleNotifier.toggleMode` не вызывался ниоткуда (поиск
+/// по `lib/` находил одно объявление), а цена строки признак режима не
+/// смотрела. То есть кассир видел состояние, которого не мог изменить, —
+/// а с задачи 12 то же самое умел бы браузерный терминал, и два фронта
+/// разошлись бы в том, что касса умеет продавать оптом.
+///
+/// Выбрано «включить», а не «убрать с экрана»: опт — не отложенная
+/// функция, а работающая. `Sales.isWholesale` — настоящая колонка, цену по
+/// ней выбирает касса (`LocalCartService._addOrMerge`), оптовая цена
+/// лежит в каталоге (`ProductPrices.wholesalePrice`) и заполняется
+/// импортом и формой товара. Убрать ярлык значило бы спрятать готовое.
+///
+/// Ключ `sale_wholesale_toggle` — для сквозного сценария: у нажатия должно
+/// быть имя, а не координаты.
+class _ModeChip extends ConsumerWidget {
   const _ModeChip({required this.mode, this.small = false});
 
   final SaleMode mode;
   final bool small;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isWholesale = mode == SaleMode.wholesale;
+    final color = isWholesale ? AppColors.warning : AppColors.primary;
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: small ? 6 : 8,
-        vertical: small ? 2 : 4,
-      ),
-      decoration: BoxDecoration(
-        color: isWholesale
-            ? AppColors.warning.withValues(alpha: 0.1)
-            : AppColors.primary.withValues(alpha: 0.1),
+    return Material(
+      key: const Key('sale_wholesale_toggle'),
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(small ? 4 : 6),
+      child: InkWell(
         borderRadius: BorderRadius.circular(small ? 4 : 6),
-      ),
-      child: Text(
-        isWholesale ? l10n.saleWholesale : l10n.saleRetail,
-        style: (small ? context.styles.caption : AppTextStyles.body).copyWith(
-          color: isWholesale ? AppColors.warning : AppColors.primary,
-          fontWeight: FontWeight.w600,
-          fontSize: small ? 10 : null,
+        onTap: () => ref.read(saleControllerProvider.notifier).toggleMode(),
+        child: Container(
+          // Переключатель «розница/опт» — не подпись, а нажимаемая
+          // цель, и нажатие меняет **цены всего чека**. Мерился 115.8×
+          // 28.0 (задача 13, проба целей пальца): промах по нему кассир
+          // заметит по итогу, а не по кнопке.
+          //
+          // `small` — вариант для полосы итога в мобильной раскладке, где
+          // рядом стоит кнопка оплаты; там высота диктуется полосой, и
+          // 48 точек её сломали бы. Оговорено, а не забыто.
+          constraints: small
+              ? const BoxConstraints()
+              : const BoxConstraints(minHeight: AppTheme.minButtonSize),
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(
+            horizontal: small ? 6 : 8,
+            vertical: small ? 2 : 4,
+          ),
+          child: Text(
+            isWholesale ? l10n.saleWholesale : l10n.saleRetail,
+            style: (small ? context.styles.caption : AppTextStyles.body)
+                .copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                  fontSize: small ? 10 : null,
+                ),
+          ),
         ),
       ),
     );

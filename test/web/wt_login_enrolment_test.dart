@@ -66,9 +66,11 @@ import 'package:telepos/domain/terminal/terminal_identity.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/terminal/terminal_secret_storage.dart';
 import 'package:telepos/domain/wire/till_ops.dart';
+import 'package:telepos/domain/wire/wire_refusal.dart';
 import 'package:telepos/presentation/controllers/auth/login_controller.dart';
 import 'package:telepos/web/wt_auth_repository.dart';
 import 'package:telepos/web/wt_dispatcher.dart';
+import 'package:telepos/web/wt_refund_service.dart';
 import 'package:telepos/web/wt_terminal_repository.dart';
 
 import '../presentation/auth/support/fakes.dart';
@@ -105,6 +107,8 @@ void main() {
   late TillWire wire;
   late WtDispatcher browser;
   late PairingInvites invites;
+  late TillOperations operations;
+  late SessionRegistry sessions;
   late int cashierId;
 
   setUp(() async {
@@ -140,8 +144,8 @@ void main() {
         );
 
     invites = PairingInvites();
-    final sessions = SessionRegistry();
-    final operations = TillOperations(
+    sessions = SessionRegistry();
+    operations = TillOperations(
       db: db,
       bootstrap: _NoopBootstrap(),
       setup: _NoopSetup(),
@@ -192,141 +196,132 @@ void main() {
     await notifier.pendingVerification;
   }
 
-  test(
-    'новое устройство: register() без кода отказывает по-настоящему, гейт '
-    'держит, действительный код от PairingInvites.mint() заводит строку и '
-    'впускает кассира',
-    () async {
-      GetIt.instance.registerSingleton<TerminalSecretStorage>(
-        FakeTerminalSecretStorage(),
-      );
+  test('новое устройство: register() без кода отказывает по-настоящему, гейт '
+      'держит, действительный код от PairingInvites.mint() заводит строку и '
+      'впускает кассира', () async {
+    GetIt.instance.registerSingleton<TerminalSecretStorage>(
+      FakeTerminalSecretStorage(),
+    );
 
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
-      final notifier = container.read(loginControllerProvider.notifier);
-      notifier.initialize();
-      await Future<void>.delayed(Duration.zero);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(loginControllerProvider.notifier);
+    notifier.initialize();
+    await Future<void>.delayed(Duration.zero);
 
-      // Шаг 1: первая попытка входа этой вкладки — секрета нет, кода тоже
-      // нет. КРАСНОЕ БЕЗ ПРАВКИ КОНТРОЛЛЕРА: до неё этот путь звал
-      // `register(code: '')` вслепую, настоящая касса отвечала
-      // `pairing_code_invalid`, и `_resolveTerminalId` тонул в общем
-      // `catch (_)` — `error` стало бы `error.auth_unknown`, а не гейтом.
-      await loginWithPin(notifier, '4321');
+    // Шаг 1: первая попытка входа этой вкладки — секрета нет, кода тоже
+    // нет. КРАСНОЕ БЕЗ ПРАВКИ КОНТРОЛЛЕРА: до неё этот путь звал
+    // `register(code: '')` вслепую, настоящая касса отвечала
+    // `pairing_code_invalid`, и `_resolveTerminalId` тонул в общем
+    // `catch (_)` — `error` стало бы `error.auth_unknown`, а не гейтом.
+    await loginWithPin(notifier, '4321');
 
-      expect(
-        container.read(loginControllerProvider).needsEnrolmentCode,
-        isTrue,
-        reason: 'без кода касса не имеет права завести терминал',
-      );
-      expect(
-        await db.terminalDao.all(),
-        isEmpty,
-        reason: 'отклонённая (не отправленная) попытка не заводит строку',
-      );
+    expect(
+      container.read(loginControllerProvider).needsEnrolmentCode,
+      isTrue,
+      reason: 'без кода касса не имеет права завести терминал',
+    );
+    expect(
+      await db.terminalDao.all(),
+      isEmpty,
+      reason: 'отклонённая (не отправленная) попытка не заводит строку',
+    );
 
-      // Шаг 2: выдуманный код — настоящая касса отвечает `pairing_code_invalid`
-      // по-настоящему (не подделка), причина обязана называться поимённо.
-      notifier.updateEnrolmentCode('этот-код-никто-не-мятил');
-      await notifier.submitEnrolmentCode();
+    // Шаг 2: выдуманный код — настоящая касса отвечает `pairing_code_invalid`
+    // по-настоящему (не подделка), причина обязана называться поимённо.
+    notifier.updateEnrolmentCode('этот-код-никто-не-мятил');
+    await notifier.submitEnrolmentCode();
 
-      expect(
-        container.read(loginControllerProvider).error,
-        'error.pairing_code_invalid',
-      );
-      expect(container.read(loginControllerProvider).needsEnrolmentCode, isTrue);
-      expect(await db.terminalDao.all(), isEmpty);
+    expect(
+      container.read(loginControllerProvider).error,
+      'error.pairing_code_invalid',
+    );
+    expect(container.read(loginControllerProvider).needsEnrolmentCode, isTrue);
+    expect(await db.terminalDao.all(), isEmpty);
 
-      // Шаг 3: настоящий код от настоящего PairingInvites той же кассы —
-      // тем же экземпляром, каким пользуется `TerminalPairingScreen`.
-      final code = invites.mint().code;
-      notifier.updateEnrolmentCode(code);
-      await notifier.submitEnrolmentCode();
+    // Шаг 3: настоящий код от настоящего PairingInvites той же кассы —
+    // тем же экземпляром, каким пользуется `TerminalPairingScreen`.
+    final code = invites.mint().code;
+    notifier.updateEnrolmentCode(code);
+    await notifier.submitEnrolmentCode();
 
-      expect(
-        container.read(loginControllerProvider).needsEnrolmentCode,
-        isFalse,
-        reason: 'действительный код обязан снять гейт',
-      );
-      final terminals = await db.terminalDao.all();
-      expect(
-        terminals,
-        hasLength(1),
-        reason: 'настоящая строка терминала обязана появиться в базе кассы',
-      );
-      expect(notifier.browserTerminalId, terminals.single.id);
+    expect(
+      container.read(loginControllerProvider).needsEnrolmentCode,
+      isFalse,
+      reason: 'действительный код обязан снять гейт',
+    );
+    final terminals = await db.terminalDao.all();
+    expect(
+      terminals,
+      hasLength(1),
+      reason: 'настоящая строка терминала обязана появиться в базе кассы',
+    );
+    expect(notifier.browserTerminalId, terminals.single.id);
 
-      // Шаг 4: вход настоящим кассиром, настоящим PIN, по настоящему проводу.
-      await loginWithPin(notifier, '4321');
+    // Шаг 4: вход настоящим кассиром, настоящим PIN, по настоящему проводу.
+    await loginWithPin(notifier, '4321');
 
-      expect(
-        container.read(loginControllerProvider).isAuthenticated,
-        isTrue,
-        reason:
-            'ДОСТИЖИМОСТЬ: терминал, заведённый настоящим кодом, обязан '
-            'провести настоящий вход, а не только появиться в базе',
-      );
-    },
-  );
+    expect(
+      container.read(loginControllerProvider).isAuthenticated,
+      isTrue,
+      reason:
+          'ДОСТИЖИМОСТЬ: терминал, заведённый настоящим кодом, обязан '
+          'провести настоящий вход, а не только появиться в базе',
+    );
+  });
 
-  test(
-    'старое устройство без секрета: настоящий resume() отвечает '
-    'terminal_secret_invalid, гейт называет причину, новый код заводит '
-    'терминал заново',
-    () async {
-      // Секрет, оставшийся от терминала, которого на этой (свежей) базе
-      // никогда не было — тот же случай, что называет пункт 7 брифа задачи
-      // 7: обновление кассы, восстановление из копии, или просто удалённый
-      // на кассе терминал.
-      final secretStore = FakeTerminalSecretStorage()
-        ..write(9999, 'секрет-от-удалённого-или-чужого-терминала');
-      GetIt.instance.registerSingleton<TerminalSecretStorage>(secretStore);
+  test('старое устройство без секрета: настоящий resume() отвечает '
+      'terminal_secret_invalid, гейт называет причину, новый код заводит '
+      'терминал заново', () async {
+    // Секрет, оставшийся от терминала, которого на этой (свежей) базе
+    // никогда не было — тот же случай, что называет пункт 7 брифа задачи
+    // 7: обновление кассы, восстановление из копии, или просто удалённый
+    // на кассе терминал.
+    final secretStore = FakeTerminalSecretStorage()
+      ..write(9999, 'секрет-от-удалённого-или-чужого-терминала');
+    GetIt.instance.registerSingleton<TerminalSecretStorage>(secretStore);
 
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
-      final notifier = container.read(loginControllerProvider.notifier);
-      notifier.initialize();
-      await Future<void>.delayed(Duration.zero);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(loginControllerProvider.notifier);
+    notifier.initialize();
+    await Future<void>.delayed(Duration.zero);
 
-      await loginWithPin(notifier, '4321');
+    await loginWithPin(notifier, '4321');
 
-      expect(
-        container.read(loginControllerProvider).needsEnrolmentCode,
-        isTrue,
-      );
-      expect(
-        container.read(loginControllerProvider).error,
-        'error.terminal_secret_invalid',
-        reason:
-            'ГЛАВНАЯ ПРОВЕРКА ПУНКТА 7 БРИФА: старое устройство без '
-            'действующего секрета обязано увидеть названную причину, а не '
-            'общее «попробуйте ещё раз»',
-      );
-      expect(
-        secretStore.read(),
-        isNull,
-        reason: 'касса доказала, что секрет плохой — он обязан быть забыт',
-      );
-      expect(await db.terminalDao.all(), isEmpty);
+    expect(container.read(loginControllerProvider).needsEnrolmentCode, isTrue);
+    expect(
+      container.read(loginControllerProvider).error,
+      'error.terminal_secret_invalid',
+      reason:
+          'ГЛАВНАЯ ПРОВЕРКА ПУНКТА 7 БРИФА: старое устройство без '
+          'действующего секрета обязано увидеть названную причину, а не '
+          'общее «попробуйте ещё раз»',
+    );
+    expect(
+      secretStore.read(),
+      isNull,
+      reason: 'касса доказала, что секрет плохой — он обязан быть забыт',
+    );
+    expect(await db.terminalDao.all(), isEmpty);
 
-      // Новый код от настоящего PairingInvites заводит терминал заново.
-      final code = invites.mint().code;
-      notifier.updateEnrolmentCode(code);
-      await notifier.submitEnrolmentCode();
+    // Новый код от настоящего PairingInvites заводит терминал заново.
+    final code = invites.mint().code;
+    notifier.updateEnrolmentCode(code);
+    await notifier.submitEnrolmentCode();
 
-      expect(container.read(loginControllerProvider).needsEnrolmentCode, isFalse);
-      final terminals = await db.terminalDao.all();
-      expect(terminals, hasLength(1));
-      expect(
-        secretStore.read()?.terminalId,
-        terminals.single.id,
-        reason: 'новый секрет новой заводки обязан быть сохранён',
-      );
+    expect(container.read(loginControllerProvider).needsEnrolmentCode, isFalse);
+    final terminals = await db.terminalDao.all();
+    expect(terminals, hasLength(1));
+    expect(
+      secretStore.read()?.terminalId,
+      terminals.single.id,
+      reason: 'новый секрет новой заводки обязан быть сохранён',
+    );
 
-      await loginWithPin(notifier, '4321');
-      expect(container.read(loginControllerProvider).isAuthenticated, isTrue);
-    },
-  );
+    await loginWithPin(notifier, '4321');
+    expect(container.read(loginControllerProvider).isAuthenticated, isTrue);
+  });
 
   // Пункт «не запри десктоп» брифа задачи 7 — на этом же настоящем проводе:
   // десктопная касса берёт свой терминал через `self()`/`ensureSelf()`, а
@@ -334,31 +329,143 @@ void main() {
   // Тот же довод, что и «свежая установка» в `terminal_register_gate_test
   // .dart`, только здесь — доказательство поверх настоящего провода целиком,
   // а не только обработчика.
-  test(
-    'десктоп: self()/ensureSelf() заводят терминал без единого кода '
-    'привязки, PairingInvites этому пути не нужен вовсе',
-    () async {
-      final localTerminals = LocalTerminalRepository(db);
-      final terminal = await localTerminals.self();
+  test('десктоп: self()/ensureSelf() заводят терминал без единого кода '
+      'привязки, PairingInvites этому пути не нужен вовсе', () async {
+    final localTerminals = LocalTerminalRepository(db);
+    final terminal = await localTerminals.self();
 
-      expect(terminal.name, 'Касса-1');
-      expect(await db.terminalDao.all(), hasLength(1));
+    expect(terminal.name, 'Касса-1');
+    expect(await db.terminalDao.all(), hasLength(1));
 
-      final auth = LocalAuthRepository(
+    final auth = LocalAuthRepository(
+      db: db,
+      sessions: SessionRegistry(),
+      throttle: LoginThrottle(),
+    );
+    final outcome = await auth.login(
+      AuthAttempt(pin: '4321', terminalId: terminal.id, userId: cashierId),
+    );
+
+    expect(
+      outcome,
+      isA<AuthSession>(),
+      reason:
+          'десктопный путь не задет гейтом задачи 6 — вход проходит '
+          'без единого PairingInvites в кадре',
+    );
+  });
+
+  test('после F5 вкладка снова называет кассе своё рабочее место — иначе '
+      'первая же операция возврата получает unknown_terminal', () async {
+    // Задача 20. Найдено разбором круга 4 ветви возвратов: `selfEnsure`
+    // больше не привязывает место вовсе (дыра с деньгами вырезана), и
+    // «сессия ещё не назвала места» стало **законным** состоянием. Кто
+    // называет место — `terminals.register`/`terminals.resume`, то есть
+    // `LoginNotifier._resolveTerminalId`; а `_restoreSession` — путь, по
+    // которому вкладка поднимается после F5, — его не звала ни строкой.
+    //
+    // Последствие названо ровно: команды возврата берут место **из
+    // сеанса** (`TillOperations._refundTerminal`, требование контракта), и
+    // сессия без места получает `unknown_terminal` на каждой из шести. То
+    // есть кассир, нажавший F5 на экране возврата, получает отказ на
+    // первом же действии при полностью исправной кассе.
+    //
+    // # Почему у петли появился номер сессии
+    //
+    // Он единственный отличает F5 от продолжения работы: касса помнит
+    // место по номеру сессии, а перезагрузка вкладки — это новая сессия с
+    // пустой памятью. С захардкоженной единицей (как было до этой правки)
+    // «вторая вкладка» наследовала привязку первой и выглядела исправной —
+    // сценарий не воспроизводился вовсе.
+    final secrets = FakeTerminalSecretStorage();
+    GetIt.instance.registerSingleton<TerminalSecretStorage>(secrets);
+
+    // ── до перезагрузки: заводим терминал и входим ──────────────────────
+    final before = ProviderContainer();
+    final first = before.read(loginControllerProvider.notifier);
+    first.initialize();
+    await Future<void>.delayed(Duration.zero);
+    await loginWithPin(first, '4321');
+
+    final code = invites.mint().code;
+    first.updateEnrolmentCode(code);
+    await first.submitEnrolmentCode();
+    await loginWithPin(first, '4321');
+
+    expect(
+      before.read(loginControllerProvider).isAuthenticated,
+      isTrue,
+      reason: 'подготовка: до перезагрузки вкладка вошла',
+    );
+    expect(
+      operations.terminalForSessionKey(1),
+      isNotNull,
+      reason: 'подготовка: касса знает место первой сессии',
+    );
+    before.dispose();
+
+    // ── F5: новая сессия, тот же токен и тот же секрет ──────────────────
+    final reloaded = Loopback(sessionId: 2);
+    final reloadedWire = TillWire(
+      reloaded,
+      operations.askHandlers,
+      watchHandlers: operations.watchHandlers,
+      runHandlers: operations.runHandlers,
+      guard: wireGuardForTill(
         db: db,
-        sessions: SessionRegistry(),
-        throttle: LoginThrottle(),
-      );
-      final outcome = await auth.login(
-        AuthAttempt(pin: '4321', terminalId: terminal.id, userId: cashierId),
-      );
+        access: {for (final op in TillOps.all) op.name: op.access},
+        sessions: sessions,
+      ),
+    )..start();
+    addTearDown(() async {
+      await reloadedWire.stop();
+      await reloaded.dispose();
+    });
+    final reloadedBrowser = WtDispatcher(
+      reloaded,
+      tokens: GetIt.instance<SessionTokenStorage>(),
+    );
 
-      expect(
-        outcome,
-        isA<AuthSession>(),
-        reason: 'десктопный путь не задет гейтом задачи 6 — вход проходит '
-            'без единого PairingInvites в кадре',
-      );
-    },
-  );
+    GetIt.instance
+      ..unregister<TerminalRepository>()
+      ..registerSingleton<TerminalRepository>(
+        WtTerminalRepository(reloadedBrowser),
+      )
+      ..unregister<AuthRepository>()
+      ..registerSingleton<AuthRepository>(WtAuthRepository(reloadedBrowser));
+
+    final after = ProviderContainer();
+    addTearDown(after.dispose);
+    after.read(loginControllerProvider.notifier).initialize();
+    await settleLoopback();
+    await settleLoopback();
+
+    expect(
+      operations.terminalForSessionKey(2),
+      isNotNull,
+      reason:
+          'КРАСНОЕ БЕЗ ПРАВКИ: `_restoreSession` поднимает токен и подписку, '
+          'но кассе о рабочем месте не говорит — сессия остаётся без места, '
+          'и возврат отказывает unknown_terminal на первом же нажатии',
+    );
+
+    // Достижимость: тот же вывод, но с той стороны, с которой его увидит
+    // кассир. Своего `RefundService` эта касса не поднимает, поэтому
+    // привязанная сессия получает `no_refund_service` — важно, что **не**
+    // `unknown_terminal`: имя места разбирается раньше
+    // (`TillOperations._refundTerminal` стоит первой строкой обработчика).
+    String? refusalCode;
+    try {
+      await WtRefundService(reloadedBrowser).watch(1).first;
+    } on WireRefusal catch (refusal) {
+      refusalCode = refusal.code;
+    }
+    expect(
+      refusalCode,
+      isNot('unknown_terminal'),
+      reason:
+          'кассир, нажавший F5 на экране возврата, обязан продолжить '
+          'работу, а не получить отказ при исправной кассе',
+    );
+  });
 }

@@ -10,6 +10,23 @@ import 'package:telepos/presentation/controllers/refund/refund_controller.dart';
 import '../helpers/helpers.dart';
 import 'test_utils.dart';
 
+/// Возврат целиком: экран → контракт → касса → база.
+///
+/// # Что изменилось задачей 20 и почему это другой тест
+///
+/// До неё контроллер держал возврат в памяти экрана и читал **мок** базы:
+/// «чек 12345» существовал в виде заранее подготовленных ответов `when(...)`,
+/// а выделение строк было полем виджета. Проверять там было почти нечего —
+/// состояние меняло само себя.
+///
+/// Теперь под экраном настоящий `LocalRefundService` над настоящей базой
+/// корзины (`test_utils.dart`, `_seedCompletedReceipt`), и каждая проверка
+/// ниже проходит через кассу: выделение — команда `setLineQuantity`,
+/// количество больше проданного — **отказ**, а не молчаливое срезание, и
+/// завершение действительно двигает деньги и остаток.
+///
+/// Чек, на котором всё это меряется: №12345 на кассе 1 — `1001` два раза по
+/// 450 и `1002` один раз по 150, итого 1050.
 void main() {
   group('Refund Cycle Integration Tests', () {
     late ProviderContainer container;
@@ -23,197 +40,202 @@ void main() {
       tearDownTestDependencies();
     });
 
-    test('complete refund cycle - by receipt', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
-
-      refundNotifier.setMode(RefundMode.byReceipt);
-      var refundState = container.read(refundControllerProvider);
-      expect(refundState.mode, equals(RefundMode.byReceipt));
-
-      await refundNotifier.loadReceipt(12345, 1);
-      refundState = container.read(refundControllerProvider);
-
-      expect(refundState.receiptInfo, isNotNull);
-      expect(refundState.receiptInfo?.receiptNo, equals(12345));
-      expect(refundState.items, isNotEmpty);
-
-      expect(refundState.allSelected, isTrue);
-      expect(refundState.canRefund, isTrue);
-
-      final refundTotal = refundState.selectedTotal;
-      expect(refundTotal, greaterThan(Decimal.zero));
-
-      final result = await refundNotifier.processRefund();
-      expect(result, isTrue);
-
-      refundNotifier.clear();
-      refundState = container.read(refundControllerProvider);
-      expect(refundState.items, isEmpty);
-    });
-
-    test('partial refund - select specific items', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
-
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
-
-      refundNotifier.deselectAll();
-      refundState = container.read(refundControllerProvider);
-      expect(refundState.noneSelected, isTrue);
-      expect(refundState.canRefund, isFalse);
-
-      if (refundState.items.isNotEmpty) {
-        refundNotifier.toggleItemSelection(refundState.items.first.id);
-        refundState = container.read(refundControllerProvider);
-
-        expect(refundState.selectedCount, equals(1));
-        expect(refundState.canRefund, isTrue);
-        expect(refundState.selectedTotal, lessThan(refundState.total));
+    /// Черновик приезжает подпиской, а очередь команд асинхронна — читать
+    /// состояние надо после того, как микрозадачи разошлись.
+    Future<RefundState> settle() async {
+      for (var i = 0; i < 5; i++) {
+        await Future<void>.delayed(Duration.zero);
       }
+      return container.read(refundControllerProvider);
+    }
+
+    test('возврат по чеку: чек приходит от кассы со строками', () async {
+      final refunds = container.read(refundControllerProvider.notifier);
+
+      await refunds.setMode(RefundMode.byReceipt);
+      var state = await settle();
+      expect(state.mode, RefundMode.byReceipt);
+
+      await refunds.loadReceipt(12345, 1);
+      state = await settle();
+
+      expect(state.error, isNull, reason: 'касса приняла чек');
+      expect(state.receiptInfo?.receiptNo, 12345);
+      expect(state.items, hasLength(2));
+      expect(
+        state.allSelected,
+        isTrue,
+        reason: 'загруженный чек возвращается целиком, пока не сняли строку',
+      );
+      expect(state.selectedTotal, Decimal.parse('1050'));
+
+      final done = await refunds.processRefund();
+      expect(done, isTrue, reason: state.error ?? 'возврат должен пройти');
+
+      refunds.clear();
+      state = await settle();
+      expect(state.items, isEmpty);
     });
 
-    test('refund with quantity adjustment', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('снятая строка остаётся видимой и возвращается обратно', () async {
+      // Правило контракта: снять выделение — послать кассе ноль, строка
+      // уходит из черновика. Экран обязан её показать снятой, а не потерять,
+      // иначе вернуть её нечем.
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
+      await refunds.loadReceipt(12345, 1);
+      var state = await settle();
+      final first = state.items.first;
 
-      if (refundState.items.isNotEmpty) {
-        final firstItem = refundState.items.first;
-        final originalQuantity = firstItem.quantity;
-        final originalTotal = refundState.selectedTotal;
+      await refunds.toggleItemSelection(first.id);
+      state = await settle();
 
-        if (originalQuantity > Decimal.one) {
-          refundNotifier.updateQuantity(firstItem.id, Decimal.one);
-          refundState = container.read(refundControllerProvider);
+      expect(state.items, hasLength(2), reason: 'строка не исчезла с экрана');
+      expect(
+        state.items.firstWhere((i) => i.id == first.id).isSelected,
+        isFalse,
+      );
+      expect(state.selectedCount, 1);
+      expect(state.selectedTotal, lessThan(Decimal.parse('1050')));
 
-          final updatedItem = refundState.items.first;
-          expect(updatedItem.quantity, equals(Decimal.one));
-          expect(refundState.selectedTotal, lessThan(originalTotal));
-        }
-      }
+      await refunds.toggleItemSelection(first.id);
+      state = await settle();
+
+      expect(state.allSelected, isTrue);
+      expect(state.selectedTotal, Decimal.parse('1050'));
     });
 
-    test('refund without receipt - manual entry', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('количество меньше проданного уменьшает сумму', () async {
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      refundNotifier.setMode(RefundMode.withoutReceipt);
-      var refundState = container.read(refundControllerProvider);
-      expect(refundState.mode, equals(RefundMode.withoutReceipt));
+      await refunds.loadReceipt(12345, 1);
+      var state = await settle();
 
-      await refundNotifier.search('Молоко');
-      await Future.delayed(const Duration(milliseconds: 500));
-      refundState = container.read(refundControllerProvider);
-      expect(refundState.searchResults, isNotEmpty);
+      final twoPack = state.items.firstWhere((i) => i.quantity > Decimal.one);
+      await refunds.updateQuantity(twoPack.id, Decimal.one);
+      state = await settle();
 
-      refundNotifier.addProduct(refundState.searchResults.first);
-      refundState = container.read(refundControllerProvider);
-      expect(refundState.items.length, equals(1));
-      expect(refundState.items.first.isSelected, isTrue);
-
-      await refundNotifier.search('Хлеб');
-      await Future.delayed(const Duration(milliseconds: 500));
-      refundState = container.read(refundControllerProvider);
-      if (refundState.searchResults.isNotEmpty) {
-        refundNotifier.addProduct(refundState.searchResults.first);
-        refundState = container.read(refundControllerProvider);
-        expect(refundState.items.length, equals(2));
-      }
-
-      expect(refundState.canRefund, isTrue);
-      final result = await refundNotifier.processRefund();
-      expect(result, isTrue);
+      expect(state.error, isNull);
+      expect(
+        state.items.firstWhere((i) => i.id == twoPack.id).quantity,
+        Decimal.one,
+      );
+      expect(state.selectedTotal, Decimal.parse('600'));
     });
 
-    test('set refund reason', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('больше проданного касса не отдаёт и говорит об этом', () async {
+      // До задачи 20 контроллер тихо срезал введённое до `maxQuantity`:
+      // кассир видел одно, а вернулось бы другое. Теперь отказ **назван**.
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
+      await refunds.loadReceipt(12345, 1);
+      var state = await settle();
+      final line = state.items.first;
+      final sold = line.maxQuantity!;
 
-      if (refundState.items.isNotEmpty) {
-        final firstItem = refundState.items.first;
+      await refunds.updateQuantity(line.id, sold + Decimal.fromInt(10));
+      state = await settle();
 
-        refundNotifier.setReason(firstItem.id, RefundReason.defective);
-        refundState = container.read(refundControllerProvider);
-
-        final updatedItem = refundState.items.first;
-        expect(updatedItem.reason, equals(RefundReason.defective));
-      }
+      expect(
+        state.error,
+        isNotNull,
+        reason: 'молчаливое срезание неотличимо от успеха',
+      );
+      // С 2026-09-15 — свой ключ возврата, а не `error.refund_refused:<текст
+      // кассы>`: код `invalid_amount` общий с корзиной, а её фраза — про
+      // скидку (`RefundController._refundOwnKeys`).
+      expect(state.error, 'error.refund_invalid_amount');
+      expect(
+        state.items.firstWhere((i) => i.id == line.id).quantity,
+        sold,
+        reason: 'отказ ничего не меняет',
+      );
     });
 
-    test('remove item from refund', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('ноль убирает строку с экрана насовсем', () async {
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
-      final initialCount = refundState.items.length;
+      await refunds.loadReceipt(12345, 1);
+      var state = await settle();
+      final id = state.items.first.id;
 
-      if (refundState.items.isNotEmpty) {
-        final firstItemId = refundState.items.first.id;
+      await refunds.updateQuantity(id, Decimal.zero);
+      state = await settle();
 
-        refundNotifier.removeItem(firstItemId);
-        refundState = container.read(refundControllerProvider);
-
-        expect(refundState.items.length, equals(initialCount - 1));
-      }
+      expect(
+        state.items.any((i) => i.id == id),
+        isFalse,
+        reason: 'убрать — не то же, что снять выделение',
+      );
+      expect(state.items, hasLength(1));
     });
 
-    test('select all / deselect all', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('снять всё и выделить всё', () async {
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
+      await refunds.loadReceipt(12345, 1);
+      var state = await settle();
+      expect(state.allSelected, isTrue);
 
-      expect(refundState.allSelected, isTrue);
+      await refunds.deselectAll();
+      state = await settle();
+      expect(state.noneSelected, isTrue);
+      expect(state.selectedTotal, Decimal.zero);
+      expect(state.canRefund, isFalse);
 
-      refundNotifier.deselectAll();
-      refundState = container.read(refundControllerProvider);
-      expect(refundState.noneSelected, isTrue);
-      expect(refundState.selectedTotal, equals(Decimal.zero));
-
-      refundNotifier.selectAll();
-      refundState = container.read(refundControllerProvider);
-      expect(refundState.allSelected, isTrue);
-      expect(refundState.selectedTotal, greaterThan(Decimal.zero));
+      await refunds.selectAll();
+      state = await settle();
+      expect(state.allSelected, isTrue);
+      expect(state.selectedTotal, Decimal.parse('1050'));
     });
 
-    test('quantity cannot exceed max from receipt', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('причина возврата остаётся экраном', () async {
+      // По проводу причина не едет вовсе (шаг 9 спеки): касса её не
+      // спрашивает, и в контракте её нет.
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
+      await refunds.loadReceipt(12345, 1);
+      var state = await settle();
+      final id = state.items.first.id;
 
-      if (refundState.items.isNotEmpty) {
-        final firstItem = refundState.items.first;
-        final maxQuantity = firstItem.maxQuantity;
+      refunds.setReason(id, RefundReason.defective);
+      state = await settle();
 
-        refundNotifier.updateQuantity(
-          firstItem.id,
-          maxQuantity + Decimal.fromInt(10),
-        );
-        refundState = container.read(refundControllerProvider);
-
-        final updatedItem = refundState.items.first;
-        expect(updatedItem.quantity, equals(maxQuantity));
-      }
+      expect(
+        state.items.firstWhere((i) => i.id == id).reason,
+        RefundReason.defective,
+      );
     });
 
-    test('removing quantity to zero removes item', () async {
-      final refundNotifier = container.read(refundControllerProvider.notifier);
+    test('возврат без чека: поиск, товар, завершение', () async {
+      final refunds = container.read(refundControllerProvider.notifier);
 
-      await refundNotifier.loadReceipt(12345, 1);
-      var refundState = container.read(refundControllerProvider);
-      final initialCount = refundState.items.length;
+      await refunds.setMode(RefundMode.withoutReceipt);
+      var state = await settle();
+      expect(state.mode, RefundMode.withoutReceipt);
+      expect(
+        state.error,
+        isNull,
+        reason: 'право op.refundWithoutReceipt проверяет касса; здесь оно есть',
+      );
 
-      if (refundState.items.isNotEmpty) {
-        final firstItemId = refundState.items.first.id;
+      await refunds.search('Молоко');
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      state = await settle();
+      expect(state.searchResults, isNotEmpty);
 
-        refundNotifier.updateQuantity(firstItemId, Decimal.zero);
-        refundState = container.read(refundControllerProvider);
+      await refunds.addProduct(state.searchResults.first);
+      state = await settle();
+      expect(state.items, hasLength(1));
+      expect(state.items.first.isSelected, isTrue);
+      expect(
+        state.items.first.maxQuantity,
+        isNull,
+        reason: 'без чека потолка нет — сверяться не с чем',
+      );
 
-        expect(refundState.items.length, equals(initialCount - 1));
-      }
+      expect(state.canRefund, isTrue);
+      expect(await refunds.processRefund(), isTrue, reason: state.error ?? '');
     });
 
     testWidgets('refund screen UI flow', (tester) async {
@@ -231,6 +253,16 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('search_receipt_btn')));
+      // `runAsync`, а не `pumpAndSettle`: чек теперь приходит **от кассы** —
+      // через очередь команд и настоящую базу в памяти. Часы `testWidgets`
+      // поддельные, и работа настоящего SQLite при них не движется вовсе:
+      // без этой обёртки ожидание кончается раньше, чем запрос, и экран
+      // остаётся пустым при полностью исправном возврате.
+      await tester.runAsync(() async {
+        for (var i = 0; i < 20; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 10));
+        }
+      });
       await tester.pumpAndSettle();
 
       expect(find.byType(ListTile), findsWidgets);

@@ -1,4 +1,12 @@
 {
+  "paymentCardChargeUnsettled": "The card has already been charged {amount}, and that sum will not reach the receipt. Void it on the payment terminal.",
+  "@paymentCardChargeUnsettled": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "@@locale": "en",
   "navReports": "Reports",
   "navStock": "Stock",
@@ -94,6 +102,11 @@
   "refundComplete": "Refund complete",
   "refundCash": "Cash refund",
   "refundCard": "Card refund",
+  "refundConnectionLostHint": "The terminal will reconnect on its own — work resumes where it stopped",
+  "refundConnectionLost": "Connection to the till lost",
+  "@refundConnectionLost": {
+    "description": "Подписка на черновик возврата оборвалась — состояние с кассы больше не приходит"
+  },
   "refundNoItems": "No items to refund",
   "refundAlreadyRefunded": "Item already refunded",
   "refundPartial": "Partial refund",
@@ -124,6 +137,7 @@
   "paymentKaspi": "Kaspi QR",
   "paymentBonus": "Bonus",
   "paymentDebt": "Debt",
+  "paymentInstallment": "Instalments",
   "paymentMixed": "Mixed",
   "paymentEnterAmount": "Enter amount",
   "paymentRemaining": "Remaining: {amount}",
@@ -149,6 +163,7 @@
   "historyNoSales": "No sales for period",
   "historyReceipt": "Receipt #{number}",
   "historyReprint": "Reprint",
+  "certificateSlipPrintFailed": "Certificate slip {number} was not printed: {reason}",
   "historyDetails": "Details",
   "historySale": "Sale",
   "historyRefund": "Refund",
@@ -300,6 +315,7 @@
   "loginWithoutPin": "Login without PIN",
   "loginShiftOpen": "Shift open",
   "loginShiftClosed": "Shift closed",
+  "loginShiftUnknown": "Shift: unknown",
   "saleQuickProducts": "Quick products",
   "saleIncrease": "Increase",
   "saleDecrease": "Decrease",
@@ -307,6 +323,8 @@
   "saleDataMatrix": "Marking (DataMatrix)",
   "saleHeld": "Sale held",
   "saleNoDeferredSales": "No deferred sales",
+  "saleDeferredListNotPermitted": "Deferred receipts are not open to you: the \"defer receipt\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.",
+  "saleDeferNotPermitted": "You may not defer a receipt: the \"defer receipt\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.",
   "saleReceiptNo": "Receipt #",
   "salePositions": "Items",
   "saleSearchHint": "Search product (name or barcode)",
@@ -482,6 +500,9 @@
   "printerPrinting": "Printing...",
   "printerCheckStatus": "Checking...",
   "printerPrintSuccess": "Print successful",
+  "paymentNotFiscalized": "Receipt not fiscalized — payment recorded",
+  "paymentFiscalModuleAbsent": "Fiscal module unavailable — receipts are not fiscalized",
+  "cashDrawerOpenError": "Cash drawer did not open",
   "printerPrintError": "Print error",
   "printerCheckBtn": "Check",
   "printerTestReceipt": "Test receipt",
@@ -588,6 +609,9 @@
   "maxAmount": "Maximum {amount}",
   "enterValidNumber": "Enter a valid number",
   "discountAmount": "Discount amount:",
+  "discountLimitPercent": "Up to {percent}% allowed — {source}",
+  "discountLimitAmount": "Up to {amount} allowed — {source}",
+  "discountApprovalAbove": "Above {percent}% a supervisor must approve",
   "sumLabel": "Amount",
   "enterAmount": "Enter amount",
   "amountMustBePositive": "Amount must be positive",
@@ -910,7 +934,7 @@
   },
   "terminalHomeWhoHeader": "Who is signed in",
   "terminalHomeUserLabel": "Cashier",
-  "terminalHomeSaleNote": "Selling in the browser is separate work: the sale screen reads the till's database directly and does not build for the browser yet.",
+  "terminalHomeSaleNote": "The till owns the cart, the receipt number and the shift — the terminal shows the receipt and commands over the wire. Printing, fiscalisation and the cash drawer stay on the till.",
   "wtNotPortedTitle": "This screen is on the till only for now",
   "wtNotPortedBody": "The browser terminal gets its data over the wire, and a screen appears here once every one of its contracts can work over that wire. This one cannot yet. Showing it empty would be worse than saying so.",
   "wtNotPortedLocation": "Route: {location}",
@@ -2096,6 +2120,17 @@
   "fiscalSettingsVatPayerSubtitle": "Organization is a VAT payer (12%)",
   "fiscalSettingsPrintVat": "Print VAT on receipt",
   "fiscalSettingsPrintVatSubtitle": "Display VAT amount on receipt",
+  "fiscalOffsetSection": "Certificates and advances",
+  "fiscalOffsetCertificateSale": "Receipt for certificate sale",
+  "fiscalOffsetCertificateSaleSubtitle": "Issue a fiscal receipt when a gift certificate is sold",
+  "fiscalOffsetLayout": "Paying with certificate or advance",
+  "fiscalOffsetLayoutSubtitle": "How the offset amount appears on the OFD receipt",
+  "fiscalOffsetLayoutDiscount": "As a discount on goods",
+  "fiscalOffsetLayoutSurchargeOnly": "Receipt for the surcharge only",
+  "fiscalOffsetPrepaymentReceipt": "Receipt for advance payment",
+  "fiscalOffsetPrepaymentReceiptSubtitle": "Issue a fiscal receipt when a customer pays an advance",
+  "fiscalOffsetSaveError": "Could not save the setting",
+  "customerPaymentTender": "Paid with",
   "fiscalSettingsVatRate": "VAT rate: 12% (calculated as 3/28)",
   "historyProductUcode": "Product #{ucode}",
   "@historyProductUcode": {
@@ -2690,6 +2725,15 @@
   "saleWholesale": "WHOLESALE",
   "saleRetail": "Retail",
   "syncPreparing": "Preparing...",
+  "refundRefused": "Refund refused: {reason}",
+  "@refundRefused": {
+    "description": "A refusal from the till on a refund operation; the reason text comes from the till",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "errorSaveFailed": "Save error: {details}",
   "@errorSaveFailed": {
     "placeholders": {
@@ -2718,6 +2762,15 @@
   },
   "errorSearchFailedGeneric": "Search error",
   "errorUnknownGeneric": "Unknown error",
+  "errorRefusalUnknownCode": "unknown reason (code {code})",
+  "@errorRefusalUnknownCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errorReasonUnknown": "unknown reason",
   "errorFillRequired": "Fill in all required fields",
   "errorNoUsers": "No registered users",
   "errorSelectUser": "Select a user",
@@ -2730,6 +2783,11 @@
   "errorCredentialUnreadable": "The PIN record is corrupted. Contact an administrator — retyping the PIN will not help.",
   "errorAuthUnknown": "The till could not answer the login attempt. Try again.",
   "errorTillNotConfigured": "The till is not set up yet — sign-in is unavailable until the setup wizard has run.",
+  "errorTillNotConfiguredSale": "The till is not set up — a receipt cannot be started. Ask an administrator to run the setup wizard.",
+  "errorNotAllowed": "You do not have permission for this action. Ask an administrator.",
+  "errorNoSaleModule": "This till cannot run a receipt: the sale module is not built in. Ask an administrator.",
+  "errorTerminalInBody": "The terminal addressed the till incorrectly. Update the app on this workstation.",
+  "errorWholesaleInStart": "A wholesale receipt does not start this way. Start a normal receipt and switch wholesale on with its own button.",
   "errorTerminalLimitReached": "This till already has the maximum number of terminals. Ask an administrator to free up a slot.",
   "errorPairingCodeInvalid": "The pairing code did not work — it may be expired, already used, or mistyped. Get a new code from the till operator.",
   "errorTerminalSecretInvalid": "This device's pairing is no longer valid — the terminal may have been removed on the till. Enter a new pairing code.",
@@ -2738,6 +2796,16 @@
   "errorSaleNotInitialized": "Sale not initialized",
   "errorReceiptEmpty": "Receipt is empty",
   "errorDeferredNotFound": "Deferred receipt not found",
+  "errorCartStale": "The receipt changed while you were working on it. The screen has been refreshed — repeat your last action.",
+  "errorCartWrongReceipt": "This receipt is no longer open. Start a new one or resume a deferred receipt.",
+  "errorCartNotStarted": "No receipt has been started yet. Start a new one or resume a deferred receipt.",
+  "errorLineNotFound": "That line is no longer in the receipt. Refresh it and try again.",
+  "errorInvalidAmount": "Invalid value. An amount cannot be negative, and a discount cannot exceed 100%.",
+  "errorDeferredTaken": "That deferred receipt has already been resumed at another workstation.",
+  "errorCartNotEmpty": "Finish or defer the current receipt first — a deferred one cannot be resumed on top of it.",
+  "errorSaleNotStarted": "The till could not start a receipt and gave no reason. Please try again.",
+  "errorShiftNotOpen": "No shift is open. Open a shift at the till.",
+  "errorCardTerminalMisconfigured": "The payment terminal of this workstation is misconfigured. Check the binding in hardware settings.",
   "errorReceiptNotFound": "Receipt #{receiptNo} not found",
   "@errorReceiptNotFound": {
     "placeholders": {
@@ -3541,6 +3609,15 @@
   "receiptTemplateTestPrintOk": "Sample receipt sent to printer",
   "receiptTemplateTestPrintFail": "Print failed (check the printer)",
   "receiptTemplateDeleteTitle": "Delete template",
+  "receiptTemplateHeaderHint": "Several lines: greeting, promotion, contacts",
+  "receiptTemplateFooterHint": "Several lines: thanks, return policy, website, social media",
+  "receiptTemplateAlignLeft": "Left",
+  "receiptTemplateAlignCenter": "Center",
+  "receiptTemplateAlignRight": "Right",
+  "receiptTemplateBold": "Bold",
+  "receiptTemplateDoubleSize": "Large (double size)",
+  "receiptTemplatePaperWidthHint": "Paper width is set in the printer settings",
+  "receiptTemplateMandatoryNote": "Mandatory details — receipt number, total, payments, VAT, fiscal sign and QR — are always printed, between the header and the footer",
   "receiptTemplateDeleteConfirm": "Delete template \"{name}\"?",
   "@receiptTemplateDeleteConfirm": {
     "placeholders": {
@@ -3562,6 +3639,7 @@
   "restaurantMergeNeedTarget": "The current table has no open order",
   "shiftOverAgeTitle": "Shift open for over 24 hours",
   "shiftOverAgeMessage": "Sale is blocked. Close the current shift and open a new one to continue.",
+  "shiftOverAgeCloseAtTill": "Sale is blocked. Close the shift at the till and open a new one to continue.",
   "supplierRepayTitle": "Repay supplier debt",
   "supplierRepayCurrentDebt": "Current debt: {amount}",
   "supplierRepayNoDebt": "No debt to the supplier",
@@ -4587,18 +4665,17 @@
   "prodNtin": "NTIN",
   "prodMarkable": "Subject to marking",
   "promoTitle": "Promotions",
+  "promoSubtitle": "Buy-one-get-one and gift promotions",
   "promoNew": "New promotion",
   "promoError": "Error: {error}",
   "promoEmpty": "No promotions",
   "promoEmptyHint": "Create a 1+1 or Gift promotion",
   "promoTypeGift": "Gift",
   "promoBuyGetFree": "buy {trigger} → {reward} free",
-  "promoSupplierTag": "supplier-funded",
   "promoDefaultName11": "1+1 promotion",
   "promoNameLabel": "Name",
   "promoTriggerLabel": "Trigger product (what to buy)",
   "promoRewardLabel": "Gift (what's free)",
-  "promoSupplierFunded": "Supplier-funded promotion",
   "promoSaveButton": "Save promotion",
   "saleWeighingPlaceItem": "Weighing... place the item on the scale",
   "saleWeightReadFailed": "Failed to read weight — enter manually",
@@ -4750,6 +4827,22 @@
   "navWmsMarking": "Marking",
   "navWmsSettings": "WMS settings",
   "errorInsufficientStock": "Insufficient stock: {name}",
+  "discountLimitsTitle": "Discount limits",
+  "discountLimitsSubtitle": "How much a cashier may give away by hand",
+  "discountLimitsIntro": "A role limit overrides the default. A role without its own row follows “Default”. One hundred percent means “no limit” — a declared value, not an absence.",
+  "discountLimitsDefaultRow": "Default (all roles)",
+  "discountLimitsMaxPercent": "Limit, %",
+  "discountLimitsApprovalAbove": "Approval above, %",
+  "discountLimitsApprovalHint": "empty — not required",
+  "discountLimitsInheritHint": "empty — same as default",
+  "discountLimitsTwoDoors": "Note: “block price decrease” in the sales policy closes only the line price edit. A discount is still allowed up to the limit — at 100 % that means a free line. These are two different doors; to close the second one, set a limit below one hundred.",
+  "discountLimitsSaved": "Limit saved",
+  "discountLimitsInherited": "Row removed: the role follows the default",
+  "discountLimitsInvalid": "The limit is a number from 0 to 100",
+  "discountLimitsApprovalNotYet": "Supervisor approval is not implemented yet: a discount above the threshold is refused with a named reason rather than opening a code prompt.",
+  "errorDeniedPolicy": "Forbidden by till settings: {detail}",
+  "errorDeniedLimit": "Discount above the allowed one: {detail}",
+  "errorApprovalRequired": "Supervisor approval required: {detail}",
   "errorBigAmountBlocked": "Sale total exceeds 1,000,000 ₸. Enable the large-amount permission in POS settings.",
   "errorMarkRequired": "Marking code required: {name}",
   "errorOrderNotFound": "Order not found",
@@ -4778,6 +4871,7 @@
   "setUserPinNew": "New PIN",
   "receiptInputRecent": "Recent receipts",
   "receiptInputNoRecent": "No receipts yet",
+  "receiptInputRecentUnavailable": "The recent receipts list is unavailable on this terminal — enter the receipt number manually",
   "shiftHistoryTitle": "Shift history",
   "shiftHistoryEmpty": "No closed shifts yet",
   "shiftHistoryShiftNo": "Shift #{id}",
@@ -4883,7 +4977,6 @@
       }
     }
   },
-  "scannerRulesUnavailable": "Barcode reading rules are not available in this build.",
   "scannerRulesSaved": "Barcode reading rules saved",
   "printQueueSectionTitle": "Print queue",
   "printQueueSubtitle": "What is waiting to print, what did not print and why.",
@@ -4913,5 +5006,640 @@
   "printQueueCancelBody": "A cancelled job can no longer be printed. If the same receipt is still needed, it has to be issued again.",
   "printQueueCancelConfirm": "Cancel job",
   "printQueueCancelDone": "The job has been cancelled",
-  "printQueueCancelRefused": "This job can no longer be cancelled: it is printing or already finished"
+  "printQueueCancelRefused": "This job can no longer be cancelled: it is printing or already finished",
+  "errorPayReceiptNotFound": "This receipt is no longer open — it cannot be paid. Refresh the screen and start again.",
+  "errorPayNotOwner": "This receipt belongs to another workstation — it cannot be paid from here.",
+  "errorPaymentAlreadyTaken": "This receipt has already been paid. The till will not take the money twice.",
+  "errorPaymentInsufficient": "The amount entered does not cover the receipt. Enter the amount again.",
+  "errorPaymentAccountMissing": "The till has no account for this payment type. Ask an administrator.",
+  "errorPaymentAccountNotAllowed": "That account was not offered for payment. Refresh the account list and choose again.",
+  "errorPaymentUnbalanced": "The payment lines do not add up to the receipt total. Enter the payment again.",
+  "errorPaymentKindInactive": "This payment kind is switched off in the till settings. Choose another one or switch it on in the settings.",
+  "errorPaymentKindUnknown": "The till does not know this payment kind. Ask an administrator.",
+  "errorCertificateUnknown": "No certificate with this number on this till. Check the number.",
+  "errorCertificatePinWrong": "The certificate PIN did not match. Enter it again.",
+  "errorCertificateRateLimited": "Too many failed certificate checks. Wait a few minutes and try again.",
+  "errorConnectionLost": "Connection to the till was lost. Check the network and try again.",
+  "errorRunIncomplete": "The till stopped the operation before finishing it. Check the result on the till before trying again.",
+  "errorWireMismatch": "The workstation and the till did not understand each other — their versions differ. Reload the page; if that does not help, contact an administrator.",
+  "errorTillFailed": "The till could not perform the operation. Try again; if the error repeats, contact an administrator.",
+  "errorTerminalChanged": "You have switched workstations — sign in again.",
+  "errorUnknownTerminal": "This workstation is not paired with the till. Pair it again with a pairing code.",
+  "errorAlreadyConfigured": "The till is already set up — the initial setup wizard is no longer available.",
+  "errorCannotDeleteSelf": "The till's own workstation cannot be deleted.",
+  "errorNoDrivers": "The till was built without hardware drivers — device search and checks are unavailable. Contact an administrator.",
+  "errorNoNetworkModule": "This till cannot manage network settings — the system service is missing. Contact an administrator.",
+  "errorNoSessionRegistry": "This till does not keep a session list. Contact an administrator.",
+  "errorNoBackupTransport": "Backups are not set up on this till. Contact an administrator.",
+  "errorBackupNotFound": "Backup not found.",
+  "errorCertificatesUnavailable": "This till does not issue gift certificates over the wire. Contact an administrator.",
+  "errorRefundStale": "The refund changed while the command was on its way to the till. Repeat the action.",
+  "errorRefundWrongDraft": "This refund draft no longer exists. Open the refund again.",
+  "errorRefundNotStarted": "No refund in progress — pick a receipt or start a refund without one.",
+  "errorRefundEmpty": "The refund has no lines — there is nothing to return.",
+  "errorReceiptAlreadyRefunded": "This receipt has already been refunded.",
+  "errorReceiptNotRefundable": "This receipt cannot be refunded here: it was paid through another till's card terminal. Refund it where it was paid.",
+  "errorLineNotInReceipt": "This item is not on the receipt — only items sold on it can be refunded against it.",
+  "errorSaleNotCompleted": "The sale on this receipt is not completed — there is nothing to refund.",
+  "errorRefundBusy": "Another refund is already in progress on the till. Finish it and try again.",
+  "errorRefundCannotStart": "The till could not start the refund and gave no reason. Check the shift and the till setup.",
+  "errorRefundInstallmentRefused": "This receipt was sold on installments — the till does not refund it. An administrator handles cancelling the contract.",
+  "errorRefundCashlessUnavailable": "This money must go back to the card or via QR, but there is no way to return it: the terminal or provider is not connected. The till does not pay such a refund in cash.",
+  "errorRefundCashlessRefused": "The bank or provider refused the refund. Check the terminal and retry — anything already returned will not be returned twice.",
+  "errorRefundKindNotRefundable": "Refunds to this payment kind are disabled in the payment kinds catalog.",
+  "errorRefundKindUnknown": "The receipt was paid with a payment kind this till does not know. The refund is refused: the tender cannot be named, and cash is not paid out for it.",
+  "refundDestinationsTitle": "Where the money goes",
+  "refundRouteDrawer": "Cash from the drawer",
+  "refundRouteCard": "To the card via the terminal",
+  "refundRouteManual": "Outside the till — the same way it was paid",
+  "refundRouteProvider": "Via the QR provider",
+  "refundRouteCertificate": "As a new gift certificate (the old one stays redeemed)",
+  "refundRouteAdvance": "To the customer's advance",
+  "refundRouteBonus": "To the bonus account",
+  "refundRouteDebt": "Against the customer's debt",
+  "errorCertificateRefundNoSource": "A receipt line is refunded to a gift certificate, but it carries no certificate number. The refund is refused: there is nothing to issue the replacement certificate from, and the till's liability would grow for nothing.",
+  "errorCertificateCashRefundRefused": "A gift certificate cannot be refunded in cash — provide the bank details for a cashless refund.",
+  "errorCertificatePaysCertificate": "A gift certificate cannot pay for the purchase of another gift certificate.",
+  "errorCreditContractUnknown": "There is no installment contract with this number. Check the number.",
+  "errorCreditContractNotActive": "The installment contract is already paid off or cancelled — there is nothing to pay.",
+  "errorCreditOverpayment": "The amount exceeds what is left on the contract. Check the amount.",
+  "errorCreditRepaymentInvalid": "The repayment amount must be greater than zero.",
+  "errorCreditAllocationRace": "Another till paid on this contract at the same moment. Take the payment again.",
+  "errorKindTenderCannotDiscount": "A payment type that brings in real money cannot be declared a non-payment on the receipt.",
+  "errorKindAccountMissing": "No receiving account is assigned to this payment type.",
+  "errorKindCounterpartyRequired": "A deferred payment type requires a named customer.",
+  "errorKindProviderRequired": "A payment type that goes through a provider (QR) needs a provider.",
+  "errorKindFiscalKindRequired": "The payment type has no fiscal treatment set.",
+  "errorKindChangeNotATender": "Only a payment type that brings in real money can give change.",
+  "errorKindSystemImmutable": "A system payment type's code or id cannot be changed or taken by another type.",
+  "errorCertificateExpired": "The certificate has expired. Ask the shop owner.",
+  "errorCertificateExhausted": "The certificate has no balance left.",
+  "errorCertificateDuplicate": "The same certificate is listed twice in this payment. Remove the duplicate.",
+  "errorCertificateRace": "The certificate balance has changed. Take the payment again.",
+  "errorCertificateAccountMissing": "The till has no certificate liability account. Ask an administrator.",
+  "errorCertificateNumberTaken": "A certificate with this number has already been issued.",
+  "errorCertificateNominalInvalid": "The certificate value must be greater than zero.",
+  "errorDebtCustomerRequired": "A credit sale needs a customer — choose one.",
+  "errorDebtNotSoldHere": "This till does not sell on credit — debt sales are turned off in the till settings.",
+  "errorDebtAccountMissing": "The customer has no account — there is nowhere to record the debt.",
+  "errorBonusAccountMissing": "The customer has no bonus account — there are no bonuses to spend.",
+  "errorPrepaymentCustomerRequired": "Offsetting a prepayment needs a customer — choose one.",
+  "errorCreditTermInvalid": "The till does not issue instalments for that term",
+  "errorCreditPrincipalInvalid": "Nothing left to finance: the receipt is fully covered",
+  "errorCreditFeeInvalid": "The contract fee is invalid",
+  "errorCreditSchemeUnknown": "The till does not know that schedule scheme",
+  "errorCreditOverdue": "The customer has another overdue instalment contract",
+  "errorCreditContractDuplicate": "An instalment contract already exists for this receipt",
+  "errorPrepaymentAccountMissing": "The customer has no account — there can be no prepayment on it.",
+  "errorPrepaymentInsufficient": "The prepayment is not enough: it has already been offset by another receipt.",
+  "errorLoyaltyCustomerUnknown": "The customer is not in the directory. Choose the customer again.",
+  "errorAmountExceedsReceipt": "The amount is larger than the receipt total. Enter the amount again.",
+  "errorCardChargeUnproven": "The till could not confirm the card charge. Check the payment terminal.",
+  "errorPaymentTypeNotAllowed": "This payment type is not allowed at this workstation.",
+  "errorPaymentsUnavailable": "This till does not accept payment over the wire. Ask an administrator.",
+  "errorNoRefundService": "This till does not process refunds over the wire. Ask an administrator.",
+  "errorRefundAbandonIsTillSide": "The refund draft is cleared by the till, not by the workstation.",
+  "errorNoAnswer": "The till did not answer. Check the connection and try again.",
+  "paymentTypeNotAllowedHere": "\"{type}\" is not allowed at this workplace. Payment types are changed in the hardware settings; the till refuses a disallowed type even if the button is pressed.",
+  "@paymentTypeNotAllowedHere": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentTypesLimitedHere": "This workplace accepts: {types}.",
+  "@paymentTypesLimitedHere": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDebtNotSoldHere": "This till does not sell on credit: debt sales are turned off in the till settings. The till refuses even if the button is pressed.",
+  "paymentDebtNotPermitted": "You are not allowed to sell on credit: the \"sell on credit\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.",
+  "saleDiscountNotPermitted": "You are not allowed to give discounts: the \"sell with discount\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.",
+  "paymentDebtPolicyUnknown": "The till has not answered yet whether credit sales are allowed here. Check the connection to the till and try again.",
+  "paymentOffsetsTitle": "Prepayment and gift certificates",
+  "paymentPrepaymentTitle": "Customer prepayment",
+  "paymentPrepaymentNeedsCustomer": "Find the customer by phone number to apply their prepayment.",
+  "paymentPrepaymentLoading": "The till has not answered yet how much prepayment is on account.",
+  "paymentPrepaymentNone": "The customer has no prepayment on account.",
+  "paymentPrepaymentBalance": "Paid in advance:",
+  "paymentPrepaymentUse": "Apply prepayment",
+  "paymentPrepaymentApplied": "Will be applied: {amount}",
+  "@paymentPrepaymentApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateTitle": "Gift certificate",
+  "paymentCertificateNumber": "Certificate number",
+  "paymentCertificatePin": "PIN, if any",
+  "paymentCertificatePresent": "Check",
+  "paymentCertificateBalance": "Certificate balance: {amount}",
+  "@paymentCertificateBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateApplied": "{amount} will be redeemed, {rest} stays on it",
+  "@paymentCertificateApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "rest": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateNotNeeded": "The receipt is already covered — this certificate will not be used.",
+  "unfiscalizedTitle": "Unfiscalized receipts",
+  "unfiscalizedEmpty": "Every receipt has its document",
+  "unfiscalizedEmptyHint": "Receipts that were paid for but got no fiscal document appear here",
+  "unfiscalizedReceiptNo": "Receipt #{number}",
+  "@unfiscalizedReceiptNo": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "unfiscalizedAgeHours": "{hours} h ago",
+  "@unfiscalizedAgeHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "unfiscalizedOverdue": "72 h window has passed",
+  "unfiscalizedRetry": "Retry",
+  "unfiscalizedRetryDone": "Document issued: {sign}",
+  "@unfiscalizedRetryDone": {
+    "placeholders": {
+      "sign": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedRetryFailed": "The operator refused again: {message}",
+  "@unfiscalizedRetryFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedNoDocument": "Recorded before failures started carrying the document: there is nothing to retry, it can only be written off",
+  "unfiscalizedNoOperator": "No fiscal operator is configured: there is nowhere to retry",
+  "unfiscalizedWriteOff": "Write off",
+  "unfiscalizedWriteOffTitle": "Write off an unfiscalized receipt",
+  "unfiscalizedWriteOffBy": "The decision is recorded under: {name}",
+  "@unfiscalizedWriteOffBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedWriteOffReason": "Reason",
+  "unfiscalizedWriteOffDone": "Receipt marked as handled",
+  "unfiscalizedWrittenOff": "Written off by {name}: {reason}",
+  "@unfiscalizedWrittenOff": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedUnknownUser": "unknown user",
+  "unfiscalizedAtShiftClose": "Shift closed with unfiscalized receipts: {count}. Numbers: {numbers}",
+  "@unfiscalizedAtShiftClose": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "numbers": {
+        "type": "String"
+      }
+    }
+  },
+  "documentsOnTheWayAtShiftClose": "Shift documents have not reached the operator yet: {count} (receipts {numbers}). Closing waits for one delivery pass; if the link stays down, the Z report is not sent — otherwise the operator report would disagree with the till.",
+  "@documentsOnTheWayAtShiftClose": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "numbers": {
+        "type": "String"
+      }
+    }
+  },
+  "qrPaidPartial": "Partially paid: {paid} of {amount}",
+  "@qrPaidPartial": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanTitle": "Money without a receipt",
+  "qrOrphanHint": "The customer paid by QR, and no receipt was closed with that money.",
+  "qrOrphanLine": "{amount} · {provider} · {key}",
+  "@qrOrphanLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "provider": {
+        "type": "String"
+      },
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanAfterGiveUp": "The confirmation arrived after the till stopped waiting",
+  "errorQrIntentUnknown": "The till does not know this QR payment. Refresh the receipt and try again.",
+  "errorQrIntentNotPaid": "The bank has not confirmed the QR payment yet. Wait for the confirmation or choose another method.",
+  "errorQrIntentAlreadySettled": "This money has already closed another receipt: {message}",
+  "@errorQrIntentAlreadySettled": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrTitle": "QR payment",
+  "paymentQrAmount": "QR amount",
+  "paymentQrStart": "Show QR",
+  "paymentQrWaiting": "Waiting for payment · {seconds} s left",
+  "@paymentQrWaiting": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentQrScanHint": "The customer scans the code in their banking app",
+  "paymentQrCancel": "Cancel waiting",
+  "paymentQrNoLink": "No link to the provider — the till keeps retrying",
+  "paymentQrPaid": "Paid by QR: {amount}",
+  "@paymentQrPaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrPaidAfterCancel": "The customer paid before the cancellation — {amount} goes into this receipt",
+  "@paymentQrPaidAfterCancel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrCancelled": "Waiting cancelled, the provider confirmed the cancellation",
+  "paymentQrPatienceSpent": "The customer did not pay in time — the till stopped waiting",
+  "paymentQrExpired": "The QR code expired at the provider",
+  "paymentQrFailed": "The provider declined the QR payment",
+  "paymentQrCancelUnconfirmed": "Cancellation not confirmed — the money may still arrive. Do not accept another payment until the till finds out.",
+  "paymentQrRecheck": "Check again",
+  "paymentQrRestart": "New code",
+  "paymentQrOverReceipt": "{amount} of the QR payment does not fit into the receipt",
+  "@paymentQrOverReceipt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrNothingToPay": "The receipt is already covered — nothing to show a code for",
+  "errorQrNotConfigured": "The QR provider is not configured on this till",
+  "errorQrNetwork": "No link to the QR provider",
+  "errorQrTimeout": "The QR provider did not answer in time",
+  "errorQrProviderBusy": "The QR provider is busy — the till will retry",
+  "errorQrMalformedReply": "The QR provider sent an unreadable reply — contact the till administrator",
+  "errorQrUnknownIntent": "The QR provider does not know this payment",
+  "errorQrRejected": "The QR provider rejected the request",
+  "errorQrReverseUnsupported": "The QR provider cannot refund money",
+  "errorQrIntentLive": "A QR payment is already waiting on this receipt — cancel it before showing a new code",
+  "fiscalReasonNetwork": "No connection to the fiscal operator",
+  "fiscalReasonOperatorUnavailable": "The fiscal operator is unavailable",
+  "fiscalReasonTokenExpired": "The operator did not accept the till's authorisation",
+  "fiscalReasonRequestNotBuilt": "The request to the operator could not be built: check the server address in fiscal settings",
+  "fiscalReasonTlsRejected": "Secure connection to the operator failed: check the server address and the till's clock",
+  "fiscalReasonClientFault": "Till error while exchanging data with the operator",
+  "fiscalReasonBadCredentials": "Wrong operator login or password",
+  "fiscalReasonCashboxNotFound": "The operator does not know this till: check the serial number",
+  "fiscalReasonCashboxBlocked": "The till is blocked by the operator",
+  "fiscalReasonOfflineLimitExceeded": "Offline document limit exceeded",
+  "fiscalReasonOfflineNotSupported": "Offline mode is not allowed for this till",
+  "fiscalReasonDuplicate": "The document is already registered with the operator, but its fiscal sign was not issued to the till — take it from the operator's cabinet",
+  "fiscalReasonValidation": "The operator rejected the document: amounts or data do not match",
+  "fiscalReasonNotEnoughMoney": "According to the operator there is not enough cash in the till",
+  "fiscalReasonShiftError": "Shift error at the operator",
+  "fiscalReasonUnsupported": "The operation is not supported by the operator",
+  "fiscalReasonNotConfigured": "Fiscalisation is not configured",
+  "fiscalReasonUnknown": "The operator refused for an unknown reason",
+  "fiscalReasonOfflineWindowExpired": "The 72-hour offline window has expired — no document was issued",
+  "fiscalReasonRowUnreadable": "The queue row is damaged: the document cannot be read",
+  "fiscalReasonWithCode": "{reason} (code {code})",
+  "fiscalReasonLegacy": "Reason recorded before translation: {text}",
+  "fiscalReasonNotRecorded": "No reason recorded",
+  "fiscalReasonPaymentTypeNotAccepted": "Payment type not accepted by the operator: “credit” and “tare” were removed in OFD protocol 2.0.2",
+  "errorDeferredListUnavailable": "The list of deferred receipts is unavailable",
+  "errorDeferredListUnavailableReason": "The list of deferred receipts is unavailable: {reason}",
+  "errorRefundSearchUnavailable": "Product search for refunds is not available on this terminal yet",
+  "errorRefundNothingSelected": "The draft has changed — there is nothing to refund. Check the selected lines.",
+  "errorRefundInvalidAmount": "This quantity cannot be refunded: it cannot exceed the quantity sold on the receipt or be below zero.",
+  "errorCertificatePinRequired": "This certificate has a PIN. Enter the PIN from the certificate.",
+  "qrSettingsTitle": "QR payments",
+  "qrSettingsSubtitle": "QR provider: address, code, key, waiting time",
+  "qrSettingsKindTitle": "Accept QR payments",
+  "qrSettingsKindSubtitle": "The \"QR\" payment type on the payment screen",
+  "qrSettingsUrl": "Provider address",
+  "qrSettingsCode": "Provider code",
+  "qrSettingsKey": "Access key",
+  "qrSettingsKeyStoredHint": "A key is saved. Enter a new one to replace it",
+  "qrSettingsKeyEmptyHint": "No key set",
+  "qrSettingsClearKey": "Erase the saved key",
+  "qrSettingsPatience": "Payment waiting time, seconds",
+  "qrSettingsSave": "Save",
+  "qrSettingsSaved": "QR settings saved",
+  "qrSettingsRemove": "Remove settings",
+  "qrSettingsStatusReady": "Provider is configured",
+  "qrSettingsStatusNotConfigured": "Provider is not configured — QR payments are unavailable",
+  "qrSettingsInvalidUrl": "The address must start with http:// or https://",
+  "qrSettingsCodeRequired": "Enter the provider code",
+  "qrSettingsInvalidPatience": "Waiting time must be {min} to {max} seconds",
+  "qrSettingsSaveFailed": "Could not save QR settings",
+  "qrSettingsTillOnly": "QR provider settings are available only on the till itself",
+  "installmentTermsTitle": "Installments",
+  "installmentTermsMonths": "Term, months",
+  "installmentTermsScheme": "Schedule type",
+  "installmentTermsContinue": "Continue",
+  "customerPaymentTitle": "Take payment / repay debt",
+  "customerPaymentCurrentDebt": "Current debt: {amount}",
+  "customerPaymentBalance": "Balance: {amount}",
+  "customerPaymentAmount": "Payment amount",
+  "customerPaymentAmountInvalid": "Enter an amount greater than 0",
+  "customerPaymentFailed": "The payment could not be recorded",
+  "customerPaymentSubmit": "Take payment",
+  "errorPrepaymentAmountInvalid": "The prepayment amount must be greater than zero. Enter the amount again.",
+  "errorPrepaymentTenderInvalid": "A prepayment is taken in cash, by card or by QR. Choose another payment kind.",
+  "errorPrepaymentTillAccountMissing": "This till has no account to receive this payment type. Set up the receiving account and try again.",
+  "errorPrepaymentIntakeFailed": "The prepayment could not be taken. Check the customer and try again.",
+  "errorPrepaymentRefundExceedsBalance": "The customer's account holds less prepayment than you are paying out. Check the balance and reduce the amount.",
+  "errorPrepaymentRefundKeyMissing": "The prepayment payout request carries no retry key, so the till cannot tell a retry from a second payout. Reopen the screen and enter the amount again.",
+  "errorPrepaymentRefundFailed": "The prepayment could not be paid out. Check the customer and try again.",
+  "errorPrepaymentRefundUnavailable": "This till does not pay out customer prepayments over the wire. Contact your administrator.",
+  "errorPrepaymentIntakeUnavailable": "This till does not take customer prepayments over the wire. Contact the administrator.",
+  "errorPrepaymentIntakeKeyMissing": "This prepayment request carries no repeat key, so the till cannot tell a retry from a second payment. Reopen the screen and enter the amount again.",
+  "errorQrSetupUnavailable": "This till holds no QR provider settings. Set QR payment up on the till itself, or contact the administrator.",
+  "errorReceiptTemplatesUnavailable": "This till holds no receipt templates. Set the template up on the till itself, or contact the administrator.",
+  "errorReceiptTemplateNameless": "A receipt template must have a name. Enter one and save again.",
+  "shiftDeskTitle": "Shift",
+  "shiftDeskOverAgeWarning": "This shift has been open for more than 24 hours, so selling is blocked. Close it and open a new one.",
+  "shiftDeskOpenedAt": "Opened: {when}",
+  "@shiftDeskOpenedAt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftDeskCountedLabel": "Counted in the drawer",
+  "shiftDeskCountedHint": "Leave empty if nobody counted — the till will use its own total.",
+  "shiftDeskOpeningCashLabel": "Cash in the drawer at the start",
+  "shiftDeskClosedNow": "The shift is closed.",
+  "shiftDeskOpenedNow": "The shift is open.",
+  "shiftDeskNoShift": "This till has no open shift.",
+  "shiftDeskUnfiscalizedCount": "Receipts with no fiscal document: {count}",
+  "@shiftDeskUnfiscalizedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftDeskUnfinishedCount": "Unfinished receipts: {count} — closing will clear them",
+  "@shiftDeskUnfinishedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorShiftDeskNotOpen": "This till has no open shift, so there is nothing to close.",
+  "errorShiftDeskAlreadyOpen": "This till already has an open shift.",
+  "errorShiftDeskUnavailable": "This till does not run shifts over the wire. Close the shift on the till itself, or contact the administrator.",
+  "errorShiftDeskActorUnknown": "A shift is opened by a cashier, and this request names none. Sign in again.",
+  "prepaymentIntakeTitle": "Take a prepayment",
+  "prepaymentIntakeFind": "Find the customer",
+  "prepaymentIntakeNotFound": "No customer with that number.",
+  "prepaymentIntakeSubmit": "Take the prepayment",
+  "prepaymentIntakeAccepted": "Prepayment taken. Paid in advance: {amount}",
+  "@prepaymentIntakeAccepted": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentIntakeFiscalFailed": "The money is taken, but no fiscal prepayment receipt was issued.",
+  "emulatorSettingsTitle": "Built-in emulators",
+  "emulatorSettingsHint": "Check printing and diagnostics without attaching devices",
+  "emulatorReceiptPrinter": "Receipt printer and cash drawer",
+  "emulatorEnabledNote": "The socket is up. The till reaches it only via the address in the binding",
+  "emulatorDisabledNote": "Off: no socket is open",
+  "emulatorAddress": "Emulator address",
+  "emulatorAddressHint": "Enter this IP and port in the printer settings",
+  "emulatorBindAction": "Write into the printer binding",
+  "emulatorBindDone": "The printer binding now points at the emulator",
+  "emulatorBindingStale": "The printer binding points at a stopped emulator — printing will fail",
+  "emulatorStartFailed": "Could not start the emulator",
+  "emulatorFiscalOperator": "Fiscal operator (OFD)",
+  "emulatorFiscalAddressHint": "Enter this address in the “Server address” field of the fiscal settings",
+  "emulatorFiscalBindAction": "Write into the fiscal settings",
+  "emulatorFiscalBindNote": "Writes the emulator address, login, password, key and cashbox number, and declares the till a test one. The registration number is left alone",
+  "emulatorFiscalBindDone": "The fiscal settings now point at the emulator",
+  "emulatorFiscalBindingStale": "The fiscal settings point at a stopped emulator — fiscalisation will fail",
+  "emulatorFiscalLocalModuleWarning": "The “Local module” field is filled in — it overrides the server address, so the till will not go to the emulator",
+  "emulatorFiscalBlockedLive": "This is a production till: the operator credentials are filled in. The OFD emulator is forbidden here — a receipt sent to a fake looks genuine but gives the customer no document",
+  "emulatorFiscalBlockedUnknown": "The fiscal settings could not be read — the OFD emulator cannot be enabled",
+  "diagnosticsFiscalEmulatorBanner": "The operator address points at this very computer — documents go to an emulator and are not fiscal",
+  "diagnosticsTitle": "Hardware diagnostics",
+  "diagnosticsSubtitle": "What the till actually sent to the devices",
+  "diagnosticsTabPrinter": "Printer",
+  "diagnosticsTabFiscal": "Fiscalisation",
+  "errorDiagnosticsUnavailable": "There is nobody to ask for diagnostics on this till",
+  "diagnosticsPrinterQueueMissing": "No print queue is configured for this workstation",
+  "diagnosticsPrinterNothingSent": "The till has not sent anything to the printer yet",
+  "diagnosticsAskFailed": "The till did not answer this question: {reason}",
+  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "diagnosticsAttempts": "attempts {count}",
+  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "diagnosticsJobQueued": "waiting in queue",
+  "diagnosticsJobPrinting": "printing",
+  "diagnosticsJobPrinted": "printed",
+  "diagnosticsJobFailed": "not printed",
+  "diagnosticsJobExpired": "expired",
+  "diagnosticsJobCancelled": "cancelled",
+  "diagnosticsFiscalNotConfigured": "No fiscal operator is configured on this till",
+  "diagnosticsFiscalAccepted": "Accepted by the operator",
+  "diagnosticsFiscalAcceptedEmpty": "The operator has not accepted a single document yet",
+  "diagnosticsFiscalQueued": "In the queue",
+  "diagnosticsFiscalQueuedEmpty": "The queue is empty — everything sent was accepted",
+  "diagnosticsFiscalSign": "Fiscal sign {value}",
+  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOperatorDoc": "operator document {value}",
+  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalReceiptNo": "receipt {value}",
+  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOffline": "issued offline",
+  "diagnosticsEmulatorBanner": "The printer binding points at this very computer — an emulator is behind the port, not paper",
+  "diagnosticsTabDrawer": "Cash drawer",
+  "drawerDiagnosticsEmpty": "The drawer has not been opened since the till started",
+  "drawerDiagnosticsUnavailable": "This till keeps no record of drawer pulses — there is nothing to ask. It does not mean the drawer was never opened.",
+  "drawerDiagnosticsCaveat": "The till only knows whether the command was accepted. Whether the drawer actually opened, neither path reports back.",
+  "drawerDiagnosticsAccepted": "Command accepted",
+  "drawerDiagnosticsRefused": "Command refused",
+  "drawerDiagnosticsViaSerial": "serial port",
+  "drawerDiagnosticsViaPrinter": "via the printer (ESC p)",
+  "diagnosticsTabScales": "Scales",
+  "diagnosticsTabDisplay": "Display",
+  "scalesDiagnosticsUnbound": "No scales are bound to this till.\nBind them in hardware settings and a reading will appear here.",
+  "scalesDiagnosticsWeight": "Scale reading",
+  "scalesDiagnosticsSilent": "The scales have sent nothing yet",
+  "scalesDiagnosticsStable": "Weight settled",
+  "scalesDiagnosticsSettling": "Weight changing",
+  "scalesDiagnosticsOverload": "Overload",
+  "scalesDiagnosticsPort": "Scale port",
+  "scalesDiagnosticsBaudSuffix": "baud",
+  "scalesDiagnosticsConnected": "Port open",
+  "scalesDiagnosticsDisconnected": "Port closed",
+  "scalesDiagnosticsCaveat": "This is what the device sent. The till does not verify the reading — that is what calibration is for.",
+  "displayDiagnosticsEmpty": "Nothing has been sent to the display since the till started",
+  "displayDiagnosticsUnavailable": "This till keeps no record of display lines — there is nothing to ask. It does not mean nothing was sent to the display.",
+  "displayDiagnosticsCurrent": "On the display now",
+  "displayDiagnosticsCaveat": "The till only knows the line went into the port. A dark or unplugged display is indistinguishable from a working one here.",
+  "displayDiagnosticsCallPrice": "price",
+  "displayDiagnosticsCallTotal": "total",
+  "displayDiagnosticsCallChange": "change",
+  "displayDiagnosticsCallText": "text",
+  "displayDiagnosticsCallWelcome": "welcome",
+  "displayDiagnosticsCallClear": "clear",
+  "emulatorScaleWeight": "Weight on the pan",
+  "emulatorScaleWeightHint": "Emulator control: this is the number the scales will report",
+  "emulatorQrProvider": "QR payment provider",
+  "emulatorQrAddressHint": "Enter this address in the QR provider settings",
+  "emulatorQrBindAction": "Use in QR settings",
+  "emulatorQrBindDone": "QR settings now point at the emulator",
+  "emulatorQrBindingStale": "QR settings point at a stopped emulator — code payment will fail",
+  "diagnosticsTabPayment": "Payment",
+  "diagnosticsPaymentEmulatorBanner": "The QR provider is on this same computer: an emulator answers, not a bank",
+  "paymentDiagnosticsUnavailable": "There is no payment data on this workstation",
+  "paymentDiagnosticsQrSection": "QR payment",
+  "paymentDiagnosticsQrEmpty": "The till has not created a single payment code yet",
+  "paymentDiagnosticsQrNotConfigured": "No QR provider is configured on this till",
+  "paymentDiagnosticsQrAddress": "Provider: {address}",
+  "paymentDiagnosticsQrUnknown": "The till does not keep the request bodies sent to the provider. What is shown is what settled in the intent: amount, status, the provider-side id and the refusal reason.",
+  "paymentDiagnosticsTerminalSection": "Payment terminal",
+  "paymentDiagnosticsTerminalEmpty": "No frame has gone to the payment terminal since the till started",
+  "paymentDiagnosticsTerminalUnknown": "The terminal log lives in memory: exchanges from before a restart are not kept, and operations performed on the terminal itself are not seen by the till at all.",
+  "paymentDiagnosticsRequest": "Request",
+  "paymentDiagnosticsReply": "Reply",
+  "paymentDiagnosticsNoReply": "There was no reply",
+  "paymentDiagnosticsApproval": "Approval code {value}",
+  "paymentDiagnosticsTransaction": "transaction {value}",
+  "paymentDiagnosticsRefusal": "Refused: {value}",
+  "paymentDiagnosticsConfirmations": "confirmations {count}",
+  "paymentDiagnosticsOrphanMoney": "money without a receipt",
+  "paymentDiagnosticsAfterGiveUp": "confirmed after the till stopped waiting",
+  "paymentDiagnosticsApproved": "Approved",
+  "paymentDiagnosticsDeclined": "Declined",
+  "paymentDiagnosticsOpPurchase": "purchase",
+  "paymentDiagnosticsOpReversal": "reversal",
+  "paymentDiagnosticsOpRefund": "refund",
+  "paymentDiagnosticsOpUnknown": "frame of an unknown kind",
+  "certificateIssueTitle": "Issue a gift certificate",
+  "certificateIssueHint": "The sale receipt takes the money for the paper. Here the paper gets its balance and the till takes on the liability.",
+  "certificateIssueNumber": "Paper number",
+  "certificateIssueNominal": "Face value",
+  "certificateIssuePin": "PIN (optional)",
+  "certificateIssueExpiresDays": "Valid for, days (optional)",
+  "certificateIssueReceipt": "Sale receipt number (optional)",
+  "certificateIssueSubmit": "Issue the certificate",
+  "certificateIssueDone": "Certificate {number} issued for {amount}",
+  "@certificateIssueDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateIssueFailed": "The certificate was not issued",
+  "certificateIssueNumberRequired": "Enter the paper number",
+  "certificateIssueNominalInvalid": "The face value must be greater than zero",
+  "certificateIssueNotPermitted": "This cashier may not issue certificates",
+  "certificateSlipTitle": "Print the slip again",
+  "certificateSlipHint": "The slip did not print on issue — hand the paper over by a reprint.",
+  "certificateSlipNumber": "Certificate number",
+  "certificateSlipPin": "PIN, if it has one",
+  "certificateSlipSubmit": "Print the slip",
+  "certificateSlipDone": "The slip of certificate {number} was sent to the printer",
+  "@certificateSlipDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateSlipFailed": "The slip was not sent to the printer",
+  "certificateSlipUnavailable": "This till has nothing to print the slip with",
+  "prepaymentRefundTitle": "Pay a prepayment back",
+  "prepaymentRefundHint": "This returns money the customer paid in advance. It does not settle a debt and does not touch bonuses.",
+  "prepaymentRefundBalance": "Paid in advance: {amount}",
+  "@prepaymentRefundBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundNothing": "There is no prepayment on the customer's account — nothing to pay back",
+  "prepaymentRefundAmount": "Amount to pay back",
+  "prepaymentRefundTender": "How to pay it back",
+  "prepaymentRefundIntake": "Intake entry number (optional)",
+  "prepaymentRefundSubmit": "Pay the prepayment back",
+  "prepaymentRefundDone": "The prepayment is paid back. Left on the account: {amount}",
+  "@prepaymentRefundDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundFailed": "The prepayment was not paid back",
+  "prepaymentRefundAmountInvalid": "The amount must be greater than zero",
+  "prepaymentRefundNotPermitted": "This cashier may not pay prepayments back",
+  "prepaymentRefundFiscalFailed": "The money is paid out, but no fiscal prepayment-refund receipt was issued.",
+  "agentRefundPrepayment": "Pay the prepayment back"
 }

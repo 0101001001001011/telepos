@@ -29,8 +29,14 @@ class SaleRepositoryImpl implements SaleRepository {
   }
 
   @override
-  Future<SaleEntity?> findInProgress() async {
-    final sale = await _db.saleDao.findInProgress();
+  Future<SaleEntity?> findInProgress({
+    required int posId,
+    required int terminalId,
+  }) async {
+    final sale = await _db.saleDao.findInProgress(
+      posId: posId,
+      terminalId: terminalId,
+    );
     return sale != null ? SaleMapper.fromDrift(sale) : null;
   }
 

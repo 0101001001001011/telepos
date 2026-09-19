@@ -70,6 +70,30 @@ class AssembleShiftReceiptUseCaseImpl implements AssembleShiftReceiptUseCase {
       saleAmount = Decimal.parse(saleSum.toStringAsFixed(3));
     }
 
+    // ── сертификаты: обязательство, а не выручка ──────────────────────
+    //
+    // Два числа, потому что вопроса два, и складывать их нельзя:
+    // «на сколько выросло обязательство» и «сколько товара отдано без
+    // живых денег». Разбор источников — в докстрингах
+    // `CertificateDao.issuedNominalBetween` и
+    // `PaymentDao.sumCertificateRedemptionsBetween`; оба числа сверены со
+    // счётом обязательства пробой `certificate_shift_totals_test.dart`.
+    //
+    // Окно и кассир — **те же**, какими считаются продажи и оплаты выше.
+    // Взять другое окно значило бы напечатать на одном листе числа за
+    // разные промежутки, и расхождение никто бы не заметил.
+    final certificatesIssued = await _db.certificateDao.issuedNominalBetween(
+      from: openTime,
+      to: closeTime,
+      userId: userId,
+    );
+    final certificatesRedeemed = await _db.paymentDao
+        .sumCertificateRedemptionsBetween(
+          userId: userId,
+          startDate: openTime,
+          endDate: closeTime,
+        );
+
     var totalPayments = Decimal.zero;
     for (final entry in paymentSums) {
       totalPayments += entry.amount;
@@ -86,6 +110,8 @@ class AssembleShiftReceiptUseCaseImpl implements AssembleShiftReceiptUseCase {
       cashInPos: cashInPos,
       cashPaymentsSum: cashPaymentsSum,
       paymentSums: paymentSums,
+      certificatesIssued: certificatesIssued,
+      certificatesRedeemed: certificatesRedeemed,
       posName: thisPos?.cashBoxName,
       companyName: thisPos?.companyName,
     );

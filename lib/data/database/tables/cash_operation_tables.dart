@@ -19,6 +19,12 @@ class CashOperations extends Table {
   IntColumn get docTime => integer().nullable()();
 
   IntColumn get state => integer().nullable()();
+
+  /// Вид оплаты, **которым приняты деньги** (v47): наличные, карта, QR.
+  ///
+  /// До v47 не хранился, и аванс, принятый картой, уезжал оператору
+  /// наличными. `null` у строк старше v47 — «не записано», а не «наличные».
+  IntColumn get kindId => integer().nullable()();
 }
 
 class CashOperationCustomFields extends Table {

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/tables/this_pos_tables.dart';
+import 'package:telepos/domain/fiscal/fiscal_offset_settings.dart';
 
 part 'this_pos_dao.g.dart';
 
@@ -11,6 +12,27 @@ class ThisPosDao extends DatabaseAccessor<AppDatabase> with _$ThisPosDaoMixin {
   Future<ThisPosEntry?> get() => (select(
     thisPosEntries,
   )..where((tp) => tp.rId.equals(true))).getSingleOrNull();
+
+  /// Номер этой кассы — или [TillNotConfigured], если его нет.
+  ///
+  /// **Единая политика номера кассы, заведена кругом правки 4 задачи 7.**
+  /// До неё четыре файла читали его четырьмя способами: бросок
+  /// `StateError`, два умолчания `?? 0` и ранний выход с записью в
+  /// журнал. Умолчание в ноль — худшее из четырёх и притом самое тихое:
+  /// ноль это **настоящий** номер кассы (в тестах — сплошь и рядом), и
+  /// запрос с ним не падает, а находит чужие строки. Ровно та же ошибка
+  /// формы, что дала дефект круга 3 (`findInProgress` без предиката
+  /// кассы), только через подстановку вместо пропуска.
+  ///
+  /// Политика: **ноль не подставляется нигде**. Ненастроенная касса это
+  /// бросок отсюда — кроме одного места, где контракт требует отказ
+  /// **значением** (`SaleInitiationUseCaseImpl` — `till_not_configured`,
+  /// задача 5); там номер проверяется явно, и ноль не подставляется тоже.
+  Future<int> requireId() async {
+    final id = (await get())?.id;
+    if (id == null) throw const TillNotConfigured();
+    return id;
+  }
 
   Future<bool> exists() async {
     final entry = await get();
@@ -206,6 +228,29 @@ class ThisPosDao extends DatabaseAccessor<AppDatabase> with _$ThisPosDaoMixin {
     );
   }
 
+  /// Сертификат и аванс в фискальном документе (v47).
+  ///
+  /// Нет строки `ThisPos` — умолчания поставки, а не отказ: касса без
+  /// мастера всё равно не продаёт.
+  Future<FiscalOffsetSettings> offsetFiscalSettings() async {
+    final entry = await get();
+    if (entry == null) return FiscalOffsetSettings.defaults;
+    return FiscalOffsetSettings(
+      fiscalizeCertificateSale: entry.fiscalizeCertificateSale,
+      offsetLayout: OffsetFiscalLayout.byIndex(entry.offsetFiscalLayout),
+      fiscalizePrepaymentReceipt: entry.fiscalizePrepaymentReceipt,
+    );
+  }
+
+  Future<int> saveOffsetFiscalSettings(FiscalOffsetSettings s) =>
+      (update(thisPosEntries)..where((tp) => tp.rId.equals(true))).write(
+        ThisPosEntriesCompanion(
+          fiscalizeCertificateSale: Value(s.fiscalizeCertificateSale),
+          offsetFiscalLayout: Value(s.offsetLayout.index),
+          fiscalizePrepaymentReceipt: Value(s.fiscalizePrepaymentReceipt),
+        ),
+      );
+
   Future<void> saveAuthSettings({
     bool? walkUpEnabled,
     int? sessionIdleMinutes,
@@ -219,4 +264,19 @@ class ThisPosDao extends DatabaseAccessor<AppDatabase> with _$ThisPosDaoMixin {
           : Value(sessionIdleMinutes),
     ),
   );
+}
+
+/// У кассы нет своего номера: она не настроена (или настройка потеряна).
+///
+/// Не [WireRefusal]: это не отказ человеку в его действии, а поломка
+/// установки, при которой не работает ничего связанного с чеками. Там,
+/// где такой отказ обязан прийти значением, он формулируется отдельно
+/// (см. докстринг [ThisPosDao.requireId]).
+final class TillNotConfigured implements Exception {
+  const TillNotConfigured();
+
+  @override
+  String toString() =>
+      'TillNotConfigured: у кассы нет своего номера (this_pos_entries.id) — '
+      'касса не настроена';
 }

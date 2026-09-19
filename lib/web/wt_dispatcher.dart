@@ -73,26 +73,44 @@ final class WtDispatcher {
   final SessionTokenStorage? _tokens;
 
   /// Спросить один раз. Поток закрывается сразу после ответа.
+  ///
+  /// # Сырой обрыв получает код здесь (2026-09-13)
+  ///
+  /// Браузер рвёт WebTransport своими исключениями — `WebTransportError`,
+  /// `StateError` закрытой сессии, — и у них нет кода. До этой правки они
+  /// уходили из [ask] как есть: [watch] и [run] их уже заворачивали
+  /// (`_exchange`: `no_session`, `stream_failed`), а одноразовый вопрос — нет.
+  /// Кассир читал «неизвестная причина» на обычном обрыве связи. Код
+  /// назначается **в месте возникновения**, потому что только здесь известно,
+  /// что именно оборвалось: поток не открылся — `no_session`, открытый поток
+  /// сорвался — `stream_failed`. Кадр запроса собирается до обмена: ошибка
+  /// сборки — не обрыв, и выдать её за «связь потеряна» было бы враньём.
   Future<Res> ask<Req, Res>(Ask<Req, Res> op, Req request) async {
-    final stream = await _streams.openStream();
-    try {
-      // Токен кладётся в конверт кадра, отдельно от тела. Отсутствующий и
-      // пустой токен касса не различает — `WireGuard.check` отвечает «нужен
-      // сеанс» на оба одинаково (ветка `SessionAccess` в `WireGuard.check`).
-      await stream.send(
-        RequestFrame(
-          op.name,
-          op.encode(request),
-          token: _tokens?.read(),
-        ).encode(),
-      );
-      // Половина отправки закрывается **до** ожидания ответа: пока она открыта,
-      // касса запроса не видит вовсе. Почему — на `WtStream.finishSending`;
-      // измерено в браузере 2026-08-05.
-      await stream.finishSending();
+    // Токен кладётся в конверт кадра, отдельно от тела. Отсутствующий и
+    // пустой токен касса не различает — `WireGuard.check` отвечает «нужен
+    // сеанс» на оба одинаково (ветка `SessionAccess` в `WireGuard.check`).
+    final requestFrame = RequestFrame(
+      op.name,
+      op.encode(request),
+      token: _tokens?.read(),
+    ).encode();
 
+    final WtStream stream;
+    try {
+      stream = await _streams.openStream();
+    } on WtProtocolError {
+      rethrow;
+    } on Object catch (error) {
+      throw WtProtocolError('no_session', '$error');
+    }
+    try {
       final String raw;
       try {
+        await stream.send(requestFrame);
+        // Половина отправки закрывается **до** ожидания ответа: пока она
+        // открыта, касса запроса не видит вовсе. Почему — на
+        // `WtStream.finishSending`; измерено в браузере 2026-08-05.
+        await stream.finishSending();
         raw = await stream.frames.first;
       } on StateError {
         // Поток закрылся, не ответив: касса перезапустилась посреди обмена.
@@ -103,6 +121,10 @@ final class WtDispatcher {
           'no_answer',
           'поток закрылся, не ответив ни одним кадром',
         );
+      } on WtProtocolError {
+        rethrow;
+      } on Object catch (error) {
+        throw WtProtocolError('stream_failed', '$error');
       }
 
       final frame = WireFrame.decode(raw);
@@ -132,6 +154,13 @@ final class WtDispatcher {
         switch (frame) {
           case UpdateFrame(:final body):
             sink.value(() => _decode(op, body));
+          case DoneFrame():
+            // Касса сказала: источник кончился сам, и это окончательное
+            // состояние. Ровно тот случай, ради которого кадр и заведён, —
+            // см. `onDone` в `till_wire.dart`. Без него законный конец
+            // подписки («прибора на этой кассе нет») приезжал на планшет
+            // отказом `stream_ended`, найдено живой приёмкой 2026-09-19.
+            sink.finish();
           case ErrorFrame(:final code, :final detail):
             sink.failure(_errorFor(code, detail));
           default:
@@ -292,8 +321,17 @@ final class WtDispatcher {
 /// одного и того же сравнения с литералом `'unauthorized'`, вписанного в
 /// каждый разбор заново: разойдись оно в одном месте — и один из трёх родов
 /// обмена продолжит доставлять истёкший сеанс обычным отказом.
-Object _errorFor(String code, String detail) => code == 'unauthorized'
-    ? SessionLost(detail)
+// `terminal_changed` — круг правки 4 задачи 19. Лечится он ровно тем
+// же единственным действием, что и `unauthorized`: войти заново. Пока
+// его здесь не было, вкладка оставалась «вошедшей» с токеном, который
+// отказывает на каждой операции, показывала рядовую ошибку провода и не
+// предлагала входа — то есть код был заведён ради действия, к которому
+// не вёл. Текст причины у них разный, путь один.
+Object _errorFor(String code, String detail) =>
+    code == 'unauthorized' || code == 'terminal_changed'
+    // Код кассы едет внутри [SessionLost]: экран, ловящий тип, ведёт на вход,
+    // а голый `catch` показывает фразу этого кода через `safeErrorText`.
+    ? SessionLost(detail, code: code)
     : WtProtocolError(code, detail);
 
 /// Куда разбор кадров складывает свои итоги.

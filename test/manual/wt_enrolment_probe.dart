@@ -257,7 +257,7 @@ class _ProbeAppState extends State<_ProbeApp> {
           padding: const EdgeInsets.all(16),
           child: SelectableText(
             _log.join('\n'),
-            style: const TextStyle(fontFamily: 'monospace', fontSize: 14),
+            style: const TextStyle(fontFamily: 'TeleposMono', fontSize: 14),
           ),
         ),
       ),

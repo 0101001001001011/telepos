@@ -72,6 +72,14 @@
       }
     }
   },
+  "paymentCardChargeUnsettled": "Карта уже проведена на {amount}, и эта сумма не попадёт в чек. Отмените операцию на платёжном терминале.",
+  "@paymentCardChargeUnsettled": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "saleRemoveItem": "Удалить товар",
   "saleClearCart": "Очистить корзину",
   "saleConfirmClear": "Очистить корзину?",
@@ -111,6 +119,11 @@
   "refundComplete": "Возврат выполнен",
   "refundCash": "Возврат наличными",
   "refundCard": "Возврат на карту",
+  "refundConnectionLostHint": "Терминал сам вернётся к кассе — работа продолжится с того же места",
+  "refundConnectionLost": "Связь с кассой потеряна",
+  "@refundConnectionLost": {
+    "description": "Подписка на черновик возврата оборвалась — состояние с кассы больше не приходит"
+  },
   "refundNoItems": "Нет товаров для возврата",
   "refundAlreadyRefunded": "Товар уже возвращён",
   "refundPartial": "Частичный возврат",
@@ -176,6 +189,7 @@
   "paymentKaspi": "Kaspi QR",
   "paymentBonus": "Бонусы",
   "paymentDebt": "В долг",
+  "paymentInstallment": "Рассрочка",
   "paymentMixed": "Смешанная",
   "paymentEnterAmount": "Введите сумму",
   "paymentRemaining": "Осталось: {amount}",
@@ -222,6 +236,18 @@
     }
   },
   "historyReprint": "Повторная печать",
+  "certificateSlipPrintFailed": "Слип сертификата {number} не напечатался: {reason}",
+  "@certificateSlipPrintFailed": {
+    "description": "Слип выпущенного сертификата не дошёл до очереди печати. Сам сертификат при этом выпущен и годен — кассир обязан выдать бумажку иначе.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "historyDetails": "Подробнее",
   "historySale": "Продажа",
   "historyRefund": "Возврат",
@@ -433,6 +459,7 @@
   "loginWithoutPin": "Войти без PIN",
   "loginShiftOpen": "Смена открыта",
   "loginShiftClosed": "Смена закрыта",
+  "loginShiftUnknown": "Смена: неизвестно",
   "saleQuickProducts": "Быстрые товары",
   "saleIncrease": "Увеличить",
   "saleDecrease": "Уменьшить",
@@ -440,6 +467,14 @@
   "saleDataMatrix": "Маркировка (DataMatrix)",
   "saleHeld": "Чек отложен",
   "saleNoDeferredSales": "Нет отложенных чеков",
+  "saleDeferredListNotPermitted": "Отложенные чеки вам не открыты: нужно право «откладывать чек». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.",
+  "saleDeferNotPermitted": "Отложить чек вам нельзя: нужно право «откладывать чек». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.",
+  "@saleDeferNotPermitted": {
+    "description": "Задача 10 ревизии 2026-09-19: причина запертой кнопки «Отложить» у кассира без права op.deferSale."
+  },
+  "@saleDeferredListNotPermitted": {
+    "description": "Задача 29: причина запертой кнопки «Отложенные» у кассира без права op.deferSale."
+  },
   "saleReceiptNo": "Чек №",
   "salePositions": "Позиций",
   "saleSearchHint": "Поиск товара (название или штрих-код)",
@@ -488,6 +523,7 @@
   "shiftClosed": "Смена закрыта",
   "shiftOverAgeTitle": "Смена открыта более 24 часов",
   "shiftOverAgeMessage": "Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.",
+  "shiftOverAgeCloseAtTill": "Продажа заблокирована. Закройте смену на кассе и откройте новую, чтобы продолжить работу.",
   "shiftSince": "с {time}",
   "@shiftSince": {
     "placeholders": {
@@ -680,6 +716,9 @@
   "printerPrinting": "Печать...",
   "printerCheckStatus": "Проверка...",
   "printerPrintSuccess": "Печать успешна",
+  "paymentNotFiscalized": "Чек не фискализован — оплата проведена",
+  "paymentFiscalModuleAbsent": "Модуль фискализации недоступен — чеки не фискализуются",
+  "cashDrawerOpenError": "Денежный ящик не открылся",
   "printerPrintError": "Ошибка печати",
   "printerCheckBtn": "Проверить",
   "printerTestReceipt": "Тестовый чек",
@@ -821,7 +860,7 @@
   "@maxPercent": {
     "placeholders": {
       "percent": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -835,6 +874,36 @@
   },
   "enterValidNumber": "Введите корректное число",
   "discountAmount": "Сумма скидки:",
+  "discountLimitPercent": "Доступно до {percent} % — {source}",
+  "discountLimitAmount": "Доступно до {amount} — {source}",
+  "discountApprovalAbove": "Выше {percent} % нужно подтверждение старшего",
+  "@discountLimitPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "@discountLimitAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "@discountApprovalAbove": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
   "sumLabel": "Сумма",
   "enterAmount": "Введите сумму",
   "amountMustBePositive": "Сумма должна быть положительной",
@@ -1313,7 +1382,7 @@
   },
   "terminalHomeWhoHeader": "Кто вошёл",
   "terminalHomeUserLabel": "Кассир",
-  "terminalHomeSaleNote": "Продажа в браузере — отдельная работа: экран продажи читает базу кассы напрямую и под браузер пока не собирается.",
+  "terminalHomeSaleNote": "Корзиной, номером чека и сменой владеет касса — терминал показывает чек и командует по проводу. Печать чека, фискализация и денежный ящик остаются на кассе.",
   "wtNotPortedTitle": "Этот экран пока только на кассе",
   "wtNotPortedBody": "Браузерный терминал берёт данные по проводу, и экран появляется здесь тогда, когда все его договоры научились работать поверх провода. Этот ещё не научился. Показать его пустым было бы хуже, чем сказать прямо.",
   "wtNotPortedLocation": "Маршрут: {location}",
@@ -2499,6 +2568,17 @@
   "fiscalSettingsVatPayerSubtitle": "Организация является плательщиком НДС (12%)",
   "fiscalSettingsPrintVat": "Печатать НДС на чеке",
   "fiscalSettingsPrintVatSubtitle": "Отображать сумму НДС в чеке",
+  "fiscalOffsetSection": "Сертификаты и аванс",
+  "fiscalOffsetCertificateSale": "Чек при продаже сертификата",
+  "fiscalOffsetCertificateSaleSubtitle": "Выбивать фискальный чек, когда покупают подарочный сертификат",
+  "fiscalOffsetLayout": "Оплата сертификатом или авансом",
+  "fiscalOffsetLayoutSubtitle": "Как сумма зачёта попадает в чек оператора ОФД",
+  "fiscalOffsetLayoutDiscount": "Скидкой на товары",
+  "fiscalOffsetLayoutSurchargeOnly": "Чек только на доплату",
+  "fiscalOffsetPrepaymentReceipt": "Чек при приёме аванса",
+  "fiscalOffsetPrepaymentReceiptSubtitle": "Выбивать фискальный чек, когда покупатель вносит аванс",
+  "fiscalOffsetSaveError": "Не удалось сохранить настройку",
+  "customerPaymentTender": "Чем принято",
   "fiscalSettingsVatRate": "Ставка НДС: 12% (расчёт по формуле 3/28)",
   "historyProductUcode": "Товар #{ucode}",
   "@historyProductUcode": {
@@ -3079,6 +3159,15 @@
   "saleWholesale": "ОПТ",
   "saleRetail": "Розница",
   "syncPreparing": "Подготовка...",
+  "refundRefused": "Возврат не выполнен: {reason}",
+  "@refundRefused": {
+    "description": "Отказ кассы на операции возврата — текст причины приходит от кассы",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "errorSaveFailed": "Ошибка сохранения: {details}",
   "@errorSaveFailed": {
     "placeholders": {
@@ -3107,6 +3196,15 @@
   },
   "errorSearchFailedGeneric": "Ошибка поиска",
   "errorUnknownGeneric": "Неизвестная ошибка",
+  "errorRefusalUnknownCode": "неизвестная причина (код {code})",
+  "@errorRefusalUnknownCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errorReasonUnknown": "неизвестная причина",
   "errorFillRequired": "Заполните все обязательные поля",
   "errorNoUsers": "Нет зарегистрированных пользователей",
   "errorSelectUser": "Выберите пользователя",
@@ -3119,6 +3217,11 @@
   "errorCredentialUnreadable": "Запись PIN-кода повреждена. Обратитесь к администратору — набрать код заново не поможет.",
   "errorAuthUnknown": "Касса не смогла ответить на попытку входа. Попробуйте ещё раз.",
   "errorTillNotConfigured": "Касса ещё не настроена — вход невозможен, пока не пройден мастер настройки.",
+  "errorTillNotConfiguredSale": "Касса не настроена — чек начать нельзя. Обратитесь к администратору: нужно пройти мастер настройки.",
+  "errorNotAllowed": "Недостаточно прав для этого действия. Обратитесь к администратору.",
+  "errorNoSaleModule": "Эта касса не умеет вести чек: модуль продажи не собран. Обратитесь к администратору.",
+  "errorTerminalInBody": "Терминал обратился к кассе неверно. Обновите приложение на рабочем месте.",
+  "errorWholesaleInStart": "Оптовый чек так не начинается. Начните обычный чек и включите опт отдельной кнопкой.",
   "errorTerminalLimitReached": "На этой кассе уже заведено максимум терминалов. Обратитесь к администратору, чтобы освободить место.",
   "errorPairingCodeInvalid": "Код привязки не подошёл — просрочен, уже использован или введён неверно. Получите новый код у оператора кассы.",
   "errorTerminalSecretInvalid": "Привязка этого устройства больше не действует — возможно, терминал удалили на кассе. Введите новый код привязки.",
@@ -3127,6 +3230,16 @@
   "errorSaleNotInitialized": "Продажа не инициализирована",
   "errorReceiptEmpty": "Чек пуст",
   "errorDeferredNotFound": "Отложенный чек не найден",
+  "errorCartStale": "Чек изменился, пока вы набирали. Экран обновлён — повторите последнее действие.",
+  "errorCartWrongReceipt": "Этот чек больше не в работе. Начните новый чек или поднимите отложенный.",
+  "errorCartNotStarted": "Чек ещё не начат. Начните новый чек или поднимите отложенный.",
+  "errorLineNotFound": "Этой строки в чеке больше нет. Обновите чек и повторите.",
+  "errorInvalidAmount": "Недопустимое значение. Сумма не может быть отрицательной, а скидка — больше 100%.",
+  "errorDeferredTaken": "Этот отложенный чек уже поднят на другом рабочем месте.",
+  "errorCartNotEmpty": "Сначала завершите или отложите текущий чек — поднять отложенный поверх него нельзя.",
+  "errorSaleNotStarted": "Касса не смогла начать чек и не назвала причину. Попробуйте ещё раз.",
+  "errorShiftNotOpen": "Смена не открыта. Откройте смену на кассе.",
+  "errorCardTerminalMisconfigured": "Платёжный терминал этого рабочего места настроен неверно. Проверьте привязку в настройках оборудования.",
   "errorReceiptNotFound": "Чек #{receiptNo} не найден",
   "@errorReceiptNotFound": {
     "placeholders": {
@@ -4006,6 +4119,15 @@
   "receiptTemplateTestPrintOk": "Образец чека отправлен на печать",
   "receiptTemplateTestPrintFail": "Не удалось напечатать (проверьте принтер)",
   "receiptTemplateDeleteTitle": "Удалить шаблон",
+  "receiptTemplateHeaderHint": "Несколько строк: приветствие, акция, контакты",
+  "receiptTemplateFooterHint": "Несколько строк: благодарность, условия возврата, сайт, соцсети",
+  "receiptTemplateAlignLeft": "Слева",
+  "receiptTemplateAlignCenter": "По центру",
+  "receiptTemplateAlignRight": "Справа",
+  "receiptTemplateBold": "Жирный",
+  "receiptTemplateDoubleSize": "Крупный (двойной размер)",
+  "receiptTemplatePaperWidthHint": "Ширина ленты задаётся в настройках принтера",
+  "receiptTemplateMandatoryNote": "Обязательные реквизиты — номер чека, итог, оплаты, НДС, фискальный признак и QR — печатаются всегда, между шапкой и подвалом",
   "receiptTemplateDeleteConfirm": "Удалить шаблон «{name}»?",
   "@receiptTemplateDeleteConfirm": {
     "placeholders": {
@@ -5385,6 +5507,7 @@
   "prodNtin": "НКТ (НТИН)",
   "prodMarkable": "Подлежит маркировке",
   "promoTitle": "Акции",
+  "promoSubtitle": "Акции 1+1 и подарки за покупку",
   "promoNew": "Новая акция",
   "promoError": "Ошибка: {error}",
   "@promoError": {
@@ -5408,12 +5531,10 @@
       }
     }
   },
-  "promoSupplierTag": "от поставщика",
   "promoDefaultName11": "Акция 1+1",
   "promoNameLabel": "Название",
   "promoTriggerLabel": "Товар-триггер (что купить)",
   "promoRewardLabel": "Подарок (что бесплатно)",
-  "promoSupplierFunded": "Акция от поставщика",
   "promoSaveButton": "Сохранить акцию",
   "saleWeighingPlaceItem": "Взвешивание... поместите товар на весы",
   "@saleWeightKg": {
@@ -5713,6 +5834,43 @@
       }
     }
   },
+  "discountLimitsTitle": "Пределы скидки",
+  "discountLimitsSubtitle": "Сколько кассир может уступить вручную",
+  "discountLimitsIntro": "Предел роли перекрывает умолчание. У роли без своей строки действует «По умолчанию». Сто процентов означает «без предела» — это объявленное значение, а не пустота.",
+  "discountLimitsDefaultRow": "По умолчанию (все роли)",
+  "discountLimitsMaxPercent": "Предел, %",
+  "discountLimitsApprovalAbove": "Подтверждение выше, %",
+  "discountLimitsApprovalHint": "пусто — не требуется",
+  "discountLimitsInheritHint": "пусто — как по умолчанию",
+  "discountLimitsTwoDoors": "Внимание: «запретить снижение цены» в политике продаж закрывает только правку цены строки. Скидка при пределе 100 % по-прежнему разрешена — вплоть до строки бесплатно. Это две разные двери; чтобы закрыть вторую, поставьте предел ниже ста.",
+  "discountLimitsSaved": "Предел сохранён",
+  "discountLimitsInherited": "Строка снята: роль наследует умолчание",
+  "discountLimitsInvalid": "Предел — число от 0 до 100",
+  "discountLimitsApprovalNotYet": "Подтверждение старшего пока не реализовано: скидка выше порога отклоняется с названной причиной, а не открывает ввод кода.",
+  "errorDeniedPolicy": "Запрещено настройками кассы: {detail}",
+  "@errorDeniedPolicy": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "errorDeniedLimit": "Скидка больше разрешённой: {detail}",
+  "@errorDeniedLimit": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "errorApprovalRequired": "Нужно подтверждение старшего: {detail}",
+  "@errorApprovalRequired": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
   "errorBigAmountBlocked": "Сумма продажи превышает 1 млн ₸. Включите разрешение на крупные суммы в настройках кассы.",
   "errorMarkRequired": "Требуется код маркировки: {name}",
   "@errorMarkRequired": {
@@ -5775,6 +5933,7 @@
   "setUserPinNew": "Новый PIN",
   "receiptInputRecent": "Последние чеки",
   "receiptInputNoRecent": "Чеков пока нет",
+  "receiptInputRecentUnavailable": "Список последних чеков на этом терминале недоступен — введите номер чека вручную",
   "shiftHistoryTitle": "История смен",
   "shiftHistoryEmpty": "Закрытых смен пока нет",
   "shiftHistoryShiftNo": "Смена №{id}",
@@ -5932,7 +6091,6 @@
       }
     }
   },
-  "scannerRulesUnavailable": "Правила чтения штрихкода недоступны в этой сборке.",
   "scannerRulesSaved": "Правила чтения штрихкода сохранены",
   "printQueueSectionTitle": "Очередь печати",
   "printQueueSubtitle": "Что ждёт печати, что не напечаталось и почему.",
@@ -5983,5 +6141,731 @@
   "printQueueCancelBody": "Отменённое задание напечатать уже нельзя. Если такой же чек всё-таки нужен, его придётся выбить заново.",
   "printQueueCancelConfirm": "Отменить задание",
   "printQueueCancelDone": "Задание отменено",
-  "printQueueCancelRefused": "Это задание отменить уже нельзя: оно печатается или уже завершено"
+  "printQueueCancelRefused": "Это задание отменить уже нельзя: оно печатается или уже завершено",
+  "errorPayReceiptNotFound": "Чек больше не в работе — оплатить его нельзя. Обновите экран и начните заново.",
+  "errorPayNotOwner": "Этот чек ведёт другое рабочее место — оплатить его отсюда нельзя.",
+  "errorPaymentAlreadyTaken": "Этот чек уже оплачен. Взять деньги второй раз касса не станет.",
+  "errorPaymentInsufficient": "Названной суммы не хватает на чек. Назовите сумму заново.",
+  "errorPaymentAccountMissing": "У кассы нет счёта для этого вида оплаты. Обратитесь к администратору.",
+  "errorPaymentAccountNotAllowed": "Такой счёт для оплаты не предлагался. Обновите список счетов и выберите заново.",
+  "errorPaymentUnbalanced": "Сумма строк оплаты не сходится с суммой чека. Наберите оплату заново.",
+  "errorPaymentKindInactive": "Этот вид оплаты выключен в настройках кассы. Выберите другой или включите его в настройках.",
+  "errorPaymentKindUnknown": "Касса не знает такого вида оплаты. Обратитесь к администратору.",
+  "errorCertificateUnknown": "Сертификата с таким номером на этой кассе нет. Проверьте номер.",
+  "errorCertificatePinWrong": "ПИН сертификата не подошёл. Наберите его заново.",
+  "errorCertificateRateLimited": "Слишком много неудачных проверок сертификата. Подождите несколько минут и повторите.",
+  "errorConnectionLost": "Связь с кассой потеряна. Проверьте сеть и повторите.",
+  "errorRunIncomplete": "Касса прервала операцию, не завершив её. Проверьте на кассе результат, прежде чем повторять.",
+  "errorWireMismatch": "Рабочее место и касса не поняли друг друга — версии разошлись. Обновите страницу; если не поможет, обратитесь к администратору.",
+  "errorTillFailed": "Касса не смогла выполнить операцию. Повторите; если ошибка повторится, обратитесь к администратору.",
+  "errorTerminalChanged": "Вы сменили рабочее место — войдите снова.",
+  "errorUnknownTerminal": "Рабочее место не привязано к кассе. Привяжите его заново кодом привязки.",
+  "errorAlreadyConfigured": "Касса уже настроена — мастер первичной настройки больше недоступен.",
+  "errorCannotDeleteSelf": "Нельзя удалить рабочее место самой кассы.",
+  "errorNoDrivers": "Касса собрана без драйверов оборудования — поиск и проверка устройств недоступны. Обратитесь к администратору.",
+  "errorNoNetworkModule": "Эта касса не управляет сетевыми настройками — нет системной службы. Обратитесь к администратору.",
+  "errorNoSessionRegistry": "Эта касса не ведёт список сеансов. Обратитесь к администратору.",
+  "errorNoBackupTransport": "Резервные копии на этой кассе не настроены. Обратитесь к администратору.",
+  "errorBackupNotFound": "Резервная копия не найдена.",
+  "errorCertificatesUnavailable": "Эта касса не выпускает подарочные сертификаты по проводу. Обратитесь к администратору.",
+  "errorRefundStale": "Возврат изменился, пока команда шла на кассу. Повторите действие.",
+  "errorRefundWrongDraft": "Этого черновика возврата больше нет. Откройте возврат заново.",
+  "errorRefundNotStarted": "Возврат не начат — выберите чек или начните возврат без чека.",
+  "errorRefundEmpty": "В возврате нет ни одной строки — возвращать нечего.",
+  "errorReceiptAlreadyRefunded": "По этому чеку возврат уже сделан.",
+  "errorReceiptNotRefundable": "Этот чек нельзя вернуть здесь: оплата прошла через терминал другой кассы. Оформите возврат там, где платили.",
+  "errorLineNotInReceipt": "Этого товара нет в чеке — по чеку возвращается только проданное в нём.",
+  "errorSaleNotCompleted": "Продажа по этому чеку не завершена — возвращать нечего.",
+  "errorRefundBusy": "На кассе уже идёт другой возврат. Завершите его и повторите.",
+  "errorRefundCannotStart": "Касса не смогла начать возврат и не назвала причину. Проверьте смену и настройку кассы.",
+  "errorRefundInstallmentRefused": "Чек продан в рассрочку — касса его не возвращает. Расторжение договора оформляет администратор.",
+  "errorRefundCashlessUnavailable": "Эти деньги надо вернуть на карту или через QR, а вернуть их нечем: терминал или провайдер не подключён. Наличными из ящика касса такой возврат не выдаёт.",
+  "errorRefundCashlessRefused": "Банк или провайдер отказал в возврате. Проверьте терминал и повторите — уже возвращённое второй раз не вернётся.",
+  "errorRefundKindNotRefundable": "На этот вид оплаты возврат запрещён в справочнике видов оплаты.",
+  "errorRefundKindUnknown": "Чек оплачен видом оплаты, которого нет в справочнике этой кассы. Возврат по нему касса не проводит: чем платили — неизвестно, а наличными за это не выдают.",
+  "refundDestinationsTitle": "Куда уйдут деньги",
+  "refundRouteDrawer": "Наличными из ящика",
+  "refundRouteCard": "На карту через терминал",
+  "refundRouteManual": "Вне кассы — тем же способом, каким платили",
+  "refundRouteProvider": "Через провайдера QR",
+  "refundRouteCertificate": "Новым сертификатом (старый остаётся погашенным)",
+  "refundRouteAdvance": "В аванс покупателя",
+  "refundRouteBonus": "На бонусный счёт",
+  "refundRouteDebt": "В счёт долга покупателя",
+  "errorCertificateRefundNoSource": "Строка чека возвращается сертификатом, но номера сертификата у неё нет. Возврат по ней касса не проводит: новую бумажку выписать не от чего, а обязательство кассы выросло бы впустую.",
+  "errorCertificateCashRefundRefused": "Наличными за сертификат вернуть нельзя — укажите реквизиты для безналичного возврата.",
+  "errorCertificatePaysCertificate": "Сертификатом нельзя оплатить покупку другого сертификата.",
+  "errorCreditContractUnknown": "Договора рассрочки с таким номером нет. Проверьте номер.",
+  "errorCreditContractNotActive": "Договор рассрочки уже погашен или отозван — платить по нему не за что.",
+  "errorCreditOverpayment": "Сумма больше остатка по договору. Проверьте сумму.",
+  "errorCreditRepaymentInvalid": "Сумма погашения должна быть больше нуля.",
+  "errorCreditAllocationRace": "По договору в ту же секунду заплатили с другой кассы. Примите платёж заново.",
+  "errorKindTenderCannotDiscount": "Вид, приносящий живые деньги, нельзя объявить в чеке «не платежом».",
+  "errorKindAccountMissing": "Виду оплаты не назначен счёт-получатель.",
+  "errorKindCounterpartyRequired": "Отложенный вид оплаты требует названного покупателя.",
+  "errorKindProviderRequired": "Виду оплаты через провайдера (QR) нужен провайдер.",
+  "errorKindFiscalKindRequired": "У вида оплаты не указана фискальная трактовка.",
+  "errorKindChangeNotATender": "Сдачу выдаёт только вид, приносящий живые деньги.",
+  "errorKindSystemImmutable": "Код или идентификатор системного вида оплаты нельзя менять и нельзя занимать другим видом.",
+  "errorCertificateExpired": "Срок действия сертификата истёк. Обратитесь к владельцу магазина.",
+  "errorCertificateExhausted": "На сертификате не осталось средств.",
+  "errorCertificateDuplicate": "Один и тот же сертификат назван в оплате дважды. Уберите повтор.",
+  "errorCertificateRace": "Остаток сертификата изменился. Повторите оплату.",
+  "errorCertificateAccountMissing": "У кассы нет счёта обязательств по сертификатам. Обратитесь к администратору.",
+  "errorCertificateNumberTaken": "Сертификат с таким номером уже выпущен.",
+  "errorCertificateNominalInvalid": "Номинал сертификата должен быть больше нуля.",
+  "errorDebtCustomerRequired": "Продажа в долг без покупателя невозможна — выберите покупателя.",
+  "errorDebtNotSoldHere": "На этой кассе не торгуют в долг — продажа в кредит выключена в настройках кассы.",
+  "errorDebtAccountMissing": "У покупателя нет расчётного счёта — долг записать некуда.",
+  "errorBonusAccountMissing": "У покупателя нет бонусного счёта — списать бонус нечем.",
+  "errorPrepaymentCustomerRequired": "Зачёт аванса требует покупателя — выберите его.",
+  "errorCreditTermInvalid": "Такой срок рассрочки касса не оформляет",
+  "errorCreditPrincipalInvalid": "Рассрочку не на что оформлять: чек покрыт целиком",
+  "errorCreditFeeInvalid": "Надбавка по договору задана неверно",
+  "errorCreditSchemeUnknown": "Такой схемы графика касса не знает",
+  "errorCreditOverdue": "У покупателя просрочен другой договор рассрочки",
+  "errorCreditContractDuplicate": "На этот чек уже оформлен договор рассрочки",
+  "errorPrepaymentAccountMissing": "У покупателя нет расчётного счёта — аванса на нём быть не может.",
+  "errorPrepaymentInsufficient": "Внесённого аванса не хватило: его уже зачли другим чеком.",
+  "errorLoyaltyCustomerUnknown": "Покупатель не найден в картотеке. Выберите покупателя заново.",
+  "errorAmountExceedsReceipt": "Сумма больше стоимости чека. Назовите сумму заново.",
+  "errorCardChargeUnproven": "Касса не подтвердила проведение карты. Проверьте платёжный терминал.",
+  "errorPaymentTypeNotAllowed": "Этот вид оплаты не разрешён на этом рабочем месте.",
+  "errorPaymentsUnavailable": "Эта касса не принимает оплату по проводу. Обратитесь к администратору.",
+  "errorNoRefundService": "Эта касса не проводит возврат по проводу. Обратитесь к администратору.",
+  "errorRefundAbandonIsTillSide": "Черновик возврата снимает касса, а не рабочее место.",
+  "errorNoAnswer": "Касса не ответила. Проверьте связь и повторите.",
+  "paymentTypeNotAllowedHere": "«{type}» не разрешена этому рабочему месту. Виды оплаты меняются в настройках оборудования; касса откажет в неразрешённом виде, даже если нажать.",
+  "@paymentTypeNotAllowedHere": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentTypesLimitedHere": "Рабочее место принимает: {types}.",
+  "@paymentTypesLimitedHere": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDebtNotSoldHere": "На этой кассе в долг не торгуют: продажа в кредит выключена в настройках кассы. Касса откажет, даже если нажать.",
+  "paymentDebtNotPermitted": "Продавать в долг вам не разрешено: нужно право «продажа в долг». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.",
+  "saleDiscountNotPermitted": "Скидку назначать вам не разрешено: нужно право «продажа со скидкой». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.",
+  "@saleDiscountNotPermitted": {
+    "description": "Приёмка 2026-09-17: причина запертого поля скидки в окне правки строки у кассира без права op.sellDiscount. Предел скидки такому кассиру не показывается."
+  },
+  "paymentDebtPolicyUnknown": "Касса пока не ответила, торгуют ли здесь в долг. Проверьте связь с кассой и попробуйте ещё раз.",
+  "paymentOffsetsTitle": "Аванс и сертификаты",
+  "paymentPrepaymentTitle": "Аванс покупателя",
+  "paymentPrepaymentNeedsCustomer": "Чтобы зачесть аванс, найдите покупателя по номеру телефона.",
+  "paymentPrepaymentLoading": "Касса ещё не ответила, сколько аванса внесено.",
+  "paymentPrepaymentNone": "У покупателя нет внесённого аванса.",
+  "paymentPrepaymentBalance": "Внесено вперёд:",
+  "paymentPrepaymentUse": "Зачесть аванс",
+  "paymentPrepaymentApplied": "Будет зачтено: {amount}",
+  "@paymentPrepaymentApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateTitle": "Подарочный сертификат",
+  "paymentCertificateNumber": "Номер сертификата",
+  "paymentCertificatePin": "ПИН, если есть",
+  "paymentCertificatePresent": "Проверить",
+  "paymentCertificateBalance": "Остаток на сертификате: {amount}",
+  "@paymentCertificateBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateApplied": "Спишется {amount}, останется {rest}",
+  "@paymentCertificateApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "rest": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateNotNeeded": "Чек уже покрыт — этот сертификат не понадобится.",
+  "unfiscalizedTitle": "Нефискализованные чеки",
+  "unfiscalizedEmpty": "Все чеки фискализованы",
+  "unfiscalizedEmptyHint": "Здесь появятся чеки, за которые деньги взяты, а документа оператор не выдал",
+  "unfiscalizedReceiptNo": "Чек №{number}",
+  "@unfiscalizedReceiptNo": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "unfiscalizedAgeHours": "{hours} ч назад",
+  "@unfiscalizedAgeHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "unfiscalizedOverdue": "Просрочено окно 72 ч",
+  "unfiscalizedRetry": "Повторить",
+  "unfiscalizedRetryDone": "Документ получен: {sign}",
+  "@unfiscalizedRetryDone": {
+    "placeholders": {
+      "sign": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedRetryFailed": "Оператор снова отказал: {message}",
+  "@unfiscalizedRetryFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedNoDocument": "Строка записана до того, как отказы стали нести документ: повторять нечем, её можно только списать",
+  "unfiscalizedNoOperator": "Фискальный оператор не настроен: повторять некуда",
+  "unfiscalizedWriteOff": "Списать",
+  "unfiscalizedWriteOffTitle": "Списать нефискализованный чек",
+  "unfiscalizedWriteOffBy": "Решение записывается на имя: {name}",
+  "@unfiscalizedWriteOffBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedWriteOffReason": "Причина списания",
+  "unfiscalizedWriteOffDone": "Чек помечен разобранным",
+  "unfiscalizedWrittenOff": "Списал {name}: {reason}",
+  "@unfiscalizedWrittenOff": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "unfiscalizedUnknownUser": "неизвестный пользователь",
+  "unfiscalizedAtShiftClose": "Смена закрыта с нефискализованными чеками: {count}. Номера: {numbers}",
+  "@unfiscalizedAtShiftClose": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "numbers": {
+        "type": "String"
+      }
+    }
+  },
+  "documentsOnTheWayAtShiftClose": "Документы смены ещё не у оператора: {count} (чеки {numbers}). Закрытие дождётся их отправки; если связь не вернётся, Z-отчёт не уйдёт — иначе отчёт оператора разойдётся с кассой.",
+  "@documentsOnTheWayAtShiftClose": {
+    "description": "Ревизия 2026-09-19, дыра 1: Z-отчёт не обгоняет документы своей смены (ShiftService.onCloseShift). Ждущие строки очереди названы кассиру ДО нажатия «Закрыть», когда он ещё может подождать связи.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "numbers": {
+        "type": "String"
+      }
+    }
+  },
+  "qrPaidPartial": "Оплачено частично: {paid} из {amount}",
+  "@qrPaidPartial": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanTitle": "Деньги без чека",
+  "qrOrphanHint": "Покупатель заплатил по QR, а чек этими деньгами не закрыт.",
+  "qrOrphanLine": "{amount} · {provider} · {key}",
+  "@qrOrphanLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "provider": {
+        "type": "String"
+      },
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanAfterGiveUp": "Подтверждение пришло после того, как касса перестала ждать",
+  "errorQrIntentUnknown": "Касса не знает этой оплаты по QR. Обновите чек и повторите.",
+  "errorQrIntentNotPaid": "Оплата по QR ещё не подтверждена банком. Дождитесь подтверждения или выберите другой способ.",
+  "errorQrIntentAlreadySettled": "Эти деньги уже закрыли другой чек: {message}",
+  "@errorQrIntentAlreadySettled": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrTitle": "Оплата по QR",
+  "paymentQrAmount": "Сумма по QR",
+  "paymentQrStart": "Показать QR",
+  "paymentQrWaiting": "Ждём оплату · осталось {seconds} с",
+  "@paymentQrWaiting": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentQrScanHint": "Покупатель сканирует код в приложении банка",
+  "paymentQrCancel": "Отменить ожидание",
+  "paymentQrNoLink": "Нет связи с провайдером — касса повторяет запрос сама",
+  "paymentQrPaid": "Оплачено по QR: {amount}",
+  "@paymentQrPaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrPaidAfterCancel": "Покупатель успел оплатить до отмены — {amount} идёт в этот чек",
+  "@paymentQrPaidAfterCancel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrCancelled": "Ожидание отменено, провайдер отмену подтвердил",
+  "paymentQrPatienceSpent": "Покупатель не оплатил за отведённое время — касса перестала ждать",
+  "paymentQrExpired": "Срок QR-кода вышел у провайдера",
+  "paymentQrFailed": "Провайдер отказал в оплате по QR",
+  "paymentQrCancelUnconfirmed": "Отмена не подтверждена — деньги ещё могут прийти. Не принимайте другую оплату, пока касса не выяснит.",
+  "paymentQrRecheck": "Проверить снова",
+  "paymentQrRestart": "Новый код",
+  "paymentQrOverReceipt": "В чек не помещается {amount} из оплаченного по QR",
+  "@paymentQrOverReceipt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrNothingToPay": "Чек уже покрыт — показывать код не на что",
+  "errorQrNotConfigured": "Провайдер QR не настроен на кассе",
+  "errorQrNetwork": "Нет связи с провайдером QR",
+  "errorQrTimeout": "Провайдер QR не ответил вовремя",
+  "errorQrProviderBusy": "Провайдер QR занят — касса повторит запрос",
+  "errorQrMalformedReply": "Провайдер QR ответил непонятно — обратитесь к администратору кассы",
+  "errorQrUnknownIntent": "Провайдер QR не знает этой оплаты",
+  "errorQrRejected": "Провайдер QR отклонил запрос",
+  "errorQrReverseUnsupported": "Провайдер QR не умеет возвращать деньги",
+  "errorQrIntentLive": "На этом чеке уже ждёт оплата по QR — отмените её, прежде чем показывать новый код",
+  "fiscalReasonNetwork": "Нет связи с фискальным оператором",
+  "fiscalReasonOperatorUnavailable": "Фискальный оператор недоступен",
+  "fiscalReasonTokenExpired": "Оператор не принял авторизацию кассы",
+  "fiscalReasonRequestNotBuilt": "Запрос к оператору не собран: проверьте адрес сервера в фискальных настройках",
+  "fiscalReasonTlsRejected": "Защищённое соединение с оператором не установлено: проверьте адрес сервера и часы кассы",
+  "fiscalReasonClientFault": "Сбой кассы при обмене с оператором",
+  "fiscalReasonBadCredentials": "Неверный логин или пароль оператора",
+  "fiscalReasonCashboxNotFound": "Касса не найдена у оператора: проверьте заводской номер",
+  "fiscalReasonCashboxBlocked": "Касса заблокирована оператором",
+  "fiscalReasonOfflineLimitExceeded": "Превышен лимит автономных документов",
+  "fiscalReasonOfflineNotSupported": "Автономный режим этой кассе не разрешён",
+  "fiscalReasonDuplicate": "Документ уже зарегистрирован у оператора, фискальный признак кассе не выдан — возьмите его в кабинете оператора",
+  "fiscalReasonValidation": "Оператор отклонил документ: суммы или данные не сходятся",
+  "fiscalReasonNotEnoughMoney": "По данным оператора в кассе недостаточно наличных",
+  "fiscalReasonShiftError": "Ошибка смены у оператора",
+  "fiscalReasonUnsupported": "Операция не поддерживается оператором",
+  "fiscalReasonNotConfigured": "Фискализация не настроена",
+  "fiscalReasonUnknown": "Оператор отказал по неизвестной причине",
+  "fiscalReasonOfflineWindowExpired": "Истекло автономное окно 72 ч — документ не выдан",
+  "fiscalReasonRowUnreadable": "Строка очереди повреждена: документ не читается",
+  "fiscalReasonWithCode": "{reason} (код {code})",
+  "@fiscalReasonWithCode": {
+    "description": "Причина фискального отказа с кодом оператора (у «оператор недоступен» — HTTP-статус)",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "fiscalReasonLegacy": "Причина записана до перевода: {text}",
+  "@fiscalReasonLegacy": {
+    "description": "Строка очереди, записанная русским текстом до перевода причин",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "fiscalReasonNotRecorded": "Причина не записана",
+  "fiscalReasonPaymentTypeNotAccepted": "Вид оплаты не принимается оператором: «кредит» и «тара» исключены протоколом ОФД 2.0.2",
+  "errorDeferredListUnavailable": "Список отложенных чеков недоступен",
+  "errorDeferredListUnavailableReason": "Список отложенных чеков недоступен: {reason}",
+  "@errorDeferredListUnavailableReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "errorRefundSearchUnavailable": "Поиск товара для возврата на этом терминале ещё не подключён",
+  "errorRefundNothingSelected": "Черновик изменился — возвращать нечего. Проверьте выделенные строки.",
+  "errorRefundInvalidAmount": "Столько вернуть нельзя: количество не может быть больше проданного по чеку или меньше нуля.",
+  "errorCertificatePinRequired": "У сертификата есть ПИН. Наберите ПИН с сертификата.",
+  "qrSettingsTitle": "Оплата по QR",
+  "qrSettingsSubtitle": "Провайдер QR/СБП: адрес, код, ключ, ожидание",
+  "qrSettingsKindTitle": "Принимать оплату по QR",
+  "qrSettingsKindSubtitle": "Вид оплаты «QR» на экране оплаты",
+  "qrSettingsUrl": "Адрес провайдера",
+  "qrSettingsCode": "Код провайдера",
+  "qrSettingsKey": "Ключ доступа",
+  "qrSettingsKeyStoredHint": "Ключ сохранён. Введите новый, чтобы заменить",
+  "qrSettingsKeyEmptyHint": "Ключ не задан",
+  "qrSettingsClearKey": "Стереть сохранённый ключ",
+  "qrSettingsPatience": "Ожидание оплаты, секунд",
+  "qrSettingsSave": "Сохранить",
+  "qrSettingsSaved": "Настройка QR сохранена",
+  "qrSettingsRemove": "Снять настройку",
+  "qrSettingsStatusReady": "Провайдер настроен",
+  "qrSettingsStatusNotConfigured": "Провайдер не настроен — оплата по QR недоступна",
+  "qrSettingsInvalidUrl": "Адрес должен начинаться с http:// или https://",
+  "qrSettingsCodeRequired": "Укажите код провайдера",
+  "qrSettingsInvalidPatience": "Ожидание — от {min} до {max} секунд",
+  "@qrSettingsInvalidPatience": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "qrSettingsSaveFailed": "Не удалось сохранить настройку QR",
+  "qrSettingsTillOnly": "Настройка провайдера QR доступна только на самой кассе",
+  "installmentTermsTitle": "Рассрочка",
+  "installmentTermsMonths": "Срок, месяцев",
+  "installmentTermsScheme": "Схема графика",
+  "installmentTermsContinue": "Продолжить",
+  "customerPaymentTitle": "Принять оплату / погасить долг",
+  "customerPaymentCurrentDebt": "Текущий долг: {amount}",
+  "@customerPaymentCurrentDebt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerPaymentBalance": "Баланс: {amount}",
+  "@customerPaymentBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerPaymentAmount": "Сумма оплаты",
+  "customerPaymentAmountInvalid": "Введите сумму больше 0",
+  "customerPaymentFailed": "Ошибка проведения оплаты",
+  "customerPaymentSubmit": "Принять оплату",
+  "errorPrepaymentAmountInvalid": "Сумма аванса должна быть больше нуля. Наберите сумму заново.",
+  "errorPrepaymentTenderInvalid": "Аванс принимается наличными, картой или по QR. Выберите другой вид оплаты.",
+  "errorPrepaymentTillAccountMissing": "У кассы нет счёта для приёма этого вида оплаты. Настройте счёт приёма и повторите.",
+  "@errorPrepaymentTillAccountMissing": {
+    "description": "Приём аванса отказан: у кассы нет счёта, куда лечь принятым деньгам (наличные — счёт кассы, безнал — эквайринг). Отказ идёт до первой записи."
+  },
+  "errorPrepaymentIntakeFailed": "Аванс принять не удалось. Проверьте покупателя и повторите.",
+  "errorPrepaymentRefundExceedsBalance": "Аванса на счёте покупателя меньше, чем вы выдаёте. Проверьте остаток и убавьте сумму.",
+  "errorPrepaymentRefundKeyMissing": "В заявке на выдачу аванса нет ключа повтора — касса не отличит повтор от второй выдачи. Откройте экран заново и наберите сумму ещё раз.",
+  "@errorPrepaymentRefundKeyMissing": {
+    "description": "Выдача аванса по проводу отказана до первой записи: кадр пришёл без ключа повтора. Исполнить его значило бы выдать живые деньги, повтор которых опознать будет нечем (решение заказчика 2026-09-18)."
+  },
+  "errorPrepaymentRefundFailed": "Аванс выдать не удалось. Проверьте покупателя и повторите.",
+  "errorPrepaymentRefundUnavailable": "Эта касса не выдаёт аванс покупателя по проводу. Обратитесь к администратору.",
+  "errorPrepaymentIntakeUnavailable": "Эта касса не принимает аванс покупателя по проводу. Обратитесь к администратору.",
+  "errorPrepaymentIntakeKeyMissing": "В заявке на приём аванса нет ключа повтора — касса не отличит повтор от второго взноса. Откройте экран заново и наберите сумму ещё раз.",
+  "@errorPrepaymentIntakeKeyMissing": {
+    "description": "Приём аванса отказан до первой записи: кадр пришёл без ключа повтора. Принять его значило бы принять деньги, повтор которых опознать будет нечем (дефект живой приёмки 2026-09-18)."
+  },
+  "errorQrSetupUnavailable": "Эта касса не хранит настройку провайдера QR. Настройте оплату по QR на самой кассе или обратитесь к администратору.",
+  "errorReceiptTemplatesUnavailable": "Эта касса не хранит шаблонов чека. Настройте шаблон на самой кассе или обратитесь к администратору.",
+  "@errorReceiptTemplatesUnavailable": {
+    "description": "Экран шаблона чека отказан: у кассы нет ни базы шаблонов, ни очереди печати, из байтов которой собирается предпросмотр. Отвечать «сохранено» такой кассе нельзя — владелец ушёл бы, считая чек настроенным."
+  },
+  "errorReceiptTemplateNameless": "У шаблона чека обязано быть название. Наберите его и сохраните ещё раз.",
+  "shiftDeskTitle": "Смена",
+  "shiftDeskOverAgeWarning": "Смена открыта более 24 часов — продажа заблокирована. Закройте её и откройте новую.",
+  "@shiftDeskOverAgeWarning": {
+    "description": "Окно просроченной смены на браузерном терминале — то же правило, которым касса запирает продажу (ShiftAgeRule, сутки, сравнение >=). С 2026-09-18 рядом стоит рабочая кнопка закрытия, а не только слова."
+  },
+  "shiftDeskOpenedAt": "Открыта: {when}",
+  "@shiftDeskOpenedAt": {
+    "description": "Время открытия смены. Приходит с кассы в СЕКУНДАХ эпохи (ShiftDeskView.openedAtSeconds) — множитель 1000 стоит только здесь, на показе.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftDeskCountedLabel": "Пересчитано в ящике",
+  "shiftDeskCountedHint": "Оставьте пустым, если не пересчитывали — касса возьмёт свой итог.",
+  "@shiftDeskCountedHint": {
+    "description": "Пустое поле означает «не считали», а не ноль: ноль в ящике — законный результат пересчёта, и подменить им «не считали» значило бы записать недостачу на всю выручку смены."
+  },
+  "shiftDeskOpeningCashLabel": "Деньги в ящике на начало",
+  "shiftDeskClosedNow": "Смена закрыта.",
+  "shiftDeskOpenedNow": "Смена открыта.",
+  "shiftDeskNoShift": "На кассе нет открытой смены.",
+  "shiftDeskUnfiscalizedCount": "Чеков без фискального документа: {count}",
+  "@shiftDeskUnfiscalizedCount": {
+    "description": "Смену закрыть можно, но не молча (докстринг ShiftService.unfiscalizedAtClose): запрещать хуже беды, промолчать нельзя.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftDeskUnfinishedCount": "Незаконченных чеков: {count} — закрытие их приберёт",
+  "@shiftDeskUnfinishedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorShiftDeskNotOpen": "На этой кассе нет открытой смены — закрывать нечего.",
+  "@errorShiftDeskNotOpen": {
+    "description": "Названный отказ вместо молчаливого успеха: ShiftServiceImpl.onCloseShift без открытой смены пишет предупреждение в журнал и возвращается, и по проводу это прочлось бы как «закрыл»."
+  },
+  "errorShiftDeskAlreadyOpen": "На этой кассе уже открыта смена.",
+  "errorShiftDeskUnavailable": "Эта касса не ведёт смен по проводу. Закройте смену на самой кассе или обратитесь к администратору.",
+  "errorShiftDeskActorUnknown": "Смену открывает кассир, а этой заявке кассира назвать нечем. Войдите заново.",
+  "@errorShiftDeskActorUnknown": {
+    "description": "Кассир берётся из сеанса, никогда из тела кадра (И162): именем смены подписан Z-отчёт и вся её выручка."
+  },
+  "@errorReceiptTemplateNameless": {
+    "description": "Шаблон отказан до записи: пришёл без названия. Безымянная строка в списке неотличима от строки, которую забыли отрисовать, — владелец решил бы, что шаблон пропал."
+  },
+  "prepaymentIntakeTitle": "Приём аванса",
+  "prepaymentIntakeFind": "Найти покупателя",
+  "prepaymentIntakeNotFound": "Покупатель с таким номером не найден.",
+  "prepaymentIntakeSubmit": "Принять аванс",
+  "prepaymentIntakeAccepted": "Аванс принят. Внесено вперёд: {amount}",
+  "@prepaymentIntakeAccepted": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentIntakeFiscalFailed": "Деньги приняты, но фискальный чек аванса не выписан.",
+  "emulatorSettingsTitle": "Встроенные эмуляторы",
+  "emulatorSettingsHint": "Проверить печать и диагностику, не подключая приборов",
+  "emulatorReceiptPrinter": "Чековый принтер и денежный ящик",
+  "emulatorEnabledNote": "Сокет поднят. Касса попадёт на него только по адресу из привязки",
+  "emulatorDisabledNote": "Выключен: сокет не открыт",
+  "emulatorAddress": "Адрес эмулятора",
+  "emulatorAddressHint": "Впишите этот IP и порт в настройках принтера",
+  "emulatorBindAction": "Вписать в привязку принтера",
+  "emulatorBindDone": "Привязка принтера теперь смотрит на эмулятор",
+  "emulatorBindingStale": "Привязка принтера смотрит на выключенный эмулятор — печать откажет",
+  "emulatorStartFailed": "Не удалось поднять эмулятор",
+  "emulatorFiscalOperator": "Фискальный оператор (ОФД)",
+  "emulatorFiscalAddressHint": "Впишите этот адрес в поле «Адрес сервера» фискальных настроек",
+  "emulatorFiscalBindAction": "Вписать в фискальные настройки",
+  "emulatorFiscalBindNote": "Впишет адрес, логин, пароль, ключ и заводской номер эмулятора и объявит кассу испытательной. Регистрационный номер не трогается",
+  "emulatorFiscalBindDone": "Фискальные настройки теперь смотрят на эмулятор",
+  "emulatorFiscalBindingStale": "Фискальные настройки смотрят на выключенный эмулятор — фискализация откажет",
+  "emulatorFiscalLocalModuleWarning": "Заполнено поле «Локальный модуль» — оно перебивает адрес сервера, и касса пойдёт не на эмулятор",
+  "emulatorFiscalBlockedLive": "Касса боевая: вписаны реквизиты оператора. Эмулятор ОФД здесь запрещён — чек, ушедший в подделку, выглядит настоящим, а документа покупателю не даёт",
+  "emulatorFiscalBlockedUnknown": "Фискальные настройки не прочитались — включить эмулятор ОФД нельзя",
+  "diagnosticsFiscalEmulatorBanner": "Адрес оператора ведёт на этот же компьютер — документы уходят в эмулятор и фискальными не являются",
+  "diagnosticsTitle": "Диагностика оборудования",
+  "diagnosticsSubtitle": "Что касса на самом деле отправила приборам",
+  "diagnosticsTabPrinter": "Принтер",
+  "diagnosticsTabFiscal": "Фискализация",
+  "errorDiagnosticsUnavailable": "Диагностику на этой кассе спросить не у кого",
+  "diagnosticsPrinterQueueMissing": "Очередь печати на этом рабочем месте не настроена",
+  "diagnosticsPrinterNothingSent": "Касса пока ничего не отправляла в принтер",
+  "diagnosticsAskFailed": "Касса не ответила на этот вопрос: {reason}",
+  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "diagnosticsAttempts": "попыток {count}",
+  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "diagnosticsJobQueued": "ждёт очереди",
+  "diagnosticsJobPrinting": "печатается",
+  "diagnosticsJobPrinted": "напечатано",
+  "diagnosticsJobFailed": "не напечатано",
+  "diagnosticsJobExpired": "просрочено",
+  "diagnosticsJobCancelled": "отменено",
+  "diagnosticsFiscalNotConfigured": "Фискальный оператор на этой кассе не настроен",
+  "diagnosticsFiscalAccepted": "Принято оператором",
+  "diagnosticsFiscalAcceptedEmpty": "Оператор пока не принял ни одного документа",
+  "diagnosticsFiscalQueued": "В очереди",
+  "diagnosticsFiscalQueuedEmpty": "Очередь пуста — всё, что отправляли, оператор принял",
+  "diagnosticsFiscalSign": "Фискальный признак {value}",
+  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOperatorDoc": "документ оператора {value}",
+  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalReceiptNo": "чек {value}",
+  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOffline": "выдан автономно",
+  "diagnosticsEmulatorBanner": "Привязка принтера смотрит на этот же компьютер — за портом эмулятор, а не бумага",
+  "diagnosticsTabDrawer": "Ящик",
+  "drawerDiagnosticsEmpty": "С запуска кассы ящик не открывали ни разу",
+  "drawerDiagnosticsUnavailable": "Памяти об импульсах ящика на этой кассе нет — спросить нечем. Это не значит, что ящик не открывали.",
+  "drawerDiagnosticsCaveat": "Касса знает только, приняли ли команду. Открылся ли ящик на самом деле, обратной связи нет ни на одном пути.",
+  "drawerDiagnosticsAccepted": "Команда принята",
+  "drawerDiagnosticsRefused": "Команда отклонена",
+  "drawerDiagnosticsViaSerial": "последовательный порт",
+  "drawerDiagnosticsViaPrinter": "через принтер (ESC p)",
+  "diagnosticsTabScales": "Весы",
+  "diagnosticsTabDisplay": "Дисплей",
+  "scalesDiagnosticsUnbound": "Весы не привязаны к этой кассе.\nПривяжите их в настройках оборудования — тогда здесь появится показание.",
+  "scalesDiagnosticsWeight": "Показание весов",
+  "scalesDiagnosticsSilent": "Весы ещё ничего не прислали",
+  "scalesDiagnosticsStable": "Вес устоялся",
+  "scalesDiagnosticsSettling": "Вес меняется",
+  "scalesDiagnosticsOverload": "Перегрузка",
+  "scalesDiagnosticsPort": "Порт весов",
+  "scalesDiagnosticsBaudSuffix": "бод",
+  "scalesDiagnosticsConnected": "Порт открыт",
+  "scalesDiagnosticsDisconnected": "Порт закрыт",
+  "scalesDiagnosticsCaveat": "Это то, что прислал прибор. Верность показаний касса не проверяет — за неё отвечает поверка.",
+  "displayDiagnosticsEmpty": "С запуска кассы на дисплей ничего не отправляли",
+  "displayDiagnosticsUnavailable": "Памяти о строках дисплея на этой кассе нет — спросить нечем. Это не значит, что на дисплей ничего не отправляли.",
+  "displayDiagnosticsCurrent": "Сейчас на дисплее",
+  "displayDiagnosticsCaveat": "Касса знает только, что строка ушла в порт. Погасший или отключённый дисплей отсюда неотличим от исправного.",
+  "displayDiagnosticsCallPrice": "цена",
+  "displayDiagnosticsCallTotal": "итог",
+  "displayDiagnosticsCallChange": "сдача",
+  "displayDiagnosticsCallText": "текст",
+  "displayDiagnosticsCallWelcome": "приветствие",
+  "displayDiagnosticsCallClear": "очистка",
+  "emulatorScaleWeight": "Вес на чаше",
+  "emulatorScaleWeightHint": "Пульт эмулятора: это число весы и пришлют кассе",
+  "emulatorQrProvider": "Провайдер оплаты по QR",
+  "emulatorQrAddressHint": "Впишите этот адрес в настройке провайдера QR",
+  "emulatorQrBindAction": "Вписать в настройку QR",
+  "emulatorQrBindDone": "Настройка QR теперь смотрит на эмулятор",
+  "emulatorQrBindingStale": "Настройка QR смотрит на выключенный эмулятор — оплата по коду откажет",
+  "diagnosticsTabPayment": "Оплата",
+  "diagnosticsPaymentEmulatorBanner": "Провайдер QR — на этом же компьютере: за адресом эмулятор, а не банк",
+  "paymentDiagnosticsUnavailable": "Данных об оплате на этом рабочем месте нет",
+  "paymentDiagnosticsQrSection": "Оплата по QR",
+  "paymentDiagnosticsQrEmpty": "Касса пока не заводила ни одного кода оплаты",
+  "paymentDiagnosticsQrNotConfigured": "Провайдер QR на этой кассе не настроен",
+  "paymentDiagnosticsQrAddress": "Провайдер: {address}",
+  "@paymentDiagnosticsQrAddress": {"placeholders": {"address": {"type": "String"}}},
+  "paymentDiagnosticsQrUnknown": "Тела запросов к провайдеру касса не хранит. Видно то, что осело в намерении: сумма, состояние, ид на той стороне и причина отказа.",
+  "paymentDiagnosticsTerminalSection": "Терминал оплаты",
+  "paymentDiagnosticsTerminalEmpty": "С запуска кассы в терминал оплаты не уходило ни одного кадра",
+  "paymentDiagnosticsTerminalUnknown": "Журнал терминала живёт в памяти: обмены до перезапуска кассы не сохраняются, а операции, проведённые с самого терминала, касса не видит вовсе.",
+  "paymentDiagnosticsRequest": "Запрос",
+  "paymentDiagnosticsReply": "Ответ",
+  "paymentDiagnosticsNoReply": "Ответа не было",
+  "paymentDiagnosticsApproval": "Код одобрения {value}",
+  "@paymentDiagnosticsApproval": {"placeholders": {"value": {"type": "String"}}},
+  "paymentDiagnosticsTransaction": "транзакция {value}",
+  "@paymentDiagnosticsTransaction": {"placeholders": {"value": {"type": "String"}}},
+  "paymentDiagnosticsRefusal": "Отказ: {value}",
+  "@paymentDiagnosticsRefusal": {"placeholders": {"value": {"type": "String"}}},
+  "paymentDiagnosticsConfirmations": "подтверждений {count}",
+  "@paymentDiagnosticsConfirmations": {"placeholders": {"count": {"type": "int"}}},
+  "paymentDiagnosticsOrphanMoney": "деньги без чека",
+  "paymentDiagnosticsAfterGiveUp": "подтверждено после того, как касса перестала ждать",
+  "paymentDiagnosticsApproved": "Одобрено",
+  "paymentDiagnosticsDeclined": "Отказано",
+  "paymentDiagnosticsOpPurchase": "покупка",
+  "paymentDiagnosticsOpReversal": "сторно",
+  "paymentDiagnosticsOpRefund": "возврат",
+  "paymentDiagnosticsOpUnknown": "кадр неизвестного вида",
+  "certificateIssueTitle": "Выпуск подарочного сертификата",
+  "certificateIssueHint": "Деньги за бумажку принимает чек продажи. Здесь бумажке заводится остаток, а касса берёт на себя обязательство.",
+  "certificateIssueNumber": "Номер бумажки",
+  "certificateIssueNominal": "Номинал",
+  "certificateIssuePin": "ПИН (необязательно)",
+  "certificateIssueExpiresDays": "Срок годности в днях (необязательно)",
+  "certificateIssueReceipt": "Номер чека продажи (необязательно)",
+  "certificateIssueSubmit": "Выпустить сертификат",
+  "certificateIssueDone": "Сертификат {number} выпущен на {amount}",
+  "@certificateIssueDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateIssueFailed": "Сертификат не выпущен",
+  "certificateIssueNumberRequired": "Впишите номер бумажки",
+  "certificateIssueNominalInvalid": "Номинал должен быть больше нуля",
+  "certificateIssueNotPermitted": "Выпуск сертификатов этому кассиру не разрешён",
+  "@certificateIssueNotPermitted": {
+    "description": "Отказ показывается на месте нажатия, а не прячет кнопку: спрятанная кнопка правом не является (I162)."
+  },
+  "certificateSlipTitle": "Напечатать слип заново",
+  "certificateSlipHint": "Слип не напечатался при выпуске — бумажку можно выдать по повторному.",
+  "certificateSlipNumber": "Номер сертификата",
+  "certificateSlipPin": "ПИН, если он есть",
+  "certificateSlipSubmit": "Напечатать слип",
+  "certificateSlipDone": "Слип сертификата {number} отправлен в печать",
+  "@certificateSlipDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateSlipFailed": "Слип в печать не отправлен",
+  "certificateSlipUnavailable": "На этой кассе слип печатать нечем",
+  "prepaymentRefundTitle": "Выдача аванса",
+  "prepaymentRefundHint": "Возвращаются деньги, внесённые покупателем вперёд. Долг этим не гасится, бонусы не трогаются.",
+  "prepaymentRefundBalance": "Внесено вперёд: {amount}",
+  "@prepaymentRefundBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundNothing": "Аванса на счёте покупателя нет — выдавать нечего",
+  "prepaymentRefundAmount": "Сумма к выдаче",
+  "prepaymentRefundTender": "Чем выдать",
+  "prepaymentRefundIntake": "Номер проводки приёма (необязательно)",
+  "prepaymentRefundSubmit": "Выдать аванс",
+  "prepaymentRefundDone": "Аванс выдан. Осталось на счёте: {amount}",
+  "@prepaymentRefundDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundFailed": "Аванс не выдан",
+  "prepaymentRefundAmountInvalid": "Сумма должна быть больше нуля",
+  "prepaymentRefundNotPermitted": "Выдача аванса этому кассиру не разрешена",
+  "prepaymentRefundFiscalFailed": "Деньги выданы, но фискальный чек возврата аванса не выписан.",
+  "agentRefundPrepayment": "Выдать аванс"
 }

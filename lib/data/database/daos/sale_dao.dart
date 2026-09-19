@@ -25,20 +25,97 @@ class SaleDao extends DatabaseAccessor<AppDatabase> with _$SaleDaoMixin {
     )..addColumns([expr])).map((row) => row.read(expr)).getSingleOrNull();
   }
 
-  Future<Sale?> findInProgress() async {
-    final results =
-        await (select(sales)
-              ..where((s) => s.state.equals(0))
-              ..limit(1))
-            .get();
-    return results.isEmpty ? null : results.first;
+  /// Чек в работе **этого** рабочего места **на этой кассе**.
+  ///
+  /// Оба довода обязательны намеренно.
+  ///
+  /// **`terminalId`** — задача 3: до v37 метод означал «единственный чек
+  /// кассы», рабочее место было одно, и `state = 0` определяло чек
+  /// однозначно. С браузерным терминалом одной кассой пользуется больше
+  /// одного места, и молчаливое умолчание вернуло бы чужой чек,
+  /// продолженный как свой.
+  ///
+  /// **`posId`** — круг правки 3 задачи 7, и это была **не** та же
+  /// ошибка, а её вторая половина. Первичный ключ `Sales` составной,
+  /// `{receiptNo, posId}`; выборка без кассы отбирает по двум третям
+  /// признака владения. Проба разбора: строка `posId = 2, receiptNo = 1,
+  /// state = 0, terminalId = 7` — и рабочее место седьмого терминала
+  /// **показало чек соседней кассы своим и записало в него строку**.
+  /// Строки чужой кассы попадают в базу штатно: обмен и слияние
+  /// (`merge_tables_use_case_impl`, `couchdb_sync_coordinator`) тянут
+  /// чеки других касс сети, а `findLastForeign` прямо на них рассчитан.
+  ///
+  /// Порядок в конце — не украшение и не замена предикату: круг правки 2
+  /// добавил `orderBy`, чтобы выбор из нескольких строк был воспроизводим,
+  /// и это **не сделало его верным** — воспроизводимо возвращалась чужая
+  /// касса. Сужает выборку предикат, порядок только убирает произвол
+  /// внутри уже верной.
+  Future<Sale?> findInProgress({
+    required int posId,
+    required int terminalId,
+  }) async {
+    return (select(sales)
+          ..where(
+            (s) =>
+                s.state.equals(0) &
+                s.posId.equals(posId) &
+                s.terminalId.equals(terminalId),
+          )
+          ..orderBy([(s) => OrderingTerm.asc(s.receiptNo)])
+          ..limit(1))
+        .getSingleOrNull();
   }
 
+  /// Чек, к которому уже применена команда с ключом [key].
+  ///
+  /// Задача 7, защита от повтора (I160) для команд, **уводящих чек из
+  /// работы**: после `defer` у рабочего места чека в работе нет, и
+  /// [findInProgress] повтор той же команды опознать уже не может —
+  /// повтор получил бы «нет корзины» вместо того же ответа. Ключ
+  /// порождается терминалом и обязан быть уникальным (uuid, не счётчик):
+  /// поиск идёт по всей кассе, а не по одному рабочему месту, потому что
+  /// у отложенного чека владельца нет по определению (правило смысла
+  /// `Sales.terminalId`).
+  Future<Sale?> findByCommandKey(int posId, String key) =>
+      (select(sales)
+            ..where((s) => s.posId.equals(posId) & s.lastCommandKey.equals(key))
+            // Тот же довод, что у [findInProgress]: ключ обязан быть
+            // уникальным, но `limit(1)` без порядка означает «доверимся»,
+            // а не «проверим». Порядок делает ответ повторяемым, даже
+            // если уникальность когда-нибудь нарушится.
+            ..orderBy([(s) => OrderingTerm.asc(s.receiptNo)])
+            ..limit(1))
+          .getSingleOrNull();
+
+  /// Меняет состояние чека и снимает владельца, если новое состояние —
+  /// не «в работе».
+  ///
+  /// Правило смысла (задача 2, уточнено по итогам разбора задачи 3):
+  /// владельца имеет **только** чек в работе (`state = 0`). Переход в
+  /// любое другое состояние снимает владельца — отложенный чек
+  /// (`state = 3`) уходит в общий пул на тех же основаниях, что
+  /// отправленный или синхронизированный: он больше не принадлежит
+  /// тому, кто его набирал. До этой правки колонку у отправленных и
+  /// синхронизированных чеков никто не трогал — `data_exchange_service`
+  /// и `merge_tables_use_case_impl` звали этот метод напрямую, и каждая
+  /// новая продажа, дойдя до отправленного состояния, несла бы
+  /// устаревшего владельца навсегда (у колонки сегодня нет читателя вне
+  /// `findInProgress`, что и делало эту ложь в данных незаметной).
+  ///
+  /// Переход **в** `state = 0`, наоборот, владельца не снимает и не
+  /// проставляет — его выставляет тот, кто поднимает чек (`undeferSale`,
+  /// вставка новой продажи), отдельной записью: этому методу неоткуда
+  /// узнать, чьих рук это подъём.
   Future<int> updateState(int receiptNo, int posId, int state) =>
       (update(sales)..where(
             (s) => s.receiptNo.equals(receiptNo) & s.posId.equals(posId),
           ))
-          .write(SalesCompanion(state: Value(state)));
+          .write(
+            SalesCompanion(
+              state: Value(state),
+              terminalId: state == 0 ? const Value.absent() : const Value(null),
+            ),
+          );
 
   Future<List<Sale>> findByState(int state) =>
       (select(sales)..where((s) => s.state.equals(state))).get();
@@ -111,11 +188,31 @@ class SaleDao extends DatabaseAccessor<AppDatabase> with _$SaleDaoMixin {
           ))
           .get();
 
+  /// Сумма продаж клиента (он же агент — `SaleUseCaseImpl.perform` кладёт
+  /// `agentLocalId` именно в `customerLocalId`), на которой считается его
+  /// баланс (`agent_balance_service_impl.dart:59`).
+  ///
+  /// **Фильтр по состоянию заведён кругом правки 1 задачи 7, и вот
+  /// почему.** До задачи 7 выборка не смотрела ни на состояние, ни на
+  /// время — и это сходило с рук, потому что у чека **в работе** оба
+  /// слагаемых были пусты: агент проставлялся только при завершении
+  /// продажи, а сумма стояла нулём до неё же. Задача 7 положила в этот
+  /// путь оба: `CartService.setAgent` пишет клиента чеку в работе, а
+  /// каждая команда корзины пишет его непустую сумму. Проба разбора: чек
+  /// в работе на 1000 давал баланс агента 1000 — **долг агента рос на
+  /// каждый скан ненабранного чека**.
+  ///
+  /// Незавершённый чек деньгами не является: `state = 0` (в работе) и
+  /// `state = 3` (отложен) исключаются — тем же выражением, которым уже
+  /// пользуется [findRecentCompleted].
   Future<double?> sumAmountByCustomerLocalId(int customerLocalId) {
     final expr = sales.amount.sum();
     return (selectOnly(sales)
           ..addColumns([expr])
-          ..where(sales.customerLocalId.equals(customerLocalId)))
+          ..where(
+            sales.customerLocalId.equals(customerLocalId) &
+                sales.state.isNotIn([0, 3]),
+          ))
         .map((row) => row.read(expr))
         .getSingleOrNull();
   }
@@ -141,6 +238,12 @@ class SaleDao extends DatabaseAccessor<AppDatabase> with _$SaleDaoMixin {
     readsFrom: {sales},
   ).get();
 
+  /// Тот же приём, что `updateState`: чек больше не в работе — владельца
+  /// нет. Отдельный метод от `updateState` (используется `CouchDB`-
+  /// синхронизацией, `couchdb_sync_coordinator.dart`), но правило смысла
+  /// одно и то же, и запись владельца дублируется здесь по той же
+  /// причине — общего метода-точки для всех переходов состояния у
+  /// таблицы исторически нет.
   Future<int> markSyncedByKey(
     int receiptNo,
     int posId, {
@@ -149,26 +252,54 @@ class SaleDao extends DatabaseAccessor<AppDatabase> with _$SaleDaoMixin {
       (update(sales)..where(
             (s) => s.receiptNo.equals(receiptNo) & s.posId.equals(posId),
           ))
-          .write(SalesCompanion(state: Value(syncedState)));
+          .write(
+            SalesCompanion(
+              state: Value(syncedState),
+              terminalId: syncedState == 0
+                  ? const Value.absent()
+                  : const Value(null),
+            ),
+          );
 
+  /// Тот же приём, что `updateState` — см. там докстрингом.
   Future<int> setState(int state, int posId, List<int> receiptNos) =>
       (update(
             sales,
           )..where((s) => s.receiptNo.isIn(receiptNos) & s.posId.equals(posId)))
-          .write(SalesCompanion(state: Value(state)));
+          .write(
+            SalesCompanion(
+              state: Value(state),
+              terminalId: state == 0 ? const Value.absent() : const Value(null),
+            ),
+          );
 
   Future<int> setAgentServerIdByLocalId(int localId, int serverId) =>
       (update(sales)..where((s) => s.customerLocalId.equals(localId))).write(
         SalesCompanion(customerServerId: Value(serverId)),
       );
 
+  /// Выручка смены — сумма продаж кассира за отрезок времени
+  /// (`assemble_shift_receipt_use_case_impl.dart:64`, отчёт по смене).
+  ///
+  /// **Фильтр по состоянию — тот же круг правки и та же причина, что у
+  /// [sumAmountByCustomerLocalId].** Отбор шёл по времени, и от суммы
+  /// незавершённого чека выборку спасало только то, что `Sales.time` у
+  /// него равен нулю (его выставляет завершение продажи), а ноль не
+  /// попадает в отрезок смены. То есть денежный итог держался на
+  /// побочном свойстве другой колонки, а не на условии, которое кто-то
+  /// написал; задача 7 сделала вторую половину этой связки —
+  /// непустую сумму у чека в работе — обычным делом.
+  ///
+  /// Условие названо явно: чек в работе (0) и отложенный (3) выручкой
+  /// смены не являются, сколько бы времени у них ни стояло.
   Future<double?> amountOfShift(int userId, int fromTime, int toTime) {
     final expr = sales.amount.sum();
     return (selectOnly(sales)
           ..addColumns([expr])
           ..where(
             sales.userId.equals(userId) &
-                sales.time.isBetweenValues(fromTime, toTime),
+                sales.time.isBetweenValues(fromTime, toTime) &
+                sales.state.isNotIn([0, 3]),
           ))
         .map((row) => row.read(expr))
         .getSingleOrNull();

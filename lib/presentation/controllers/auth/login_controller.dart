@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:telepos/domain/auth/cashier_on_duty.dart';
 import 'package:telepos/app/router/app_routes.dart';
 import 'package:telepos/core/constants/enums/operating_mode.dart';
 import 'package:telepos/core/constants/enums/user_role.dart';
@@ -21,6 +22,7 @@ import 'package:telepos/domain/wire/wire_refusal.dart';
 import 'package:telepos/presentation/common/navigation/nav_destinations.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/presentation/screens/auth/widgets/user_selector.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Что сказать человеку у кассы про отказ входа.
 ///
@@ -59,7 +61,7 @@ class LoginState {
     this.isLoading = false,
     this.error,
     this.isAuthenticated = false,
-    this.isShiftOpened = false,
+    this.shift = ShiftStatus.unknown,
     this.sessionEndedReason,
     this.needsEnrolmentCode = false,
     this.enrolmentCode = '',
@@ -77,7 +79,9 @@ class LoginState {
 
   final bool isAuthenticated;
 
-  final bool isShiftOpened;
+  /// Смена вошедшего — задача 47. Умолчание [ShiftStatus.unknown]: до входа
+  /// смену никто не спрашивал, и значок не имеет права сказать «закрыта».
+  final ShiftStatus shift;
 
   /// Ключ локализации причины, по которой сеанс кончился не по нажатию.
   /// Ровно два значения, различённых настолько, насколько это доказано
@@ -161,7 +165,7 @@ class LoginState {
     String? error,
     bool clearError = false,
     bool? isAuthenticated,
-    bool? isShiftOpened,
+    ShiftStatus? shift,
     String? sessionEndedReason,
     bool clearSessionEndedReason = false,
     bool? needsEnrolmentCode,
@@ -176,7 +180,7 @@ class LoginState {
       isLoading: isLoading ?? this.isLoading,
       error: clearError ? null : (error ?? this.error),
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
-      isShiftOpened: isShiftOpened ?? this.isShiftOpened,
+      shift: shift ?? this.shift,
       sessionEndedReason: clearSessionEndedReason
           ? null
           : (sessionEndedReason ?? this.sessionEndedReason),
@@ -207,6 +211,13 @@ class LoginNotifier extends Notifier<LoginState> {
   /// Единственный десктопный процесс не переживает F5 (у него нет вкладки,
   /// которую можно перезагрузить), и заводить для него хранилище токена
   /// значило бы решать вопрос, которого там нет.
+  /// Кассир на самой кассе (`CashierOnDuty`). `null` — не касса (браузер):
+  /// там порта нет, и кассир едет сеансом провода.
+  CashierOnDutyHolder? get _cashierOnDuty =>
+      GetIt.instance.isRegistered<CashierOnDutyHolder>()
+      ? GetIt.instance<CashierOnDutyHolder>()
+      : null;
+
   SessionTokenStorage? get _tokenStore =>
       GetIt.instance.isRegistered<SessionTokenStorage>()
       ? GetIt.instance<SessionTokenStorage>()
@@ -903,12 +914,19 @@ class LoginNotifier extends Notifier<LoginState> {
             !autoVerify ||
             state.isPinMaxLength ||
             outcome.reason != AuthRejectionReason.wrongPin;
-        if (showNow) {
-          state = state.copyWith(
-            enteredPin: '',
-            error: messageForRejection(outcome.reason),
-          );
-        }
+        //
+        // **Гейт держит только слова, а не набор** — задача 46. Касса
+        // засчитывает неудачу раньше сверки PIN (`penalizeFailure`), значит
+        // к этой строке попытка уже потрачена при любом `showNow`. Прежде
+        // ветка `showNow == false` не трогала `enteredPin`: кассир дописывал
+        // цифры к отвергнутому префиксу и тратил вторую попытку тем же
+        // набором, не узнав о первой.
+        state = showNow
+            ? state.copyWith(
+                enteredPin: '',
+                error: messageForRejection(outcome.reason),
+              )
+            : state.copyWith(enteredPin: '');
     }
   }
 
@@ -974,6 +992,32 @@ class LoginNotifier extends Notifier<LoginState> {
 
     _lastKnownExpiresAt = store.readExpiresAt();
     _watchSession(token);
+
+    // Вкладка обязана назвать кассе своё **рабочее место** заново, а не
+    // только предъявить токен.
+    //
+    // Касса помнит место по номеру QUIC-сессии
+    // (`TillOperations._sessionTerminals`), а F5 — это новая сессия с пустой
+    // памятью о месте. Назвать его умеет только этот вызов: в браузере он
+    // ведёт к `terminals.resume` сохранённым секретом, и именно `resume`
+    // кладёт место в память сессии. Токен же переживает перезагрузку сам и о
+    // месте кассе ничего не говорит.
+    //
+    // **До этой строки** вкладка после F5 оставалась «вошедшей» и без места,
+    // а каждая операция, которая берёт место из сеанса — все шесть операций
+    // возврата (`TillOperations._refundTerminal`), — отвечала
+    // `unknown_terminal` при полностью исправной кассе. Найдено разбором
+    // круга 4 ветви возвратов: там `terminals.selfEnsure` перестал
+    // привязывать место (вырезана дыра с деньгами), и «сессия без места»
+    // стало законным состоянием, которого прежде не было. Проба:
+    // `test/web/wt_login_enrolment_test.dart`, «после F5 вкладка снова
+    // называет кассе своё рабочее место».
+    //
+    // Исход не проверяется и наружу не идёт: свои названные состояния
+    // ([needsEnrolmentCode], `error.terminal_secret_invalid`,
+    // `error.auth_unknown`) метод выставляет сам, а восстановление сеанса —
+    // не вход, и превращать неудачу привязки в отказ входа здесь нечем.
+    await _resolveTerminalId();
   }
 
   /// Заводит живую подписку на сеанс [token] — единственное место, где
@@ -1039,6 +1083,7 @@ class LoginNotifier extends Notifier<LoginState> {
 
     _token = null;
     _tokenStore?.clear();
+    _cashierOnDuty?.signOut();
 
     ref.read(appStateProvider.notifier).logout();
 
@@ -1094,6 +1139,10 @@ class LoginNotifier extends Notifier<LoginState> {
   Future<void> _onSession(AuthSession session) async {
     _token = session.token;
     _tokenStore?.write(session.token, session.expiresAt);
+    // Кассир на самой кассе — для замка перебора сертификатов, который
+    // считает по кассиру (`ThrottledPaymentService`). В браузере порта нет:
+    // там кассир едет сеансом провода.
+    _cashierOnDuty?.signIn(session.userId);
     _lastKnownExpiresAt = session.expiresAt;
 
     final roleIndex = _getUserRoleIndex(session.role);
@@ -1106,7 +1155,7 @@ class LoginNotifier extends Notifier<LoginState> {
           role: roleIndex,
           permissions: session.permissions,
         );
-    ref.read(appStateProvider.notifier).setShiftOpened(session.shiftOpen);
+    ref.read(appStateProvider.notifier).setShift(session.shift);
 
     final modeIndex = session.operatingMode;
     final mode = modeIndex >= 0 && modeIndex < OperatingMode.values.length
@@ -1117,7 +1166,7 @@ class LoginNotifier extends Notifier<LoginState> {
     state = state.copyWith(
       selectedUser: _userById(session.userId) ?? state.selectedUser,
       isAuthenticated: true,
-      isShiftOpened: session.shiftOpen,
+      shift: session.shift,
       clearError: true,
       // Свежий действующий сеанс закрывает любую прежнюю историю «сеанс
       // кончился»: если она и была, она больше не про текущее состояние.
@@ -1190,6 +1239,7 @@ class LoginNotifier extends Notifier<LoginState> {
     final token = _token ?? _tokenStore?.read();
     _token = null;
     _tokenStore?.clear();
+    _cashierOnDuty?.signOut();
 
     ref.read(appStateProvider.notifier).logout();
     reset();
@@ -1218,7 +1268,10 @@ class LoginNotifier extends Notifier<LoginState> {
   /// собирается и работает.
   String getPostLoginRoute() {
     if (!_capabilities.ownsData) return AppRoutes.terminalHome;
-    if (!state.isShiftOpened) return AppRoutes.shift;
+    // Не «открыта» — на экран смены, и «не знаю» туда же: экран смены
+    // измеряет её сам, а вести на продажу по незнанию значило бы
+    // упереться в `shift_not_open` на первом скане (задача 47).
+    if (state.shift != ShiftStatus.open) return AppRoutes.shift;
     final mode = ref.read(appStateProvider).operatingMode;
     return NavDestinations.defaultRoute(mode);
   }

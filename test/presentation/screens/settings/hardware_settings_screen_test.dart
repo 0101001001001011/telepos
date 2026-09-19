@@ -30,6 +30,7 @@ import 'package:telepos/domain/device/device_check.dart';
 import 'package:telepos/domain/device/device_class.dart';
 import 'package:telepos/domain/device/device_discovery.dart';
 import 'package:telepos/domain/device/device_profile_catalog.dart';
+import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
 import 'package:telepos/domain/terminal/device_binding.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
@@ -142,11 +143,30 @@ const _scannerProfileId = 'scanner.usb.hid';
 /// (`DeviceBindingEditor._buildParamFields`), а у весов он есть.
 const _scaleProfileId = 'scale.cas.pd2';
 
+/// Хранилище правил И142 в памяти.
+///
+/// Регистрируется **всегда** — пункт 11 ревизии 2026-09-19. До него экран
+/// спрашивал `isRegistered<ScannerRulesRepository>()` и без привязки просто
+/// прятал секцию; теперь привязка есть в обеих сборках, где этот экран
+/// открывается (касса и планшет), и её отсутствие — ошибка сборки. Эта
+/// фальшивка и есть то, чем сторож «развилок нет» заставил заменить
+/// молчание.
+class _MemoryScannerRules implements ScannerRulesRepository {
+  ScannerRules? saved;
+
+  @override
+  Future<ScannerRules> read() async => saved ?? ScannerRules.unset;
+
+  @override
+  Future<void> save(ScannerRules rules) async => saved = rules;
+}
+
 Future<({ProviderContainer container, _SpyLoginNotifier spy})> _pumpScreen(
   WidgetTester tester, {
   required DeviceBindingRepository bindingRepo,
   required DeviceCheck deviceCheck,
   DeviceDiscovery? deviceDiscovery,
+  ScannerRulesRepository? scannerRules,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
@@ -163,7 +183,10 @@ Future<({ProviderContainer container, _SpyLoginNotifier spy})> _pumpScreen(
         ),
       ),
     )
-    ..registerSingleton<DeviceCheck>(deviceCheck);
+    ..registerSingleton<DeviceCheck>(deviceCheck)
+    ..registerSingleton<ScannerRulesRepository>(
+      scannerRules ?? _MemoryScannerRules(),
+    );
   if (deviceDiscovery != null) {
     GetIt.instance.registerSingleton<DeviceDiscovery>(deviceDiscovery);
   }
@@ -224,6 +247,62 @@ Future<({ProviderContainer container, _SpyLoginNotifier spy})> _pumpScreen(
 
 void main() {
   tearDown(() => GetIt.instance.reset());
+
+  testWidgets(
+    'правила сканера: поля стоят и «Сохранить» доносит их до хранилища',
+    (tester) async {
+      // Пункт 11 ревизии 2026-09-19. Прежде секция на планшете показывала
+      // текст «здесь их не задать»: браузерная точка входа не привязывала
+      // писателя вовсе. Проба ходит **экраном** — набирает в поля и жмёт ту
+      // же кнопку, что кассир, — потому что «операция провода есть»
+      // доказывает достижимость с провода, а не с экрана, и между этими
+      // двумя утверждениями в этом проекте уже пропадало целое требование.
+      //
+      // Чего проба НЕ доказывает: что запись доедет до кассы. За это
+      // отвечает `WtScannerRules.save` и её пробы по проводу
+      // (`test/web/wt_quick_product_catalog_test.dart`); здесь хранилище
+      // в памяти.
+      final rules = _MemoryScannerRules();
+      final result = await _pumpScreen(
+        tester,
+        bindingRepo: _FakeDeviceBindingRepository(),
+        deviceCheck: _FakeDeviceCheck(),
+        scannerRules: rules,
+      );
+
+      final minField = find.byKey(const Key('scanner_rule_min_length'));
+      expect(
+        minField,
+        findsOneWidget,
+        reason: 'красный до правки: секция рисовала текст вместо полей',
+      );
+
+      await tester.enterText(minField, '6');
+      await tester.enterText(
+        find.byKey(const Key('scanner_rule_max_length')),
+        '9',
+      );
+      await tester.enterText(
+        find.byKey(const Key('scanner_rule_timeout_ms')),
+        '75',
+      );
+
+      final l10n = AppLocalizations.of(
+        tester.element(find.byType(HardwareSettingsScreen)),
+      )!;
+      await tester.tap(find.text(l10n.globalSave));
+      await tester.pumpAndSettle();
+
+      expect(rules.saved?.barcodeMinLength, 6);
+      expect(rules.saved?.barcodeMaxLength, 9);
+      expect(rules.saved?.scannerTimeoutMs, 75);
+      expect(
+        result.spy.sessionLostCalls,
+        0,
+        reason: 'удачное сохранение сеанс не гасит',
+      );
+    },
+  );
 
   testWidgets(
     'загрузка настроек: SessionLost гасит сеанс и уводит на вход, не открывает '

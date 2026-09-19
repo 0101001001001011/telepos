@@ -268,7 +268,7 @@ void main() {
         expect(extended.permissions, minted.permissions);
         expect(extended.operatingMode, minted.operatingMode);
         expect(extended.pointMode, minted.pointMode);
-        expect(extended.shiftOpen, minted.shiftOpen);
+        expect(extended.shift, minted.shift);
         expect(extended.issuedAt, minted.issuedAt);
         expect(extended.terminalId, minted.terminalId);
         expect(

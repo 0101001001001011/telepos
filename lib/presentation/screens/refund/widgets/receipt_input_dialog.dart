@@ -2,10 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
-import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/refund/recent_receipts.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/widgets/keyboards/num_pad.dart';
 
@@ -16,26 +15,66 @@ class ReceiptInputResult {
   final int posId;
 }
 
+/// Ввод номера чека для возврата.
+///
+/// # Почему подсказка приезжает доводом, а не читается здесь
+///
+/// До задачи 20 этот виджет спрашивал последние чеки у базы сам
+/// (`saleDao.findRecentCompleted` через контейнер зависимостей). Диалог из-за этого
+/// не собирался под браузер — база тянет `dart:ffi`, — и вместе с ним не
+/// собирался весь экран возврата. Список чеков теперь готовит вызывающий
+/// (`refund_screen._showReceiptDialog`) через контракт `RecentReceipts`, а
+/// виджет только показывает то, что ему дали. Пустой список — «последних
+/// чеков нет»: ровно то, что видел кассир при отказе прежнего запроса.
 class ReceiptInputDialog extends StatefulWidget {
   const ReceiptInputDialog({
     this.availablePosIds = const [1],
     this.posNames = const {1: 'Касса-1'},
+    this.recent = const [],
+    this.recentAvailable = true,
     super.key,
   });
 
   final List<int> availablePosIds;
   final Map<int, String> posNames;
 
+  /// Последние совершённые чеки — подсказка, а не источник правды.
+  final List<RecentReceipt> recent;
+
+  /// Умеет ли этот терминал вообще спросить кассу о последних чеках.
+  ///
+  /// **Отличать «чеков нет» от «спросить нечем» обязательно, и это не
+  /// косметика.** Найдено живой приёмкой задачи 21: в браузере
+  /// `RecentReceipts` не зарегистрирован (`main_web.dart`, снято намеренно —
+  /// своей операции провода нет), список приезжал пустым, и диалог печатал
+  /// «Чеков пока нет» — **утверждение о данных магазина**, а не о переносе.
+  /// Кассир с бумажным чеком на руках читает это как «продажа не
+  /// записалась» и идёт делать неверное: возврат без чека вместо возврата
+  /// по чеку, или эскалацию несуществующей потери.
+  ///
+  /// Скрытая кнопка учит «здесь этого нет»; ложный пустой список учит «твои
+  /// данные пропали». Поэтому здесь второе состояние пустоты, а не молчание,
+  /// — тем же приёмом, каким та же нехватка уже названа словами на соседнем
+  /// экране (`deviceSearchUnavailable`, `hardware_settings_screen.dart`).
+  /// Прежде здесь назывался `scannerRulesUnavailable`; пункт 11 ревизии
+  /// 2026-09-19 снял ту нехватку вовсе — правила сканера с планшета теперь
+  /// задаются, — и образец переехал на соседнюю секцию того же экрана.
+  final bool recentAvailable;
+
   static Future<ReceiptInputResult?> show(
     BuildContext context, {
     List<int> availablePosIds = const [1],
     Map<int, String> posNames = const {1: 'Касса-1'},
+    List<RecentReceipt> recent = const [],
+    bool recentAvailable = true,
   }) {
     return showDialog<ReceiptInputResult>(
       context: context,
       builder: (context) => ReceiptInputDialog(
         availablePosIds: availablePosIds,
         posNames: posNames,
+        recent: recent,
+        recentAvailable: recentAvailable,
       ),
     );
   }
@@ -48,28 +87,11 @@ class _ReceiptInputDialogState extends State<ReceiptInputDialog> {
   final _receiptController = TextEditingController();
   late int _selectedPosId;
   String? _error;
-  List<Sale> _recent = const [];
-  bool _loadingRecent = true;
 
   @override
   void initState() {
     super.initState();
     _selectedPosId = widget.availablePosIds.first;
-    _loadRecent();
-  }
-
-  Future<void> _loadRecent() async {
-    try {
-      final db = GetIt.I<AppDatabase>();
-      final recent = await db.saleDao.findRecentCompleted(limit: 30);
-      if (mounted)
-        setState(() {
-          _recent = recent;
-          _loadingRecent = false;
-        });
-    } catch (_) {
-      if (mounted) setState(() => _loadingRecent = false);
-    }
   }
 
   String _fmtTime(int unixSec) {
@@ -161,21 +183,24 @@ class _ReceiptInputDialogState extends State<ReceiptInputDialog> {
                   180.0,
                   MediaQuery.sizeOf(context).height * 0.3,
                 ),
-                child: _loadingRecent
-                    ? const Center(child: CircularProgressIndicator())
-                    : _recent.isEmpty
+                child: widget.recent.isEmpty
                     ? Center(
                         child: Text(
-                          l10n.receiptInputNoRecent,
+                          // Две разные пустоты — см. докстринг
+                          // [ReceiptInputDialog.recentAvailable].
+                          widget.recentAvailable
+                              ? l10n.receiptInputNoRecent
+                              : l10n.receiptInputRecentUnavailable,
                           style: context.styles.caption,
+                          textAlign: TextAlign.center,
                         ),
                       )
                     : ListView.separated(
                         shrinkWrap: true,
-                        itemCount: _recent.length,
+                        itemCount: widget.recent.length,
                         separatorBuilder: (_, __) => const Divider(height: 1),
                         itemBuilder: (_, i) {
-                          final s = _recent[i];
+                          final s = widget.recent[i];
                           return ListTile(
                             leading: const Icon(
                               Icons.receipt_long_outlined,

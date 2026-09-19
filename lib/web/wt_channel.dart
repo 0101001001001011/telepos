@@ -15,6 +15,8 @@ library;
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:telepos/core/errors/named_refusal.dart';
+
 /// Один двунаправленный поток к кассе.
 ///
 /// Соответствие ответа запросу даёт сам поток: отвечать некуда, кроме как в
@@ -97,7 +99,11 @@ final class WtUnavailable {
 /// **отсутствие сессии** — состояние, которое экран показывает. Отказ внутри
 /// уже поднятой сессии приходит туда, где вызывающий и так ждёт результата:
 /// в `Future` вопроса или в `Stream` подписки. Другого канала у них нет.
-final class WtProtocolError implements Exception {
+///
+/// [NamedRefusal]: на экран через `safeErrorText` уходит код, а не имя типа —
+/// в dart2js оно минифицировано, и кассир читал «Ошибка сохранения:
+/// minified:du» вместо названной кассой причины (живая приёмка 2026-09-13).
+final class WtProtocolError implements Exception, NamedRefusal {
   const WtProtocolError(this.code, this.detail);
 
   /// Код кассы (`unknown_op`, `handler_failed`) либо код разбора
@@ -105,9 +111,13 @@ final class WtProtocolError implements Exception {
   ///
   /// Отделён от подробности намеренно: по коду отличают «нет такой операции»
   /// от «обработчик упал», и это разные действия оператора.
+  @override
   final String code;
 
   final String detail;
+
+  @override
+  String get reasonText => detail;
 
   @override
   String toString() => 'WtProtocolError($code: $detail)';

@@ -21,9 +21,11 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/presentation/controllers/auth/login_controller.dart';
 import 'package:telepos/presentation/screens/auth/login_screen.dart';
 import 'package:telepos/presentation/screens/auth/widgets/pin_keypad.dart';
+import 'package:telepos/presentation/screens/auth/widgets/user_selector.dart';
 
 import '../../../support/contrast.dart';
 import '../../auth/support/fakes.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Держит `LoginState` таким, каким его положит тест, — без единого
 /// GetIt-договора: `initialize()`, которое `LoginScreen.initState` зовёт
@@ -160,6 +162,33 @@ void main() {
       },
     );
 
+    // Задача 47: значку смены нужно третье состояние. До входа смену никто
+    // не спрашивал — ни касса (сеанса ещё нет), ни экран (локального чтения
+    // смены нет ни на кассе, ни в браузере), — а значок красился «Смена
+    // закрыта»: умолчание `false` читалось как измерение. Красный на
+    // `9ac079a5`: `LoginState.isShiftOpened` по умолчанию `false`.
+    testWidgets('до входа смена «неизвестно», а не «закрыта»', (tester) async {
+      const user = UserItem(id: 4, name: 'Айгуль');
+      final notifier = _FixedLoginNotifier(
+        const LoginState(users: [user], selectedUser: user),
+      );
+      final context = await pumpLoginScreen(tester, notifier);
+      final l10n = AppLocalizations.of(context)!;
+
+      expect(
+        find.text(l10n.loginShiftUnknown),
+        findsOneWidget,
+        reason: 'никто не спрашивал — значок обязан сказать «неизвестно»',
+      );
+      expect(
+        find.text(l10n.loginShiftClosed),
+        findsNothing,
+        reason:
+            '«закрыта» — утверждение о смене, которого никто не делал: '
+            'умолчание не имеет права выглядеть как измерение',
+      );
+    });
+
     testWidgets('причины нет — текста нет', (tester) async {
       final notifier = _FixedLoginNotifier(const LoginState());
       final context = await pumpLoginScreen(tester, notifier);
@@ -192,7 +221,7 @@ void main() {
           permissions: const {'nav.sale'},
           operatingMode: 0,
           pointMode: 'selfService',
-          shiftOpen: false,
+          shift: ShiftStatus.closed,
           issuedAt: DateTime.now(),
           expiresAt: DateTime.now().add(const Duration(minutes: 30)),
           terminalId: 1,

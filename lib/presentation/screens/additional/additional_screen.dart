@@ -44,6 +44,19 @@ enum AdditionalAction {
   catalog(icon: Icons.inventory, color: AppColors.primary),
   supply(icon: Icons.inventory_2, color: AppColors.primary),
   changeLanguage(icon: Icons.language, color: AppColors.primary),
+
+  /// Выпуск подарочного сертификата — дыра 1 ревизии 2026-09-19.
+  ///
+  /// **Плитка здесь, а не кнопка на экране продажи**, и это измерено, а не
+  /// выбрано: сетка кнопок продажи (`SaleActionButtons`) одна на кассу и на
+  /// браузерный терминал, а маршрута `/certificate-issue` в браузерной
+  /// таблице нет — кнопка там привела бы вкладку на «маршрут не найден».
+  /// «Дополнительно» же объявлено только десктопной таблицей и ровно для
+  /// таких действий: редких, называемых словом, не участвующих в чеке.
+  ///
+  /// Плитка **видна всем** — право спрашивают маршрут и сам экран, а не
+  /// видимость (I162).
+  giftCertificate(icon: Icons.card_giftcard, color: AppColors.primary),
   kaspiPos(icon: Icons.credit_card, color: Color(0xFFF14635));
 
   const AdditionalAction({
@@ -71,6 +84,7 @@ enum AdditionalAction {
       AdditionalAction.catalog => l10n.catalogTitle,
       AdditionalAction.supply => l10n.additionalSupplyAction,
       AdditionalAction.changeLanguage => l10n.additionalLanguageAction,
+      AdditionalAction.giftCertificate => l10n.certificateIssueTitle,
       AdditionalAction.kaspiPos => l10n.additionalKaspiPos,
     };
   }
@@ -168,6 +182,10 @@ class AdditionalScreen extends ConsumerWidget {
         context.go(AppRoutes.supply);
       case AdditionalAction.changeLanguage:
         _showLanguageSelector(context);
+      case AdditionalAction.giftCertificate:
+        // `go`, а не `push`: маршрут объявлен в той же оболочке, что и
+        // соседи этой сетки, и переход обязан вести себя как они.
+        context.go(AppRoutes.certificateIssue);
       case AdditionalAction.kaspiPos:
         _openKaspiPos(context);
     }

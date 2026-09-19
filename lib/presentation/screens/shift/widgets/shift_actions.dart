@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:telepos/app/config/background_task_manager.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_semantic_colors.dart';
@@ -8,6 +9,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/shift/shift_controller.dart';
+import 'package:telepos/domain/services/shift_service.dart';
 import 'package:telepos/presentation/screens/settings/fiscal_correction_screen.dart';
 
 DateTime? _lastZTapAt;
@@ -318,6 +320,17 @@ class ShiftActions extends ConsumerWidget {
     );
   }
 
+  /// Сводка нефискализованных — из настоящей службы смены, а не из
+  /// состояния экрана: экран о фискальной очереди ничего не знает.
+  Future<UnfiscalizedAtClose> _unfiscalizedAtClose() async {
+    if (!GetIt.I.isRegistered<ShiftService>()) return UnfiscalizedAtClose.empty;
+    try {
+      return await GetIt.I<ShiftService>().unfiscalizedAtClose();
+    } catch (_) {
+      return UnfiscalizedAtClose.empty;
+    }
+  }
+
   void _showCloseConfirmation(BuildContext context, ShiftNotifier notifier) {
     final hasDifference = state.hasDifference;
     final diff = state.difference;
@@ -371,6 +384,51 @@ class ShiftActions extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
               ],
+              // Задача 11: смену с нефискализованными чеками закрыть
+              // можно, но **не молча**. Число и номера называются здесь,
+              // до нажатия, а не задним числом в журнале.
+              //
+              // Ревизия 2026-09-19 добавила вторую полосу — **ждущие**
+              // документы. Это не та же беда: у них документа ещё нет, но
+              // он будет. Важно другое — Z-отчёт их дожидается
+              // (`ShiftService.onCloseShift`), и если связь не вернётся,
+              // отчёт не уйдёт вовсе. Кассир узнаёт об этом до нажатия,
+              // когда ещё может подождать сети, а не после.
+              FutureBuilder<UnfiscalizedAtClose>(
+                future: _unfiscalizedAtClose(),
+                builder: (context, snapshot) {
+                  final summary = snapshot.data;
+                  if (summary == null || summary.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (summary.hasFailed)
+                        _CloseNotice(
+                          noticeKey: const ValueKey('shift-close-unfiscalized'),
+                          icon: Icons.receipt_long_outlined,
+                          color: Theme.of(context).colorScheme.error,
+                          text: dl10n.unfiscalizedAtShiftClose(
+                            summary.count,
+                            summary.receiptNumbers.join(', '),
+                          ),
+                        ),
+                      if (summary.onTheWay > 0)
+                        _CloseNotice(
+                          noticeKey: const ValueKey('shift-close-on-the-way'),
+                          icon: Icons.cloud_upload_outlined,
+                          color: AppColors.warning,
+                          text: dl10n.documentsOnTheWayAtShiftClose(
+                            summary.onTheWay,
+                            summary.onTheWayReceipts.join(', '),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
               Text(dl10n.shiftConfirmCloseQuestion, style: AppTextStyles.body),
               const SizedBox(height: 8),
               Text(
@@ -409,6 +467,47 @@ class ShiftActions extends ConsumerWidget {
           ],
         );
       },
+    );
+  }
+}
+
+/// Полоса предупреждения в окне закрытия смены.
+///
+/// Заведена, когда полос стало две: одинаковая рамка, разные цвет, значок и
+/// смысл. Переписывать рамку второй раз значило бы завести два внешних вида
+/// у одного и того же предупреждения — они разошлись бы на первой правке.
+class _CloseNotice extends StatelessWidget {
+  const _CloseNotice({
+    required this.noticeKey,
+    required this.icon,
+    required this.color,
+    required this.text,
+  });
+
+  final Key noticeKey;
+  final IconData icon;
+  final Color color;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        key: noticeKey,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(width: 12),
+            Expanded(child: Text(text, style: AppTextStyles.body)),
+          ],
+        ),
+      ),
     );
   }
 }

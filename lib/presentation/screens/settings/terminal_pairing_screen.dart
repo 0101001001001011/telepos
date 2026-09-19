@@ -15,6 +15,7 @@ import 'package:telepos/core/locale/locale_provider.dart';
 import 'package:telepos/core/settings/terminal_service_settings.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
+import 'package:telepos/app/theme/app_typography.dart';
 
 /// Экран, оживляющий `PairingInvites.mint()` — задача 2 работы «знакомство
 /// терминала с кассой», исправленный волной правок «касса говорит, что
@@ -328,7 +329,7 @@ class _TerminalPairingScreenState extends ConsumerState<TerminalPairingScreen> {
                     invite.code,
                     key: const ValueKey('pairing-code'),
                     style: TextStyle(
-                      fontFamily: 'monospace',
+                      fontFamily: AppTypography.familyMono,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,

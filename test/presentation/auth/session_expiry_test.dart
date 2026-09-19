@@ -36,6 +36,7 @@ import 'package:telepos/web/wt_device_check.dart';
 
 import '../../web/support/fake_dispatcher.dart';
 import 'support/fakes.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 AuthSession _session(String token, {DateTime? expiresAt}) => AuthSession(
   token: token,
@@ -45,7 +46,7 @@ AuthSession _session(String token, {DateTime? expiresAt}) => AuthSession(
   permissions: const {'nav.sale'},
   operatingMode: 0,
   pointMode: 'cashier',
-  shiftOpen: true,
+  shift: ShiftStatus.open,
   issuedAt: DateTime.now().subtract(const Duration(minutes: 5)),
   expiresAt: expiresAt ?? DateTime.now().add(const Duration(minutes: 25)),
   terminalId: 1,

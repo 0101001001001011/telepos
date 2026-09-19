@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:telepos/domain/entities/cash_operation/cash_operation_receipt_data.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_in_out_controller.dart';
+import 'package:telepos/hardware/paper_charset.dart';
+import 'package:telepos/hardware/printer/printer_manager.dart';
 import 'package:telepos/hardware/printer/receipt/receipt_builder.dart';
 
 class CashOperationReceiptBuilder implements ReceiptBuilder {
@@ -128,8 +130,12 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
     _printLine('=' * paperWidth);
   }
 
+  /// Текст, готовый к разметке: казахские буквы и `₸` уже заменены тем, что
+  /// CP866 напечатает. Обоснование замен — `hardware/paper_charset.dart`.
+  static String _paper(String text) => paperText(text, PaperCharset.cp866);
+
   void _printLine(String text) {
-    _buffer.addAll(Cp866Encoder.encode(text));
+    _buffer.addAll(encodePaper(text, PaperCharset.cp866));
     _addCommand(EscPosCommands.newLine);
   }
 
@@ -157,12 +163,18 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
     return '$d.$m.$y $h:$min';
   }
 
+  /// Строка «Сумма: … 4 000.00 ₸» — **сначала замена знаков, потом отступ**.
+  ///
+  /// Знак тенге CP866 не содержит, и общая таблица бумаги заменяет его на
+  /// «тг» — на знак длиннее. Считай отступ по исходной строке, и квитанция
+  /// выйдет на колонку шире ленты: измерено пробой
+  /// `receipt_paper_width_wire_test` — 33 колонки вместо 32 и 49 вместо 48.
   String _formatAmountLine() {
-    final label = 'Сумма:';
+    const label = 'Сумма:';
     final amount = _formatAmount(data.amount);
-    final value = '$amount ${data.currencySymbol}';
+    final value = _paper('$amount ${data.currencySymbol}');
     final padding = paperWidth - label.length - value.length;
-    return '$label${' ' * padding}$value';
+    return '$label${' ' * (padding > 0 ? padding : 1)}$value';
   }
 
   String _formatAmount(Decimal amount) {

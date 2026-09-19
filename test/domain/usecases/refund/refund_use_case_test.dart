@@ -37,6 +37,7 @@ void main() {
           amount: Decimal.parse('500.00'),
           productCount: 1,
           paymentCount: 1,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -81,6 +82,7 @@ void main() {
           amount: Decimal.parse('500.00'),
           productCount: 1,
           paymentCount: 1,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -118,6 +120,7 @@ void main() {
           amount: Decimal.parse('500.00'),
           productCount: 1,
           paymentCount: 2,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -158,6 +161,7 @@ void main() {
           amount: Decimal.parse('500.00'),
           productCount: 1,
           paymentCount: 1,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -205,6 +209,7 @@ void main() {
           amount: Decimal.parse('1300.00'),
           productCount: 2,
           paymentCount: 1,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -248,6 +253,7 @@ void main() {
             amount: Decimal.parse('1000.00'),
             productCount: 1,
             paymentCount: 1,
+            drawerAmount: Decimal.zero,
           );
 
           when(
@@ -351,6 +357,7 @@ void main() {
           amount: Decimal.parse('450.00'),
           productCount: 1,
           paymentCount: 1,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -391,6 +398,7 @@ void main() {
           amount: Decimal.parse('1200.00'),
           productCount: 1,
           paymentCount: 1,
+          drawerAmount: Decimal.zero,
         );
 
         when(
@@ -467,6 +475,7 @@ void main() {
         amount: Decimal.parse('500.00'),
         productCount: 2,
         paymentCount: 3,
+        drawerAmount: Decimal.zero,
       );
 
       expect(result.refundLocalId, 1);
@@ -481,6 +490,7 @@ void main() {
         amount: Decimal.zero,
         productCount: 0,
         paymentCount: 0,
+        drawerAmount: Decimal.zero,
       );
 
       expect(result.amount, Decimal.zero);

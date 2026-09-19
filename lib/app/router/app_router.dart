@@ -20,6 +20,8 @@ import 'package:telepos/presentation/screens/splash/splash_screen.dart';
 import 'package:telepos/presentation/screens/additional/additional_screen.dart';
 import 'package:telepos/presentation/screens/sync/sync_screen.dart';
 import 'package:telepos/presentation/screens/settings/general_settings_screen.dart';
+import 'package:telepos/presentation/screens/diagnostics/diagnostics_screen.dart';
+import 'package:telepos/presentation/screens/settings/emulator_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/terminal_service_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/transport_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/printer_settings_screen.dart';
@@ -28,9 +30,14 @@ import 'package:telepos/presentation/screens/label/label_templates_screen.dart';
 import 'package:telepos/presentation/screens/label/label_template_editor_screen.dart';
 import 'package:telepos/presentation/screens/settings/receipt/receipt_templates_screen.dart';
 import 'package:telepos/presentation/screens/settings/receipt/receipt_template_editor_screen.dart';
+import 'package:telepos/presentation/screens/certificate/certificate_issue_screen.dart';
+import 'package:telepos/presentation/screens/prepayment/prepayment_refund_screen.dart';
+import 'package:telepos/presentation/screens/credit/credit_contracts_screen.dart';
+import 'package:telepos/presentation/screens/fiscal/unfiscalized_receipts_screen.dart';
 import 'package:telepos/presentation/screens/settings/esf_outbox_screen.dart';
 import 'package:telepos/presentation/screens/settings/esf_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/fiscal_settings_screen.dart';
+import 'package:telepos/presentation/screens/settings/qr_payment_setup_screen.dart';
 import 'package:telepos/presentation/screens/settings/esutd_screen.dart';
 import 'package:telepos/presentation/screens/settings/esutd_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/snt_screen.dart';
@@ -63,6 +70,7 @@ import 'package:telepos/presentation/screens/supplier_return/dialogs/supplier_re
 import 'package:telepos/presentation/screens/supplier_order/supplier_order_screen.dart';
 import 'package:telepos/presentation/screens/markup/markup_settings_screen.dart';
 import 'package:telepos/presentation/screens/promotion/promotions_screen.dart';
+import 'package:telepos/presentation/screens/settings/discount_limits_screen.dart';
 import 'package:telepos/presentation/screens/customer_display/customer_display_screen.dart';
 import 'package:telepos/presentation/screens/telegram/telegram_auth_screen.dart';
 import 'package:telepos/presentation/screens/telegram/staff_chat_screen.dart';
@@ -144,7 +152,9 @@ List<RouteBase> _buildRoutes() {
         GoRoute(
           path: AppRoutes.sale,
           pageBuilder: (context, state) =>
-              const NoTransitionPage(child: SaleScreen()),
+              const NoTransitionPage(
+                child: SaleScreen(shiftClose: ShiftCloseHere(_openShift)),
+              ),
         ),
         GoRoute(
           path: AppRoutes.refund,
@@ -211,6 +221,11 @@ List<RouteBase> _buildRoutes() {
               const NoTransitionPage(child: PromotionsScreen()),
         ),
         GoRoute(
+          path: AppRoutes.discountLimits,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: DiscountLimitsScreen()),
+        ),
+        GoRoute(
           path: AppRoutes.movement,
           pageBuilder: (context, state) => NoTransitionPage(
             child: _AdaptiveStockOperationPage(
@@ -242,6 +257,16 @@ List<RouteBase> _buildRoutes() {
           path: AppRoutes.terminalServiceSettings,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: TerminalServiceSettingsScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.diagnostics,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: DiagnosticsScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.emulatorSettings,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: EmulatorSettingsScreen()),
         ),
         GoRoute(
           path: AppRoutes.transportSettings,
@@ -294,6 +319,59 @@ List<RouteBase> _buildRoutes() {
           path: AppRoutes.fiscalSettings,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: FiscalSettingsScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.qrProviderSettings,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: QrPaymentSetupScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.unfiscalizedReceipts,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: UnfiscalizedReceiptsScreen()),
+        ),
+        // Выпуск сертификата и повтор печати его слипа — дыра 1 ревизии
+        // 2026-09-19. До этой строки `op.issueCertificate` охранял
+        // операцию, которой кассир не мог вызвать ничем: право было, путь
+        // отсутствовал. Разбор выбора места — в докстринге
+        // `AppRoutes.certificateIssue`.
+        GoRoute(
+          path: AppRoutes.certificateIssue,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: CertificateIssueScreen()),
+        ),
+        // Выдача аванса деньгами — дыра 2 ревизии 2026-09-19. Юзкейс
+        // `CustomerPaymentUseCase.refundPrepayment` был заведён целиком и
+        // до этой строки не звался ни одним экраном. Разбор выбора места —
+        // в докстринге `AppRoutes.prepaymentRefund`.
+        GoRoute(
+          path: AppRoutes.prepaymentRefund,
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: PrepaymentRefundScreen(
+              // Покупатель едет параметром запроса, тем же приёмом и с тем
+              // же умолчанием, что у `/credit-contracts` ниже: отсутствующий
+              // или нечисловой — ноль, и касса ответит «покупатель не
+              // найден» до всякой записи. Выдумывать покупателя нельзя — с
+              // его счёта уходят деньги.
+              agentLocalId:
+                  int.tryParse(state.uri.queryParameters['agentId'] ?? '') ?? 0,
+              agentName: state.uri.queryParameters['agentName'] ?? '',
+            ),
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.creditContracts,
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: CreditContractsScreen(
+              // Покупатель едет параметром запроса. Отсутствующий или
+              // нечисловой — ноль: экран покажет «живых договоров нет», а
+              // не упадёт разбором. Выдумывать покупателя нельзя — по нему
+              // принимают деньги.
+              agentLocalId:
+                  int.tryParse(state.uri.queryParameters['agentId'] ?? '') ?? 0,
+              agentName: state.uri.queryParameters['agentName'] ?? '',
+            ),
+          ),
         ),
         GoRoute(
           path: AppRoutes.esfSettings,
@@ -597,8 +675,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     // вошедшего невозбранно.
     //
     // `permissionKey == null` пропускается молча — не умолчанием, а решением,
-    // измеренным обходом `_buildRoutes()` (задача 17, отчёт
-    // `task-17-report.md`, правка «маршрут → ключ», следом за ней, и правка
+    // измеренным обходом `_buildRoutes()` (задача 17 закрытия
+    // долга безопасности, правка «маршрут → ключ», следом за ней, и правка
     // «второй порядок» закрытия долга безопасности, 2026-08-22, пункт 1).
     // Число покрытых маршрутов менялось пять раз и посчитано заново каждый
     // раз, а не унаследовано текстом отчёта — читай счёт в
@@ -682,3 +760,7 @@ String _homeRoute(AppState appState) {
 
   return AppRoutes.additional;
 }
+
+/// Переход диалога просроченной смены — задача 37. Живёт в таблице, у которой
+/// экран смены есть, а не в экране продажи, общем с браузером.
+void _openShift(BuildContext context) => context.go(AppRoutes.shift);

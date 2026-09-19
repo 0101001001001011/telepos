@@ -162,6 +162,9 @@ class WebKassaEsfTransport implements EsfSoapTransport {
       case -1:
       case -2:
       case -3:
+      // −5: 5xx/408/429 без кода оператора (`WebKassaApiClient
+      // .operatorUnavailableCode`) — тот же «не рассматривался».
+      case -5:
         return EsfErrorCode.network;
       case 2:
       case 3:

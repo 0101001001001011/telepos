@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/sync/couchdb_document_mapper.dart';
 import 'package:telepos/data/sync/couchdb_sync_engine.dart';
@@ -138,8 +139,54 @@ class CouchDbSyncCoordinator {
     total += await _pushMovements();
     total += await _pushInventories();
     total += await _pushSupplierReturns();
+    total += await _pushBonusEntries();
     return total;
   }
+
+  /// Отправить свои записи бонусного журнала — задача 13, шаг 9.
+  ///
+  /// Отправляются только **свои** (`state = 1`): чужие приехали оттуда,
+  /// куда их и отправлять, а стартовый остаток миграции помечен `null`
+  /// нарочно — у соседней кассы он свой, и сложить их значило бы удвоить
+  /// бонусы каждому клиенту.
+  Future<int> _pushBonusEntries() async {
+    final pending = await _db.bonusEntryDao.pendingForPush();
+    if (pending.isEmpty) return 0;
+
+    final docs = <Map<String, dynamic>>[];
+    final ids = <int>[];
+    for (final e in pending) {
+      docs.add(CouchDbDocumentMapper.bonusEntryToDoc(_bonusEntryToMap(e)));
+      ids.add(e.id);
+    }
+
+    final confirmed = await _engine.pushDocuments(docs);
+    if (confirmed <= 0) return 0;
+
+    if (confirmed < docs.length) {
+      talker.warning(
+        '[CouchDB Coordinator] Partial bonus push '
+        '($confirmed/${docs.length}); leaving all PENDING for retry',
+      );
+      return confirmed;
+    }
+    await _db.bonusEntryDao.markPushed(ids);
+    return confirmed;
+  }
+
+  Map<String, dynamic> _bonusEntryToMap(BonusEntry e) => {
+    'origin_pos_id': e.originPosId,
+    'origin_entry_id': e.originEntryId,
+    'account_id': e.accountId,
+    'kind': e.kind,
+    'amount': e.amount,
+    'receipt_no': e.receiptNo,
+    'pos_id': e.posId,
+    'refund_local_id': e.refundLocalId,
+    'user_id': e.userId,
+    'reason': e.reason,
+    'time': e.time,
+  };
 
   Future<int> _pushSales() async {
     final pending = await _db.saleDao.findByState(_salePending);
@@ -391,7 +438,56 @@ class CouchDbSyncCoordinator {
         talker.warning('[CouchDB Coordinator] Skip category doc: $e');
       }
     }
+
+    // Бонусный журнал — вариант C сведения: реплицируется журнал, баланс
+    // считает каждая касса сама. Порядок доставки на результат не влияет
+    // (сумма не зависит от порядка слагаемых), повторная доставка ничего
+    // не меняет (ключ по паре «породившая касса + её номер записи»).
+    // Проверено числами в `bonus_journal_reconciliation_test.dart`.
+    final bonusEntries = result.changes['bonus_entry'] ?? const [];
+    for (final doc in bonusEntries) {
+      try {
+        applied += await _applyBonusEntry(doc);
+      } catch (e) {
+        talker.warning('[CouchDB Coordinator] Skip bonus_entry doc: $e');
+      }
+    }
     return applied;
+  }
+
+  Future<int> _applyBonusEntry(Map<String, dynamic> doc) async {
+    final m = CouchDbDocumentMapper.docToBonusEntry(doc);
+    final originPosId = m['origin_pos_id'];
+    final originEntryId = m['origin_entry_id'];
+    final accountId = m['account_id'];
+    final kind = m['kind'];
+    if (originPosId is! int ||
+        originEntryId is! int ||
+        accountId is! int ||
+        kind is! int) {
+      return 0;
+    }
+    // Своя же запись, вернувшаяся из обмена, не принимается: она уже
+    // здесь, и `applyRemote` отличил бы её по ключу — но тогда касса
+    // пересчитывала бы баланс на каждом круге обмена без надобности.
+    if (originPosId == await _db.bonusEntryDao.ownPosId()) return 0;
+
+    final applied = await _db.bonusEntryDao.applyRemote(
+      originPosId: originPosId,
+      originEntryId: originEntryId,
+      accountId: accountId,
+      kind: kind,
+      // Деньги приезжают строкой десятичного числа (I159): `double` терял
+      // бы третий знак молча.
+      amount: Decimal.parse((m['amount'] ?? '0').toString()),
+      receiptNo: m['receipt_no'] as int?,
+      posId: m['pos_id'] as int?,
+      refundLocalId: m['refund_local_id'] as int?,
+      userId: m['user_id'] as int?,
+      reason: m['reason'] as String?,
+      time: (m['time'] as num?)?.toInt() ?? 0,
+    );
+    return applied ? 1 : 0;
   }
 
   Future<int> _applyCategory(Map<String, dynamic> doc) async {

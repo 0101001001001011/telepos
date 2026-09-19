@@ -1,3 +1,5 @@
+import 'package:telepos/core/errors/named_refusal.dart';
+
 /// Отказ, который обработчик формулирует сам и адресует человеку.
 ///
 /// До этого типа причина такого отказа ехала как текст произвольного
@@ -14,15 +16,34 @@
 /// безопасный текст обязан скрывать. Поэтому он единственный доезжает до
 /// терминала целиком, минуя `safeErrorText` (`lib/data/transport/till_wire.dart`
 /// ловит его раньше общего `on Object`).
-final class WireRefusal implements Exception {
-  const WireRefusal(this.code, this.message);
+///
+/// [NamedRefusal] — затем, чтобы код не терялся и на **обратном** пути: там,
+/// где экран всё же пропускает отказ через `safeErrorText`, тот отдаёт код, а
+/// не имя типа (в dart2js — `minified:xx`), и `ErrorLocalizer` находит фразу.
+final class WireRefusal implements Exception, NamedRefusal {
+  const WireRefusal(this.code, this.message, {this.subject});
 
   /// Код отказа — то же поле, что и `ErrorFrame.code`. По нему терминал
   /// отличает причину, а не по подстроке в тексте.
+  @override
   final String code;
 
   /// Текст для человека.
   final String message;
+
+  /// К чему именно отказ относится, когда в запросе таких несколько, —
+  /// **только внутри кассы**, на провод не едет (`ErrorFrame` несёт код и
+  /// текст).
+  ///
+  /// Заведено 2026-09-15 ради замка перебора сертификатов: `pay.complete`
+  /// может нести несколько номеров, и без этого поля замок не знал, какой
+  /// из них не подошёл, и засчитывал неудачу всем
+  /// (`CertificateThrottle.guard`). `null` — отказ ни к чему отдельному не
+  /// относится.
+  final String? subject;
+
+  @override
+  String get reasonText => message;
 
   @override
   String toString() => 'WireRefusal($code: $message)';

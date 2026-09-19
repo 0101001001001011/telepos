@@ -25,6 +25,12 @@ WireGuard wireGuardForTill({
   required AppDatabase db,
   required Map<String, WireAccess> access,
   required SessionLookup sessions,
+  // Круг правки 3 задачи 19 «Продажи с браузерного терминала»: сверка «место
+  // сеанса == место сессии сейчас». Обычно это
+  // `TillOperations.terminalForSessionKey`. `null` — сверка не делается,
+  // разбор в докстринге `WireGuard._boundTerminalId`; настоящая касса
+  // (`main.dart`) подключает его всегда.
+  int? Function(int sessionKey)? boundTerminalId,
 }) => WireGuard(
   access: access,
   sessions: sessions,
@@ -34,4 +40,5 @@ WireGuard wireGuardForTill({
   // `wire_guard.dart`). `terminalDao.self()` не бросает на ненастроенной
   // кассе — просто отдаёт `null`, ровно то, что здесь и нужно.
   selfTerminalId: () async => (await db.terminalDao.self())?.id,
+  boundTerminalId: boundTerminalId,
 );

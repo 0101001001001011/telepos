@@ -3,6 +3,7 @@ import 'package:decimal/decimal.dart';
 import 'package:telepos/domain/entities/receipt/receipt_options.dart';
 import 'package:telepos/domain/print/print_document_id.dart';
 import 'package:telepos/domain/print/print_queue.dart';
+import 'package:telepos/domain/sale/payment_service.dart' show FiscalState;
 
 class ReceiptSellerInfo {
   const ReceiptSellerInfo({this.binIin, this.address});
@@ -68,6 +69,7 @@ class SaleReceiptData {
     this.vatAmount,
     this.vatRatePercent = 16,
     this.currencySymbol = '₸',
+    this.fiscalState,
   });
 
   final int receiptNo;
@@ -102,6 +104,21 @@ class SaleReceiptData {
   final int vatRatePercent;
 
   final String currencySymbol;
+
+  /// Чем кончилась фискализация **этого** чека, если её спрашивали.
+  ///
+  /// `null` — «не спрашивали»: дубликат из истории, чек, собранный не
+  /// оплатой, или старая запись. Это не то же, что
+  /// [FiscalState.notRequired], и печатать по `null` утверждение о
+  /// причине нельзя — по той же причине, по которой
+  /// `FiscalStateCodes.unknown` не совпадает ни с одним живым
+  /// состоянием.
+  ///
+  /// Нужно затем, чтобы «НЕФИСКАЛЬНЫЙ ЧЕК» в подвале перестал быть одной
+  /// строкой на три разные причины: покупателю и кассиру важно, чек не
+  /// фискален потому, что так настроено, потому, что касса собрана без
+  /// узла фискализации, или потому, что документ этому чеку не положен.
+  final FiscalState? fiscalState;
 
   bool get isFiscal =>
       fiscal?.hasAny ?? (fiscalNumber != null && fiscalNumber!.isNotEmpty);
@@ -178,6 +195,7 @@ class ReceiptProductLine {
     required this.total,
     Decimal? discountAmount,
     this.originalPrice,
+    this.discountLabel,
   }) : discountAmount = discountAmount ?? Decimal.zero;
 
   final String name;
@@ -186,6 +204,22 @@ class ReceiptProductLine {
   final Decimal total;
   final Decimal discountAmount;
   final Decimal? originalPrice;
+
+  /// Откуда скидка — словами, для покупателя: «подарок акции», «скидка
+  /// кассира». `null` — происхождение не записано.
+  ///
+  /// # Почему это на бумаге, а не только в отчёте
+  ///
+  /// Чек — единственное, что покупатель уносит с собой, и до задачи 13
+  /// он называл подарок акции просто числом: разность `priceBefore −
+  /// price` не помнит, откуда взялась. Покупатель, которому пообещали
+  /// «две пачки — третья даром», в чеке видел скидку без имени и не мог
+  /// проверить, что акцию ему вообще применили.
+  ///
+  /// `null` там, где происхождения нет: чеки, проданные до v40, его не
+  /// несут, и выдумывать им имя нельзя — «скидка кассира» на подарке
+  /// акции хуже, чем молчание.
+  final String? discountLabel;
 
   bool get hasDiscount => discountAmount > Decimal.zero;
 }
@@ -256,6 +290,48 @@ abstract class ReceiptPrintService {
   /// ([PrintDocumentKind.sample]).
   Future<PrintSubmitOutcome> printSampleReceipt(SaleReceiptData data);
 
+  /// Слип подарочного сертификата — **нефискальный документ**, решение
+  /// заказчика 2026-09-16: «без печати схема у прилавка не работает,
+  /// покупатель уходит с пустыми руками».
+  ///
+  /// Печатается дважды за жизнь бумажки и обоими путями её появления:
+  /// выпуском при продаже (`pay.certificateIssue`) и выпуском новой при
+  /// возврате (`RefundRoute.certificate`). Фискального документа у слипа нет
+  /// и быть не должно: деньги за сертификат приходят обычной строкой оплаты
+  /// того чека, которым его продали, — разбор в докстринге
+  /// [CertificateSlipData].
+  Future<PrintSubmitOutcome> printCertificateSlip(CertificateSlipData data);
+
+  /// # Про [certificatesIssued] и [certificatesRedeemed] — у обоих отчётов
+  ///
+  /// Два числа, а не одно, и оба **обязательные доводы**, а не поля с
+  /// умолчанием. Довод тот же, по которому обязательна фискальная
+  /// трактовка вида оплаты: забыть их нельзя по сборке. Умолчание
+  /// `Decimal.zero` печатало бы честный с виду ноль на кассе, где
+  /// сертификаты работают, и узнать об этом было бы неоткуда.
+  ///
+  /// **Они отвечают на разные вопросы и не складываются:**
+  ///
+  /// - [certificatesIssued] — на сколько за смену выросло обязательство
+  ///   магазина. Это деньги в ящике, которые магазин ещё должен: товара на
+  ///   них не отдано. Источник — номиналы бумажек
+  ///   (`CertificateDao.issuedNominalBetween`).
+  /// - [certificatesRedeemed] — сколько товара отдано **без живых денег**.
+  ///   Источник — строки оплаты на счёт рода `certificateLiability`
+  ///   (`PaymentDao.sumCertificateRedemptionsBetween`).
+  ///
+  /// Взять оба из одного места нельзя: строки оплаты чека, которым продали
+  /// бумажку, говорят, **чем** за неё заплатили, а не какая бумажка
+  /// выпущена; остаток бумажки — снимок на сейчас, а не движение за смену.
+  /// Сложенные из одного источника, они разойдутся с учётом молча.
+  ///
+  /// # Чего эти строки НЕ делают
+  ///
+  /// Не уменьшают [saleTotal] и не входят в [cashInDrawer] отдельным
+  /// вычетом: выручка считается по чекам целиком, а деньги в ящике — по
+  /// ящику. Строки стоят рядом с итогом затем, чтобы кассир и владелец
+  /// **не складывали** обязательство с выручкой, а не затем, чтобы касса
+  /// пересчитала им итог.
   Future<PrintSubmitOutcome> printXReport({
     required String storeName,
     required String posName,
@@ -266,8 +342,12 @@ abstract class ReceiptPrintService {
     required int refundCount,
     required Decimal refundTotal,
     required Decimal cashInDrawer,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   });
 
+  /// Строки сертификатов — в докстринге [printXReport]: довод, источники и
+  /// чего они не делают, у обоих отчётов одни.
   Future<PrintSubmitOutcome> printZReport({
     required String storeName,
     required String posName,
@@ -282,6 +362,8 @@ abstract class ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   });
 
   Future<PrintSubmitOutcome> printPreCheck(PreCheckData data);
@@ -309,9 +391,19 @@ abstract class ReceiptPrintService {
 
   void invalidateReceiptOptionsCache();
 
-  String renderSalePreviewText(SaleReceiptData data, ReceiptOptions options);
+  /// Ширина ленты, на которой **сейчас** напечатается чек этой кассы, — из
+  /// привязки чекового принтера (`ReceiptPaperWidthSource`). Экран шаблона
+  /// показывает предпросмотр именно на ней.
+  Future<ReceiptPaperWidth> currentPaperWidth();
+
+  String renderSalePreviewText(
+    SaleReceiptData data,
+    ReceiptOptions options, {
+    required ReceiptPaperWidth paperWidth,
+  });
 
   String renderZReportPreview({
+    required ReceiptPaperWidth paperWidth,
     required String storeName,
     required String posName,
     required String cashierName,
@@ -325,9 +417,12 @@ abstract class ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   });
 
   String renderXReportPreview({
+    required ReceiptPaperWidth paperWidth,
     required String storeName,
     required String posName,
     required String cashierName,
@@ -337,7 +432,92 @@ abstract class ReceiptPrintService {
     required int refundCount,
     required Decimal refundTotal,
     required Decimal cashInDrawer,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   });
+
+  /// Предпросмотр слипа — **те же байты**, разобранные в текст, а не вторая
+  /// раскладка. Тот же довод, что у [renderSalePreviewText].
+  String renderCertificateSlipPreviewText(
+    CertificateSlipData data,
+    ReceiptOptions options, {
+    required ReceiptPaperWidth paperWidth,
+  });
+}
+
+/// Слип подарочного сертификата — то, с чем покупатель отходит от прилавка.
+///
+/// # Это не чек, и документ говорит об этом сам
+///
+/// Фискального документа у выпуска нет и быть не должно: деньги за
+/// сертификат приходят обычной строкой оплаты того чека, которым его
+/// продали, — сертификат в нём то, что покупают, а не то, чем платят
+/// (докстринг `CertificateIssuer`). Поэтому на слипе стоит прямая пометка
+/// «не фискальный документ»: без неё бумажка с номером, суммой и реквизитами
+/// продавца неотличима от чека и будет предъявлена как чек.
+///
+/// # ПИНа здесь нет **полем**, а не по забывчивости
+///
+/// Печатается факт [hasPin], и только он. Номер и ПИН рядом на одной
+/// бумажке — это найденная бумажка, отоваренная кем угодно; тот же довод, по
+/// которому `pinHash` не едет на провод (`certificateToWireJson`). Поля под
+/// ПИН нет затем, чтобы его нельзя было напечатать случайно.
+///
+/// # Две дороги, один документ
+///
+/// Слип печатается обоими путями появления бумажки: выпуском при продаже
+/// (`pay.certificateIssue`) и выпуском новой при возврате
+/// (`RefundRoute.certificate`). У второй [refundLocalId] и [sourceNumber]
+/// названы — покупатель обязан увидеть, почему бумажка новая, иначе он
+/// придёт со старой, а она погашена навсегда (решение 2, 2026-09-16).
+class CertificateSlipData {
+  const CertificateSlipData({
+    required this.number,
+    required this.amount,
+    required this.dateTime,
+    required this.posId,
+    required this.posName,
+    required this.storeName,
+    required this.cashierName,
+    this.expiresAt,
+    this.hasPin = false,
+    this.seller,
+    this.refundLocalId,
+    this.sourceNumber,
+    this.isDuplicate = false,
+  });
+
+  /// Номер, напечатанный на бумажке. У выпущенной возвратом —
+  /// `<исходный>-R<возврат>`.
+  final String number;
+
+  /// На что бумажка годна: номинал при выпуске, закрытая сумма — у
+  /// выпущенной возвратом.
+  final Decimal amount;
+
+  final DateTime dateTime;
+
+  final int posId;
+  final String posName;
+  final String storeName;
+  final String cashierName;
+
+  /// Когда истекает. `null` — бессрочная, и на бумаге это **слово**, а не
+  /// пустое место.
+  final DateTime? expiresAt;
+
+  /// У бумажки есть ПИН. Самого ПИНа здесь нет — см. докстринг класса.
+  final bool hasPin;
+
+  final ReceiptSellerInfo? seller;
+
+  /// Возврат, которым бумажка выпущена. `null` — обычный выпуск при продаже.
+  final int? refundLocalId;
+
+  /// Исходная бумажка, взамен которой выпущена эта.
+  final String? sourceNumber;
+
+  final bool isDuplicate;
 }
 
 class PreCheckData {

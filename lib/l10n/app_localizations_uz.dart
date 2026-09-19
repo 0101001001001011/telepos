@@ -33,7 +33,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get globalSave => 'Saqlash';
 
   @override
-  String get globalNew => 'Новый';
+  String get globalNew => 'Yangi';
 
   @override
   String get globalDelete => 'O\'chirish';
@@ -200,6 +200,11 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
+  String paymentCardChargeUnsettled(String amount) {
+    return 'Karta allaqachon $amount miqdorida oʻtkazilgan va bu summa chekka tushmaydi. Toʻlov terminalida operatsiyani bekor qiling.';
+  }
+
+  @override
   String get saleRemoveItem => 'Tovarni o\'chirish';
 
   @override
@@ -298,6 +303,13 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get refundCard => 'Kartaga qaytarish';
+
+  @override
+  String get refundConnectionLostHint =>
+      'Terminal kassaga oʻzi qaytadi — ish oʻsha joydan davom etadi';
+
+  @override
+  String get refundConnectionLost => 'Kassa bilan aloqa uzildi';
 
   @override
   String get refundNoItems => 'Qaytarish uchun tovarlar yo\'q';
@@ -400,6 +412,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get paymentDebt => 'Qarzga';
 
   @override
+  String get paymentInstallment => 'Bo\'lib to\'lash';
+
+  @override
   String get paymentMixed => 'Aralash';
 
   @override
@@ -479,6 +494,11 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get historyReprint => 'Qayta chop etish';
+
+  @override
+  String certificateSlipPrintFailed(String number, String reason) {
+    return '$number sertifikat slipi chop etilmadi: $reason';
+  }
 
   @override
   String get historyDetails => 'Batafsil';
@@ -946,6 +966,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginShiftClosed => 'Smena yopiq';
 
   @override
+  String get loginShiftUnknown => 'Smena: noma\'lum';
+
+  @override
   String get saleQuickProducts => 'Tez mahsulotlar';
 
   @override
@@ -964,10 +987,18 @@ class AppLocalizationsUz extends AppLocalizations {
   String get saleHeld => 'Chek kechiktirildi';
 
   @override
-  String get saleNoDeferredSales => 'Нет отложенных чеков';
+  String get saleNoDeferredSales => 'Kechiktirilgan cheklar yo\'q';
 
   @override
-  String get saleReceiptNo => 'Чек №';
+  String get saleDeferredListNotPermitted =>
+      'Kechiktirilgan cheklar sizga ochiq emas: «chekni kechiktirish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.';
+
+  @override
+  String get saleDeferNotPermitted =>
+      'Chekni kechiktira olmaysiz: «chekni kechiktirish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.';
+
+  @override
+  String get saleReceiptNo => 'Chek №';
 
   @override
   String get salePositions => 'Mahsulotlar';
@@ -1067,11 +1098,15 @@ class AppLocalizationsUz extends AppLocalizations {
   String get shiftClosed => 'Smena yopildi';
 
   @override
-  String get shiftOverAgeTitle => 'Смена открыта более 24 часов';
+  String get shiftOverAgeTitle => 'Smena 24 soatdan ortiq ochiq';
 
   @override
   String get shiftOverAgeMessage =>
-      'Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.';
+      'Sotuv bloklandi. Ishni davom ettirish uchun joriy smenani yopib, yangisini oching.';
+
+  @override
+  String get shiftOverAgeCloseAtTill =>
+      'Sotuv bloklandi. Ishni davom ettirish uchun smenani kassada yopib, yangisini oching.';
 
   @override
   String shiftSince(String time) {
@@ -1251,11 +1286,11 @@ class AppLocalizationsUz extends AppLocalizations {
   String get inventoryTitle => 'Inventarizatsiya';
 
   @override
-  String get inventoryFullCount => 'Полная инвентаризация';
+  String get inventoryFullCount => 'To\'liq inventarizatsiya';
 
   @override
   String get inventoryFullCountSubtitle =>
-      'Обнулить остатки непросканированных товаров';
+      'Skanerlanmagan tovarlar qoldig\'ini nolga tushirish';
 
   @override
   String get inventoryStart => 'Boshlash';
@@ -1493,6 +1528,17 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get printerPrintSuccess => 'Chop etish muvaffaqiyatli';
+
+  @override
+  String get paymentNotFiscalized =>
+      'Chek fiskallashtirilmadi — toʻlov qayd etildi';
+
+  @override
+  String get paymentFiscalModuleAbsent =>
+      'Fiskallashtirish moduli mavjud emas — cheklar fiskallashtirilmaydi';
+
+  @override
+  String get cashDrawerOpenError => 'Kassa qutisi ochilmadi';
 
   @override
   String get printerPrintError => 'Chop etish xatosi';
@@ -1813,7 +1859,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get valueCannotBeNegative => 'Qiymat manfiy bo\'lishi mumkin emas';
 
   @override
-  String maxPercent(int percent) {
+  String maxPercent(String percent) {
     return 'Maksimum $percent%';
   }
 
@@ -1827,6 +1873,21 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get discountAmount => 'Chegirma summasi:';
+
+  @override
+  String discountLimitPercent(String percent, String source) {
+    return '$percent % gacha ruxsat — $source';
+  }
+
+  @override
+  String discountLimitAmount(String amount, String source) {
+    return '$amount gacha ruxsat — $source';
+  }
+
+  @override
+  String discountApprovalAbove(String percent) {
+    return '$percent % dan yuqori katta xodim tasdiqlashi kerak';
+  }
 
   @override
   String get sumLabel => 'Summa';
@@ -2067,7 +2128,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get actionDefer => 'Keyinga qoldirish';
 
   @override
-  String get actionDeferredList => 'Отложенные';
+  String get actionDeferredList => 'Kechiktirilganlar';
 
   @override
   String get actionMark => 'Markirovka';
@@ -2387,10 +2448,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get restaurantSplitApply => 'Qo\'llash';
 
   @override
-  String get restaurantSplitPaymentTitle => 'Оплата по гостям';
+  String get restaurantSplitPaymentTitle => 'Mehmonlar bo\'yicha to\'lov';
 
   @override
-  String get restaurantSplitPaymentProceed => 'К оплате';
+  String get restaurantSplitPaymentProceed => 'To\'lovga';
 
   @override
   String get restaurantPreCheckPrinted => 'Pre-chek printerga yuborildi';
@@ -2583,7 +2644,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get terminalHomeSaleNote =>
-      'Brauzerda sotish — alohida ish: sotish ekrani kassaning bazasini to‘g‘ridan-to‘g‘ri o‘qiydi va hozircha brauzer uchun qurilmaydi.';
+      'Savat, chek raqami va smena kassaga tegishli — terminal chekni ko‘rsatadi va sim orqali buyruq beradi. Chek chop etish, fiskallashtirish va pul qutisi kassada qoladi.';
 
   @override
   String get wtNotPortedTitle => 'Bu ekran hozircha faqat kassada';
@@ -4565,10 +4626,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get agentNewCustomer => 'Yangi mijoz';
 
   @override
-  String get agentTypeCustomer => 'Клиент';
+  String get agentTypeCustomer => 'Mijoz';
 
   @override
-  String get agentTypeSupplier => 'Поставщик';
+  String get agentTypeSupplier => 'Yetkazib beruvchi';
 
   @override
   String get agentNameHint => 'Mijoz ismini kiriting';
@@ -5127,6 +5188,43 @@ class AppLocalizationsUz extends AppLocalizations {
       'Chekda QQS summasini ko\'rsatish';
 
   @override
+  String get fiscalOffsetSection => 'Sertifikatlar va avans';
+
+  @override
+  String get fiscalOffsetCertificateSale => 'Sertifikat sotilganda chek';
+
+  @override
+  String get fiscalOffsetCertificateSaleSubtitle =>
+      'Sovg\'a sertifikati sotilganda fiskal chek berish';
+
+  @override
+  String get fiscalOffsetLayout => 'Sertifikat yoki avans bilan to\'lov';
+
+  @override
+  String get fiscalOffsetLayoutSubtitle =>
+      'Hisobga olish summasi OFD chekiga qanday tushadi';
+
+  @override
+  String get fiscalOffsetLayoutDiscount => 'Tovarlarga chegirma sifatida';
+
+  @override
+  String get fiscalOffsetLayoutSurchargeOnly =>
+      'Faqat qo\'shimcha to\'lovga chek';
+
+  @override
+  String get fiscalOffsetPrepaymentReceipt => 'Avans qabul qilinganda chek';
+
+  @override
+  String get fiscalOffsetPrepaymentReceiptSubtitle =>
+      'Xaridor avans kiritganda fiskal chek berish';
+
+  @override
+  String get fiscalOffsetSaveError => 'Sozlamani saqlab bo\'lmadi';
+
+  @override
+  String get customerPaymentTender => 'Nima bilan qabul qilindi';
+
+  @override
   String get fiscalSettingsVatRate =>
       'QQS stavkasi: 12% (3/28 formulasi bo\'yicha)';
 
@@ -5334,14 +5432,15 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get shiftZReportQueued =>
-      'Z-отчёт принят в очередь печати. Бумаги пока нет: она выйдет, когда принтер сможет. Задание ждёт 30 минут — посмотреть его можно в Настройках → Принтер';
+      'Z-hisobot chop etish navbatiga qabul qilindi. Qog\'oz hozircha yo\'q: printer imkon topganda chiqadi. Vazifa 30 daqiqa kutadi — uni Sozlamalar → Printer bo\'limida ko\'rish mumkin';
 
   @override
   String get shiftZReportAlreadyQueued =>
-      'Z-отчёт уже сдан в печать — второй раз он не печатается';
+      'Z-hisobot allaqachon chop etishga yuborilgan — u ikkinchi marta chop etilmaydi';
 
   @override
-  String get shiftZReportPrintFailed => 'Не удалось сдать Z-отчёт в печать';
+  String get shiftZReportPrintFailed =>
+      'Z-hisobotni chop etishga yuborib bo\'lmadi';
 
   @override
   String get shiftFinishAllSales => 'Barcha sotuvlarni yakunlang';
@@ -5395,19 +5494,19 @@ class AppLocalizationsUz extends AppLocalizations {
   String get shiftCashOperations => 'Kassa operatsiyalari';
 
   @override
-  String get shiftSalesLabel => 'Продажи';
+  String get shiftSalesLabel => 'Sotuvlar';
 
   @override
-  String get shiftSalesTotal => 'Сумма продаж';
+  String get shiftSalesTotal => 'Sotuvlar summasi';
 
   @override
-  String get shiftCashSales => 'Наличные';
+  String get shiftCashSales => 'Naqd';
 
   @override
-  String get shiftCardSales => 'Карта';
+  String get shiftCardSales => 'Karta';
 
   @override
-  String get shiftRefundsTotal => 'Возвраты';
+  String get shiftRefundsTotal => 'Qaytarishlar';
 
   @override
   String get shiftShortage => 'Kamomad';
@@ -5951,6 +6050,11 @@ class AppLocalizationsUz extends AppLocalizations {
   String get syncPreparing => 'Tayyorlanmoqda...';
 
   @override
+  String refundRefused(String reason) {
+    return 'Qaytarish bajarilmadi: $reason';
+  }
+
+  @override
   String errorSaveFailed(String details) {
     return 'Saqlash xatosi: $details';
   }
@@ -5976,6 +6080,14 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get errorUnknownGeneric => 'Noma\'lum xato';
+
+  @override
+  String errorRefusalUnknownCode(String code) {
+    return 'noma\'lum sabab (kodi $code)';
+  }
+
+  @override
+  String get errorReasonUnknown => 'noma\'lum sabab';
 
   @override
   String get errorFillRequired => 'Barcha majburiy maydonlarni to\'ldiring';
@@ -6021,6 +6133,26 @@ class AppLocalizationsUz extends AppLocalizations {
       'Kassa hali sozlanmagan — sozlash ustasi tugamaguncha kirish mumkin emas.';
 
   @override
+  String get errorTillNotConfiguredSale =>
+      'Kassa sozlanmagan — chekni boshlab bo\'lmaydi. Administratorga murojaat qiling: sozlash ustasidan o\'tish kerak.';
+
+  @override
+  String get errorNotAllowed =>
+      'Bu amal uchun huquq yetarli emas. Administratorga murojaat qiling.';
+
+  @override
+  String get errorNoSaleModule =>
+      'Bu kassa chek yurita olmaydi: sotuv moduli yig\'ilmagan. Administratorga murojaat qiling.';
+
+  @override
+  String get errorTerminalInBody =>
+      'Terminal kassaga noto\'g\'ri murojaat qildi. Ish o\'rnidagi ilovani yangilang.';
+
+  @override
+  String get errorWholesaleInStart =>
+      'Ulgurji chek bunday boshlanmaydi. Oddiy chek boshlab, ulgurjini alohida tugma bilan yoqing.';
+
+  @override
   String get errorTerminalLimitReached =>
       'Bu kassada terminallarning maksimal soni ro\'yxatga olingan. Joy bo\'shatish uchun administratorga murojaat qiling.';
 
@@ -6046,6 +6178,45 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get errorDeferredNotFound => 'Keyinga qoldirilgan chek topilmadi';
+
+  @override
+  String get errorCartStale =>
+      'Siz terayotganingizda chek o\'zgardi. Ekran yangilandi — oxirgi amalni takrorlang.';
+
+  @override
+  String get errorCartWrongReceipt =>
+      'Bu chek endi ishda emas. Yangi chek boshlang yoki keyinga qoldirilganini oching.';
+
+  @override
+  String get errorCartNotStarted =>
+      'Chek hali boshlanmagan. Yangi chek boshlang yoki keyinga qoldirilganini oching.';
+
+  @override
+  String get errorLineNotFound =>
+      'Bu qator chekda yo\'q. Chekni yangilab, qayta urinib ko\'ring.';
+
+  @override
+  String get errorInvalidAmount =>
+      'Yaroqsiz qiymat. Summa manfiy bo\'lolmaydi, chegirma esa 100% dan oshmasligi kerak.';
+
+  @override
+  String get errorDeferredTaken =>
+      'Bu keyinga qoldirilgan chekni boshqa ish o\'rni olib qo\'ygan.';
+
+  @override
+  String get errorCartNotEmpty =>
+      'Avval joriy chekni yakunlang yoki keyinga qoldiring — uning ustiga boshqasini ochib bo\'lmaydi.';
+
+  @override
+  String get errorSaleNotStarted =>
+      'Kassa chekni boshlay olmadi va sababini aytmadi. Qayta urinib ko\'ring.';
+
+  @override
+  String get errorShiftNotOpen => 'Smena ochilmagan. Smenani kassada oching.';
+
+  @override
+  String get errorCardTerminalMisconfigured =>
+      'Ushbu ish joyining to\'lov terminali noto\'g\'ri sozlangan. Uskuna sozlamalaridagi bog\'lanishni tekshiring.';
 
   @override
   String errorReceiptNotFound(String receiptNo) {
@@ -7017,42 +7188,42 @@ class AppLocalizationsUz extends AppLocalizations {
   String get hwTerminalTerminalId => 'Terminal ID';
 
   @override
-  String get catalogExportCsv => 'Экспорт CSV';
+  String get catalogExportCsv => 'CSV eksport';
 
   @override
-  String get catalogImport => 'Импорт';
+  String get catalogImport => 'Import';
 
   @override
-  String get catalogFilterColumn => 'Фильтр...';
+  String get catalogFilterColumn => 'Filtr...';
 
   @override
   String catalogExportSuccess(String path) {
-    return 'Экспортировано в $path';
+    return '$path ga eksport qilindi';
   }
 
   @override
-  String get catalogExportFailed => 'Ошибка экспорта';
+  String get catalogExportFailed => 'Eksport xatosi';
 
   @override
-  String get catalogImportResults => 'Результаты импорта';
+  String get catalogImportResults => 'Import natijalari';
 
   @override
   String catalogImportImported(int count) {
-    return 'Импортировано: $count';
+    return 'Import qilindi: $count';
   }
 
   @override
   String catalogImportUpdated(int count) {
-    return 'Обновлено: $count';
+    return 'Yangilandi: $count';
   }
 
   @override
   String catalogImportSkipped(int count) {
-    return 'Пропущено: $count';
+    return 'O\'tkazib yuborildi: $count';
   }
 
   @override
-  String get catalogImportErrors => 'Ошибки:';
+  String get catalogImportErrors => 'Xatolar:';
 
   @override
   String get catalogTypeConsumable => 'Sarf materiali';
@@ -7079,36 +7250,36 @@ class AppLocalizationsUz extends AppLocalizations {
   String get serviceQuickServicesEmpty => 'Tez xizmatlar yo\'q';
 
   @override
-  String get serviceIntakeItems => 'Принимаемые предметы';
+  String get serviceIntakeItems => 'Qabul qilinadigan buyumlar';
 
   @override
-  String get serviceItemName => 'Что принимаете (предмет, вещь, устройство)';
+  String get serviceItemName => 'Nimani qabul qilasiz (buyum, narsa, qurilma)';
 
   @override
-  String get serviceItemDescription => 'Описание проблемы / пожелания клиента';
+  String get serviceItemDescription => 'Muammo tavsifi / mijoz istaklari';
 
   @override
-  String get serviceItemSerial => 'Серийный номер / маркировка';
+  String get serviceItemSerial => 'Seriya raqami / markirovka';
 
   @override
-  String get serviceItemAdd => 'Добавить предмет';
+  String get serviceItemAdd => 'Buyum qo\'shish';
 
   @override
-  String get serviceItemEmpty => 'Добавьте хотя бы один предмет';
+  String get serviceItemEmpty => 'Kamida bitta buyum qo\'shing';
 
   @override
   String serviceItemCount(int count) {
-    return '$count шт.';
+    return '$count dona';
   }
 
   @override
-  String get serviceClientQuickName => 'Имя клиента';
+  String get serviceClientQuickName => 'Mijoz ismi';
 
   @override
-  String get serviceClientQuickPhone => 'Телефон клиента';
+  String get serviceClientQuickPhone => 'Mijoz telefoni';
 
   @override
-  String get serviceClientOrSearch => 'или найти в базе';
+  String get serviceClientOrSearch => 'yoki bazadan topish';
 
   @override
   String get catalogTypeDish => 'Taom';
@@ -7824,6 +7995,37 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get receiptTemplateDeleteTitle => 'Shablonni o\'chirish';
+
+  @override
+  String get receiptTemplateHeaderHint =>
+      'Bir necha qator: salomlashuv, aksiya, kontaktlar';
+
+  @override
+  String get receiptTemplateFooterHint =>
+      'Bir necha qator: minnatdorchilik, qaytarish shartlari, sayt, ijtimoiy tarmoqlar';
+
+  @override
+  String get receiptTemplateAlignLeft => 'Chapda';
+
+  @override
+  String get receiptTemplateAlignCenter => 'Markazda';
+
+  @override
+  String get receiptTemplateAlignRight => 'O\'ngda';
+
+  @override
+  String get receiptTemplateBold => 'Qalin';
+
+  @override
+  String get receiptTemplateDoubleSize => 'Yirik (ikki barobar o\'lcham)';
+
+  @override
+  String get receiptTemplatePaperWidthHint =>
+      'Lenta kengligi printer sozlamalarida belgilanadi';
+
+  @override
+  String get receiptTemplateMandatoryNote =>
+      'Majburiy rekvizitlar — chek raqami, jami, to\'lovlar, QQS, fiskal belgi va QR — har doim sarlavha va pastki qism orasida chop etiladi';
 
   @override
   String receiptTemplateDeleteConfirm(String name) {
@@ -10431,6 +10633,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get promoTitle => 'Aksiyalar';
 
   @override
+  String get promoSubtitle => '1+1 aksiyalari va xarid uchun sovg\'alar';
+
+  @override
   String get promoNew => 'Yangi aksiya';
 
   @override
@@ -10453,9 +10658,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get promoSupplierTag => 'yetkazib beruvchidan';
-
-  @override
   String get promoDefaultName11 => '1+1 aksiyasi';
 
   @override
@@ -10466,9 +10668,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get promoRewardLabel => 'Sovg\'a (nima bepul)';
-
-  @override
-  String get promoSupplierFunded => 'Yetkazib beruvchidan aksiya';
 
   @override
   String get promoSaveButton => 'Aksiyani saqlash';
@@ -10964,6 +11163,65 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
+  String get discountLimitsTitle => 'Chegirma cheklovlari';
+
+  @override
+  String get discountLimitsSubtitle =>
+      'Kassir qo\'lda qancha chegirma bera oladi';
+
+  @override
+  String get discountLimitsIntro =>
+      'Rol chegarasi standartni almashtiradi. O\'z qatori yo\'q rol uchun “Standart” amal qiladi. Yuz foiz “cheklovsiz” degani — bu e\'lon qilingan qiymat, bo\'shliq emas.';
+
+  @override
+  String get discountLimitsDefaultRow => 'Standart (barcha rollar)';
+
+  @override
+  String get discountLimitsMaxPercent => 'Chegara, %';
+
+  @override
+  String get discountLimitsApprovalAbove => 'Tasdiq chegarasi, %';
+
+  @override
+  String get discountLimitsApprovalHint => 'bo\'sh — talab qilinmaydi';
+
+  @override
+  String get discountLimitsInheritHint => 'bo\'sh — standartdek';
+
+  @override
+  String get discountLimitsTwoDoors =>
+      'Diqqat: savdo siyosatidagi “narxni tushirishni taqiqlash” faqat qator narxini tahrirlashni yopadi. Chegirma 100 % chegarada hamon ruxsat etilgan — hatto bepul qatorgacha. Bu ikki xil eshik; ikkinchisini yopish uchun chegarani yuzdan past qiling.';
+
+  @override
+  String get discountLimitsSaved => 'Chegara saqlandi';
+
+  @override
+  String get discountLimitsInherited =>
+      'Qator olib tashlandi: rol standartni meros qiladi';
+
+  @override
+  String get discountLimitsInvalid => 'Chegara — 0 dan 100 gacha son';
+
+  @override
+  String get discountLimitsApprovalNotYet =>
+      'Katta xodimning tasdig\'i hozircha amalga oshirilmagan: chegaradan oshgan chegirma kod so\'ramay, aytilgan sabab bilan rad etiladi.';
+
+  @override
+  String errorDeniedPolicy(String detail) {
+    return 'Kassa sozlamalari bilan taqiqlangan: $detail';
+  }
+
+  @override
+  String errorDeniedLimit(String detail) {
+    return 'Chegirma ruxsat etilganidan ko\'proq: $detail';
+  }
+
+  @override
+  String errorApprovalRequired(String detail) {
+    return 'Katta xodimning tasdig\'i kerak: $detail';
+  }
+
+  @override
   String get errorBigAmountBlocked =>
       'Sotuv summasi 1 mln ₸ dan oshadi. Kassa sozlamalarida katta summalarga ruxsatni yoqing.';
 
@@ -11057,6 +11315,10 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get receiptInputNoRecent => 'Hozircha cheklar yo\'q';
+
+  @override
+  String get receiptInputRecentUnavailable =>
+      'Oxirgi cheklar ro\'yxati bu terminalda mavjud emas — chek raqamini qo\'lda kiriting';
 
   @override
   String get shiftHistoryTitle => 'Smenalar tarixi';
@@ -11335,10 +11597,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get scannerRulesUnavailable =>
-      'Bu yig\'malada shtrix-kod o\'qish qoidalari mavjud emas.';
-
-  @override
   String get scannerRulesSaved => 'Shtrix-kod o\'qish qoidalari saqlandi';
 
   @override
@@ -11439,4 +11697,1521 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get printQueueCancelRefused =>
       'Bu topshiriqni endi bekor qilib bo‘lmaydi: u chop etilmoqda yoki yakunlangan';
+
+  @override
+  String get errorPayReceiptNotFound =>
+      'Chek endi ishda emas — uni to\'lash mumkin emas. Ekranni yangilab, qaytadan boshlang.';
+
+  @override
+  String get errorPayNotOwner =>
+      'Bu chekni boshqa ish joyi yuritmoqda — uni bu yerdan to\'lash mumkin emas.';
+
+  @override
+  String get errorPaymentAlreadyTaken =>
+      'Bu chek allaqachon to\'langan. Kassa pulni ikkinchi marta olmaydi.';
+
+  @override
+  String get errorPaymentInsufficient =>
+      'Kiritilgan summa chekni qoplamaydi. Summani qaytadan kiriting.';
+
+  @override
+  String get errorPaymentAccountMissing =>
+      'Kassada bu to\'lov turi uchun hisob yo\'q. Administratorga murojaat qiling.';
+
+  @override
+  String get errorPaymentAccountNotAllowed =>
+      'Bunday hisob to\'lov uchun taklif qilinmagan. Hisoblar ro\'yxatini yangilab, qaytadan tanlang.';
+
+  @override
+  String get errorPaymentUnbalanced =>
+      'To\'lov qatorlari summasi chek summasiga to\'g\'ri kelmaydi. To\'lovni qaytadan kiriting.';
+
+  @override
+  String get errorPaymentKindInactive =>
+      'Bu to\'lov turi kassa sozlamalarida o\'chirilgan. Boshqasini tanlang yoki sozlamalarda yoqing.';
+
+  @override
+  String get errorPaymentKindUnknown =>
+      'Kassa bunday to\'lov turini bilmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorCertificateUnknown =>
+      'Bu kassada bunday raqamli sertifikat yo\'q. Raqamni tekshiring.';
+
+  @override
+  String get errorCertificatePinWrong =>
+      'Sertifikat PIN kodi to\'g\'ri kelmadi. Qaytadan kiriting.';
+
+  @override
+  String get errorCertificateRateLimited =>
+      'Sertifikatni tekshirishda muvaffaqiyatsiz urinishlar juda ko\'p. Bir necha daqiqa kuting va qaytadan urinib ko\'ring.';
+
+  @override
+  String get errorConnectionLost =>
+      'Kassa bilan aloqa uzildi. Tarmoqni tekshirib, qaytadan urinib ko\'ring.';
+
+  @override
+  String get errorRunIncomplete =>
+      'Kassa amalni yakunlamasdan to\'xtatdi. Qaytarishdan oldin kassadagi natijani tekshiring.';
+
+  @override
+  String get errorWireMismatch =>
+      'Ish joyi va kassa bir-birini tushunmadi — versiyalar mos emas. Sahifani yangilang; yordam bermasa, administratorga murojaat qiling.';
+
+  @override
+  String get errorTillFailed =>
+      'Kassa amalni bajara olmadi. Qaytadan urinib ko\'ring; xato takrorlansa, administratorga murojaat qiling.';
+
+  @override
+  String get errorTerminalChanged =>
+      'Siz ish joyini almashtirdingiz — qaytadan kiring.';
+
+  @override
+  String get errorUnknownTerminal =>
+      'Ish joyi kassaga ulanmagan. Uni ulash kodi bilan qaytadan ulang.';
+
+  @override
+  String get errorAlreadyConfigured =>
+      'Kassa allaqachon sozlangan — dastlabki sozlash ustasi endi mavjud emas.';
+
+  @override
+  String get errorCannotDeleteSelf =>
+      'Kassaning o\'z ish joyini o\'chirib bo\'lmaydi.';
+
+  @override
+  String get errorNoDrivers =>
+      'Kassa uskuna drayverlarisiz yig\'ilgan — qurilmalarni qidirish va tekshirish mavjud emas. Administratorga murojaat qiling.';
+
+  @override
+  String get errorNoNetworkModule =>
+      'Bu kassa tarmoq sozlamalarini boshqarmaydi — tizim xizmati yo\'q. Administratorga murojaat qiling.';
+
+  @override
+  String get errorNoSessionRegistry =>
+      'Bu kassa seanslar ro\'yxatini yuritmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorNoBackupTransport =>
+      'Bu kassada zaxira nusxalar sozlanmagan. Administratorga murojaat qiling.';
+
+  @override
+  String get errorBackupNotFound => 'Zaxira nusxa topilmadi.';
+
+  @override
+  String get errorCertificatesUnavailable =>
+      'Bu kassa sovg\'a sertifikatlarini tarmoq orqali chiqarmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorRefundStale =>
+      'Buyruq kassaga yetguncha qaytarish o\'zgardi. Amalni takrorlang.';
+
+  @override
+  String get errorRefundWrongDraft =>
+      'Bu qaytarish qoralamasi endi yo\'q. Qaytarishni qaytadan oching.';
+
+  @override
+  String get errorRefundNotStarted =>
+      'Qaytarish boshlanmagan — chekni tanlang yoki cheksiz qaytarishni boshlang.';
+
+  @override
+  String get errorRefundEmpty =>
+      'Qaytarishda birorta qator yo\'q — qaytariladigan narsa yo\'q.';
+
+  @override
+  String get errorReceiptAlreadyRefunded =>
+      'Bu chek bo\'yicha qaytarish allaqachon qilingan.';
+
+  @override
+  String get errorReceiptNotRefundable =>
+      'Bu chekni bu yerda qaytarib bo\'lmaydi: to\'lov boshqa kassaning terminali orqali o\'tgan. Qaytarishni to\'lov qilingan joyda rasmiylashtiring.';
+
+  @override
+  String get errorLineNotInReceipt =>
+      'Bu tovar chekda yo\'q — chek bo\'yicha faqat unda sotilgan narsalar qaytariladi.';
+
+  @override
+  String get errorSaleNotCompleted =>
+      'Bu chek bo\'yicha sotuv yakunlanmagan — qaytariladigan narsa yo\'q.';
+
+  @override
+  String get errorRefundBusy =>
+      'Kassada boshqa qaytarish davom etmoqda. Uni yakunlab, qaytadan urinib ko\'ring.';
+
+  @override
+  String get errorRefundCannotStart =>
+      'Kassa qaytarishni boshlay olmadi va sababini aytmadi. Smena va kassa sozlamalarini tekshiring.';
+
+  @override
+  String get errorRefundInstallmentRefused =>
+      'Chek muddatli to\'lovga sotilgan — kassa uni qaytarmaydi. Shartnomani bekor qilishni administrator rasmiylashtiradi.';
+
+  @override
+  String get errorRefundCashlessUnavailable =>
+      'Bu pulni kartaga yoki QR orqali qaytarish kerak, lekin qaytarish vositasi yo\'q: terminal yoki provayder ulanmagan. Kassa bunday qaytarishni tortmadan naqd bermaydi.';
+
+  @override
+  String get errorRefundCashlessRefused =>
+      'Bank yoki provayder qaytarishni rad etdi. Terminalni tekshirib, qayta urinib ko\'ring — avval qaytarilgani ikkinchi marta qaytarilmaydi.';
+
+  @override
+  String get errorRefundKindNotRefundable =>
+      'Bu to\'lov turiga qaytarish to\'lov turlari ma\'lumotnomasida taqiqlangan.';
+
+  @override
+  String get errorRefundKindUnknown =>
+      'Chek ushbu kassa ma\'lumotnomasida yo\'q to\'lov turi bilan to\'langan. Kassa u bo\'yicha qaytarishni amalga oshirmaydi: nima bilan to\'langani noma\'lum, buning uchun naqd pul berilmaydi.';
+
+  @override
+  String get refundDestinationsTitle => 'Pul qayerga ketadi';
+
+  @override
+  String get refundRouteDrawer => 'Tortmadan naqd';
+
+  @override
+  String get refundRouteCard => 'Terminal orqali kartaga';
+
+  @override
+  String get refundRouteManual => 'Kassadan tashqari — to\'langan usulda';
+
+  @override
+  String get refundRouteProvider => 'QR provayderi orqali';
+
+  @override
+  String get refundRouteCertificate =>
+      'Yangi sertifikat bilan (eskisi so\'ndirilgan holda qoladi)';
+
+  @override
+  String get refundRouteAdvance => 'Xaridorning avans to\'loviga';
+
+  @override
+  String get refundRouteBonus => 'Bonus hisobiga';
+
+  @override
+  String get refundRouteDebt => 'Xaridor qarzi hisobiga';
+
+  @override
+  String get errorCertificateRefundNoSource =>
+      'Chek qatori sertifikat bilan qaytariladi, lekin unda sertifikat raqami yo\'q. Kassa u bo\'yicha qaytarishni o\'tkazmaydi: yangi sertifikatni nimaga asoslanib yozish noma\'lum, kassaning majburiyati esa bekorga o\'sardi.';
+
+  @override
+  String get errorCertificateCashRefundRefused =>
+      'Sertifikat uchun naqd pul bilan qaytarib bo\'lmaydi — naqd pulsiz qaytarish rekvizitlarini ko\'rsating.';
+
+  @override
+  String get errorCertificatePaysCertificate =>
+      'Sertifikat bilan boshqa sertifikat xaridini to\'lab bo\'lmaydi.';
+
+  @override
+  String get errorCreditContractUnknown =>
+      'Bunday raqamli muddatli to\'lov shartnomasi yo\'q. Raqamni tekshiring.';
+
+  @override
+  String get errorCreditContractNotActive =>
+      'Muddatli to\'lov shartnomasi allaqachon to\'langan yoki bekor qilingan — u bo\'yicha to\'lanadigan narsa yo\'q.';
+
+  @override
+  String get errorCreditOverpayment =>
+      'Summa shartnoma bo\'yicha qoldiqdan ko\'p. Summani tekshiring.';
+
+  @override
+  String get errorCreditRepaymentInvalid =>
+      'To\'lov summasi noldan katta bo\'lishi kerak.';
+
+  @override
+  String get errorCreditAllocationRace =>
+      'Aynan shu lahzada shartnoma bo\'yicha boshqa kassadan to\'langan. To\'lovni qaytadan qabul qiling.';
+
+  @override
+  String get errorKindTenderCannotDiscount =>
+      'Haqiqiy pul olib keladigan to\'lov turini chekda «to\'lov emas» deb e\'lon qilib bo\'lmaydi.';
+
+  @override
+  String get errorKindAccountMissing =>
+      'To\'lov turiga qabul qiluvchi hisob biriktirilmagan.';
+
+  @override
+  String get errorKindCounterpartyRequired =>
+      'Keyinga qoldirilgan to\'lov turi nomlangan xaridorni talab qiladi.';
+
+  @override
+  String get errorKindProviderRequired =>
+      'Provayder (QR) orqali to\'lov turiga provayder kerak.';
+
+  @override
+  String get errorKindFiscalKindRequired =>
+      'To\'lov turining fiskal talqini ko\'rsatilmagan.';
+
+  @override
+  String get errorKindChangeNotATender =>
+      'Qaytimni faqat haqiqiy pul olib keladigan tur beradi.';
+
+  @override
+  String get errorKindSystemImmutable =>
+      'Tizimli to\'lov turining kodi yoki identifikatorini o\'zgartirib ham, boshqa turga berib ham bo\'lmaydi.';
+
+  @override
+  String get errorCertificateExpired =>
+      'Sertifikat muddati tugagan. Do\'kon egasiga murojaat qiling.';
+
+  @override
+  String get errorCertificateExhausted => 'Sertifikatda mablag\' qolmagan.';
+
+  @override
+  String get errorCertificateDuplicate =>
+      'Bitta sertifikat to\'lovda ikki marta ko\'rsatilgan. Takrorni olib tashlang.';
+
+  @override
+  String get errorCertificateRace =>
+      'Sertifikat qoldig\'i o\'zgardi. To\'lovni qaytadan bajaring.';
+
+  @override
+  String get errorCertificateAccountMissing =>
+      'Kassada sertifikatlar bo\'yicha majburiyat hisobi yo\'q. Administratorga murojaat qiling.';
+
+  @override
+  String get errorCertificateNumberTaken =>
+      'Bunday raqamli sertifikat allaqachon chiqarilgan.';
+
+  @override
+  String get errorCertificateNominalInvalid =>
+      'Sertifikat qiymati noldan katta bo\'lishi kerak.';
+
+  @override
+  String get errorDebtCustomerRequired =>
+      'Qarzga sotish xaridorsiz mumkin emas — xaridorni tanlang.';
+
+  @override
+  String get errorDebtNotSoldHere =>
+      'Bu kassada qarzga savdo qilinmaydi — kreditga sotish kassa sozlamalarida oʻchirilgan.';
+
+  @override
+  String get errorDebtAccountMissing =>
+      'Xaridorda hisob yo\'q — qarzni yozadigan joy yo\'q.';
+
+  @override
+  String get errorBonusAccountMissing =>
+      'Xaridorda bonus hisobi yo\'q — bonusni yechish uchun hech narsa yo\'q.';
+
+  @override
+  String get errorPrepaymentCustomerRequired =>
+      'Avansni hisobga olish uchun xaridor kerak — uni tanlang.';
+
+  @override
+  String get errorCreditTermInvalid =>
+      'Bo\'lib to\'lashning bunday muddati rasmiylashtirilmaydi';
+
+  @override
+  String get errorCreditPrincipalInvalid =>
+      'Bo\'lib to\'lash uchun summa yo\'q: chek to\'liq qoplangan';
+
+  @override
+  String get errorCreditFeeInvalid => 'Shartnoma bo\'yicha ustama noto\'g\'ri';
+
+  @override
+  String get errorCreditSchemeUnknown =>
+      'Bunday jadval sxemasini kassa bilmaydi';
+
+  @override
+  String get errorCreditOverdue =>
+      'Xaridorning boshqa bo\'lib to\'lash shartnomasi muddati o\'tgan';
+
+  @override
+  String get errorCreditContractDuplicate =>
+      'Bu chekka bo\'lib to\'lash shartnomasi allaqachon rasmiylashtirilgan';
+
+  @override
+  String get errorPrepaymentAccountMissing =>
+      'Xaridorda hisob yo\'q — unda avans bo\'lishi mumkin emas.';
+
+  @override
+  String get errorPrepaymentInsufficient =>
+      'Kiritilgan avans yetmadi: u boshqa chek bilan hisobga olingan.';
+
+  @override
+  String get errorLoyaltyCustomerUnknown =>
+      'Xaridor kartotekada topilmadi. Xaridorni qaytadan tanlang.';
+
+  @override
+  String get errorAmountExceedsReceipt =>
+      'Summa chek qiymatidan katta. Summani qaytadan kiriting.';
+
+  @override
+  String get errorCardChargeUnproven =>
+      'Kassa karta orqali to\'lovni tasdiqlamadi. To\'lov terminalini tekshiring.';
+
+  @override
+  String get errorPaymentTypeNotAllowed =>
+      'Bu to\'lov turi ushbu ish joyida ruxsat etilmagan.';
+
+  @override
+  String get errorPaymentsUnavailable =>
+      'Bu kassa sim orqali to\'lovni qabul qilmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorNoRefundService =>
+      'Bu kassa sim orqali qaytarishni amalga oshirmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorRefundAbandonIsTillSide =>
+      'Qaytarish qoralamasini ish joyi emas, kassa olib tashlaydi.';
+
+  @override
+  String get errorNoAnswer =>
+      'Kassa javob bermadi. Aloqani tekshirib, qaytadan urinib ko\'ring.';
+
+  @override
+  String paymentTypeNotAllowedHere(String type) {
+    return '\"$type\" bu ish joyiga ruxsat etilmagan. To‘lov turlari uskuna sozlamalarida o‘zgartiriladi; bosilsa ham kassa ruxsatsiz turni rad etadi.';
+  }
+
+  @override
+  String paymentTypesLimitedHere(String types) {
+    return 'Ish joyi qabul qiladi: $types.';
+  }
+
+  @override
+  String get paymentDebtNotSoldHere =>
+      'Bu kassada qarzga sotilmaydi: kreditga sotish kassa sozlamalarida oʻchirilgan. Tugma bosilsa ham, kassa rad etadi.';
+
+  @override
+  String get paymentDebtNotPermitted =>
+      'Sizga qarzga sotishga ruxsat yoʻq: «qarzga sotish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.';
+
+  @override
+  String get saleDiscountNotPermitted =>
+      'Sizga chegirma berishga ruxsat yoʻq: «chegirma bilan sotish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.';
+
+  @override
+  String get paymentDebtPolicyUnknown =>
+      'Kassa hozircha bu yerda qarzga sotiladimi yoʻqmi javob bermadi. Kassa bilan aloqani tekshirib, qayta urinib koʻring.';
+
+  @override
+  String get paymentOffsetsTitle => 'Avans va sertifikatlar';
+
+  @override
+  String get paymentPrepaymentTitle => 'Xaridor avansi';
+
+  @override
+  String get paymentPrepaymentNeedsCustomer =>
+      'Avansni hisobga olish uchun xaridorni telefon raqami boʻyicha toping.';
+
+  @override
+  String get paymentPrepaymentLoading =>
+      'Kassa hali qancha avans kiritilganini javob bermadi.';
+
+  @override
+  String get paymentPrepaymentNone => 'Xaridorning kiritilgan avansi yoʻq.';
+
+  @override
+  String get paymentPrepaymentBalance => 'Oldindan kiritilgan:';
+
+  @override
+  String get paymentPrepaymentUse => 'Avansni hisobga olish';
+
+  @override
+  String paymentPrepaymentApplied(String amount) {
+    return 'Hisobga olinadi: $amount';
+  }
+
+  @override
+  String get paymentCertificateTitle => 'Sovgʻa sertifikati';
+
+  @override
+  String get paymentCertificateNumber => 'Sertifikat raqami';
+
+  @override
+  String get paymentCertificatePin => 'PIN, boʻlsa';
+
+  @override
+  String get paymentCertificatePresent => 'Tekshirish';
+
+  @override
+  String paymentCertificateBalance(String amount) {
+    return 'Sertifikatdagi qoldiq: $amount';
+  }
+
+  @override
+  String paymentCertificateApplied(String amount, String rest) {
+    return '$amount yechiladi, $rest qoladi';
+  }
+
+  @override
+  String get paymentCertificateNotNeeded =>
+      'Chek toʻliq yopildi — bu sertifikat kerak boʻlmaydi.';
+
+  @override
+  String get unfiscalizedTitle => 'Fiskallashtirilmagan cheklar';
+
+  @override
+  String get unfiscalizedEmpty => 'Barcha cheklar fiskallashtirilgan';
+
+  @override
+  String get unfiscalizedEmptyHint =>
+      'Bu yerda puli olingan, lekin operator hujjat bermagan cheklar paydo bo\'ladi';
+
+  @override
+  String unfiscalizedReceiptNo(int number) {
+    return 'Chek №$number';
+  }
+
+  @override
+  String unfiscalizedAgeHours(int hours) {
+    return '$hours soat oldin';
+  }
+
+  @override
+  String get unfiscalizedOverdue => '72 soatlik muddat o\'tib ketdi';
+
+  @override
+  String get unfiscalizedRetry => 'Takrorlash';
+
+  @override
+  String unfiscalizedRetryDone(String sign) {
+    return 'Hujjat olindi: $sign';
+  }
+
+  @override
+  String unfiscalizedRetryFailed(String message) {
+    return 'Operator yana rad etdi: $message';
+  }
+
+  @override
+  String get unfiscalizedNoDocument =>
+      'Qator rad javoblari hujjat olib yura boshlashidan oldin yozilgan: takrorlash uchun hech narsa yo\'q, uni faqat hisobdan chiqarish mumkin';
+
+  @override
+  String get unfiscalizedNoOperator =>
+      'Fiskal operator sozlanmagan: takrorlashga joy yo\'q';
+
+  @override
+  String get unfiscalizedWriteOff => 'Hisobdan chiqarish';
+
+  @override
+  String get unfiscalizedWriteOffTitle =>
+      'Fiskallashtirilmagan chekni hisobdan chiqarish';
+
+  @override
+  String unfiscalizedWriteOffBy(String name) {
+    return 'Qaror quyidagi nomga yoziladi: $name';
+  }
+
+  @override
+  String get unfiscalizedWriteOffReason => 'Hisobdan chiqarish sababi';
+
+  @override
+  String get unfiscalizedWriteOffDone =>
+      'Chek ko\'rib chiqilgan deb belgilandi';
+
+  @override
+  String unfiscalizedWrittenOff(String name, String reason) {
+    return '$name hisobdan chiqardi: $reason';
+  }
+
+  @override
+  String get unfiscalizedUnknownUser => 'noma\'lum foydalanuvchi';
+
+  @override
+  String unfiscalizedAtShiftClose(int count, String numbers) {
+    return 'Smena fiskallashtirilmagan cheklar bilan yopildi: $count. Raqamlar: $numbers';
+  }
+
+  @override
+  String documentsOnTheWayAtShiftClose(int count, String numbers) {
+    return 'Smena hujjatlari hali operatorda emas: $count (cheklar $numbers). Yopish ularning yuborilishini kutadi; aloqa tiklanmasa, Z-hisobot yuborilmaydi — aks holda operator hisoboti kassa bilan mos kelmaydi.';
+  }
+
+  @override
+  String qrPaidPartial(String paid, String amount) {
+    return 'Оплачено частично: $paid из $amount';
+  }
+
+  @override
+  String get qrOrphanTitle => 'Деньги без чека';
+
+  @override
+  String get qrOrphanHint =>
+      'Покупатель заплатил по QR, а чек этими деньгами не закрыт.';
+
+  @override
+  String qrOrphanLine(String amount, String provider, String key) {
+    return '$amount · $provider · $key';
+  }
+
+  @override
+  String get qrOrphanAfterGiveUp =>
+      'Подтверждение пришло после того, как касса перестала ждать';
+
+  @override
+  String get errorQrIntentUnknown =>
+      'Kassa bu QR to\'lovini bilmaydi. Chekni yangilang va qayta urinib ko\'ring.';
+
+  @override
+  String get errorQrIntentNotPaid =>
+      'QR to\'lovini bank hali tasdiqlamadi. Tasdiqni kuting yoki boshqa usulni tanlang.';
+
+  @override
+  String errorQrIntentAlreadySettled(String message) {
+    return 'Bu pul allaqachon boshqa chekni yopgan: $message';
+  }
+
+  @override
+  String get paymentQrTitle => 'QR orqali to\'lov';
+
+  @override
+  String get paymentQrAmount => 'QR summasi';
+
+  @override
+  String get paymentQrStart => 'QR ko\'rsatish';
+
+  @override
+  String paymentQrWaiting(int seconds) {
+    return 'To\'lov kutilmoqda · $seconds s qoldi';
+  }
+
+  @override
+  String get paymentQrScanHint => 'Xaridor kodni bank ilovasida skanerlaydi';
+
+  @override
+  String get paymentQrCancel => 'Kutishni bekor qilish';
+
+  @override
+  String get paymentQrNoLink =>
+      'Provayder bilan aloqa yo\'q — kassa so\'rovni o\'zi takrorlaydi';
+
+  @override
+  String paymentQrPaid(String amount) {
+    return 'QR orqali to\'landi: $amount';
+  }
+
+  @override
+  String paymentQrPaidAfterCancel(String amount) {
+    return 'Xaridor bekor qilishdan oldin to\'lab ulgurdi — $amount shu chekka tushadi';
+  }
+
+  @override
+  String get paymentQrCancelled => 'Kutish bekor qilindi, provayder tasdiqladi';
+
+  @override
+  String get paymentQrPatienceSpent =>
+      'Xaridor belgilangan vaqtda to\'lamadi — kassa kutishni to\'xtatdi';
+
+  @override
+  String get paymentQrExpired => 'QR kodning muddati provayderda tugadi';
+
+  @override
+  String get paymentQrFailed => 'Provayder QR to\'lovini rad etdi';
+
+  @override
+  String get paymentQrCancelUnconfirmed =>
+      'Bekor qilish tasdiqlanmadi — pul hali kelishi mumkin. Kassa aniqlamaguncha boshqa to\'lovni qabul qilmang.';
+
+  @override
+  String get paymentQrRecheck => 'Qayta tekshirish';
+
+  @override
+  String get paymentQrRestart => 'Yangi kod';
+
+  @override
+  String paymentQrOverReceipt(String amount) {
+    return 'QR to\'lovidan $amount chekka sig\'maydi';
+  }
+
+  @override
+  String get paymentQrNothingToPay =>
+      'Chek allaqachon yopilgan — kod ko\'rsatishga hojat yo\'q';
+
+  @override
+  String get errorQrNotConfigured => 'Kassada QR provayderi sozlanmagan';
+
+  @override
+  String get errorQrNetwork => 'QR provayderi bilan aloqa yo\'q';
+
+  @override
+  String get errorQrTimeout => 'QR provayderi o\'z vaqtida javob bermadi';
+
+  @override
+  String get errorQrProviderBusy => 'QR provayderi band — kassa takrorlaydi';
+
+  @override
+  String get errorQrMalformedReply =>
+      'QR provayderi tushunarsiz javob berdi — kassa administratoriga murojaat qiling';
+
+  @override
+  String get errorQrUnknownIntent => 'QR provayderi bu to\'lovni bilmaydi';
+
+  @override
+  String get errorQrRejected => 'QR provayderi so\'rovni rad etdi';
+
+  @override
+  String get errorQrReverseUnsupported => 'QR provayderi pulni qaytara olmaydi';
+
+  @override
+  String get errorQrIntentLive =>
+      'Bu chekda QR to\'lovi kutilmoqda — yangi kod ko\'rsatishdan oldin uni bekor qiling';
+
+  @override
+  String get fiscalReasonNetwork => 'Fiskal operator bilan aloqa yo‘q';
+
+  @override
+  String get fiscalReasonOperatorUnavailable => 'Fiskal operator ishlamayapti';
+
+  @override
+  String get fiscalReasonTokenExpired =>
+      'Operator kassa avtorizatsiyasini qabul qilmadi';
+
+  @override
+  String get fiscalReasonRequestNotBuilt =>
+      'Operatorga so‘rov tuzilmadi: fiskal sozlamalardagi server manzilini tekshiring';
+
+  @override
+  String get fiscalReasonTlsRejected =>
+      'Operator bilan himoyalangan ulanish o‘rnatilmadi: server manzilini va kassa soatini tekshiring';
+
+  @override
+  String get fiscalReasonClientFault =>
+      'Operator bilan almashishda kassa nosozligi';
+
+  @override
+  String get fiscalReasonBadCredentials =>
+      'Operator logini yoki paroli noto‘g‘ri';
+
+  @override
+  String get fiscalReasonCashboxNotFound =>
+      'Operator bu kassani topmadi: zavod raqamini tekshiring';
+
+  @override
+  String get fiscalReasonCashboxBlocked =>
+      'Kassa operator tomonidan bloklangan';
+
+  @override
+  String get fiscalReasonOfflineLimitExceeded =>
+      'Avtonom hujjatlar chegarasi oshib ketdi';
+
+  @override
+  String get fiscalReasonOfflineNotSupported =>
+      'Bu kassaga avtonom rejim ruxsat etilmagan';
+
+  @override
+  String get fiscalReasonDuplicate =>
+      'Hujjat operatorda allaqachon ro‘yxatdan o‘tgan, lekin fiskal belgi kassaga berilmadi — uni operator kabinetidan oling';
+
+  @override
+  String get fiscalReasonValidation =>
+      'Operator hujjatni rad etdi: summalar yoki ma’lumotlar mos emas';
+
+  @override
+  String get fiscalReasonNotEnoughMoney =>
+      'Operator ma’lumotiga ko‘ra kassada naqd pul yetarli emas';
+
+  @override
+  String get fiscalReasonShiftError => 'Operatorda smena xatosi';
+
+  @override
+  String get fiscalReasonUnsupported =>
+      'Amal operator tomonidan qo‘llab-quvvatlanmaydi';
+
+  @override
+  String get fiscalReasonNotConfigured => 'Fiskallashtirish sozlanmagan';
+
+  @override
+  String get fiscalReasonUnknown => 'Operator noma’lum sabab bilan rad etdi';
+
+  @override
+  String get fiscalReasonOfflineWindowExpired =>
+      '72 soatlik avtonom oyna tugadi — hujjat berilmadi';
+
+  @override
+  String get fiscalReasonRowUnreadable =>
+      'Navbat qatori shikastlangan: hujjat o‘qilmaydi';
+
+  @override
+  String fiscalReasonWithCode(String reason, int code) {
+    return '$reason (kod $code)';
+  }
+
+  @override
+  String fiscalReasonLegacy(String text) {
+    return 'Sabab tarjimadan oldin yozilgan: $text';
+  }
+
+  @override
+  String get fiscalReasonNotRecorded => 'Sabab yozilmagan';
+
+  @override
+  String get fiscalReasonPaymentTypeNotAccepted =>
+      'To‘lov turi operator tomonidan qabul qilinmaydi: «kredit» va «tara» OFD 2.0.2 protokolidan chiqarilgan';
+
+  @override
+  String get errorDeferredListUnavailable =>
+      'Kechiktirilgan cheklar ro\'yxati mavjud emas';
+
+  @override
+  String errorDeferredListUnavailableReason(String reason) {
+    return 'Kechiktirilgan cheklar ro\'yxati mavjud emas: $reason';
+  }
+
+  @override
+  String get errorRefundSearchUnavailable =>
+      'Bu terminalda qaytarish uchun mahsulot qidirish hali ulanmagan';
+
+  @override
+  String get errorRefundNothingSelected =>
+      'Qoralama o\'zgardi — qaytariladigan narsa yo\'q. Belgilangan qatorlarni tekshiring.';
+
+  @override
+  String get errorRefundInvalidAmount =>
+      'Bunchani qaytarib bo\'lmaydi: miqdor chek bo\'yicha sotilgandan ko\'p yoki noldan kam bo\'lishi mumkin emas.';
+
+  @override
+  String get errorCertificatePinRequired =>
+      'Sertifikatda PIN-kod bor. Sertifikatdagi PIN-kodni kiriting.';
+
+  @override
+  String get qrSettingsTitle => 'QR orqali to\'lov';
+
+  @override
+  String get qrSettingsSubtitle => 'QR provayderi: manzil, kod, kalit, kutish';
+
+  @override
+  String get qrSettingsKindTitle => 'QR orqali to\'lov qabul qilish';
+
+  @override
+  String get qrSettingsKindSubtitle => 'To\'lov ekranidagi «QR» to\'lov turi';
+
+  @override
+  String get qrSettingsUrl => 'Provayder manzili';
+
+  @override
+  String get qrSettingsCode => 'Provayder kodi';
+
+  @override
+  String get qrSettingsKey => 'Kirish kaliti';
+
+  @override
+  String get qrSettingsKeyStoredHint =>
+      'Kalit saqlangan. Almashtirish uchun yangisini kiriting';
+
+  @override
+  String get qrSettingsKeyEmptyHint => 'Kalit berilmagan';
+
+  @override
+  String get qrSettingsClearKey => 'Saqlangan kalitni o\'chirish';
+
+  @override
+  String get qrSettingsPatience => 'To\'lovni kutish, soniya';
+
+  @override
+  String get qrSettingsSave => 'Saqlash';
+
+  @override
+  String get qrSettingsSaved => 'QR sozlamasi saqlandi';
+
+  @override
+  String get qrSettingsRemove => 'Sozlamani olib tashlash';
+
+  @override
+  String get qrSettingsStatusReady => 'Provayder sozlangan';
+
+  @override
+  String get qrSettingsStatusNotConfigured =>
+      'Provayder sozlanmagan — QR orqali to\'lov mavjud emas';
+
+  @override
+  String get qrSettingsInvalidUrl =>
+      'Manzil http:// yoki https:// bilan boshlanishi kerak';
+
+  @override
+  String get qrSettingsCodeRequired => 'Provayder kodini kiriting';
+
+  @override
+  String qrSettingsInvalidPatience(String min, String max) {
+    return 'Kutish — $min soniyadan $max soniyagacha';
+  }
+
+  @override
+  String get qrSettingsSaveFailed => 'QR sozlamasini saqlab bo\'lmadi';
+
+  @override
+  String get qrSettingsTillOnly =>
+      'QR provayderini sozlash faqat kassaning o\'zida mavjud';
+
+  @override
+  String get installmentTermsTitle => 'Muddatli to\'lov';
+
+  @override
+  String get installmentTermsMonths => 'Muddati, oy';
+
+  @override
+  String get installmentTermsScheme => 'Jadval turi';
+
+  @override
+  String get installmentTermsContinue => 'Davom etish';
+
+  @override
+  String get customerPaymentTitle => 'To\'lov qabul qilish / qarzni to\'lash';
+
+  @override
+  String customerPaymentCurrentDebt(String amount) {
+    return 'Joriy qarz: $amount';
+  }
+
+  @override
+  String customerPaymentBalance(String amount) {
+    return 'Balans: $amount';
+  }
+
+  @override
+  String get customerPaymentAmount => 'To\'lov summasi';
+
+  @override
+  String get customerPaymentAmountInvalid => '0 dan katta summani kiriting';
+
+  @override
+  String get customerPaymentFailed => 'To\'lovni o\'tkazishda xato';
+
+  @override
+  String get customerPaymentSubmit => 'To\'lov qabul qilish';
+
+  @override
+  String get errorPrepaymentAmountInvalid =>
+      'Avans summasi noldan katta bo\'lishi kerak. Summani qaytadan kiriting.';
+
+  @override
+  String get errorPrepaymentTenderInvalid =>
+      'Avans naqd pul, karta yoki QR orqali qabul qilinadi. Boshqa to\'lov turini tanlang.';
+
+  @override
+  String get errorPrepaymentTillAccountMissing =>
+      'Bu kassada ushbu to\'lov turini qabul qiladigan hisob yo\'q. Qabul hisobini sozlab, qayta urining.';
+
+  @override
+  String get errorPrepaymentIntakeFailed =>
+      'Avansni qabul qilib bo\'lmadi. Xaridorni tekshiring va qaytadan urinib ko\'ring.';
+
+  @override
+  String get errorPrepaymentRefundExceedsBalance =>
+      'Xaridor hisobidagi avans siz bermoqchi bo\'lgan summadan kam. Qoldiqni tekshiring va summani kamaytiring.';
+
+  @override
+  String get errorPrepaymentRefundKeyMissing =>
+      'Avansni qaytarish arizasida takror kaliti yo\'q — kassa takrorni ikkinchi to\'lovdan ajrata olmaydi. Ekranni qaytadan oching va summani yana kiriting.';
+
+  @override
+  String get errorPrepaymentRefundFailed =>
+      'Avansni qaytarib bo‘lmadi. Xaridorni tekshiring va qayta urinib ko‘ring.';
+
+  @override
+  String get errorPrepaymentRefundUnavailable =>
+      'Bu kassa xaridor avansini sim orqali qaytarmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorPrepaymentIntakeUnavailable =>
+      'Bu kassa xaridor avansini sim orqali qabul qilmaydi. Administratorga murojaat qiling.';
+
+  @override
+  String get errorPrepaymentIntakeKeyMissing =>
+      'Bu avans arizasida takrorlash kaliti yo\'q, shuning uchun kassa takrorlashni ikkinchi to\'lovdan ajrata olmaydi. Ekranni qayta oching va summani qaytadan kiriting.';
+
+  @override
+  String get errorQrSetupUnavailable =>
+      'Bu kassada QR provayder sozlamasi saqlanmaydi. QR orqali toʻlovni kassaning oʻzida sozlang yoki administratorga murojaat qiling.';
+
+  @override
+  String get errorReceiptTemplatesUnavailable =>
+      'Bu kassada chek shablonlari saqlanmaydi. Shablonni kassaning oʻzida sozlang yoki administratorga murojaat qiling.';
+
+  @override
+  String get errorReceiptTemplateNameless =>
+      'Chek shabloni nomga ega boʻlishi shart. Nomini kiriting va qayta saqlang.';
+
+  @override
+  String get shiftDeskTitle => 'Smena';
+
+  @override
+  String get shiftDeskOverAgeWarning =>
+      'Smena 24 soatdan ortiq ochiq — sotuv bloklangan. Uni yoping va yangisini oching.';
+
+  @override
+  String shiftDeskOpenedAt(String when) {
+    return 'Ochilgan: $when';
+  }
+
+  @override
+  String get shiftDeskCountedLabel => 'Yashikda sanaldi';
+
+  @override
+  String get shiftDeskCountedHint =>
+      'Hech kim sanamagan boʻlsa, boʻsh qoldiring — kassa oʻz yakunini oladi.';
+
+  @override
+  String get shiftDeskOpeningCashLabel => 'Boshlanishda yashikdagi pul';
+
+  @override
+  String get shiftDeskClosedNow => 'Smena yopildi.';
+
+  @override
+  String get shiftDeskOpenedNow => 'Smena ochildi.';
+
+  @override
+  String get shiftDeskNoShift => 'Kassada ochiq smena yoʻq.';
+
+  @override
+  String shiftDeskUnfiscalizedCount(int count) {
+    return 'Fiskal hujjatsiz cheklar: $count';
+  }
+
+  @override
+  String shiftDeskUnfinishedCount(int count) {
+    return 'Tugallanmagan cheklar: $count — yopish ularni tozalaydi';
+  }
+
+  @override
+  String get errorShiftDeskNotOpen =>
+      'Bu kassada ochiq smena yoʻq — yopadigan narsa yoʻq.';
+
+  @override
+  String get errorShiftDeskAlreadyOpen => 'Bu kassada smena allaqachon ochiq.';
+
+  @override
+  String get errorShiftDeskUnavailable =>
+      'Bu kassa smenalarni sim orqali yuritmaydi. Smenani kassaning oʻzida yoping yoki administratorga murojaat qiling.';
+
+  @override
+  String get errorShiftDeskActorUnknown =>
+      'Smenani kassir ochadi, bu soʻrovda kassir atalmagan. Qaytadan kiring.';
+
+  @override
+  String get prepaymentIntakeTitle => 'Avans qabul qilish';
+
+  @override
+  String get prepaymentIntakeFind => 'Xaridorni topish';
+
+  @override
+  String get prepaymentIntakeNotFound => 'Bunday raqamli xaridor topilmadi.';
+
+  @override
+  String get prepaymentIntakeSubmit => 'Avansni qabul qilish';
+
+  @override
+  String prepaymentIntakeAccepted(String amount) {
+    return 'Avans qabul qilindi. Oldindan kiritilgan: $amount';
+  }
+
+  @override
+  String get prepaymentIntakeFiscalFailed =>
+      'Pul qabul qilindi, lekin avansning fiskal cheki yozilmadi.';
+
+  @override
+  String get emulatorSettingsTitle => 'O‘rnatilgan emulyatorlar';
+
+  @override
+  String get emulatorSettingsHint =>
+      'Asboblarni ulamasdan chop etish va diagnostikani tekshirish';
+
+  @override
+  String get emulatorReceiptPrinter => 'Chek printeri va pul qutisi';
+
+  @override
+  String get emulatorEnabledNote =>
+      'Soket ochiq. Kassa unga faqat bog‘lanishdagi manzil orqali yetadi';
+
+  @override
+  String get emulatorDisabledNote => 'O‘chiq: soket ochilmagan';
+
+  @override
+  String get emulatorAddress => 'Emulyator manzili';
+
+  @override
+  String get emulatorAddressHint =>
+      'Ushbu IP va portni printer sozlamalariga yozing';
+
+  @override
+  String get emulatorBindAction => 'Printer bog‘lanishiga yozish';
+
+  @override
+  String get emulatorBindDone => 'Printer bog‘lanishi endi emulyatorga qaraydi';
+
+  @override
+  String get emulatorBindingStale =>
+      'Printer bog‘lanishi o‘chirilgan emulyatorga qaraydi — chop etish bajarilmaydi';
+
+  @override
+  String get emulatorStartFailed => 'Emulyatorni ishga tushirib bo‘lmadi';
+
+  @override
+  String get emulatorFiscalOperator => 'Fiskal operator (OFD)';
+
+  @override
+  String get emulatorFiscalAddressHint =>
+      'Ushbu manzilni fiskal sozlamalardagi «Server manzili» maydoniga yozing';
+
+  @override
+  String get emulatorFiscalBindAction => 'Fiskal sozlamalarga yozish';
+
+  @override
+  String get emulatorFiscalBindNote =>
+      'Emulyator manzili, logini, paroli, kaliti va zavod raqamini yozadi hamda kassani sinov kassasi deb e’lon qiladi. Ro‘yxatga olish raqamiga tegilmaydi';
+
+  @override
+  String get emulatorFiscalBindDone =>
+      'Fiskal sozlamalar endi emulyatorga qaraydi';
+
+  @override
+  String get emulatorFiscalBindingStale =>
+      'Fiskal sozlamalar o‘chirilgan emulyatorga qaraydi — fiskallashtirish rad etiladi';
+
+  @override
+  String get emulatorFiscalLocalModuleWarning =>
+      '«Mahalliy modul» maydoni to‘ldirilgan — u server manzilini bosib ketadi, kassa emulyatorga bormaydi';
+
+  @override
+  String get emulatorFiscalBlockedLive =>
+      'Kassa jangovar: operator rekvizitlari to‘ldirilgan. Bu yerda OFD emulyatori taqiqlanadi — soxtaga ketgan chek haqiqiydek ko‘rinadi, ammo xaridorga hujjat bermaydi';
+
+  @override
+  String get emulatorFiscalBlockedUnknown =>
+      'Fiskal sozlamalar o‘qilmadi — OFD emulyatorini yoqib bo‘lmaydi';
+
+  @override
+  String get diagnosticsFiscalEmulatorBanner =>
+      'Operator manzili shu kompyuterga qaraydi — hujjatlar emulyatorga ketadi va fiskal hisoblanmaydi';
+
+  @override
+  String get diagnosticsTitle => 'Uskuna diagnostikasi';
+
+  @override
+  String get diagnosticsSubtitle => 'Kassa asboblarga aslida nima yuborgani';
+
+  @override
+  String get diagnosticsTabPrinter => 'Printer';
+
+  @override
+  String get diagnosticsTabFiscal => 'Fiskallashtirish';
+
+  @override
+  String get errorDiagnosticsUnavailable =>
+      'Bu kassada diagnostikani so\'raydigan hech kim yo\'q';
+
+  @override
+  String get diagnosticsPrinterQueueMissing =>
+      'Bu ish o\'rnida chop etish navbati sozlanmagan';
+
+  @override
+  String get diagnosticsPrinterNothingSent =>
+      'Kassa printerga hozircha hech narsa yubormadi';
+
+  @override
+  String diagnosticsAskFailed(String reason) {
+    return 'Kassa bu savolga javob bermadi: $reason';
+  }
+
+  @override
+  String diagnosticsAttempts(int count) {
+    return 'urinish $count';
+  }
+
+  @override
+  String get diagnosticsJobQueued => 'navbatda turibdi';
+
+  @override
+  String get diagnosticsJobPrinting => 'chop etilmoqda';
+
+  @override
+  String get diagnosticsJobPrinted => 'chop etildi';
+
+  @override
+  String get diagnosticsJobFailed => 'chop etilmadi';
+
+  @override
+  String get diagnosticsJobExpired => 'muddati o\'tdi';
+
+  @override
+  String get diagnosticsJobCancelled => 'bekor qilindi';
+
+  @override
+  String get diagnosticsFiscalNotConfigured =>
+      'Bu kassada fiskal operator sozlanmagan';
+
+  @override
+  String get diagnosticsFiscalAccepted => 'Operator qabul qildi';
+
+  @override
+  String get diagnosticsFiscalAcceptedEmpty =>
+      'Operator hozircha bironta hujjatni qabul qilmadi';
+
+  @override
+  String get diagnosticsFiscalQueued => 'Navbatda';
+
+  @override
+  String get diagnosticsFiscalQueuedEmpty =>
+      'Navbat bo\'sh — yuborilganlarning hammasini operator qabul qildi';
+
+  @override
+  String diagnosticsFiscalSign(String value) {
+    return 'Fiskal belgi $value';
+  }
+
+  @override
+  String diagnosticsFiscalOperatorDoc(String value) {
+    return 'operator hujjati $value';
+  }
+
+  @override
+  String diagnosticsFiscalReceiptNo(String value) {
+    return 'chek $value';
+  }
+
+  @override
+  String get diagnosticsFiscalOffline => 'mustaqil berilgan';
+
+  @override
+  String get diagnosticsEmulatorBanner =>
+      'Printer bog‘lanishi shu kompyuterga qaraydi — port ortida qog‘oz emas, emulyator';
+
+  @override
+  String get diagnosticsTabDrawer => 'Pul qutisi';
+
+  @override
+  String get drawerDiagnosticsEmpty =>
+      'Kassa ishga tushganidan beri quti biror marta ham ochilmadi';
+
+  @override
+  String get drawerDiagnosticsUnavailable =>
+      'Bu kassada quti impulslari yozuvi yo\'q — so\'raydigan narsa yo\'q. Bu quti ochilmagan degani emas.';
+
+  @override
+  String get drawerDiagnosticsCaveat =>
+      'Kassa faqat buyruq qabul qilinganini biladi. Qutining haqiqatan ochilgani haqida ikkala yo‘lda ham qaytar aloqa yo‘q.';
+
+  @override
+  String get drawerDiagnosticsAccepted => 'Buyruq qabul qilindi';
+
+  @override
+  String get drawerDiagnosticsRefused => 'Buyruq rad etildi';
+
+  @override
+  String get drawerDiagnosticsViaSerial => 'ketma-ket port';
+
+  @override
+  String get drawerDiagnosticsViaPrinter => 'printer orqali (ESC p)';
+
+  @override
+  String get diagnosticsTabScales => 'Tarozi';
+
+  @override
+  String get diagnosticsTabDisplay => 'Displey';
+
+  @override
+  String get scalesDiagnosticsUnbound =>
+      'Bu kassaga tarozi bog‘lanmagan.\nUni uskuna sozlamalarida bog‘lang — shunda bu yerda ko‘rsatkich paydo bo‘ladi.';
+
+  @override
+  String get scalesDiagnosticsWeight => 'Tarozi ko‘rsatkichi';
+
+  @override
+  String get scalesDiagnosticsSilent => 'Tarozi hali hech narsa yubormadi';
+
+  @override
+  String get scalesDiagnosticsStable => 'Og‘irlik barqarorlashdi';
+
+  @override
+  String get scalesDiagnosticsSettling => 'Og‘irlik o‘zgarmoqda';
+
+  @override
+  String get scalesDiagnosticsOverload => 'Ortiqcha yuk';
+
+  @override
+  String get scalesDiagnosticsPort => 'Tarozi porti';
+
+  @override
+  String get scalesDiagnosticsBaudSuffix => 'bod';
+
+  @override
+  String get scalesDiagnosticsConnected => 'Port ochiq';
+
+  @override
+  String get scalesDiagnosticsDisconnected => 'Port yopiq';
+
+  @override
+  String get scalesDiagnosticsCaveat =>
+      'Bu — asbob yuborgani. Ko‘rsatkich to‘g‘riligini kassa tekshirmaydi, buning uchun tekshiruv bor.';
+
+  @override
+  String get displayDiagnosticsEmpty =>
+      'Kassa ishga tushganidan beri displeyga hech narsa yuborilmadi';
+
+  @override
+  String get displayDiagnosticsUnavailable =>
+      'Bu kassada displey satrlari yozuvi yo\'q — so\'raydigan narsa yo\'q. Bu displeyga hech narsa yuborilmagan degani emas.';
+
+  @override
+  String get displayDiagnosticsCurrent => 'Hozir displeyda';
+
+  @override
+  String get displayDiagnosticsCaveat =>
+      'Kassa faqat satr portga ketganini biladi. O‘chgan yoki uzilgan displey bu yerda ishlayotganidan farq qilmaydi.';
+
+  @override
+  String get displayDiagnosticsCallPrice => 'narx';
+
+  @override
+  String get displayDiagnosticsCallTotal => 'jami';
+
+  @override
+  String get displayDiagnosticsCallChange => 'qaytim';
+
+  @override
+  String get displayDiagnosticsCallText => 'matn';
+
+  @override
+  String get displayDiagnosticsCallWelcome => 'salomlashuv';
+
+  @override
+  String get displayDiagnosticsCallClear => 'tozalash';
+
+  @override
+  String get emulatorScaleWeight => 'Tovoqdagi og‘irlik';
+
+  @override
+  String get emulatorScaleWeightHint =>
+      'Emulyator puldi: tarozi kassaga shu sonni yuboradi';
+
+  @override
+  String get emulatorQrProvider => 'QR to\'lov provayderi';
+
+  @override
+  String get emulatorQrAddressHint =>
+      'Bu manzilni QR provayderi sozlamasiga yozing';
+
+  @override
+  String get emulatorQrBindAction => 'QR sozlamasiga yozish';
+
+  @override
+  String get emulatorQrBindDone => 'QR sozlamasi endi emulyatorga qaraydi';
+
+  @override
+  String get emulatorQrBindingStale =>
+      'QR sozlamasi o\'chirilgan emulyatorga qaraydi — kod bo\'yicha to\'lov rad etiladi';
+
+  @override
+  String get diagnosticsTabPayment => 'To\'lov';
+
+  @override
+  String get diagnosticsPaymentEmulatorBanner =>
+      'QR provayderi shu kompyuterda: manzil ortida bank emas, emulyator';
+
+  @override
+  String get paymentDiagnosticsUnavailable =>
+      'Bu ish o\'rnida to\'lov haqida ma\'lumot yo\'q';
+
+  @override
+  String get paymentDiagnosticsQrSection => 'QR orqali to\'lov';
+
+  @override
+  String get paymentDiagnosticsQrEmpty =>
+      'Kassa hozircha bironta to\'lov kodini yaratmadi';
+
+  @override
+  String get paymentDiagnosticsQrNotConfigured =>
+      'Bu kassada QR provayderi sozlanmagan';
+
+  @override
+  String paymentDiagnosticsQrAddress(String address) {
+    return 'Provayder: $address';
+  }
+
+  @override
+  String get paymentDiagnosticsQrUnknown =>
+      'Provayderga yuborilgan so\'rov tanalarini kassa saqlamaydi. Ko\'rinadigani — niyatda qolgani: summa, holat, u tomondagi identifikator va rad etish sababi.';
+
+  @override
+  String get paymentDiagnosticsTerminalSection => 'To\'lov terminali';
+
+  @override
+  String get paymentDiagnosticsTerminalEmpty =>
+      'Kassa ishga tushgandan beri to\'lov terminaliga bironta kadr ketmadi';
+
+  @override
+  String get paymentDiagnosticsTerminalUnknown =>
+      'Terminal jurnali xotirada turadi: qayta ishga tushirishgacha bo\'lgan almashinuvlar saqlanmaydi, terminalning o\'zida bajarilgan amallarni esa kassa umuman ko\'rmaydi.';
+
+  @override
+  String get paymentDiagnosticsRequest => 'So\'rov';
+
+  @override
+  String get paymentDiagnosticsReply => 'Javob';
+
+  @override
+  String get paymentDiagnosticsNoReply => 'Javob bo\'lmadi';
+
+  @override
+  String paymentDiagnosticsApproval(String value) {
+    return 'Ma\'qullash kodi $value';
+  }
+
+  @override
+  String paymentDiagnosticsTransaction(String value) {
+    return 'tranzaksiya $value';
+  }
+
+  @override
+  String paymentDiagnosticsRefusal(String value) {
+    return 'Rad etildi: $value';
+  }
+
+  @override
+  String paymentDiagnosticsConfirmations(int count) {
+    return 'tasdiqlar soni $count';
+  }
+
+  @override
+  String get paymentDiagnosticsOrphanMoney => 'cheksiz pul';
+
+  @override
+  String get paymentDiagnosticsAfterGiveUp =>
+      'kassa kutishni to\'xtatgandan keyin tasdiqlandi';
+
+  @override
+  String get paymentDiagnosticsApproved => 'Ma\'qullandi';
+
+  @override
+  String get paymentDiagnosticsDeclined => 'Rad etildi';
+
+  @override
+  String get paymentDiagnosticsOpPurchase => 'xarid';
+
+  @override
+  String get paymentDiagnosticsOpReversal => 'storno';
+
+  @override
+  String get paymentDiagnosticsOpRefund => 'qaytarish';
+
+  @override
+  String get paymentDiagnosticsOpUnknown => 'noma\'lum turdagi kadr';
+
+  @override
+  String get certificateIssueTitle => 'Sovg\'a sertifikatini chiqarish';
+
+  @override
+  String get certificateIssueHint =>
+      'Qog\'oz uchun pulni sotuv cheki qabul qiladi. Bu yerda qog\'ozga qoldiq ochiladi, kassa majburiyat oladi.';
+
+  @override
+  String get certificateIssueNumber => 'Qog\'oz raqami';
+
+  @override
+  String get certificateIssueNominal => 'Nominal';
+
+  @override
+  String get certificateIssuePin => 'PIN (majburiy emas)';
+
+  @override
+  String get certificateIssueExpiresDays =>
+      'Amal qilish muddati, kun (majburiy emas)';
+
+  @override
+  String get certificateIssueReceipt =>
+      'Sotuv chekining raqami (majburiy emas)';
+
+  @override
+  String get certificateIssueSubmit => 'Sertifikat chiqarish';
+
+  @override
+  String certificateIssueDone(String number, String amount) {
+    return '$number sertifikati $amount summaga chiqarildi';
+  }
+
+  @override
+  String get certificateIssueFailed => 'Sertifikat chiqarilmadi';
+
+  @override
+  String get certificateIssueNumberRequired => 'Qog\'oz raqamini kiriting';
+
+  @override
+  String get certificateIssueNominalInvalid =>
+      'Nominal noldan katta bo\'lishi kerak';
+
+  @override
+  String get certificateIssueNotPermitted =>
+      'Bu kassirga sertifikat chiqarishga ruxsat yo\'q';
+
+  @override
+  String get certificateSlipTitle => 'Slipni qayta chop etish';
+
+  @override
+  String get certificateSlipHint =>
+      'Chiqarishda slip chop etilmadi — qog\'ozni takroriy slip bo\'yicha berish mumkin.';
+
+  @override
+  String get certificateSlipNumber => 'Sertifikat raqami';
+
+  @override
+  String get certificateSlipPin => 'PIN, agar bo\'lsa';
+
+  @override
+  String get certificateSlipSubmit => 'Slipni chop etish';
+
+  @override
+  String certificateSlipDone(String number) {
+    return '$number sertifikatining slipi chop etishga yuborildi';
+  }
+
+  @override
+  String get certificateSlipFailed => 'Slip chop etishga yuborilmadi';
+
+  @override
+  String get certificateSlipUnavailable =>
+      'Bu kassada slipni chop etadigan qurilma yo\'q';
+
+  @override
+  String get prepaymentRefundTitle => 'Avansni qaytarish';
+
+  @override
+  String get prepaymentRefundHint =>
+      'Xaridor oldindan kiritgan pul qaytariladi. Qarz bu bilan to\'lanmaydi, bonuslarga tegilmaydi.';
+
+  @override
+  String prepaymentRefundBalance(String amount) {
+    return 'Oldindan kiritilgan: $amount';
+  }
+
+  @override
+  String get prepaymentRefundNothing =>
+      'Xaridor hisobida avans yo\'q — qaytaradigan narsa yo\'q';
+
+  @override
+  String get prepaymentRefundAmount => 'Qaytariladigan summa';
+
+  @override
+  String get prepaymentRefundTender => 'Nima bilan qaytariladi';
+
+  @override
+  String get prepaymentRefundIntake =>
+      'Qabul qilish yozuvining raqami (majburiy emas)';
+
+  @override
+  String get prepaymentRefundSubmit => 'Avansni qaytarish';
+
+  @override
+  String prepaymentRefundDone(String amount) {
+    return 'Avans qaytarildi. Hisobda qolgani: $amount';
+  }
+
+  @override
+  String get prepaymentRefundFailed => 'Avans qaytarilmadi';
+
+  @override
+  String get prepaymentRefundAmountInvalid =>
+      'Summa noldan katta bo\'lishi kerak';
+
+  @override
+  String get prepaymentRefundNotPermitted =>
+      'Bu kassirga avansni qaytarishga ruxsat yo\'q';
+
+  @override
+  String get prepaymentRefundFiscalFailed =>
+      'Pul berildi, lekin avans qaytarimining fiskal cheki yozilmadi.';
+
+  @override
+  String get agentRefundPrepayment => 'Avansni qaytarish';
 }

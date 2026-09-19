@@ -1,3 +1,4 @@
+import 'package:telepos/domain/fiscal/fiscal_doc_kind.dart';
 import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
 import 'package:telepos/data/database/app_database.dart';
@@ -98,8 +99,8 @@ class SaleHistoryServiceImpl implements SaleHistoryService {
     );
 
     final hasWebkassa = sale.saleId != null
-        ? (await _db.webkassaReceiptDao.findByIsSaleAndOperationId(
-                true,
+        ? (await _db.webkassaReceiptDao.findByKindAndOperationId(
+                FiscalDocKind.sale,
                 sale.saleId!,
               )) !=
               null

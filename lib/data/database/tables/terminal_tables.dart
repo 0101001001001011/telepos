@@ -22,8 +22,7 @@ class Terminals extends Table {
   /// терминалы молча получат чужой режим — а режим определяет права доступа.
   /// Провод (`lib/domain/wire/terminal_wire.dart`) уже читает и пишет это поле по
   /// имени; хранилище обязано подчиняться тому же правилу.
-  TextColumn get pointMode =>
-      text().withDefault(const Constant('cashier'))();
+  TextColumn get pointMode => text().withDefault(const Constant('cashier'))();
 
   IntColumn get createdAt => integer()();
 
@@ -43,13 +42,34 @@ class Terminals extends Table {
   /// навсегда — задача 6 обязана считать это «секрета нет», а не «любой
   /// секрет подходит».
   TextColumn get secretFingerprint => text().nullable()();
+
+  /// Виды оплаты, разрешённые этому рабочему месту, — имена значений
+  /// `PaymentType` через запятую (схема v38, задача 15 плана «продажа с
+  /// браузерного терминала», решение заказчика №5).
+  ///
+  /// **Имена, а не индексы и не битовая маска** — то же правило, что у
+  /// `pointMode` выше: индекс меняет смысл, стоит вставить новый вид оплаты
+  /// не в конец `PaymentType.values`, и тогда терминал, которому разрешили
+  /// карту, молча начал бы принимать долг. Разбор — `paymentTypesFromNames`
+  /// (`lib/domain/terminal/terminal.dart`), он же отказывается угадывать
+  /// незнакомое имя.
+  ///
+  /// **`withDefault('')`, а не `nullable()`, и пустая строка означает «все
+  /// виды».** Колонка появляется у каждой уже существующей строки пустой:
+  /// набора видов до этой версии не существовало, и придумать его задним
+  /// числом означало бы решить за оператора, чем его касса торгует. Читать
+  /// пустое как «ничего нельзя» значило бы онеметь всю установку в момент
+  /// обновления — см. докстринг `Terminal.allowedPaymentTypes` и пробу
+  /// `migration_v38_test.dart`.
+  TextColumn get allowedPaymentTypes =>
+      text().withDefault(const Constant(''))();
 }
 
 /// "Этот терминал, этот класс устройства → этот профиль, эти параметры" —
 /// docs/system-architecture.md, раздел 8, И141/И142. Схема v27
 /// (`lib/data/database/app_database.dart`).
 ///
-/// **Не одна строка на класс.** Fix round 1 (task-2-report.md): класс — не
+/// **Не одна строка на класс.** Fix round 1: класс — не
 /// однослотовый; у терминала может быть больше одной привязки одного класса
 /// одновременно — два принтера этикеток, второй чековый принтер, несколько
 /// периферийных устройств на неукомплектованной точке. Уникальный ключ
@@ -71,7 +91,7 @@ class Terminals extends Table {
 /// `LocalTerminalRepository`, HTTP-контракт); план 2, задача 5 перевела все
 /// пять на эту таблицу и удалила колонки в той же миграции v27 (после того,
 /// как `_migrateDeviceBindings()` уже прочитала их как источник) —
-/// см. task-5-report.md. Держать оба представления живыми одновременно было
+/// задача 5 плана 2. Держать оба представления живыми одновременно было
 /// бы ровно тем параллельным состоянием, которое план запрещает.
 class TerminalDeviceBindings extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -91,8 +111,7 @@ class TerminalDeviceBindings extends Table {
   TextColumn get profileId => text()();
 
   /// JSON-объект `Map<String, String>` — `DeviceBinding.parameters`.
-  TextColumn get parametersJson =>
-      text().withDefault(const Constant('{}'))();
+  TextColumn get parametersJson => text().withDefault(const Constant('{}'))();
 
   /// JSON-объект `Map<String, String>` — `DeviceBinding.options`.
   TextColumn get optionsJson => text().withDefault(const Constant('{}'))();

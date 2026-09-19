@@ -1,3 +1,4 @@
+import 'package:telepos/domain/fiscal/fiscal_doc_kind.dart';
 import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
@@ -126,8 +127,8 @@ class SaleComponentUseCaseImpl implements SaleComponentUseCase {
 
     SaleComponentWebkassaReceipt? webkassaReceipt;
     if (sale.saleId != null) {
-      final wkReceipt = await _db.webkassaReceiptDao.findByIsSaleAndOperationId(
-        true,
+      final wkReceipt = await _db.webkassaReceiptDao.findByKindAndOperationId(
+        FiscalDocKind.sale,
         sale.saleId!,
       );
       if (wkReceipt != null) {

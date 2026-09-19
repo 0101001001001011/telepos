@@ -24,6 +24,7 @@ library;
 
 import 'dart:async';
 
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/setup/setup_draft.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
@@ -74,6 +75,12 @@ class EmptyTerminalRepository implements TerminalRepository {
 
   @override
   Future<void> rename(int terminalId, String name) async {}
+
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) async {}
 
   @override
   Future<void> delete(int terminalId) async {}

@@ -13,6 +13,7 @@ import 'package:telepos/data/repositories/scanner_rules_repository_impl.dart';
 import 'package:telepos/data/terminal/device_binding_repository_local.dart';
 import 'package:telepos/domain/device/device_profile_catalog.dart';
 import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
@@ -34,9 +35,23 @@ class _FakeTerminalRepository implements TerminalRepository {
 
   final int terminalId;
 
+  /// Что экран записал набором видов оплаты (задача 15). Записывается, а не
+  /// бросает, потому что `HardwareSettingsScreen` теперь сохраняет виды
+  /// оплаты той же кнопкой, что и правила сканера, — и «упасть громко»
+  /// здесь означало бы уронить проверку правил сканера из-за соседней
+  /// секции, к которой она не относится.
+  final List<Set<PaymentType>> savedPaymentTypes = [];
+
+  /// Набор, который экран прочтёт при открытии. Пустой — «все виды».
+  Set<PaymentType> allowedPaymentTypes = const {};
+
   @override
-  Future<Terminal> self() async =>
-      Terminal(id: terminalId, name: 'Касса-1', pointMode: PointMode.cashier);
+  Future<Terminal> self() async => Terminal(
+    id: terminalId,
+    name: 'Касса-1',
+    pointMode: PointMode.cashier,
+    allowedPaymentTypes: allowedPaymentTypes,
+  );
 
   @override
   Future<List<Terminal>> list() => throw UnimplementedError();
@@ -62,6 +77,12 @@ class _FakeTerminalRepository implements TerminalRepository {
 
   @override
   Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) async => savedPaymentTypes.add(types);
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();

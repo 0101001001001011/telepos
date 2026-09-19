@@ -7,7 +7,6 @@ import 'package:telepos/app/services/old_sale_cleanup_service.dart';
 import 'package:telepos/core/constants/app_constants.dart';
 import 'package:telepos/core/services/update/updater_service.dart';
 import 'package:telepos/core/services/update/update_state.dart';
-import 'package:telepos/domain/usecases/fiscal/fisc_errors_service.dart';
 
 class BackgroundTaskManager {
   BackgroundTaskManager({required Talker logger}) : _logger = logger;
@@ -19,24 +18,11 @@ class BackgroundTaskManager {
   final List<Timer> _timers = [];
   bool _isRunning = false;
 
-  final StreamController<List<UnfiscalizedOperation>> _fiscErrorsController =
-      StreamController<List<UnfiscalizedOperation>>.broadcast();
-
-  Stream<List<UnfiscalizedOperation>> get fiscErrorsStream =>
-      _fiscErrorsController.stream;
-
-  List<UnfiscalizedOperation> _lastFiscErrors = const [];
-  List<UnfiscalizedOperation> get lastFiscErrors => _lastFiscErrors;
-
   DataExchangeService? _dataExchangeService;
 
   OldSaleCleanupService? _cleanupService;
 
   UpdaterService? _updaterService;
-
-  FiscErrorsService? _fiscErrorsService;
-
-  DateTime? _lastFiscErrorsCheckDate;
 
   bool get isRunning => _isRunning;
 
@@ -47,8 +33,6 @@ class BackgroundTaskManager {
   OldSaleCleanupService? get cleanupService => _cleanupService;
 
   UpdaterService? get updaterService => _updaterService;
-
-  FiscErrorsService? get fiscErrorsService => _fiscErrorsService;
 
   Future<void> startAll() async {
     if (disabledForTests) {
@@ -65,7 +49,6 @@ class BackgroundTaskManager {
     _startDataExchangeTask();
     _startOldSaleEraserTask();
     _startUpdaterTask();
-    _startFiscErrorsTask();
   }
 
   Future<void> _initializeServices() async {
@@ -110,20 +93,6 @@ class BackgroundTaskManager {
     } catch (e) {
       _logger.warning('Failed to initialize UpdaterService: $e');
     }
-
-    try {
-      if (GetIt.I.isRegistered<FiscErrorsService>()) {
-        _fiscErrorsService = GetIt.I<FiscErrorsService>();
-        _logger.info(
-          'FiscErrorsService initialized: '
-          'nextCheck=${_fiscErrorsService!.getNextCheckTime()}',
-        );
-      } else {
-        _logger.warning('FiscErrorsService not registered in DI');
-      }
-    } catch (e) {
-      _logger.warning('Failed to initialize FiscErrorsService: $e');
-    }
   }
 
   void stopAll() {
@@ -137,9 +106,6 @@ class BackgroundTaskManager {
 
   void dispose() {
     stopAll();
-    if (!_fiscErrorsController.isClosed) {
-      _fiscErrorsController.close();
-    }
   }
 
   void _startDataExchangeTask() {
@@ -266,60 +232,6 @@ class BackgroundTaskManager {
       }
     } catch (e, st) {
       _logger.handle(e, st, 'Updater tick failed');
-    }
-  }
-
-  void _startFiscErrorsTask() {
-    final timer = Timer.periodic(
-      const Duration(minutes: 1),
-      (_) => _onFiscErrorsTick(),
-    );
-    _timers.add(timer);
-    _logger.info('FiscErrors task started (daily at 12:00 Asia/Almaty)');
-  }
-
-  Future<void> _onFiscErrorsTick() async {
-    if (_fiscErrorsService == null) {
-      _logger.debug('FiscErrors tick — service not initialized');
-      return;
-    }
-
-    if (!FiscErrorsSchedule.isCheckTimeNow()) {
-      return;
-    }
-
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
-
-    if (_lastFiscErrorsCheckDate == todayDate) {
-      return;
-    }
-
-    _lastFiscErrorsCheckDate = todayDate;
-    _logger.info('FiscErrors tick — checking for unfiscalized operations');
-
-    try {
-      final errors = await _fiscErrorsService!.checkErrors();
-
-      if (errors.isEmpty) {
-        _logger.debug('FiscErrors: no unfiscalized operations');
-      } else {
-        _logger.warning(
-          'FiscErrors: found ${errors.length} unfiscalized operations',
-        );
-        for (final error in errors) {
-          _logger.warning(
-            '  ${error.typeText} #${error.receiptNo}: ${error.lastError ?? "pending"}',
-          );
-        }
-
-        _lastFiscErrors = List.unmodifiable(errors);
-        if (!_fiscErrorsController.isClosed) {
-          _fiscErrorsController.add(_lastFiscErrors);
-        }
-      }
-    } catch (e, st) {
-      _logger.handle(e, st, 'FiscErrors tick failed');
     }
   }
 }

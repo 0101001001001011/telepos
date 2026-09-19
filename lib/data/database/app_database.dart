@@ -27,6 +27,14 @@ import 'package:telepos/data/database/daos/mark_up_dao.dart';
 import 'package:telepos/data/database/daos/promotion_dao.dart';
 import 'package:telepos/data/database/daos/package_product_dao.dart';
 import 'package:telepos/data/database/daos/payment_dao.dart';
+import 'package:telepos/data/database/daos/payment_intent_dao.dart';
+import 'package:telepos/data/database/daos/qr_provider_config_dao.dart';
+import 'package:telepos/data/database/daos/payment_kind_dao.dart';
+import 'package:telepos/data/database/daos/certificate_dao.dart';
+import 'package:telepos/data/database/daos/credit_dao.dart';
+import 'package:telepos/data/database/daos/prepayment_intake_dao.dart';
+import 'package:telepos/data/database/daos/fiscal_owed_report_dao.dart';
+import 'package:telepos/data/database/daos/prepayment_refund_dao.dart';
 import 'package:telepos/data/database/daos/pos_dao.dart';
 import 'package:telepos/data/database/daos/product_alias_dao.dart';
 import 'package:telepos/data/database/daos/product_info_dao.dart';
@@ -78,6 +86,22 @@ import 'package:telepos/data/database/tables/security_tables.dart';
 import 'package:telepos/data/database/tables/cash_operation_tables.dart';
 import 'package:telepos/data/database/tables/config_tables.dart';
 import 'package:telepos/data/database/tables/custom_field_tables.dart';
+import 'package:telepos/data/database/tables/bonus_tables.dart';
+import 'package:telepos/data/database/tables/payment_intent_tables.dart';
+import 'package:telepos/data/database/tables/qr_provider_tables.dart';
+import 'package:telepos/data/database/tables/payment_kind_tables.dart';
+import 'package:telepos/data/database/tables/certificate_refund_tables.dart';
+import 'package:telepos/data/database/tables/certificate_tables.dart';
+import 'package:telepos/data/database/tables/credit_tables.dart';
+import 'package:telepos/data/database/tables/prepayment_intake_tables.dart';
+import 'package:telepos/domain/account/account_type.dart';
+import 'package:telepos/domain/payment/payment_kind.dart';
+import 'package:telepos/domain/payment/payment_kind_resolver.dart';
+import 'package:telepos/domain/bonus/bonus_entry_kind.dart';
+import 'package:telepos/domain/fiscal/bonus_account_types.dart';
+import 'package:telepos/data/database/daos/bonus_entry_dao.dart';
+import 'package:telepos/data/database/tables/discount_tables.dart';
+import 'package:telepos/data/database/daos/sale_discount_dao.dart';
 import 'package:telepos/data/database/tables/nomenclature_tables.dart';
 import 'package:telepos/data/database/tables/organization_tables.dart';
 import 'package:telepos/data/database/tables/user_permission_tables.dart';
@@ -155,6 +179,7 @@ part 'app_database.g.dart';
     InventoryProducts,
     WebkassaReceipts,
     FiscalQueueEntries,
+    FiscalOwedReports,
     WebkassaConfigs,
     CustomFields,
     CustomFieldItems,
@@ -204,6 +229,19 @@ part 'app_database.g.dart';
     PrintJobs,
     PrintJobConfirmations,
     SecurityEvents,
+    DiscountLimits,
+    BonusEntries,
+    SaleDiscounts,
+    DiscountAuditEntries,
+    PaymentKinds,
+    PaymentIntents,
+    GiftCertificates,
+    CertificateRefundLinks,
+    CreditContracts,
+    CreditScheduleEntries,
+    QrProviderConfigs,
+    PrepaymentIntakes,
+    PrepaymentRefunds,
   ],
   daos: [
     AdditionalPrinterDao,
@@ -225,6 +263,9 @@ part 'app_database.g.dart';
     SaleProductDao,
     RefundDao,
     PaymentDao,
+    PaymentKindDao,
+    PaymentIntentDao,
+    QrProviderConfigDao,
     ShiftDao,
     SupplyDao,
     SupplyProductDao,
@@ -238,6 +279,7 @@ part 'app_database.g.dart';
     InventoryDao,
     InventoryProductDao,
     WebkassaReceiptDao,
+    FiscalOwedReportDao,
     UserDao,
     UserPosSettingsDao,
     AgentDao,
@@ -276,6 +318,12 @@ part 'app_database.g.dart';
     WmsConfigDao,
     TerminalDao,
     SecurityEventDao,
+    BonusEntryDao,
+    SaleDiscountDao,
+    CertificateDao,
+    CreditDao,
+    PrepaymentIntakeDao,
+    PrepaymentRefundDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -354,7 +402,7 @@ class AppDatabase extends _$AppDatabase {
   final String? legacyHardwareSettingsBlobJson;
 
   @override
-  int get schemaVersion => 36;
+  int get schemaVersion => 53;
 
   Future<void> checkpointWal() async {
     await customStatement('PRAGMA wal_checkpoint(TRUNCATE)');
@@ -406,6 +454,214 @@ class AppDatabase extends _$AppDatabase {
       return cause.toString().contains(needle);
     }
     return false;
+  }
+
+  /// Посев девяти системных видов оплаты — миграция v41, задача 14.
+  ///
+  /// `seed` (то есть `insertOrIgnore`), а не перезапись: установка,
+  /// прошедшая v41 и открытая заново, придёт сюда второй раз, и
+  /// перезапись **стёрла бы настройку оператора** — вернула бы
+  /// выключенному сертификату включённость, а перенастроенной фискальной
+  /// трактовке умолчание. Тот же довод, что у
+  /// `_ensureDefaultDiscountLimit`.
+  Future<void> _seedSystemPaymentKinds() async {
+    for (final kind in SystemPaymentKinds.all) {
+      await paymentKindDao.seed(kind);
+    }
+  }
+
+  /// Вид «Сертификат» получает счёт-получатель — миграция v44, задача 21.
+  ///
+  /// # Почему это отдельная поправка, а не посев
+  ///
+  /// [_seedSystemPaymentKinds] сеет через `insertOrIgnore`, и это
+  /// правильно: перезапись стёрла бы настройку оператора. Но на кассе,
+  /// прошедшей v41, строка вида 5 **уже есть** — с пустым
+  /// счётом-получателем, потому что рода счёта под обязательство тогда не
+  /// существовало (докстринг `SystemPaymentKinds`). Посев её не тронет, и
+  /// вид останется невключаемым навсегда: `PaymentKindRules` не даёт
+  /// включить незачётный вид без счёта.
+  ///
+  /// # Почему условие такое узкое
+  ///
+  /// `payee_account_type IS NULL` — потому что оператор мог назвать счёт
+  /// сам, и переписать его нашим значением значило бы отменить его
+  /// решение. `id = 5` — потому что поправляется **системный** вид, а
+  /// пользовательские виды миграция не трогает вовсе.
+  ///
+  /// Род, а не конкретный счёт: счёт у каждой кассы свой, и рассылать его
+  /// номер в справочнике, который синхронизируется между кассами, нельзя
+  /// (докстринг `PaymentKinds.payeeAccountType`). Сам счёт заводится при
+  /// первом выпуске сертификата — `LocalCertificateIssuer`.
+  Future<void> _pointCertificateKindAtLiabilityAccount() async {
+    if (!await _tableExists('payment_kinds')) return;
+    await customStatement(
+      'UPDATE payment_kinds SET payee_account_type = ? '
+      'WHERE id = ? AND payee_account_type IS NULL',
+      [AccountType.certificateLiability, SystemPaymentKindIds.certificate],
+    );
+  }
+
+  /// Выдать [newKeys] существующим пользователям **по умолчанию их роли**.
+  ///
+  /// # Почему без этого шага новый ключ не работает ни у кого
+  ///
+  /// `user_permissions` с задачи 16 — **allow-list**: пустая строка
+  /// означает «запрещено», а не «разрешено». Ключ, добавленный в
+  /// `PermissionKeys.allPermissions` без миграции, у каждого
+  /// существующего не-владельца строки не имеет — и потому читается
+  /// отказом. Новая возможность тихо не работает ни для кого, включая
+  /// роль, которой она полагается по умолчанию.
+  ///
+  /// # Правило то же, каким мастер заводит нового пользователя
+  ///
+  /// Строка пишется, только если ключ есть в `roleDefaults[role]`, и
+  /// только `isAllowed = true`: отсутствие ключа в умолчаниях роли
+  /// остаётся **отсутствием строки**, а не запретительной записью —
+  /// таблица уже allow-list. Владелец не участвует:
+  /// `LocalAuthRepository._issue` выдаёт ему `allPermissions` в обход
+  /// этой таблицы целиком, и строки на него были бы данными без читателя.
+  ///
+  /// Пользователь без роли пропускается: роли у него нет, умолчаний тоже,
+  /// и выдумывать их значит выдать право по догадке.
+  ///
+  /// Выделено из ветки `from < 35` задачей 24: рассрочка добавляет второй
+  /// ключ, и второй такой же цикл рядом был бы вторым ответом на один
+  /// вопрос.
+  Future<void> _grantNewPermissionKeys(Set<String> newKeys) async {
+    // # Почему шаг спрашивает про таблицы, а не считает их существующими
+    //
+    // Он зовётся из миграции, а миграцию гоняют **фикстуры**, собранные
+    // из урезанного DDL: проба подъёма с v36 держит ровно те таблицы,
+    // которые ей нужны, и `users` среди них нет. Без этого вопроса шаг
+    // ронял бы `SqliteException(1): no such table: users` **девятнадцать**
+    // проб миграций — измерено набором сразу после того, как v45 позвала
+    // его первой.
+    //
+    // На настоящей кассе обе таблицы есть всегда (обе заведены задолго до
+    // v45), так что пропуск здесь не ослабляет выдачу права: он лишь
+    // объявляет, что шаг не имеет права требовать соседей. Тот же приём и
+    // тот же довод, что у [_pointCertificateKindAtLiabilityAccount].
+    if (!await _tableExists('users')) return;
+    if (!await _tableExists('user_permissions')) return;
+    final allUsers = await userDao.findAll();
+    final grants = <UserPermissionsCompanion>[];
+    for (final user in allUsers) {
+      if (user.role == null || user.role == UserRole.owner.index) {
+        continue;
+      }
+
+      final role = UserRole.fromIndex(user.role!);
+      final defaults = PermissionKeys.roleDefaults[role] ?? const <String>{};
+
+      final existingRows = await userPermissionDao.findByUserId(user.id);
+      final presentKeys = existingRows.map((row) => row.permissionKey).toSet();
+
+      for (final key in newKeys) {
+        if (presentKeys.contains(key)) continue;
+        if (!defaults.contains(key)) continue;
+
+        grants.add(
+          UserPermissionsCompanion.insert(
+            userId: user.id,
+            permissionKey: key,
+            isAllowed: const Value(true),
+          ),
+        );
+      }
+    }
+    // Одним оборотом — тот же довод, что у [_seedBonusOpeningBalances] и у
+    // ветки `from < 33`. Здесь ключей единицы, а не десятки, так что цена
+    // меньше; но форма «строка за оборот» уже стоила шестидесяти секунд в
+    // одном месте, и оставлять её рядом значит ждать, когда сюда приедет
+    // десяток ключей.
+    if (grants.isEmpty) return;
+    await batch((b) => b.insertAll(userPermissions, grants));
+  }
+
+  /// Перестройка `Payments` под вид оплаты — миграция v41, задача 14.
+  ///
+  /// # Порядок обязателен, и вот почему
+  ///
+  /// Новый уникальный ключ — `{receiptNo, posId, seq}`. Перестроить
+  /// таблицу **до** проставления `seq` нельзя: у всех строк он был бы
+  /// нулём от умолчания, и первый же чек с двумя платежами уронил бы
+  /// миграцию на своём же новом ключе — на кассе клиента, посреди
+  /// обновления. Поэтому колонки добавляются `ALTER TABLE` (ключей не
+  /// трогает), заполняются, и только потом таблица переписывается копией
+  /// под новые ключи.
+  ///
+  /// # `kind_id` — тем самым одним выражением
+  ///
+  /// `CASE` собирается из `PaymentKindDerivation.sqlCase`, а не пишется
+  /// рядом второй рукой. `CASE`, отставший от правила на один род счёта,
+  /// — порча, которой негде покраснеть: она мигрирует меньше строк, чем
+  /// нужно, и молчит.
+  ///
+  /// Строка, чей счёт **снесён**, остаётся без вида: подзапрос отдаёт
+  /// `NULL`. Это не «наличные по умолчанию» — разбор в докстринге
+  /// `Payments.kindId`.
+  /// Есть ли такая таблица в базе, которую мы открываем.
+  ///
+  /// Нужна не из осторожности, а по замеру: **десять проб прежних
+  /// миграций поднимают базу, в которой нет ни `payments`, ни
+  /// `accounts`** — они сеют ровно те таблицы, про которые спрашивают. Та
+  /// же беда была у `_seedBonusOpeningBalances` и решена тем же доводом:
+  /// миграция обязана пережить базу, которая выглядит не так, как
+  /// ожидалось, иначе одна кривая установка останавливает обновление
+  /// всем.
+  Future<bool> _tableExists(String name) async {
+    final rows = await customSelect(
+      "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+      variables: [Variable.withString(name)],
+    ).get();
+    return rows.isNotEmpty;
+  }
+
+  Future<void> _rebuildPaymentsWithKind(Migrator m) async {
+    if (!await _tableExists('payments')) {
+      // Таблицы денег нет вовсе — перестраивать нечего. Создаём её сразу
+      // в новом виде и уходим: переписывать пустоту копией бессмысленно.
+      await _safeCreateTable(m, payments);
+      return;
+    }
+
+    await _safeAddColumn(m, payments, payments.kindId);
+    await _safeAddColumn(m, payments, payments.seq);
+    await _safeAddColumn(m, payments, payments.commandKey);
+    await _safeAddColumn(m, payments, payments.reference);
+    await _safeAddColumn(m, payments, payments.providerCode);
+
+    if (await _tableExists('accounts')) {
+      await customStatement(
+        'UPDATE payments SET kind_id = ('
+        'SELECT ${PaymentKindDerivation.sqlCase('a.type')} '
+        'FROM accounts a WHERE a.id = payments.payee_account_id)',
+      );
+    }
+
+    // `seq` внутри чека — по возрастанию `id`, то есть по порядку
+    // записи. Оконная функция не нужна и намеренно не взята: подзапрос
+    // читается без знания о версии sqlite, а строк на один чек — единицы.
+    await customStatement(
+      'UPDATE payments SET seq = ('
+      'SELECT COUNT(*) FROM payments p2 '
+      'WHERE p2.receipt_no = payments.receipt_no '
+      'AND p2.pos_id = payments.pos_id AND p2.id < payments.id) '
+      'WHERE receipt_no IS NOT NULL AND pos_id IS NOT NULL',
+    );
+    await customStatement(
+      'UPDATE payments SET seq = ('
+      'SELECT COUNT(*) FROM payments p2 '
+      'WHERE p2.refund_local_id = payments.refund_local_id '
+      'AND p2.id < payments.id) '
+      'WHERE refund_local_id IS NOT NULL',
+    );
+
+    // Строки без чека и без возврата (`countUnsynced` их и ищет)
+    // остаются с `seq = 0` — и не сталкиваются: в sqlite `NULL` в
+    // уникальном ключе не равен `NULL`.
+    await m.alterTable(TableMigration(payments));
   }
 
   Future<void> _safeAddColumn(
@@ -473,6 +729,131 @@ class AppDatabase extends _$AppDatabase {
   /// уровне БД, независимо от того, как её пытаются вставить. Нужен на обоих
   /// путях — и `onCreate` (свежая установка), и миграции v26 (апгрейд) —
   /// иначе гарантия существовала бы только для мигрировавших баз.
+  /// Кладёт строку умолчания предела скидки, если её ещё нет.
+  ///
+  /// `insertOrIgnore`, а не `insert` и не `insertOnConflictUpdate`: первый
+  /// упал бы на первичном ключе при повторном заходе, второй **стёр бы
+  /// назначенный владельцем предел**, вернув сто процентов молча.
+  /// Стартовые остатки бонусного журнала — миграция v40, шаг 7 задачи 13.
+  ///
+  /// Одна запись на каждый бонусный счёт с ненулевым остатком, чтобы
+  /// «остаток равен сумме журнала» держалось с первой секунды.
+  ///
+  /// # Три решения, каждое стоит объяснения
+  ///
+  /// **Счёт с нулевым остатком записи не получает.** Ноль равен пустой
+  /// сумме, и запись «начислено ноль» здесь не факт о клиенте, а мусор в
+  /// журнале у каждого, кто бонусами не пользовался.
+  ///
+  /// **Отрицательный остаток записывается [BonusEntryKind.openingDeficit],
+  /// а не выравнивается в ноль.** У бонусного счёта минуса быть не должно,
+  /// но в базах, прошедших через дефект возврата (задача 10), он есть.
+  /// Обнулить его значило бы подарить покупателю чужие деньги молча —
+  /// и сделать первую же сверку ложью в другую сторону.
+  ///
+  /// **`insertOrIgnore` по ключу происхождения.** Установка, поднявшаяся на
+  /// v40 и откатившаяся к прежней сборке, придёт сюда второй раз: обычная
+  /// вставка удвоила бы стартовые остатки всем. Номер записи берётся
+  /// **постоянным** (`originEntryId = 1`... по порядку счетов), а не
+  /// «максимум + 1», именно ради этого: повтор обязан попасть в тот же
+  /// ключ, а не завести соседний.
+  Future<void> _seedBonusOpeningBalances() async {
+    // Справочника счетов нет — засевать нечего, и это не повод не
+    // подняться. Тот же довод, что у `_safeAddColumn` и
+    // `_safeCreateTable`: миграция обязана пережить базу, которая
+    // выглядит не так, как ожидалось, — иначе одна кривая установка
+    // останавливает обновление всем.
+    //
+    // Найдено набором, а не рассуждением: десять проб прежних миграций
+    // поднимают **пустую** базу с проставленной версией схемы, и первая
+    // редакция этой ветки уронила все десять — не своим дефектом, а
+    // требованием к чужой фикстуре.
+    final hasAccounts = await customSelect(
+      "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'accounts'",
+    ).getSingleOrNull();
+    if (hasAccounts == null) return;
+
+    var posId = 0;
+    try {
+      posId = (await thisPosDao.get())?.id ?? 0;
+    } catch (_) {
+      // Кассу не назвали — запись родится с нулевым номером кассы, и это
+      // видимое «родилась там, где кассу не назвали». Настоящие номера
+      // начинаются с единицы, так что сведение их не перепутает.
+    }
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    // Род счёта спрашивается у [BonusAccountTypes] — миграция это его
+    // третий читатель, и своего списка у неё нет намеренно.
+    final rows = await customSelect(
+      'SELECT id, value FROM accounts '
+      'WHERE type IN ${BonusAccountTypes.sqlInList}',
+    ).get();
+
+    var seq = 0;
+    final entries = <BonusEntriesCompanion>[];
+    for (final row in rows) {
+      final raw = row.read<double?>('value') ?? 0;
+      final balance = Decimal.parse(raw.toString());
+      if (balance == Decimal.zero) continue;
+      seq++;
+      final positive = balance > Decimal.zero;
+      entries.add(
+        BonusEntriesCompanion.insert(
+          accountId: row.read<int>('id'),
+          kind: positive
+              ? BonusEntryKind.opening
+              : BonusEntryKind.openingDeficit,
+          amount: positive ? balance : -balance,
+          time: now,
+          originPosId: posId,
+          originEntryId: seq,
+          reason: const Value(
+            'стартовый остаток при переходе на журнал (v40): истории '
+            'движений до этой версии не существовало',
+          ),
+          // Отправке не подлежит: у соседней кассы свой стартовый остаток,
+          // и принять чужой значило бы сложить один остаток дважды.
+          state: const Value(null),
+        ),
+      );
+    }
+    if (entries.isEmpty) return;
+
+    // # Одним оборотом, а не строкой за оборот — и это замер, а не вкус
+    //
+    // Первая редакция звала `await into(bonusEntries).insert(...)` внутри
+    // цикла. На кассе с пятью тысячами бонусных счетов (карта лояльности у
+    // магазина, где такое вообще есть) это пять тысяч отдельных вставок,
+    // каждая со своим сбросом журнала на диск.
+    //
+    // Замер 2026-09-19 (`migration_volume_timing_test`, база за год работы:
+    // 30 000 чеков, 105 000 строк, 36 000 оплат): подъём **v39 → v51** шёл
+    // **61,4 с**, а подъём **v40 → v51** — **0,97 с**. Разница в шестьдесят
+    // секунд целиком приходится на эту ветку; перестройка `Payments` в v41,
+    // которую докстринг ветки называл самым долгим шагом за всю историю
+    // проекта, стоила **0,4 с** на тех же данных. То есть самое дорогое
+    // место миграции было не там, где его искали, и узнать это чтением
+    // было нельзя.
+    //
+    // Пакет меняет только число оборотов. Строки, их порядок, режим
+    // `insertOrIgnore` (довод — в ветке `from < 39`) и содержимое те же:
+    // правильность по-прежнему сторожит `migration_v40_bonus_journal_test`.
+    await batch(
+      (b) => b.insertAll(bonusEntries, entries, mode: InsertMode.insertOrIgnore),
+    );
+  }
+
+  Future<void> _ensureDefaultDiscountLimit() async {
+    await into(discountLimits).insert(
+      DiscountLimitsCompanion.insert(
+        role: const Value(DiscountLimitRoles.anyRole),
+        maxPercentPerLine: Value(Decimal.fromInt(100)),
+      ),
+      mode: InsertMode.insertOrIgnore,
+    );
+  }
+
   Future<void> _ensureSingleSelfTerminalIndex() async {
     await customStatement(
       'CREATE UNIQUE INDEX IF NOT EXISTS terminals_single_self '
@@ -599,6 +980,23 @@ class AppDatabase extends _$AppDatabase {
     onCreate: (m) async {
       await m.createAll();
       await _ensureSingleSelfTerminalIndex();
+      // Строка умолчания предела скидки — **на обоих путях**, как и уникальный
+      // индекс выше. Найдено пробой экрана: `onCreate` миграций не исполняет,
+      // и на свежей установке строки не было вовсе. Читатель отдал бы сто
+      // процентов и там (`LocalDiscountPolicy`, ветвь «строки нет»), то есть
+      // касса работала бы верно, — но экран пределов показывал бы пустое
+      // поле, а I165 требует **объявленного значения**, а не пустоты, которую
+      // владелец должен угадать.
+      await _ensureDefaultDiscountLimit();
+      // Девять системных видов оплаты — **на обоих путях**, по тому же
+      // доводу, что у строки предела скидки прямо выше. `onCreate`
+      // миграций не исполняет: без этой строки свежая установка получила
+      // бы пустой справочник, оплата не нашла бы ни одного вида, а
+      // `PaymentKindResolver` на каждой строке отвечал бы «не знаю» —
+      // притом что набор остался бы зелёным, если бы пробы поднимали
+      // только мигрировавшую базу. Ровно это и было измерено пробой
+      // `свежая база` до правки: `SELECT COUNT(*) FROM payment_kinds` → 0.
+      await _seedSystemPaymentKinds();
     },
 
     onUpgrade: (m, from, to) async {
@@ -866,8 +1264,7 @@ class AppDatabase extends _$AppDatabase {
         // v27 step to read it back a moment later, made sense while that
         // column existed; it does not any more — task 5 (this task) dropped
         // it, together with the other six `Terminals` device columns, once
-        // `TerminalDeviceBindings` carried their content instead. See
-        // task-5-report.md.
+        // `TerminalDeviceBindings` carried their content instead.
         //
         // Net behaviour change for this one, narrow, already-historical path
         // (an install still on pre-v26 schema being upgraded straight to
@@ -901,7 +1298,7 @@ class AppDatabase extends _$AppDatabase {
         );
 
         // Rahmet removed from the product entirely (product owner, mid
-        // fix-round-1 on this task — see task-2-report.md). Unlike the
+        // fix-round-1 on this task). Unlike the
         // `terminals` columns below, this one drops cleanly: it is a lone
         // `BoolColumn` on `ThisPosEntries`, referenced by no other table,
         // view, index or trigger, so `ALTER TABLE ... DROP COLUMN` (sqlite3
@@ -911,7 +1308,7 @@ class AppDatabase extends _$AppDatabase {
 
         // Read the seven legacy `terminals` device columns as a **source**
         // before dropping them below — task 2 deliberately left this
-        // ordering note here (see task-2-report.md) for whoever did the
+        // ordering note here for whoever did the
         // drop, and this is that step: task 5.
         await _migrateDeviceBindings();
 
@@ -1213,6 +1610,7 @@ class AppDatabase extends _$AppDatabase {
         // может (см. абзац выше), этот случай не возникает — правило просто
         // не различает модели, потому что различать здесь больше нечего.
         final allUsers = await userDao.findAll();
+        final grants = <UserPermissionsCompanion>[];
         for (final user in allUsers) {
           if (user.role == UserRole.owner.index) continue;
 
@@ -1228,7 +1626,7 @@ class AppDatabase extends _$AppDatabase {
               // новой — явное значение по роли).
               continue;
             }
-            await into(userPermissions).insert(
+            grants.add(
               UserPermissionsCompanion.insert(
                 userId: user.id,
                 permissionKey: key,
@@ -1236,6 +1634,17 @@ class AppDatabase extends _$AppDatabase {
               ),
             );
           }
+        }
+        // Одним оборотом, а не строкой за оборот — та же правка и тот же
+        // довод, что у [_seedBonusOpeningBalances]. Замер 2026-09-19
+        // (`migration_volume_timing_test`): подъём v32 → v51 шёл **4,6 с**
+        // против **1,5 с** у v33 → v51, и все три секунды приходились сюда
+        // — десяток кассиров на два десятка ключей это сотни отдельных
+        // вставок, каждая со своим сбросом журнала на диск. Строки и их
+        // содержимое прежние; сторож правильности —
+        // `test/unit/data/permission_migration_test.dart`.
+        if (grants.isNotEmpty) {
+          await batch((b) => b.insertAll(userPermissions, grants));
         }
       }
 
@@ -1280,33 +1689,11 @@ class AppDatabase extends _$AppDatabase {
           PermissionKeys.settingsAppliance,
         };
 
-        final allUsers = await userDao.findAll();
-        for (final user in allUsers) {
-          if (user.role == null || user.role == UserRole.owner.index) {
-            continue;
-          }
-
-          final role = UserRole.fromIndex(user.role!);
-          final defaults = PermissionKeys.roleDefaults[role] ?? const <String>{};
-
-          final existingRows = await userPermissionDao.findByUserId(user.id);
-          final presentKeys = existingRows
-              .map((row) => row.permissionKey)
-              .toSet();
-
-          for (final key in newKeys) {
-            if (presentKeys.contains(key)) continue;
-            if (!defaults.contains(key)) continue;
-
-            await into(userPermissions).insert(
-              UserPermissionsCompanion.insert(
-                userId: user.id,
-                permissionKey: key,
-                isAllowed: const Value(true),
-              ),
-            );
-          }
-        }
+        // Тело вынесено в [_grantNewPermissionKeys] правкой задачи 24:
+        // рассрочка добавляет **второй** ключ в словарь, и второй такой же
+        // цикл рядом был бы вторым ответом на вопрос «кому достаётся новый
+        // ключ». Правило одно, и разъехаться ему теперь негде.
+        await _grantNewPermissionKeys(newKeys);
       }
 
       if (from < 36) {
@@ -1324,6 +1711,521 @@ class AppDatabase extends _$AppDatabase {
         // получить им секрет — переустановиться заново тем же путём, каким
         // заводится любой новый терминал.
         await _safeAddColumn(m, terminals, terminals.secretFingerprint);
+      }
+
+      if (from < 37) {
+        // Задача 2 плана «продажа с браузерного терминала». До этой версии
+        // рабочее место у кассы было ровно одно, и `saleDao.findInProgress()`
+        // брала `state = 0` без всякой привязки к рабочему месту — верно,
+        // пока рабочих мест одно. С появлением браузерного терминала это
+        // перестаёт быть так, и чеку в работе нужен владелец. Три колонки,
+        // а не одна: `terminalId` — сам владелец (I156, см. докстринг
+        // колонки в `sale_tables.dart`), `cartVersion` — защита от команды,
+        // посчитанной от устаревшего снимка (I161), `lastCommandKey` —
+        // защита от повтора последней команды (I160, докстринг колонки
+        // объясняет, почему одной строки хватает и таблица-журнал не
+        // нужна).
+        await _safeAddColumn(m, sales, sales.terminalId);
+        await _safeAddColumn(m, sales, sales.cartVersion);
+        await _safeAddColumn(m, sales, sales.lastCommandKey);
+
+        // Живому чеку в работе (state = 0) владельцем становится
+        // единственный терминал самой кассы (is_self = 1) — до этой версии
+        // рабочее место было одно, и это оно. Признак терминала кассы —
+        // `terminals.is_self` (`TerminalDao.self()`), но DAO здесь
+        // намеренно не вызывается: миграция обязана пережить случай, когда
+        // is_self не проставлен ни у одной строки. Такого быть не должно,
+        // но подзапрос без единственного результата просто даёт NULL — чек
+        // остаётся без владельца, и это не повод падать.
+        await customStatement(
+          'UPDATE sales SET terminal_id = '
+          '(SELECT id FROM terminals WHERE is_self = 1 LIMIT 1) '
+          'WHERE state = 0',
+        );
+      }
+
+      if (from < 38) {
+        // Задача 15 того же плана, решение заказчика №5: набор разрешённых
+        // видов оплаты — свойство рабочего места. Только `ADD COLUMN`, и
+        // **никакого переноса данных нарочно**: набора видов до этой версии
+        // не существовало ни у одной строки, и проставить сюда «все четыре»
+        // задним числом значило бы записать решение, которого оператор не
+        // принимал. Умолчание колонки — пустая строка, и пустое означает
+        // «все виды» (`Terminal.allowedPaymentTypes`): существующие
+        // терминалы продолжают принимать деньги ровно так же, как вчера, а
+        // запрет появляется только там, где его назначили руками.
+        await _safeAddColumn(m, terminals, terminals.allowedPaymentTypes);
+      }
+
+      if (from < 39) {
+        // Задача 12 плана «Полнота продажи»: у ручной скидки появляется
+        // объявленный предел (I165).
+        //
+        // **Умолчание обязано означать «как вчера».** До этой версии
+        // единственным потолком скидки была арифметика — «скидка не больше
+        // стоимости строки», то есть строка бесплатно была законной
+        // операцией. Таблица, появившаяся со строгим умолчанием, остановила
+        // бы каждую скидку на каждой кассе в день обновления: миграция сама
+        // стала бы отказом, а объяснить кассиру его было бы нечем. Поэтому
+        // кладётся **ровно одна** строка `role = -1` со стом процентами.
+        //
+        // Сто процентов записаны **значением**, а не оставлены отсутствием
+        // строки: I165 говорит, что «предела нет» не существует — существует
+        // объявленное значение, которое видно на экране пределов и которое
+        // владелец может изменить. Пустая таблица заставила бы читателя
+        // выдумывать ответ, а выдуманный ответ невозможно ни показать, ни
+        // поправить.
+        await _safeCreateTable(m, discountLimits);
+        // `insertOrIgnore`, а не `insert` и не `insertOnConflictUpdate`.
+        // Установка, прошедшая v39 и открытая заново (или откатившаяся к
+        // прежней сборке и поднятая снова), придёт сюда второй раз: `insert`
+        // упал бы на первичном ключе, а `insertOnConflictUpdate` **стёр бы
+        // назначенный владельцем предел**, вернув сто процентов молча. Тот
+        // же довод, что у `_safeAddColumn`, только для строки, а не для
+        // колонки.
+        await _ensureDefaultDiscountLimit();
+      }
+
+      if (from < 40) {
+        // Задача 13 плана «Полнота продажи»: бонусный остаток перестаёт
+        // быть одним перезаписываемым числом и получает журнал.
+        //
+        // **Стартовые остатки кладутся здесь же, одним оборотом с
+        // таблицей.** Инвариант «остаток равен сумме журнала» обязан
+        // держаться с первой секунды: пустой журнал при непустом остатке
+        // — расхождение у каждого клиента, у кого бонусы есть. Первая же
+        // сверка показала бы его, объяснить его было бы нечем, и сторож
+        // обесценился бы в тот же день. Обесценившийся сторож отключают.
+        //
+        // **Историю движений из чеков не восстанавливаем.** Её там нет:
+        // до v40 «кто, когда, по какому чеку» не записывалось нигде, и
+        // всё, что можно было бы собрать из чеков, было бы догадкой,
+        // выглядящей как запись. Честное «до v40 один стартовый остаток»
+        // лучше выдуманной истории, потому что его видно.
+        await _safeCreateTable(m, bonusEntries);
+        await _seedBonusOpeningBalances();
+
+        // Происхождение скидки и аудит попыток — той же версией.
+        //
+        // **Задним числом не заполняются, и это решение, а не пропуск.**
+        // Происхождение скидок проданных чеков вывести не из чего: акций
+        // в базе нет вовсе (они чистая функция от строк и `Promotions`,
+        // считаемая при сборке снимка), а разность `priceBefore − price`
+        // одинакова у подарка и у уступки кассира. Записать все прежние
+        // скидки ручными значило бы завести историю, которая выглядит как
+        // настоящая и врёт про каждый акционный подарок за всё время
+        // работы кассы. Пустая таблица честнее: по ней видно, что до v40
+        // происхождения не записывали.
+        await _safeCreateTable(m, saleDiscounts);
+        await _safeCreateTable(m, discountAuditEntries);
+      }
+
+      if (from < 41) {
+        // Задача 14 плана «Полнота продажи»: у оплаты появляется вид.
+        //
+        // **Шаг тяжёлый по форме, но не самый дорогой — и это замер.**
+        // `Payments` перестраивается копированием: sqlite не умеет менять
+        // уникальные ключи через `ALTER TABLE`, а менять их обязательно —
+        // `{receiptNo, posId, payeeAccountId}` запрещал две законные
+        // строки на один счёт. На кассе с многолетней историей это
+        // переписывание всей таблицы денег.
+        //
+        // Здесь до 2026-09-19 стояло «самый долгий шаг миграции за всё
+        // время проекта», и это было **неверно**. Замер
+        // (`migration_volume_timing_test`, 36 000 строк оплаты): ступень
+        // v41 → v40 стоит **0,38 с**, а соседняя ступень v40 → v39 стоила
+        // **60,4 с** — бонусный журнал, о цене которого не было сказано
+        // ничего. Утверждение о цене, полученное чтением кода, держалось
+        // месяц и уводило внимание не туда; поэтому здесь теперь число, а
+        // не впечатление.
+        //
+        // Порядок обязателен: справочник **до** перестройки, иначе
+        // проставлять `kind_id` будет не на что ссылаться.
+        await _safeCreateTable(m, paymentKinds);
+        await _seedSystemPaymentKinds();
+        await _rebuildPaymentsWithKind(m);
+      }
+
+      // ── номера разведены; пустых веток здесь НЕТ, и это ответ ───────
+      //
+      // Пустые ветки приезжали сюда **дважды**: сначала с QR (задача
+      // 22), теперь с сертификатом (задача 21). Оба раза приём был
+      // честным, оба раза он разбирается здесь, потому что молча
+      // выкинуть чужой намеренный код нельзя.
+      //
+      // Довод заглушек верен и остаётся в силе: сторож
+      // `app_database_test` требует **непрерывной** цепочки `if (from <
+      // N)` для всех N от 2 до `schemaVersion`, и требует справедливо —
+      // поднятая версия без своей ветки даёт установке прыжок через
+      // изменение схемы, которое всплывёт потом отсутствующей колонкой,
+      // а не упавшей миграцией. Заглушка нужна там, где номер **занят
+      // соседом, которого в дереве нет**.
+      //
+      // Здесь ни один такой номер не остался:
+      //
+      // * **v42 — аванс (задача 23), и он УЖЕ влит.** Обе заглушки —
+      //   и QR, и сертификата — столкнулись здесь с настоящей веткой.
+      //   Столкновение задумано их авторами, и разрешается оно в пользу
+      //   настоящей: пустая ветвь поверх непустой стёрла бы правку
+      //   справочника, и вид `prepayment` остался бы невключаемым.
+      // * **v43 — намерения QR (задача 22), и он УЖЕ влит.** Заглушка
+      //   сертификата «содержание приезжает с её ветвью» описывала
+      //   ровно эту ветвь — ветвь приехала. Пустая поверх неё лишила бы
+      //   таблицы `PaymentIntents` каждую кассу, доезжающую с v41 и
+      //   ниже: на свежей базе таблица создаётся объявлением схемы, при
+      //   обновлении — только этим шагом, и покраснело бы это не здесь,
+      //   а на первой же оплате телефоном у клиента.
+      // * **v44 — сертификат (задача 21), и он приезжает сейчас.**
+      //   Ветвь ниже **настоящая**: своя таблица плюс одна поправка
+      //   справочника. Номер назван координатором и не меняется — 42 и
+      //   43 заняты влитыми соседями, цепочка 2…44 остаётся непрерывной
+      //   и целиком из настоящих шагов.
+      //
+      // Проверяется это не чтением: непрерывность цепочки считает
+      // `app_database_test`, а `migration_v44_certificates_test`
+      // поднимает базу **с 43** и смотрит, что сертификатная таблица
+      // появилась, счёт вида проставился, а справочник не потерял ни
+      // одного вида — то есть что чужие шаги 42 и 43 проехали живыми.
+      if (from < 42) {
+        // Задача 23: у «Предоплаты» появляется счёт-получатель.
+        //
+        // **Таблиц не прибавилось, колонок не прибавилось** — правится
+        // одна строка справочника. Шаг всё равно нужен: посев идёт
+        // `insertOrIgnore` (и правильно — он не имеет права затирать
+        // настройки оператора), значит на кассе, доехавшей до v41
+        // вчера, строка вида `prepayment` осталась бы без
+        // `payee_account_type`. А без него правило 4 справочника
+        // (`kind_account_missing`) **отказывает включить** зачёт, и вид
+        // стал бы невключаемым — окно, в которое видно, но через
+        // которое ничего не проходит.
+        //
+        // Правятся только те поля, решения по которым оператор принять
+        // не мог: их у вида до сих пор не было вовсе. `is_active`
+        // **не трогается** — включение вида это решение оператора, и
+        // выключенным он остаётся.
+        await customStatement(
+          'UPDATE payment_kinds SET payee_account_type = ?, '
+          'requires_counterparty = 1 '
+          'WHERE id = ? AND payee_account_type IS NULL',
+          [AccountType.agentMain, SystemPaymentKindIds.prepayment],
+        );
+      }
+
+      if (from < 43) {
+        // Задача 22 плана «Полнота продажи»: намерения оплаты QR/СБП.
+        //
+        // `from < 43` срабатывает и на базе, стоящей на 42: таблицы
+        // намерений у неё нет так же, как у базы на 41.
+        //
+        // **Только создание таблицы, ни строчки переноса** — и это не
+        // лень, а единственный честный ответ. Намерений до v43 не
+        // существовало нигде: ни колонкой, ни записью, ни в `Payments`.
+        // Вывести их задним числом не из чего, а выдумать — значит
+        // завести историю, которая выглядит настоящей и врёт про каждый
+        // чек, оплаченный до этой сборки.
+        //
+        // Пустая таблица честнее: по ней видно, что до v43 намерения не
+        // записывали. Тот же довод, что у `SaleDiscounts` в v40.
+        await _safeCreateTable(m, paymentIntents);
+      }
+
+      if (from < 44) {
+        // Задача 21 плана «Полнота продажи»: подарочный сертификат.
+        //
+        // **Номер v44, а не v42, и это не описка.** Номер миграции —
+        // общий ресурс ветвей одного яруса: v42 забрала задача 23
+        // (предоплата), v43 — задача 22 (QR), обе влились раньше. Номер
+        // **назван координатором, а не угадан**: две работы уже взяли
+        // один и тот же номер независимо, и угадывание третьей стоило бы
+        // третьего столкновения.
+        //
+        // Шаг короткий, и это не случайность: вся тяжесть задачи 14
+        // (перестройка `Payments`) уже уплачена, и сертификату досталась
+        // готовая строка оплаты с `kind_id` и `reference`. Здесь только
+        // своя таблица и **одна поправка справочника**.
+        await _safeCreateTable(m, giftCertificates);
+        await _seedSystemPaymentKinds();
+        await _pointCertificateKindAtLiabilityAccount();
+      }
+
+      if (from < 45) {
+        // Задача 24 плана «Полнота продажи»: рассрочка с кредитным
+        // договором. **Последний вид оплаты, которого не было в дереве ни
+        // одним символом** — кроме строки справочника, заведённой задачей
+        // 14 выключенной и ждавшей своей работы.
+        //
+        // Шаг делает три вещи, и ни одна не лишняя:
+        //
+        // 1. **Две таблицы.** Договор и график. Переноса нет ни строчки —
+        //    рассрочек до v45 не существовало нигде: ни колонкой, ни
+        //    записью, ни в `Payments`. Вывести их задним числом не из
+        //    чего, а выдумать значит завести историю, которая выглядит
+        //    настоящей и врёт про каждый чек, проданный в долг. Пустая
+        //    таблица честнее — тот же довод, что у `SaleDiscounts` в v40 и
+        //    `PaymentIntents` в v43.
+        //
+        // 2. **Посев справочника.** Ровно по той же причине, что в v44:
+        //    `seed` — это `insertOrIgnore`, и касса, доехавшая до v41
+        //    вчера, строку вида `installment` уже имеет; строки нет только
+        //    у той, что доезжает с ещё более старой. Вид **остаётся
+        //    выключенным** — включение это решение оператора.
+        //
+        // 3. **Новое право `op.creditRepay`** — и это обязательный шаг, а
+        //    не вежливость. `user_permissions` с задачи 16 — allow-list:
+        //    ключ, добавленный в словарь без миграции, молча становится
+        //    отказом для **каждого** существующего не-владельца, и
+        //    погашение рассрочки не заработало бы ни у кого, включая
+        //    кассира, которому оно полагается по роли. Правило записано в
+        //    докстринге `PermissionKeys.allPermissions`; здесь оно
+        //    исполняется по образцу ветки `from < 35`.
+        await _safeCreateTable(m, creditContracts);
+        await _safeCreateTable(m, creditScheduleEntries);
+        await _seedSystemPaymentKinds();
+        await _grantNewPermissionKeys(const {PermissionKeys.opCreditRepay});
+      }
+
+      if (from < 46) {
+        // Вход в оплату по QR: настройка провайдера — адрес, имя, ключ и
+        // терпение кассы.
+        //
+        // **Только создание таблицы.** Настройки провайдера до v46 не
+        // было нигде — `HttpQrPaymentProvider` не собирал никто, и адрес
+        // ему давать было некому. Выдумывать строку по умолчанию нельзя
+        // вдвойне: адрес-заглушка отправил бы деньги покупателя в никуда,
+        // а касса без строки честно отвечает `qr_not_configured`.
+        await _safeCreateTable(m, qrProviderConfigs);
+      }
+
+      if (from < 47) {
+        // Сертификат и аванс в фискальном документе — решения заказчика
+        // 2026-09-14 (план `2026-09-14-sale-remaining.md`, группа A).
+        //
+        // Три настройки кассы одним шагом — номер закреплён за этой
+        // дорожкой координатором. Умолчания стоят в объявлении колонок:
+        // продажа сертификата без чека, зачёт скидкой, приём аванса с чеком.
+        // Проверка таблицы — ради **частичных баз проб миграций**
+        // (`migration_v41_payments_test` и соседи строят базу vN из одних
+        // нужных им таблиц). У настоящей кассы обе таблицы есть с v1.
+        if (await _tableExists('this_pos_entries')) {
+          await _safeAddColumn(
+            m,
+            thisPosEntries,
+            thisPosEntries.fiscalizeCertificateSale,
+          );
+          await _safeAddColumn(
+            m,
+            thisPosEntries,
+            thisPosEntries.offsetFiscalLayout,
+          );
+          await _safeAddColumn(
+            m,
+            thisPosEntries,
+            thisPosEntries.fiscalizePrepaymentReceipt,
+          );
+        }
+
+        // Чем принят аванс — до v47 не хранилось нигде. Старым строкам
+        // ничего не проставляется: выдумать «наличные» значило бы записать
+        // историю, которой не было.
+        if (await _tableExists('cash_operations')) {
+          await _safeAddColumn(m, cashOperations, cashOperations.kindId);
+        }
+
+        // Системные «Сертификат» и «Предоплата» теряли трактовку `cash`,
+        // посеянную v41: гашение и зачёт — не фискальная оплата. Правится
+        // **только посевное значение** — трактовку, выбранную оператором,
+        // шаг не трогает (сторож `FiscalOffsetSettings.effectiveTreatment`
+        // закрывает опасные сочетания и без этого).
+        await customStatement(
+          'UPDATE payment_kinds SET fiscal_treatment = ? '
+          "WHERE id IN (?, ?) AND fiscal_treatment = 'cash'",
+          [
+            FiscalTreatment.offsetNotFiscal.code,
+            SystemPaymentKindIds.certificate,
+            SystemPaymentKindIds.prepayment,
+          ],
+        );
+      }
+
+      if (from < 48) {
+        // Журнал связи «возврат → сертификат» — решения заказчика
+        // 2026-09-16. Номер v48 закреплён за этой дорожкой координатором
+        // (v49–v52 свободны).
+        //
+        // **Только создание таблицы, и переноса нет ни строчки.** До v48
+        // возврат товара, оплаченного сертификатом, возвращал деньги на ту
+        // же бумажку (`CertificateDao.restore`), то есть никакой второй
+        // бумажки не заводилось и связывать было нечего. Вывести журнал
+        // задним числом не из чего: у прежних возвратов нового сертификата
+        // не было вовсе, а выдумать связь значит записать историю, которая
+        // выглядит настоящей и врёт про каждый возврат.
+        //
+        // Пустая таблица честнее — тот же довод, что у `SaleDiscounts` в
+        // v40, `PaymentIntents` в v43 и `CreditContracts` в v45.
+        await _safeCreateTable(m, certificateRefundLinks);
+      }
+
+      if (from < 49) {
+        // Память кассы о принятых авансах — дефект живой приёмки 2026-09-18.
+        // Номер следующий за v48; v50–v52 остаются свободными.
+        //
+        // **Только создание таблицы, переноса нет ни строчки — и это
+        // названное ограничение, а не забывчивость.** У приёмов, записанных
+        // до v49, ключа заявки не было вовсе: `PrepaymentIntakeRequest` его
+        // не нёс, и по проводу он не ехал. Выдумать ключ задним числом
+        // нельзя — не из чего: ключ это метка вкладки, а не свойство
+        // проводки, и любое вычисленное здесь число совпало бы с настоящим
+        // только случайно. Хуже того, выдуманный ключ **выглядел бы
+        // настоящим** и молча съел бы первый же законный повторный взнос той
+        // же суммы.
+        //
+        // Цена честности названа: заявка, начатая до подъёма и повторённая
+        // после, защиты не получит. Она живёт секунды и кончается вместе с
+        // перезапуском кассы, тогда как выдуманная память врала бы годами.
+        //
+        // Пустая таблица честнее — тот же довод, что у `CertificateRefundLinks`
+        // в v48, `CreditContracts` в v45 и `PaymentIntents` в v43.
+        await _safeCreateTable(m, prepaymentIntakes);
+      }
+
+      if (from < 50) {
+        // Род фискального документа — замер 2026-09-19. Номер следующий
+        // за v49; v51–v52 остаются свободными.
+        //
+        // # Что здесь чинится
+        //
+        // Первичным ключом `webkassa_receipts` был один `operation_id`, а
+        // класть в него ходили три разные последовательности. Замер
+        // показал столкновение на паре «продажа №5 и возврат №5»:
+        // `UNIQUE constraint failed`, и `_persistReceipt` глотает падение
+        // строкой журнала. Разбор целиком — в докстринге `FiscalDocKind`.
+        //
+        // # Перенос ЕСТЬ, и он выводится, а не выдумывается
+        //
+        // В отличие от v45–v49, здесь переносить есть что и есть из чего:
+        // род старой строки однозначно читается по `is_sale`. До v50 в
+        // таблицу писали ровно два рода — продажу (`is_sale = 1`) и
+        // возврат товара (`is_sale = 0`); аванс не писался вовсе (это и
+        // есть вторая половина той же находки). Поэтому `1` возвратам и
+        // умолчание `0` всем прочим — не догадка, а полный разбор случаев.
+        //
+        // **Чего перенос НЕ делает:** он не возвращает строки, потерянные
+        // столкновением до v50. Документ у оператора есть, локальной
+        // записи не осталось, и восстановить её не из чего — выдуманная
+        // строка выглядела бы настоящей.
+        if (!await _tableExists('webkassa_receipts')) {
+          // Таблицы документов нет вовсе — перестраивать нечего. Такое
+          // бывает у урезанных фикстур миграции (v36…v38): они несут
+          // только то, что мерят. Создаём сразу в новом виде и уходим —
+          // тот же приём, что у `_rebuildPaymentsWithKind`.
+          await _safeCreateTable(m, webkassaReceipts);
+        } else {
+          await _safeAddColumn(m, webkassaReceipts, webkassaReceipts.docKind);
+          await customStatement(
+            'UPDATE webkassa_receipts SET doc_kind = 1 WHERE is_sale = 0',
+          );
+          // Ключ расширяется **пересборкой таблицы**: `ALTER TABLE` в
+          // sqlite первичного ключа не меняет, и без этой строки колонка
+          // появилась бы, а столкновение осталось.
+          await m.alterTable(TableMigration(webkassaReceipts));
+        }
+      }
+
+      if (from < 51) {
+        // Возврат по намерению QR — ревизия 2026-09-19, дыра 3. Номер
+        // следующий за v50; v52 остаётся свободным.
+        //
+        // # Что здесь чинится
+        //
+        // `paymentIntentDao` не упоминался в `RefundUseCaseImpl` **вовсе**:
+        // возврат просил провайдера вернуть деньги и уходил, не сказав об
+        // этом строке намерения ни слова. Намерение, по которому деньги уже
+        // у покупателя, оставалось `paid` навсегда, а член
+        // `QrIntentStatus.reversed` не писал никто — замер `git grep`
+        // нашёл его только в объявлении, в `switch` показа и в пробе
+        // эмулятора.
+        //
+        // # Переноса нет, и это названное ограничение
+        //
+        // Сколько вернули по намерениям **до** v51, вывести не из чего.
+        // Строка сторно в `Payments` несёт `terminal_transaction_id`
+        // возврата — ид, который провайдер вернул **на возврат**, — и с
+        // `provider_intent_id` намерения он совпадает только у нынешнего
+        // адаптера и только случайно; у прежних возвратов его не
+        // записывали вовсе. Выдуманное число здесь было бы неотличимо от
+        // настоящего и врало бы про каждый разбор.
+        //
+        // Цена честности: у возвратов до v51 столбец пуст, и такое
+        // намерение по-прежнему читается оплаченным. Пустая колонка видна;
+        // выдуманная сумма — нет.
+        await _safeAddColumn(m, paymentIntents, paymentIntents.reversedAmount);
+        await _safeAddColumn(m, paymentIntents, paymentIntents.reversedAt);
+      }
+
+      if (from < 52) {
+        // Долг по Z-отчёту — ревизия 2026-09-19, беда 2. Номер следующий
+        // за v51.
+        //
+        // # Что здесь чинится
+        //
+        // Закрытие смены с 2026-09-19 не отправляет Z, пока документы
+        // смены не у оператора, — и правильно делает. Но задержанный Z
+        // **никто не досылал**: хранилища «Z должен» не было вовсе, и
+        // отчёт посылало только следующее закрытие смены. Смена
+        // оператора, простоявшая открытой дольше суток, отвечает кодом 12
+        // на первой продаже следующего дня — то есть касса утром не
+        // продаёт.
+        //
+        // Разбор решения — в докстринге `FiscalOwedReports` и
+        // `ShiftServiceImpl.settleOwedZReport`.
+        //
+        // # Переноса нет, и это не пустая графа
+        //
+        // Долгов, накопленных **до** v52, вывести не из чего: задержка Z
+        // нигде не записывалась. Прочитать её задним числом можно было бы
+        // разве что по журналу приложения, а журнал живёт до перезапуска
+        // и ротации. Выдуманный долг заставил бы кассу послать Z за
+        // смену, которая давно закрыта чужим отчётом, — то есть завёл бы
+        // ровно ту беду, от которой таблица заводится.
+        //
+        // **Чего перенос НЕ делает:** он не закрывает смены оператора,
+        // оставшиеся открытыми до подъёма. Первая после подъёма закроется
+        // обычным закрытием смены кассы.
+        await _safeCreateTable(m, fiscalOwedReports);
+      }
+
+      // Выдача аванса по проводу приехала ОДНОВРЕМЕННО с долгом по
+      // Z-отчёту — двумя параллельными дорожками, и обе объявили себя v52.
+      // Разведено при сведении: долг остался 52, память о выданных авансах
+      // стала 53. Порядок между ними не значим (таблицы независимы), но
+      // номер обязан быть один на шаг: касса, поднявшаяся по одной ветке,
+      // иначе считала бы себя обновлённой и второй таблицы не завела бы.
+      if (from < 53) {
+        // Память кассы о **выданных** авансах — выдача аванса по проводу,
+        // решение заказчика 2026-09-18 «в браузере должно работать то же,
+        // что в приложении». Номер следующий за v51; свободных за ним
+        // координатор не резервировал.
+        //
+        // # Почему таблица, а не колонка рода в `prepayment_intakes`
+        //
+        // Разбор целиком — в докстринге `PrepaymentRefunds`; коротко: одна
+        // таблица означала бы одно пространство ключей на приём и на
+        // выдачу, и кадр приёма с ключом, занятым выдачей, получил бы в
+        // ответ исход выдачи — «принято» без единой записанной копейки.
+        //
+        // # Переноса нет ни строчки, и это названное ограничение
+        //
+        // До v52 выдача аванса жила **только** кассовым экраном
+        // (`/prepayment-refund`), и ключа заявки у неё не было вовсе:
+        // `refundPrepayment` его не принимал. Выдумать ключ задним числом
+        // не из чего — он метка вкладки, а не свойство проводки, — и
+        // выдуманный молча съел бы первую же законную вторую выдачу той же
+        // суммы.
+        //
+        // Цена честности та же, что у v49: заявка, начатая до подъёма и
+        // повторённая после, защиты не получит. Она живёт секунды;
+        // выдуманная память врала бы годами.
+        await _safeCreateTable(m, prepaymentRefunds);
       }
     },
 

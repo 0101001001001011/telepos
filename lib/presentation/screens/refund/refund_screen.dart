@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
-import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
-import 'package:telepos/domain/services/receipt_print_service.dart';
-import 'package:telepos/presentation/screens/payment/receipt_data_enricher.dart';
+import 'package:telepos/domain/payment/certificate_slip_printer.dart';
+import 'package:telepos/domain/refund/recent_receipts.dart';
+import 'package:telepos/domain/refund/refund_allocation.dart';
+import 'package:telepos/domain/wire/session_lost.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/core/logging/app_talker.dart';
+import 'package:telepos/presentation/common/utils/error_localizer.dart';
+import 'package:telepos/presentation/common/utils/session_lost_handler.dart';
 import 'package:telepos/presentation/controllers/refund/refund_controller.dart';
 import 'package:telepos/presentation/screens/refund/widgets/receipt_input_dialog.dart';
 import 'package:telepos/presentation/screens/refund/widgets/refund_action_buttons.dart';
@@ -18,6 +23,18 @@ import 'package:telepos/presentation/screens/refund/widgets/refund_items_table.d
 import 'package:telepos/presentation/screens/refund/widgets/refund_mode_selector.dart';
 import 'package:telepos/presentation/screens/refund/widgets/refund_total_panel.dart';
 
+/// Возврат — тот же экран на кассе и на браузерном терминале.
+///
+/// Задача 20 плана «Продажа с браузерного терминала». До неё экран читал базу
+/// в трёх местах: номер кассы для диалога чека, чек возврата на печать и
+/// разнос суммы по счетам исходного чека. Ни одно из них не выполнимо в
+/// браузере, и веб-сборка на этом экране не компилировалась.
+///
+/// Теперь возврат идёт через `RefundService` (контроллер), печать — забота
+/// кассы (`LocalRefundService.complete` → `RefundReceiptPrinter`), а
+/// подсказка «последние чеки» приходит через `RecentReceipts`, которого в
+/// браузере пока нет — и экран говорит об этом списком «нет чеков», а не
+/// отказом.
 class RefundScreen extends ConsumerStatefulWidget {
   const RefundScreen({super.key});
 
@@ -30,6 +47,20 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
   final _searchFocus = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    // Подписка на черновик поднимается **при каждом заходе**, а не один раз
+    // за жизнь провайдера. Провайдер возврата живёт всю вкладку, и после
+    // кончившегося сеанса его подписка оставалась мёртвой навсегда: кассир,
+    // вошедший заново, видел снимок, снятый до отказа. `addPostFrameCallback`
+    // — правило дерева: читать провайдер из `initState` напрямую нельзя.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(ref.read(refundControllerProvider.notifier).ensureWatching());
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _searchFocus.dispose();
@@ -38,18 +69,47 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Кончившийся сеанс уводит на вход — **до** показа любых ошибок.
+    //
+    // Единственная реакция на `SessionLost` в дереве (`handleSessionLost`):
+    // погасить сеанс тем же путём, каким его гасит живая подписка, и уйти на
+    // вход, не дожидаясь `redirect`. Тот же вызов стоит в
+    // `hardware_settings_screen.dart` и `print_price_tag_dialog.dart`.
+    //
+    // Блокер круга правки: до этой строки контроллер превращал `SessionLost`
+    // в `error.save_failed:SessionLost`, кассир читал имя типа исключения и
+    // оставался на экране, где больше ничего не работало.
+    ref.listen<SessionLost?>(
+      refundControllerProvider.select((s) => s.sessionLost),
+      (previous, next) {
+        if (next == null || next == previous) return;
+        if (!mounted) return;
+        handleSessionLost(context, next);
+      },
+    );
+
+    // Отказ показывается **каждый раз**, даже если текст тот же.
+    //
+    // Держится это не здесь, а в `_enqueue`: общий ход **любой** команды
+    // чистит `error` перед отправкой (`clearError: true`), поэтому
+    // повторный отказ приходит как переход `null → текст`, а не
+    // `текст → тот же текст`, который `next == previous` проглотил бы.
+    // Два нажатия подряд на одну неисправность — обычное дело, и молчание
+    // на втором кассир читает как «кнопка не сработала».
+    //
+    // Проба: «второй такой же отказ показывается снова, а не глотается»
+    // (`refund_confirm_button_test.dart`); краснеет, если снять чистку.
     ref.listen<String?>(refundControllerProvider.select((s) => s.error), (
       previous,
-      next,
+      message,
     ) {
-      if (next == null || next == previous) return;
+      if (message == null || message == previous) return;
       if (!mounted) return;
-      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
-            content: Text(_refundErrorMessage(l10n, next)),
+            content: Text(_refundErrorMessage(context, message)),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -89,7 +149,16 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
     );
   }
 
-  String _refundErrorMessage(AppLocalizations l10n, String error) {
+  /// Отказ показывается **названным**.
+  ///
+  /// Прежний вид этой функции возвращал `l10n.globalError` — «Ошибка» — на
+  /// всё, кроме двух случаев. Возврат при этом устроен так, что отказ в нём
+  /// обычен по праву: количество больше проданного, чек уже возвращён,
+  /// смена закрыта, прав на возврат без чека нет. Кассир видел одно слово и
+  /// не знал, что делать; текст `WireRefusal` уже написан для человека и
+  /// безопасен (И144), и теперь он доезжает.
+  String _refundErrorMessage(BuildContext context, String error) {
+    final l10n = AppLocalizations.of(context)!;
     final code = error.split(':').first;
     switch (code) {
       case 'error.receipt_not_found':
@@ -97,22 +166,47 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
       case 'error.not_authorized':
         return l10n.refundErrorNotAuthenticated;
       default:
-        return l10n.globalError;
+        return ErrorLocalizer.localize(context, error);
     }
   }
 
   void _showReceiptDialog() async {
-    final db = GetIt.I<AppDatabase>();
-    final thisPos = await db.thisPosDao.get();
-    final posId = thisPos?.id ?? 1;
-    final posName = thisPos?.cashBoxName ?? 'POS-$posId';
+    // Номер кассы приезжает **со снимком возврата**: `RefundView.posId` —
+    // это касса, которая ведёт черновик, и спрашивать её отдельно незачем.
+    // Прежний код брал его из базы и потому работал только на кассе.
+    final posId = ref.read(refundControllerProvider).posId ?? 1;
+
+    // Подсказка «последние чеки» — необязательная. На кассе контракт
+    // зарегистрирован, в браузере (пока нет своей операции провода) — нет.
+    //
+    // **Нехватка едет в диалог отдельным доводом, а не пустым списком.**
+    // До живой приёмки задачи 21 она приезжала пустотой, неотличимой от
+    // «магазин сегодня не продавал», и диалог печатал «Чеков пока нет» —
+    // утверждение о данных магазина вместо утверждения о переносе. Разбор
+    // и цена ошибки — в докстринге `ReceiptInputDialog.recentAvailable`.
+    //
+    // Отказ **живого** контракта (`catch` ниже) считается тем же, чем и
+    // отсутствие: спросить не вышло, а сколько чеков у магазина на самом
+    // деле, мы по-прежнему не знаем. Соврать «ноль» здесь так же нельзя.
+    var recentAvailable = GetIt.I.isRegistered<RecentReceipts>();
+    var recent = const <RecentReceipt>[];
+    if (recentAvailable) {
+      try {
+        recent = await GetIt.I<RecentReceipts>().recent(limit: 30);
+      } catch (e) {
+        talker.warning('Refund: recent receipts unavailable: $e');
+        recentAvailable = false;
+      }
+    }
 
     if (!mounted) return;
 
     final result = await ReceiptInputDialog.show(
       context,
       availablePosIds: [posId],
-      posNames: {posId: posName},
+      posNames: {posId: 'POS-$posId'},
+      recent: recent,
+      recentAvailable: recentAvailable,
     );
 
     if (result != null) {
@@ -226,6 +320,21 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
                 dl10n.refundAmountValue('${state.selectedTotal}'),
                 style: AppTextStyles.h3.copyWith(color: AppColors.warning),
               ),
+              // Куда уйдут деньги — **до** нажатия (задача 26). Строки
+              // считает касса той же раскладкой, которой проведёт возврат.
+              if (state.destinations.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(dl10n.refundDestinationsTitle),
+                const SizedBox(height: 4),
+                for (final d in state.destinations)
+                  Text(
+                    '${refundRouteLabel(dl10n, d.route)}'
+                    '${d.kindName == null ? '' : ' · ${d.kindName}'}'
+                    '${d.detail == null ? '' : ' · ${d.detail}'}'
+                    ' — ${d.amount}',
+                    key: ValueKey('refund-destination-${d.route.code}'),
+                  ),
+              ],
             ],
           ),
           actions: [
@@ -247,178 +356,98 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
     );
 
     if (confirmed == true) {
-      final refundState = ref.read(refundControllerProvider);
-
       final success = await ref
           .read(refundControllerProvider.notifier)
           .processRefund();
 
       if (success && mounted) {
-        await _printRefundReceipt(refundState);
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.refundSuccess),
-              backgroundColor: AppColors.success,
-            ),
-          );
-          ref.read(refundControllerProvider.notifier).clear();
-        }
+        // Чек печатает **касса**, на той же операции, которой отдала деньги
+        // (`LocalRefundService.complete` → `RefundReceiptPrinter`). Экрану
+        // печатать нечем: у браузерного терминала нет ни базы чека, ни
+        // принтера кассы, а собирать чек по своему состоянию значило бы
+        // завести второе мнение о том, что вернули.
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(l10n.refundSuccess),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        ref.read(refundControllerProvider.notifier).clear();
+        // Слип новой бумажки — отдельная строка и отдельный разговор: см.
+        // [_reportSlipTroubles].
+        unawaited(_reportSlipTroubles(messenger, l10n));
+        unawaited(_reportHardwareTroubles(messenger, l10n));
       }
     }
   }
 
-  Future<void> _printRefundReceipt(RefundState refundState) async {
-    try {
-      if (!GetIt.I.isRegistered<ReceiptPrintService>()) return;
-      final printService = GetIt.I<ReceiptPrintService>();
-
-      final db = GetIt.I<AppDatabase>();
-      final thisPos = await db.thisPosDao.get();
-      final shift = await db.shiftDao.findOpenedShift();
-
-      String cashierName = 'Cashier';
-      if (shift != null) {
-        final users = await (db.select(
-          db.users,
-        )..where((u) => u.id.equals(shift.userId))).get();
-        if (users.isNotEmpty) {
-          cashierName = users.first.name ?? 'Cashier';
-        }
-      }
-
-      final selectedItems = refundState.items
-          .where((i) => i.isSelected)
-          .toList();
-      final products = selectedItems.map((item) {
-        return ReceiptProductLine(
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          total: item.total,
-        );
-      }).toList();
-
-      final payments = await _buildRefundPaymentLines(db, refundState);
-
-      final req = await buildReceiptRequisites(
-        db,
-        posId: thisPos?.id,
-        operationId: refundState.receiptInfo?.receiptNo,
-        isSale: false,
-      );
-
-      final receiptData = RefundReceiptData(
-        refundId: 0,
-        originalReceiptNo: refundState.receiptInfo?.receiptNo,
-        posId: thisPos?.id ?? 1,
-        posName: thisPos?.cashBoxName ?? 'POS',
-        storeName: thisPos?.companyName ?? '',
-        dateTime: DateTime.now(),
-        cashierName: cashierName,
-        products: products,
-        payments: payments,
-        totalAmount: refundState.selectedTotal,
-        seller: req.seller,
-        fiscal: req.fiscal,
-        isVatPayer: req.isVatPayer,
-        vatAmount: req.vatFromGross(refundState.selectedTotal),
-        vatRatePercent: req.vatRatePercent,
-        currencySymbol: req.currencySymbol,
-      );
-
-      // Сдача в очередь: недоступный принтер оставляет задание в хранилище, а
-      // не теряет чек возврата вместе с локальными переменными.
-      final outcome = await printService.printRefundReceipt(receiptData);
-      if (outcome.isRejected) {
-        talker.warning(
-          'Чек возврата не принят в очередь печати: ${outcome.message}',
-        );
-      }
-    } catch (e, stack) {
-      talker.warning(
-        'Refund receipt print failed (non-blocking): $e',
-        e,
-        stack,
-      );
-    }
-  }
-
-  Future<List<ReceiptPaymentLine>> _buildRefundPaymentLines(
-    AppDatabase db,
-    RefundState refundState,
+  /// Беда ящика после возврата — **называется кассиру**.
+  ///
+  /// Приёмка 2026-09-17: касса открывает ящик на возврате с наличной частью
+  /// и помнит беду, если он не открылся, — но экран её не спрашивал. Кассир
+  /// видел «Возврат проведён» и не знал, что ящик придётся открыть ключом.
+  /// Предупреждение жёлтое, а не отказ: деньги по книгам выданы.
+  Future<void> _reportHardwareTroubles(
+    ScaffoldMessengerState messenger,
+    AppLocalizations l10n,
   ) async {
-    final refundTotal = refundState.selectedTotal;
-    final receiptInfo = refundState.receiptInfo;
-
-    if (receiptInfo == null) {
-      return [
-        ReceiptPaymentLine(name: 'Cash', amount: refundTotal, isCash: true),
-      ];
-    }
-
     try {
-      final salePayments = await db.paymentDao.findBySale(
-        receiptInfo.receiptNo,
-        receiptInfo.posId,
-      );
-
-      if (salePayments.isEmpty) {
-        return [
-          ReceiptPaymentLine(name: 'Cash', amount: refundTotal, isCash: true),
-        ];
-      }
-
-      final saleTotal = salePayments.fold<Decimal>(
-        Decimal.zero,
-        (sum, p) => sum + p.amount,
-      );
-
-      final lines = <ReceiptPaymentLine>[];
-      var remaining = refundTotal;
-
-      for (var i = 0; i < salePayments.length; i++) {
-        final payment = salePayments[i];
-        final isLast = i == salePayments.length - 1;
-
-        Decimal lineAmount;
-        if (isLast) {
-          lineAmount = remaining;
-        } else if (saleTotal > Decimal.zero) {
-          final ratio = (payment.amount / saleTotal).toDecimal(
-            scaleOnInfinitePrecision: 10,
-          );
-          lineAmount = (refundTotal * ratio).truncate(scale: 3);
-          if (lineAmount > remaining) lineAmount = remaining;
-        } else {
-          lineAmount = Decimal.zero;
-        }
-
-        if (lineAmount <= Decimal.zero) continue;
-
-        final account = await db.accountDao.findById(payment.payeeAccountId);
-        final isCash =
-            account == null || account.type == 0 || account.type == 2;
-        final name = account?.name ?? (isCash ? 'Cash' : 'Card');
-
-        lines.add(
-          ReceiptPaymentLine(name: name, amount: lineAmount, isCash: isCash),
+      final troubles = await ref
+          .read(refundControllerProvider.notifier)
+          .hardwareTroubles();
+      for (final _ in troubles) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(l10n.cashDrawerOpenError),
+            backgroundColor: AppColors.warning,
+          ),
         );
-        remaining -= lineAmount;
       }
+    } catch (_) {
+      // Вопрос о бедах — не часть возврата: возврат уже проведён, и отказ
+      // этого вопроса не имеет права выглядеть отказом возврата.
+    }
+  }
 
-      if (lines.isEmpty) {
-        return [
-          ReceiptPaymentLine(name: 'Cash', amount: refundTotal, isCash: true),
-        ];
-      }
-      return lines;
-    } catch (e) {
-      talker.warning('Refund payment-line build failed, using cash: $e');
-      return [
-        ReceiptPaymentLine(name: 'Cash', amount: refundTotal, isCash: true),
-      ];
+  /// Беда печати слипа — **называется кассиру**, а не молчит в журнале.
+  ///
+  /// Возврат по сертификату выпускает покупателю **новую** бумажку (решение
+  /// заказчика 2026-09-16, пункт 2), и её номер вида `<исходный>-R<возврат>`
+  /// живёт только на слипе. Не напечатался слип — покупатель уходит с пустыми
+  /// руками, имея на кассе годный сертификат, о котором он ничего не знает.
+  /// Это ровно та беда железа, которую продажа называет кассиру после оплаты
+  /// (`PaymentService.hardwareTroubles`), и здесь она называется так же.
+  ///
+  /// **Возврата это не отменяет**: деньги отданы, сертификат выпущен и годен.
+  /// Поэтому предупреждение жёлтое и отдельное, а не отказ.
+  ///
+  /// Порт необязателен: у браузерного терминала его нет — там печатает касса,
+  /// и беду видно на её экране очереди печати.
+  Future<void> _reportSlipTroubles(
+    ScaffoldMessengerState messenger,
+    AppLocalizations l10n,
+  ) async {
+    if (!GetIt.I.isRegistered<CertificateSlipPrinter>()) return;
+    final slips = GetIt.I<CertificateSlipPrinter>();
+    try {
+      // Слип **отправляется, а не ожидается** самим возвратом, поэтому здесь
+      // его отправку надо дождаться — иначе беда ещё не случилась, и экран
+      // прочитал бы пустоту.
+      await slips.pending;
+    } catch (_) {
+      // `printIssued` не бросает по контракту. Но если однажды бросит,
+      // собранные до того беды всё равно обязаны дойти до кассира.
+    }
+    for (final trouble in slips.takeTroubles()) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.certificateSlipPrintFailed(trouble.number, trouble.message),
+          ),
+          backgroundColor: AppColors.warning,
+        ),
+      );
     }
   }
 }
@@ -779,3 +808,19 @@ class _SearchField extends ConsumerWidget {
     );
   }
 }
+
+/// Как получатель денег возврата называется кассиру — задача 26.
+///
+/// `switch` исчерпывающий и без `default`: новый получатель сломает сборку
+/// здесь, а не приедет на экран кодом.
+String refundRouteLabel(AppLocalizations l10n, RefundRoute route) =>
+    switch (route) {
+      RefundRoute.drawer => l10n.refundRouteDrawer,
+      RefundRoute.card => l10n.refundRouteCard,
+      RefundRoute.manual => l10n.refundRouteManual,
+      RefundRoute.provider => l10n.refundRouteProvider,
+      RefundRoute.certificate => l10n.refundRouteCertificate,
+      RefundRoute.advance => l10n.refundRouteAdvance,
+      RefundRoute.bonus => l10n.refundRouteBonus,
+      RefundRoute.debt => l10n.refundRouteDebt,
+    };

@@ -157,7 +157,7 @@ void main() {
       wire = TillWire(
         server,
         const {},
-        watchHandlers: {'demo.state': (body) => source.stream},
+        watchHandlers: {'demo.state': (_, [_, _]) => source.stream},
         guard: openGuard,
       )..start();
 
@@ -188,7 +188,7 @@ void main() {
       wire = TillWire(
         server,
         const {},
-        watchHandlers: {'demo.state': (body) => source.stream},
+        watchHandlers: {'demo.state': (_, [_, _]) => source.stream},
         guard: openGuard,
       )..start();
 
@@ -204,7 +204,7 @@ void main() {
       wire = TillWire(
         server,
         const {},
-        watchHandlers: {'demo.state': (body) => source.stream},
+        watchHandlers: {'demo.state': (_, [_, _]) => source.stream},
         guard: openGuard,
       )..start();
       await watchAndSettle('demo.state');
@@ -223,7 +223,7 @@ void main() {
       wire = TillWire(
         server,
         const {},
-        watchHandlers: {'demo.state': (body) => source.stream},
+        watchHandlers: {'demo.state': (_, [_, _]) => source.stream},
         guard: openGuard,
       )..start();
       await watchAndSettle('demo.state');
@@ -245,7 +245,7 @@ void main() {
       wire = TillWire(
         server,
         const {},
-        watchHandlers: {'demo.state': (body) => source.stream},
+        watchHandlers: {'demo.state': (_, [_, _]) => source.stream},
         guard: openGuard,
       )..start();
       await watchAndSettle('demo.state');
@@ -255,6 +255,47 @@ void main() {
 
       expect(wire.liveSubscriptions, 0);
       expect(server.closedStreams, [(1, 4)]);
+    });
+
+    test('перед закрытием касса говорит «done», а не молчит', () async {
+      // Живая приёмка 2026-09-19: молчаливое закрытие планшет читал как
+      // ОБРЫВ и показывал «касса не ответила: stream_ended». А закончился
+      // источник сам — это ответ, и ответ окончательный: так касса отвечает
+      // на вопрос о неподключённом приборе (`LocalHardwareDiagnostics`,
+      // И144). Вкладка ящика показывала отказ там, где было состояние.
+      //
+      // Различить два случая может только касса: у браузерной половины
+      // тихое закрытие потока и порванная сессия выглядят одинаково.
+      // Поэтому кадр обязателен — и он же граница: молчание по-прежнему
+      // означает обрыв, и соседняя проба в `wt_dispatcher_test` держит
+      // вторую половину этого различения.
+      final source = StreamController<Map<String, Object?>>();
+      wire = TillWire(
+        server,
+        const {},
+        watchHandlers: {'demo.state': (_, [_, _]) => source.stream},
+        guard: openGuard,
+      )..start();
+      await watchAndSettle('demo.state');
+
+      source.add(const {'n': 1});
+      await Future<void>.delayed(Duration.zero);
+      await source.close();
+      await Future<void>.delayed(Duration.zero);
+
+      final sent = server.sentFrames.map(WireFrame.decode).toList();
+      expect(
+        sent.last,
+        isA<DoneFrame>(),
+        reason:
+            'последним кадром обязан быть «done»: без него окончательное '
+            'состояние неотличимо от обрыва связи',
+      );
+      expect(
+        sent.whereType<UpdateFrame>(),
+        hasLength(1),
+        reason: 'кадр состояния никуда не делся — done его не заменяет',
+      );
     });
   });
 }

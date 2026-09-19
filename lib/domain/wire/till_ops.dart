@@ -1,8 +1,17 @@
 /// Каталог операций провода между кассой и терминалом.
 ///
-/// Тридцать одно описание, и каждое — единственное место, где живёт форма
+/// Пятьдесят одно описание, и каждое — единственное место, где живёт форма
 /// своего обмена. Оба конца собираются отсюда, поэтому разойтись молча они не
 /// могут.
+///
+/// **Последние двадцать объявлены не здесь, а в `SaleOps`**
+/// (`lib/domain/wire/sale_ops.dart`): `sale.ping` завела задача 1 плана
+/// «Продажа с браузерного терминала» (2026-09-06), остальные девятнадцать —
+/// задача 9 того же плана, по одной на каждый метод контракта `CartService`.
+/// У продажи свой файл-каталог, но входят они в [all] наравне с остальными,
+/// через `...SaleOps.all` — единый список не имеет права знать о делении на
+/// файлы, иначе сторож провода (`wire_guard.dart`) видел бы только часть
+/// операций, а `ApiServer.access` знал бы права только части.
 ///
 /// # Почему это каталог, а не список путей
 ///
@@ -12,15 +21,17 @@
 /// стоило белого экрана без единого слова, потому что 404 приходил страницей
 /// HTML, а разбор ждал JSON.
 ///
-/// # Девять из тридцати одной перестают быть вопросами
+/// # Одиннадцать из пятидесяти одной перестают быть вопросами
 ///
-/// Семь подписок ([setupState], [terminalsList], [terminalSelf],
-/// [deviceBindings], [authUsers], [authSession], [authSessions]) и две
-/// длинных работы ([setupRestore], [setupLoadGlobalData]). Ровно это и
-/// просили от смены транспорта: касса получает возможность заговорить
-/// первой. Упавшая печать, появившееся устройство, смена, закрытая на другой
-/// кассе, заведённый кассир, погашенный сеанс, отозванный сеанс соседа —
-/// всё это доезжает в момент события, а не при следующем вопросе.
+/// Девять подписок ([setupState], [terminalsList], [terminalSelf],
+/// [deviceBindings], [authUsers], [authSession], [authSessions],
+/// [SaleOps.cart], [SaleOps.deferredList]) и две длинных работы
+/// ([setupRestore], [setupLoadGlobalData]). Ровно это и просили от смены
+/// транспорта: касса получает возможность заговорить первой. Упавшая печать,
+/// появившееся устройство, смена, закрытая на другой кассе, заведённый
+/// кассир, погашенный сеанс, отозванный сеанс соседа, корзина, изменённая
+/// соседней вкладкой, чек, поднятый из общего пула соседом, — всё это
+/// доезжает в момент события, а не при следующем вопросе.
 ///
 /// [authSessions] и [authSessionRevoke] — задача 19 закрытия долга
 /// безопасности (2026-08-22): экран списка живых сеансов
@@ -55,6 +66,8 @@
 /// третьего читателя формы ровно после того, как второго свели с первым.
 library;
 
+import 'package:decimal/decimal.dart';
+
 import 'package:telepos/core/constants/permission_keys.dart';
 import 'package:telepos/domain/auth/auth_attempt.dart';
 import 'package:telepos/domain/auth/auth_outcome.dart';
@@ -62,10 +75,17 @@ import 'package:telepos/domain/auth/auth_session.dart';
 import 'package:telepos/domain/auth/auth_user.dart';
 import 'package:telepos/domain/auth/live_session.dart';
 import 'package:telepos/domain/device/device_check.dart';
+import 'package:telepos/domain/diagnostics/hardware_diagnostics.dart';
 import 'package:telepos/domain/device/device_class.dart';
 import 'package:telepos/domain/device/device_discovery.dart';
 import 'package:telepos/domain/network/network_status.dart';
+import 'package:telepos/domain/print/print_job.dart';
 import 'package:telepos/domain/network/wifi_network.dart';
+import 'package:telepos/domain/payment/qr_provider_setup.dart';
+import 'package:telepos/domain/receipt/receipt_template_setup.dart';
+import 'package:telepos/domain/shift/shift_desk.dart';
+import 'package:telepos/domain/wire/wire_money.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/setup/setup_draft.dart';
 import 'package:telepos/domain/setup/setup_draft_json.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
@@ -76,6 +96,11 @@ import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/wire/auth_wire.dart';
 import 'package:telepos/domain/wire/device_wire.dart';
 import 'package:telepos/domain/wire/network_wire.dart';
+import 'package:telepos/domain/wire/pay_ops.dart';
+import 'package:telepos/domain/wire/refund_ops.dart';
+import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
+import 'package:telepos/domain/wire/sale_ops.dart';
+import 'package:telepos/domain/wire/scanner_rules_codec.dart';
 import 'package:telepos/domain/wire/setup_state.dart';
 import 'package:telepos/domain/wire/terminal_wire.dart';
 import 'package:telepos/domain/wire/wire_access.dart';
@@ -89,6 +114,16 @@ typedef DeviceBindingSaveRequest = ({int terminalId, DeviceBinding binding});
 
 /// Запрос на переименование терминала.
 typedef TerminalRenameRequest = ({int terminalId, String name});
+
+/// Запрос на смену набора разрешённых видов оплаты — задача 15 плана
+/// «продажа с браузерного терминала», решение заказчика №5.
+///
+/// Пустое множество — законное значение и означает «все виды», а не «ни
+/// одного» (докстринг `Terminal.allowedPaymentTypes`).
+typedef TerminalPaymentTypesRequest = ({
+  int terminalId,
+  Set<PaymentType> types,
+});
 
 /// Запрос на возврат уже заведённого терминала по секрету — задача 5 плана
 /// «знакомство терминала с кассой», шаг 2 спеки.
@@ -122,6 +157,35 @@ typedef EthernetConfigureRequest = ({
   String? gateway,
   String? dns,
 });
+
+/// Заявка на запись настройки провайдера QR — решение заказчика 2026-09-18.
+///
+/// Один в один доводы [QrProviderSetupRepository.save], и это не совпадение,
+/// а требование: браузерная половина — вторая реализация **того же** порта, и
+/// поле, потерянное между ними, означало бы настройку, которую с кассы задать
+/// можно, а с планшета нет.
+///
+/// `newApiKey` — единственное поле каталога, несущее секрет, и едет оно
+/// только **от вкладки к кассе**. Пустое или `null` значит «прежний ключ
+/// остаётся»: экран ключа не знает и вернуть его не может, поэтому
+/// пересохранение адреса не имеет права молча стереть ключ. Стирание —
+/// отдельное намерение `clearApiKey`, а не пустая строка: «не набирал» и
+/// «сотри» обязаны различаться.
+typedef QrProviderSaveAsk = ({
+  String baseUrl,
+  String code,
+  Duration patience,
+  String? newApiKey,
+  bool clearApiKey,
+});
+
+/// Заявка на запись шаблона чека — решение заказчика 2026-09-18.
+///
+/// Один в один доводы [ReceiptTemplateSetupRepository.save]. Признака
+/// «встроенный» здесь нет **полем**, и это не потеря при переносе: разбор — в
+/// докстринге порта, коротко — единственным способом его поменять стала бы
+/// как раз эта поездка.
+typedef ReceiptTemplateSaveAsk = ({int? id, String name, String optionsJson});
 
 abstract final class TillOps {
   /// Чем закончился подъём кассы. Однократно на старте — спрашивать это
@@ -326,6 +390,31 @@ abstract final class TillOps {
     decode: _decodeOk,
   );
 
+  /// Назначить рабочему месту набор разрешённых видов оплаты — задача 15,
+  /// решение заказчика №5.
+  ///
+  /// Право и владение — те же, что у [terminalRename]: `settings.hardware`
+  /// плюс `ownTerminal: TerminalOwnership.same`. Это **настройка рабочего
+  /// места**, ровно как его имя и его устройства, и правится она там же, где
+  /// они, — на экране настроек своего терминала.
+  ///
+  /// **Чего эта операция не делает: она не является защитой от кассира.**
+  /// Владелец сеанса с правом `settings.hardware` может снять запрет с
+  /// собственного рабочего места — ровно как может переименовать его или
+  /// перепривязать принтер. Защита, которую даёт задача 15, — другая: экран,
+  /// **не имеющий** этого права (а у рядового кассира его и нет), не может
+  /// обойти запрет ни подделкой кадра оплаты, ни спрятанной кнопкой, потому
+  /// что вид оплаты проверяет касса (`LocalPaymentService`), а не вкладка.
+  static const terminalSetPaymentTypes = Ask<TerminalPaymentTypesRequest, bool>(
+    'terminals.setPaymentTypes',
+    access: SessionAccess(
+      needs: PermissionKeys.settingsHardware,
+      ownTerminal: TerminalOwnership.same,
+    ),
+    encode: _encodePaymentTypes,
+    decode: _decodeOk,
+  );
+
   /// Завести новый терминал по имени и коду привязки. Отдаёт
   /// [TerminalEnrollment] — терминал и его секрет (задача 4 плана «знакомство
   /// терминала с кассой», шаг 2 спеки): секрет едет в ответе значением ровно
@@ -346,12 +435,13 @@ abstract final class TillOps {
   /// потраченный код привязки (`TerminalRegisterRequest.code`) — сторож его
   /// не проверяет (докстринг [EnrolmentAccess]), проверяет обработчик
   /// (`TillOperations.askHandlers[terminalRegister.name]`).
-  static const terminalRegister = Ask<TerminalRegisterRequest, TerminalEnrollment>(
-    'terminals.register',
-    access: EnrolmentAccess(),
-    encode: _encodeRegister,
-    decode: _decodeTerminalEnrollment,
-  );
+  static const terminalRegister =
+      Ask<TerminalRegisterRequest, TerminalEnrollment>(
+        'terminals.register',
+        access: EnrolmentAccess(),
+        encode: _encodeRegister,
+        decode: _decodeTerminalEnrollment,
+      );
 
   /// Вернуть уже заведённый терминал на новую QUIC-сессию, предъявив его
   /// секрет — задача 5 плана «знакомство терминала с кассой» (шаг 2 спеки).
@@ -576,13 +666,508 @@ abstract final class TillOps {
         decode: _decodeSuccessMode,
       );
 
+  /// Правила чтения штрихкода этой кассы — задача 45.
+  ///
+  /// Их применяет `BarcodeScannerMixin` к каждому скану на продаже и возврате,
+  /// в том числе в браузере: длины кода и зазор между символами — правила
+  /// клавиатурного сканера, а не устройства кассы. До задачи 45 браузер их не
+  /// читал вовсе и молча брал зашитые.
+  ///
+  /// Право — **любой сеанс** ([SessionAccess] без `needs`): правила нужны и
+  /// экрану продажи (`nav.sale`), и экрану возврата (`nav.refund`), тайны в
+  /// них нет, а запрет по одному из двух прав оставил бы второй экран на
+  /// зашитых правилах — тем же молчанием.
+  static const scannerRules = Ask<void, ScannerRules>(
+    'scanner.rules',
+    access: SessionAccess(),
+    encode: _nothing,
+    decode: scannerRulesFromWireJson,
+  );
+
+  /// Записать правила чтения штрихкода — пункт 11 ревизии 2026-09-19,
+  /// решение заказчика 2026-09-18 («в браузере должно работать то же, что в
+  /// приложении»).
+  ///
+  /// # Что было
+  ///
+  /// [scannerRules] отдавала правила и только. Кассир за планшетом видел
+  /// длины кода и зазор между символами на экране «Оборудование» ровно до
+  /// тех пор, пока не пробовал их **задать**: секция говорила
+  /// `scannerRulesUnavailable` — «здесь их не настроить». Владелец, у
+  /// которого вместо кассы планшет, не мог настроить сканер ничем.
+  ///
+  /// # Право — `settings.hardware`, существующее
+  ///
+  /// Тот же ключ, что у маршрута `/hardware-settings`
+  /// (`PermissionKeys.routeToPermissionKey`), то есть ровно то право, каким
+  /// заперт экран, где эти поля стоят. Своего ключа не заводится по тому же
+  /// доводу, что у настройки QR выше: новый ключ без шага миграции тихо не
+  /// достаётся ни одному существующему пользователю.
+  ///
+  /// **Не путать с правом чтения.** [scannerRules] открыта любому сеансу
+  /// нарочно: её просит `BarcodeScannerMixin` на продаже и на возврате, и
+  /// тайны в длинах кода нет. Запись — настройка кассы, и её периметр
+  /// другой: правило длины, заданное мимо наладчика, молча отбрасывает
+  /// сканы на **всех** рабочих местах.
+  ///
+  /// # Почему запись целиком, а не по полю
+  ///
+  /// Тем же доводом, что и у `ScannerRulesRepository.save`: годность —
+  /// свойство тройки (min ≤ max), а не каждого значения по отдельности.
+  /// Операция «задать только максимум» позволила бы пройти через негодное
+  /// промежуточное состояние и записать его.
+  ///
+  /// Отказ негодной тройки приходит **значением** — `bad_request` с
+  /// текстом от `ScannerRules`, а не падением обработчика: проверку делает
+  /// конструктор `ScannerRules` при разборе кадра, до того как что-либо
+  /// будет записано.
+  static const scannerRulesSave = Ask<ScannerRules, bool>(
+    'scanner.saveRules',
+    access: SessionAccess(needs: PermissionKeys.settingsHardware),
+    encode: scannerRulesToWireJson,
+    decode: _decodeOk,
+  );
+
+  /// Просрочена ли партия, которой ушёл бы этот товар — пункт 11 ревизии
+  /// 2026-09-19.
+  ///
+  /// Экран продажи спрашивает это **после** того, как строка встала в чек, и
+  /// показывает жёлтый снекбар с именем товара. До этой операции вопрос
+  /// задавался напрямую `BatchTrackingUseCase` в контейнере, которого в
+  /// браузере нет: кассир за планшетом пробивал просроченный товар молча.
+  ///
+  /// Право — `nav.sale`: спрашивает только экран продажи, и спрашивает про
+  /// товар, который кассир **уже** положил в чек. Ответ — одно «да/нет» про
+  /// срок годности; тайны в нём нет, но и открывать вопрос без сеанса
+  /// незачем, а `nav.sale` у того, кто ведёт чек, есть по построению.
+  ///
+  /// Разбор, почему это отдельная операция, а не поле в `CartView`, — в
+  /// докстринге `ExpiryWarningReader`; коротко: предупреждение относится к
+  /// действию кассира, а не к состоянию чека, и поле снимка потухло бы на
+  /// первом обновлении подписки `sale.cart`.
+  ///
+  /// **Имя начинается на `sale.`, а объявление живёт здесь, а не в
+  /// `SaleOps`** — и это решение, а не недосмотр. `SaleOps` собран по
+  /// правилу «одна операция на метод контракта `CartService`»
+  /// (докстринг там, и `sale_ops_access_test` сверяет их поимённо); эта
+  /// операция методом корзины не является и не должна им становиться —
+  /// иначе правило превратилось бы в «что угодно про продажу». Обработчик
+  /// при этом лежит в карте продажи — там же, где `scanner.rules`, и по
+  /// тому же поводу: общий запрет называть рабочее место в теле.
+  static const saleExpiryWarning = Ask<int, bool>(
+    'sale.expiryWarning',
+    access: SessionAccess(needs: PermissionKeys.navSale),
+    encode: _encodeProductId,
+    decode: _decodeExpired,
+  );
+
+  /// Остатки кассы изменились — пункт 12 ревизии 2026-09-19.
+  ///
+  /// **Подписка, а не вопрос, и это не оформление.** Вкладку держат
+  /// открытой всю смену, а остаток написан в каждой строке выдачи поиска
+  /// экрана продажи и в каталоге. Вопрос был бы верен ровно в миг
+  /// постройки экрана — то есть ровно тогда, когда он и так верен, — и
+  /// продажа, проведённая соседним рабочим местом, не доехала бы никуда.
+  /// Это и есть то, ради чего менялся транспорт: касса говорит первой.
+  ///
+  /// Первый кадр несёт текущий номер ревизии, дальнейшие — изменения.
+  /// Номер сам по себе не значит ничего: подписанный перечитывает свой
+  /// остаток обычным путём (докстринг `StockChanges`).
+  ///
+  /// Право — **любой сеанс** ([SessionAccess] без `needs`), тем же
+  /// доводом, что у [scannerRules]: сообщение нужно и экрану продажи
+  /// (`nav.sale`), и каталогу (`nav.catalog`), а несёт оно одно число без
+  /// единого сведения о товаре, деньгах или покупателе. Запрет по одному
+  /// из прав оставил бы второй экран с устаревшей цифрой — тем же
+  /// молчанием, ради снятия которого подписка заведена.
+  ///
+  /// Рабочее место в теле не называется: остаток — свойство кассы, а не
+  /// стойки.
+  static const stockRevision = Watch<void, int>(
+    'stock.revision',
+    access: SessionAccess(),
+    encode: _nothing,
+    decode: _decodeRevision,
+  );
+
+  // ── настройка оплаты по QR ─────────────────────────────────────────────
+  //
+  // Решение заказчика 2026-09-18, дословно: «это не граница, а пробел — в
+  // браузере должно работать то же, что в приложении». Экран настройки QR
+  // (пункт 8 C) жил только на кассе, и владелец, у которого вместо кассы
+  // планшет, включить оплату по QR не мог ничем: строку
+  // `qr_provider_configs` писала либо десктопная сборка, либо дверь стенда.
+  //
+  // # Ключ провайдера едет только внутрь
+  //
+  // Это главное свойство всей четвёрки, и держится оно **формой ответа**, а
+  // не бдительностью: ответ — `QrProviderView`, у которого поля ключа нет
+  // вовсе (докстринг `qr_provider_setup.dart`). Утечке неоткуда взяться:
+  // нечего класть. Сторож — `test/backend/qr_setup_secret_test.dart`, он
+  // пишет ключ с браузера и просматривает каждый кадр, отправленный кассой
+  // терминалу.
+  //
+  // # Право — `settings.accounts`, существующее
+  //
+  // Тот же ключ, что у маршрута `/qr-provider-settings`
+  // (`PermissionKeys.routeToPermissionKey`), и тот же довод: провайдер
+  // решает, куда уходят деньги покупателя, — периметр счетов кассы. Своего
+  // ключа не заводится: новый без шага миграции тихо не достаётся ни одному
+  // существующему пользователю (докстринг `PermissionKeys.allPermissions`,
+  // «Правило на будущее»), а миграции у этой работы нет.
+  //
+  // Право **постоянно** и не зависит от тела: тела, при котором правка
+  // адреса провайдера была бы безобидна, не существует.
+  //
+  // # Почему четыре операции, а не одна с режимом
+  //
+  // По одной на метод контракта `QrProviderSetupRepository` — тем же
+  // правилом, каким собраны `terminals.*`: договор, у которого на проводе
+  // нет одного метода, отказывает в одном месте из четырёх, и узнать об
+  // этом можно только нажав кнопку. Режим в теле сделал бы разбор кадра
+  // развилкой, а право — зависящим от поля.
+
+  /// Что экран знает о настройке QR. **Ключа в ответе нет** — его нет в
+  /// [QrProviderView].
+  static const qrProviderSettings = Ask<void, QrProviderView>(
+    'qr.providerSettings',
+    access: SessionAccess(needs: PermissionKeys.settingsAccounts),
+    encode: _nothing,
+    decode: qrProviderViewFromWireJson,
+  );
+
+  /// Записать адрес, имя, терпение — и, если набран, новый ключ.
+  ///
+  /// Единственная операция каталога, которой ключ провайдера вообще
+  /// доверяется, и едет он **только в этом направлении**: из вкладки на
+  /// кассу. Обратно не возвращается ничем — ответ пуст по форме.
+  static const qrProviderSave = Ask<QrProviderSaveAsk, bool>(
+    'qr.providerSave',
+    access: SessionAccess(needs: PermissionKeys.settingsAccounts),
+    encode: _encodeQrProviderSave,
+    decode: _decodeOk,
+  );
+
+  /// Снять настройку целиком — касса перестаёт показывать коды.
+  static const qrProviderClear = Ask<void, bool>(
+    'qr.providerClear',
+    access: SessionAccess(needs: PermissionKeys.settingsAccounts),
+    encode: _nothing,
+    decode: _decodeOk,
+  );
+
+  /// Включить или выключить вид оплаты QR в справочнике.
+  ///
+  /// Отдельной операцией, а не полем сохранения: выключатель — единственное
+  /// действие экрана, которое кассир делает **не заполнив форму**, и
+  /// пришивать его к сохранению значило бы требовать адреса ради того, чтобы
+  /// выключить вид оплаты.
+  static const qrProviderKind = Ask<bool, bool>(
+    'qr.providerKind',
+    access: SessionAccess(needs: PermissionKeys.settingsAccounts),
+    encode: _encodeQrKindActive,
+    decode: _decodeOk,
+  );
+
+  // ── шаблон чека ────────────────────────────────────────────────────────
+  //
+  // Решение заказчика 2026-09-18: «это не граница, а пробел — в браузере
+  // должно работать то же, что в приложении». Шапка, подвал и содержимое
+  // чека правились только на кассе: оба экрана шаблона ходили в
+  // `AppDatabase` напрямую, а `lib/data/` в браузерную сборку не собирается
+  // вовсе (сторож `browser_routes_test`).
+  //
+  // # Предпросмотр — операция провода, а не работа вкладки
+  //
+  // Это главное свойство всей пятёрки, и оно объясняется целиком в
+  // докстринге `receipt_template_setup.dart`. Коротко: текст чека на экране
+  // рождается **в одном месте на всё дерево** —
+  // `ReceiptPrintService.renderSalePreviewText`, которая собирает настоящий
+  // поток ESC/POS тем же кодом, каким печатает, и разбирает его обратно.
+  // Вкладка получает готовую строку и о раскладке не знает ничего: ни
+  // ширины ленты, ни выравнивания, ни кодовой страницы. Вторая раскладка в
+  // браузере уже была бы третьей в дереве, а расхождение двух первых стоило
+  // круга правок (докстринг `escpos_text_preview.dart`).
+  //
+  // # Право — `settings.printer`, существующее
+  //
+  // Тот же ключ, что у `/printer-settings`, и тот же довод: ширину ленты, на
+  // которой собран предпросмотр, задаёт именно тот экран, и шаблон без неё
+  // не имеет смысла — «узкий чек при выбранном широком» и был тем дефектом.
+  // Своего ключа не заводится: новый без шага миграции тихо не достаётся ни
+  // одному существующему пользователю (докстринг
+  // `PermissionKeys.allPermissions`, «Правило на будущее»), а миграции у
+  // этой работы нет. Кассиру ни один `settings.*` не достаётся по
+  // умолчанию — и это верно: текст чека магазина не рядовое действие у кассы.
+  //
+  // # Почему пять операций, а не одна с режимом
+  //
+  // По одной на метод контракта `ReceiptTemplateSetupRepository`, тем же
+  // правилом, каким собраны `qr.*` и `terminals.*`: договор, у которого на
+  // проводе нет одного метода, отказывает в одном месте из пяти, и узнать об
+  // этом можно только нажав кнопку.
+
+  /// Список шаблонов и ширина ленты привязанного принтера.
+  static const receiptTemplates = Ask<void, ReceiptTemplateCatalog>(
+    'receipt.templates',
+    access: SessionAccess(needs: PermissionKeys.settingsPrinter),
+    encode: _nothing,
+    decode: receiptTemplateCatalogFromWireJson,
+  );
+
+  /// Записать шаблон: новый (`id == null`) или правку существующего.
+  static const receiptTemplateSave = Ask<ReceiptTemplateSaveAsk, bool>(
+    'receipt.templateSave',
+    access: SessionAccess(needs: PermissionKeys.settingsPrinter),
+    encode: _encodeReceiptTemplateSave,
+    decode: _decodeOk,
+  );
+
+  /// Печатать этим шаблоном.
+  static const receiptTemplateSelect = Ask<int, bool>(
+    'receipt.templateSelect',
+    access: SessionAccess(needs: PermissionKeys.settingsPrinter),
+    encode: _encodeReceiptTemplateId,
+    decode: _decodeOk,
+  );
+
+  /// Удалить шаблон. Встроенный не удаляется — запрет держит касса.
+  static const receiptTemplateDelete = Ask<int, bool>(
+    'receipt.templateDelete',
+    access: SessionAccess(needs: PermissionKeys.settingsPrinter),
+    encode: _encodeReceiptTemplateId,
+    decode: _decodeOk,
+  );
+
+  /// Предпросмотр черновика — **те же байты, что уйдут в принтер**,
+  /// разобранные кассой в текст.
+  ///
+  /// Ответ — строка, а не байты и не разобранная настройка. Разбор, почему
+  /// именно так, — в докстринге `receipt_template_setup.dart`; сторож —
+  /// `test/backend/receipt_template_op_test.dart`.
+  static const receiptTemplatePreview = Ask<String, String>(
+    'receipt.templatePreview',
+    access: SessionAccess(needs: PermissionKeys.settingsPrinter),
+    encode: _encodeReceiptTemplateOptions,
+    decode: receiptTemplatePreviewFromWireJson,
+  );
+
+  /// Пробная печать образца на принтере кассы.
+  ///
+  /// Черновика не несёт: кассовая кнопка печатала **выбранный сохранённый**
+  /// шаблон и до этой работы (докстринг
+  /// `ReceiptTemplateSetupRepository.testPrint`). Дать вкладке печатать
+  /// черновик значило бы сделать браузер способнее кассы.
+  static const receiptTemplateTestPrint = Ask<void, bool>(
+    'receipt.templateTestPrint',
+    access: SessionAccess(needs: PermissionKeys.settingsPrinter),
+    encode: _nothing,
+    decode: _decodeOk,
+  );
+
+  // ── смена ──────────────────────────────────────────────────────────────
+  //
+  // Решение заказчика 2026-09-18. Замерено живьём в тот же день: смена
+  // старше суток запирает продажу окном «Смена открыта более 24 часов.
+  // Продажа заблокирована. Закройте смену на кассе и откройте новую», а с
+  // планшета закрыть смену было нечем — путь упирался в стену. Вторая
+  // половина того же пробела: дом терминала показывал «Смена открыта»
+  // зелёным значком и при просроченной смене, потому что состояние смены
+  // приезжало один раз, в `AuthSession` при входе, и больше не менялось
+  // ничем: ни одной операции провода про смену в каталоге не было.
+  //
+  // # Состояние — подписка, а не вопрос
+  //
+  // Это и есть починка значка. Вопрос был бы верен ровно в тот миг, когда
+  // строится экран, а вкладку держат открытой всю смену: касса закрыла бы
+  // смену, а на планшете значок остался бы зелёным до перезагрузки
+  // страницы. Источник — `AppDatabase.tableUpdates`, тот же, которым уже
+  // живут девять подписок каталога.
+  //
+  // # Что вкладка вправе задать, а что считает касса
+  //
+  // Разбор целиком — в докстринге `lib/domain/shift/shift_desk.dart`.
+  // Коротко: вкладка задаёт **одно число — сколько человек насчитал в
+  // ящике**, потому что это физический замер, которого нет ни в одном
+  // журнале. Всё остальное — системный итог, «должно быть», расхождение,
+  // время закрытия, уточнённое время открытия, Z-отчёт, список
+  // нефискализованных чеков — арифметика над журналом кассы, и считает её
+  // касса. Вкладке, которой позволено назвать системный итог, ничего не
+  // стоило бы закрыть смену на числе, которого никто не считал: расхождение
+  // вышло бы нулевым по построению.
+  //
+  // Деньги едут **строкой** (`wireMoney`, I159), и `null` значит «не
+  // считали», а не ноль: ноль в ящике — законный результат пересчёта.
+  //
+  // # Право — `nav.shift`, существующее
+  //
+  // Тот же ключ, что у `/shift` — экрана, который эти операции и переносят.
+  // Кассиру он достаётся по умолчанию ([roleDefaults]), и это верно:
+  // закрыть свою смену — рядовое действие у кассы, ради которого кассир не
+  // должен искать администратора. Своего ключа не заводится: новый без шага
+  // миграции тихо не достаётся ни одному существующему пользователю.
+  //
+  // Кассира, на которого открывается смена, операции **не возят**: его
+  // берёт обработчик из `AuthSession` (И162).
+
+  /// Состояние смены кассы — сейчас и при каждом изменении.
+  static const shiftState = Watch<void, ShiftDeskView>(
+    'shift.state',
+    access: SessionAccess(needs: PermissionKeys.navShift),
+    encode: _nothing,
+    decode: shiftDeskViewFromWireJson,
+  );
+
+  /// Закрыть смену. Тело несёт пересчитанные деньги — или не несёт ничего.
+  static const shiftClose = Ask<Decimal?, bool>(
+    'shift.close',
+    access: SessionAccess(needs: PermissionKeys.navShift),
+    encode: _encodeShiftCounted,
+    decode: _decodeOk,
+  );
+
+  /// Открыть смену. Тело несёт деньги, положенные в ящик на начало.
+  static const shiftOpen = Ask<Decimal?, bool>(
+    'shift.open',
+    access: SessionAccess(needs: PermissionKeys.navShift),
+    encode: _encodeShiftCounted,
+    decode: _decodeOk,
+  );
+
+  // ── диагностика оборудования ──────────────────────────────────────────
+  //
+  // Пункт «Достижимость с браузерного терминала» плана
+  // `2026-09-19-hardware-diagnostics.md` и решение заказчика 2026-09-18: «в
+  // браузере должно работать то же, что в приложении». Экран диагностики
+  // был только на кассе — вкладки читали `PrintQueue`, `AppDatabase` и
+  // `FiscalQueueStore` напрямую, а три из четырёх договоров живут в
+  // `lib/data/` и `lib/hardware/`, то есть в браузер не собираются вовсе.
+  //
+  // # Две операции, а не одна с режимом
+  //
+  // По одной на метод порта `HardwareDiagnosticsRepository`, тем же
+  // правилом, каким собраны `qr.*`, `receipt.*` и `shift.*`. Причём **род у
+  // них разный**, и это не мелочь оформления: принтер — подписка, оператор
+  // — вопрос, и род здесь тип, а не поле, так что перепутать их при вызове
+  // нечем.
+  //
+  // # Почему принтер — подписка
+  //
+  // Наладчик держит вкладку открытой и печатает пробный чек с соседнего
+  // экрана. Вопрос был бы верен ровно в миг постройки экрана: пробный чек
+  // не появился бы на нём вовсе, и вкладка отвечала бы «касса ничего не
+  // печатала» сразу после печати. Источник у подписки уже есть —
+  // `PrintQueue.watch()`, тот самый, которым живёт кассовая вкладка.
+  //
+  // # Почему оператор — вопрос
+  //
+  // У очереди фискализации сигнала изменения нет, и заводить его ради
+  // экрана, который наладчик и так обновляет потягиванием вниз, значило бы
+  // строить подписку под поверхность, а не под событие. Кассовая вкладка
+  // устроена вопросом с первого дня.
+  //
+  // # Тела у обеих пустые, и это решение
+  //
+  // Рабочего места операции не возят. Вопрос вкладки — «что отправила
+  // **эта касса**», и отвечает касса по себе (`TerminalRepository.self`).
+  // Прими операция чужой `terminalId` с планшета, вкладка читала бы чеки
+  // соседнего рабочего места (И29: у задания есть владелец — терминал и
+  // касса), а право `settings.hardware` этого не закрывает: оно про
+  // настройку своего оборудования, а не про чужие чеки.
+  //
+  // # Право — `settings.hardware`, существующее
+  //
+  // Тот же ключ, что у маршрута `/diagnostics` на кассе, у
+  // `/hardware-settings` и у `/emulator-settings`. Экран показывает
+  // внутренности настройки оборудования, а не операцию кассира. Своего
+  // ключа не заводится по тому же доводу, что у соседей: новый без шага
+  // миграции тихо не достаётся ни одному существующему пользователю
+  // (докстринг `PermissionKeys.allPermissions`, «Правило на будущее»), а
+  // миграции у этой работы нет.
+
+  /// Задания печати этой кассы — сейчас и при каждом изменении.
+  ///
+  /// Чек едет **готовым текстом**, а не байтами: разбирает его касса своим
+  /// единственным разборщиком. Разбор, почему именно так, — в докстринге
+  /// `lib/domain/diagnostics/hardware_diagnostics.dart`.
+  static const diagnosticsPrinter = Watch<void, PrinterDiagnosticsView>(
+    'diagnostics.printer',
+    access: SessionAccess(needs: PermissionKeys.settingsHardware),
+    encode: _nothing,
+    decode: printerDiagnosticsFromWireJson,
+  );
+
+  /// Обмен с фискальным оператором: принятые документы и очередь.
+  static const diagnosticsFiscal = Ask<void, FiscalDiagnosticsView>(
+    'diagnostics.fiscal',
+    access: SessionAccess(needs: PermissionKeys.settingsHardware),
+    encode: _nothing,
+    decode: fiscalDiagnosticsFromWireJson,
+  );
+
+  // ── ящик, дисплей, весы (пункт 4 того же плана) ────────────────────────
+  //
+  // Три вкладки, которых на планшете не было вовсе. Право, пустое тело и
+  // запрет называть рабочее место — те же, что у двух операций выше; ниже
+  // только то, что у этих троих своё.
+  //
+  // # Все три — подписки, и у каждой довод свой
+  //
+  // У ящика и дисплея довод принтера дословно: наладчик держит вкладку
+  // открытой и **жмёт кнопку на кассе** — импульс и строка обязаны появиться
+  // в момент события, а не при следующем вопросе. Сигнал у кассы уже есть
+  // (`CashDrawerJournal.watch`, `CustomerDisplayJournal.watch`), заводить под
+  // эти подписки не пришлось ничего — тем они и отличаются от фискальной
+  // очереди, где сигнала нет и подписку строили бы ради экрана.
+  //
+  // У весов довод **другой и сильнее**: вопрос здесь неверен по предмету.
+  // Вкладка весов существует затем, чтобы наладчик положил груз на чашу и
+  // увидел, как число едет; вопрос показал бы одно застывшее число.
+  //
+  // # Но у весов данные — поток, и потому касса их прореживает
+  //
+  // `ScalesService` опрашивает порт каждые 200 мс. Кадр на каждое показание
+  // означал бы поток ради вкладки, которую смотрят минуту. Прореживает
+  // **касса, до провода**, двумя правилами: не повторяться (неподвижные весы
+  // шлют одно и то же бесконечно — с этим правилом простой стоит ноль
+  // кадров) и не чаще окна, с обязательной досылкой последнего. Разбор
+  // решения целиком — в докстринге
+  // `HardwareDiagnosticsRepository.watchScales`.
+  //
+  // Прореживание живёт на кассе, а не здесь и не во вкладке, по тому же
+  // правилу, что текст чека: по проводу едет готовое значение, а не сырьё.
+
+  /// Импульсы денежного ящика этой кассы — сейчас и при каждом новом.
+  static const diagnosticsDrawer = Watch<void, DrawerDiagnosticsView>(
+    'diagnostics.drawer',
+    access: SessionAccess(needs: PermissionKeys.settingsHardware),
+    encode: _nothing,
+    decode: drawerDiagnosticsFromWireJson,
+  );
+
+  /// Строки, ушедшие на дисплей покупателя, и то, что на стекле сейчас.
+  static const diagnosticsDisplay = Watch<void, DisplayDiagnosticsView>(
+    'diagnostics.display',
+    access: SessionAccess(needs: PermissionKeys.settingsHardware),
+    encode: _nothing,
+    decode: displayDiagnosticsFromWireJson,
+  );
+
+  /// Показание весов живьём — кадрами, прореженными кассой.
+  static const diagnosticsScales = Watch<void, ScalesDiagnosticsView>(
+    'diagnostics.scales',
+    access: SessionAccess(needs: PermissionKeys.settingsHardware),
+    encode: _nothing,
+    decode: scalesDiagnosticsFromWireJson,
+  );
+
   /// Все операции провода.
   ///
   /// Список ведётся руками, и это не недосмотр: в Dart нет способа перечислить
   /// объявленные константы класса без зеркал, а зеркала запрещены в сборке
   /// под браузер. Забытая здесь операция уходит от проверок уникальности имени
   /// и рода — поэтому `till_ops_test.dart` отдельно сверяет этот список с
-  /// поимённым перечислением всех тридцати одной.
+  /// поимённым перечислением всех тридцати двух.
   static const all = <WireOp<Object?, Object?>>[
     startupBoot,
     setupFirstLaunch,
@@ -597,12 +1182,21 @@ abstract final class TillOps {
     deviceBindings,
     deviceBindingSave,
     terminalRename,
+    terminalSetPaymentTypes,
     terminalRegister,
     terminalResume,
     terminalDelete,
     terminalSelfEnsure,
     deviceDiscovery,
     deviceCheck,
+    scannerRules,
+    // Пункт 11 ревизии 2026-09-19: правила сканера с планшета не только
+    // читаются, а просроченная партия называется и в браузере.
+    scannerRulesSave,
+    saleExpiryWarning,
+    // Пункт 12 ревизии 2026-09-19: остаток соседнего рабочего места
+    // перестаёт устаревать молча.
+    stockRevision,
     authUsers,
     authLogin,
     authLogout,
@@ -615,6 +1209,40 @@ abstract final class TillOps {
     networkWifiDisconnect,
     networkEthernetStatus,
     networkEthernetConfigure,
+    // Настройка оплаты по QR из браузера — решение заказчика 2026-09-18.
+    qrProviderSettings,
+    qrProviderSave,
+    qrProviderClear,
+    qrProviderKind,
+    // Шаблон чека из браузера — решение заказчика 2026-09-18.
+    receiptTemplates,
+    receiptTemplateSave,
+    receiptTemplateSelect,
+    receiptTemplateDelete,
+    receiptTemplatePreview,
+    receiptTemplateTestPrint,
+    // Смена с браузерного терминала — решение заказчика 2026-09-18.
+    shiftState,
+    shiftClose,
+    shiftOpen,
+    // Диагностика оборудования с планшета — пункт «Достижимость с
+    // браузерного терминала» плана 2026-09-19.
+    diagnosticsPrinter,
+    diagnosticsFiscal,
+    // Пункт 4 того же плана: ящик, дисплей покупателя и весы. До них на
+    // планшете этих вкладок не было вовсе.
+    diagnosticsDrawer,
+    diagnosticsDisplay,
+    diagnosticsScales,
+    ...SaleOps.all,
+    ...PayOps.all,
+    // Задача 19 плана «Продажа с браузерного терминала»: шесть операций
+    // возврата, у каждой своё имя в словаре доступа — иначе два ключа
+    // `op.refund`/`op.refundWithoutReceipt` проверять было бы нечем
+    // (докстринг `RefundOps`). Входят одной строкой по тому же правилу, что
+    // и `SaleOps.all`: единый список не имеет права знать о делении на
+    // файлы, иначе сторож провода видел бы только часть операций.
+    ...RefundOps.all,
   ];
 }
 
@@ -644,6 +1272,16 @@ Map<String, Object?> _encodeRename(TerminalRenameRequest request) => {
   'terminalId': request.terminalId,
   'name': request.name,
 };
+
+/// Тем же именем поля и тем же списком имён, что и в [terminalToWireJson]
+/// (`terminal_wire.dart`): запрос и ответ говорят об одном наборе одними
+/// словами, иначе согласие двух форм пришлось бы доказывать тестом вместо
+/// того, чтобы читать его глазами.
+Map<String, Object?> _encodePaymentTypes(TerminalPaymentTypesRequest request) =>
+    {
+      'terminalId': request.terminalId,
+      'allowedPaymentTypes': paymentTypeNames(request.types),
+    };
 
 Map<String, Object?> _encodeRegister(TerminalRegisterRequest request) => {
   'name': request.name,
@@ -691,11 +1329,378 @@ Map<String, Object?> _encodeEthernetConfigure(
   if (request.dns != null) 'dns': request.dns,
 };
 
+/// Настройка провайдера в кадре заявки.
+///
+/// Терпение — секундами целым числом, а не `Duration.toString()`: разбор
+/// текста «0:03:00.000000» на той стороне был бы вторым местом, где живёт
+/// форма, и первая же смена локали или формата сломала бы его молча.
+Map<String, Object?> _encodeQrProviderSave(QrProviderSaveAsk ask) => {
+  'baseUrl': ask.baseUrl,
+  'code': ask.code,
+  'patienceSeconds': ask.patience.inSeconds,
+  // Ключ кладётся **только когда кассир его набрал** — тем же приёмом и по
+  // тому же доводу, что ПИН сертификата: пустая строка в кадре и «не
+  // набирали» означают разное, и касса обязана различать их, чтобы
+  // пересохранение адреса не стирало прежний ключ.
+  if (ask.newApiKey != null && ask.newApiKey!.isNotEmpty)
+    'newApiKey': ask.newApiKey,
+  // Стирание кладётся только когда его просили: `false` в кадре ничего не
+  // сообщает, а отсутствие ключа читается умолчанием на той стороне.
+  if (ask.clearApiKey) 'clearApiKey': true,
+};
+
+/// Заявка из тела кадра — читается **снисходительно**.
+///
+/// Не-строка в адресе или мусор в секундах — кадр, собранный мимо экрана, и
+/// честный ответ ему даёт касса: пустой адрес делает настройку неполной
+/// (`QrProviderView.configured == false`), а не роняет обработчик `TypeError`
+/// ом, уехавшим на провод именем типа (I144).
+///
+/// Терпение вне разумных границ обрезается **здесь, а не на экране**: экран
+/// границы проверяет, чтобы избавить от круга, но запрет обязан держать
+/// касса — кадр можно собрать и без экрана. Ноль секунд означал бы код,
+/// который умирает раньше, чем покупатель откроет банк.
+QrProviderSaveAsk qrProviderSaveFromWireJson(Map<String, Object?> json) => (
+  baseUrl: switch (json['baseUrl']) {
+    final String value => value.trim(),
+    _ => '',
+  },
+  code: switch (json['code']) {
+    final String value => value.trim(),
+    _ => '',
+  },
+  patience: Duration(
+    seconds: switch (json['patienceSeconds']) {
+      final num value
+          when value >= qrPatienceMinSeconds && value <= qrPatienceMaxSeconds =>
+        value.toInt(),
+      _ => qrPatienceDefaultSeconds,
+    },
+  ),
+  newApiKey: switch (json['newApiKey']) {
+    final String value when value.trim().isNotEmpty => value.trim(),
+    _ => null,
+  },
+  clearApiKey: json['clearApiKey'] == true,
+);
+
+/// Границы терпения — **одни на экран и на кассу**.
+///
+/// Объявлены здесь, а не в контроллере экрана, ровно потому, что проверяют их
+/// оба: контроллер — чтобы не платить круг за заведомый отказ, касса — чтобы
+/// запрет держался и для кадра, собранного мимо экрана. Два набора чисел
+/// разошлись бы на первой же правке.
+const qrPatienceMinSeconds = 30;
+const qrPatienceMaxSeconds = 1800;
+const qrPatienceDefaultSeconds = 180;
+
+Map<String, Object?> _encodeQrKindActive(bool active) => {'active': active};
+
+/// Включение вида оплаты из тела кадра. Отсутствие поля — `false`: умолчание
+/// обязано быть тем, которое ничего не включает.
+bool qrKindActiveFromWireJson(Map<String, Object?> json) =>
+    json['active'] == true;
+
+// --- Смена ----------------------------------------------------------------
+
+/// Пересчитанные деньги в кадре — **строкой и только когда их считали**.
+///
+/// Деньги строкой — правило I159 (`wireMoney`, единственная дверь). Ключ
+/// **отсутствует**, когда считать никто не садился: `null` в значении читался
+/// бы так же, но говорил бы, что вкладка про пересчёт думала, а
+/// снисходительный разбор на приёме обязан отличать «не назвали» от
+/// «назвали мусором». Класть сюда `'0'` было бы прямой ошибкой: ноль в ящике
+/// — законный результат пересчёта, и подменить им «не считали» значит
+/// записать недостачу на всю выручку смены.
+Map<String, Object?> _encodeShiftCounted(Decimal? counted) => {
+  if (counted != null) 'counted': wireMoney(counted),
+};
+
+/// Пересчитанные деньги из тела кадра — читается **снисходительно**.
+///
+/// Не-строка, пустая строка и не-число читаются как «не считали», а не как
+/// ноль: кадр, собранный мимо экрана, не имеет права записать недостачу на
+/// всю выручку смены тем, что в поле оказался мусор. Тот же довод, что у
+/// `qrProviderSaveFromWireJson`, только цена ошибки здесь денежная.
+///
+/// Число, а не строка (`{'counted': 1234.5}`), — тоже «не считали»: деньги
+/// по проводу едут строкой, и принять `double` значило бы завести вторую,
+/// теряющую точность дверь рядом с единственной разрешённой (I159).
+Decimal? shiftCountedFromWireJson(Map<String, Object?> json) =>
+    switch (json['counted']) {
+      final String value when value.trim().isNotEmpty => Decimal.tryParse(
+        value.trim(),
+      ),
+      _ => null,
+    };
+
+/// Состояние смены в кадре ответа.
+Map<String, Object?> shiftDeskViewToWireJson(ShiftDeskView view) => {
+  'open': view.open,
+  'overAge': view.overAge,
+  if (view.openedAtSeconds != null) 'openedAtSeconds': view.openedAtSeconds,
+  if (view.cashierName != null) 'cashierName': view.cashierName,
+  'openingCash': wireMoney(view.openingCash),
+  'systemTotal': wireMoney(view.systemTotal),
+  'expectedCash': wireMoney(view.expectedCash),
+  'unfinishedSales': view.unfinishedSales,
+  'unfiscalizedCount': view.unfiscalizedCount,
+  'unfiscalizedReceipts': view.unfiscalizedReceipts,
+};
+
+/// Разбор состояния смены.
+///
+/// Усечённый кадр читается **закрытой сменой**, а не открытой: умолчание
+/// обязано быть тем, которое ничего не утверждает. Ошибись оно в другую
+/// сторону, и вкладка на потерянном поле рисовала бы зелёный значок «смена
+/// открыта» — ровно тот дефект, ради которого эта операция и заведена.
+///
+/// `openedAtSeconds` — **секунды**, и имя поля названо так нарочно: ошибка в
+/// единицах уже стоила получаса разбора, а при множителе в тысячу
+/// просроченная смена выглядела бы свежей.
+ShiftDeskView shiftDeskViewFromWireJson(Map<String, Object?> json) =>
+    ShiftDeskView(
+      open: json['open'] == true,
+      // Возраст **не пересчитывается здесь из `openedAtSeconds`**, а
+      // читается тем, что сказала касса: предел (сутки, сравнение `>=`)
+      // живёт в `ShiftAgeRule`, и второй счёт возраста в браузере разошёлся
+      // бы с тем, которым касса запирает продажу, — значок говорил бы одно,
+      // а продажа другое.
+      overAge: json['overAge'] == true,
+      openedAtSeconds: switch (json['openedAtSeconds']) {
+        final int value when value > 0 => value,
+        _ => null,
+      },
+      cashierName: switch (json['cashierName']) {
+        final String value when value.isNotEmpty => value,
+        _ => null,
+      },
+      openingCash: _money(json['openingCash']),
+      systemTotal: _money(json['systemTotal']),
+      expectedCash: _money(json['expectedCash']),
+      unfinishedSales: switch (json['unfinishedSales']) {
+        final int value when value > 0 => value,
+        _ => 0,
+      },
+      unfiscalizedCount: switch (json['unfiscalizedCount']) {
+        final int value when value > 0 => value,
+        _ => 0,
+      },
+      unfiscalizedReceipts: switch (json['unfiscalizedReceipts']) {
+        final List<Object?> rows => [
+          for (final row in rows)
+            if (row is int) row,
+        ],
+        _ => const [],
+      },
+    );
+
+/// Деньги из кадра. Потерянное или испорченное поле — ноль: показать нечего,
+/// и это честнее выдуманного числа. Экран при этом не молчит — рядом стоит
+/// `open == false`, то есть «смены нет», и чисел он не рисует вовсе.
+Decimal _money(Object? raw) => switch (raw) {
+  final String value => Decimal.tryParse(value) ?? Decimal.zero,
+  _ => Decimal.zero,
+};
+
+// --- Шаблон чека ----------------------------------------------------------
+
+Map<String, Object?> _encodeReceiptTemplateSave(ReceiptTemplateSaveAsk ask) => {
+  // `id` кладётся только у правки: отсутствие поля и есть «новый шаблон», а
+  // `null` в кадре читалось бы тем же, но говорило бы, что вкладка про `id`
+  // думала. Разница не косметическая — снисходительный разбор ниже
+  // обязан отличать «не назвали» от «назвали мусором».
+  if (ask.id != null) 'id': ask.id,
+  'name': ask.name,
+  'optionsJson': ask.optionsJson,
+};
+
+/// Заявка из тела кадра — читается **снисходительно**.
+///
+/// Тот же довод, что у `qrProviderSaveFromWireJson`: кадр можно собрать и
+/// мимо экрана, и не-строка в имени — это заявка, а не повод уронить
+/// обработчик `TypeError`-ом, уехавшим на провод именем типа (I144).
+///
+/// Пустое имя **не** подменяется здесь умолчанием: запрет на безымянный
+/// шаблон держит обработчик кассы названным отказом, а не тихая подстановка
+/// «Без названия». Владелец обязан узнать, что шаблон не записан, — иначе он
+/// уйдёт с экрана, считая чек настроенным.
+ReceiptTemplateSaveAsk receiptTemplateSaveFromWireJson(
+  Map<String, Object?> json,
+) => (
+  id: switch (json['id']) {
+    final int value when value > 0 => value,
+    _ => null,
+  },
+  name: switch (json['name']) {
+    final String value => value.trim(),
+    _ => '',
+  },
+  // Мусор вместо настройки читается пустой строкой, а `ReceiptOptions.decode`
+  // на ней отдаёт умолчание — то же, что видит новый шаблон. Уронить
+  // обработчик было бы хуже: кадр пришёл, ответить на него надо.
+  optionsJson: switch (json['optionsJson']) {
+    final String value => value,
+    _ => '',
+  },
+);
+
+Map<String, Object?> _encodeReceiptTemplateId(int id) => {'id': id};
+
+/// Идентификатор из тела кадра. Мусор и отсутствие читаются нулём, а строки с
+/// таким `id` не бывает: и выбор, и удаление окажутся ничем не сделавшими
+/// запросами, а не обработчиком, упавшим на приведении типа.
+int receiptTemplateIdFromWireJson(Map<String, Object?> json) =>
+    switch (json['id']) {
+      final int value => value,
+      _ => 0,
+    };
+
+Map<String, Object?> _encodeReceiptTemplateOptions(String optionsJson) => {
+  'optionsJson': optionsJson,
+};
+
+String receiptTemplateOptionsFromWireJson(Map<String, Object?> json) =>
+    switch (json['optionsJson']) {
+      final String value => value,
+      _ => '',
+    };
+
+/// Список шаблонов в кадре ответа.
+///
+/// Разобранной настройки (`ReceiptOptions`) здесь нет: по проводу едет ровно
+/// то, что лежит в колонке, а разбор — дело экрана. Разбери его порт или
+/// кодек, у формы хранения появился бы второй читатель, отстающий на одну
+/// правку.
+Map<String, Object?> receiptTemplateCatalogToWireJson(
+  ReceiptTemplateCatalog catalog,
+) => {
+  'paperWidthMm': catalog.paperWidthMm,
+  'templates': [
+    for (final row in catalog.templates)
+      {
+        'id': row.id,
+        'name': row.name,
+        'builtIn': row.builtIn,
+        'selected': row.selected,
+        'optionsJson': row.optionsJson,
+      },
+  ],
+};
+
+/// Разбор списка. Усечённый кадр не роняет вкладку: она покажет пустой
+/// список — то же, что показала бы для кассы без единого шаблона.
+ReceiptTemplateCatalog receiptTemplateCatalogFromWireJson(
+  Map<String, Object?> json,
+) => ReceiptTemplateCatalog(
+  // Ширина ленты умолчанием **58 мм**, а не 80: узкая лента — та, на которой
+  // текст переносится раньше. Ошибись умолчание в другую сторону, и
+  // предпросмотр на потерянном поле показывал бы строки шире, чем выйдет из
+  // принтера, — то самое расхождение «экран не то, что бумага», ради
+  // которого всё это устроено.
+  paperWidthMm: switch (json['paperWidthMm']) {
+    final int value when value == 80 => 80,
+    _ => 58,
+  },
+  templates: switch (json['templates']) {
+    final List<Object?> rows => [
+      for (final row in rows)
+        if (row is Map<String, Object?>)
+          ReceiptTemplateRow(
+            id: switch (row['id']) {
+              final int value => value,
+              _ => 0,
+            },
+            name: switch (row['name']) {
+              final String value => value,
+              _ => '',
+            },
+            builtIn: row['builtIn'] == true,
+            selected: row['selected'] == true,
+            optionsJson: switch (row['optionsJson']) {
+              final String value => value,
+              _ => '',
+            },
+          ),
+    ],
+    _ => const [],
+  },
+);
+
+/// Предпросмотр в кадре ответа — **готовый текст**, собранный кассой.
+Map<String, Object?> receiptTemplatePreviewToWireJson(String text) => {
+  'preview': text,
+};
+
+/// Разбор предпросмотра. Потерянное поле читается пустой строкой: экран
+/// покажет пустую рамку, а не строку «null» поверх белого поля чека.
+String receiptTemplatePreviewFromWireJson(Map<String, Object?> json) =>
+    switch (json['preview']) {
+      final String value => value,
+      _ => '',
+    };
+
+/// Настройка QR в кадре ответа — **без ключа, и класть его сюда нечего**.
+///
+/// [QrProviderView] поля ключа не имеет вовсе (докстринг
+/// `qr_provider_setup.dart`), поэтому утечке неоткуда взяться: это свойство
+/// формы, а не внимательности пишущего. Единственное, что касса говорит о
+/// ключе, — `keySet`: заведён или нет.
+Map<String, Object?> qrProviderViewToWireJson(QrProviderView view) => {
+  'configured': view.configured,
+  'baseUrl': view.baseUrl,
+  'code': view.code,
+  'keySet': view.keySet,
+  'patienceSeconds': view.patience.inSeconds,
+  'kindActive': view.kindActive,
+};
+
+/// Разбор ответа. Усечённый кадр не роняет вкладку: она покажет настройку
+/// незаведённой — то же, что показала бы для пустой кассы.
+QrProviderView qrProviderViewFromWireJson(Map<String, Object?> json) =>
+    QrProviderView(
+      configured: json['configured'] == true,
+      baseUrl: switch (json['baseUrl']) {
+        final String value => value,
+        _ => '',
+      },
+      code: switch (json['code']) {
+        final String value => value,
+        _ => '',
+      },
+      keySet: json['keySet'] == true,
+      patience: Duration(
+        seconds: switch (json['patienceSeconds']) {
+          final num value when value > 0 => value.toInt(),
+          _ => qrPatienceDefaultSeconds,
+        },
+      ),
+      kindActive: json['kindActive'] == true,
+    );
+
 // --- Разбор ответов ------------------------------------------------------
 
 /// Итог действия. Отсутствие `ok` — это «нет», а не «да»: умолчание обязано
 /// быть тем, которое ничего не утверждает.
 bool _decodeOk(Map<String, Object?> body) => body['ok'] == true;
+
+Map<String, Object?> _encodeProductId(int productId) => {
+  'productId': productId,
+};
+
+/// Нераспознанное тело читается как «не просрочено», и это решение, а не
+/// небрежность: предупреждение — не запрет, и выдумать его на непонятном
+/// ответе значило бы учить кассира не верить жёлтому снекбару.
+bool _decodeExpired(Map<String, Object?> body) => body['expired'] == true;
+
+/// Номер ревизии остатков. Отсутствие поля — отказ разбора, а не ноль:
+/// «касса прислала кадр без номера» и «номер ноль» — разные вещи, и
+/// вторая означает свежую кассу, на которой остаток ещё не двигали.
+int _decodeRevision(Map<String, Object?> body) {
+  final value = body['revision'];
+  if (value is int) return value;
+  throw FormatException('stock.revision: нет поля revision — $body');
+}
 
 /// Нераспознанное имя состояния подъёма читается как [AppInitStatus.databaseFailure].
 ///
@@ -794,9 +1799,7 @@ AuthSession? _decodeAuthSession(Map<String, Object?> body) =>
     authSessionFromWireJson((body['session'] as Map?)?.cast<String, Object?>());
 
 List<LiveSession> _decodeLiveSessions(Map<String, Object?> body) =>
-    _objectList(
-      body['sessions'],
-    ).map(liveSessionFromWireJson).toList();
+    _objectList(body['sessions']).map(liveSessionFromWireJson).toList();
 
 NetworkStatus _decodeNetworkStatus(Map<String, Object?> body) =>
     networkStatusFromWireJson(body);
@@ -806,7 +1809,10 @@ List<WifiNetwork> _decodeWifiScan(Map<String, Object?> body) =>
 
 ({bool success, String message}) _decodeSuccessMessage(
   Map<String, Object?> body,
-) => (success: body['success'] == true, message: (body['message'] ?? '') as String);
+) => (
+  success: body['success'] == true,
+  message: (body['message'] ?? '') as String,
+);
 
 /// Форма `network.ethernetStatus` варьируется по тому, что вернул `ip -j addr
 /// show` на кассе (докстринг `NetworkRepository.ethernetStatus`) — тело
@@ -815,3 +1821,300 @@ Map<String, dynamic> _decodeEthernetStatus(Map<String, Object?> body) => body;
 
 ({bool success, String mode}) _decodeSuccessMode(Map<String, Object?> body) =>
     (success: body['success'] == true, mode: (body['mode'] ?? '') as String);
+
+// --- Диагностика оборудования --------------------------------------------
+//
+// Пункт «Достижимость с браузерного терминала» плана 2026-09-19.
+//
+// # Чего в этих кадрах нет ни байта — и это главное свойство
+//
+// Байтов ESC/POS. Чек едет **готовым текстом**: его разобрала касса своим
+// единственным разборщиком, и во второй половине провода раскладки чека нет
+// вовсе. Разбор, почему так, — в докстринге
+// `lib/domain/diagnostics/hardware_diagnostics.dart`; цена того, что было бы
+// наоборот, записана в докстринге `escpos_text_preview.dart`.
+//
+// # Состояние задания едет ИМЕНЕМ, а не номером
+//
+// Глобальное правило проекта (докстринг `PrintJobState`): индекс сломался бы
+// от вставки нового состояния в середину перечисления, и сломался бы молча.
+
+/// Задания печати в кадре подписки.
+Map<String, Object?> printerDiagnosticsToWireJson(
+  PrinterDiagnosticsView view,
+) => {
+  'available': view.available,
+  'jobs': [
+    for (final job in view.jobs)
+      {
+        'id': job.id,
+        'state': job.state.name,
+        'attempts': job.attempts,
+        'createdAt': job.createdAt.toIso8601String(),
+        'failureReason': job.failureReason,
+        'text': job.text,
+      },
+  ],
+};
+
+/// Разбор заданий печати.
+///
+/// Состояние ищется **строго по имени** (`PrintJobState.values.byName`), без
+/// подстановки умолчания, и это решение: имя, которого нет в перечислении,
+/// означало бы кассу новее вкладки, а такого не бывает по построению —
+/// страницу и бандл вкладка берёт у **той же кассы**, к которой потом
+/// подключается (`ApiServer._frontendHandler`). Подставь разбор здесь «ждёт
+/// очереди» на неизвестное имя, вкладка показывала бы правдоподобно-неверное
+/// состояние вместо того, чтобы назвать беду.
+PrinterDiagnosticsView printerDiagnosticsFromWireJson(
+  Map<String, Object?> json,
+) => PrinterDiagnosticsView(
+  available: json['available'] == true,
+  jobs: switch (json['jobs']) {
+    final List<Object?> rows => [
+      for (final row in rows.whereType<Map<String, Object?>>())
+        PrintJobDiagnostics(
+          id: (row['id'] ?? '') as String,
+          state: PrintJobState.values.byName((row['state'] ?? '') as String),
+          attempts: switch (row['attempts']) {
+            final int value => value,
+            _ => 0,
+          },
+          createdAt:
+              DateTime.tryParse((row['createdAt'] ?? '') as String) ??
+              DateTime.fromMillisecondsSinceEpoch(0),
+          failureReason: row['failureReason'] as String?,
+          text: (row['text'] ?? '') as String,
+        ),
+    ],
+    _ => const [],
+  },
+);
+
+/// Обмен с фискальным оператором в кадре ответа.
+Map<String, Object?> fiscalDiagnosticsToWireJson(FiscalDiagnosticsView view) =>
+    {
+      'configured': view.configured,
+      'accepted': [
+        for (final doc in view.accepted)
+          {
+            'fiscalNo': doc.fiscalNo,
+            'operatorReceiptNo': doc.operatorReceiptNo,
+            'receiptNo': doc.receiptNo,
+            'offline': doc.offline,
+          },
+      ],
+      'queued': [
+        for (final doc in view.queued)
+          {
+            'idempotencyKey': doc.idempotencyKey,
+            'opType': doc.opType,
+            'attempts': doc.attempts,
+            'failed': doc.failed,
+            'lastError': doc.lastError,
+            // Тело запроса — строкой, уже с отступами. Не вложенным объектом:
+            // касса форматирует его ровно так, как этот текст будут сверять с
+            // тем, что ждёт оператор, и второй форматировщик во вкладке
+            // разошёлся бы с первым на первой же правке.
+            'payloadJson': doc.payloadJson,
+          },
+      ],
+      // Признак «за адресом эмулятор» считает КАССА: вкладка одна на обе
+      // поверхности, а разбор адреса требует `dart:io`, которого в браузерной
+      // сборке нет. Довод целиком — на `FiscalDiagnosticsView.onLoopback`.
+      'onLoopback': view.onLoopback,
+    };
+
+// --- Ящик, дисплей, весы --------------------------------------------------
+//
+// Пункт 4 того же плана. Три правила, общие на все три кадра:
+//
+// 1. **перечни едут именами**, а не номерами — общее правило проекта
+//    (докстринг `PrintJobState`): индекс сломался бы от вставки значения в
+//    середину, и сломался бы молча;
+// 2. **разбор имени строгий**, без подстановки умолчания, тем же доводом,
+//    что у состояния задания печати: страницу и бандл вкладка берёт у той же
+//    кассы, к которой подключается, и имени, которого нет в перечне, взяться
+//    неоткуда. Подставь разбор умолчание, наладчик увидел бы правдоподобное
+//    неверное слово вместо названной беды;
+// 3. **готовые значения, а не сырьё.** Вес едет строкой с тремя знаками,
+//    сумма на дисплее — той записью, что ушла в порт, статус весов —
+//    разобранным. Второй разборщик на планшете разошёлся бы с первым молча —
+//    то же решение, по которому чек едет текстом.
+
+/// Импульсы ящика в кадре подписки.
+Map<String, Object?> drawerDiagnosticsToWireJson(DrawerDiagnosticsView view) =>
+    {
+      'available': view.available,
+      'kicks': [
+        for (final kick in view.kicks)
+          {
+            'at': kick.at.toIso8601String(),
+            'path': kick.path.name,
+            // `accepted`, а не `opened`: обратной связи от соленоида нет ни на
+            // одном пути, и имя поля на проводе обязано говорить это же.
+            'accepted': kick.accepted,
+            'note': kick.note,
+          },
+      ],
+    };
+
+/// Разбор импульсов ящика.
+DrawerDiagnosticsView drawerDiagnosticsFromWireJson(
+  Map<String, Object?> json,
+) => DrawerDiagnosticsView(
+  available: json['available'] == true,
+  kicks: switch (json['kicks']) {
+    final List<Object?> rows => [
+      for (final row in rows.whereType<Map<String, Object?>>())
+        DrawerKickDiagnostics(
+          at:
+              DateTime.tryParse((row['at'] ?? '') as String) ??
+              DateTime.fromMillisecondsSinceEpoch(0),
+          path: DrawerKickPath.values.byName((row['path'] ?? '') as String),
+          accepted: row['accepted'] == true,
+          note: row['note'] as String?,
+        ),
+    ],
+    _ => const [],
+  },
+);
+
+/// Строки дисплея покупателя в кадре подписки.
+Map<String, Object?> displayDiagnosticsToWireJson(
+  DisplayDiagnosticsView view,
+) => {
+  'available': view.available,
+  'lines': [for (final line in view.lines) _displayLineToWireJson(line)],
+  // «Что на стекле сейчас» едет **отдельным полем**, а не вычисляется
+  // вкладкой обходом списка: правило «последняя принятая» живёт одно, у
+  // журнала кассы. Посчитай его принимающая половина сама, правило оказалось
+  // бы в двух местах и разошлось бы на первой же правке.
+  'current': view.current == null
+      ? null
+      : _displayLineToWireJson(view.current!),
+};
+
+Map<String, Object?> _displayLineToWireJson(DisplayLineDiagnostics line) => {
+  'at': line.at.toIso8601String(),
+  'kind': line.kind.name,
+  'text': line.text,
+  'refusal': line.refusal,
+};
+
+DisplayLineDiagnostics _displayLineFromWireJson(Map<String, Object?> row) =>
+    DisplayLineDiagnostics(
+      at:
+          DateTime.tryParse((row['at'] ?? '') as String) ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+      kind: DisplayCallKind.values.byName((row['kind'] ?? '') as String),
+      text: (row['text'] ?? '') as String,
+      refusal: row['refusal'] as String?,
+    );
+
+/// Разбор строк дисплея.
+DisplayDiagnosticsView displayDiagnosticsFromWireJson(
+  Map<String, Object?> json,
+) => DisplayDiagnosticsView(
+  available: json['available'] == true,
+  lines: switch (json['lines']) {
+    final List<Object?> rows => [
+      for (final row in rows.whereType<Map<String, Object?>>())
+        _displayLineFromWireJson(row),
+    ],
+    _ => const [],
+  },
+  current: switch (json['current']) {
+    final Map<String, Object?> row => _displayLineFromWireJson(row),
+    _ => null,
+  },
+);
+
+/// Показание весов в кадре подписки.
+///
+/// Кадр приходит **прореженным**: касса не шлёт ни повторов, ни чаще одного
+/// в окно. Разбор решения — в докстринге
+/// `HardwareDiagnosticsRepository.watchScales`; здесь важно одно следствие:
+/// по частоте этих кадров **нельзя** судить о частоте ответов прибора.
+Map<String, Object?> scalesDiagnosticsToWireJson(ScalesDiagnosticsView view) =>
+    {
+      'bound': view.bound,
+      'port': view.port,
+      'baudRate': view.baudRate,
+      'protocol': view.protocol,
+      'connected': view.connected,
+      'reading': view.reading == null
+          ? null
+          : {
+              // Строкой с тремя знаками, уже приготовленной кассой: число на
+              // проводе означало бы, что принимающая половина выбирает формат
+              // показа, — а `Decimal` печатает 1.250 как «1.25», и разрешение
+              // прибора терялось бы молча.
+              'weight': view.reading!.weight,
+              'unit': view.reading!.unit,
+              'status': view.reading!.status.name,
+              'errorMessage': view.reading!.errorMessage,
+            },
+    };
+
+/// Разбор показания весов.
+ScalesDiagnosticsView scalesDiagnosticsFromWireJson(
+  Map<String, Object?> json,
+) => ScalesDiagnosticsView(
+  bound: json['bound'] == true,
+  port: json['port'] as String?,
+  baudRate: switch (json['baudRate']) {
+    final int value => value,
+    _ => 0,
+  },
+  protocol: (json['protocol'] ?? '') as String,
+  connected: json['connected'] == true,
+  reading: switch (json['reading']) {
+    final Map<String, Object?> row => ScalesReadingDiagnostics(
+      weight: (row['weight'] ?? '') as String,
+      unit: (row['unit'] ?? '') as String,
+      status: ScalesReadingStatus.values.byName(
+        (row['status'] ?? '') as String,
+      ),
+      errorMessage: row['errorMessage'] as String?,
+    ),
+    _ => null,
+  },
+);
+
+/// Разбор обмена с оператором.
+FiscalDiagnosticsView fiscalDiagnosticsFromWireJson(
+  Map<String, Object?> json,
+) => FiscalDiagnosticsView(
+  configured: json['configured'] == true,
+  onLoopback: json['onLoopback'] == true,
+  accepted: switch (json['accepted']) {
+    final List<Object?> rows => [
+      for (final row in rows.whereType<Map<String, Object?>>())
+        FiscalAcceptedDocument(
+          fiscalNo: row['fiscalNo'] as String?,
+          operatorReceiptNo: row['operatorReceiptNo'] as String?,
+          receiptNo: row['receiptNo'] as String?,
+          offline: row['offline'] == true,
+        ),
+    ],
+    _ => const [],
+  },
+  queued: switch (json['queued']) {
+    final List<Object?> rows => [
+      for (final row in rows.whereType<Map<String, Object?>>())
+        FiscalQueuedDocument(
+          idempotencyKey: (row['idempotencyKey'] ?? '') as String,
+          opType: (row['opType'] ?? '') as String,
+          attempts: switch (row['attempts']) {
+            final int value => value,
+            _ => 0,
+          },
+          failed: row['failed'] == true,
+          lastError: row['lastError'] as String?,
+          payloadJson: (row['payloadJson'] ?? '') as String,
+        ),
+    ],
+    _ => const [],
+  },
+);

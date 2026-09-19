@@ -300,14 +300,32 @@ void main() {
       expect(retried.body['Token'], 'TKN-2');
     });
 
-    test('duplicate (Code 14) → idempotent success', () async {
-      final t = _FakeTransport([
-        _ok({'Token': 'TKN'}),
-        _err(14, 'DuplicateExternalCode'),
-      ]);
-      final res = await _provider(t).fiscalizeSale(_mixedSale());
-      expect(res.success, isTrue);
-    });
+    /// Код 14 — **не идемпотентный успех**, и это не игра слов.
+    ///
+    /// Утверждение «повтор того же ключа идемпотентен» верно про оператора:
+    /// второго документа у него не появится. Про кассу оно неверно —
+    /// признака первого документа она не получает, и печатать ей нечего.
+    /// Ответ `ok(fiscalSign: '')`, стоявший здесь до 2026-09-18, это и
+    /// закреплял: кассир читал «фискализовано», покупатель уносил чек без
+    /// фискального признака, а строки в `WebkassaReceipts` не появлялось
+    /// (`_persistReceipt` выходит по `!hasFiscalSign`). Разбор и причина,
+    /// по которой признак не дозапрашивается, — в докстринге
+    /// `WebKassaProvider._checkResult`; живьём — в
+    /// `test/data/fiscal/webkassa_duplicate_key_test.dart`.
+    test(
+      'duplicate (Code 14) → отказ duplicate, а не пустой признак',
+      () async {
+        final t = _FakeTransport([
+          _ok({'Token': 'TKN'}),
+          _err(14, 'DuplicateExternalCode'),
+        ]);
+        final res = await _provider(t).fiscalizeSale(_mixedSale());
+        expect(res.success, isFalse);
+        expect(res.errorCode, FiscalErrorCode.duplicate);
+        expect(res.rawErrorCode, 14);
+        expect(res.hasFiscalSign, isFalse);
+      },
+    );
 
     test(
       'bad credentials (Code 1) on authorize → notConfigured/failure',

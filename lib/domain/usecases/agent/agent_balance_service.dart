@@ -14,8 +14,4 @@ abstract class AgentBalanceService {
   Future<void> set(int agentLocalId, Decimal balance);
 
   Future<void> coupleWith(Map<int, Decimal> balances);
-
-  Future<Decimal> getCashback(int agentLocalId);
-
-  Future<Decimal> addCashback(int agentLocalId, Decimal amount);
 }

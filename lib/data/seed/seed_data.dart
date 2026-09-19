@@ -344,11 +344,16 @@ Future<void> generateSeedData(AppDatabase db) async {
 
         saleAmount = (saleAmount * 1000).roundToDouble() / 1000;
 
+        // `terminal_id` — явный `NULL`, не умолчание колонки: демо-продажи
+        // рождаются сразу в `state` 1/4 (`saleState` выше, никогда 0), и
+        // владельца по правилу смысла `Sales.terminalId` не несут — но
+        // правило требует решения на каждую запись `state`, не молчаливого
+        // совпадения с умолчанием (`sale_state_owner_guard_test.dart`).
         await db.customStatement(
           'INSERT OR IGNORE INTO sales '
           '(receipt_no, pos_id, user_id, amount, time, state, is_wholesale, '
-          'customer_local_id, is_ofd) '
-          'VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)',
+          'customer_local_id, is_ofd, terminal_id) '
+          'VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NULL)',
           [
             receiptNo,
             posId,

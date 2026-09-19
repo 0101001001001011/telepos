@@ -5,6 +5,7 @@ import 'package:decimal/decimal.dart';
 import 'package:telepos/hardware/display/display_config.dart';
 import 'package:telepos/hardware/display/led_display.dart';
 import 'package:telepos/hardware/display/vfd_display.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 
 abstract class CustomerDisplayManager {
   CustomerDisplayConfig get config;
@@ -101,14 +102,30 @@ abstract class BaseDisplayManager implements CustomerDisplayManager {
     return str.padLeft(lineLength);
   }
 
-  String fitLine(String text) {
+  /// Текст, готовый к разметке строки табло.
+  ///
+  /// Та же таблица, что у чека (`hardware/paper_charset.dart`): казахские
+  /// буквы выходят русской основой, `₸` — сокращением «тг». Замена делается
+  /// **до** обрезки и добивки пробелами, иначе строка на табло уехала бы на
+  /// разницу длин — ровно тот дефект, который был измерен на квитанции
+  /// кассовой операции (33 колонки вместо 32).
+  ///
+  /// **Чего это НЕ доказывает:** кодовая страница табло не проверена на
+  /// железе и не объявляется потоком — в отличие от чека, где её ставит
+  /// `ESC t 17`. Здесь взята CP866, потому что именно её и собирали прежние
+  /// кодировщики табло; замера нет ни у той, ни у этой.
+  String displayText(String text) => paperText(text, PaperCharset.cp866);
+
+  String fitLine(String rawText) {
+    final text = displayText(rawText);
     if (text.length > lineLength) {
       return text.substring(0, lineLength);
     }
     return text.padRight(lineLength);
   }
 
-  String centerText(String text) {
+  String centerText(String rawText) {
+    final text = displayText(rawText);
     if (text.length >= lineLength) {
       return text.substring(0, lineLength);
     }

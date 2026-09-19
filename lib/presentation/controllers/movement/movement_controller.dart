@@ -2,12 +2,12 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:telepos/presentation/controllers/app/stock_revision.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker/talker.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/product/find_by_barcode_use_case.dart';
-import 'package:telepos/presentation/controllers/stock_registry/stock_registry_controller.dart';
 
 @immutable
 class MovementProductInfo {
@@ -319,7 +319,8 @@ class MovementNotifier extends Notifier<MovementState> {
 
       state = state.copyWith(isSaving: false);
 
-      ref.invalidate(stockRegistryControllerProvider);
+      // Задача 36: одна дорога на «остатки изменились» — счётчик.
+      ref.read(stockRevisionProvider.notifier).bump();
 
       return MovementSaveResult.saved(
         movementId: movementId,

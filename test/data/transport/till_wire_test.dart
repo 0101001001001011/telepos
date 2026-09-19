@@ -30,7 +30,7 @@ void main() {
     // Это всё, ради чего заводились двунаправленные потоки: соответствие
     // ответа вопросу не хранится нигде, оно и есть поток.
     wire = TillWire(server, {
-      'demo.echo': (body, [_]) async => {'text': body['value']},
+      'demo.echo': (body, [_, _]) async => {'text': body['value']},
     }, guard: openGuard)..start();
 
     await askAndSettle('{"op":"demo.echo","body":{"value":"семь"}}');
@@ -59,7 +59,7 @@ void main() {
   test('обработчик, бросивший исключение, не роняет кассу', () async {
     // Касса, упавшая на запросе терминала, не может принять деньги (И144).
     wire = TillWire(server, {
-      'demo.boom': (body, [_]) async => throw StateError('внутри плохо'),
+      'demo.boom': (body, [_, _]) async => throw StateError('внутри плохо'),
     }, guard: openGuard)..start();
 
     await askAndSettle('{"op":"demo.boom","body":{}}');
@@ -117,7 +117,7 @@ void main() {
     // состояние, другой список терминалов. Перепутанные ответы выглядели бы
     // как испорченные данные, а не как ошибка транспорта.
     wire = TillWire(server, {
-      'demo.echo': (body, [_]) async => {'text': body['value']},
+      'demo.echo': (body, [_, _]) async => {'text': body['value']},
     }, guard: openGuard)..start();
 
     server.emitStreamOpened(sessionId: 1, streamId: 4);

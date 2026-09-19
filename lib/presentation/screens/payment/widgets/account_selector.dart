@@ -55,19 +55,22 @@ class AccountSelector extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final effectiveSelectedId =
-        selectedId ??
-        accounts
-            .firstWhere((a) => a.isDefault, orElse: () => accounts.first)
-            .id;
-
-    if (selectedId == null) {
-      Future.microtask(() {
-        ref
-            .read(paymentControllerProvider.notifier)
-            .selectAccount(effectiveSelectedId);
-      });
-    }
+    // **Пустой выбор остаётся пустым** (круг правки 4 задачи 14).
+    //
+    // Здесь стоял обратный ход: при пустом выборе виджет сам подставлял
+    // счёт с признаком умолчания — то есть **кассовый** — и записывал его
+    // в состояние. На кассе без видимых банковских счетов это отменяло
+    // сброс, который делает `PaymentNotifier._autoSelectAccount`, прямо в
+    // том же кадре: кассир жал «Наличные», потом «Смешанная», выбор
+    // сбрасывался и тут же возвращался кассовым. Смешанная оплата и долг
+    // с наличной частью на такой кассе не проходили вовсе.
+    //
+    // Пустой выбор значит «кассир не выбирал» — и касса подберёт счёт
+    // сама, тем же путём, каким подбирает его для карточной части
+    // (`LocalPaymentService._bankAccountId`). Выделять что-то за кассира
+    // виджет не имеет права: он не знает, что она подберёт, а показанный
+    // «умолчательный» кассовый счёт под карту она бы как раз не выбрала.
+    final effectiveSelectedId = selectedId;
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing),

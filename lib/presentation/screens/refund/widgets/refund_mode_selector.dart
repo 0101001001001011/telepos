@@ -92,13 +92,23 @@ class _ModeButton extends StatelessWidget {
                     : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 8),
-              Text(
-                label,
-                style: AppTextStyles.button.copyWith(
-                  color: isSelected
-                      ? AppColors.black
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              // На телефоне (360 точек) две подписи с иконками не помещаются
+              // в ряд: переполнение шесть точек, и поверх переключателя идёт
+              // жёлто-чёрная лента. Сжимается подпись — иконка и цель пальца
+              // остаются целыми.
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.button.copyWith(
+                    color: isSelected
+                        ? AppColors.black
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ],

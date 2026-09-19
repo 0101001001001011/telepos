@@ -19,6 +19,21 @@ extension ReportRowDecimal on QueryRow {
   }
 }
 
+/// Отчётные выборки.
+///
+/// # Какой чек — выручка
+///
+/// Выручкой считается только **проданный** чек: состояние не `0` (в работе),
+/// не `2` (тот же чек в работе, занятый под оплату на время записи денег,
+/// `LocalPaymentService._stateClaimedForPayment`) и не `3` (отложен). Тем же
+/// правилом живёт `SaleDao.amountOfShift`.
+///
+/// До задачи 34 все восемнадцать мест исключали одно состояние `3`, и открытый
+/// стол ресторана — `state = 0` с настоящим временем и суммой — входил в
+/// выручку отчётов. `NULL` в состоянии исключается, как исключался и
+/// прежним фильтром: `NULL NOT IN (…)` в SQL не истина.
+///
+/// Проба — `test/data/database/report_dao_in_progress_test.dart`.
 @DriftAccessor(tables: [])
 class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
   ReportDao(super.db);
@@ -27,12 +42,12 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
     final rows = await customSelect(
       'SELECT '
       '(SELECT COALESCE(SUM(amount), 0) FROM sales '
-      '   WHERE time BETWEEN ?1 AND ?2 AND state <> 3) - '
+      '   WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3)) - '
       '(SELECT COALESCE(SUM(amount), 0) FROM refunds '
       '   WHERE time BETWEEN ?1 AND ?2 AND (state IS NULL OR state <> 0)) '
       'AS total_revenue, '
       '(SELECT COUNT(*) FROM sales '
-      '   WHERE time BETWEEN ?1 AND ?2 AND state <> 3) AS sale_count',
+      '   WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3)) AS sale_count',
       variables: [Variable.withInt(startTs), Variable.withInt(endTs)],
       readsFrom: {},
     ).get();
@@ -46,7 +61,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'SUM(is_sale) AS cnt '
       'FROM ('
       '  SELECT (time / 86400) AS day_bucket, amount AS amount, 1 AS is_sale '
-      '  FROM sales WHERE time BETWEEN ?1 AND ?2 AND state <> 3 '
+      '  FROM sales WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3) '
       '  UNION ALL '
       '  SELECT (time / 86400) AS day_bucket, -amount AS amount, 0 AS is_sale '
       '  FROM refunds WHERE time BETWEEN ?1 AND ?2 AND (state IS NULL OR state <> 0) '
@@ -66,7 +81,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'FROM sale_products sp '
       'JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
       'JOIN product_infos pi ON pi.ucode = sp.ucode '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'GROUP BY sp.ucode '
       'ORDER BY revenue DESC '
       'LIMIT ?',
@@ -101,7 +116,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'SUM(amount) AS revenue '
       'FROM ('
       '  SELECT ((time % 86400) / 3600) AS hour_of_day, amount AS amount, 1 AS is_sale '
-      '  FROM sales WHERE time BETWEEN ?1 AND ?2 AND state <> 3 '
+      '  FROM sales WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3) '
       '  UNION ALL '
       '  SELECT ((time % 86400) / 3600) AS hour_of_day, -amount AS amount, 0 AS is_sale '
       '  FROM refunds WHERE time BETWEEN ?1 AND ?2 AND (state IS NULL OR state <> 0) '
@@ -120,7 +135,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'SUM(t.amount) AS revenue '
       'FROM ('
       '  SELECT user_id, amount AS amount, 1 AS is_sale '
-      '  FROM sales WHERE time BETWEEN ?1 AND ?2 AND state <> 3 '
+      '  FROM sales WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3) '
       '  UNION ALL '
       '  SELECT user_id, -amount AS amount, 0 AS is_sale '
       '  FROM refunds WHERE time BETWEEN ?1 AND ?2 AND (state IS NULL OR state <> 0) '
@@ -141,7 +156,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'FROM sale_products sp '
       'JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
       'LEFT JOIN categories c ON c.id = sp.category_id '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'GROUP BY sp.category_id '
       'ORDER BY revenue DESC',
       variables: [Variable.withInt(startTs), Variable.withInt(endTs)],
@@ -200,7 +215,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'COUNT(*) AS sale_count '
       'FROM sales s '
       'LEFT JOIN agents ag ON ag.local_id = s.customer_local_id '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'AND s.customer_local_id IS NOT NULL '
       'GROUP BY s.customer_local_id '
       'ORDER BY revenue DESC '
@@ -237,7 +252,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'FROM sale_products sp '
       'JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
       'JOIN product_infos pi ON pi.ucode = sp.ucode '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'AND pi.quantity IS NOT NULL '
       'GROUP BY sp.ucode '
       'HAVING total_sold > 0 '
@@ -264,7 +279,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'FROM sale_products sp '
       'JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
       'WHERE sp.ucode = ? '
-      'AND s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'AND s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'GROUP BY day_bucket '
       'ORDER BY day_bucket',
       variables: [
@@ -287,7 +302,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
       'JOIN product_infos pi ON pi.ucode = sp.ucode '
       'LEFT JOIN product_prices pp ON pp.ucode = sp.ucode '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'AND pi.quantity IS NOT NULL '
       'GROUP BY sp.ucode '
       'HAVING total_sold > 0 '
@@ -334,7 +349,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       '  SELECT sp.ucode AS ucode, sp.quantity AS qty, sp.quantity * sp.price AS revenue '
       '  FROM sale_products sp '
       '  JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
-      '  WHERE s.time BETWEEN ?1 AND ?2 AND s.state <> 3 '
+      '  WHERE s.time BETWEEN ?1 AND ?2 AND s.state NOT IN (0, 2, 3) '
       '  UNION ALL '
       '  SELECT rp.ucode AS ucode, -rp.quantity AS qty, -(rp.quantity * rp.price) AS revenue '
       '  FROM refund_products rp '
@@ -371,7 +386,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'SUM(s.amount) AS total_revenue, '
       'AVG(s.amount) AS avg_check '
       'FROM sales s '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'AND s.order_type IS NOT NULL '
       'GROUP BY s.order_type ORDER BY total_revenue DESC',
       variables: [Variable.withInt(startTs), Variable.withInt(endTs)],
@@ -407,7 +422,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       '  SELECT sp.ucode AS ucode, sp.quantity AS qty, sp.quantity * sp.price AS revenue '
       '  FROM sale_products sp '
       '  JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
-      '  WHERE s.time BETWEEN ?1 AND ?2 AND s.state <> 3 '
+      '  WHERE s.time BETWEEN ?1 AND ?2 AND s.state NOT IN (0, 2, 3) '
       '  UNION ALL '
       '  SELECT rp.ucode AS ucode, -rp.quantity AS qty, -(rp.quantity * rp.price) AS revenue '
       '  FROM refund_products rp '
@@ -447,7 +462,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       'FROM sale_products sp '
       'JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
       'JOIN product_infos pi ON pi.ucode = sp.ucode '
-      'WHERE s.time BETWEEN ? AND ? AND s.state <> 3 '
+      'WHERE s.time BETWEEN ? AND ? AND s.state NOT IN (0, 2, 3) '
       'GROUP BY COALESCE(pi.vat_rate, -1) '
       'ORDER BY vat_rate',
       variables: [Variable.withInt(startTs), Variable.withInt(endTs)],
@@ -492,7 +507,7 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
       '  SELECT sp.ucode AS ucode, sp.quantity AS qty, sp.quantity * sp.price AS revenue '
       '  FROM sale_products sp '
       '  JOIN sales s ON s.receipt_no = sp.receipt_no AND s.pos_id = sp.pos_id '
-      '  WHERE s.time BETWEEN ?1 AND ?2 AND s.state <> 3 '
+      '  WHERE s.time BETWEEN ?1 AND ?2 AND s.state NOT IN (0, 2, 3) '
       '  UNION ALL '
       '  SELECT rp.ucode AS ucode, -rp.quantity AS qty, -(rp.quantity * rp.price) AS revenue '
       '  FROM refund_products rp '
@@ -526,9 +541,9 @@ class ReportDao extends DatabaseAccessor<AppDatabase> with _$ReportDaoMixin {
     final rows = await customSelect(
       'SELECT '
       '(SELECT COALESCE(SUM(amount), 0) FROM sales '
-      '   WHERE time BETWEEN ?1 AND ?2 AND state <> 3) AS sales_income, '
+      '   WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3)) AS sales_income, '
       '(SELECT COUNT(*) FROM sales '
-      '   WHERE time BETWEEN ?1 AND ?2 AND state <> 3) AS sale_count, '
+      '   WHERE time BETWEEN ?1 AND ?2 AND state NOT IN (0, 2, 3)) AS sale_count, '
       '(SELECT COALESCE(SUM(amount), 0) FROM refunds '
       '   WHERE time BETWEEN ?1 AND ?2) AS refund_total, '
       '(SELECT COUNT(*) FROM refunds '

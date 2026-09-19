@@ -21,13 +21,42 @@ class PaymentRepositoryImpl implements PaymentRepository {
     return PaymentMapper.fromDriftList(payments);
   }
 
+  /// # Нумерация строк — здесь, а не у вызывающего
+  ///
+  /// Уникальный ключ `Payments` — `{receiptNo, posId, seq}` (задача 14), и
+  /// защищает он **только пока `seq` считается от нуля на каждой
+  /// попытке**. Пакет, пришедший сюда, и есть одна попытка: номера ему
+  /// проставляются по порядку списка, от нуля, внутри каждого чека и
+  /// каждого возврата.
+  ///
+  /// Оставить это вызывающему было бы правилом, живущим в чужой
+  /// внимательности: `PaymentEntity.seq` имеет умолчание `0`, и пакет из
+  /// двух строк одного чека, собранный без единой мысли о номерах,
+  /// столкнулся бы сырым `SqliteException(2067)`. Ровно это и покраснело
+  /// в `repository_live_integration_test` в тот же час, когда ключ
+  /// сменился.
+  ///
+  /// **Названный предел:** два *разных* вызова по одному чеку столкнутся
+  /// — второй начнёт снова с нуля. Это верно: два вызова — две попытки, а
+  /// две попытки оплатить один чек и есть то, от чего ключ поставлен.
+  /// Дописывать строки к уже оплаченному чеку этот метод не умеет и не
+  /// должен.
   @override
   Future<void> insertPayments(List<PaymentEntity> payments) async {
     if (payments.isEmpty) return;
 
+    final nextSeq = <String, int>{};
     await _db.batch((batch) {
       for (final payment in payments) {
-        batch.insert(_db.payments, PaymentMapper.toDrift(payment));
+        final group = payment.receiptNo != null
+            ? 's:${payment.receiptNo}:${payment.posId}'
+            : 'r:${payment.refundLocalId}';
+        final seq = nextSeq[group] ?? 0;
+        nextSeq[group] = seq + 1;
+        batch.insert(
+          _db.payments,
+          PaymentMapper.toDrift(payment.copyWith(seq: seq)),
+        );
       }
     });
   }

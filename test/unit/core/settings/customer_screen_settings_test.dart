@@ -37,7 +37,10 @@ void main() {
       expect(choice.monitor, 2);
     });
 
-    test('выключено явно — монитор не должен открываться, даже если задан',
+    // Задача 33: прежнее имя — «монитор не должен открываться» — утверждало
+    // про `lib/main.dart` (`_maybeOpenCustomerScreen`, `if (!choice.enabled)
+    // return`), который здесь не исполняется. Проверяется разбор.
+    test('выключено явно — enabled ложно, даже если монитор задан',
         () async {
       SharedPreferences.setMockInitialValues({
         kCustomerScreenPrefsKey: jsonEncode({'enabled': false, 'monitor': 3}),

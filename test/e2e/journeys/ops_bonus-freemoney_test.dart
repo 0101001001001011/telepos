@@ -28,6 +28,22 @@ void main() {
     await h.db.delete(h.db.saleProducts).go();
     await h.db.delete(h.db.sales).go();
     await h.db.delete(h.db.shifts).go();
+
+    // Задача 5 плана «Продажа с браузерного терминала»:
+    // `SaleInitiationUseCaseImpl.initiate()` больше не открывает смену сама,
+    // когда её нет, — она отвечает отказом `shift_not_open`. Этот сценарий
+    // чистит смены перед каждой пробой и молча полагался на прежнее
+    // самооткрытие; теперь смена открывается **явно**, тем же действием, каким
+    // её открывает касса перед продажей, и **на названного человека** — того
+    // самого кассира, которого завёл харнесс, а не на выдуманный `userId: 1`.
+    //
+    // Посев вынесен в `E2eHarness.openShift()` при слиянии: те же девять
+    // сценариев чинились дважды и по-разному — ветвь `wire-sale` сеяла
+    // смену дословно в каждом файле, ветвь `browser-sale` завела помощник.
+    // Взято тело помощника; там же назван и довод про **текущее** время
+    // открытия (смена задним числом упёрлась бы в сторож «открыта более 24
+    // часов», `kShiftMaxAge`, и продажа отказала бы снова, другой причиной).
+    await h.openShift();
     container = ProviderContainer();
     addTearDown(container.dispose);
   });
@@ -109,7 +125,11 @@ void main() {
       reason: 'sale must initialize (receiptNo) before payment',
     );
 
-    saleNotifier.addProduct(
+    // Команда корзины асинхронна с задачи 7: она идёт в базу через
+    // контракт `CartService`, а не правит состояние на месте. Без
+    // `await` следующая строка читает снимок ДО команды — сумма 0, а
+    // продолжение работает поверх уже выброшенного нотифайера.
+    await saleNotifier.addProduct(
       ProductSearchResult(
         id: bonusUcode,
         name: 'Корзина 1000',
@@ -138,7 +158,14 @@ void main() {
       reason: 'available bonus must equal the cashback balance (500)',
     );
 
-    payNotifier.setBonusToUse(d('200'));
+    // Та же вторая причина, что и у команд корзины, но на операциях
+    // оплаты: `setBonusToUse` ушла за контракт `PaymentService`
+    // (задача 14) и стала асинхронной — потолок бонуса ставит касса, а
+    // не экран. Без `await` следующая строка читает снимок ДО ответа
+    // кассы и видит ноль. Найдено слиянием: ветвь продажи чинила
+    // ожидание только своим командам, ветвь оплаты этой пробы не
+    // видела зелёной ни разу.
+    await payNotifier.setBonusToUse(d('200'));
     expect(container.read(paymentControllerProvider).bonusToUse, d('200'));
     expect(
       container.read(paymentControllerProvider).amountToPay,

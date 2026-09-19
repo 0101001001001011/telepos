@@ -98,7 +98,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   test(
-    'default is none -> POS usable offline: NoOp provider, sale never blocks',
+    'default is none -> POS usable offline: Refusing provider, sale never blocks',
     () async {
       final prefs = await SharedPreferences.getInstance();
       final c = _container(prefs);
@@ -110,14 +110,24 @@ void main() {
 
       final ctrl = c.read(fiscalSettingsControllerProvider.notifier);
       final provider = ctrl.resolveProvider();
-      expect(provider.id, 'noop', reason: 'none resolves to NoOp');
+      expect(provider.id, 'refusing', reason: 'none resolves to Refusing');
 
+      // Прежде здесь требовалось `r.queued == true` с доводом «sale
+      // completes locally, fiscal deferred». Довод был неверен: очереди за
+      // этим провайдером нет — её даёт `OfflineQueueingProvider`, который
+      // оборачивает НАСТОЯЩИХ провайдеров, а заглушка подставляется вместо
+      // обёртки. Ожидание закрепляло обещание, которое никто не исполнял.
+      //
+      // Касса и правда остаётся рабочей без оператора, но не потому, что
+      // провайдер что-то обещает, а потому, что политика `isOfdSale` до
+      // него не доходит: `operatorType == none` отсекается настройкой.
+      // Это измерено настоящей продажей в
+      // `test/data/fiscal/policy_precedes_provider_test.dart`, а здесь
+      // проверяется то, что видно отсюда, — сам провайдер отказывает.
       final r = await provider.fiscalizeSale(_sampleSale());
-      expect(
-        r.queued,
-        isTrue,
-        reason: 'sale completes locally, fiscal deferred',
-      );
+      expect(r.success, isFalse);
+      expect(r.queued, isFalse, reason: 'очереди за этим провайдером нет');
+      expect(r.errorCode, FiscalErrorCode.notConfigured);
       expect(r.hasFiscalSign, isFalse);
 
       expect(await ctrl.save(), isTrue);
@@ -198,12 +208,12 @@ void main() {
     ctrl.selectOperator(FiscalOperatorType.kassa24);
     expect(
       ctrl.resolveProvider().id,
-      'noop',
+      'refusing',
       reason: 'unregistered operator falls back to NoOp (offline-first)',
     );
 
     ctrl.selectOperator(FiscalOperatorType.none);
-    expect(ctrl.resolveProvider().id, 'noop');
+    expect(ctrl.resolveProvider().id, 'refusing');
   });
 
   test(

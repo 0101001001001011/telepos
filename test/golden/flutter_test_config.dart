@@ -104,12 +104,20 @@ Future<void> _loadRealFonts() async {
 
   // Штрихкоды и всё, что набрано моноширинным, иначе рисуются подстановкой и
   // расходятся с приложением.
+  //
+  // Семейство ровно одно — то, которое объявлено в `pubspec.yaml`. Здесь
+  // регистрировалось ещё и родовое `'monospace'`, и это **делало набор добрее
+  // продукта**: пятнадцать мест в `lib/` просили `'monospace'`, приложение
+  // такой гарнитуры не несёт, а пробы получали настоящую моноширинную и
+  // выглядели правильно. Дефект нашёлся живой проверкой на планшете
+  // 2026-09-19 — предпросмотр чека рисовался пропорциональным шрифтом, и
+  // столбцы расходились с лентой. Набор его не видел ни одной пробой из 5883.
+  //
+  // Правило: испытательная среда не даёт того, чего нет у продукта.
   if (mono != null) {
-    for (final family in ['TeleposMono', 'monospace']) {
-      final loader = FontLoader(family)..addFont(Future.value(mono));
-      if (monoBold != null) loader.addFont(Future.value(monoBold));
-      await loader.load();
-    }
+    final loader = FontLoader('TeleposMono')..addFont(Future.value(mono));
+    if (monoBold != null) loader.addFont(Future.value(monoBold));
+    await loader.load();
   }
 
   if (icons != null) {

@@ -113,7 +113,9 @@ Future<void> _loadBundledFonts() async {
   for (final family in ['Roboto', 'Segoe UI', 'SF Pro Text', '.SF UI Text']) {
     await _register(family, [sansReg, sansMedium, sansBold]);
   }
-  await _register('monospace', [monoReg, monoBold]);
+  // Родового `'monospace'` здесь нет намеренно: приложение такой гарнитуры не
+  // несёт, и регистрация делала набор добрее продукта. Разбор — в том же
+  // месте `test/golden/flutter_test_config.dart`.
   await _register('TeleposMono', [monoReg, monoBold]);
 
   final icons = await _asset(

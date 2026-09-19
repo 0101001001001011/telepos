@@ -4,7 +4,7 @@ import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/fiscal/fiscal_provider.dart';
 import 'package:telepos/domain/fiscal/fiscal_provider_registry.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
-import 'package:telepos/domain/fiscal/noop_fiscal_provider.dart';
+import 'package:telepos/domain/fiscal/refusing_fiscal_provider.dart';
 
 class _FakeProvider implements FiscalProvider {
   _FakeProvider(this.settings);
@@ -121,19 +121,19 @@ FiscalSaleRequest _sampleSale({int id = 7, String key = 'GUID-1'}) {
 
 void main() {
   group('FiscalProviderRegistry — operator selection from settings', () {
-    test('operatorType none resolves to NoOpFiscalProvider', () {
+    test('operatorType none resolves to RefusingFiscalProvider', () {
       final registry = FiscalProviderRegistry();
       final provider = registry.resolve(FiscalSettings.disabled());
-      expect(provider, isA<NoOpFiscalProvider>());
-      expect(provider.id, 'noop');
+      expect(provider, isA<RefusingFiscalProvider>());
+      expect(provider.id, 'refusing');
     });
 
-    test('unregistered operator falls back to NoOp (never crashes)', () {
+    test('unregistered operator falls back to Refusing (never crashes)', () {
       final registry = FiscalProviderRegistry();
       final provider = registry.resolve(
         FiscalSettings(operatorType: FiscalOperatorType.webkassa),
       );
-      expect(provider, isA<NoOpFiscalProvider>());
+      expect(provider, isA<RefusingFiscalProvider>());
     });
 
     test('registered operator is selected and receives settings', () {
@@ -184,19 +184,27 @@ void main() {
     });
   });
 
-  group('NoOp provider — offline-first, never blocks', () {
-    const noop = NoOpFiscalProvider();
+  // Прежде эта группа называлась «NoOp provider — offline-first, never
+  // blocks» и **закрепляла ложь**: она требовала, чтобы заглушка отвечала
+  // `queued` — то есть «чек встал в очередь и уедет сам». Очереди за ней не
+  // было ни одной: очередь даёт `OfflineQueueingProvider`, и он оборачивает
+  // настоящих провайдеров, а заглушка подставлялась реестром **вместо**
+  // обёртки, а не под неё. Ожидания ниже переписаны по поведению, а не
+  // подогнаны: то, что они требуют теперь, — названный отказ.
+  group('Refusing provider — отказывает названно, ничего не обещает', () {
+    const refusing = RefusingFiscalProvider();
 
-    test('sale returns queued success (no fiscalSign, no network)', () async {
-      final r = await noop.fiscalizeSale(_sampleSale());
-      expect(r.success, isTrue);
-      expect(r.queued, isTrue);
-      expect(r.offlineMode, isTrue);
+    test('продажа отказана как «не настроено», а не поставлена в очередь', () async {
+      final r = await refusing.fiscalizeSale(_sampleSale());
+      expect(r.success, isFalse);
+      expect(r.errorCode, FiscalErrorCode.notConfigured);
+      // Главное отличие от прежнего поведения: обещания очереди больше нет.
+      expect(r.queued, isFalse, reason: 'очереди за этим провайдером нет');
       expect(r.hasFiscalSign, isFalse);
     });
 
-    test('refund / money in / money out all queue', () async {
-      final refund = await noop.fiscalizeRefund(
+    test('возврат / приход / расход — тоже отказ, не очередь', () async {
+      final refund = await refusing.fiscalizeRefund(
         FiscalRefundRequest(
           sale: _sampleSale(),
           basis: FiscalRefundBasis(
@@ -207,27 +215,29 @@ void main() {
           ),
         ),
       );
-      final mIn = await noop.moneyIn(
+      final mIn = await refusing.moneyIn(
         FiscalMoneyRequest(
           idempotencyKey: 'k',
           amount: Decimal.fromInt(1000),
           occurredAt: DateTime(2026),
         ),
       );
-      final mOut = await noop.moneyOut(
+      final mOut = await refusing.moneyOut(
         FiscalMoneyRequest(
           idempotencyKey: 'k2',
           amount: Decimal.fromInt(500),
           occurredAt: DateTime(2026),
         ),
       );
-      expect(refund.queued, isTrue);
-      expect(mIn.queued, isTrue);
-      expect(mOut.queued, isTrue);
+      for (final r in [refund, mIn, mOut]) {
+        expect(r.success, isFalse);
+        expect(r.queued, isFalse);
+        expect(r.errorCode, FiscalErrorCode.notConfigured);
+      }
     });
 
-    test('correction is unsupported (normalized error code)', () async {
-      final r = await noop.correctionReceipt(
+    test('коррекция отказана названно', () async {
+      final r = await refusing.correctionReceipt(
         FiscalCorrectionRequest(
           idempotencyKey: 'k',
           positions: const [],
@@ -235,15 +245,20 @@ void main() {
         ),
       );
       expect(r.success, isFalse);
-      expect(r.errorCode, FiscalErrorCode.unsupported);
+      expect(r.errorCode, FiscalErrorCode.notConfigured);
     });
 
-    test('reports succeed benignly', () async {
-      expect(
-        (await noop.closeShift(const FiscalShiftRequest())).success,
-        isTrue,
-      );
-      expect((await noop.xReport(const FiscalShiftRequest())).success, isTrue);
+    test('отчёты не «удаются благополучно» — они отказывают', () async {
+      final close = await refusing.closeShift(const FiscalShiftRequest());
+      final x = await refusing.xReport(const FiscalShiftRequest());
+      expect(close.success, isFalse);
+      expect(x.success, isFalse);
+      expect(close.result.errorCode, FiscalErrorCode.notConfigured);
+      expect(x.result.errorCode, FiscalErrorCode.notConfigured);
+    });
+
+    test('настройки заглушки не «годны» — validateConfig называет причину', () {
+      expect(refusing.validateConfig(FiscalSettings()), isNotNull);
     });
   });
 

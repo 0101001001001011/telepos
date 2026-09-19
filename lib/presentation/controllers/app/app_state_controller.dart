@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../core/constants/enums/operating_mode.dart';
 import '../../../core/platform/host_process.dart';
 import '../../../core/platform/platform_info.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 enum ConnectionStatus { online, offline, syncing }
 
@@ -24,7 +25,7 @@ class AppState {
     this.freeStorageBytes,
     this.showStorageWarning = false,
     this.permissions = const {},
-    this.isShiftOpened = false,
+    this.shift = ShiftStatus.unknown,
     this.operatingMode = OperatingMode.retail,
   });
 
@@ -48,7 +49,8 @@ class AppState {
 
   final Set<String> permissions;
 
-  final bool isShiftOpened;
+  /// Смена вошедшего — задача 47, три состояния (разбор в [ShiftStatus]).
+  final ShiftStatus shift;
 
   final OperatingMode operatingMode;
 
@@ -90,7 +92,7 @@ class AppState {
     int? freeStorageBytes,
     bool? showStorageWarning,
     Set<String>? permissions,
-    bool? isShiftOpened,
+    ShiftStatus? shift,
     OperatingMode? operatingMode,
   }) {
     return AppState(
@@ -104,7 +106,7 @@ class AppState {
       freeStorageBytes: freeStorageBytes ?? this.freeStorageBytes,
       showStorageWarning: showStorageWarning ?? this.showStorageWarning,
       permissions: permissions ?? this.permissions,
-      isShiftOpened: isShiftOpened ?? this.isShiftOpened,
+      shift: shift ?? this.shift,
       operatingMode: operatingMode ?? this.operatingMode,
     );
   }
@@ -247,8 +249,8 @@ class AppStateNotifier extends Notifier<AppState> {
     state = state.copyWith(userId: userId, userName: userName ?? 'Test User');
   }
 
-  void setShiftOpened(bool isOpened) {
-    state = state.copyWith(isShiftOpened: isOpened);
+  void setShift(ShiftStatus shift) {
+    state = state.copyWith(shift: shift);
   }
 
   void setConnectionStatus(ConnectionStatus status) {
@@ -269,6 +271,8 @@ class AppStateNotifier extends Notifier<AppState> {
       clearUserName: true,
       clearUserRole: true,
       permissions: const {},
+      // Вышедший — смену больше никто не спрашивал (задача 47).
+      shift: ShiftStatus.unknown,
     );
   }
 }
@@ -301,8 +305,8 @@ final currentUserIdProvider = Provider<int?>((ref) {
   return ref.watch(appStateProvider.select((s) => s.userId));
 });
 
-final isShiftOpenedProvider = Provider<bool>((ref) {
-  return ref.watch(appStateProvider.select((s) => s.isShiftOpened));
+final shiftStatusProvider = Provider<ShiftStatus>((ref) {
+  return ref.watch(appStateProvider.select((s) => s.shift));
 });
 
 final operatingModeProvider = Provider<OperatingMode>((ref) {

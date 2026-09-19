@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/app/theme/app_colors.dart';
@@ -11,6 +12,7 @@ import 'package:telepos/presentation/controllers/agent/agent_controller.dart';
 import 'package:telepos/presentation/controllers/agent/customer_payment_controller.dart';
 import 'package:telepos/presentation/controllers/agent/supplier_payment_controller.dart';
 import 'package:telepos/presentation/dialogs/record_customer_payment_dialog.dart';
+import 'package:telepos/app/router/app_routes.dart';
 import 'package:telepos/presentation/dialogs/record_supplier_payment_dialog.dart';
 
 class AgentDetailsDialog extends ConsumerStatefulWidget {
@@ -89,6 +91,10 @@ class _AgentDetailsDialogState extends ConsumerState<AgentDetailsDialog> {
 
               _buildRecordPaymentButton(),
               const SizedBox(height: 16),
+
+              _buildRefundPrepaymentButton(),
+
+              _buildCreditContractsButton(),
 
               if (_error != null)
                 Container(
@@ -274,6 +280,101 @@ class _AgentDetailsDialogState extends ConsumerState<AgentDetailsDialog> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Договоры рассрочки покупателя — задача 24.
+  ///
+  /// # Почему кнопка стоит здесь, а не в «Ещё»
+  ///
+  /// Погашение начинается с человека: покупатель приносит деньги и
+  /// называет себя, а не номер договора. Кассир уже нашёл его в
+  /// картотеке, чтобы посмотреть долг, — договор лежит рядом с тем же
+  /// долгом и на том же счёте.
+  ///
+  /// # Кнопка ПОКАЗЫВАЕТСЯ и без права
+  ///
+  /// Право `op.creditRepay` проверяет **экран договоров** и сама служба;
+  /// спрятанная кнопка запретом не является (I162), а исчезнувшая
+  /// оставляет кассира с вопросом «куда делись рассрочки» и без единого
+  /// способа на него ответить. Кнопки нет только у поставщика: рассрочку
+  /// продают покупателю.
+  Widget _buildCreditContractsButton() {
+    if (widget.agent.type == AgentType.supplier) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          key: const Key('agent_credit_contracts_button'),
+          // Через маршрутизатор, а не `MaterialPageRoute`: право
+          // `op.creditRepay` проверяет `redirect` по карте маршрутов, и
+          // экран, вытолкнутый мимо таблицы, прошёл бы мимо проверки.
+          onPressed: () => context.push(
+            Uri(
+              path: AppRoutes.creditContracts,
+              queryParameters: {
+                'agentId': '${widget.agent.localId}',
+                'agentName': widget.agent.name,
+              },
+            ).toString(),
+          ),
+          icon: const Icon(Icons.event_repeat_outlined, size: 18),
+          label: const Text('Рассрочки'),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// «Выдать аванс» — дыра 2 ревизии 2026-09-19, **соседняя с приёмом**.
+  ///
+  /// Кнопка стоит ровно под «Принять оплату / погасить долг» и намеренно:
+  /// приём и выдача — одна работа двумя сторонами, и искать их в разных
+  /// местах кассиру незачем. Под обеими один контроллер и один юзкейс.
+  ///
+  /// # Почему переход, а не диалог
+  ///
+  /// Право `op.creditRepay` на кассе проверяет `redirect` по карте
+  /// маршрутов; у `showDialog` такой проверки нет вовсе (I162), а выдача
+  /// выпускает деньги из кассы и уменьшает расчётный счёт покупателя.
+  /// Экран сверх того спрашивает право перед вызовом.
+  ///
+  /// Кнопка **не прячется** и у покупателя без аванса: пропавшая оставила
+  /// бы кассира с вопросом «куда делась выдача» и без ответа, а остаток
+  /// экран показывает словами в первой же строке. Нет её только у
+  /// поставщика: аванс вносит покупатель.
+  Widget _buildRefundPrepaymentButton() {
+    if (widget.agent.type == AgentType.supplier) {
+      return const SizedBox.shrink();
+    }
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          key: const Key('agent_refund_prepayment_button'),
+          onPressed: () => context.push(
+            Uri(
+              path: AppRoutes.prepaymentRefund,
+              queryParameters: {
+                'agentId': '${widget.agent.localId}',
+                'agentName': widget.agent.name,
+              },
+            ).toString(),
+          ),
+          icon: const Icon(Icons.undo, size: 18),
+          label: Text(l10n.agentRefundPrepayment),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+          ),
+        ),
       ),
     );
   }

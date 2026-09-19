@@ -3,14 +3,17 @@ import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';
 import 'package:talker/talker.dart';
+import 'package:telepos/app/di/device_catalog_module.dart';
 import 'package:telepos/data/database/app_database.dart';
-import 'package:telepos/data/device/device_profile_catalog_builtin.dart';
 import 'package:telepos/data/device/terminal_device_binding_resolver.dart';
 import 'package:telepos/domain/device/device_class.dart';
 import 'package:telepos/domain/device/device_profile.dart';
 import 'package:telepos/domain/terminal/device_binding.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
+import 'package:telepos/emulators/emulated_device_profile_catalog.dart';
+import 'package:telepos/emulators/emulated_spooler_printer.dart';
 import 'package:telepos/hardware/cash_drawer/cash_drawer_service.dart';
+import 'package:telepos/hardware/display/customer_display_journal.dart';
 import 'package:telepos/hardware/display/customer_display_manager.dart';
 import 'package:telepos/hardware/display/display_config.dart';
 import 'package:telepos/hardware/printer/printer_manager.dart';
@@ -162,7 +165,7 @@ Future<List<DeviceBinding>> _resolveOwnBindings(
     return await resolveTerminalDeviceBindings(
       database: getIt<AppDatabase>(),
       terminalId: terminal.id,
-      catalog: BuiltinDeviceProfileCatalog(),
+      catalog: buildDeviceProfileCatalog(),
     );
   } on InstallationNotConfiguredException {
     logger.debug(
@@ -256,6 +259,25 @@ PrinterManager buildReceiptPrinterManager(
   DeviceBinding binding,
   Talker logger,
 ) {
+  // Печать через спулер — одно из двух семейств, у которых нет ни адреса, ни
+  // COM-порта, и потому единственное среди принтеров, где подставляется НАШ
+  // класс, а не чужой процесс. Сетевой принтер сюда не попадает никогда: у
+  // него есть `ipAddress`, и эмулируется он настоящим сокетом на 9100
+  // (`lib/emulators/escpos/emulator.dart`) — то есть проверяется весь путь,
+  // включая `WifiPrinterManager`, кадры ESC/POS и опрос `DLE EOT`.
+  //
+  // За константой времени компиляции: в магазинной сборке этой ветки нет.
+  if (kEmulatorsEnabled && binding.profileId == kEmulatedSpoolerProfileId) {
+    logger.debug(
+      'Registering EmulatedSpoolerPrinter (эмулятор, файл '
+      '${binding.parameters[kEmulatedFileParam]})',
+    );
+    return EmulatedSpoolerPrinter(
+      file: binding.parameters[kEmulatedFileParam] ?? '',
+      refuse: binding.parameters[kEmulatedRefuseParam] ?? '',
+    );
+  }
+
   return resolvePrinterManager(
     receiptType: _printerTransportFor(binding),
     receiptAddress: binding.parameters['ipAddress']?.trim(),
@@ -397,7 +419,7 @@ void _registerDisplayService(
   );
   final profile = binding == null
       ? null
-      : BuiltinDeviceProfileCatalog().byId(binding.profileId);
+      : buildDeviceProfileCatalog().byId(binding.profileId);
 
   final config = (binding != null && profile != null)
       ? CustomerDisplayConfig(
@@ -413,13 +435,37 @@ void _registerDisplayService(
           baudRate: 9600,
         );
 
+  // Память дисплея регистрируется **здесь**, вместе с самим дисплеем, а не в
+  // общей сборке графа.
+  //
+  // Измерено 2026-09-19: она стояла в `service_locator`, а резолвилась здесь —
+  // и всякий, кто звал `registerHardwareServices` напрямую (это делают пробы и
+  // сквозной стенд), получал `GetIt: CustomerDisplayJournal is not registered`.
+  // Пять падений в `test/unit/app/hardware_module_test.dart`; нашла их соседняя
+  // дорожка, а не я — мой прогон в тот день не задел `test/unit/app`.
+  //
+  // Правило отсюда: **модуль не имеет права требовать того, чего сам не
+  // регистрирует.** Журнал принадлежит дисплею — канал у него односторонний, и
+  // без записи о показанном не остаётся ни следа.
+  if (!getIt.isRegistered<CustomerDisplayJournal>()) {
+    getIt.registerLazySingleton<CustomerDisplayJournal>(
+      CustomerDisplayJournal.new,
+    );
+  }
+
   if (_isDesktop) {
     getIt.registerLazySingleton<CustomerDisplayManager>(() {
       logger.debug(
         'CustomerDisplayManager registered (desktop, '
         '${config.enabled ? 'bound to ${profile?.id}' : 'disabled'})',
       );
-      return CustomerDisplayManager.create(config);
+      // Обёртка памяти — всегда, а не «в режиме диагностики»: вопрос «что
+      // касса показала покупателю» встаёт на живой кассе так же, как на
+      // стенде, и второй путь «с записью / без записи» разошёлся бы молча.
+      return RecordingCustomerDisplay(
+        CustomerDisplayManager.create(config),
+        getIt<CustomerDisplayJournal>(),
+      );
     });
   } else {
     getIt.registerLazySingleton<CustomerDisplayManager>(
@@ -521,7 +567,7 @@ void _registerScalesService(
 ScalesService buildScalesService(DeviceBinding? binding, Talker logger) {
   final profile = binding == null
       ? null
-      : BuiltinDeviceProfileCatalog().byId(binding.profileId);
+      : buildDeviceProfileCatalog().byId(binding.profileId);
   final port = binding?.parameters['comPort'];
 
   return ScalesService(
@@ -555,7 +601,7 @@ LabelPrinterService buildLabelPrinterService(
 ) {
   final profile = binding == null
       ? null
-      : BuiltinDeviceProfileCatalog().byId(binding.profileId);
+      : buildDeviceProfileCatalog().byId(binding.profileId);
 
   final host = binding?.parameters['ipAddress']?.trim();
   final port = int.tryParse(binding?.parameters['port'] ?? '');

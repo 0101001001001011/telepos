@@ -286,12 +286,37 @@ void _pollLoop(_PollRequest request) {
 }
 
 /// One isolate for the short calls, so they never queue behind a poll.
+///
+/// ## Every reply is addressed to the call that asked for it
+///
+/// Calls overlap: a server writes to many streams without awaiting one write
+/// before the next. Until 0.2.2 a call took "the next reply to arrive" from a
+/// broadcast stream, so two calls in flight both received the first reply and
+/// the second reply reached nobody. While everything succeeded that was
+/// invisible — `ok` handed to the wrong caller is still `ok`. When one call
+/// failed, its failure was handed to a healthy call beside it as well: a write
+/// into a stream the peer had abandoned (`peerGone`) made a concurrent write
+/// into a live subscription report `peerGone` too, and its caller closed a
+/// subscription that was working.
+///
+/// Hence an id on the way out and the same id on the way back. Matching by
+/// order would also be correct today, because the worker answers every command
+/// synchronously and in turn — but a single missing reply would then shift
+/// every later answer onto the wrong call, silently and for the rest of the
+/// process. With ids a missing reply costs exactly one call.
 class _CommandChannel {
-  _CommandChannel._(this._isolate, this._toWorker, this._replies);
+  _CommandChannel._(this._isolate, this._toWorker, Stream<Object?> replies) {
+    _replies = replies.listen((message) {
+      if (message is! _Reply) return;
+      _pending.remove(message.id)?.complete(message.payload);
+    });
+  }
 
   final Isolate _isolate;
   final SendPort _toWorker;
-  final Stream<Object?> _replies;
+  late final StreamSubscription<Object?> _replies;
+  final _pending = <int, Completer<Object?>>{};
+  var _nextId = 0;
 
   static Future<_CommandChannel?> spawn(List<String>? candidatePaths) async {
     final probe = probeNativeLibrary(candidatePaths: candidatePaths);
@@ -309,14 +334,40 @@ class _CommandChannel {
   }
 
   Future<Object?> send(Object command) {
-    final reply = _replies.first;
-    _toWorker.send(command);
-    return reply;
+    final id = _nextId++;
+    final reply = Completer<Object?>();
+    _pending[id] = reply;
+    _toWorker.send(_Envelope(id, command));
+    return reply.future;
   }
 
   Future<void> dispose() async {
     _isolate.kill(priority: Isolate.immediate);
+    await _replies.cancel();
+    // A call still waiting when the worker is killed would otherwise wait
+    // forever. The same value a missing library gives: nothing was done.
+    final orphans = _pending.values.toList();
+    _pending.clear();
+    for (final orphan in orphans) {
+      orphan.complete(
+        const _StatusReply(RkQuicStatus.notRunning, 'the endpoint was stopped'),
+      );
+    }
   }
+}
+
+/// A command and the id its reply will carry back.
+class _Envelope {
+  const _Envelope(this.id, this.command);
+  final int id;
+  final Object command;
+}
+
+/// A reply and the id of the command it answers.
+class _Reply {
+  const _Reply(this.id, this.payload);
+  final int id;
+  final Object? payload;
 }
 
 class _CommandStart {
@@ -372,15 +423,26 @@ void _commandLoop(_CommandStart start) {
 
   final bindings = _openBindings(start.candidatePaths);
   if (bindings == null) {
-    start.reply.send(
-      const _StatusReply(RkQuicStatus.unsupported, 'no library'),
-    );
+    // Answered per command, not once up front: a reply nobody asked for has no
+    // call to be addressed to, and the call that did ask would wait forever.
+    inbox.listen((message) {
+      if (message is! _Envelope) return;
+      start.reply.send(
+        _Reply(
+          message.id,
+          const _StatusReply(RkQuicStatus.unsupported, 'no library'),
+        ),
+      );
+    });
     return;
   }
 
   var handle = 0;
 
-  inbox.listen((message) {
+  inbox.listen((envelope) {
+    if (envelope is! _Envelope) return;
+    final id = envelope.id;
+    final message = envelope.command;
     switch (message) {
       case _StartCommand(:final configJson):
         final json = jsonEncode(configJson).toNativeUtf8();
@@ -390,14 +452,16 @@ void _commandLoop(_CommandStart start) {
             bindings.serverStart(json, out).toDartString(),
           );
           if (status != RkQuicStatus.ok) {
-            start.reply.send(_StatusReply(status, bindings.takeLastError()));
+            start.reply.send(
+              _Reply(id, _StatusReply(status, bindings.takeLastError())),
+            );
             return;
           }
           handle = out.value;
           final portOut = calloc<ffi.Uint16>();
           try {
             bindings.serverLocalPort(handle, portOut);
-            start.reply.send(_StartedReply(handle, portOut.value));
+            start.reply.send(_Reply(id, _StartedReply(handle, portOut.value)));
           } finally {
             calloc.free(portOut);
           }
@@ -416,16 +480,23 @@ void _commandLoop(_CommandStart start) {
                 .toDartString(),
           );
           start.reply.send(
-            _StatusReply(
-              status,
-              status == RkQuicStatus.ok ? null : bindings.takeLastError(),
+            _Reply(
+              id,
+              _StatusReply(
+                status,
+                status == RkQuicStatus.ok ? null : bindings.takeLastError(),
+              ),
             ),
           );
         } finally {
           malloc.free(payload);
         }
 
-      case _StreamSendCommand(:final sessionId, :final streamId, :final message):
+      case _StreamSendCommand(
+        :final sessionId,
+        :final streamId,
+        :final message,
+      ):
         final payload = message.toNativeUtf8();
         try {
           final status = statusFromWireName(
@@ -434,9 +505,12 @@ void _commandLoop(_CommandStart start) {
                 .toDartString(),
           );
           start.reply.send(
-            _StatusReply(
-              status,
-              status == RkQuicStatus.ok ? null : bindings.takeLastError(),
+            _Reply(
+              id,
+              _StatusReply(
+                status,
+                status == RkQuicStatus.ok ? null : bindings.takeLastError(),
+              ),
             ),
           );
         } finally {
@@ -450,9 +524,12 @@ void _commandLoop(_CommandStart start) {
           bindings.streamClose(handle, sessionId, streamId).toDartString(),
         );
         start.reply.send(
-          _StatusReply(
-            status,
-            status == RkQuicStatus.ok ? null : bindings.takeLastError(),
+          _Reply(
+            id,
+            _StatusReply(
+              status,
+              status == RkQuicStatus.ok ? null : bindings.takeLastError(),
+            ),
           ),
         );
 
@@ -460,11 +537,14 @@ void _commandLoop(_CommandStart start) {
         final status = statusFromWireName(
           bindings.serverStop(handle).toDartString(),
         );
-        start.reply.send(_StatusReply(status, null));
+        start.reply.send(_Reply(id, _StatusReply(status, null)));
 
       default:
         start.reply.send(
-          const _StatusReply(RkQuicStatus.unrecognised, 'unknown command'),
+          _Reply(
+            id,
+            const _StatusReply(RkQuicStatus.unrecognised, 'unknown command'),
+          ),
         );
     }
   });

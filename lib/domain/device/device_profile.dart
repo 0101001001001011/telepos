@@ -104,8 +104,8 @@ class DeviceCapabilities {
 /// anything else that does not change how the device is *addressed* — И142:
 /// "параметр, не влияющий на разговор с устройством, не хранится среди его
 /// настроек". Those are business rules about the value read, not the
-/// conversation with the hardware, and this task does not model them at all
-/// (see task-1-report.md).
+/// conversation with the hardware, and this task does not model them at
+/// all.
 @immutable
 class DeviceConnectionParam {
   const DeviceConnectionParam({

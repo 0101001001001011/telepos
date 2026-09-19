@@ -144,10 +144,14 @@ class LocalSetupRepository implements SetupRepository {
     // printer-configuration path now. See `this_pos_tables.dart` and
     // `app_database.dart`'s `if (from < 27)` block for the column drop.
 
+    // Ширина ленты мастера уходит в привязку принтера (`[7b/9]` ниже,
+    // `_createDeviceBindings`) — единственное место, откуда её читает печать.
+    // Шапка шаблона — только то, что оператор написал в мастере. Название
+    // организации сюда больше не подставляется: оно и так печатается жирным
+    // строкой продавца, и чек выходил с названием дважды подряд.
     await db.receiptTemplateDao.seedDefaults(
-      header: pos.printerHeader ?? companyName,
+      header: pos.printerHeader,
       footer: pos.printerFooter,
-      paperWidthMm: paperWidthMmFromCharWidth(pos.paperWidth),
     );
     SetupLogger.info(
       'completeSetup [4c/9]: дефолтный шаблон чека засеян из мастера',

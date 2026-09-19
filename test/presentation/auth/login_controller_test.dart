@@ -23,6 +23,7 @@ import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/presentation/controllers/auth/login_controller.dart';
 
 import 'support/fakes.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// В отличие от [FakeTerminalIdentity] (`support/fakes.dart`) — на самом деле помнит: `remember`
 /// пишет, `currentId` читает то, что было записано, `forget` стирает.
@@ -162,6 +163,48 @@ void main() {
           'было бы 3',
     );
     expect(auth.seen?.pin, '123456');
+  });
+
+  // Задача 46 плана «Продажа с браузерного терминала»: автопроверка
+  // неполного PIN, который касса отвергла как неверный. Попытка на кассе к
+  // этому моменту **уже сгорела** (`penalizeFailure` зовётся до сверки PIN),
+  // а буфер оставался прежним: кассир дописывал цифры к отвергнутому
+  // префиксу и тратил вторую попытку тем же набором. Красный на `9ac079a5`:
+  // ветка `showNow == false` не трогала `enteredPin` вовсе.
+  testWidgets('отвергнутый при автопроверке неполный PIN стирается из набора', (
+    tester,
+  ) async {
+    final auth = FakeAuthRepository(
+      const AuthRejection(AuthRejectionReason.wrongPin),
+    );
+    GetIt.instance.registerSingleton<AuthRepository>(auth);
+
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    final notifier = container.read(loginControllerProvider.notifier);
+    notifier.initialize();
+    await tester.pump();
+
+    // Четыре цифры из шести возможных и пауза длиннее задержки — ровно
+    // случай `showNow == false`: автопроверка, не предел длины, `wrongPin`.
+    for (final digit in ['1', '2', '3', '4']) {
+      notifier.addDigit(digit);
+    }
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(
+      auth.callCount,
+      1,
+      reason: 'предпосылка: автопроверка дошла до кассы и попытка потрачена',
+    );
+    expect(
+      container.read(loginControllerProvider).enteredPin,
+      isEmpty,
+      reason:
+          'Касса уже засчитала неудачу, а набор остался: следующая цифра '
+          'допишется к отвергнутому префиксу и сожжёт вторую попытку.',
+    );
   });
 
   // Найдено ревью (отложено с задачи 11 до этой): `removeDigit`/`clearPin`
@@ -374,7 +417,7 @@ void main() {
         permissions: const {'nav.sale'},
         operatingMode: 0,
         pointMode: 'cashier',
-        shiftOpen: true,
+        shift: ShiftStatus.open,
         issuedAt: DateTime(2026, 8, 20),
         expiresAt: DateTime(2026, 8, 21),
         terminalId: 1,
@@ -423,7 +466,7 @@ void main() {
         permissions: const {'nav.sale'},
         operatingMode: 0,
         pointMode: 'cashier',
-        shiftOpen: false,
+        shift: ShiftStatus.closed,
         issuedAt: DateTime(2026, 8, 20),
         expiresAt: DateTime(2026, 8, 21),
         terminalId: 1,
@@ -1046,7 +1089,7 @@ void main() {
         permissions: const {'nav.sale'},
         operatingMode: 0,
         pointMode: 'selfService',
-        shiftOpen: false,
+        shift: ShiftStatus.closed,
         issuedAt: DateTime(2026, 8, 21),
         expiresAt: DateTime(2026, 8, 22),
         terminalId: 1,
@@ -1261,7 +1304,7 @@ void main() {
         permissions: const {'nav.sale'},
         operatingMode: 0,
         pointMode: 'cashier',
-        shiftOpen: false,
+        shift: ShiftStatus.closed,
         issuedAt: DateTime(2026, 8, 20),
         expiresAt: DateTime(2026, 8, 21),
         terminalId: 1,
@@ -1297,7 +1340,7 @@ void main() {
           permissions: const {},
           operatingMode: 0,
           pointMode: 'cashier',
-          shiftOpen: false,
+          shift: ShiftStatus.closed,
           issuedAt: DateTime(2026, 8, 20),
           expiresAt: DateTime(2026, 8, 21),
           terminalId: 1,
@@ -1348,7 +1391,7 @@ void main() {
         permissions: const {'nav.sale'},
         operatingMode: 0,
         pointMode: 'cashier',
-        shiftOpen: true,
+        shift: ShiftStatus.open,
         issuedAt: DateTime.now().subtract(const Duration(minutes: 5)),
         // Относительно `DateTime.now()`, а не календарной датой: этот тест
         // проходит через тот же `_restoreSession`, который проверяет
@@ -1481,7 +1524,7 @@ void main() {
           permissions: const {'nav.sale'},
           operatingMode: 0,
           pointMode: 'cashier',
-          shiftOpen: true,
+          shift: ShiftStatus.open,
           issuedAt: DateTime.now().subtract(const Duration(hours: 3)),
           // В прошлом — тот самый случай, который тихая касса могла бы
           // отдать без правки `SessionRegistry.watch`: F5 через два часа
@@ -1528,7 +1571,7 @@ void main() {
           permissions: const {},
           operatingMode: 0,
           pointMode: 'cashier',
-          shiftOpen: false,
+          shift: ShiftStatus.closed,
           issuedAt: DateTime(2026, 8, 20),
           expiresAt: DateTime(2026, 8, 21),
           terminalId: 1,

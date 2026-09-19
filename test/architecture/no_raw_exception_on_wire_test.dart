@@ -132,6 +132,18 @@ const _sweepTargets = <({String label, String regex})>[
     regex: r'\bunexpectedError\(',
   ),
   (label: 'onProgress?.call(...)', regex: r'\bonProgress\??\.call\('),
+  // Задача 16, круг правки 2. Отказ очереди печати **уезжает на
+  // провод**: `LocalPaymentService` кладёт `PrintSubmitOutcome.message`
+  // в `CompletionTrouble.message`, оттуда операция `pay.troubles`
+  // несёт его во вкладку браузера и в снек кассиру. **Пять**
+  // производителей этого текста интерполировали исключение сырьём —
+  // сторож их и нашёл (разбор называл четыре, пятый —
+  // `printer_settings_screen.dart`, и именно поэтому цель заведена по
+  // имени вызова, а не списком файлов).
+  (
+    label: 'PrintSubmitOutcome.rejected(...)',
+    regex: r'\bPrintSubmitOutcome\.rejected\(',
+  ),
 ];
 
 /// Сырая интерполяция объекта исключения — в любом месте литерала, не только
@@ -232,96 +244,90 @@ void main() {
   );
 
   for (final target in _sweepTargets) {
-    test(
-      '${target.label}: ни один вызов во всём lib/ не несёт сырую '
-      'интерполяцию исключения',
-      () {
-        final pattern = RegExp(target.regex);
-        final offenders = <String>[];
-        var callsFound = 0;
-
-        for (final file in files) {
-          final source = file.readAsStringSync();
-          final calls = _callsMatching(source, pattern);
-          callsFound += calls.length;
-          for (final call in calls) {
-            if (_isOffending(call)) {
-              offenders.add(
-                '${file.path}: '
-                '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
-              );
-            }
-          }
-        }
-
-        // Страховка от теста, который зелёный только потому, что ничего не
-        // нашёл (переименование, рефакторинг, унёсший все вызовы) — та же
-        // роль, что у прежнего sanityMarker по одному файлу, теперь по
-        // всему обходу разом.
-        expect(
-          callsFound,
-          greaterThan(0),
-          reason:
-              'ни одного вызова ${target.label} не нашлось во всём lib/ — '
-              'сам сторож сломан (переименование? рефакторинг, унёсший все '
-              'вызовы?)',
-        );
-
-        expect(
-          offenders,
-          isEmpty,
-          reason:
-              'наружу едет исключение через toString() — а значит, для '
-              'SqliteException, параметры запроса (потенциально хэш PIN) '
-              'едут в кадр/исход как есть. Прогони через safeErrorText '
-              '(lib/core/errors/safe_error_text.dart). Нашедшиеся места:\n'
-              '${offenders.join('\n')}',
-        );
-      },
-    );
-  }
-
-  test(
-    'error: в состоянии экрана (lib/presentation/**) не несёт сырую '
-    'интерполяцию исключения',
-    () {
-      final presentationFiles = _dartFilesUnder('lib/presentation');
+    test('${target.label}: ни один вызов во всём lib/ не несёт сырую '
+        'интерполяцию исключения', () {
+      final pattern = RegExp(target.regex);
       final offenders = <String>[];
-      var literalsFound = 0;
+      var callsFound = 0;
 
-      for (final file in presentationFiles) {
+      for (final file in files) {
         final source = file.readAsStringSync();
-        for (final match in _errorLiteralPattern.allMatches(source)) {
-          literalsFound++;
-          final literal = match.group(0)!;
-          if (_isOffending(literal)) {
-            offenders.add('${file.path}: ${literal.trim()}');
+        final calls = _callsMatching(source, pattern);
+        callsFound += calls.length;
+        for (final call in calls) {
+          if (_isOffending(call)) {
+            offenders.add(
+              '${file.path}: '
+              '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
+            );
           }
         }
       }
 
-      // Та же страховка, что у сторожа по вызовам: ноль найденных литералов
-      // — не «всё почищено», а сломанный обход (переименование `error:`,
-      // переезд состояния на другой конструктор).
+      // Страховка от теста, который зелёный только потому, что ничего не
+      // нашёл (переименование, рефакторинг, унёсший все вызовы) — та же
+      // роль, что у прежнего sanityMarker по одному файлу, теперь по
+      // всему обходу разом.
       expect(
-        literalsFound,
+        callsFound,
         greaterThan(0),
         reason:
-            'ни одного литерала error: не нашлось во всём '
-            'lib/presentation/ — сам сторож сломан (переименование? '
-            'переезд состояния на другой конструктор?)',
+            'ни одного вызова ${target.label} не нашлось во всём lib/ — '
+            'сам сторож сломан (переименование? рефакторинг, унёсший все '
+            'вызовы?)',
       );
 
       expect(
         offenders,
         isEmpty,
         reason:
-            'состояние экрана несёт исключение через toString() — тем же '
-            'путём, каким кадр провода нёс хэш PIN до задачи 2. Прогони '
-            'через safeErrorText (lib/core/errors/safe_error_text.dart). '
-            'Нашедшиеся места:\n'
+            'наружу едет исключение через toString() — а значит, для '
+            'SqliteException, параметры запроса (потенциально хэш PIN) '
+            'едут в кадр/исход как есть. Прогони через safeErrorText '
+            '(lib/core/errors/safe_error_text.dart). Нашедшиеся места:\n'
             '${offenders.join('\n')}',
       );
-    },
-  );
+    });
+  }
+
+  test('error: в состоянии экрана (lib/presentation/**) не несёт сырую '
+      'интерполяцию исключения', () {
+    final presentationFiles = _dartFilesUnder('lib/presentation');
+    final offenders = <String>[];
+    var literalsFound = 0;
+
+    for (final file in presentationFiles) {
+      final source = file.readAsStringSync();
+      for (final match in _errorLiteralPattern.allMatches(source)) {
+        literalsFound++;
+        final literal = match.group(0)!;
+        if (_isOffending(literal)) {
+          offenders.add('${file.path}: ${literal.trim()}');
+        }
+      }
+    }
+
+    // Та же страховка, что у сторожа по вызовам: ноль найденных литералов
+    // — не «всё почищено», а сломанный обход (переименование `error:`,
+    // переезд состояния на другой конструктор).
+    expect(
+      literalsFound,
+      greaterThan(0),
+      reason:
+          'ни одного литерала error: не нашлось во всём '
+          'lib/presentation/ — сам сторож сломан (переименование? '
+          'переезд состояния на другой конструктор?)',
+    );
+
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'состояние экрана несёт исключение через toString() — тем же '
+          'путём, каким кадр провода нёс хэш PIN до задачи 2. Прогони '
+          'через safeErrorText (lib/core/errors/safe_error_text.dart). '
+          'Нашедшиеся места:\n'
+          '${offenders.join('\n')}',
+    );
+  });
 }

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:telepos/hardware/display/customer_display_manager.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 
 class VfdDisplayManager extends BaseDisplayManager {
   VfdDisplayManager(super.config);
@@ -155,23 +156,14 @@ class VfdDisplayManager extends BaseDisplayManager {
     await _write(bytes);
   }
 
-  List<int> _encodeText(String text) {
-    final result = <int>[];
-    for (final char in text.codeUnits) {
-      if (char < 128) {
-        result.add(char);
-      } else if (char >= 0x410 && char <= 0x44F) {
-        result.add(char - 0x410 + 0x80);
-      } else if (char == 0x401) {
-        result.add(0xF0);
-      } else if (char == 0x451) {
-        result.add(0xF1);
-      } else {
-        result.add(0x20);
-      }
-    }
-    return result;
-  }
+  /// Байты строки — общей таблицей бумаги (`hardware/paper_charset.dart`).
+  ///
+  /// Своя таблица здесь была **неверной**: она отправляла всю кириллицу
+  /// `0x410..0x44F` в `0x80 + (c - 0x410)`, то есть строчные «р»…«я»
+  /// ложились на `0xB0..0xBF` — участок псевдографики CP866. Покупатель
+  /// видел на табло рамки вместо букв, и никакая проба на это не смотрела.
+  List<int> _encodeText(String text) =>
+      encodePaper(text, PaperCharset.cp866);
 
   Future<void> _write(List<int> data) async {
     if (!_connected || _file == null) return;

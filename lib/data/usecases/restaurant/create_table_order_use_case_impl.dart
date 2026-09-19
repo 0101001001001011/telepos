@@ -4,16 +4,19 @@ import 'package:talker/talker.dart';
 import 'package:telepos/core/constants/enums/order_type.dart';
 import 'package:telepos/core/constants/enums/table_status.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/data/sale/receipt_numbers.dart';
 import 'package:telepos/domain/entities/restaurant/restaurant_order_entity.dart';
 import 'package:telepos/domain/usecases/restaurant/create_table_order_use_case.dart';
 
 class CreateTableOrderUseCaseImpl implements CreateTableOrderUseCase {
   CreateTableOrderUseCaseImpl({required AppDatabase db, required Talker logger})
     : _db = db,
-      _logger = logger;
+      _logger = logger,
+      _receiptNumbers = ReceiptNumbers(db);
 
   final AppDatabase _db;
   final Talker _logger;
+  final ReceiptNumbers _receiptNumbers;
 
   static const int _stateInProgress = 0;
 
@@ -53,27 +56,43 @@ class CreateTableOrderUseCaseImpl implements CreateTableOrderUseCase {
         throw StateError('CreateTableOrder: no opened shift');
       }
 
-      final lastReceipt = await _db.saleDao.findLastReceiptNo();
-      final nextReceiptNo = (lastReceipt ?? 0) + 1;
-
       final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-      await _db
-          .into(_db.sales)
-          .insert(
-            SalesCompanion.insert(
-              receiptNo: nextReceiptNo,
-              posId: posId,
-              userId: shift.userId,
-              amount: Decimal.zero,
-              time: now,
-              storeId: Value(thisPos.storeId),
-              state: const Value(_stateInProgress),
-              isWholesale: const Value(false),
-              isOfd: const Value(false),
-              orderType: Value(orderType.index),
-            ),
-          );
+      // Владелец обязателен при `state = 0` (правило смысла
+      // `Sales.terminalId`) — без него чек в работе не находит никто,
+      // включая `findInProgress`. Терминал — `terminals.self`: этот стол
+      // заводит сама касса, тот же приём, что и
+      // `sale_initiation_use_case_impl.dart`, пока задача 5 не даёт
+      // довод `terminalId` явно.
+      final terminalId = (await _db.terminalDao.self())?.id ?? 0;
+
+      // Номер закрепляется атомарно вместе с полной строкой — тот же
+      // класс, что и `sale_initiation_use_case_impl.dart` (задача 4,
+      // круг правки 1): `findLastReceiptNo() ?? 0) + 1` здесь на месте
+      // делил один и тот же счётчик с продажей и с закрытием заказа
+      // услуги без всякой защиты от гонки между ними.
+      final nextReceiptNo = await _receiptNumbers.withNext(posId, (
+        receiptNo,
+      ) async {
+        await _db
+            .into(_db.sales)
+            .insert(
+              SalesCompanion.insert(
+                receiptNo: receiptNo,
+                posId: posId,
+                userId: shift.userId,
+                amount: Decimal.zero,
+                time: now,
+                storeId: Value(thisPos.storeId),
+                state: const Value(_stateInProgress),
+                isWholesale: const Value(false),
+                isOfd: const Value(false),
+                orderType: Value(orderType.index),
+                terminalId: Value(terminalId),
+              ),
+            );
+        return receiptNo;
+      });
 
       _logger.info(
         'CreateTableOrder: created sale '

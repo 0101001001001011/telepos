@@ -1,5 +1,6 @@
 library;
 
+import 'package:telepos/domain/fiscal/fiscal_doc_kind.dart';
 import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
@@ -14,6 +15,7 @@ import 'package:telepos/domain/fiscal/fiscal_provider.dart';
 import 'package:telepos/domain/fiscal/fiscal_provider_registry.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 import 'package:telepos/domain/services/shift_service.dart';
+import 'package:telepos/domain/fiscal/fiscal_offset_settings.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
 
 import '../support/harness.dart';
@@ -246,16 +248,37 @@ void main() {
           markable: false,
         );
 
+        // Строкой ниже проба сама признаёт, что оператора нет. Значит
+        // политика `isOfdSale` до провайдера бы и не дошла: она спрашивает
+        // ровно этот `isEnabled()`. Вызов `fiscalizeSale` здесь —
+        // **обход политики**, сделанный пробой напрямую.
         expect(await service.isEnabled(), isFalse);
+
         final res = await service.fiscalizeSale(
           saleReceiptNo: 7005,
           salePosId: 1,
           amount: d('500'),
           cashAmount: d('500'),
           cardAmount: Decimal.zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: Decimal.zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
         );
-        expect(res.success, isTrue, reason: 'NoOp never blocks the sale');
-        expect(res.queued, isTrue);
+
+        // Прежде здесь требовалось `success == true, queued == true` с
+        // доводом «NoOp never blocks the sale». Довод путал два разных
+        // утверждения. Продажу не блокирует **политика**, отсекая чек до
+        // провайдера, — это измерено настоящей продажей в
+        // `test/data/fiscal/policy_precedes_provider_test.dart`. А
+        // провайдер, до которого всё-таки дошли в обход политики, обязан
+        // отказать: очереди за ним нет — её даёт `OfflineQueueingProvider`
+        // поверх настоящих провайдеров, а заглушка подставляется вместо
+        // обёртки. Обещание очереди было обещанием без исполнителя.
+        expect(res.success, isFalse, reason: 'оператора нет — отказ, не успех');
+        expect(res.queued, isFalse, reason: 'очереди за заглушкой нет');
+        expect(res.errorCode, FiscalErrorCode.notConfigured);
         expect(res.hasFiscalSign, isFalse);
       }
 
@@ -286,6 +309,11 @@ void main() {
           amount: d('500'),
           cashAmount: d('500'),
           cardAmount: Decimal.zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: Decimal.zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
         );
 
         final pos = provider.lastSale!.positions.first;
@@ -316,6 +344,11 @@ void main() {
           amount: d('500'),
           cashAmount: Decimal.zero,
           cardAmount: d('500'),
+          mobileAmount: Decimal.zero,
+          bonusAmount: Decimal.zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
         );
 
         expect(res.success, isTrue);
@@ -323,7 +356,14 @@ void main() {
 
         final sent = provider.lastSale!;
         expect(sent.localOperationId, 7001);
-        expect(sent.idempotencyKey, 'sale-7001-1');
+        // Ключ несёт эпоху — время самого чека (`FiscalIdempotency`,
+        // 2026-09-18). Прежнее `sale-7001-1` жило ровно до первой уборки
+        // старых продаж: она обнуляет `max(receipt_no)`, номера идут
+        // заново, и оператор отвечал на них кодом 14.
+        expect(
+          sent.idempotencyKey,
+          'sale-${(await db.saleDao.findByKey(7001, 1))!.time}-7001-1',
+        );
         expect(sent.positions.length, 1);
 
         final pos = sent.positions.first;
@@ -337,8 +377,8 @@ void main() {
         expect(sent.payments.single.kind, FiscalPaymentKind.card);
         expect(sent.payments.single.amount, d('500'));
 
-        final receipt = await db.webkassaReceiptDao.findByIsSaleAndOperationId(
-          true,
+        final receipt = await db.webkassaReceiptDao.findByKindAndOperationId(
+          FiscalDocKind.sale,
           7001,
         );
         expect(receipt, isNotNull);
@@ -394,6 +434,14 @@ void main() {
           refundLocalId: 8003,
           originalSaleReceiptNo: 7003,
           amount: d('500'),
+          cashAmount: d('500'),
+          cardAmount: Decimal.zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: Decimal.zero,
+          creditAmount: Decimal.zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
         );
 
         expect(res.success, isTrue);
@@ -464,10 +512,15 @@ void main() {
           amount: d('500'),
           cashAmount: d('500'),
           cardAmount: Decimal.zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: Decimal.zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
         );
         expect(res.success, isFalse, reason: 'offline → not fiscalized');
-        final receipt = await db.webkassaReceiptDao.findByIsSaleAndOperationId(
-          true,
+        final receipt = await db.webkassaReceiptDao.findByKindAndOperationId(
+          FiscalDocKind.sale,
           7004,
         );
         expect(receipt, isNull);

@@ -218,10 +218,18 @@ class InitializationTask {
       _logger.warning('LastSaleReceiptNoUseCase failed: $e');
     }
 
-    final inProgressSale = await _db.saleDao.findInProgress();
-    if (inProgressSale != null) {
+    // `findInProgress()` берёт довод — чек **своего** рабочего места
+    // (v37, задача 3 плана «продажа с браузерного терминала»). Здесь же
+    // ничего не решается, только пишется журнал старта кассы, а с v37
+    // рабочих мест на одной кассе может быть больше одного одновременно —
+    // логировать нужно каждый чек в работе, а не первый попавшийся:
+    // первый попавшийся молча показал бы одну корзину из двух и соврал бы
+    // при разборе живых случаев.
+    final inProgressSales = await _db.saleDao.findByState(0);
+    for (final sale in inProgressSales) {
       _logger.debug(
-        'Found in-progress sale: receiptNo=${inProgressSale.receiptNo}',
+        'Found in-progress sale: receiptNo=${sale.receiptNo}, '
+        'terminalId=${sale.terminalId}',
       );
     }
 

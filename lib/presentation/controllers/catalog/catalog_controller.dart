@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:telepos/presentation/controllers/app/stock_revision.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:telepos/data/database/app_database.dart';
@@ -240,6 +241,10 @@ class CatalogNotifier extends Notifier<CatalogState> {
 
   @override
   CatalogState build() {
+    // «Остатки изменились» приходит числом (`StockRevision`, задача 36):
+    // продажа, инвентаризация и перемещение сообщают о факте, не импортируя
+    // этот файл вместе с базой за ним.
+    ref.watch(stockRevisionProvider);
     _db = GetIt.I<AppDatabase>();
     _createProductInfo = GetIt.I<CreateProductInfoUseCase>();
     _createProductPrice = GetIt.I<CreateProductPriceUseCase>();

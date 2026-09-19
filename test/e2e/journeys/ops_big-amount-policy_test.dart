@@ -57,6 +57,22 @@ void main() {
     await h.db.delete(h.db.saleProducts).go();
     await h.db.delete(h.db.sales).go();
     await h.db.delete(h.db.shifts).go();
+
+    // Задача 5 плана «Продажа с браузерного терминала»:
+    // `SaleInitiationUseCaseImpl.initiate()` больше не открывает смену сама,
+    // когда её нет, — она отвечает отказом `shift_not_open`. Этот сценарий
+    // чистит смены перед каждой пробой и молча полагался на прежнее
+    // самооткрытие; теперь смена открывается **явно**, тем же действием, каким
+    // её открывает касса перед продажей, и **на названного человека** — того
+    // самого кассира, которого завёл харнесс, а не на выдуманный `userId: 1`.
+    //
+    // Посев вынесен в `E2eHarness.openShift()` при слиянии: те же девять
+    // сценариев чинились дважды и по-разному — ветвь `wire-sale` сеяла
+    // смену дословно в каждом файле, ветвь `browser-sale` завела помощник.
+    // Взято тело помощника; там же назван и довод про **текущее** время
+    // открытия (смена задним числом упёрлась бы в сторож «открыта более 24
+    // часов», `kShiftMaxAge`, и продажа отказала бы снова, другой причиной).
+    await h.openShift();
     container = ProviderContainer();
     addTearDown(container.dispose);
   });
@@ -82,7 +98,11 @@ void main() {
       reason: 'sale must initialize before payment',
     );
 
-    saleNotifier.addProduct(
+    // Команда корзины асинхронна с задачи 7: она идёт в базу через
+    // контракт `CartService`, а не правит состояние на месте. Без
+    // `await` следующая строка читает снимок ДО команды — сумма 0, а
+    // продолжение работает поверх уже выброшенного нотифайера.
+    await saleNotifier.addProduct(
       ProductSearchResult(
         id: ucode,
         name: 'Дорогой товар $ucode',
@@ -98,9 +118,22 @@ void main() {
     payNotifier.setCashReceived(total);
 
     final ok = await payNotifier.processPayment();
-    final saleError = container.read(saleControllerProvider).error;
+    // Причина отказа читается с **экрана оплаты**, а не с экрана продажи,
+    // и адрес сменила задача 14, а не эта проба. До неё оплату проводил
+    // `SaleNotifier.completeSale`, и потолок суммы всплывал в
+    // `saleController.error`; теперь завершение живёт за контрактом
+    // `PaymentService`, `completeSale` из этого пути не зовётся вовсе, и
+    // отказ кассы кладёт в состояние `PaymentNotifier._errorKeyOf`. Кассир
+    // читает его фразой: экран оплаты переводит ключ `ErrorLocalizer`,
+    // а `error.big_amount_blocked` в словаре есть.
+    //
+    // Найдено слиянием: на ветви оплаты эта проба зелёной не была ни разу
+    // (её держала регрессия задачи 5), а ветвь продажи нового адреса не
+    // знала. Утверждать по старому адресу значило бы утверждать про
+    // мёртвый путь.
+    final payError = container.read(paymentControllerProvider).error;
     final completed = (await db.saleDao.findByState(1)).length;
-    return (ok: ok, saleError: saleError, completed: completed);
+    return (ok: ok, saleError: payError, completed: completed);
   }
 
   test('A) total 1.5M with allowBigAmount=false is BLOCKED', () async {
@@ -116,7 +149,7 @@ void main() {
     expect(
       r.saleError,
       'error.big_amount_blocked',
-      reason: 'completeSale must surface the big-amount guard error',
+      reason: 'the payment screen must surface the big-amount guard error',
     );
     expect(r.completed, 0, reason: 'no sale may complete when blocked');
   });

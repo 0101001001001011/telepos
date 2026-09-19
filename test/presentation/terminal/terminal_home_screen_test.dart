@@ -18,6 +18,7 @@ import 'package:telepos/core/constants/permission_keys.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/presentation/screens/terminal/terminal_home_screen.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Сеанс, каким его видит экран, — три поля, которые задача и просит:
 /// имя, состояние смены, действующие права. Полного `AuthSession` тут не
@@ -117,8 +118,8 @@ class _TestAppStateNotifier extends Notifier<AppState>
   }
 
   @override
-  void setShiftOpened(bool isOpened) {
-    state = state.copyWith(isShiftOpened: isOpened);
+  void setShift(ShiftStatus shift) {
+    state = state.copyWith(shift: shift);
   }
 
   @override
@@ -163,7 +164,7 @@ Widget terminalHomeUnderTest({required _Session session}) {
 
   container.read(appStateProvider.notifier)
     ..setUserInfo(id: 1, name: session.name, role: 0, permissions: session.permissions)
-    ..setShiftOpened(session.shiftOpen);
+    ..setShift(session.shiftOpen ? ShiftStatus.open : ShiftStatus.closed);
 
   final router = GoRouter(
     initialLocation: AppRoutes.terminalHome,

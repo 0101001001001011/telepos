@@ -1,6 +1,6 @@
 name: rk_quic
 description: QUIC and WebTransport for Dart over a native library, so a Dart process can serve browser clients directly instead of waiting for HTTP/3 in the SDK.
-version: 0.2.1
+version: 0.2.2
 repository: https://github.com/0101001001001011/rk-quic
 issue_tracker: https://github.com/0101001001001011/rk-quic/issues
 

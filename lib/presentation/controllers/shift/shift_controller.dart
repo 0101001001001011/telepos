@@ -2,18 +2,21 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:telepos/presentation/controllers/app/money_ledger_revision.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/services/receipt_print_service.dart';
+import 'package:telepos/data/shift/local_shift_desk.dart';
 import 'package:telepos/domain/services/shift_service.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
 import 'package:telepos/domain/usecases/shift/assemble_shift_receipt_use_case.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/core/logging/app_talker.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 enum CashOperationType { investment, expense, dividend }
 
@@ -285,6 +288,12 @@ class ShiftNotifier extends Notifier<ShiftState> {
 
   @override
   ShiftState build() {
+    // «Деньги изменились» приходит числом (`MoneyLedgerRevision`): тот, кто
+    // их изменил, больше не обязан знать имя этого провайдера — а значит и
+    // импортировать этот файл вместе со всей базой за ним. Поведение то же,
+    // что у прежнего `ref.invalidate(shiftControllerProvider)`: смена
+    // перечитывает себя.
+    ref.watch(moneyLedgerRevisionProvider);
     _loadingInProgress = false;
     Future.microtask(() {
       if (!ref.mounted) return;
@@ -547,6 +556,9 @@ class ShiftNotifier extends Notifier<ShiftState> {
         effectiveUserId,
         openingCash: initialAmount,
       );
+      // Задача 47: открытую здесь смену значок узнаёт сразу, а не с
+      // первого начатого чека.
+      ref.read(appStateProvider.notifier).setShift(ShiftStatus.open);
 
       await _loadShiftData();
     } catch (e) {
@@ -566,31 +578,30 @@ class ShiftNotifier extends Notifier<ShiftState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final inProgressSales = await _db.saleDao.findByState(0);
-      for (final sale in inProgressSales) {
-        await _db.saleProductDao.deleteBySale(sale.receiptNo, sale.posId);
-        await _db.paymentDao.deleteBySale(sale.receiptNo, sale.posId);
-        await (_db.delete(_db.sales)..where(
-              (s) =>
-                  s.receiptNo.equals(sale.receiptNo) &
-                  s.posId.equals(sale.posId),
-            ))
-            .go();
-        talker.info(
-          'Shift: cleaned up IN_PROGRESS sale receipt=${sale.receiptNo}',
-        );
-      }
+      // Процедура закрытия живёт **в одном месте на кассу**
+      // (`LocalShiftDesk`), и её же зовёт обработчик провода
+      // (`TillOps.shiftClose`) — решение заказчика 2026-09-18, «в браузере
+      // должно работать то же, что в приложении».
+      //
+      // До этой правки уборка начатых чеков, выбор суммы и запись
+      // расхождения стояли прямо здесь, поверх `GetIt.I<AppDatabase>()`.
+      // Оставить их здесь и написать рядом такие же для провода значило бы
+      // закрывать смену с кассы одним способом, а с планшета другим, и
+      // расходились бы они **в деньгах**: расхождение, записанное одним
+      // путём и не записанное другим, не ловится ни инвентаризацией, ни
+      // отчётом смены.
+      //
+      // `counted` — **`null`, когда никто не считал**, а не `systemTotal`:
+      // выбор «насчитали против системного итога» делает стойка, тем же
+      // правилом, каким его делал этот метод. Передай экран сюда системный
+      // итог, он бы сам решал за кассу, каким числом закрывать смену.
+      await LocalShiftDesk(
+        db: _db,
+        shifts: GetIt.I<ShiftService>(),
+        logger: talker,
+      ).close(counted: state.hasCounted ? state.enteredTotal : null);
 
-      final cashInPos = state.hasCounted
-          ? state.enteredTotal
-          : state.systemTotal;
-
-      await _persistReconciliation(shift);
-
-      final shiftService = GetIt.I<ShiftService>();
-      await shiftService.onCloseShift(cashInPos);
-
-      ref.read(appStateProvider.notifier).setShiftOpened(false);
+      ref.read(appStateProvider.notifier).setShift(ShiftStatus.closed);
 
       await _loadShiftData();
     } catch (e) {
@@ -598,46 +609,6 @@ class ShiftNotifier extends Notifier<ShiftState> {
         isLoading: false,
         error: 'error.shift_close_failed:${safeErrorText(e)}',
       );
-    }
-  }
-
-  Future<void> _persistReconciliation(Shift shift) async {
-    try {
-      final reconciliation = state.reconciliation;
-      if (reconciliation == Decimal.zero) return;
-
-      final isOverage = reconciliation > Decimal.zero;
-      final type = isOverage
-          ? CashOperationType.investment
-          : CashOperationType.expense;
-
-      final thisPos = await _db.thisPosDao.get();
-      var posAccountId = thisPos?.accountId;
-      if (posAccountId == null) {
-        final posAccounts = await _db.accountDao.findByType(AccountType.pos);
-        if (posAccounts.isNotEmpty) posAccountId = posAccounts.first.id;
-      }
-
-      final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-
-      await _db.cashOperationDao.insert(
-        CashOperationsCompanion.insert(
-          amount: reconciliation,
-          type: type.index,
-          accountId: Value(posAccountId),
-          userId: Value(shift.userId),
-          note: Value(isOverage ? 'Излишек смены' : 'Недостача смены'),
-          docTime: Value(now),
-          state: const Value(1),
-        ),
-      );
-
-      talker.info(
-        'Shift: reconciliation persisted shift=${shift.id} '
-        'amount=$reconciliation (${isOverage ? 'излишек' : 'недостача'})',
-      );
-    } catch (e, st) {
-      talker.error('Shift: _persistReconciliation error: $e', e, st);
     }
   }
 
@@ -691,6 +662,13 @@ class ShiftNotifier extends Notifier<ShiftState> {
         cashEnd: receipt.cashInPos,
         cashIncome: receipt.cashPaymentsSum,
         cashExpense: cashExpense,
+        // Оба числа — **из той же сборки отчёта**, что и выручка, а не
+        // посчитанные здесь заново: второе мнение о том, сколько выпущено
+        // сертификатов, разошлось бы с первым молча. Разбор источников — в
+        // докстрингах `ShiftReceipt.certificatesIssued` и
+        // `ShiftReceipt.certificatesRedeemed`.
+        certificatesIssued: receipt.certificatesIssued,
+        certificatesRedeemed: receipt.certificatesRedeemed,
       );
 
       if (outcome.isRejected) {
@@ -777,6 +755,8 @@ class ShiftNotifier extends Notifier<ShiftState> {
         refundCount: state.refundsCount,
         refundTotal: state.refundsTotal,
         cashInDrawer: cashInPos,
+        certificatesIssued: receipt.certificatesIssued,
+        certificatesRedeemed: receipt.certificatesRedeemed,
       );
       return !outcome.isRejected;
     } catch (e, st) {

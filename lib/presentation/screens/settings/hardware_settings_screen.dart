@@ -16,13 +16,17 @@ import 'package:telepos/domain/device/device_discovery.dart';
 import 'package:telepos/domain/device/device_profile.dart';
 import 'package:telepos/domain/device/device_profile_catalog.dart';
 import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/device_binding.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
+import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/wire/session_lost.dart';
+import 'package:telepos/domain/wire/wire_refusal.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/adaptive/breakpoints.dart';
 import 'package:telepos/presentation/common/utils/session_lost_handler.dart';
+import 'package:telepos/app/theme/app_typography.dart';
 
 /// Settings for the device classes that don't have their own screen —
 /// scanner, scale, physical customer-facing pole display, cash drawer,
@@ -73,11 +77,22 @@ class _HardwareSettingsScreenState
   DeviceProfileCatalog? _catalog;
   DeviceBindingRepository? _bindingRepo;
 
-  /// `null` when this build has no writer for the И142 rules — the browser
-  /// binding (`lib/web/main_web.dart`) registers no `ScannerRulesRepository`,
-  /// so the section says so instead of showing fields that would silently
-  /// fail to save.
-  ScannerRulesRepository? _scannerRulesRepo;
+  /// Писатель правил И142.
+  ///
+  /// **Развилки «есть привязка / нет привязки» здесь больше нет — пункт 11
+  /// ревизии 2026-09-19.** Она была настоящей ровно до того дня: браузерная
+  /// точка входа не привязывала `ScannerRulesRepository` вовсе, и секция
+  /// говорила словами, что правил здесь не задать. Теперь `main_web.dart`
+  /// привязывает `WtScannerRules` и под пишущим договором тоже (операция
+  /// `scanner.saveRules`, право `settings.hardware`), а на кассе стоит
+  /// `LocalScannerRulesRepository`. Обеих сборок, где этот экран вообще
+  /// открывается, — две, и в обеих писатель есть: незаведённая привязка
+  /// стала ошибкой сборки, а не режимом работы (правило сторожа
+  /// `presentation_is_registered_test.dart`).
+  ///
+  /// Поле остаётся, но заполняется **прямым** резолвом в [_load] и падает
+  /// там, где падение видно, а не прячет отсутствие за пустой секцией.
+  late final ScannerRulesRepository _scannerRulesRepo;
 
   final _scannerRulesDraft = _ScannerRulesDraft();
 
@@ -102,6 +117,51 @@ class _HardwareSettingsScreenState
   bool _customerScreenEnabled = false;
   int _customerScreenMonitor = 1;
   List<String> _monitors = const [];
+
+  /// Виды оплаты, разрешённые **этому** рабочему месту — задача 15 плана
+  /// «продажа с браузерного терминала», решение заказчика №5: «планшет у
+  /// кассы берёт всё, в зале — только безнал».
+  ///
+  /// Пустой набор означает «все виды» (`Terminal.allowedPaymentTypes`), и
+  /// на этом экране он выглядит как выключенный переключатель секции: пока
+  /// оператор не ограничил рабочее место, ограничений нет.
+  ///
+  /// **Этот экран запретом не является.** Он записывает настройку; отказ
+  /// даёт касса (`LocalPaymentService`, I44/I162), и подделанная вкладка
+  /// обойти его не может. Секция здесь потому, что это настройка того же
+  /// рабочего места, что и его устройства выше, — и правит их один и тот же
+  /// человек тем же правом `settings.hardware`.
+  Set<PaymentType> _allowedPaymentTypes = const {};
+  bool _paymentTypesLimited = false;
+
+  /// Оператор трогал эту секцию в этот заход?
+  ///
+  /// **Без этого признака секция пишет при каждом сохранении экрана** — а
+  /// экран общий: привязка принтера сохраняется той же кнопкой и уносила бы
+  /// виды оплаты заодно. Круг правки 3 намерил на этом худший из исходов:
+  /// набор `{debt}` (из одних не-тендеров) срезался в пустой, пустой значит
+  /// «все виды», и **сохранение молча снимало ограничение** — оператор видел
+  /// просто выключенный переключатель, и ничто не говорило ему, что запрет
+  /// отброшен.
+  ///
+  /// Правило теперь простое: настройка уезжает на кассу тогда, и только
+  /// тогда, когда её изменил человек.
+  bool _paymentTypesTouched = false;
+
+  /// Виды, записанные рабочему месту, которых **эта версия не знает как
+  /// тендеры** (`mixed`, `debt` — см. `tenderPaymentTypes`).
+  ///
+  /// Срезаются из [_allowedPaymentTypes] при чтении, но не молча: секция
+  /// называет их вслух. Молчание здесь было бы второй бедой того же рода —
+  /// оператор видел бы «ограничений нет» там, где ограничение записано, и не
+  /// знал бы, что чинить.
+  Set<PaymentType> _paymentTypesUnknown = const {};
+
+  /// `null` — эта сборка сохранить набор не может (репозиторий не
+  /// зарегистрирован или мастер настройки не пройден). Секция говорит об
+  /// этом прямо, а не показывает галочки, которые молча не сохранятся, —
+  /// тем же приёмом, что [_scannerRulesRepo] выше.
+  TerminalRepository? _terminalRepo;
 
   @override
   void initState() {
@@ -137,8 +197,24 @@ class _HardwareSettingsScreenState
       _catalog = GetIt.I<DeviceProfileCatalog>();
       final bindingRepo = GetIt.I<DeviceBindingRepository>();
       _bindingRepo = bindingRepo;
-      final terminal = await GetIt.I<TerminalRepository>().self();
+      final terminalRepo = GetIt.I<TerminalRepository>();
+      _terminalRepo = terminalRepo;
+      final terminal = await terminalRepo.self();
       _terminalId = terminal.id;
+      // **Не-тендеры срезаются при чтении** (круг правки 2). Записать их
+      // касса больше не даёт, но строка, написанная раньше запрета (или
+      // рукой в базе), иначе делала бы экран бесполезным ровно там, где он
+      // нужен: галочек для `mixed`/`debt` нет, а множество уезжало бы на
+      // сохранение дословно — касса отвергала бы его каждый раз, и снять
+      // причину с экрана было бы нельзя. Срезание превращает «вечный отказ»
+      // в «набор, который оператор видит и может починить».
+      _allowedPaymentTypes = terminal.allowedPaymentTypes.intersection(
+        tenderPaymentTypes,
+      );
+      _paymentTypesUnknown = terminal.allowedPaymentTypes.difference(
+        tenderPaymentTypes,
+      );
+      _paymentTypesLimited = _allowedPaymentTypes.isNotEmpty;
       final bindings = await bindingRepo.forTerminal(terminal.id);
 
       DeviceBinding? bindingFor(DeviceClass deviceClass) {
@@ -169,14 +245,11 @@ class _HardwareSettingsScreenState
       // Best-effort load; the screen still opens with defaults either way.
     }
 
-    if (GetIt.I.isRegistered<ScannerRulesRepository>()) {
-      final repo = GetIt.I<ScannerRulesRepository>();
-      _scannerRulesRepo = repo;
-      try {
-        _scannerRulesDraft.applyRules(await repo.read());
-      } catch (_) {
-        // Nothing set up yet — the fields stay empty, meaning "default".
-      }
+    _scannerRulesRepo = GetIt.I<ScannerRulesRepository>();
+    try {
+      _scannerRulesDraft.applyRules(await _scannerRulesRepo.read());
+    } catch (_) {
+      // Nothing set up yet — the fields stay empty, meaning "default".
     }
 
     try {
@@ -227,21 +300,64 @@ class _HardwareSettingsScreenState
       }
     }
 
+    // Виды оплаты рабочего места (задача 15) сохраняются той же кнопкой, по
+    // тому же доводу, что и правила сканера ниже: оператор, нажавший
+    // «Сохранить», имеет в виду весь экран. Ошибка одной части попадает в
+    // общий список, а не отменяет уже сохранённое.
+    final terminalRepo = _terminalRepo;
+    // Секцию не трогали — она молчит. Полный разбор у
+    // [_paymentTypesTouched]: экран общий, и сохранение принтера не имеет
+    // права переписать виды оплаты, тем более снять запрет.
+    if (terminalId != null && terminalRepo != null && _paymentTypesTouched) {
+      try {
+        await terminalRepo.setAllowedPaymentTypes(
+          terminalId,
+          // Снятый переключатель означает «все виды» — пустой набор, а не
+          // текущие галочки: иначе оператор, снявший ограничение, оставил
+          // бы рабочее место с прежним запретом (докстринг
+          // `Terminal.allowedPaymentTypes`).
+          _paymentTypesLimited ? _allowedPaymentTypes : const {},
+        );
+        // **Запись починена — предупреждению больше нечего сообщать**
+        // (круг правки 4). Прежде [_paymentTypesUnknown] считался один раз
+        // при загрузке и после успешного сохранения не пересчитывался:
+        // оператор делал ровно то, что велел красный текст, набор уезжал на
+        // кассу верным — а экран продолжал утверждать, что запись сломана и
+        // «остаётся как есть». Тот же род вреда, ради которого секция и
+        // заговорила, только в другую сторону: круг 3 закрыл «оператор не
+        // знает, что чинить» и открыл «оператор не знает, что починил».
+        if (mounted) setState(() => _paymentTypesUnknown = const {});
+      } on SessionLost catch (error) {
+        handleSessionLost(context, error);
+        return;
+      } on WireRefusal catch (e) {
+        errors.add('Виды оплаты: ${e.message}');
+      }
+    }
+
     // The three И142 rules save on the same button as the bindings — they are
     // edited on the same screen and an operator pressing "сохранить" means
     // all of it. A parse or validation failure is collected into the same
     // error list rather than aborting the bindings that already saved.
-    final scannerRulesRepo = _scannerRulesRepo;
-    if (scannerRulesRepo != null) {
-      try {
-        await scannerRulesRepo.save(_scannerRulesDraft.toRules(l10n));
-      } on ArgumentError catch (e) {
-        errors.add('${l10n.scannerRulesTitle}: ${_describe(e)}');
-      } on FormatException catch (e) {
-        errors.add('${l10n.scannerRulesTitle}: ${e.message}');
-      } on StateError catch (e) {
-        errors.add('${l10n.scannerRulesTitle}: ${e.message}');
-      }
+    try {
+      await _scannerRulesRepo.save(_scannerRulesDraft.toRules(l10n));
+    } on SessionLost catch (error) {
+      // Пункт 11 ревизии 2026-09-19: с планшета запись уходит по проводу, и
+      // истёкший сеанс здесь — такой же обычный исход, как у привязок выше.
+      // До этой правки его не ловил никто: на кассе запись в базу `SessionLost`
+      // бросить не могла вовсе.
+      handleSessionLost(context, error);
+      return;
+    } on WireRefusal catch (e) {
+      // Отказ кассы — текстом в общий список, а не тишиной: «сохранено» без
+      // записи и есть то молчание, ради снятия которого заведена операция.
+      errors.add('${l10n.scannerRulesTitle}: ${e.message}');
+    } on ArgumentError catch (e) {
+      errors.add('${l10n.scannerRulesTitle}: ${_describe(e)}');
+    } on FormatException catch (e) {
+      errors.add('${l10n.scannerRulesTitle}: ${e.message}');
+    } on StateError catch (e) {
+      errors.add('${l10n.scannerRulesTitle}: ${e.message}');
     }
 
     try {
@@ -354,10 +470,7 @@ class _HardwareSettingsScreenState
                         onChanged: () => setState(() {}),
                       ),
                       const SizedBox(height: 20),
-                      _ScannerRulesSection(
-                        draft: _scannerRulesDraft,
-                        available: _scannerRulesRepo != null,
-                      ),
+                      _ScannerRulesSection(draft: _scannerRulesDraft),
                       const SizedBox(height: 20),
                       DeviceBindingEditor(
                         title: 'Весы',
@@ -405,6 +518,8 @@ class _HardwareSettingsScreenState
                         terminalId: _terminalId,
                         onChanged: () => setState(() {}),
                       ),
+                      const SizedBox(height: 20),
+                      _buildPaymentTypesSection(),
                       const SizedBox(height: 24),
                     ],
                   ),
@@ -413,6 +528,126 @@ class _HardwareSettingsScreenState
             ),
     );
   }
+
+  /// Виды оплаты рабочего места — задача 15, решение заказчика №5.
+  ///
+  /// Переключатель секции отличает «ограничений нет» (пустой набор) от
+  /// выбранного списка. Без него «снять все галочки» и «разрешить всё»
+  /// выглядели бы одинаково, а означали бы одно и то же — и оператор,
+  /// снявший последнюю галочку, думал бы, что запретил всё, тогда как
+  /// пустой набор означает «все виды».
+  ///
+  /// Подпись под галочками говорит вслух то, ради чего задача и делалась:
+  /// запрет держит касса, а не этот экран.
+  Widget _buildPaymentTypesSection() {
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+    return _SettingsSectionCard(
+      title: 'Виды оплаты рабочего места',
+      // `Icons.payment` — тот же материальный набор, которым в этом файле
+      // уже помечена секция платёжного терминала: своего глифа для оплаты
+      // в `TeleposIcons` нет (волны 1–2 рисовались под другие места), а
+      // придумывать его ради одной секции — работа со своей спекой.
+      icon: Icons.payment,
+      trailing: Switch(
+        key: const Key('payment_types_limit_switch'),
+        value: _paymentTypesLimited,
+        onChanged: _terminalRepo == null
+            ? null
+            : (value) => setState(() {
+                _paymentTypesTouched = true;
+                _paymentTypesLimited = value;
+                // Включили ограничение на пустом наборе — предлагать
+                // «ничего не разрешено» нельзя: такого состояния не
+                // существует (пустое значит «все»). Умолчание — безнал,
+                // ровно тот случай, ради которого решение принималось:
+                // «планшет в зале — только безнал».
+                if (value && _allowedPaymentTypes.isEmpty) {
+                  _allowedPaymentTypes = const {PaymentType.card};
+                }
+              }),
+      ),
+      children: [
+        if (_paymentTypesUnknown.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              'В настройке этого рабочего места записаны виды, которых эта '
+              'версия не знает: '
+              '${_paymentTypesUnknown.map((t) => _paymentTypeLabel(t).toLowerCase()).join(', ')}. '
+              'Ограничение по ним не действует. Выберите виды заново, чтобы '
+              'починить запись — пока вы этого не сделали, она остаётся как '
+              'есть.',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        if (_terminalRepo == null)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              'Эта сборка не умеет сохранять виды оплаты рабочего места.',
+              style: TextStyle(color: muted, fontSize: 13),
+            ),
+          )
+        else if (!_paymentTypesLimited)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              'Ограничений нет: рабочее место принимает все виды оплаты.',
+              style: TextStyle(color: muted, fontSize: 13),
+            ),
+          )
+        else ...[
+          // **Тендеры, а не все виды** (правка круга 1): смешанная — форма
+          // оплаты, а не тендер, и галочка для неё была ловушкой. Снять её
+          // на наборе `{mixed}` значило собрать немое рабочее место, а
+          // оставить её снятой на `{cash, card}` — запретить смешанную,
+          // обе половины которой разрешены. Разбор — `tenderPaymentTypes`.
+          for (final type in tenderPaymentTypes)
+            CheckboxListTile(
+              key: Key('payment_type_${type.name}'),
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: _allowedPaymentTypes.contains(type),
+              title: Text(_paymentTypeLabel(type)),
+              onChanged: (checked) => setState(() {
+                _paymentTypesTouched = true;
+                final next = {..._allowedPaymentTypes};
+                if (checked ?? false) {
+                  next.add(type);
+                } else {
+                  next.remove(type);
+                }
+                // Последнюю галочку снять нельзя: пустой набор означает
+                // «все виды», и снятие последней галочки означало бы ровно
+                // обратное тому, что оператор делает. Хочет снять
+                // ограничение — выключает переключатель секции.
+                if (next.isEmpty) return;
+                _allowedPaymentTypes = next;
+              }),
+            ),
+          const SizedBox(height: 4),
+          Text(
+            'Запрет проверяет касса: терминал, которому вид оплаты не '
+            'разрешён, получит отказ, даже если кнопка на его экране '
+            'осталась.',
+            style: TextStyle(color: muted, fontSize: 12),
+          ),
+        ],
+      ],
+    );
+  }
+
+  String _paymentTypeLabel(PaymentType type) => switch (type) {
+    PaymentType.cash => 'Наличные',
+    PaymentType.card => 'Карта',
+    PaymentType.mixed => 'Смешанная',
+    PaymentType.debt => 'В долг',
+    PaymentType.installment => 'Рассрочка',
+  };
 
   Widget _buildCustomerScreenSection(AppLocalizations l10n) {
     return _SettingsSectionCard(
@@ -777,7 +1012,7 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
                 key: Key('param_${profile.id}_${param.key}'),
                 controller: controller,
                 style: const TextStyle(
-                  fontFamily: 'monospace',
+                  fontFamily: AppTypography.familyMono,
                   fontFamilyFallback: ['TeleposMono', 'monospace'],
                 ),
                 decoration: InputDecoration(
@@ -921,7 +1156,7 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
                   key: Key('option_${profile.id}_${option.key}_$value'),
                   label: Text(
                     value,
-                    style: const TextStyle(fontFamily: 'monospace'),
+                    style: const TextStyle(fontFamily: AppTypography.familyMono),
                   ),
                   selected: selected,
                   onSelected: (_) {
@@ -1185,7 +1420,7 @@ class _DiscoveryResultsDialog extends StatelessWidget {
                       subtitle: Text(
                         '${sourceLabel(l10n, candidate.source)} · '
                         '${candidate.parameters[paramKey]}',
-                        style: const TextStyle(fontFamily: 'monospace'),
+                        style: const TextStyle(fontFamily: AppTypography.familyMono),
                       ),
                       onTap: () => Navigator.of(context).pop(candidate),
                     );
@@ -1254,14 +1489,15 @@ class _ScannerRulesDraft {
 
 /// Operator controls for the three И142 rules (И142, section 20's UI-first
 /// rule). Saved by the screen's own Save button, alongside the bindings.
+/// Пункт 11 ревизии 2026-09-19: довода «available» у секции больше нет.
+/// Три поля стоят всегда — и на кассе, и на планшете. Прежняя ветка
+/// «здесь их не задать» была честной ровно до того дня, когда запись
+/// приехала на провод; оставленная после, она прятала бы работающую
+/// настройку за текстом о её отсутствии.
 class _ScannerRulesSection extends StatelessWidget {
-  const _ScannerRulesSection({required this.draft, required this.available});
+  const _ScannerRulesSection({required this.draft});
 
   final _ScannerRulesDraft draft;
-
-  /// `false` when no `ScannerRulesRepository` is registered — the fields are
-  /// not shown at all rather than shown and silently unable to save.
-  final bool available;
 
   @override
   Widget build(BuildContext context) {
@@ -1269,8 +1505,7 @@ class _ScannerRulesSection extends StatelessWidget {
     return _SettingsSectionCard(
       title: l10n.scannerRulesTitle,
       icon: Icons.rule,
-      children: available
-          ? [
+      children: [
               Text(
                 l10n.scannerRulesSubtitle,
                 style: TextStyle(
@@ -1303,16 +1538,7 @@ class _ScannerRulesSection extends StatelessWidget {
                   '${ScannerRules.defaultScannerTimeoutMs}',
                 ),
               ),
-            ]
-          : [
-              Text(
-                l10n.scannerRulesUnavailable,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13,
-                ),
-              ),
-            ],
+      ],
     );
   }
 
@@ -1354,44 +1580,62 @@ class _SettingsSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // `Material(transparency)` вокруг **всей** карточки, а не вокруг одного
+    // виджета в одной секции: карточка рисует свой фон `Container`'ом, а
+    // `ListTile` и его родня кладут подсветку нажатия на ближайший
+    // `Material` — который остался бы **под** этим фоном. Flutter говорит
+    // об этом утверждением («ListTile background color or ink splashes may
+    // be invisible»), и оно роняет виджет-пробу, а в продукте дало бы
+    // строку без отклика на нажатие.
+    //
+    // Круг правки 1: сначала обёртка стояла в месте вызова, у галочек видов
+    // оплаты. Но карточка общая для всех секций этого экрана, и ловушка
+    // ждала бы каждую следующую. Одна строка здесь снимает её для всех.
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 8, 0),
-            child: Row(
-              children: [
-                Icon(icon, size: 20, color: AppColors.primary),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onSurface,
+      // `Material(transparency)` **внутри** оформления, а не вокруг него:
+      // утверждение Flutter ищет `DecoratedBox` с фоном между `ListTile` и
+      // ближайшим `Material`, так что обёртка снаружи его не снимает —
+      // проверено, круг правки 1 наступил на это первой попыткой.
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 8, 0),
+              child: Row(
+                children: [
+                  Icon(icon, size: 20, color: AppColors.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
-                ),
-                if (trailing != null) trailing!,
-              ],
+                  if (trailing != null) trailing!,
+                ],
+              ),
             ),
-          ),
-          const Divider(height: 16),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: children,
+            const Divider(height: 16),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

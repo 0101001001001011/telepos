@@ -27,7 +27,7 @@ class DrawString extends DrawingAction {
   final int? maxLines;
 
   static const TextStyle defaultStyle = TextStyle(
-    fontFamily: 'Arial',
+    fontFamily: 'Roboto',
     fontSize: 7.0 * 1.2,
     color: Colors.black,
     height: 1.2,

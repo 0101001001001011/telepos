@@ -16,6 +16,7 @@ class _ThisPosEntriesShape {
     required this.rIdColumn,
     required this.cashBoxNameColumn,
     required this.usersCreateSql,
+    required this.salesCreateSql,
   });
 
   final String createSql;
@@ -32,6 +33,14 @@ class _ThisPosEntriesShape {
   // `users` (таблица существует с версии 1), поэтому это пробел фикстуры, а
   // не свойство реального апгрейда.
   final String usersCreateSql;
+
+  // Задача 2 плана «продажа с браузерного терминала»: схема поднимается до
+  // 37, и открытие с `PRAGMA user_version = 25` теперь проходит и блок
+  // `if (from < 37)`, который трогает существующую таблицу `sales` (`ADD
+  // COLUMN` трижды). Та же причина, что у `usersCreateSql` выше: без неё
+  // подъём падает на `no such table: sales`, хотя настоящая база апгрейда
+  // имеет `sales` с самой первой схемы.
+  final String salesCreateSql;
 }
 
 Future<_ThisPosEntriesShape> _readThisPosEntriesShape() async {
@@ -48,12 +57,27 @@ Future<_ThisPosEntriesShape> _readThisPosEntriesShape() async {
         "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'users'",
       )
       .getSingle();
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final salesRow = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
   final shape = _ThisPosEntriesShape(
     createSql: row.read<String>('sql'),
     tableName: table.actualTableName,
     rIdColumn: table.rId.name,
     cashBoxNameColumn: table.cashBoxName.name,
     usersCreateSql: usersRow.read<String>('sql'),
+    salesCreateSql: salesRow.read<String>('sql'),
   );
   await probe.close();
   return shape;
@@ -74,6 +98,7 @@ AppDatabase _openAsIfMigratingFromV25(
       setup: (raw) {
         raw.execute(shape.createSql);
         raw.execute(shape.usersCreateSql);
+        raw.execute(shape.salesCreateSql);
         raw.execute('PRAGMA user_version = 25');
         if (seedRow != null) {
           seedRow(raw, shape);
@@ -202,7 +227,7 @@ void main() {
       // seven raw `Terminals` device columns (printerType/printerAddress/
       // scannerType/scalePort/scaleBaudRate/drawerViaPrinter/displayPort) —
       // plan 2, task 5 dropped those (see app_database.dart's `if (from <
-      // 26)` block, and task-5-report.md): terminal device settings live in
+      // 26)` block): terminal device settings live in
       // TerminalDeviceBindings, read/written through DeviceBindingRepository,
       // not raw columns. Nothing printer-related survives to seed here any
       // more — the test is narrowed to what still transfers: name and

@@ -53,6 +53,7 @@ import 'package:telepos/domain/wire/wire_frame.dart';
 
 import '../data/transport/fake_quic_server.dart';
 import 'support/noop_auth.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Два известных токена — с правом на оборудование и без него. Тот же приём,
 /// что `_OneSession` в `test/data/transport/till_wire_guard_test.dart`, но на
@@ -83,7 +84,7 @@ AuthSession _session({
       : const <String>{},
   operatingMode: 0,
   pointMode: 'cashier',
-  shiftOpen: false,
+  shift: ShiftStatus.closed,
   issuedAt: DateTime.utc(2026, 8, 21, 10),
   expiresAt: DateTime.utc(2026, 8, 21, 10, 30),
   terminalId: terminalId,

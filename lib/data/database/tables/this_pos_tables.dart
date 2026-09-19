@@ -30,6 +30,21 @@ class ThisPosEntries extends Table {
 
   IntColumn get ofdSyncType => integer().nullable()();
 
+  // ── сертификат и аванс в фискальном документе (v47) ──────────────────
+  // Решения заказчика 2026-09-14; разбор — `FiscalOffsetSettings`.
+
+  /// Фискальный чек продажи сертификата. По умолчанию выкл.
+  BoolColumn get fiscalizeCertificateSale =>
+      boolean().withDefault(const Constant(false))();
+
+  /// Раскладка зачёта: индекс `OffsetFiscalLayout`, 0 — скидкой.
+  IntColumn get offsetFiscalLayout =>
+      integer().withDefault(const Constant(0))();
+
+  /// Фискальный чек приёма аванса. По умолчанию вкл.
+  BoolColumn get fiscalizePrepaymentReceipt =>
+      boolean().withDefault(const Constant(true))();
+
   IntColumn get cashbackRate => integer().nullable()();
 
   IntColumn get discountsRoundType =>
@@ -197,7 +212,7 @@ class ThisPosEntries extends Table {
   /// (`barcodeMinLength`/`barcodeMaxLength`) —
   /// `lib/data/database/migrations/device_binding_migration.dart`. Готового
   /// столбца под них не было ни здесь, ни где-либо ещё — оба добавлены этой
-  /// схемой, см. task-2-report.md.
+  /// схемой.
   IntColumn get barcodeMinLength => integer().nullable()();
 
   IntColumn get barcodeMaxLength => integer().nullable()();

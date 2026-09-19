@@ -1,3 +1,5 @@
+import 'package:telepos/core/logging/app_talker.dart';
+import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -747,8 +749,36 @@ class _PrintQueueSectionState extends State<PrintQueueSection> {
     PrintSubmitOutcome outcome;
     try {
       outcome = await queue.retry(jobId, extendBy: extendBy);
-    } catch (e) {
-      outcome = PrintSubmitOutcome.rejected(jobId, '$e');
+    } catch (e, st) {
+      // **Журнал обязателен здесь, и это цена круга правки 2** (задача 16).
+      // До него сюда попадал полный текст исключения — и он был
+      // **единственным** видом оператора на очередь, нарушившую
+      // собственный контракт «`retry` никогда не бросает». Круг правки 2
+      // завернул его в `safeErrorText`, потому что отсюда текст уезжает
+      // на экран, — и оставил бы оператору слово «StateError» вместо
+      // причины. Тот же класс беды, что у самой очереди: заворачивание у
+      // источника съедает сведения, если рядом нет записи.
+      //
+      // **`isLoggerReady` обязателен, и это блокер круга правки 5.**
+      // `talker` — `late`, его ставит точка входа. Круг правки 4 позвал
+      // его без проверки, и перехват, чей собственный комментарий обещает
+      // пережить сломанный контракт очереди, **сам ронял экран**
+      // (`LateInitializationError: Field 'talker' has not been
+      // initialized`): исход не присваивался, отметка не ставилась,
+      // оператор не видел ничего. Правило записано этой же ветвью кругом
+      // раньше — `payment_controller.dart` делает ровно так же.
+      //
+      // **Измеренное основание — виджет-пробы, и только они** (уточнено
+      // кругом правки 6). Формулировка соседа поминает ещё и браузерную
+      // сборку, но обе точки входа ставят журнал вторым оператором, до
+      // всякого экрана, — так что в бою этот путь сегодня недостижим.
+      // Гарантия перехвата тем не менее обнуляется везде, где журнал не
+      // поднят, и первое такое место — любая виджет-проба этого пути
+      // (`printer_settings_retry_no_logger_test.dart`).
+      if (isLoggerReady) {
+        talker.error('PrintQueue: повтор задания $jobId бросил', e, st);
+      }
+      outcome = PrintSubmitOutcome.rejected(jobId, safeErrorText(e));
     }
     if (!mounted) return;
     setState(() => _lastAction = _describeOutcome(l10n, outcome));

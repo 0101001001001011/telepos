@@ -25,7 +25,13 @@ void main() {
           )
           .toList();
 
-      expect(names, ['открыто', 'сеанс', 'сеанс', 'до настройки', 'знакомство']);
+      expect(names, [
+        'открыто',
+        'сеанс',
+        'сеанс',
+        'до настройки',
+        'знакомство',
+      ]);
     });
   });
 
@@ -125,8 +131,13 @@ void main() {
       // вызывающей вкладки. `terminals.deviceDiscovery` не про конкретный
       // терминал (ищет устройства кассы вообще, без `terminalId` в теле) и
       // намеренно не входит ни в одну из групп.
+      //
+      // `terminals.setPaymentTypes` (задача 15) — в той же группе и по той
+      // же причине, что `terminals.rename`: это настройка **своего**
+      // рабочего места, и нацелиться ею на чужое нельзя.
       const same = {
         'terminals.rename',
+        'terminals.setPaymentTypes',
         'terminals.deviceBindings',
         'terminals.deviceBindingSave',
         'terminals.deviceCheck',
@@ -145,40 +156,71 @@ void main() {
       }
     });
 
-    test(
-      'список сеансов и их отзыв требуют право распоряжаться входом, не '
-      'оборудованием',
-      () {
-        // Задача 19 закрытия долга безопасности: `SessionRegistry
-        // .revokeAll()` существовал с задачи 9 и не звался ни одной
-        // строкой рабочего кода. Отзыв чужого сеанса — не то же самое, что
-        // настройка оборудования (`settingsHardware`): это тот же
-        // периметр, что и у `/auth-settings` (задача 18) — «кто и как
-        // входит в кассу». Правка, а не подгонка числом: без неё новая
-        // пара операций могла бы тихо унести настоящий пароль права
-        // (например, унаследовать `settingsHardware` копипастой соседней
-        // операции) и разбор бы этого не заметил — тест ниже называет
-        // ожидаемое право поимённо, а не считает штуки.
-        for (final name in const ['auth.sessions', 'auth.sessionRevoke']) {
-          final op = TillOps.all.firstWhere((o) => o.name == name);
-          final access = op.access;
-          expect(access, isA<SessionAccess>(), reason: name);
-          expect(
-            (access as SessionAccess).needs,
-            PermissionKeys.settingsUsers,
-            reason: name,
-          );
-          expect(
-            access.ownTerminal,
-            isNull,
-            reason:
-                '$name обязана уметь нацелиться на терминал, отличный от '
-                'терминала вызывающей вкладки — иначе отзывать было бы '
-                'нечего',
-          );
-        }
-      },
-    );
+    test('список сеансов и их отзыв требуют право распоряжаться входом, не '
+        'оборудованием', () {
+      // Задача 19 закрытия долга безопасности: `SessionRegistry
+      // .revokeAll()` существовал с задачи 9 и не звался ни одной
+      // строкой рабочего кода. Отзыв чужого сеанса — не то же самое, что
+      // настройка оборудования (`settingsHardware`): это тот же
+      // периметр, что и у `/auth-settings` (задача 18) — «кто и как
+      // входит в кассу». Правка, а не подгонка числом: без неё новая
+      // пара операций могла бы тихо унести настоящий пароль права
+      // (например, унаследовать `settingsHardware` копипастой соседней
+      // операции) и разбор бы этого не заметил — тест ниже называет
+      // ожидаемое право поимённо, а не считает штуки.
+      for (final name in const ['auth.sessions', 'auth.sessionRevoke']) {
+        final op = TillOps.all.firstWhere((o) => o.name == name);
+        final access = op.access;
+        expect(access, isA<SessionAccess>(), reason: name);
+        expect(
+          (access as SessionAccess).needs,
+          PermissionKeys.settingsUsers,
+          reason: name,
+        );
+        expect(
+          access.ownTerminal,
+          isNull,
+          reason:
+              '$name обязана уметь нацелиться на терминал, отличный от '
+              'терминала вызывающей вкладки — иначе отзывать было бы '
+              'нечего',
+        );
+      }
+    });
+
+    test('sale.ping — право продажи, а не любой сеанс (сужено задачей 9)', () {
+      // Задача 1 объявила `SessionAccess()` без `needs` и обосновала это
+      // словами «тем же правом, каким пользуется сканирование в самой
+      // продаже». Обоснование и объявление расходились: сканирование в
+      // продаже живёт под `nav.sale`, а «без needs» — это право любого
+      // вошедшего, включая того, кому продажа закрыта вовсе. Задача 9,
+      // заводя остальные девятнадцать операций продажи, свела их: ping —
+      // такая же операция продажи, как и прочие пятнадцать обычных, и
+      // ходит под тем же ключом.
+      //
+      // Полная раскладка всех двадцати закреплена закрытой таблицей в
+      // `test/domain/wire/sale_ops_access_test.dart`; здесь остаётся
+      // именно эта строка — она про историю расхождения, а не про
+      // раскладку.
+      final op = TillOps.all.firstWhere((o) => o.name == 'sale.ping');
+      final access = op.access;
+
+      expect(access, isA<SessionAccess>());
+      expect(
+        (access as SessionAccess).needs,
+        PermissionKeys.navSale,
+        reason:
+            'sale.ping — операция продажи, и права на продажу для неё '
+            'достаточно; отдельного ключа под замер провода нет',
+      );
+      expect(
+        access.ownTerminal,
+        isNull,
+        reason:
+            'sale.ping не нацелена на конкретный terminalId в теле — '
+            'штрихкод, а не устройство, предмет запроса',
+      );
+    });
 
     test('мастер настройки открыт только до настройки', () {
       final setupOnly = TillOps.all

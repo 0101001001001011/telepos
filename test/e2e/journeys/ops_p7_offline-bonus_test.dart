@@ -8,9 +8,29 @@ import 'package:get_it/get_it.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
 import 'package:telepos/data/usecases/agent/bonus_service_impl.dart';
+import 'package:telepos/domain/bonus/bonus_entry_kind.dart';
 
 import '../support/harness.dart';
 
+/// P7: бонусы работают **оффлайн**, против местного кэшбэк-счёта, и никогда
+/// не бросают `NoInternet`.
+///
+/// # Что здесь изменилось в задаче 13 — и почему это не потеря покрытия
+///
+/// Проба звала `BonusService.deductBonuses` и `cancelTransaction`. Обе
+/// удалены, и обе были **вторым способом** сделать то, что продукт делает
+/// иначе:
+///
+/// - списание в кассе идёт строкой `Payments` на бонусный счёт, а потолок
+///   («не больше остатка», «не больше суммы чека») стоит в
+///   `LocalPaymentService._plan`, где о чеке известно. Проверка потолка
+///   живёт в `test/data/sale/` и в `refund_bonus_sign_test.dart` — на
+///   настоящем пути, а не на дублирующем методе;
+/// - `cancelTransaction` была пустым `return;` и не вызывалась ниоткуда.
+///
+/// Взамен проба спрашивает то, чего до журнала спросить было нельзя вовсе:
+/// **чем объясняется остаток**. «Оффлайн работает» и «остаток верен» —
+/// разные утверждения, и второе сильнее.
 void main() {
   final h = E2eHarness();
 
@@ -20,8 +40,8 @@ void main() {
   });
   tearDownAll(() => h.tearDown());
 
-  test('bonus accrual + balance + deduction run OFFLINE against the local '
-      'cashback account (Decimal-exact, never throws NoInternet)', () async {
+  test('bonus accrual runs OFFLINE against the local cashback account, and '
+      'the balance is explained by the journal (Decimal-exact)', () async {
     final db = GetIt.I<AppDatabase>();
     final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
@@ -39,6 +59,23 @@ void main() {
         updateTime: drift.Value(now),
       ),
     );
+    // Счёт заведён **после** миграции, поэтому стартовой записи у него нет:
+    // журнал объясняет только то, что произошло с ним при живом журнале.
+    // Сверка это знает и потому обязана показать расхождение — оно здесь
+    // настоящее, а не ложная тревога.
+    await db.bonusEntryDao.record(
+      accountId: cashbackAccId,
+      kind: BonusEntryKind.opening,
+      amount: d(cashbackOpening),
+      reason: 'остаток на момент заведения счёта',
+    );
+    // `record` сдвинул остаток на свою сумму — вернём объявленный.
+    await db.accountDao.updateBalance(
+      cashbackAccId,
+      d(cashbackOpening),
+      redemption: true,
+    );
+
     const phone = 7011234567;
     await db
         .into(db.agents)
@@ -90,43 +127,49 @@ void main() {
     final reread = await service.getBonusBalance(phone);
     expect(reread.balance, d('550'));
 
-    final deduct = await service.deductBonuses(
+    // **Несущее утверждение после задачи 13.** Остаток объясняется журналом
+    // целиком: 500 стартовых плюс 50 начисленных. До журнала объяснять его
+    // было нечем — «кто, когда, по какому чеку» не записывалось нигде.
+    expect(await db.bonusEntryDao.balanceOf(cashbackAccId), d('550'));
+    expect(
+      await db.bonusEntryDao.divergences(),
+      isEmpty,
+      reason: 'записанный остаток обязан совпасть с суммой журнала',
+    );
+
+    final journal = await db.bonusEntryDao.findByAccount(cashbackAccId);
+    final accrued = journal.where((e) => e.kind == BonusEntryKind.accrual);
+    expect(accrued, hasLength(1));
+    expect(accrued.single.amount, d('50'));
+    expect(
+      accrued.single.receiptNo,
+      42,
+      reason: 'по какому чеку — то, чего в базе не было нигде',
+    );
+    expect(
+      accrued.single.reason,
+      contains('5'),
+      reason: 'запись называет ставку, по которой начислено: '
+          'к моменту возврата ставка может быть другой',
+    );
+
+    // Ставка ноль начисляет ноль — и записи не заводит: журнал не место для
+    // «ничего не произошло».
+    await (db.update(db.thisPosEntries)..where((tp) => tp.rId.equals(true)))
+        .write(const ThisPosEntriesCompanion(cashbackRate: drift.Value(0)));
+    final none = await service.accrualBonuses(
       phone: phone,
-      amount: d('200'),
-      saleReceiptNo: 42,
+      saleAmount: d('1000'),
+      saleReceiptNo: 43,
     );
-    expect(deduct.success, isTrue);
-    expect(deduct.deductedAmount, d('200'));
-    expect(
-      deduct.remainingBalance,
-      d('350'),
-      reason: '550 - 200 = 350, Decimal-exact',
-    );
+    expect(none.success, isTrue);
+    expect(none.accruedAmount, Decimal.zero);
+    expect(await db.bonusEntryDao.findBySale(43, 1), isEmpty);
+    expect(await db.bonusEntryDao.balanceOf(cashbackAccId), d('550'));
 
-    final afterDeduct = (await db.accountDao.findById(cashbackAccId))?.value;
-    expect(afterDeduct, d('350'));
-
-    final tooMuch = await service.deductBonuses(
-      phone: phone,
-      amount: d('1000'),
-      saleReceiptNo: 42,
-    );
-    expect(
-      tooMuch.success,
-      isFalse,
-      reason: 'cannot redeem more bonus than available',
-    );
-    expect(
-      tooMuch.remainingBalance,
-      d('350'),
-      reason: 'balance is untouched on a rejected deduction',
-    );
-    final unchanged = (await db.accountDao.findById(cashbackAccId))?.value;
-    expect(unchanged, d('350'));
-
+    // Неизвестный телефон — ноль и никакого исключения: оффлайн есть
+    // оффлайн.
     final unknown = await service.getBonusBalance(7000000000);
     expect(unknown.balance, Decimal.zero);
-
-    await service.cancelTransaction('local-accrual-42-0');
   });
 }

@@ -1,3 +1,4 @@
+import 'package:telepos/core/errors/safe_error_text.dart';
 import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';
@@ -134,7 +135,7 @@ class PrintSubmission {
       );
       return PrintSubmitOutcome.rejected(
         documentId.value,
-        'Не удалось поставить документ в очередь печати: $e',
+        'Не удалось поставить документ в очередь печати: ${safeErrorText(e)}',
       );
     }
 
@@ -152,10 +153,12 @@ class PrintSubmission {
   /// ключ, который читатель мог бы принять за настоящий и попробовать
   /// повторить.
   PrintSubmitOutcome cannotIdentify(PrintDocumentKind kind, Object error) {
-    _logger?.warning('[PrintSubmission] Документ ${kind.name} не опознан: $error');
+    _logger?.warning(
+      '[PrintSubmission] Документ ${kind.name} не опознан: $error',
+    );
     return PrintSubmitOutcome.rejected(
       unidentifiedJobId(kind),
-      'Не удалось определить, кому принадлежит документ (${kind.name}): $error',
+      'Не удалось определить, кому принадлежит документ (${kind.name}): ${safeErrorText(error)}',
     );
   }
 

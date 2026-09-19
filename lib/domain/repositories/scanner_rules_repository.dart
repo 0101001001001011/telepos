@@ -114,13 +114,31 @@ class ScannerRules {
       'scannerTimeoutMs: $scannerTimeoutMs)';
 }
 
+/// Читает правила — и только читает. Задача 45.
+///
+/// Тому, кто **применяет** правила к скану (`BarcodeScannerMixin` — продажа
+/// и возврат), запись не нужна: сузить договор до чтения значит, что такой
+/// читатель не может записать их даже по ошибке.
+///
+/// **Вторая половина прежнего довода снята пунктом 11 ревизии 2026-09-19.**
+/// Она гласила, что на браузерном терминале записи «и нет»: правила —
+/// настройка кассы. Это перестало быть правдой — запись есть
+/// (`TillOps.scannerRulesSave`, право `settings.hardware`), и
+/// `WtScannerRules` реализует [ScannerRulesRepository] целиком. Довод
+/// оставлен здесь названным, а не стёрт: следующий читатель иначе решит,
+/// что разделение заведено зря.
+abstract interface class ScannerRulesReader {
+  Future<ScannerRules> read();
+}
+
 /// Reads and writes the installation's [ScannerRules].
 ///
 /// [save] writes all three at once, deliberately: they are edited together
 /// on one form and their validity is a property of the triple (min ≤ max),
 /// not of each value alone. A per-field setter would let a caller step
 /// through an invalid intermediate state and persist it.
-abstract interface class ScannerRulesRepository {
+abstract interface class ScannerRulesRepository implements ScannerRulesReader {
+  @override
   Future<ScannerRules> read();
 
   /// Throws [ArgumentError] if [rules] does not validate — the same check

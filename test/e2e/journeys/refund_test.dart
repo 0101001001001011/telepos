@@ -13,7 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telepos/core/locale/app_locale.dart';
 import 'package:telepos/core/locale/locale_provider.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/core/logging/app_talker.dart' as app_log;
 import 'package:telepos/data/database/daos/account_dao.dart';
+import 'package:telepos/data/refund/local_refund_service.dart';
+import 'package:telepos/domain/refund/refund_receipt_printer.dart';
+import 'package:telepos/domain/refund/refund_service.dart';
+import 'package:telepos/domain/usecases/refund/refund_initiation_use_case.dart';
+import 'package:telepos/domain/usecases/refund/refund_use_case.dart';
+import 'package:telepos/domain/usecases/sale/can_sale_be_refunded_use_case.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/screens/auth/login_screen.dart';
 import 'package:telepos/presentation/screens/refund/refund_screen.dart';
@@ -64,6 +71,44 @@ void main() {
   });
 
   tearDownAll(() => h.tearDown());
+
+  /// Свежая касса возврата на каждый тест — **не косметика, а условие того,
+  /// что тесты вообще идут после первого.**
+  ///
+  /// `LocalRefundService` (задача 18) разводит команды очередью: хвост
+  /// очереди — `Future`, созданный при предыдущей команде. Каждый
+  /// `testWidgets` живёт в **своей** зоне с собственным планировщиком, и
+  /// зона предыдущего теста после него мертва: `previous.then(...)`,
+  /// подписанный из второго теста на будущее, созданное в первом,
+  /// запланировал бы микрозадачу в мёртвой зоне и **не выполнился бы
+  /// никогда**. Снаружи это выглядит так, будто экран возврата перестал
+  /// отвечать: команда уходит, касса молчит, ошибки нет.
+  ///
+  /// Найдено задачей 20 при переносе экрана на контракт: до неё экран звал
+  /// юзкейсы напрямую, очереди не было, и общего состояния между тестами
+  /// тоже. На продукте этого не бывает — там зона одна на всю жизнь
+  /// процесса, — поэтому чинится здесь, а не в сервисе.
+  setUp(() {
+    if (GetIt.I.isRegistered<RefundService>()) {
+      GetIt.I.unregister<RefundService>();
+    }
+    // `registerLazySingleton`, а не `registerSingleton`: `setUp` выполняется
+    // **вне** зоны `testWidgets`, и хвост очереди, созданный в нём, был бы
+    // ровно так же чужим для тела теста, как хвост предыдущего теста. Ленивая
+    // фабрика строит сервис при первом обращении — то есть уже внутри зоны
+    // того теста, который им пользуется.
+    GetIt.I.registerLazySingleton<RefundService>(
+      () => LocalRefundService(
+        db: h.db,
+        logger: app_log.talker,
+        initiation: GetIt.I<RefundInitiationUseCase>(),
+        refunds: GetIt.I<RefundUseCase>(),
+        canBeRefunded: GetIt.I<CanSaleBeRefundedUseCase>(),
+        drawer: () async => true,
+        printer: GetIt.I<RefundReceiptPrinter>(),
+      ),
+    );
+  });
 
   Future<GoRouter> pumpRefundApp(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1600, 1000);
@@ -373,12 +418,26 @@ void main() {
       reason: 'bank account balance must decrease by the refund total',
     );
 
+    // **Прежний сторож #16 требовал порчи денег** (задача 10).
+    //
+    // Он читался как «долг покупателя уменьшается на сумму возврата» и
+    // краснел бы, если бы это перестало быть так. Но чек здесь оплачен
+    // картой **полностью**, и возврат уже вернул покупателю все 600
+    // сторно на банковский счёт. Двинуть после этого ещё и его расчётный
+    // счёт значило бы списать с него те же 600 второй раз: касса и деньги
+    // отдала, и долг записала.
+    //
+    // Правило теперь зеркально продаже: расчётный счёт покупателя двигает
+    // **то, что не вернулось деньгами** (`amount − Σсторно`). Здесь это
+    // ноль, и остаток обязан остаться нетронутым.
     final agentAccount = await db.accountDao.findById(sale.agentAccountId);
     expect(agentAccount, isNotNull);
     expect(
       agentAccount!.value,
-      sale.agentOpeningBalance - sale.total,
-      reason: 'guard #16: agent balance must be reduced by the refund amount',
+      sale.agentOpeningBalance,
+      reason:
+          'чек оплачен полностью и полностью возвращён деньгами — '
+          'долговой части у этого возврата нет',
     );
   });
 
@@ -438,8 +497,14 @@ void main() {
     final refundPayments = await db.paymentDao.findByRefund(refund.localId);
     expect(refundPayments.single.amount, -expectedPartial);
 
+    // Та же правка знака, что и у полного возврата: 450 вернулись
+    // сторно на банковский счёт, значит долговой части нет и здесь.
     final agentAccount = await db.accountDao.findById(sale.agentAccountId);
-    expect(agentAccount!.value, sale.agentOpeningBalance - expectedPartial);
+    expect(
+      agentAccount!.value,
+      sale.agentOpeningBalance,
+      reason: 'частичный возврат вернулся деньгами целиком — долг не тронут',
+    );
   });
 
   testWidgets('empty state shown before any receipt is loaded', (tester) async {

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/data/repositories/scanner_rules_repository_impl.dart';
+import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
 import 'package:telepos/presentation/common/mixins/barcode_scanner_mixin.dart';
 
 /// `BarcodeScannerMixin` is the live keyboard-wedge scanning path six real
@@ -56,7 +58,22 @@ void main() {
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
     await GetIt.I.reset();
-    GetIt.I.registerSingleton<AppDatabase>(db);
+    // Задача 13: миксин больше не читает `ThisPosEntries` сам — он
+    // спрашивает доменный контракт, и здесь стоит **та же** реализация,
+    // которую регистрирует боевой DI (`service_locator.dart:585`:
+    // `LocalScannerRulesRepository(getIt<AppDatabase>())`) над **той же**
+    // таблицей. Проверяется по-прежнему сквозной путь «настройка в базе →
+    // живой декодер», а не то, что позвали подделку.
+    //
+    // Причина переезда: экран продажи (один из шести, кто подмешивает этот
+    // декодер) переехал в браузерную таблицу маршрутов, а базы в браузере
+    // нет вовсе — прежний путь тянул `dart:io` и `dart:ffi` в веб-сборку.
+    final rules = LocalScannerRulesRepository(db);
+    GetIt.I
+      ..registerSingleton<ScannerRulesRepository>(rules)
+      // Задача 45: миксин читает правила через `ScannerRulesReader` — тот
+      // же синглтон, что и в `service_locator.dart`.
+      ..registerSingleton<ScannerRulesReader>(rules);
     // Deliberately no TerminalRepository registration: `_loadScannerSettings`
     // assigns `_scannerMaxGapMs`/`_minBarcodeLength`/`_maxBarcodeLength`
     // *before* it ever checks for one (see that method's source) — this

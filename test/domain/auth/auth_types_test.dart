@@ -3,6 +3,7 @@ import 'package:telepos/domain/auth/auth_outcome.dart';
 import 'package:telepos/domain/auth/auth_rejection.dart';
 import 'package:telepos/domain/auth/auth_session.dart';
 import 'package:telepos/domain/auth/auth_user.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 void main() {
   group('AuthUser', () {
@@ -37,7 +38,7 @@ void main() {
         permissions: const {'nav.sale'},
         operatingMode: 0,
         pointMode: 'cashier',
-        shiftOpen: true,
+        shift: ShiftStatus.open,
         issuedAt: DateTime.utc(2026, 8, 20, 10),
         expiresAt: DateTime.utc(2026, 8, 20, 10, 30),
         terminalId: 1,

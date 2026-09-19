@@ -12,6 +12,8 @@ class PaymentEntity {
     required this.amount,
     required this.time,
     this.state,
+    this.kindId,
+    this.seq = 0,
   });
 
   final int? id;
@@ -34,6 +36,18 @@ class PaymentEntity {
 
   final int? state;
 
+  /// Вид оплаты — строка `PaymentKinds` (v41).
+  final int? kindId;
+
+  /// Номер строки внутри попытки — **от нуля**.
+  ///
+  /// Умолчание `0` здесь не «неважно»: у одиночной строки номер и есть
+  /// ноль. Тот, кто пишет **несколько** строк одного чека, обязан
+  /// пронумеровать их сам — иначе они столкнутся на уникальном ключе
+  /// `{receiptNo, posId, seq}`. Ровно это и произошло у
+  /// `PaymentRepositoryImpl.insertPayments`, и покраснело сразу.
+  final int seq;
+
   bool get isForSale => receiptNo != null && posId != null;
 
   bool get isForRefund => refundLocalId != null;
@@ -50,6 +64,8 @@ class PaymentEntity {
     Decimal? amount,
     int? time,
     int? state,
+    int? kindId,
+    int? seq,
   }) {
     return PaymentEntity(
       id: id ?? this.id,
@@ -64,6 +80,8 @@ class PaymentEntity {
       amount: amount ?? this.amount,
       time: time ?? this.time,
       state: state ?? this.state,
+      kindId: kindId ?? this.kindId,
+      seq: seq ?? this.seq,
     );
   }
 }

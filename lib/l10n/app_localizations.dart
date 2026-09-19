@@ -470,6 +470,12 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{{count} товар} few{{count} товара} other{{count} товаров}}'**
   String saleItems(int count);
 
+  /// No description provided for @paymentCardChargeUnsettled.
+  ///
+  /// In ru, this message translates to:
+  /// **'Карта уже проведена на {amount}, и эта сумма не попадёт в чек. Отмените операцию на платёжном терминале.'**
+  String paymentCardChargeUnsettled(String amount);
+
   /// No description provided for @saleRemoveItem.
   ///
   /// In ru, this message translates to:
@@ -662,6 +668,18 @@ abstract class AppLocalizations {
   /// **'Возврат на карту'**
   String get refundCard;
 
+  /// No description provided for @refundConnectionLostHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Терминал сам вернётся к кассе — работа продолжится с того же места'**
+  String get refundConnectionLostHint;
+
+  /// Подписка на черновик возврата оборвалась — состояние с кассы больше не приходит
+  ///
+  /// In ru, this message translates to:
+  /// **'Связь с кассой потеряна'**
+  String get refundConnectionLost;
+
   /// No description provided for @refundNoItems.
   ///
   /// In ru, this message translates to:
@@ -842,6 +860,12 @@ abstract class AppLocalizations {
   /// **'В долг'**
   String get paymentDebt;
 
+  /// No description provided for @paymentInstallment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассрочка'**
+  String get paymentInstallment;
+
   /// No description provided for @paymentMixed.
   ///
   /// In ru, this message translates to:
@@ -991,6 +1015,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Повторная печать'**
   String get historyReprint;
+
+  /// Слип выпущенного сертификата не дошёл до очереди печати. Сам сертификат при этом выпущен и годен — кассир обязан выдать бумажку иначе.
+  ///
+  /// In ru, this message translates to:
+  /// **'Слип сертификата {number} не напечатался: {reason}'**
+  String certificateSlipPrintFailed(String number, String reason);
 
   /// No description provided for @historyDetails.
   ///
@@ -1898,6 +1928,12 @@ abstract class AppLocalizations {
   /// **'Смена закрыта'**
   String get loginShiftClosed;
 
+  /// No description provided for @loginShiftUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена: неизвестно'**
+  String get loginShiftUnknown;
+
   /// No description provided for @saleQuickProducts.
   ///
   /// In ru, this message translates to:
@@ -1939,6 +1975,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Нет отложенных чеков'**
   String get saleNoDeferredSales;
+
+  /// Задача 29: причина запертой кнопки «Отложенные» у кассира без права op.deferSale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отложенные чеки вам не открыты: нужно право «откладывать чек». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.'**
+  String get saleDeferredListNotPermitted;
+
+  /// Задача 10 ревизии 2026-09-19: причина запертой кнопки «Отложить» у кассира без права op.deferSale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отложить чек вам нельзя: нужно право «откладывать чек». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.'**
+  String get saleDeferNotPermitted;
 
   /// No description provided for @saleReceiptNo.
   ///
@@ -2143,6 +2191,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.'**
   String get shiftOverAgeMessage;
+
+  /// No description provided for @shiftOverAgeCloseAtTill.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа заблокирована. Закройте смену на кассе и откройте новую, чтобы продолжить работу.'**
+  String get shiftOverAgeCloseAtTill;
 
   /// No description provided for @shiftSince.
   ///
@@ -2942,6 +2996,24 @@ abstract class AppLocalizations {
   /// **'Печать успешна'**
   String get printerPrintSuccess;
 
+  /// No description provided for @paymentNotFiscalized.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек не фискализован — оплата проведена'**
+  String get paymentNotFiscalized;
+
+  /// No description provided for @paymentFiscalModuleAbsent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Модуль фискализации недоступен — чеки не фискализуются'**
+  String get paymentFiscalModuleAbsent;
+
+  /// No description provided for @cashDrawerOpenError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Денежный ящик не открылся'**
+  String get cashDrawerOpenError;
+
   /// No description provided for @printerPrintError.
   ///
   /// In ru, this message translates to:
@@ -3558,7 +3630,7 @@ abstract class AppLocalizations {
   ///
   /// In ru, this message translates to:
   /// **'Максимум {percent}%'**
-  String maxPercent(int percent);
+  String maxPercent(String percent);
 
   /// No description provided for @maxAmount.
   ///
@@ -3577,6 +3649,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сумма скидки:'**
   String get discountAmount;
+
+  /// No description provided for @discountLimitPercent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно до {percent} % — {source}'**
+  String discountLimitPercent(String percent, String source);
+
+  /// No description provided for @discountLimitAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно до {amount} — {source}'**
+  String discountLimitAmount(String amount, String source);
+
+  /// No description provided for @discountApprovalAbove.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выше {percent} % нужно подтверждение старшего'**
+  String discountApprovalAbove(String percent);
 
   /// No description provided for @sumLabel.
   ///
@@ -4925,7 +5015,7 @@ abstract class AppLocalizations {
   /// No description provided for @terminalHomeSaleNote.
   ///
   /// In ru, this message translates to:
-  /// **'Продажа в браузере — отдельная работа: экран продажи читает базу кассы напрямую и под браузер пока не собирается.'**
+  /// **'Корзиной, номером чека и сменой владеет касса — терминал показывает чек и командует по проводу. Печать чека, фискализация и денежный ящик остаются на кассе.'**
   String get terminalHomeSaleNote;
 
   /// No description provided for @wtNotPortedTitle.
@@ -9584,6 +9674,72 @@ abstract class AppLocalizations {
   /// **'Отображать сумму НДС в чеке'**
   String get fiscalSettingsPrintVatSubtitle;
 
+  /// No description provided for @fiscalOffsetSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификаты и аванс'**
+  String get fiscalOffsetSection;
+
+  /// No description provided for @fiscalOffsetCertificateSale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек при продаже сертификата'**
+  String get fiscalOffsetCertificateSale;
+
+  /// No description provided for @fiscalOffsetCertificateSaleSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбивать фискальный чек, когда покупают подарочный сертификат'**
+  String get fiscalOffsetCertificateSaleSubtitle;
+
+  /// No description provided for @fiscalOffsetLayout.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата сертификатом или авансом'**
+  String get fiscalOffsetLayout;
+
+  /// No description provided for @fiscalOffsetLayoutSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как сумма зачёта попадает в чек оператора ОФД'**
+  String get fiscalOffsetLayoutSubtitle;
+
+  /// No description provided for @fiscalOffsetLayoutDiscount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидкой на товары'**
+  String get fiscalOffsetLayoutDiscount;
+
+  /// No description provided for @fiscalOffsetLayoutSurchargeOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек только на доплату'**
+  String get fiscalOffsetLayoutSurchargeOnly;
+
+  /// No description provided for @fiscalOffsetPrepaymentReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек при приёме аванса'**
+  String get fiscalOffsetPrepaymentReceipt;
+
+  /// No description provided for @fiscalOffsetPrepaymentReceiptSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбивать фискальный чек, когда покупатель вносит аванс'**
+  String get fiscalOffsetPrepaymentReceiptSubtitle;
+
+  /// No description provided for @fiscalOffsetSaveError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось сохранить настройку'**
+  String get fiscalOffsetSaveError;
+
+  /// No description provided for @customerPaymentTender.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чем принято'**
+  String get customerPaymentTender;
+
   /// No description provided for @fiscalSettingsVatRate.
   ///
   /// In ru, this message translates to:
@@ -11024,6 +11180,12 @@ abstract class AppLocalizations {
   /// **'Подготовка...'**
   String get syncPreparing;
 
+  /// Отказ кассы на операции возврата — текст причины приходит от кассы
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат не выполнен: {reason}'**
+  String refundRefused(String reason);
+
   /// No description provided for @errorSaveFailed.
   ///
   /// In ru, this message translates to:
@@ -11065,6 +11227,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Неизвестная ошибка'**
   String get errorUnknownGeneric;
+
+  /// No description provided for @errorRefusalUnknownCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'неизвестная причина (код {code})'**
+  String errorRefusalUnknownCode(String code);
+
+  /// No description provided for @errorReasonUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'неизвестная причина'**
+  String get errorReasonUnknown;
 
   /// No description provided for @errorFillRequired.
   ///
@@ -11138,6 +11312,36 @@ abstract class AppLocalizations {
   /// **'Касса ещё не настроена — вход невозможен, пока не пройден мастер настройки.'**
   String get errorTillNotConfigured;
 
+  /// No description provided for @errorTillNotConfiguredSale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не настроена — чек начать нельзя. Обратитесь к администратору: нужно пройти мастер настройки.'**
+  String get errorTillNotConfiguredSale;
+
+  /// No description provided for @errorNotAllowed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно прав для этого действия. Обратитесь к администратору.'**
+  String get errorNotAllowed;
+
+  /// No description provided for @errorNoSaleModule.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не умеет вести чек: модуль продажи не собран. Обратитесь к администратору.'**
+  String get errorNoSaleModule;
+
+  /// No description provided for @errorTerminalInBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Терминал обратился к кассе неверно. Обновите приложение на рабочем месте.'**
+  String get errorTerminalInBody;
+
+  /// No description provided for @errorWholesaleInStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оптовый чек так не начинается. Начните обычный чек и включите опт отдельной кнопкой.'**
+  String get errorWholesaleInStart;
+
   /// No description provided for @errorTerminalLimitReached.
   ///
   /// In ru, this message translates to:
@@ -11185,6 +11389,66 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Отложенный чек не найден'**
   String get errorDeferredNotFound;
+
+  /// No description provided for @errorCartStale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек изменился, пока вы набирали. Экран обновлён — повторите последнее действие.'**
+  String get errorCartStale;
+
+  /// No description provided for @errorCartWrongReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот чек больше не в работе. Начните новый чек или поднимите отложенный.'**
+  String get errorCartWrongReceipt;
+
+  /// No description provided for @errorCartNotStarted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек ещё не начат. Начните новый чек или поднимите отложенный.'**
+  String get errorCartNotStarted;
+
+  /// No description provided for @errorLineNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этой строки в чеке больше нет. Обновите чек и повторите.'**
+  String get errorLineNotFound;
+
+  /// No description provided for @errorInvalidAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недопустимое значение. Сумма не может быть отрицательной, а скидка — больше 100%.'**
+  String get errorInvalidAmount;
+
+  /// No description provided for @errorDeferredTaken.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот отложенный чек уже поднят на другом рабочем месте.'**
+  String get errorDeferredTaken;
+
+  /// No description provided for @errorCartNotEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сначала завершите или отложите текущий чек — поднять отложенный поверх него нельзя.'**
+  String get errorCartNotEmpty;
+
+  /// No description provided for @errorSaleNotStarted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не смогла начать чек и не назвала причину. Попробуйте ещё раз.'**
+  String get errorSaleNotStarted;
+
+  /// No description provided for @errorShiftNotOpen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена не открыта. Откройте смену на кассе.'**
+  String get errorShiftNotOpen;
+
+  /// No description provided for @errorCardTerminalMisconfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёжный терминал этого рабочего места настроен неверно. Проверьте привязку в настройках оборудования.'**
+  String get errorCardTerminalMisconfigured;
 
   /// No description provided for @errorReceiptNotFound.
   ///
@@ -14461,6 +14725,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Удалить шаблон'**
   String get receiptTemplateDeleteTitle;
+
+  /// No description provided for @receiptTemplateHeaderHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Несколько строк: приветствие, акция, контакты'**
+  String get receiptTemplateHeaderHint;
+
+  /// No description provided for @receiptTemplateFooterHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Несколько строк: благодарность, условия возврата, сайт, соцсети'**
+  String get receiptTemplateFooterHint;
+
+  /// No description provided for @receiptTemplateAlignLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Слева'**
+  String get receiptTemplateAlignLeft;
+
+  /// No description provided for @receiptTemplateAlignCenter.
+  ///
+  /// In ru, this message translates to:
+  /// **'По центру'**
+  String get receiptTemplateAlignCenter;
+
+  /// No description provided for @receiptTemplateAlignRight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Справа'**
+  String get receiptTemplateAlignRight;
+
+  /// No description provided for @receiptTemplateBold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Жирный'**
+  String get receiptTemplateBold;
+
+  /// No description provided for @receiptTemplateDoubleSize.
+  ///
+  /// In ru, this message translates to:
+  /// **'Крупный (двойной размер)'**
+  String get receiptTemplateDoubleSize;
+
+  /// No description provided for @receiptTemplatePaperWidthHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ширина ленты задаётся в настройках принтера'**
+  String get receiptTemplatePaperWidthHint;
+
+  /// No description provided for @receiptTemplateMandatoryNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обязательные реквизиты — номер чека, итог, оплаты, НДС, фискальный признак и QR — печатаются всегда, между шапкой и подвалом'**
+  String get receiptTemplateMandatoryNote;
 
   /// No description provided for @receiptTemplateDeleteConfirm.
   ///
@@ -19207,6 +19525,12 @@ abstract class AppLocalizations {
   /// **'Акции'**
   String get promoTitle;
 
+  /// No description provided for @promoSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Акции 1+1 и подарки за покупку'**
+  String get promoSubtitle;
+
   /// No description provided for @promoNew.
   ///
   /// In ru, this message translates to:
@@ -19243,12 +19567,6 @@ abstract class AppLocalizations {
   /// **'купи {trigger} → {reward} бесплатно'**
   String promoBuyGetFree(int trigger, int reward);
 
-  /// No description provided for @promoSupplierTag.
-  ///
-  /// In ru, this message translates to:
-  /// **'от поставщика'**
-  String get promoSupplierTag;
-
   /// No description provided for @promoDefaultName11.
   ///
   /// In ru, this message translates to:
@@ -19272,12 +19590,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Подарок (что бесплатно)'**
   String get promoRewardLabel;
-
-  /// No description provided for @promoSupplierFunded.
-  ///
-  /// In ru, this message translates to:
-  /// **'Акция от поставщика'**
-  String get promoSupplierFunded;
 
   /// No description provided for @promoSaveButton.
   ///
@@ -20185,6 +20497,102 @@ abstract class AppLocalizations {
   /// **'Недостаточно остатка: {name}'**
   String errorInsufficientStock(String name);
 
+  /// No description provided for @discountLimitsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пределы скидки'**
+  String get discountLimitsTitle;
+
+  /// No description provided for @discountLimitsSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сколько кассир может уступить вручную'**
+  String get discountLimitsSubtitle;
+
+  /// No description provided for @discountLimitsIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'Предел роли перекрывает умолчание. У роли без своей строки действует «По умолчанию». Сто процентов означает «без предела» — это объявленное значение, а не пустота.'**
+  String get discountLimitsIntro;
+
+  /// No description provided for @discountLimitsDefaultRow.
+  ///
+  /// In ru, this message translates to:
+  /// **'По умолчанию (все роли)'**
+  String get discountLimitsDefaultRow;
+
+  /// No description provided for @discountLimitsMaxPercent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Предел, %'**
+  String get discountLimitsMaxPercent;
+
+  /// No description provided for @discountLimitsApprovalAbove.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждение выше, %'**
+  String get discountLimitsApprovalAbove;
+
+  /// No description provided for @discountLimitsApprovalHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'пусто — не требуется'**
+  String get discountLimitsApprovalHint;
+
+  /// No description provided for @discountLimitsInheritHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'пусто — как по умолчанию'**
+  String get discountLimitsInheritHint;
+
+  /// No description provided for @discountLimitsTwoDoors.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внимание: «запретить снижение цены» в политике продаж закрывает только правку цены строки. Скидка при пределе 100 % по-прежнему разрешена — вплоть до строки бесплатно. Это две разные двери; чтобы закрыть вторую, поставьте предел ниже ста.'**
+  String get discountLimitsTwoDoors;
+
+  /// No description provided for @discountLimitsSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Предел сохранён'**
+  String get discountLimitsSaved;
+
+  /// No description provided for @discountLimitsInherited.
+  ///
+  /// In ru, this message translates to:
+  /// **'Строка снята: роль наследует умолчание'**
+  String get discountLimitsInherited;
+
+  /// No description provided for @discountLimitsInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Предел — число от 0 до 100'**
+  String get discountLimitsInvalid;
+
+  /// No description provided for @discountLimitsApprovalNotYet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждение старшего пока не реализовано: скидка выше порога отклоняется с названной причиной, а не открывает ввод кода.'**
+  String get discountLimitsApprovalNotYet;
+
+  /// No description provided for @errorDeniedPolicy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрещено настройками кассы: {detail}'**
+  String errorDeniedPolicy(String detail);
+
+  /// No description provided for @errorDeniedLimit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка больше разрешённой: {detail}'**
+  String errorDeniedLimit(String detail);
+
+  /// No description provided for @errorApprovalRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужно подтверждение старшего: {detail}'**
+  String errorApprovalRequired(String detail);
+
   /// No description provided for @errorBigAmountBlocked.
   ///
   /// In ru, this message translates to:
@@ -20352,6 +20760,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Чеков пока нет'**
   String get receiptInputNoRecent;
+
+  /// No description provided for @receiptInputRecentUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список последних чеков на этом терминале недоступен — введите номер чека вручную'**
+  String get receiptInputRecentUnavailable;
 
   /// No description provided for @shiftHistoryTitle.
   ///
@@ -20815,12 +21229,6 @@ abstract class AppLocalizations {
   /// **'Значение «{value}» — не целое число'**
   String scannerRulesNotAnInteger(String value);
 
-  /// No description provided for @scannerRulesUnavailable.
-  ///
-  /// In ru, this message translates to:
-  /// **'Правила чтения штрихкода недоступны в этой сборке.'**
-  String get scannerRulesUnavailable;
-
   /// No description provided for @scannerRulesSaved.
   ///
   /// In ru, this message translates to:
@@ -21000,6 +21408,2466 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Это задание отменить уже нельзя: оно печатается или уже завершено'**
   String get printQueueCancelRefused;
+
+  /// No description provided for @errorPayReceiptNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек больше не в работе — оплатить его нельзя. Обновите экран и начните заново.'**
+  String get errorPayReceiptNotFound;
+
+  /// No description provided for @errorPayNotOwner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот чек ведёт другое рабочее место — оплатить его отсюда нельзя.'**
+  String get errorPayNotOwner;
+
+  /// No description provided for @errorPaymentAlreadyTaken.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот чек уже оплачен. Взять деньги второй раз касса не станет.'**
+  String get errorPaymentAlreadyTaken;
+
+  /// No description provided for @errorPaymentInsufficient.
+  ///
+  /// In ru, this message translates to:
+  /// **'Названной суммы не хватает на чек. Назовите сумму заново.'**
+  String get errorPaymentInsufficient;
+
+  /// No description provided for @errorPaymentAccountMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'У кассы нет счёта для этого вида оплаты. Обратитесь к администратору.'**
+  String get errorPaymentAccountMissing;
+
+  /// No description provided for @errorPaymentAccountNotAllowed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Такой счёт для оплаты не предлагался. Обновите список счетов и выберите заново.'**
+  String get errorPaymentAccountNotAllowed;
+
+  /// No description provided for @errorPaymentUnbalanced.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма строк оплаты не сходится с суммой чека. Наберите оплату заново.'**
+  String get errorPaymentUnbalanced;
+
+  /// No description provided for @errorPaymentKindInactive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот вид оплаты выключен в настройках кассы. Выберите другой или включите его в настройках.'**
+  String get errorPaymentKindInactive;
+
+  /// No description provided for @errorPaymentKindUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не знает такого вида оплаты. Обратитесь к администратору.'**
+  String get errorPaymentKindUnknown;
+
+  /// No description provided for @errorCertificateUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификата с таким номером на этой кассе нет. Проверьте номер.'**
+  String get errorCertificateUnknown;
+
+  /// No description provided for @errorCertificatePinWrong.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПИН сертификата не подошёл. Наберите его заново.'**
+  String get errorCertificatePinWrong;
+
+  /// No description provided for @errorCertificateRateLimited.
+  ///
+  /// In ru, this message translates to:
+  /// **'Слишком много неудачных проверок сертификата. Подождите несколько минут и повторите.'**
+  String get errorCertificateRateLimited;
+
+  /// No description provided for @errorConnectionLost.
+  ///
+  /// In ru, this message translates to:
+  /// **'Связь с кассой потеряна. Проверьте сеть и повторите.'**
+  String get errorConnectionLost;
+
+  /// No description provided for @errorRunIncomplete.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса прервала операцию, не завершив её. Проверьте на кассе результат, прежде чем повторять.'**
+  String get errorRunIncomplete;
+
+  /// No description provided for @errorWireMismatch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рабочее место и касса не поняли друг друга — версии разошлись. Обновите страницу; если не поможет, обратитесь к администратору.'**
+  String get errorWireMismatch;
+
+  /// No description provided for @errorTillFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не смогла выполнить операцию. Повторите; если ошибка повторится, обратитесь к администратору.'**
+  String get errorTillFailed;
+
+  /// No description provided for @errorTerminalChanged.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы сменили рабочее место — войдите снова.'**
+  String get errorTerminalChanged;
+
+  /// No description provided for @errorUnknownTerminal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рабочее место не привязано к кассе. Привяжите его заново кодом привязки.'**
+  String get errorUnknownTerminal;
+
+  /// No description provided for @errorAlreadyConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса уже настроена — мастер первичной настройки больше недоступен.'**
+  String get errorAlreadyConfigured;
+
+  /// No description provided for @errorCannotDeleteSelf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нельзя удалить рабочее место самой кассы.'**
+  String get errorCannotDeleteSelf;
+
+  /// No description provided for @errorNoDrivers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса собрана без драйверов оборудования — поиск и проверка устройств недоступны. Обратитесь к администратору.'**
+  String get errorNoDrivers;
+
+  /// No description provided for @errorNoNetworkModule.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не управляет сетевыми настройками — нет системной службы. Обратитесь к администратору.'**
+  String get errorNoNetworkModule;
+
+  /// No description provided for @errorNoSessionRegistry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не ведёт список сеансов. Обратитесь к администратору.'**
+  String get errorNoSessionRegistry;
+
+  /// No description provided for @errorNoBackupTransport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Резервные копии на этой кассе не настроены. Обратитесь к администратору.'**
+  String get errorNoBackupTransport;
+
+  /// No description provided for @errorBackupNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Резервная копия не найдена.'**
+  String get errorBackupNotFound;
+
+  /// No description provided for @errorCertificatesUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не выпускает подарочные сертификаты по проводу. Обратитесь к администратору.'**
+  String get errorCertificatesUnavailable;
+
+  /// No description provided for @errorRefundStale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат изменился, пока команда шла на кассу. Повторите действие.'**
+  String get errorRefundStale;
+
+  /// No description provided for @errorRefundWrongDraft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этого черновика возврата больше нет. Откройте возврат заново.'**
+  String get errorRefundWrongDraft;
+
+  /// No description provided for @errorRefundNotStarted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат не начат — выберите чек или начните возврат без чека.'**
+  String get errorRefundNotStarted;
+
+  /// No description provided for @errorRefundEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'В возврате нет ни одной строки — возвращать нечего.'**
+  String get errorRefundEmpty;
+
+  /// No description provided for @errorReceiptAlreadyRefunded.
+  ///
+  /// In ru, this message translates to:
+  /// **'По этому чеку возврат уже сделан.'**
+  String get errorReceiptAlreadyRefunded;
+
+  /// No description provided for @errorReceiptNotRefundable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот чек нельзя вернуть здесь: оплата прошла через терминал другой кассы. Оформите возврат там, где платили.'**
+  String get errorReceiptNotRefundable;
+
+  /// No description provided for @errorLineNotInReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этого товара нет в чеке — по чеку возвращается только проданное в нём.'**
+  String get errorLineNotInReceipt;
+
+  /// No description provided for @errorSaleNotCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа по этому чеку не завершена — возвращать нечего.'**
+  String get errorSaleNotCompleted;
+
+  /// No description provided for @errorRefundBusy.
+  ///
+  /// In ru, this message translates to:
+  /// **'На кассе уже идёт другой возврат. Завершите его и повторите.'**
+  String get errorRefundBusy;
+
+  /// No description provided for @errorRefundCannotStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не смогла начать возврат и не назвала причину. Проверьте смену и настройку кассы.'**
+  String get errorRefundCannotStart;
+
+  /// No description provided for @errorRefundInstallmentRefused.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек продан в рассрочку — касса его не возвращает. Расторжение договора оформляет администратор.'**
+  String get errorRefundInstallmentRefused;
+
+  /// No description provided for @errorRefundCashlessUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эти деньги надо вернуть на карту или через QR, а вернуть их нечем: терминал или провайдер не подключён. Наличными из ящика касса такой возврат не выдаёт.'**
+  String get errorRefundCashlessUnavailable;
+
+  /// No description provided for @errorRefundCashlessRefused.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк или провайдер отказал в возврате. Проверьте терминал и повторите — уже возвращённое второй раз не вернётся.'**
+  String get errorRefundCashlessRefused;
+
+  /// No description provided for @errorRefundKindNotRefundable.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этот вид оплаты возврат запрещён в справочнике видов оплаты.'**
+  String get errorRefundKindNotRefundable;
+
+  /// No description provided for @errorRefundKindUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек оплачен видом оплаты, которого нет в справочнике этой кассы. Возврат по нему касса не проводит: чем платили — неизвестно, а наличными за это не выдают.'**
+  String get errorRefundKindUnknown;
+
+  /// No description provided for @refundDestinationsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Куда уйдут деньги'**
+  String get refundDestinationsTitle;
+
+  /// No description provided for @refundRouteDrawer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наличными из ящика'**
+  String get refundRouteDrawer;
+
+  /// No description provided for @refundRouteCard.
+  ///
+  /// In ru, this message translates to:
+  /// **'На карту через терминал'**
+  String get refundRouteCard;
+
+  /// No description provided for @refundRouteManual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вне кассы — тем же способом, каким платили'**
+  String get refundRouteManual;
+
+  /// No description provided for @refundRouteProvider.
+  ///
+  /// In ru, this message translates to:
+  /// **'Через провайдера QR'**
+  String get refundRouteProvider;
+
+  /// No description provided for @refundRouteCertificate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новым сертификатом (старый остаётся погашенным)'**
+  String get refundRouteCertificate;
+
+  /// No description provided for @refundRouteAdvance.
+  ///
+  /// In ru, this message translates to:
+  /// **'В аванс покупателя'**
+  String get refundRouteAdvance;
+
+  /// No description provided for @refundRouteBonus.
+  ///
+  /// In ru, this message translates to:
+  /// **'На бонусный счёт'**
+  String get refundRouteBonus;
+
+  /// No description provided for @refundRouteDebt.
+  ///
+  /// In ru, this message translates to:
+  /// **'В счёт долга покупателя'**
+  String get refundRouteDebt;
+
+  /// No description provided for @errorCertificateRefundNoSource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Строка чека возвращается сертификатом, но номера сертификата у неё нет. Возврат по ней касса не проводит: новую бумажку выписать не от чего, а обязательство кассы выросло бы впустую.'**
+  String get errorCertificateRefundNoSource;
+
+  /// No description provided for @errorCertificateCashRefundRefused.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наличными за сертификат вернуть нельзя — укажите реквизиты для безналичного возврата.'**
+  String get errorCertificateCashRefundRefused;
+
+  /// No description provided for @errorCertificatePaysCertificate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификатом нельзя оплатить покупку другого сертификата.'**
+  String get errorCertificatePaysCertificate;
+
+  /// No description provided for @errorCreditContractUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Договора рассрочки с таким номером нет. Проверьте номер.'**
+  String get errorCreditContractUnknown;
+
+  /// No description provided for @errorCreditContractNotActive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Договор рассрочки уже погашен или отозван — платить по нему не за что.'**
+  String get errorCreditContractNotActive;
+
+  /// No description provided for @errorCreditOverpayment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма больше остатка по договору. Проверьте сумму.'**
+  String get errorCreditOverpayment;
+
+  /// No description provided for @errorCreditRepaymentInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма погашения должна быть больше нуля.'**
+  String get errorCreditRepaymentInvalid;
+
+  /// No description provided for @errorCreditAllocationRace.
+  ///
+  /// In ru, this message translates to:
+  /// **'По договору в ту же секунду заплатили с другой кассы. Примите платёж заново.'**
+  String get errorCreditAllocationRace;
+
+  /// No description provided for @errorKindTenderCannotDiscount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вид, приносящий живые деньги, нельзя объявить в чеке «не платежом».'**
+  String get errorKindTenderCannotDiscount;
+
+  /// No description provided for @errorKindAccountMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Виду оплаты не назначен счёт-получатель.'**
+  String get errorKindAccountMissing;
+
+  /// No description provided for @errorKindCounterpartyRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отложенный вид оплаты требует названного покупателя.'**
+  String get errorKindCounterpartyRequired;
+
+  /// No description provided for @errorKindProviderRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Виду оплаты через провайдера (QR) нужен провайдер.'**
+  String get errorKindProviderRequired;
+
+  /// No description provided for @errorKindFiscalKindRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'У вида оплаты не указана фискальная трактовка.'**
+  String get errorKindFiscalKindRequired;
+
+  /// No description provided for @errorKindChangeNotATender.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сдачу выдаёт только вид, приносящий живые деньги.'**
+  String get errorKindChangeNotATender;
+
+  /// No description provided for @errorKindSystemImmutable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код или идентификатор системного вида оплаты нельзя менять и нельзя занимать другим видом.'**
+  String get errorKindSystemImmutable;
+
+  /// No description provided for @errorCertificateExpired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок действия сертификата истёк. Обратитесь к владельцу магазина.'**
+  String get errorCertificateExpired;
+
+  /// No description provided for @errorCertificateExhausted.
+  ///
+  /// In ru, this message translates to:
+  /// **'На сертификате не осталось средств.'**
+  String get errorCertificateExhausted;
+
+  /// No description provided for @errorCertificateDuplicate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Один и тот же сертификат назван в оплате дважды. Уберите повтор.'**
+  String get errorCertificateDuplicate;
+
+  /// No description provided for @errorCertificateRace.
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток сертификата изменился. Повторите оплату.'**
+  String get errorCertificateRace;
+
+  /// No description provided for @errorCertificateAccountMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'У кассы нет счёта обязательств по сертификатам. Обратитесь к администратору.'**
+  String get errorCertificateAccountMissing;
+
+  /// No description provided for @errorCertificateNumberTaken.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификат с таким номером уже выпущен.'**
+  String get errorCertificateNumberTaken;
+
+  /// No description provided for @errorCertificateNominalInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номинал сертификата должен быть больше нуля.'**
+  String get errorCertificateNominalInvalid;
+
+  /// No description provided for @errorDebtCustomerRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа в долг без покупателя невозможна — выберите покупателя.'**
+  String get errorDebtCustomerRequired;
+
+  /// No description provided for @errorDebtNotSoldHere.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этой кассе не торгуют в долг — продажа в кредит выключена в настройках кассы.'**
+  String get errorDebtNotSoldHere;
+
+  /// No description provided for @errorDebtAccountMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'У покупателя нет расчётного счёта — долг записать некуда.'**
+  String get errorDebtAccountMissing;
+
+  /// No description provided for @errorBonusAccountMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'У покупателя нет бонусного счёта — списать бонус нечем.'**
+  String get errorBonusAccountMissing;
+
+  /// No description provided for @errorPrepaymentCustomerRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Зачёт аванса требует покупателя — выберите его.'**
+  String get errorPrepaymentCustomerRequired;
+
+  /// No description provided for @errorCreditTermInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Такой срок рассрочки касса не оформляет'**
+  String get errorCreditTermInvalid;
+
+  /// No description provided for @errorCreditPrincipalInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассрочку не на что оформлять: чек покрыт целиком'**
+  String get errorCreditPrincipalInvalid;
+
+  /// No description provided for @errorCreditFeeInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Надбавка по договору задана неверно'**
+  String get errorCreditFeeInvalid;
+
+  /// No description provided for @errorCreditSchemeUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Такой схемы графика касса не знает'**
+  String get errorCreditSchemeUnknown;
+
+  /// No description provided for @errorCreditOverdue.
+  ///
+  /// In ru, this message translates to:
+  /// **'У покупателя просрочен другой договор рассрочки'**
+  String get errorCreditOverdue;
+
+  /// No description provided for @errorCreditContractDuplicate.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этот чек уже оформлен договор рассрочки'**
+  String get errorCreditContractDuplicate;
+
+  /// No description provided for @errorPrepaymentAccountMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'У покупателя нет расчётного счёта — аванса на нём быть не может.'**
+  String get errorPrepaymentAccountMissing;
+
+  /// No description provided for @errorPrepaymentInsufficient.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внесённого аванса не хватило: его уже зачли другим чеком.'**
+  String get errorPrepaymentInsufficient;
+
+  /// No description provided for @errorLoyaltyCustomerUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупатель не найден в картотеке. Выберите покупателя заново.'**
+  String get errorLoyaltyCustomerUnknown;
+
+  /// No description provided for @errorAmountExceedsReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма больше стоимости чека. Назовите сумму заново.'**
+  String get errorAmountExceedsReceipt;
+
+  /// No description provided for @errorCardChargeUnproven.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не подтвердила проведение карты. Проверьте платёжный терминал.'**
+  String get errorCardChargeUnproven;
+
+  /// No description provided for @errorPaymentTypeNotAllowed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот вид оплаты не разрешён на этом рабочем месте.'**
+  String get errorPaymentTypeNotAllowed;
+
+  /// No description provided for @errorPaymentsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не принимает оплату по проводу. Обратитесь к администратору.'**
+  String get errorPaymentsUnavailable;
+
+  /// No description provided for @errorNoRefundService.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не проводит возврат по проводу. Обратитесь к администратору.'**
+  String get errorNoRefundService;
+
+  /// No description provided for @errorRefundAbandonIsTillSide.
+  ///
+  /// In ru, this message translates to:
+  /// **'Черновик возврата снимает касса, а не рабочее место.'**
+  String get errorRefundAbandonIsTillSide;
+
+  /// No description provided for @errorNoAnswer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не ответила. Проверьте связь и повторите.'**
+  String get errorNoAnswer;
+
+  /// No description provided for @paymentTypeNotAllowedHere.
+  ///
+  /// In ru, this message translates to:
+  /// **'«{type}» не разрешена этому рабочему месту. Виды оплаты меняются в настройках оборудования; касса откажет в неразрешённом виде, даже если нажать.'**
+  String paymentTypeNotAllowedHere(String type);
+
+  /// No description provided for @paymentTypesLimitedHere.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рабочее место принимает: {types}.'**
+  String paymentTypesLimitedHere(String types);
+
+  /// No description provided for @paymentDebtNotSoldHere.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этой кассе в долг не торгуют: продажа в кредит выключена в настройках кассы. Касса откажет, даже если нажать.'**
+  String get paymentDebtNotSoldHere;
+
+  /// No description provided for @paymentDebtNotPermitted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продавать в долг вам не разрешено: нужно право «продажа в долг». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.'**
+  String get paymentDebtNotPermitted;
+
+  /// Приёмка 2026-09-17: причина запертого поля скидки в окне правки строки у кассира без права op.sellDiscount. Предел скидки такому кассиру не показывается.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидку назначать вам не разрешено: нужно право «продажа со скидкой». Его выдаёт администратор в настройках прав; касса откажет любому, у кого его нет.'**
+  String get saleDiscountNotPermitted;
+
+  /// No description provided for @paymentDebtPolicyUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса пока не ответила, торгуют ли здесь в долг. Проверьте связь с кассой и попробуйте ещё раз.'**
+  String get paymentDebtPolicyUnknown;
+
+  /// No description provided for @paymentOffsetsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс и сертификаты'**
+  String get paymentOffsetsTitle;
+
+  /// No description provided for @paymentPrepaymentTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс покупателя'**
+  String get paymentPrepaymentTitle;
+
+  /// No description provided for @paymentPrepaymentNeedsCustomer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы зачесть аванс, найдите покупателя по номеру телефона.'**
+  String get paymentPrepaymentNeedsCustomer;
+
+  /// No description provided for @paymentPrepaymentLoading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса ещё не ответила, сколько аванса внесено.'**
+  String get paymentPrepaymentLoading;
+
+  /// No description provided for @paymentPrepaymentNone.
+  ///
+  /// In ru, this message translates to:
+  /// **'У покупателя нет внесённого аванса.'**
+  String get paymentPrepaymentNone;
+
+  /// No description provided for @paymentPrepaymentBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внесено вперёд:'**
+  String get paymentPrepaymentBalance;
+
+  /// No description provided for @paymentPrepaymentUse.
+  ///
+  /// In ru, this message translates to:
+  /// **'Зачесть аванс'**
+  String get paymentPrepaymentUse;
+
+  /// No description provided for @paymentPrepaymentApplied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Будет зачтено: {amount}'**
+  String paymentPrepaymentApplied(String amount);
+
+  /// No description provided for @paymentCertificateTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подарочный сертификат'**
+  String get paymentCertificateTitle;
+
+  /// No description provided for @paymentCertificateNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер сертификата'**
+  String get paymentCertificateNumber;
+
+  /// No description provided for @paymentCertificatePin.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПИН, если есть'**
+  String get paymentCertificatePin;
+
+  /// No description provided for @paymentCertificatePresent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверить'**
+  String get paymentCertificatePresent;
+
+  /// No description provided for @paymentCertificateBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток на сертификате: {amount}'**
+  String paymentCertificateBalance(String amount);
+
+  /// No description provided for @paymentCertificateApplied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спишется {amount}, останется {rest}'**
+  String paymentCertificateApplied(String amount, String rest);
+
+  /// No description provided for @paymentCertificateNotNeeded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек уже покрыт — этот сертификат не понадобится.'**
+  String get paymentCertificateNotNeeded;
+
+  /// No description provided for @unfiscalizedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нефискализованные чеки'**
+  String get unfiscalizedTitle;
+
+  /// No description provided for @unfiscalizedEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все чеки фискализованы'**
+  String get unfiscalizedEmpty;
+
+  /// No description provided for @unfiscalizedEmptyHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь появятся чеки, за которые деньги взяты, а документа оператор не выдал'**
+  String get unfiscalizedEmptyHint;
+
+  /// No description provided for @unfiscalizedReceiptNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек №{number}'**
+  String unfiscalizedReceiptNo(int number);
+
+  /// No description provided for @unfiscalizedAgeHours.
+  ///
+  /// In ru, this message translates to:
+  /// **'{hours} ч назад'**
+  String unfiscalizedAgeHours(int hours);
+
+  /// No description provided for @unfiscalizedOverdue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просрочено окно 72 ч'**
+  String get unfiscalizedOverdue;
+
+  /// No description provided for @unfiscalizedRetry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторить'**
+  String get unfiscalizedRetry;
+
+  /// No description provided for @unfiscalizedRetryDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Документ получен: {sign}'**
+  String unfiscalizedRetryDone(String sign);
+
+  /// No description provided for @unfiscalizedRetryFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оператор снова отказал: {message}'**
+  String unfiscalizedRetryFailed(String message);
+
+  /// No description provided for @unfiscalizedNoDocument.
+  ///
+  /// In ru, this message translates to:
+  /// **'Строка записана до того, как отказы стали нести документ: повторять нечем, её можно только списать'**
+  String get unfiscalizedNoDocument;
+
+  /// No description provided for @unfiscalizedNoOperator.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальный оператор не настроен: повторять некуда'**
+  String get unfiscalizedNoOperator;
+
+  /// No description provided for @unfiscalizedWriteOff.
+  ///
+  /// In ru, this message translates to:
+  /// **'Списать'**
+  String get unfiscalizedWriteOff;
+
+  /// No description provided for @unfiscalizedWriteOffTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Списать нефискализованный чек'**
+  String get unfiscalizedWriteOffTitle;
+
+  /// No description provided for @unfiscalizedWriteOffBy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Решение записывается на имя: {name}'**
+  String unfiscalizedWriteOffBy(String name);
+
+  /// No description provided for @unfiscalizedWriteOffReason.
+  ///
+  /// In ru, this message translates to:
+  /// **'Причина списания'**
+  String get unfiscalizedWriteOffReason;
+
+  /// No description provided for @unfiscalizedWriteOffDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек помечен разобранным'**
+  String get unfiscalizedWriteOffDone;
+
+  /// No description provided for @unfiscalizedWrittenOff.
+  ///
+  /// In ru, this message translates to:
+  /// **'Списал {name}: {reason}'**
+  String unfiscalizedWrittenOff(String name, String reason);
+
+  /// No description provided for @unfiscalizedUnknownUser.
+  ///
+  /// In ru, this message translates to:
+  /// **'неизвестный пользователь'**
+  String get unfiscalizedUnknownUser;
+
+  /// No description provided for @unfiscalizedAtShiftClose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена закрыта с нефискализованными чеками: {count}. Номера: {numbers}'**
+  String unfiscalizedAtShiftClose(int count, String numbers);
+
+  /// Ревизия 2026-09-19, дыра 1: Z-отчёт не обгоняет документы своей смены (ShiftService.onCloseShift). Ждущие строки очереди названы кассиру ДО нажатия «Закрыть», когда он ещё может подождать связи.
+  ///
+  /// In ru, this message translates to:
+  /// **'Документы смены ещё не у оператора: {count} (чеки {numbers}). Закрытие дождётся их отправки; если связь не вернётся, Z-отчёт не уйдёт — иначе отчёт оператора разойдётся с кассой.'**
+  String documentsOnTheWayAtShiftClose(int count, String numbers);
+
+  /// No description provided for @qrPaidPartial.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачено частично: {paid} из {amount}'**
+  String qrPaidPartial(String paid, String amount);
+
+  /// No description provided for @qrOrphanTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги без чека'**
+  String get qrOrphanTitle;
+
+  /// No description provided for @qrOrphanHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупатель заплатил по QR, а чек этими деньгами не закрыт.'**
+  String get qrOrphanHint;
+
+  /// No description provided for @qrOrphanLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{amount} · {provider} · {key}'**
+  String qrOrphanLine(String amount, String provider, String key);
+
+  /// No description provided for @qrOrphanAfterGiveUp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждение пришло после того, как касса перестала ждать'**
+  String get qrOrphanAfterGiveUp;
+
+  /// No description provided for @errorQrIntentUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не знает этой оплаты по QR. Обновите чек и повторите.'**
+  String get errorQrIntentUnknown;
+
+  /// No description provided for @errorQrIntentNotPaid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата по QR ещё не подтверждена банком. Дождитесь подтверждения или выберите другой способ.'**
+  String get errorQrIntentNotPaid;
+
+  /// No description provided for @errorQrIntentAlreadySettled.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эти деньги уже закрыли другой чек: {message}'**
+  String errorQrIntentAlreadySettled(String message);
+
+  /// No description provided for @paymentQrTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата по QR'**
+  String get paymentQrTitle;
+
+  /// No description provided for @paymentQrAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма по QR'**
+  String get paymentQrAmount;
+
+  /// No description provided for @paymentQrStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать QR'**
+  String get paymentQrStart;
+
+  /// No description provided for @paymentQrWaiting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ждём оплату · осталось {seconds} с'**
+  String paymentQrWaiting(int seconds);
+
+  /// No description provided for @paymentQrScanHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупатель сканирует код в приложении банка'**
+  String get paymentQrScanHint;
+
+  /// No description provided for @paymentQrCancel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отменить ожидание'**
+  String get paymentQrCancel;
+
+  /// No description provided for @paymentQrNoLink.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет связи с провайдером — касса повторяет запрос сама'**
+  String get paymentQrNoLink;
+
+  /// No description provided for @paymentQrPaid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплачено по QR: {amount}'**
+  String paymentQrPaid(String amount);
+
+  /// No description provided for @paymentQrPaidAfterCancel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупатель успел оплатить до отмены — {amount} идёт в этот чек'**
+  String paymentQrPaidAfterCancel(String amount);
+
+  /// No description provided for @paymentQrCancelled.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидание отменено, провайдер отмену подтвердил'**
+  String get paymentQrCancelled;
+
+  /// No description provided for @paymentQrPatienceSpent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупатель не оплатил за отведённое время — касса перестала ждать'**
+  String get paymentQrPatienceSpent;
+
+  /// No description provided for @paymentQrExpired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок QR-кода вышел у провайдера'**
+  String get paymentQrExpired;
+
+  /// No description provided for @paymentQrFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер отказал в оплате по QR'**
+  String get paymentQrFailed;
+
+  /// No description provided for @paymentQrCancelUnconfirmed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отмена не подтверждена — деньги ещё могут прийти. Не принимайте другую оплату, пока касса не выяснит.'**
+  String get paymentQrCancelUnconfirmed;
+
+  /// No description provided for @paymentQrRecheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверить снова'**
+  String get paymentQrRecheck;
+
+  /// No description provided for @paymentQrRestart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый код'**
+  String get paymentQrRestart;
+
+  /// No description provided for @paymentQrOverReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'В чек не помещается {amount} из оплаченного по QR'**
+  String paymentQrOverReceipt(String amount);
+
+  /// No description provided for @paymentQrNothingToPay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек уже покрыт — показывать код не на что'**
+  String get paymentQrNothingToPay;
+
+  /// No description provided for @errorQrNotConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR не настроен на кассе'**
+  String get errorQrNotConfigured;
+
+  /// No description provided for @errorQrNetwork.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет связи с провайдером QR'**
+  String get errorQrNetwork;
+
+  /// No description provided for @errorQrTimeout.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR не ответил вовремя'**
+  String get errorQrTimeout;
+
+  /// No description provided for @errorQrProviderBusy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR занят — касса повторит запрос'**
+  String get errorQrProviderBusy;
+
+  /// No description provided for @errorQrMalformedReply.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR ответил непонятно — обратитесь к администратору кассы'**
+  String get errorQrMalformedReply;
+
+  /// No description provided for @errorQrUnknownIntent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR не знает этой оплаты'**
+  String get errorQrUnknownIntent;
+
+  /// No description provided for @errorQrRejected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR отклонил запрос'**
+  String get errorQrRejected;
+
+  /// No description provided for @errorQrReverseUnsupported.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR не умеет возвращать деньги'**
+  String get errorQrReverseUnsupported;
+
+  /// No description provided for @errorQrIntentLive.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этом чеке уже ждёт оплата по QR — отмените её, прежде чем показывать новый код'**
+  String get errorQrIntentLive;
+
+  /// No description provided for @fiscalReasonNetwork.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет связи с фискальным оператором'**
+  String get fiscalReasonNetwork;
+
+  /// No description provided for @fiscalReasonOperatorUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальный оператор недоступен'**
+  String get fiscalReasonOperatorUnavailable;
+
+  /// No description provided for @fiscalReasonTokenExpired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оператор не принял авторизацию кассы'**
+  String get fiscalReasonTokenExpired;
+
+  /// No description provided for @fiscalReasonRequestNotBuilt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрос к оператору не собран: проверьте адрес сервера в фискальных настройках'**
+  String get fiscalReasonRequestNotBuilt;
+
+  /// No description provided for @fiscalReasonTlsRejected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Защищённое соединение с оператором не установлено: проверьте адрес сервера и часы кассы'**
+  String get fiscalReasonTlsRejected;
+
+  /// No description provided for @fiscalReasonClientFault.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбой кассы при обмене с оператором'**
+  String get fiscalReasonClientFault;
+
+  /// No description provided for @fiscalReasonBadCredentials.
+  ///
+  /// In ru, this message translates to:
+  /// **'Неверный логин или пароль оператора'**
+  String get fiscalReasonBadCredentials;
+
+  /// No description provided for @fiscalReasonCashboxNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не найдена у оператора: проверьте заводской номер'**
+  String get fiscalReasonCashboxNotFound;
+
+  /// No description provided for @fiscalReasonCashboxBlocked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса заблокирована оператором'**
+  String get fiscalReasonCashboxBlocked;
+
+  /// No description provided for @fiscalReasonOfflineLimitExceeded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Превышен лимит автономных документов'**
+  String get fiscalReasonOfflineLimitExceeded;
+
+  /// No description provided for @fiscalReasonOfflineNotSupported.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автономный режим этой кассе не разрешён'**
+  String get fiscalReasonOfflineNotSupported;
+
+  /// No description provided for @fiscalReasonDuplicate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Документ уже зарегистрирован у оператора, фискальный признак кассе не выдан — возьмите его в кабинете оператора'**
+  String get fiscalReasonDuplicate;
+
+  /// No description provided for @fiscalReasonValidation.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оператор отклонил документ: суммы или данные не сходятся'**
+  String get fiscalReasonValidation;
+
+  /// No description provided for @fiscalReasonNotEnoughMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'По данным оператора в кассе недостаточно наличных'**
+  String get fiscalReasonNotEnoughMoney;
+
+  /// No description provided for @fiscalReasonShiftError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка смены у оператора'**
+  String get fiscalReasonShiftError;
+
+  /// No description provided for @fiscalReasonUnsupported.
+  ///
+  /// In ru, this message translates to:
+  /// **'Операция не поддерживается оператором'**
+  String get fiscalReasonUnsupported;
+
+  /// No description provided for @fiscalReasonNotConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискализация не настроена'**
+  String get fiscalReasonNotConfigured;
+
+  /// No description provided for @fiscalReasonUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оператор отказал по неизвестной причине'**
+  String get fiscalReasonUnknown;
+
+  /// No description provided for @fiscalReasonOfflineWindowExpired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Истекло автономное окно 72 ч — документ не выдан'**
+  String get fiscalReasonOfflineWindowExpired;
+
+  /// No description provided for @fiscalReasonRowUnreadable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Строка очереди повреждена: документ не читается'**
+  String get fiscalReasonRowUnreadable;
+
+  /// Причина фискального отказа с кодом оператора (у «оператор недоступен» — HTTP-статус)
+  ///
+  /// In ru, this message translates to:
+  /// **'{reason} (код {code})'**
+  String fiscalReasonWithCode(String reason, int code);
+
+  /// Строка очереди, записанная русским текстом до перевода причин
+  ///
+  /// In ru, this message translates to:
+  /// **'Причина записана до перевода: {text}'**
+  String fiscalReasonLegacy(String text);
+
+  /// No description provided for @fiscalReasonNotRecorded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Причина не записана'**
+  String get fiscalReasonNotRecorded;
+
+  /// No description provided for @fiscalReasonPaymentTypeNotAccepted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вид оплаты не принимается оператором: «кредит» и «тара» исключены протоколом ОФД 2.0.2'**
+  String get fiscalReasonPaymentTypeNotAccepted;
+
+  /// No description provided for @errorDeferredListUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список отложенных чеков недоступен'**
+  String get errorDeferredListUnavailable;
+
+  /// No description provided for @errorDeferredListUnavailableReason.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список отложенных чеков недоступен: {reason}'**
+  String errorDeferredListUnavailableReason(String reason);
+
+  /// No description provided for @errorRefundSearchUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск товара для возврата на этом терминале ещё не подключён'**
+  String get errorRefundSearchUnavailable;
+
+  /// No description provided for @errorRefundNothingSelected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Черновик изменился — возвращать нечего. Проверьте выделенные строки.'**
+  String get errorRefundNothingSelected;
+
+  /// No description provided for @errorRefundInvalidAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Столько вернуть нельзя: количество не может быть больше проданного по чеку или меньше нуля.'**
+  String get errorRefundInvalidAmount;
+
+  /// No description provided for @errorCertificatePinRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'У сертификата есть ПИН. Наберите ПИН с сертификата.'**
+  String get errorCertificatePinRequired;
+
+  /// No description provided for @qrSettingsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата по QR'**
+  String get qrSettingsTitle;
+
+  /// No description provided for @qrSettingsSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR/СБП: адрес, код, ключ, ожидание'**
+  String get qrSettingsSubtitle;
+
+  /// No description provided for @qrSettingsKindTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принимать оплату по QR'**
+  String get qrSettingsKindTitle;
+
+  /// No description provided for @qrSettingsKindSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вид оплаты «QR» на экране оплаты'**
+  String get qrSettingsKindSubtitle;
+
+  /// No description provided for @qrSettingsUrl.
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес провайдера'**
+  String get qrSettingsUrl;
+
+  /// No description provided for @qrSettingsCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код провайдера'**
+  String get qrSettingsCode;
+
+  /// No description provided for @qrSettingsKey.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ключ доступа'**
+  String get qrSettingsKey;
+
+  /// No description provided for @qrSettingsKeyStoredHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ключ сохранён. Введите новый, чтобы заменить'**
+  String get qrSettingsKeyStoredHint;
+
+  /// No description provided for @qrSettingsKeyEmptyHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ключ не задан'**
+  String get qrSettingsKeyEmptyHint;
+
+  /// No description provided for @qrSettingsClearKey.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стереть сохранённый ключ'**
+  String get qrSettingsClearKey;
+
+  /// No description provided for @qrSettingsPatience.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидание оплаты, секунд'**
+  String get qrSettingsPatience;
+
+  /// No description provided for @qrSettingsSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить'**
+  String get qrSettingsSave;
+
+  /// No description provided for @qrSettingsSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройка QR сохранена'**
+  String get qrSettingsSaved;
+
+  /// No description provided for @qrSettingsRemove.
+  ///
+  /// In ru, this message translates to:
+  /// **'Снять настройку'**
+  String get qrSettingsRemove;
+
+  /// No description provided for @qrSettingsStatusReady.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер настроен'**
+  String get qrSettingsStatusReady;
+
+  /// No description provided for @qrSettingsStatusNotConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер не настроен — оплата по QR недоступна'**
+  String get qrSettingsStatusNotConfigured;
+
+  /// No description provided for @qrSettingsInvalidUrl.
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес должен начинаться с http:// или https://'**
+  String get qrSettingsInvalidUrl;
+
+  /// No description provided for @qrSettingsCodeRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите код провайдера'**
+  String get qrSettingsCodeRequired;
+
+  /// No description provided for @qrSettingsInvalidPatience.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидание — от {min} до {max} секунд'**
+  String qrSettingsInvalidPatience(String min, String max);
+
+  /// No description provided for @qrSettingsSaveFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось сохранить настройку QR'**
+  String get qrSettingsSaveFailed;
+
+  /// No description provided for @qrSettingsTillOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройка провайдера QR доступна только на самой кассе'**
+  String get qrSettingsTillOnly;
+
+  /// No description provided for @installmentTermsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассрочка'**
+  String get installmentTermsTitle;
+
+  /// No description provided for @installmentTermsMonths.
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок, месяцев'**
+  String get installmentTermsMonths;
+
+  /// No description provided for @installmentTermsScheme.
+  ///
+  /// In ru, this message translates to:
+  /// **'Схема графика'**
+  String get installmentTermsScheme;
+
+  /// No description provided for @installmentTermsContinue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get installmentTermsContinue;
+
+  /// No description provided for @customerPaymentTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять оплату / погасить долг'**
+  String get customerPaymentTitle;
+
+  /// No description provided for @customerPaymentCurrentDebt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий долг: {amount}'**
+  String customerPaymentCurrentDebt(String amount);
+
+  /// No description provided for @customerPaymentBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баланс: {amount}'**
+  String customerPaymentBalance(String amount);
+
+  /// No description provided for @customerPaymentAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма оплаты'**
+  String get customerPaymentAmount;
+
+  /// No description provided for @customerPaymentAmountInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите сумму больше 0'**
+  String get customerPaymentAmountInvalid;
+
+  /// No description provided for @customerPaymentFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка проведения оплаты'**
+  String get customerPaymentFailed;
+
+  /// No description provided for @customerPaymentSubmit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять оплату'**
+  String get customerPaymentSubmit;
+
+  /// No description provided for @errorPrepaymentAmountInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма аванса должна быть больше нуля. Наберите сумму заново.'**
+  String get errorPrepaymentAmountInvalid;
+
+  /// No description provided for @errorPrepaymentTenderInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс принимается наличными, картой или по QR. Выберите другой вид оплаты.'**
+  String get errorPrepaymentTenderInvalid;
+
+  /// Приём аванса отказан: у кассы нет счёта, куда лечь принятым деньгам (наличные — счёт кассы, безнал — эквайринг). Отказ идёт до первой записи.
+  ///
+  /// In ru, this message translates to:
+  /// **'У кассы нет счёта для приёма этого вида оплаты. Настройте счёт приёма и повторите.'**
+  String get errorPrepaymentTillAccountMissing;
+
+  /// No description provided for @errorPrepaymentIntakeFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс принять не удалось. Проверьте покупателя и повторите.'**
+  String get errorPrepaymentIntakeFailed;
+
+  /// No description provided for @errorPrepaymentRefundExceedsBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванса на счёте покупателя меньше, чем вы выдаёте. Проверьте остаток и убавьте сумму.'**
+  String get errorPrepaymentRefundExceedsBalance;
+
+  /// Выдача аванса по проводу отказана до первой записи: кадр пришёл без ключа повтора. Исполнить его значило бы выдать живые деньги, повтор которых опознать будет нечем (решение заказчика 2026-09-18).
+  ///
+  /// In ru, this message translates to:
+  /// **'В заявке на выдачу аванса нет ключа повтора — касса не отличит повтор от второй выдачи. Откройте экран заново и наберите сумму ещё раз.'**
+  String get errorPrepaymentRefundKeyMissing;
+
+  /// No description provided for @errorPrepaymentRefundFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс выдать не удалось. Проверьте покупателя и повторите.'**
+  String get errorPrepaymentRefundFailed;
+
+  /// No description provided for @errorPrepaymentRefundUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не выдаёт аванс покупателя по проводу. Обратитесь к администратору.'**
+  String get errorPrepaymentRefundUnavailable;
+
+  /// No description provided for @errorPrepaymentIntakeUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не принимает аванс покупателя по проводу. Обратитесь к администратору.'**
+  String get errorPrepaymentIntakeUnavailable;
+
+  /// Приём аванса отказан до первой записи: кадр пришёл без ключа повтора. Принять его значило бы принять деньги, повтор которых опознать будет нечем (дефект живой приёмки 2026-09-18).
+  ///
+  /// In ru, this message translates to:
+  /// **'В заявке на приём аванса нет ключа повтора — касса не отличит повтор от второго взноса. Откройте экран заново и наберите сумму ещё раз.'**
+  String get errorPrepaymentIntakeKeyMissing;
+
+  /// No description provided for @errorQrSetupUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не хранит настройку провайдера QR. Настройте оплату по QR на самой кассе или обратитесь к администратору.'**
+  String get errorQrSetupUnavailable;
+
+  /// Экран шаблона чека отказан: у кассы нет ни базы шаблонов, ни очереди печати, из байтов которой собирается предпросмотр. Отвечать «сохранено» такой кассе нельзя — владелец ушёл бы, считая чек настроенным.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не хранит шаблонов чека. Настройте шаблон на самой кассе или обратитесь к администратору.'**
+  String get errorReceiptTemplatesUnavailable;
+
+  /// Шаблон отказан до записи: пришёл без названия. Безымянная строка в списке неотличима от строки, которую забыли отрисовать, — владелец решил бы, что шаблон пропал.
+  ///
+  /// In ru, this message translates to:
+  /// **'У шаблона чека обязано быть название. Наберите его и сохраните ещё раз.'**
+  String get errorReceiptTemplateNameless;
+
+  /// No description provided for @shiftDeskTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена'**
+  String get shiftDeskTitle;
+
+  /// Окно просроченной смены на браузерном терминале — то же правило, которым касса запирает продажу (ShiftAgeRule, сутки, сравнение >=). С 2026-09-18 рядом стоит рабочая кнопка закрытия, а не только слова.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена открыта более 24 часов — продажа заблокирована. Закройте её и откройте новую.'**
+  String get shiftDeskOverAgeWarning;
+
+  /// Время открытия смены. Приходит с кассы в СЕКУНДАХ эпохи (ShiftDeskView.openedAtSeconds) — множитель 1000 стоит только здесь, на показе.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыта: {when}'**
+  String shiftDeskOpenedAt(String when);
+
+  /// No description provided for @shiftDeskCountedLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пересчитано в ящике'**
+  String get shiftDeskCountedLabel;
+
+  /// Пустое поле означает «не считали», а не ноль: ноль в ящике — законный результат пересчёта, и подменить им «не считали» значило бы записать недостачу на всю выручку смены.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставьте пустым, если не пересчитывали — касса возьмёт свой итог.'**
+  String get shiftDeskCountedHint;
+
+  /// No description provided for @shiftDeskOpeningCashLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги в ящике на начало'**
+  String get shiftDeskOpeningCashLabel;
+
+  /// No description provided for @shiftDeskClosedNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена закрыта.'**
+  String get shiftDeskClosedNow;
+
+  /// No description provided for @shiftDeskOpenedNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена открыта.'**
+  String get shiftDeskOpenedNow;
+
+  /// No description provided for @shiftDeskNoShift.
+  ///
+  /// In ru, this message translates to:
+  /// **'На кассе нет открытой смены.'**
+  String get shiftDeskNoShift;
+
+  /// Смену закрыть можно, но не молча (докстринг ShiftService.unfiscalizedAtClose): запрещать хуже беды, промолчать нельзя.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чеков без фискального документа: {count}'**
+  String shiftDeskUnfiscalizedCount(int count);
+
+  /// No description provided for @shiftDeskUnfinishedCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Незаконченных чеков: {count} — закрытие их приберёт'**
+  String shiftDeskUnfinishedCount(int count);
+
+  /// Названный отказ вместо молчаливого успеха: ShiftServiceImpl.onCloseShift без открытой смены пишет предупреждение в журнал и возвращается, и по проводу это прочлось бы как «закрыл».
+  ///
+  /// In ru, this message translates to:
+  /// **'На этой кассе нет открытой смены — закрывать нечего.'**
+  String get errorShiftDeskNotOpen;
+
+  /// No description provided for @errorShiftDeskAlreadyOpen.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этой кассе уже открыта смена.'**
+  String get errorShiftDeskAlreadyOpen;
+
+  /// No description provided for @errorShiftDeskUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта касса не ведёт смен по проводу. Закройте смену на самой кассе или обратитесь к администратору.'**
+  String get errorShiftDeskUnavailable;
+
+  /// Кассир берётся из сеанса, никогда из тела кадра (И162): именем смены подписан Z-отчёт и вся её выручка.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смену открывает кассир, а этой заявке кассира назвать нечем. Войдите заново.'**
+  String get errorShiftDeskActorUnknown;
+
+  /// No description provided for @prepaymentIntakeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приём аванса'**
+  String get prepaymentIntakeTitle;
+
+  /// No description provided for @prepaymentIntakeFind.
+  ///
+  /// In ru, this message translates to:
+  /// **'Найти покупателя'**
+  String get prepaymentIntakeFind;
+
+  /// No description provided for @prepaymentIntakeNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покупатель с таким номером не найден.'**
+  String get prepaymentIntakeNotFound;
+
+  /// No description provided for @prepaymentIntakeSubmit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять аванс'**
+  String get prepaymentIntakeSubmit;
+
+  /// No description provided for @prepaymentIntakeAccepted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс принят. Внесено вперёд: {amount}'**
+  String prepaymentIntakeAccepted(String amount);
+
+  /// No description provided for @prepaymentIntakeFiscalFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги приняты, но фискальный чек аванса не выписан.'**
+  String get prepaymentIntakeFiscalFailed;
+
+  /// No description provided for @emulatorSettingsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Встроенные эмуляторы'**
+  String get emulatorSettingsTitle;
+
+  /// No description provided for @emulatorSettingsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверить печать и диагностику, не подключая приборов'**
+  String get emulatorSettingsHint;
+
+  /// No description provided for @emulatorReceiptPrinter.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер и денежный ящик'**
+  String get emulatorReceiptPrinter;
+
+  /// No description provided for @emulatorEnabledNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сокет поднят. Касса попадёт на него только по адресу из привязки'**
+  String get emulatorEnabledNote;
+
+  /// No description provided for @emulatorDisabledNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выключен: сокет не открыт'**
+  String get emulatorDisabledNote;
+
+  /// No description provided for @emulatorAddress.
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес эмулятора'**
+  String get emulatorAddress;
+
+  /// No description provided for @emulatorAddressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Впишите этот IP и порт в настройках принтера'**
+  String get emulatorAddressHint;
+
+  /// No description provided for @emulatorBindAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вписать в привязку принтера'**
+  String get emulatorBindAction;
+
+  /// No description provided for @emulatorBindDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привязка принтера теперь смотрит на эмулятор'**
+  String get emulatorBindDone;
+
+  /// No description provided for @emulatorBindingStale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привязка принтера смотрит на выключенный эмулятор — печать откажет'**
+  String get emulatorBindingStale;
+
+  /// No description provided for @emulatorStartFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось поднять эмулятор'**
+  String get emulatorStartFailed;
+
+  /// No description provided for @emulatorFiscalOperator.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальный оператор (ОФД)'**
+  String get emulatorFiscalOperator;
+
+  /// No description provided for @emulatorFiscalAddressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Впишите этот адрес в поле «Адрес сервера» фискальных настроек'**
+  String get emulatorFiscalAddressHint;
+
+  /// No description provided for @emulatorFiscalBindAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вписать в фискальные настройки'**
+  String get emulatorFiscalBindAction;
+
+  /// No description provided for @emulatorFiscalBindNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Впишет адрес, логин, пароль, ключ и заводской номер эмулятора и объявит кассу испытательной. Регистрационный номер не трогается'**
+  String get emulatorFiscalBindNote;
+
+  /// No description provided for @emulatorFiscalBindDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальные настройки теперь смотрят на эмулятор'**
+  String get emulatorFiscalBindDone;
+
+  /// No description provided for @emulatorFiscalBindingStale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальные настройки смотрят на выключенный эмулятор — фискализация откажет'**
+  String get emulatorFiscalBindingStale;
+
+  /// No description provided for @emulatorFiscalLocalModuleWarning.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заполнено поле «Локальный модуль» — оно перебивает адрес сервера, и касса пойдёт не на эмулятор'**
+  String get emulatorFiscalLocalModuleWarning;
+
+  /// No description provided for @emulatorFiscalBlockedLive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса боевая: вписаны реквизиты оператора. Эмулятор ОФД здесь запрещён — чек, ушедший в подделку, выглядит настоящим, а документа покупателю не даёт'**
+  String get emulatorFiscalBlockedLive;
+
+  /// No description provided for @emulatorFiscalBlockedUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальные настройки не прочитались — включить эмулятор ОФД нельзя'**
+  String get emulatorFiscalBlockedUnknown;
+
+  /// No description provided for @diagnosticsFiscalEmulatorBanner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес оператора ведёт на этот же компьютер — документы уходят в эмулятор и фискальными не являются'**
+  String get diagnosticsFiscalEmulatorBanner;
+
+  /// No description provided for @diagnosticsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Диагностика оборудования'**
+  String get diagnosticsTitle;
+
+  /// No description provided for @diagnosticsSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что касса на самом деле отправила приборам'**
+  String get diagnosticsSubtitle;
+
+  /// No description provided for @diagnosticsTabPrinter.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принтер'**
+  String get diagnosticsTabPrinter;
+
+  /// No description provided for @diagnosticsTabFiscal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискализация'**
+  String get diagnosticsTabFiscal;
+
+  /// No description provided for @errorDiagnosticsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Диагностику на этой кассе спросить не у кого'**
+  String get errorDiagnosticsUnavailable;
+
+  /// No description provided for @diagnosticsPrinterQueueMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очередь печати на этом рабочем месте не настроена'**
+  String get diagnosticsPrinterQueueMissing;
+
+  /// No description provided for @diagnosticsPrinterNothingSent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса пока ничего не отправляла в принтер'**
+  String get diagnosticsPrinterNothingSent;
+
+  /// No description provided for @diagnosticsAskFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не ответила на этот вопрос: {reason}'**
+  String diagnosticsAskFailed(String reason);
+
+  /// No description provided for @diagnosticsAttempts.
+  ///
+  /// In ru, this message translates to:
+  /// **'попыток {count}'**
+  String diagnosticsAttempts(int count);
+
+  /// No description provided for @diagnosticsJobQueued.
+  ///
+  /// In ru, this message translates to:
+  /// **'ждёт очереди'**
+  String get diagnosticsJobQueued;
+
+  /// No description provided for @diagnosticsJobPrinting.
+  ///
+  /// In ru, this message translates to:
+  /// **'печатается'**
+  String get diagnosticsJobPrinting;
+
+  /// No description provided for @diagnosticsJobPrinted.
+  ///
+  /// In ru, this message translates to:
+  /// **'напечатано'**
+  String get diagnosticsJobPrinted;
+
+  /// No description provided for @diagnosticsJobFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'не напечатано'**
+  String get diagnosticsJobFailed;
+
+  /// No description provided for @diagnosticsJobExpired.
+  ///
+  /// In ru, this message translates to:
+  /// **'просрочено'**
+  String get diagnosticsJobExpired;
+
+  /// No description provided for @diagnosticsJobCancelled.
+  ///
+  /// In ru, this message translates to:
+  /// **'отменено'**
+  String get diagnosticsJobCancelled;
+
+  /// No description provided for @diagnosticsFiscalNotConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальный оператор на этой кассе не настроен'**
+  String get diagnosticsFiscalNotConfigured;
+
+  /// No description provided for @diagnosticsFiscalAccepted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принято оператором'**
+  String get diagnosticsFiscalAccepted;
+
+  /// No description provided for @diagnosticsFiscalAcceptedEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оператор пока не принял ни одного документа'**
+  String get diagnosticsFiscalAcceptedEmpty;
+
+  /// No description provided for @diagnosticsFiscalQueued.
+  ///
+  /// In ru, this message translates to:
+  /// **'В очереди'**
+  String get diagnosticsFiscalQueued;
+
+  /// No description provided for @diagnosticsFiscalQueuedEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очередь пуста — всё, что отправляли, оператор принял'**
+  String get diagnosticsFiscalQueuedEmpty;
+
+  /// No description provided for @diagnosticsFiscalSign.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальный признак {value}'**
+  String diagnosticsFiscalSign(String value);
+
+  /// No description provided for @diagnosticsFiscalOperatorDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'документ оператора {value}'**
+  String diagnosticsFiscalOperatorDoc(String value);
+
+  /// No description provided for @diagnosticsFiscalReceiptNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'чек {value}'**
+  String diagnosticsFiscalReceiptNo(String value);
+
+  /// No description provided for @diagnosticsFiscalOffline.
+  ///
+  /// In ru, this message translates to:
+  /// **'выдан автономно'**
+  String get diagnosticsFiscalOffline;
+
+  /// No description provided for @diagnosticsEmulatorBanner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привязка принтера смотрит на этот же компьютер — за портом эмулятор, а не бумага'**
+  String get diagnosticsEmulatorBanner;
+
+  /// No description provided for @diagnosticsTabDrawer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ящик'**
+  String get diagnosticsTabDrawer;
+
+  /// No description provided for @drawerDiagnosticsEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'С запуска кассы ящик не открывали ни разу'**
+  String get drawerDiagnosticsEmpty;
+
+  /// No description provided for @drawerDiagnosticsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Памяти об импульсах ящика на этой кассе нет — спросить нечем. Это не значит, что ящик не открывали.'**
+  String get drawerDiagnosticsUnavailable;
+
+  /// No description provided for @drawerDiagnosticsCaveat.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса знает только, приняли ли команду. Открылся ли ящик на самом деле, обратной связи нет ни на одном пути.'**
+  String get drawerDiagnosticsCaveat;
+
+  /// No description provided for @drawerDiagnosticsAccepted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Команда принята'**
+  String get drawerDiagnosticsAccepted;
+
+  /// No description provided for @drawerDiagnosticsRefused.
+  ///
+  /// In ru, this message translates to:
+  /// **'Команда отклонена'**
+  String get drawerDiagnosticsRefused;
+
+  /// No description provided for @drawerDiagnosticsViaSerial.
+  ///
+  /// In ru, this message translates to:
+  /// **'последовательный порт'**
+  String get drawerDiagnosticsViaSerial;
+
+  /// No description provided for @drawerDiagnosticsViaPrinter.
+  ///
+  /// In ru, this message translates to:
+  /// **'через принтер (ESC p)'**
+  String get drawerDiagnosticsViaPrinter;
+
+  /// No description provided for @diagnosticsTabScales.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весы'**
+  String get diagnosticsTabScales;
+
+  /// No description provided for @diagnosticsTabDisplay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дисплей'**
+  String get diagnosticsTabDisplay;
+
+  /// No description provided for @scalesDiagnosticsUnbound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весы не привязаны к этой кассе.\nПривяжите их в настройках оборудования — тогда здесь появится показание.'**
+  String get scalesDiagnosticsUnbound;
+
+  /// No description provided for @scalesDiagnosticsWeight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показание весов'**
+  String get scalesDiagnosticsWeight;
+
+  /// No description provided for @scalesDiagnosticsSilent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весы ещё ничего не прислали'**
+  String get scalesDiagnosticsSilent;
+
+  /// No description provided for @scalesDiagnosticsStable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вес устоялся'**
+  String get scalesDiagnosticsStable;
+
+  /// No description provided for @scalesDiagnosticsSettling.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вес меняется'**
+  String get scalesDiagnosticsSettling;
+
+  /// No description provided for @scalesDiagnosticsOverload.
+  ///
+  /// In ru, this message translates to:
+  /// **'Перегрузка'**
+  String get scalesDiagnosticsOverload;
+
+  /// No description provided for @scalesDiagnosticsPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Порт весов'**
+  String get scalesDiagnosticsPort;
+
+  /// No description provided for @scalesDiagnosticsBaudSuffix.
+  ///
+  /// In ru, this message translates to:
+  /// **'бод'**
+  String get scalesDiagnosticsBaudSuffix;
+
+  /// No description provided for @scalesDiagnosticsConnected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Порт открыт'**
+  String get scalesDiagnosticsConnected;
+
+  /// No description provided for @scalesDiagnosticsDisconnected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Порт закрыт'**
+  String get scalesDiagnosticsDisconnected;
+
+  /// No description provided for @scalesDiagnosticsCaveat.
+  ///
+  /// In ru, this message translates to:
+  /// **'Это то, что прислал прибор. Верность показаний касса не проверяет — за неё отвечает поверка.'**
+  String get scalesDiagnosticsCaveat;
+
+  /// No description provided for @displayDiagnosticsEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'С запуска кассы на дисплей ничего не отправляли'**
+  String get displayDiagnosticsEmpty;
+
+  /// No description provided for @displayDiagnosticsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Памяти о строках дисплея на этой кассе нет — спросить нечем. Это не значит, что на дисплей ничего не отправляли.'**
+  String get displayDiagnosticsUnavailable;
+
+  /// No description provided for @displayDiagnosticsCurrent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас на дисплее'**
+  String get displayDiagnosticsCurrent;
+
+  /// No description provided for @displayDiagnosticsCaveat.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса знает только, что строка ушла в порт. Погасший или отключённый дисплей отсюда неотличим от исправного.'**
+  String get displayDiagnosticsCaveat;
+
+  /// No description provided for @displayDiagnosticsCallPrice.
+  ///
+  /// In ru, this message translates to:
+  /// **'цена'**
+  String get displayDiagnosticsCallPrice;
+
+  /// No description provided for @displayDiagnosticsCallTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'итог'**
+  String get displayDiagnosticsCallTotal;
+
+  /// No description provided for @displayDiagnosticsCallChange.
+  ///
+  /// In ru, this message translates to:
+  /// **'сдача'**
+  String get displayDiagnosticsCallChange;
+
+  /// No description provided for @displayDiagnosticsCallText.
+  ///
+  /// In ru, this message translates to:
+  /// **'текст'**
+  String get displayDiagnosticsCallText;
+
+  /// No description provided for @displayDiagnosticsCallWelcome.
+  ///
+  /// In ru, this message translates to:
+  /// **'приветствие'**
+  String get displayDiagnosticsCallWelcome;
+
+  /// No description provided for @displayDiagnosticsCallClear.
+  ///
+  /// In ru, this message translates to:
+  /// **'очистка'**
+  String get displayDiagnosticsCallClear;
+
+  /// No description provided for @emulatorScaleWeight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вес на чаше'**
+  String get emulatorScaleWeight;
+
+  /// No description provided for @emulatorScaleWeightHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пульт эмулятора: это число весы и пришлют кассе'**
+  String get emulatorScaleWeightHint;
+
+  /// No description provided for @emulatorQrProvider.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер оплаты по QR'**
+  String get emulatorQrProvider;
+
+  /// No description provided for @emulatorQrAddressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Впишите этот адрес в настройке провайдера QR'**
+  String get emulatorQrAddressHint;
+
+  /// No description provided for @emulatorQrBindAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вписать в настройку QR'**
+  String get emulatorQrBindAction;
+
+  /// No description provided for @emulatorQrBindDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройка QR теперь смотрит на эмулятор'**
+  String get emulatorQrBindDone;
+
+  /// No description provided for @emulatorQrBindingStale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройка QR смотрит на выключенный эмулятор — оплата по коду откажет'**
+  String get emulatorQrBindingStale;
+
+  /// No description provided for @diagnosticsTabPayment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата'**
+  String get diagnosticsTabPayment;
+
+  /// No description provided for @diagnosticsPaymentEmulatorBanner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR — на этом же компьютере: за адресом эмулятор, а не банк'**
+  String get diagnosticsPaymentEmulatorBanner;
+
+  /// No description provided for @paymentDiagnosticsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данных об оплате на этом рабочем месте нет'**
+  String get paymentDiagnosticsUnavailable;
+
+  /// No description provided for @paymentDiagnosticsQrSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата по QR'**
+  String get paymentDiagnosticsQrSection;
+
+  /// No description provided for @paymentDiagnosticsQrEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса пока не заводила ни одного кода оплаты'**
+  String get paymentDiagnosticsQrEmpty;
+
+  /// No description provided for @paymentDiagnosticsQrNotConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер QR на этой кассе не настроен'**
+  String get paymentDiagnosticsQrNotConfigured;
+
+  /// No description provided for @paymentDiagnosticsQrAddress.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провайдер: {address}'**
+  String paymentDiagnosticsQrAddress(String address);
+
+  /// No description provided for @paymentDiagnosticsQrUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тела запросов к провайдеру касса не хранит. Видно то, что осело в намерении: сумма, состояние, ид на той стороне и причина отказа.'**
+  String get paymentDiagnosticsQrUnknown;
+
+  /// No description provided for @paymentDiagnosticsTerminalSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Терминал оплаты'**
+  String get paymentDiagnosticsTerminalSection;
+
+  /// No description provided for @paymentDiagnosticsTerminalEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'С запуска кассы в терминал оплаты не уходило ни одного кадра'**
+  String get paymentDiagnosticsTerminalEmpty;
+
+  /// No description provided for @paymentDiagnosticsTerminalUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Журнал терминала живёт в памяти: обмены до перезапуска кассы не сохраняются, а операции, проведённые с самого терминала, касса не видит вовсе.'**
+  String get paymentDiagnosticsTerminalUnknown;
+
+  /// No description provided for @paymentDiagnosticsRequest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрос'**
+  String get paymentDiagnosticsRequest;
+
+  /// No description provided for @paymentDiagnosticsReply.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ответ'**
+  String get paymentDiagnosticsReply;
+
+  /// No description provided for @paymentDiagnosticsNoReply.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ответа не было'**
+  String get paymentDiagnosticsNoReply;
+
+  /// No description provided for @paymentDiagnosticsApproval.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код одобрения {value}'**
+  String paymentDiagnosticsApproval(String value);
+
+  /// No description provided for @paymentDiagnosticsTransaction.
+  ///
+  /// In ru, this message translates to:
+  /// **'транзакция {value}'**
+  String paymentDiagnosticsTransaction(String value);
+
+  /// No description provided for @paymentDiagnosticsRefusal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отказ: {value}'**
+  String paymentDiagnosticsRefusal(String value);
+
+  /// No description provided for @paymentDiagnosticsConfirmations.
+  ///
+  /// In ru, this message translates to:
+  /// **'подтверждений {count}'**
+  String paymentDiagnosticsConfirmations(int count);
+
+  /// No description provided for @paymentDiagnosticsOrphanMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'деньги без чека'**
+  String get paymentDiagnosticsOrphanMoney;
+
+  /// No description provided for @paymentDiagnosticsAfterGiveUp.
+  ///
+  /// In ru, this message translates to:
+  /// **'подтверждено после того, как касса перестала ждать'**
+  String get paymentDiagnosticsAfterGiveUp;
+
+  /// No description provided for @paymentDiagnosticsApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Одобрено'**
+  String get paymentDiagnosticsApproved;
+
+  /// No description provided for @paymentDiagnosticsDeclined.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отказано'**
+  String get paymentDiagnosticsDeclined;
+
+  /// No description provided for @paymentDiagnosticsOpPurchase.
+  ///
+  /// In ru, this message translates to:
+  /// **'покупка'**
+  String get paymentDiagnosticsOpPurchase;
+
+  /// No description provided for @paymentDiagnosticsOpReversal.
+  ///
+  /// In ru, this message translates to:
+  /// **'сторно'**
+  String get paymentDiagnosticsOpReversal;
+
+  /// No description provided for @paymentDiagnosticsOpRefund.
+  ///
+  /// In ru, this message translates to:
+  /// **'возврат'**
+  String get paymentDiagnosticsOpRefund;
+
+  /// No description provided for @paymentDiagnosticsOpUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'кадр неизвестного вида'**
+  String get paymentDiagnosticsOpUnknown;
+
+  /// No description provided for @certificateIssueTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпуск подарочного сертификата'**
+  String get certificateIssueTitle;
+
+  /// No description provided for @certificateIssueHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги за бумажку принимает чек продажи. Здесь бумажке заводится остаток, а касса берёт на себя обязательство.'**
+  String get certificateIssueHint;
+
+  /// No description provided for @certificateIssueNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер бумажки'**
+  String get certificateIssueNumber;
+
+  /// No description provided for @certificateIssueNominal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номинал'**
+  String get certificateIssueNominal;
+
+  /// No description provided for @certificateIssuePin.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПИН (необязательно)'**
+  String get certificateIssuePin;
+
+  /// No description provided for @certificateIssueExpiresDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Срок годности в днях (необязательно)'**
+  String get certificateIssueExpiresDays;
+
+  /// No description provided for @certificateIssueReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер чека продажи (необязательно)'**
+  String get certificateIssueReceipt;
+
+  /// No description provided for @certificateIssueSubmit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпустить сертификат'**
+  String get certificateIssueSubmit;
+
+  /// No description provided for @certificateIssueDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификат {number} выпущен на {amount}'**
+  String certificateIssueDone(String number, String amount);
+
+  /// No description provided for @certificateIssueFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификат не выпущен'**
+  String get certificateIssueFailed;
+
+  /// No description provided for @certificateIssueNumberRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Впишите номер бумажки'**
+  String get certificateIssueNumberRequired;
+
+  /// No description provided for @certificateIssueNominalInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номинал должен быть больше нуля'**
+  String get certificateIssueNominalInvalid;
+
+  /// Отказ показывается на месте нажатия, а не прячет кнопку: спрятанная кнопка правом не является (I162).
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпуск сертификатов этому кассиру не разрешён'**
+  String get certificateIssueNotPermitted;
+
+  /// No description provided for @certificateSlipTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напечатать слип заново'**
+  String get certificateSlipTitle;
+
+  /// No description provided for @certificateSlipHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Слип не напечатался при выпуске — бумажку можно выдать по повторному.'**
+  String get certificateSlipHint;
+
+  /// No description provided for @certificateSlipNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер сертификата'**
+  String get certificateSlipNumber;
+
+  /// No description provided for @certificateSlipPin.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПИН, если он есть'**
+  String get certificateSlipPin;
+
+  /// No description provided for @certificateSlipSubmit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напечатать слип'**
+  String get certificateSlipSubmit;
+
+  /// No description provided for @certificateSlipDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Слип сертификата {number} отправлен в печать'**
+  String certificateSlipDone(String number);
+
+  /// No description provided for @certificateSlipFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Слип в печать не отправлен'**
+  String get certificateSlipFailed;
+
+  /// No description provided for @certificateSlipUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этой кассе слип печатать нечем'**
+  String get certificateSlipUnavailable;
+
+  /// No description provided for @prepaymentRefundTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдача аванса'**
+  String get prepaymentRefundTitle;
+
+  /// No description provided for @prepaymentRefundHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращаются деньги, внесённые покупателем вперёд. Долг этим не гасится, бонусы не трогаются.'**
+  String get prepaymentRefundHint;
+
+  /// No description provided for @prepaymentRefundBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внесено вперёд: {amount}'**
+  String prepaymentRefundBalance(String amount);
+
+  /// No description provided for @prepaymentRefundNothing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванса на счёте покупателя нет — выдавать нечего'**
+  String get prepaymentRefundNothing;
+
+  /// No description provided for @prepaymentRefundAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма к выдаче'**
+  String get prepaymentRefundAmount;
+
+  /// No description provided for @prepaymentRefundTender.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чем выдать'**
+  String get prepaymentRefundTender;
+
+  /// No description provided for @prepaymentRefundIntake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер проводки приёма (необязательно)'**
+  String get prepaymentRefundIntake;
+
+  /// No description provided for @prepaymentRefundSubmit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдать аванс'**
+  String get prepaymentRefundSubmit;
+
+  /// No description provided for @prepaymentRefundDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс выдан. Осталось на счёте: {amount}'**
+  String prepaymentRefundDone(String amount);
+
+  /// No description provided for @prepaymentRefundFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс не выдан'**
+  String get prepaymentRefundFailed;
+
+  /// No description provided for @prepaymentRefundAmountInvalid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма должна быть больше нуля'**
+  String get prepaymentRefundAmountInvalid;
+
+  /// No description provided for @prepaymentRefundNotPermitted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдача аванса этому кассиру не разрешена'**
+  String get prepaymentRefundNotPermitted;
+
+  /// No description provided for @prepaymentRefundFiscalFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги выданы, но фискальный чек возврата аванса не выписан.'**
+  String get prepaymentRefundFiscalFailed;
+
+  /// No description provided for @agentRefundPrepayment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдать аванс'**
+  String get agentRefundPrepayment;
 }
 
 class _AppLocalizationsDelegate

@@ -20,7 +20,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// контракты домена. Но каталог `lib/presentation/screens/settings` целиком
 /// добавить нельзя: в нём двадцать один файл, который импортирует
 /// инфраструктуру (`AppDatabase`, `SysdClient`, `drift`, `dart:io`, хранилища
-/// `lib/data/...`) — перечислены в task-3-report.md. Записать «чисто» про весь
+/// `lib/data/...`). Записать «чисто» про весь
 /// каталог было бы неправдой, а не записать ничего — оставить три чистых файла
 /// без охраны: следующая правка вернула бы туда прямой импорт, и ничто бы не
 /// возразило. Поэтому запись может быть и файлом.
@@ -61,6 +61,18 @@ const checkedRoots = <({String path, bool isDomain})>[
   // легально. Запись здесь — единственное, что не даёт ему отъехать обратно.
   (path: 'lib/presentation/screens/auth', isDomain: false),
   (path: 'lib/presentation/controllers/auth', isDomain: false),
+  // Настройка оплаты по QR (пункт 8 C, 2026-09-15): экран и контроллер
+  // ходят только через доменный порт — ключ провайдера им не отдают, и
+  // прямой импорт базы открыл бы второй путь к нему.
+  (
+    path: 'lib/presentation/screens/settings/qr_payment_setup_screen.dart',
+    isDomain: false,
+  ),
+  (
+    path:
+        'lib/presentation/controllers/settings/qr_payment_setup_controller.dart',
+    isDomain: false,
+  ),
 ];
 
 /// Что запрещено импортировать из UI-слоя, в форме `package:`/`dart:`.

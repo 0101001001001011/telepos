@@ -3,11 +3,13 @@ library;
 import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:telepos/data/services/receipt_print_service_impl.dart';
+import 'package:telepos/domain/entities/receipt/receipt_options.dart';
 
 void main() {
   final service = ReceiptPrintServiceImpl();
 
   String zText() => service.renderZReportPreview(
+    paperWidth: ReceiptPaperWidth.mm58,
     storeName: 'ТОО Новая Заря',
     posName: 'Касса №1',
     cashierName: 'Иванова А.',
@@ -21,9 +23,12 @@ void main() {
     cashEnd: Decimal.parse('19000.50'),
     cashIncome: Decimal.parse('15000.50'),
     cashExpense: Decimal.parse('1000.00'),
+    certificatesIssued: Decimal.zero,
+    certificatesRedeemed: Decimal.zero,
   );
 
   String xText() => service.renderXReportPreview(
+    paperWidth: ReceiptPaperWidth.mm58,
     storeName: 'ТОО Новая Заря',
     posName: 'Касса №1',
     cashierName: 'Иванова А.',
@@ -33,6 +38,8 @@ void main() {
     refundCount: 0,
     refundTotal: Decimal.zero,
     cashInDrawer: Decimal.parse('14999.99'),
+    certificatesIssued: Decimal.zero,
+    certificatesRedeemed: Decimal.zero,
   );
 
   group('Z-отчёт — кириллица РК-стиль', () {

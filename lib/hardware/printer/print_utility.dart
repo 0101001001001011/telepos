@@ -7,6 +7,7 @@ import 'package:telepos/hardware/printer/printer_factory.dart';
 import 'package:telepos/hardware/printer/printer_manager.dart';
 import 'package:telepos/hardware/printer/wifi_printer.dart';
 import 'package:telepos/hardware/printer/windows_printer.dart';
+import 'package:telepos/hardware/paper_charset.dart';
 
 class PrintUtility {
   PrintUtility._();
@@ -216,27 +217,14 @@ class PrintUtility {
     return Uint8List.fromList(buffer);
   }
 
-  static List<int> _encodeCP866(String text) {
-    final bytes = <int>[];
-    for (final char in text.runes) {
-      if (char < 128) {
-        bytes.add(char);
-      } else if (char >= 0x410 && char <= 0x42F) {
-        bytes.add(char - 0x410 + 0x80);
-      } else if (char >= 0x430 && char <= 0x43F) {
-        bytes.add(char - 0x430 + 0xA0);
-      } else if (char >= 0x440 && char <= 0x44F) {
-        bytes.add(char - 0x440 + 0xE0);
-      } else if (char == 0x401) {
-        bytes.add(0xF0);
-      } else if (char == 0x451) {
-        bytes.add(0xF1);
-      } else {
-        bytes.add(0x3F);
-      }
-    }
-    return bytes;
-  }
+  /// Байты CP866 — общей таблицей бумаги (`hardware/paper_charset.dart`).
+  ///
+  /// Седьмая по счёту частная таблица в дереве; своей здесь больше нет.
+  /// Пробная печать — первое, что кассир видит от принтера, и она обязана
+  /// выходить теми же байтами, что чек, иначе «проверка прошла» ничего не
+  /// говорит о продаже.
+  static List<int> _encodeCP866(String text) =>
+      encodePaper(text, PaperCharset.cp866);
 
   static Future<PrinterDetailInfo?> getPrinterInfo(
     PrinterManager printer,

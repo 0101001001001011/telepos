@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/bonus/bonus_entry_kind.dart';
 import 'package:telepos/domain/usecases/agent/bonus_service.dart';
 
 class BonusServiceImpl implements BonusService {
@@ -34,45 +35,6 @@ class BonusServiceImpl implements BonusService {
   }
 
   @override
-  Future<BonusDeductResult> deductBonuses({
-    required int phone,
-    required Decimal amount,
-    required int saleReceiptNo,
-  }) async {
-    final resolved = await _resolveCashback(phone);
-    if (resolved == null) {
-      return BonusDeductResult(
-        success: false,
-        transactionId: '',
-        deductedAmount: Decimal.zero,
-        remainingBalance: Decimal.zero,
-        errorMessage: 'Клиент или кешбэк-счёт не найден',
-      );
-    }
-
-    final current = resolved.account.value ?? Decimal.zero;
-    if (amount <= Decimal.zero || amount > current) {
-      return BonusDeductResult(
-        success: false,
-        transactionId: '',
-        deductedAmount: Decimal.zero,
-        remainingBalance: current,
-        errorMessage: 'Недостаточно бонусов для списания',
-      );
-    }
-
-    final remaining = current - amount;
-    await _db.accountDao.updateBalance(resolved.account.id, remaining);
-
-    return BonusDeductResult(
-      success: true,
-      transactionId: _localTxnId('deduct', saleReceiptNo),
-      deductedAmount: amount,
-      remainingBalance: remaining,
-    );
-  }
-
-  @override
   Future<BonusAccrualResult> accrualBonuses({
     required int phone,
     required Decimal saleAmount,
@@ -97,7 +59,19 @@ class BonusServiceImpl implements BonusService {
     final current = resolved.account.value ?? Decimal.zero;
     final newBalance = current + accrued;
     if (accrued > Decimal.zero) {
-      await _db.accountDao.updateBalance(resolved.account.id, newBalance);
+      // Журналом, а не перезаписью остатка (задача 13). Именно отсюда
+      // возврат потом узнаёт, **сколько было начислено по этому чеку**:
+      // пересчитать это по нынешней ставке нельзя — `cashback_rate` к
+      // моменту возврата может быть другой, и пересчёт дал бы
+      // правдоподобное неверное число.
+      await _db.bonusEntryDao.record(
+        accountId: resolved.account.id,
+        kind: BonusEntryKind.accrual,
+        amount: accrued,
+        receiptNo: saleReceiptNo,
+        posId: await _posId(),
+        reason: 'кэшбэк за покупку по ставке $rate %',
+      );
     }
 
     return BonusAccrualResult(
@@ -108,15 +82,20 @@ class BonusServiceImpl implements BonusService {
     );
   }
 
-  @override
-  Future<void> cancelTransaction(String transactionId) async {
-    return;
-  }
-
   Future<Decimal> _cashbackRate() async {
     final thisPos = await _db.thisPosDao.get();
     final rate = thisPos?.cashbackRate ?? 0;
     return Decimal.fromInt(rate);
+  }
+
+  /// Номер кассы для записи журнала. Не настроена — `0`, тем же доводом,
+  /// что в [BonusEntryDao]: начисление кэшбэка не повод не продать.
+  Future<int> _posId() async {
+    try {
+      return (await _db.thisPosDao.get())?.id ?? 0;
+    } catch (_) {
+      return 0;
+    }
   }
 
   String _localTxnId(String kind, int saleReceiptNo) =>

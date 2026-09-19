@@ -12,6 +12,7 @@ import 'package:telepos/core/locale/app_locale.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
+import 'package:telepos/domain/fiscal/fiscal_offset_settings.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/shift/shift_controller.dart';
@@ -61,6 +62,11 @@ class _SpyFiscalService implements FiscalService {
     required Decimal amount,
     required Decimal cashAmount,
     required Decimal cardAmount,
+    required Decimal mobileAmount,
+    required Decimal bonusAmount,
+    required Decimal offsetAmount,
+    required OffsetFiscalLayout offsetLayout,
+    required bool excludeCertificatePositions,
     String? customerBin,
   }) async => FiscalResult.queued();
   @override
@@ -68,6 +74,29 @@ class _SpyFiscalService implements FiscalService {
     required int refundLocalId,
     required int? originalSaleReceiptNo,
     required Decimal amount,
+    required Decimal cashAmount,
+    required Decimal cardAmount,
+    required Decimal mobileAmount,
+    required Decimal bonusAmount,
+    required Decimal creditAmount,
+    required Decimal offsetAmount,
+    required OffsetFiscalLayout offsetLayout,
+    required bool excludeCertificatePositions,
+  }) async => FiscalResult.queued();
+  @override
+  Future<FiscalResult> fiscalizePrepayment({
+    required int operationId,
+    required Decimal amount,
+    required FiscalPaymentKind paymentKind,
+    required String positionName,
+  }) async => FiscalResult.queued();
+  @override
+  Future<FiscalResult> fiscalizePrepaymentRefund({
+    required int operationId,
+    required int? intakeOperationId,
+    required Decimal amount,
+    required FiscalPaymentKind paymentKind,
+    required String positionName,
   }) async => FiscalResult.queued();
   @override
   Future<FiscalResult> fiscalizePurchase(FiscalSaleRequest req) async =>

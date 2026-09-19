@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:telepos/backend/security_journal.dart';
 import 'package:telepos/data/database/app_database.dart' as db;
 import 'package:telepos/data/database/watch_source.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/terminal/terminal_secret.dart';
@@ -234,6 +235,77 @@ class LocalTerminalRepository implements TerminalRepository {
   Future<void> rename(int terminalId, String name) =>
       _db.terminalDao.rename(terminalId, _requireName(name));
 
+  /// Задача 15 плана «продажа с браузерного терминала»: набор видов оплаты
+  /// рабочего места (схема v38).
+  ///
+  /// Отказ на несуществующем `terminalId` — тем же кодом `unknown_terminal`,
+  /// которым отвечают [delete] и `auth.login`: запись «в никуда», доложившая
+  /// об успехе, выглядела бы для оператора как сохранённая настройка,
+  /// которой нет.
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) async {
+    // **Набор состоит из тендеров, и проверка стоит здесь** — на
+    // единственном писателе колонки, а не на границе провода: десктопный
+    // экран настроек зовёт этот репозиторий напрямую, минуя провод, и без
+    // второй проверки один контракт вёл бы себя на двух сторонах
+    // по-разному (тот же довод, что у [_requireName]).
+    //
+    // Правка круга 1. Без неё `{mixed}` записывался и делал рабочее место
+    // немым: сама смешанная отбивалась по составным частям, а наличные,
+    // карта и долг — по заявленному виду. Разбор — [tenderPaymentTypes].
+    final strangers = types.difference(tenderPaymentTypes);
+    if (strangers.isNotEmpty) {
+      throw WireRefusal(
+        'bad_request',
+        'набор видов оплаты рабочего места состоит из тендеров '
+            '(${paymentTypeNames(tenderPaymentTypes).join(', ')}); '
+            '${paymentTypeNames(strangers).join(', ')} — форма оплаты, а не '
+            'тендер, и запрещать её отдельно не за чем: её половины '
+            'проверяются по числам кассы',
+      );
+    }
+
+    final row = await _db.terminalDao.findById(terminalId);
+    if (row == null) {
+      throw WireRefusal(
+        'unknown_terminal',
+        'терминала с таким id не существует: $terminalId',
+      );
+    }
+    await (_db.update(
+      _db.terminals,
+    )..where((t) => t.id.equals(terminalId))).write(
+      db.TerminalsCompanion(
+        allowedPaymentTypes: Value(storedPaymentTypes(types)),
+      ),
+    );
+  }
+
+  /// Набор в хранимую строку. Разделитель — запятая; пустое множество даёт
+  /// пустую строку, а она означает «все виды» (докстринг колонки).
+  ///
+  /// Публичная пара с [paymentTypesFromStored] и **единственная** на
+  /// хранение: `LocalPaymentService` читает ту же колонку своим запросом к
+  /// DAO (ему нужен один терминал, а не список) и разбирает её этой же
+  /// функцией. Две копии разбора одного формата — это два ответа на вопрос
+  /// «что разрешено рабочему месту», и разойтись им ничто бы не мешало.
+  static String storedPaymentTypes(Set<PaymentType> types) =>
+      paymentTypeNames(types).join(',');
+
+  /// Хранимая строка в набор. Пустая (и строка из одних разделителей) —
+  /// пустой набор; незнакомое имя — отказ, а не тихое выбрасывание, см.
+  /// [paymentTypesFromNames].
+  static Set<PaymentType> paymentTypesFromStored(
+    String stored, {
+    required int terminalId,
+  }) => paymentTypesFromNames(
+    stored.split(',').where((part) => part.isNotEmpty),
+    terminalId: terminalId,
+  );
+
   /// Удаляет терминал безвозвратно — задача 8 закрытия долга.
   ///
   /// # Почему отказ, а не молчаливое «нечего удалять», на несуществующем id
@@ -333,6 +405,10 @@ class LocalTerminalRepository implements TerminalRepository {
     id: row.id,
     name: row.name,
     pointMode: _pointModeFromStored(row.pointMode, terminalId: row.id),
+    allowedPaymentTypes: paymentTypesFromStored(
+      row.allowedPaymentTypes,
+      terminalId: row.id,
+    ),
   );
 
   /// Переводит хранимое имя в [PointMode].

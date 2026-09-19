@@ -18,7 +18,7 @@ class CanvasPrinter {
   double get widthPx => profile.printWidthPx.toDouble();
 
   TextStyle get defaultTextStyle => TextStyle(
-    fontFamily: 'Arial',
+    fontFamily: 'Roboto',
     fontSize: 7.0 * 1.2 * (dpi / 72),
     color: Colors.black,
     height: 1.2,

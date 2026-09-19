@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
@@ -60,6 +61,19 @@ class _ProductSearchState extends ConsumerState<ProductSearch> {
     ref.read(saleControllerProvider.notifier).search(newText);
   }
 
+  /// Закрыть выдачу и очистить поле — один ход, которым кончаются все пути
+  /// добавления товара и который вешается на `Escape`.
+  ///
+  /// Единственный источник правды — состояние: поле следует за ним
+  /// (слушатель `searchQuery` в [build]), а не наоборот. `_controller.clear()`
+  /// здесь всё же стоит — тем же порядком, что в `onSubmitted`: слушатель
+  /// сработает следующим кадром, а курсор кассира не должен успеть увидеть
+  /// прежний набор.
+  void _dismissResults() {
+    _controller.clear();
+    ref.read(saleControllerProvider.notifier).search('');
+  }
+
   void _onVirtualEnter() {
     final state = ref.read(saleControllerProvider);
     if (state.searchResults.isNotEmpty) {
@@ -75,80 +89,117 @@ class _ProductSearchState extends ConsumerState<ProductSearch> {
   Widget build(BuildContext context) {
     final state = ref.watch(saleControllerProvider);
 
+    // Состояние → поле. Связь была только одна, от поля к состоянию, и
+    // поэтому скан копил цифры в поле: `Enter` съедает
+    // `BarcodeScannerMixin`, `onSubmitted` не срабатывает, а сам скан
+    // добавляет товар мимо виджета. Найдено живым прогоном 2026-09-07 —
+    // подробности в докстринге `SaleController.addByBarcode`.
+    //
+    // Чистится **только на опустевший запрос**: подставлять сюда любое
+    // значение состояния значило бы драться с кассиром за курсор посреди
+    // набора.
+    ref.listen<String>(saleControllerProvider.select((s) => s.searchQuery), (
+      previous,
+      next,
+    ) {
+      if (next.isEmpty && _controller.text.isNotEmpty) _controller.clear();
+    });
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextField(
-          controller: _controller,
-          focusNode: _focusNode,
-          autofocus: widget.autofocus,
-          readOnly: _isDesktopPos && _showKeyboard,
-          showCursor: true,
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.searchProductHint,
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_isDesktopPos)
-                  IconButton(
-                    icon: Icon(
-                      _showKeyboard ? Icons.keyboard_hide : Icons.keyboard,
-                      color: _showKeyboard
-                          ? AppColors.primary
-                          : Theme.of(context).colorScheme.onSurfaceVariant,
+        // `Escape` закрывает выдачу — приёмка 2026-09-17.
+        //
+        // Привязка стоит **вокруг поля**, а не выше по дереву: `Escape`
+        // разбирается от узла, у которого фокус, вверх, и эта пара ближе к
+        // полю, чем умолчание `WidgetsApp` (`Escape` → `DismissIntent`),
+        // поэтому срабатывает она, а не оно. Выше по дереву привязка
+        // отбирала бы `Escape` у диалогов продажи, которые им закрываются.
+        CallbackShortcuts(
+          bindings: {
+            const SingleActivator(LogicalKeyboardKey.escape): _dismissResults,
+          },
+          child: TextField(
+            controller: _controller,
+            focusNode: _focusNode,
+            autofocus: widget.autofocus,
+            readOnly: _isDesktopPos && _showKeyboard,
+            showCursor: true,
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.searchProductHint,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_isDesktopPos)
+                    IconButton(
+                      // 48 точек вместо умолчания Material (40×40) — задача
+                      // 13, правки под касание. Значок стоит внутри поля
+                      // поиска, куда кассир целится пальцем чаще всего.
+                      constraints: const BoxConstraints(
+                        minWidth: AppTheme.minButtonSize,
+                        minHeight: AppTheme.minButtonSize,
+                      ),
+                      icon: Icon(
+                        _showKeyboard ? Icons.keyboard_hide : Icons.keyboard,
+                        color: _showKeyboard
+                            ? AppColors.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      tooltip: _showKeyboard
+                          ? AppLocalizations.of(context)!.keyboardHide
+                          : AppLocalizations.of(context)!.keyboardShow,
+                      onPressed: () {
+                        setState(() => _showKeyboard = !_showKeyboard);
+                        if (_showKeyboard) _focusNode.requestFocus();
+                      },
                     ),
-                    tooltip: _showKeyboard
-                        ? AppLocalizations.of(context)!.keyboardHide
-                        : AppLocalizations.of(context)!.keyboardShow,
-                    onPressed: () {
-                      setState(() => _showKeyboard = !_showKeyboard);
-                      if (_showKeyboard) _focusNode.requestFocus();
-                    },
-                  ),
-                if (state.searchQuery.isNotEmpty)
-                  IconButton(
-                    icon: const Icon(TeleposIcons.close),
-                    onPressed: () {
-                      _controller.clear();
-                      ref.read(saleControllerProvider.notifier).search('');
-                    },
-                  ),
-              ],
+                  if (state.searchQuery.isNotEmpty)
+                    IconButton(
+                      constraints: const BoxConstraints(
+                        minWidth: AppTheme.minButtonSize,
+                        minHeight: AppTheme.minButtonSize,
+                      ),
+                      icon: const Icon(TeleposIcons.close),
+                      onPressed: _dismissResults,
+                    ),
+                ],
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+              ),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-            ),
-          ),
-          onChanged: (value) {
-            ref.read(saleControllerProvider.notifier).search(value);
-          },
-          onSubmitted: (value) async {
-            if (value.isEmpty) return;
+            onChanged: (value) {
+              ref.read(saleControllerProvider.notifier).search(value);
+            },
+            onSubmitted: (value) async {
+              if (value.isEmpty) return;
 
-            final notifier = ref.read(saleControllerProvider.notifier);
-            final currentState = ref.read(saleControllerProvider);
+              final notifier = ref.read(saleControllerProvider.notifier);
+              final currentState = ref.read(saleControllerProvider);
 
-            if (currentState.searchResults.isNotEmpty) {
-              notifier.addProduct(currentState.searchResults.first);
-              _controller.clear();
-              notifier.search('');
+              if (currentState.searchResults.isNotEmpty) {
+                notifier.addProduct(currentState.searchResults.first);
+                _dismissResults();
+                _focusNode.requestFocus();
+                return;
+              }
+
+              // Поле чистится **только при успехе** — ненайденный штрихкод
+              // остаётся набранным, иначе кассир не увидит, что именно не
+              // нашлось (докстринг `SaleNotifier.addByBarcode`). Взведённый
+              // поиск снимает сам контроллер, и тоже только при успехе: на
+              // ненайденном штрихкоде выдаче всё равно нечего показать.
+              final found = await notifier.addByBarcode(value);
+              if (found) _dismissResults();
               _focusNode.requestFocus();
-              return;
-            }
-
-            final found = await notifier.addByBarcode(value);
-            if (found) {
-              _controller.clear();
-              notifier.search('');
-            }
-            _focusNode.requestFocus();
-          },
-          onTap: () {
-            if (_isDesktopPos && !_showKeyboard) {
-              setState(() => _showKeyboard = true);
-            }
-          },
+            },
+            onTap: () {
+              if (_isDesktopPos && !_showKeyboard) {
+                setState(() => _showKeyboard = true);
+              }
+            },
+          ),
         ),
 
         if (state.isSearching)

@@ -1,6 +1,8 @@
 import 'package:talker/talker.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/data/print/bound_receipt_paper_width.dart';
 import 'package:telepos/data/print/print_submission.dart';
+import 'package:telepos/domain/print/receipt_paper_width_source.dart';
 import 'package:telepos/domain/entities/cash_operation/cash_operation_receipt_data.dart';
 import 'package:telepos/domain/print/print_document_id.dart';
 import 'package:telepos/domain/print/print_queue.dart';
@@ -33,13 +35,20 @@ class CashOperationReceiptServiceImpl implements CashOperationReceiptService {
   CashOperationReceiptServiceImpl({
     required AppDatabase db,
     required Talker logger,
+    ReceiptPaperWidthSource? paperWidth,
   }) : _db = db,
        _logger = logger,
+       _paperWidth = paperWidth ?? BoundReceiptPaperWidth(logger: logger),
        _submission = PrintSubmission(logger: logger);
 
   final AppDatabase _db;
   final Talker _logger;
   final PrintSubmission _submission;
+
+  /// Ширина ленты — из привязки принтера, как у чека продажи. До правки
+  /// квитанция читала `ThisPosEntries.paperWidth` — ширину дня мастера,
+  /// которую экран принтера не меняет.
+  final ReceiptPaperWidthSource _paperWidth;
 
   @override
   Future<CashOperationReceiptData?> buildReceiptData(int operationId) async {
@@ -117,10 +126,10 @@ class CashOperationReceiptServiceImpl implements CashOperationReceiptService {
         copyIndex: 0,
       );
 
-      final paperWidth = (await _db.thisPosDao.get())?.paperWidth ?? 48;
+      final paperWidth = await _paperWidth.current();
       final bytes = CashOperationReceiptBuilder(
         data: receiptData,
-        paperWidth: paperWidth,
+        paperWidth: paperWidth.charWidth,
       ).build();
 
       return await _submission.submit(bytes, documentId);

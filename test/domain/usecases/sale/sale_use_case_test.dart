@@ -1,6 +1,8 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:telepos/domain/payment/payment_kind.dart';
+import 'package:telepos/domain/sale/receipt_line.dart';
 import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
 
 class MockSaleUseCase extends Mock implements SaleUseCase {}
@@ -19,6 +21,7 @@ void main() {
     registerFallbackValue(FakeWithdrawalEntry());
     registerFallbackValue(<PaymentEntry>[]);
     registerFallbackValue(<CustomFieldEntry>[]);
+    registerFallbackValue(<ReceiptLine>[]);
   });
 
   group('SaleUseCase', () {
@@ -31,7 +34,7 @@ void main() {
     group('perform', () {
       test('should complete sale successfully with valid parameters', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('1000.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('1000.00')),
         ];
 
         when(
@@ -39,6 +42,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -55,6 +59,7 @@ void main() {
             receiptNo: 1,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.parse('500.00'),
             selectiveOfd: false,
@@ -67,6 +72,7 @@ void main() {
             receiptNo: 1,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.parse('500.00'),
             selectiveOfd: false,
@@ -76,7 +82,7 @@ void main() {
 
       test('should complete sale with zero change', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('500.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('500.00')),
         ];
 
         when(
@@ -84,6 +90,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -95,6 +102,7 @@ void main() {
             receiptNo: 2,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.zero,
             selectiveOfd: false,
@@ -105,7 +113,7 @@ void main() {
 
       test('should complete sale with agent information', () async {
         final payments = [
-          PaymentEntry(
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, 
             payeeAccountId: 1,
             amount: Decimal.parse('1000.00'),
             customerLocalId: 5,
@@ -117,6 +125,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -130,6 +139,7 @@ void main() {
             receiptNo: 3,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.parse('500.00'),
             selectiveOfd: true,
@@ -142,7 +152,7 @@ void main() {
 
       test('should complete sale with custom fields', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('500.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('500.00')),
         ];
         final customFields = [
           const CustomFieldEntry(customFieldId: 1, customFieldItemId: 10),
@@ -154,6 +164,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -166,6 +177,7 @@ void main() {
             receiptNo: 4,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.zero,
             selectiveOfd: false,
@@ -177,7 +189,7 @@ void main() {
 
       test('should complete sale with withdrawal', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('400.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('400.00')),
         ];
         final withdrawal = WithdrawalEntry(
           agentAccountId: 5,
@@ -189,6 +201,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -201,6 +214,7 @@ void main() {
             receiptNo: 5,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.zero,
             selectiveOfd: false,
@@ -212,7 +226,7 @@ void main() {
 
       test('should complete sale with customer BIN', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('500.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('500.00')),
         ];
 
         when(
@@ -220,6 +234,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -232,6 +247,7 @@ void main() {
             receiptNo: 6,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.zero,
             selectiveOfd: true,
@@ -243,8 +259,8 @@ void main() {
 
       test('should handle multiple payments', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('300.00')),
-          PaymentEntry(payeeAccountId: 2, amount: Decimal.parse('200.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('300.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 2, amount: Decimal.parse('200.00')),
         ];
 
         when(
@@ -252,6 +268,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -263,6 +280,7 @@ void main() {
             receiptNo: 7,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.zero,
             selectiveOfd: false,
@@ -277,6 +295,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -288,6 +307,7 @@ void main() {
             receiptNo: 8,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: [],
             change: Decimal.zero,
             selectiveOfd: false,
@@ -299,7 +319,7 @@ void main() {
       test('should handle large amounts (near limit)', () async {
         final largeAmount = Decimal.parse('999999.999');
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('1000000.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('1000000.00')),
         ];
 
         when(
@@ -307,6 +327,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: any(named: 'selectiveOfd'),
@@ -318,6 +339,7 @@ void main() {
             receiptNo: 9,
             posId: 100,
             amount: largeAmount,
+            lines: const [],
             payments: payments,
             change: Decimal.parse('0.001'),
             selectiveOfd: true,
@@ -328,7 +350,7 @@ void main() {
 
       test('should handle sale with OFD enabled', () async {
         final payments = [
-          PaymentEntry(payeeAccountId: 1, amount: Decimal.parse('500.00')),
+          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.parse('500.00')),
         ];
 
         when(
@@ -336,6 +358,7 @@ void main() {
             receiptNo: any(named: 'receiptNo'),
             posId: any(named: 'posId'),
             amount: any(named: 'amount'),
+            lines: any(named: 'lines'),
             payments: any(named: 'payments'),
             change: any(named: 'change'),
             selectiveOfd: true,
@@ -347,6 +370,7 @@ void main() {
             receiptNo: 10,
             posId: 100,
             amount: Decimal.parse('500.00'),
+            lines: const [],
             payments: payments,
             change: Decimal.zero,
             selectiveOfd: true,
@@ -359,7 +383,7 @@ void main() {
 
   group('PaymentEntry', () {
     test('should create payment entry with required fields', () {
-      final entry = PaymentEntry(
+      final entry = PaymentEntry(kindId: SystemPaymentKindIds.cash, 
         payeeAccountId: 1,
         amount: Decimal.parse('100.00'),
       );
@@ -370,7 +394,7 @@ void main() {
     });
 
     test('should create payment entry with customer local id', () {
-      final entry = PaymentEntry(
+      final entry = PaymentEntry(kindId: SystemPaymentKindIds.cash, 
         payeeAccountId: 1,
         amount: Decimal.parse('100.00'),
         customerLocalId: 5,
@@ -380,13 +404,13 @@ void main() {
     });
 
     test('should handle zero amount', () {
-      final entry = PaymentEntry(payeeAccountId: 1, amount: Decimal.zero);
+      final entry = PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: 1, amount: Decimal.zero);
 
       expect(entry.amount, Decimal.zero);
     });
 
     test('should handle decimal precision (P18,S3)', () {
-      final entry = PaymentEntry(
+      final entry = PaymentEntry(kindId: SystemPaymentKindIds.cash, 
         payeeAccountId: 1,
         amount: Decimal.parse('123456.789'),
       );

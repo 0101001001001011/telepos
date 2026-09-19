@@ -7,7 +7,6 @@ import 'package:get_it/get_it.dart';
 import 'package:telepos/data/fiscal/fiscal_settings_store.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 import 'package:telepos/data/database/app_database.dart';
-import 'package:telepos/domain/entities/receipt/receipt_options.dart';
 import 'package:telepos/domain/usecases/sale/sale_round_option_use_case.dart';
 import 'package:telepos/domain/ismpt/ismpt_service.dart';
 import 'package:telepos/data/snt/snt_service.dart';
@@ -55,21 +54,28 @@ void main() {
     );
   });
 
-  group('Receipt template seed from setup (header/footer/width)', () {
+  group('Receipt template seed from setup (header/footer)', () {
     test(
-      'seedDefaults bakes wizard header/footer/80mm into selected options',
+      'seedDefaults bakes wizard header/footer into selected options — and '
+      'no paper width: that belongs to the printer binding',
       () async {
         final db = GetIt.I<AppDatabase>();
         await db.delete(db.receiptTemplates).go();
         await db.receiptTemplateDao.seedDefaults(
           header: 'ТОО МойНова',
           footer: 'Спасибо! Ждём снова',
-          paperWidthMm: 80,
         );
         final opts = await db.receiptTemplateDao.getSelectedOptions();
-        expect(opts.headerText, 'ТОО МойНова');
-        expect(opts.footerText, 'Спасибо! Ждём снова');
-        expect(opts.paperWidth, ReceiptPaperWidth.mm80);
+        expect(opts.header.text, 'ТОО МойНова');
+        expect(opts.footer.text, 'Спасибо! Ждём снова');
+        final stored = (await db.receiptTemplateDao.getSelected())!.optionsJson;
+        expect(
+          stored,
+          isNot(contains('paperWidth')),
+          reason:
+              'шаблон, помнящий ширину ленты, — второй источник ширины, '
+              'из-за которого выбранная на принтере лента не доходила до чека',
+        );
       },
     );
   });

@@ -11,6 +11,7 @@ import 'package:telepos/presentation/controllers/system/system_management_contro
 import 'package:telepos/core/constants/enums/user_role.dart';
 import 'package:telepos/presentation/common/widgets/owner_only_gate.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
+import 'package:telepos/app/theme/app_typography.dart';
 
 class SystemTerminalScreen extends ConsumerStatefulWidget {
   const SystemTerminalScreen({super.key});
@@ -266,7 +267,7 @@ class _SystemTerminalScreenState extends ConsumerState<SystemTerminalScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontFamily: 'monospace',
+                          fontFamily: AppTypography.familyMono,
                           fontSize: 11,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -423,7 +424,7 @@ class _SystemTerminalScreenState extends ConsumerState<SystemTerminalScreen> {
                         l10n.sysmTerminalEmpty,
                         style: const TextStyle(
                           color: Colors.white38,
-                          fontFamily: 'monospace',
+                          fontFamily: AppTypography.familyMono,
                           fontSize: 13,
                         ),
                       ),
@@ -444,7 +445,7 @@ class _SystemTerminalScreenState extends ConsumerState<SystemTerminalScreen> {
   }
 
   Widget _entryView(AppLocalizations l10n, _TerminalEntry e) {
-    const mono = TextStyle(fontFamily: 'monospace', fontSize: 13);
+    const mono = TextStyle(fontFamily: AppTypography.familyMono, fontSize: 13);
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Column(
@@ -535,12 +536,12 @@ class _SystemTerminalScreenState extends ConsumerState<SystemTerminalScreen> {
                   autofocus: true,
                   enabled: !_busy,
                   textInputAction: TextInputAction.go,
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 14),
+                  style: const TextStyle(fontFamily: AppTypography.familyMono, fontSize: 14),
                   decoration: InputDecoration(
                     hintText: l10n.sysmTerminalHint,
                     prefixText: '\$ ',
                     prefixStyle: const TextStyle(
-                      fontFamily: 'monospace',
+                      fontFamily: AppTypography.familyMono,
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),

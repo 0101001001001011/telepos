@@ -38,6 +38,7 @@
 library;
 
 import 'package:telepos/domain/device/device_class.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/device_binding.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
@@ -47,6 +48,13 @@ Map<String, Object?> terminalToWireJson(Terminal terminal) => {
   'id': terminal.id,
   'name': terminal.name,
   'pointMode': terminal.pointMode.name,
+  // Задача 15: набор видов оплаты — свойство рабочего места. Списком имён,
+  // не маской: то же правило, что у `pointMode` выше. Пустой список —
+  // законное значение и означает «все виды»
+  // (`Terminal.allowedPaymentTypes`), поэтому едет всегда, а не «только
+  // если не пуст»: умолчание на чтении было бы тем же самым значением, но
+  // молчание на проводе не отличить от «сторона старше и поля не знает».
+  'allowedPaymentTypes': paymentTypeNames(terminal.allowedPaymentTypes),
 };
 
 /// Читает [Terminal] из формы провода. Обратная — [terminalToWireJson].
@@ -59,6 +67,25 @@ Terminal terminalFromWireJson(Map<String, dynamic> json) {
       json['pointMode'] as String?,
       terminalId: id,
     ),
+    allowedPaymentTypes: paymentTypesFromWire(
+      json['allowedPaymentTypes'],
+      terminalId: id,
+    ),
+  );
+}
+
+/// Читает набор видов оплаты из того, что пришло на его месте.
+///
+/// Отсутствие поля — законное «пусто», то есть «все виды»: касса старше
+/// задачи 15 его не шлёт, и это ровно то поведение, которое у неё было.
+/// Незнакомое **имя** — отказ ([paymentTypesFromNames]), а не выбрасывание:
+/// разбор там объясняет, почему выбрасывание превратило бы запрет в
+/// разрешение.
+Set<PaymentType> paymentTypesFromWire(Object? raw, {required int terminalId}) {
+  if (raw is! List) return const {};
+  return paymentTypesFromNames(
+    raw.map((value) => '$value'),
+    terminalId: terminalId,
   );
 }
 

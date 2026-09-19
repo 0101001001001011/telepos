@@ -65,7 +65,11 @@ void main() {
       );
     });
 
-    test('причина, которую увидит оператор, приходит от записи, а не от подключения', () async {
+    // Задача 33: имя и довод говорили об операторе и `PrintJob.failureReason`
+    // — это `PrintQueueLocal` (`lib/data/print/print_queue_local.dart`,
+    // `started.failWith(result.errorMessage)`), который здесь не исполняется.
+    // Проверяется `errorMessage` результата печати.
+    test('причина отказа печати приходит от записи, а не от подключения', () async {
       final result = await printToBoundPrinter(
         GetIt.I,
         payloadBytes: Uint8List.fromList(const [0x1B, 0x40]),
@@ -75,8 +79,8 @@ void main() {
         result.errorMessage,
         _BudgetPrinter.writeFailure,
         reason:
-            'причина уезжает оператору в PrintJob.failureReason; причина от '
-            'подключения назвала бы шаг, который к бумаге не ведёт',
+            'причина от подключения назвала бы шаг, который к бумаге не '
+            'ведёт',
       );
     });
 

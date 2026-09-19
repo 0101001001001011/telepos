@@ -7,6 +7,7 @@ import 'package:telepos/data/database/app_database.dart' hide Terminal;
 import 'package:telepos/data/device/device_profile_catalog_builtin.dart';
 import 'package:telepos/data/terminal/device_binding_repository_local.dart';
 import 'package:telepos/domain/device/device_profile_catalog.dart';
+import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
@@ -49,6 +50,12 @@ class _FakeTerminalRepository implements TerminalRepository {
 
   @override
   Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+
+  @override
+  Future<void> setAllowedPaymentTypes(
+    int terminalId,
+    Set<PaymentType> types,
+  ) => throw UnimplementedError();
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();

@@ -36,6 +36,8 @@ class _GatedPrintService implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal certificatesIssued,
+    required Decimal certificatesRedeemed,
   }) async {
     zCalls++;
     await gate.future;

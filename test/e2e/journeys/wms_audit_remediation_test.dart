@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:telepos/domain/payment/payment_kind.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
 import 'package:telepos/domain/usecases/wms/manage_warehouse_use_case.dart';
@@ -234,7 +235,11 @@ void main() {
         receiptNo: receiptNo,
         posId: posId,
         amount: d('3000'),
-        payments: [PaymentEntry(payeeAccountId: posAcc.id, amount: d('3000'))],
+        // Строки чека этот журнал кладёт в базу сам, с уже готовыми ценами:
+        // переписывать `perform` нечего. Пустой список — не заглушка, а
+        // утверждение «формат уже верен» (задача 9).
+        lines: const [],
+        payments: [PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAcc.id, amount: d('3000'))],
         change: Decimal.zero,
         selectiveOfd: false,
       );
@@ -302,7 +307,9 @@ void main() {
         receiptNo: receiptNo2,
         posId: posId,
         amount: d('500'),
-        payments: [PaymentEntry(payeeAccountId: posAcc.id, amount: d('500'))],
+        // Строки чека этот журнал кладёт в базу сам, с уже готовыми ценами.
+        lines: const [],
+        payments: [PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAcc.id, amount: d('500'))],
         change: Decimal.zero,
         selectiveOfd: false,
       );

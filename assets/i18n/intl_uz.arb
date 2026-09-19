@@ -1,4 +1,12 @@
 {
+  "paymentCardChargeUnsettled": "Karta allaqachon {amount} miqdorida oʻtkazilgan va bu summa chekka tushmaydi. Toʻlov terminalida operatsiyani bekor qiling.",
+  "@paymentCardChargeUnsettled": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "@@locale": "uz",
   "navReports": "Hisobotlar",
   "navStock": "Ombor",
@@ -12,6 +20,7 @@
   "globalYes": "Ha",
   "globalNo": "Yo'q",
   "globalSave": "Saqlash",
+  "globalNew": "Yangi",
   "globalDelete": "O'chirish",
   "globalEdit": "Tahrirlash",
   "globalAdd": "Qo'shish",
@@ -110,6 +119,9 @@
   "refundComplete": "Qaytarish bajarildi",
   "refundCash": "Naqd qaytarish",
   "refundCard": "Kartaga qaytarish",
+  "refundConnectionLost": "Kassa bilan aloqa uzildi",
+  "refundConnectionLostHint": "Terminal kassaga oʻzi qaytadi — ish oʻsha joydan davom etadi",
+  "refundRefused": "Qaytarish bajarilmadi: {reason}",
   "refundNoItems": "Qaytarish uchun tovarlar yo'q",
   "refundAlreadyRefunded": "Tovar qaytarilgan",
   "refundPartial": "Qisman qaytarish",
@@ -175,6 +187,7 @@
   "paymentKaspi": "Kaspi QR",
   "paymentBonus": "Bonuslar",
   "paymentDebt": "Qarzga",
+  "paymentInstallment": "Bo'lib to'lash",
   "paymentMixed": "Aralash",
   "paymentEnterAmount": "Summani kiriting",
   "paymentRemaining": "Qoldi: {amount}",
@@ -221,6 +234,7 @@
     }
   },
   "historyReprint": "Qayta chop etish",
+  "certificateSlipPrintFailed": "{number} sertifikat slipi chop etilmadi: {reason}",
   "historyDetails": "Batafsil",
   "historySale": "Sotuv",
   "historyRefund": "Qaytarish",
@@ -414,12 +428,17 @@
   "loginWithoutPin": "PIN-siz kirish",
   "loginShiftOpen": "Smena ochiq",
   "loginShiftClosed": "Smena yopiq",
+  "loginShiftUnknown": "Smena: noma'lum",
   "saleQuickProducts": "Tez mahsulotlar",
   "saleIncrease": "Oshirish",
   "saleDecrease": "Kamaytirish",
   "saleMark": "Markirovka",
   "saleDataMatrix": "Markirovka (DataMatrix)",
   "saleHeld": "Chek kechiktirildi",
+  "saleNoDeferredSales": "Kechiktirilgan cheklar yo'q",
+  "saleDeferredListNotPermitted": "Kechiktirilgan cheklar sizga ochiq emas: «chekni kechiktirish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.",
+  "saleDeferNotPermitted": "Chekni kechiktira olmaysiz: «chekni kechiktirish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.",
+  "saleReceiptNo": "Chek №",
   "salePositions": "Mahsulotlar",
   "saleSearchHint": "Mahsulot qidirish (nomi yoki shtrix-kod)",
   "refundWithReceipt": "CHEK BILAN",
@@ -515,6 +534,8 @@
   "supplyInvalidQty": "To'g'ri miqdorni kiriting",
   "supplyInvalidPrice": "To'g'ri narxni kiriting",
   "inventoryTitle": "Inventarizatsiya",
+  "inventoryFullCount": "To'liq inventarizatsiya",
+  "inventoryFullCountSubtitle": "Skanerlanmagan tovarlar qoldig'ini nolga tushirish",
   "inventoryStart": "Boshlash",
   "inventoryFinish": "Tugatish",
   "inventoryScanHint": "Shtrix-kodni skanerlang",
@@ -592,6 +613,9 @@
   "printerPrinting": "Chop etilmoqda...",
   "printerCheckStatus": "Tekshirilmoqda...",
   "printerPrintSuccess": "Chop etish muvaffaqiyatli",
+  "paymentNotFiscalized": "Chek fiskallashtirilmadi — toʻlov qayd etildi",
+  "paymentFiscalModuleAbsent": "Fiskallashtirish moduli mavjud emas — cheklar fiskallashtirilmaydi",
+  "cashDrawerOpenError": "Kassa qutisi ochilmadi",
   "printerPrintError": "Chop etish xatosi",
   "printerCheckBtn": "Tekshirish",
   "printerTestReceipt": "Test chek",
@@ -698,7 +722,7 @@
   "@maxPercent": {
     "placeholders": {
       "percent": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -712,6 +736,9 @@
   },
   "enterValidNumber": "To'g'ri raqamni kiriting",
   "discountAmount": "Chegirma summasi:",
+  "discountLimitPercent": "{percent} % gacha ruxsat — {source}",
+  "discountLimitAmount": "{amount} gacha ruxsat — {source}",
+  "discountApprovalAbove": "{percent} % dan yuqori katta xodim tasdiqlashi kerak",
   "sumLabel": "Summa",
   "enterAmount": "Summani kiriting",
   "amountMustBePositive": "Summa musbat bo'lishi kerak",
@@ -898,6 +925,7 @@
   "thankYouForPurchase": "Xaridingiz uchun rahmat!",
   "searchProductHint": "Tovar qidirish (nomi yoki shtrix-kod)",
   "actionDefer": "Keyinga qoldirish",
+  "actionDeferredList": "Kechiktirilganlar",
   "actionMark": "Markirovka",
   "actionIncrease": "Oshirish",
   "actionDecrease": "Kamaytirish",
@@ -1034,6 +1062,8 @@
     }
   },
   "restaurantSplitApply": "Qo'llash",
+  "restaurantSplitPaymentTitle": "Mehmonlar bo'yicha to'lov",
+  "restaurantSplitPaymentProceed": "To'lovga",
   "restaurantPreCheckPrinted": "Pre-chek printerga yuborildi",
   "restaurantPreCheckFailed": "Pre-chek chop etish xatosi",
   "restaurantSubtotal": "Oraliq summa",
@@ -1149,7 +1179,7 @@
   },
   "terminalHomeWhoHeader": "Kim kirdi",
   "terminalHomeUserLabel": "Kassir",
-  "terminalHomeSaleNote": "Brauzerda sotish — alohida ish: sotish ekrani kassaning bazasini to‘g‘ridan-to‘g‘ri o‘qiydi va hozircha brauzer uchun qurilmaydi.",
+  "terminalHomeSaleNote": "Savat, chek raqami va smena kassaga tegishli — terminal chekni ko‘rsatadi va sim orqali buyruq beradi. Chek chop etish, fiskallashtirish va pul qutisi kassada qoladi.",
   "wtNotPortedTitle": "Bu ekran hozircha faqat kassada",
   "wtNotPortedBody": "Brauzer terminali ma’lumotlarni sim orqali oladi va ekran bu yerda uning barcha shartnomalari sim ustida ishlay olganda paydo bo‘ladi. Bu hali o‘rganmagan. Uni bo‘sh ko‘rsatgandan ko‘ra, to‘g‘ridan aytgan yaxshiroq.",
   "wtNotPortedLocation": "Yo‘nalish: {location}",
@@ -2095,6 +2125,8 @@
     }
   },
   "agentNewCustomer": "Yangi mijoz",
+  "agentTypeCustomer": "Mijoz",
+  "agentTypeSupplier": "Yetkazib beruvchi",
   "agentNameHint": "Mijoz ismini kiriting",
   "agentBinHint": "12 raqam",
   "agentCustomerFound": "Mijoz topildi",
@@ -2333,6 +2365,17 @@
   "fiscalSettingsVatPayerSubtitle": "Tashkilot QQS to'lovchisi hisoblanadi (12%)",
   "fiscalSettingsPrintVat": "Chekda QQS chop etish",
   "fiscalSettingsPrintVatSubtitle": "Chekda QQS summasini ko'rsatish",
+  "fiscalOffsetSection": "Sertifikatlar va avans",
+  "fiscalOffsetCertificateSale": "Sertifikat sotilganda chek",
+  "fiscalOffsetCertificateSaleSubtitle": "Sovg'a sertifikati sotilganda fiskal chek berish",
+  "fiscalOffsetLayout": "Sertifikat yoki avans bilan to'lov",
+  "fiscalOffsetLayoutSubtitle": "Hisobga olish summasi OFD chekiga qanday tushadi",
+  "fiscalOffsetLayoutDiscount": "Tovarlarga chegirma sifatida",
+  "fiscalOffsetLayoutSurchargeOnly": "Faqat qo'shimcha to'lovga chek",
+  "fiscalOffsetPrepaymentReceipt": "Avans qabul qilinganda chek",
+  "fiscalOffsetPrepaymentReceiptSubtitle": "Xaridor avans kiritganda fiskal chek berish",
+  "fiscalOffsetSaveError": "Sozlamani saqlab bo'lmadi",
+  "customerPaymentTender": "Nima bilan qabul qilindi",
   "fiscalSettingsVatRate": "QQS stavkasi: 12% (3/28 formulasi bo'yicha)",
   "historyProductUcode": "Tovar #{ucode}",
   "@historyProductUcode": {
@@ -2484,6 +2527,9 @@
   "historyFiscalNo": "Yo'q",
   "historyFiscalError": "Xato",
   "shiftPrintZReport": "Z-hisobotni chop etish",
+  "shiftZReportQueued": "Z-hisobot chop etish navbatiga qabul qilindi. Qog'oz hozircha yo'q: printer imkon topganda chiqadi. Vazifa 30 daqiqa kutadi — uni Sozlamalar → Printer bo'limida ko'rish mumkin",
+  "shiftZReportAlreadyQueued": "Z-hisobot allaqachon chop etishga yuborilgan — u ikkinchi marta chop etilmaydi",
+  "shiftZReportPrintFailed": "Z-hisobotni chop etishga yuborib bo'lmadi",
   "shiftFinishAllSales": "Barcha sotuvlarni yakunlang",
   "shiftCannotClose": "Smenani yopish mumkin emas",
   "shiftOpeningShift": "Smenani ochish",
@@ -2513,6 +2559,11 @@
   "shiftSystemTotal": "Tizim summasi",
   "shiftEnteredTotal": "Kiritilgan summa",
   "shiftCashOperations": "Kassa operatsiyalari",
+  "shiftSalesLabel": "Sotuvlar",
+  "shiftSalesTotal": "Sotuvlar summasi",
+  "shiftCashSales": "Naqd",
+  "shiftCardSales": "Karta",
+  "shiftRefundsTotal": "Qaytarishlar",
   "shiftShortage": "Kamomad",
   "shiftSurplus": "Ortiqcha",
   "shiftBalances": "Mos keladi",
@@ -2947,6 +2998,15 @@
   },
   "errorSearchFailedGeneric": "Qidiruv xatosi",
   "errorUnknownGeneric": "Noma'lum xato",
+  "errorRefusalUnknownCode": "noma'lum sabab (kodi {code})",
+  "@errorRefusalUnknownCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errorReasonUnknown": "noma'lum sabab",
   "errorFillRequired": "Barcha majburiy maydonlarni to'ldiring",
   "errorNoUsers": "Ro'yxatdan o'tgan foydalanuvchilar yo'q",
   "errorSelectUser": "Foydalanuvchini tanlang",
@@ -2959,6 +3019,11 @@
   "errorCredentialUnreadable": "PIN kod yozuvi buzilgan. Administratorga murojaat qiling — qayta kiritish yordam bermaydi.",
   "errorAuthUnknown": "Kassa kirish urinishiga javob bera olmadi. Qayta urinib ko'ring.",
   "errorTillNotConfigured": "Kassa hali sozlanmagan — sozlash ustasi tugamaguncha kirish mumkin emas.",
+  "errorTillNotConfiguredSale": "Kassa sozlanmagan — chekni boshlab bo'lmaydi. Administratorga murojaat qiling: sozlash ustasidan o'tish kerak.",
+  "errorNotAllowed": "Bu amal uchun huquq yetarli emas. Administratorga murojaat qiling.",
+  "errorNoSaleModule": "Bu kassa chek yurita olmaydi: sotuv moduli yig'ilmagan. Administratorga murojaat qiling.",
+  "errorTerminalInBody": "Terminal kassaga noto'g'ri murojaat qildi. Ish o'rnidagi ilovani yangilang.",
+  "errorWholesaleInStart": "Ulgurji chek bunday boshlanmaydi. Oddiy chek boshlab, ulgurjini alohida tugma bilan yoqing.",
   "errorTerminalLimitReached": "Bu kassada terminallarning maksimal soni ro'yxatga olingan. Joy bo'shatish uchun administratorga murojaat qiling.",
   "errorPairingCodeInvalid": "Bog'lash kodi mos kelmadi — muddati o'tgan, allaqachon ishlatilgan yoki noto'g'ri kiritilgan. Kassadan yangi kod oling.",
   "errorTerminalSecretInvalid": "Bu qurilmaning bog'lanishi endi amal qilmaydi — terminal kassadan o'chirilgan bo'lishi mumkin. Yangi bog'lash kodini kiriting.",
@@ -2967,6 +3032,16 @@
   "errorSaleNotInitialized": "Sotuv ishga tushirilmagan",
   "errorReceiptEmpty": "Chek bo'sh",
   "errorDeferredNotFound": "Keyinga qoldirilgan chek topilmadi",
+  "errorCartStale": "Siz terayotganingizda chek o'zgardi. Ekran yangilandi — oxirgi amalni takrorlang.",
+  "errorCartWrongReceipt": "Bu chek endi ishda emas. Yangi chek boshlang yoki keyinga qoldirilganini oching.",
+  "errorCartNotStarted": "Chek hali boshlanmagan. Yangi chek boshlang yoki keyinga qoldirilganini oching.",
+  "errorLineNotFound": "Bu qator chekda yo'q. Chekni yangilab, qayta urinib ko'ring.",
+  "errorInvalidAmount": "Yaroqsiz qiymat. Summa manfiy bo'lolmaydi, chegirma esa 100% dan oshmasligi kerak.",
+  "errorDeferredTaken": "Bu keyinga qoldirilgan chekni boshqa ish o'rni olib qo'ygan.",
+  "errorCartNotEmpty": "Avval joriy chekni yakunlang yoki keyinga qoldiring — uning ustiga boshqasini ochib bo'lmaydi.",
+  "errorSaleNotStarted": "Kassa chekni boshlay olmadi va sababini aytmadi. Qayta urinib ko'ring.",
+  "errorShiftNotOpen": "Smena ochilmagan. Smenani kassada oching.",
+  "errorCardTerminalMisconfigured": "Ushbu ish joyining to'lov terminali noto'g'ri sozlangan. Uskuna sozlamalaridagi bog'lanishni tekshiring.",
   "errorReceiptNotFound": "#{receiptNo} chek topilmadi",
   "@errorReceiptNotFound": {
     "placeholders": {
@@ -3421,6 +3496,16 @@
   "hwTerminalPort": "Port",
   "hwTerminalMerchantId": "Merchant ID",
   "hwTerminalTerminalId": "Terminal ID",
+  "catalogExportCsv": "CSV eksport",
+  "catalogImport": "Import",
+  "catalogFilterColumn": "Filtr...",
+  "catalogExportSuccess": "{path} ga eksport qilindi",
+  "catalogExportFailed": "Eksport xatosi",
+  "catalogImportResults": "Import natijalari",
+  "catalogImportImported": "Import qilindi: {count}",
+  "catalogImportUpdated": "Yangilandi: {count}",
+  "catalogImportSkipped": "O'tkazib yuborildi: {count}",
+  "catalogImportErrors": "Xatolar:",
   "catalogTypeConsumable": "Sarf materiali",
   "catalogFilterConsumable": "Sarf materiallari",
   "catalogFilterInner": "Ichki",
@@ -3429,6 +3514,16 @@
   "serviceConsumableSelected": "Tanlangan tovar",
   "serviceQuickServicesTitle": "Tez xizmatlar",
   "serviceQuickServicesEmpty": "Tez xizmatlar yo'q",
+  "serviceIntakeItems": "Qabul qilinadigan buyumlar",
+  "serviceItemName": "Nimani qabul qilasiz (buyum, narsa, qurilma)",
+  "serviceItemDescription": "Muammo tavsifi / mijoz istaklari",
+  "serviceItemSerial": "Seriya raqami / markirovka",
+  "serviceItemAdd": "Buyum qo'shish",
+  "serviceItemEmpty": "Kamida bitta buyum qo'shing",
+  "serviceItemCount": "{count} dona",
+  "serviceClientQuickName": "Mijoz ismi",
+  "serviceClientQuickPhone": "Mijoz telefoni",
+  "serviceClientOrSearch": "yoki bazadan topish",
   "catalogTypeDish": "Taom",
   "catalogFilterDish": "Taomlar",
   "dishCalculation": "Kalkulyatsiya",
@@ -3704,6 +3799,15 @@
   "receiptTemplateTestPrintOk": "Chek namunasi printerga yuborildi",
   "receiptTemplateTestPrintFail": "Bosib chiqarish muvaffaqiyatsiz (printerni tekshiring)",
   "receiptTemplateDeleteTitle": "Shablonni o'chirish",
+  "receiptTemplateHeaderHint": "Bir necha qator: salomlashuv, aksiya, kontaktlar",
+  "receiptTemplateFooterHint": "Bir necha qator: minnatdorchilik, qaytarish shartlari, sayt, ijtimoiy tarmoqlar",
+  "receiptTemplateAlignLeft": "Chapda",
+  "receiptTemplateAlignCenter": "Markazda",
+  "receiptTemplateAlignRight": "O'ngda",
+  "receiptTemplateBold": "Qalin",
+  "receiptTemplateDoubleSize": "Yirik (ikki barobar o'lcham)",
+  "receiptTemplatePaperWidthHint": "Lenta kengligi printer sozlamalarida belgilanadi",
+  "receiptTemplateMandatoryNote": "Majburiy rekvizitlar — chek raqami, jami, to'lovlar, QQS, fiskal belgi va QR — har doim sarlavha va pastki qism orasida chop etiladi",
   "receiptTemplateDeleteConfirm": "«{name}» shablonini o'chirilsinmi?",
   "@receiptTemplateDeleteConfirm": {
     "placeholders": {
@@ -3723,8 +3827,9 @@
   "restaurantMergeConfirm": "Объединить ({count})",
   "restaurantMergeDone": "Столы объединены",
   "restaurantMergeNeedTarget": "На текущем столе нет открытого заказа",
-  "shiftOverAgeTitle": "Смена открыта более 24 часов",
-  "shiftOverAgeMessage": "Продажа заблокирована. Закройте текущую смену и откройте новую, чтобы продолжить работу.",
+  "shiftOverAgeTitle": "Smena 24 soatdan ortiq ochiq",
+  "shiftOverAgeMessage": "Sotuv bloklandi. Ishni davom ettirish uchun joriy smenani yopib, yangisini oching.",
+  "shiftOverAgeCloseAtTill": "Sotuv bloklandi. Ishni davom ettirish uchun smenani kassada yopib, yangisini oching.",
   "supplierRepayTitle": "Погасить долг поставщику",
   "supplierRepayCurrentDebt": "Текущий долг: {amount}",
   "supplierRepayNoDebt": "Долга перед поставщиком нет",
@@ -4750,18 +4855,17 @@
   "prodNtin": "NTIN",
   "prodMarkable": "Markirovka qilinadi",
   "promoTitle": "Aksiyalar",
+  "promoSubtitle": "1+1 aksiyalari va xarid uchun sovg'alar",
   "promoNew": "Yangi aksiya",
   "promoError": "Xato: {error}",
   "promoEmpty": "Aksiyalar yo'q",
   "promoEmptyHint": "1+1 yoki Sovg'a aksiyasini yarating",
   "promoTypeGift": "Sovg'a",
   "promoBuyGetFree": "{trigger} sotib ol → {reward} bepul",
-  "promoSupplierTag": "yetkazib beruvchidan",
   "promoDefaultName11": "1+1 aksiyasi",
   "promoNameLabel": "Nomi",
   "promoTriggerLabel": "Trigger mahsulot (nima sotib olish)",
   "promoRewardLabel": "Sovg'a (nima bepul)",
-  "promoSupplierFunded": "Yetkazib beruvchidan aksiya",
   "promoSaveButton": "Aksiyani saqlash",
   "saleWeighingPlaceItem": "Tortilmoqda... mahsulotni tarozига qoʻying",
   "saleWeightReadFailed": "Ogʻirlikni oʻqib boʻlmadi — qoʻlda kiriting",
@@ -4913,6 +5017,22 @@
   "navWmsMarking": "Markirovka",
   "navWmsSettings": "WMS sozlamalari",
   "errorInsufficientStock": "Qoldiq yetarli emas: {name}",
+  "discountLimitsTitle": "Chegirma cheklovlari",
+  "discountLimitsSubtitle": "Kassir qo'lda qancha chegirma bera oladi",
+  "discountLimitsIntro": "Rol chegarasi standartni almashtiradi. O'z qatori yo'q rol uchun “Standart” amal qiladi. Yuz foiz “cheklovsiz” degani — bu e'lon qilingan qiymat, bo'shliq emas.",
+  "discountLimitsDefaultRow": "Standart (barcha rollar)",
+  "discountLimitsMaxPercent": "Chegara, %",
+  "discountLimitsApprovalAbove": "Tasdiq chegarasi, %",
+  "discountLimitsApprovalHint": "bo'sh — talab qilinmaydi",
+  "discountLimitsInheritHint": "bo'sh — standartdek",
+  "discountLimitsTwoDoors": "Diqqat: savdo siyosatidagi “narxni tushirishni taqiqlash” faqat qator narxini tahrirlashni yopadi. Chegirma 100 % chegarada hamon ruxsat etilgan — hatto bepul qatorgacha. Bu ikki xil eshik; ikkinchisini yopish uchun chegarani yuzdan past qiling.",
+  "discountLimitsSaved": "Chegara saqlandi",
+  "discountLimitsInherited": "Qator olib tashlandi: rol standartni meros qiladi",
+  "discountLimitsInvalid": "Chegara — 0 dan 100 gacha son",
+  "discountLimitsApprovalNotYet": "Katta xodimning tasdig'i hozircha amalga oshirilmagan: chegaradan oshgan chegirma kod so'ramay, aytilgan sabab bilan rad etiladi.",
+  "errorDeniedPolicy": "Kassa sozlamalari bilan taqiqlangan: {detail}",
+  "errorDeniedLimit": "Chegirma ruxsat etilganidan ko'proq: {detail}",
+  "errorApprovalRequired": "Katta xodimning tasdig'i kerak: {detail}",
   "errorBigAmountBlocked": "Sotuv summasi 1 mln ₸ dan oshadi. Kassa sozlamalarida katta summalarga ruxsatni yoqing.",
   "errorMarkRequired": "Markirovka kodi kerak: {name}",
   "errorOrderNotFound": "Buyurtma topilmadi",
@@ -4941,6 +5061,7 @@
   "setUserPinNew": "Yangi PIN",
   "receiptInputRecent": "So'nggi cheklar",
   "receiptInputNoRecent": "Hozircha cheklar yo'q",
+  "receiptInputRecentUnavailable": "Oxirgi cheklar ro'yxati bu terminalda mavjud emas — chek raqamini qo'lda kiriting",
   "shiftHistoryTitle": "Smenalar tarixi",
   "shiftHistoryEmpty": "Yopilgan smenalar hozircha yo'q",
   "shiftHistoryShiftNo": "Smena №{id}",
@@ -5046,7 +5167,6 @@
       }
     }
   },
-  "scannerRulesUnavailable": "Bu yig'malada shtrix-kod o'qish qoidalari mavjud emas.",
   "scannerRulesSaved": "Shtrix-kod o'qish qoidalari saqlandi",
   "printQueueSectionTitle": "Chop etish navbati",
   "printQueueSubtitle": "Nima chop etilishini kutmoqda, nima chop etilmadi va nima uchun.",
@@ -5076,5 +5196,575 @@
   "printQueueCancelBody": "Bekor qilingan topshiriqni chop etib bo‘lmaydi. Xuddi shunday chek kerak bo‘lsa, uni qaytadan chiqarish kerak.",
   "printQueueCancelConfirm": "Topshiriqni bekor qilish",
   "printQueueCancelDone": "Topshiriq bekor qilindi",
-  "printQueueCancelRefused": "Bu topshiriqni endi bekor qilib bo‘lmaydi: u chop etilmoqda yoki yakunlangan"
+  "printQueueCancelRefused": "Bu topshiriqni endi bekor qilib bo‘lmaydi: u chop etilmoqda yoki yakunlangan",
+  "errorPayReceiptNotFound": "Chek endi ishda emas — uni to'lash mumkin emas. Ekranni yangilab, qaytadan boshlang.",
+  "errorPayNotOwner": "Bu chekni boshqa ish joyi yuritmoqda — uni bu yerdan to'lash mumkin emas.",
+  "errorPaymentAlreadyTaken": "Bu chek allaqachon to'langan. Kassa pulni ikkinchi marta olmaydi.",
+  "errorPaymentInsufficient": "Kiritilgan summa chekni qoplamaydi. Summani qaytadan kiriting.",
+  "errorPaymentAccountMissing": "Kassada bu to'lov turi uchun hisob yo'q. Administratorga murojaat qiling.",
+  "errorPaymentAccountNotAllowed": "Bunday hisob to'lov uchun taklif qilinmagan. Hisoblar ro'yxatini yangilab, qaytadan tanlang.",
+  "errorPaymentUnbalanced": "To'lov qatorlari summasi chek summasiga to'g'ri kelmaydi. To'lovni qaytadan kiriting.",
+  "errorPaymentKindInactive": "Bu to'lov turi kassa sozlamalarida o'chirilgan. Boshqasini tanlang yoki sozlamalarda yoqing.",
+  "errorPaymentKindUnknown": "Kassa bunday to'lov turini bilmaydi. Administratorga murojaat qiling.",
+  "errorCertificateUnknown": "Bu kassada bunday raqamli sertifikat yo'q. Raqamni tekshiring.",
+  "errorCertificatePinWrong": "Sertifikat PIN kodi to'g'ri kelmadi. Qaytadan kiriting.",
+  "errorCertificateRateLimited": "Sertifikatni tekshirishda muvaffaqiyatsiz urinishlar juda ko'p. Bir necha daqiqa kuting va qaytadan urinib ko'ring.",
+  "errorConnectionLost": "Kassa bilan aloqa uzildi. Tarmoqni tekshirib, qaytadan urinib ko'ring.",
+  "errorRunIncomplete": "Kassa amalni yakunlamasdan to'xtatdi. Qaytarishdan oldin kassadagi natijani tekshiring.",
+  "errorWireMismatch": "Ish joyi va kassa bir-birini tushunmadi — versiyalar mos emas. Sahifani yangilang; yordam bermasa, administratorga murojaat qiling.",
+  "errorTillFailed": "Kassa amalni bajara olmadi. Qaytadan urinib ko'ring; xato takrorlansa, administratorga murojaat qiling.",
+  "errorTerminalChanged": "Siz ish joyini almashtirdingiz — qaytadan kiring.",
+  "errorUnknownTerminal": "Ish joyi kassaga ulanmagan. Uni ulash kodi bilan qaytadan ulang.",
+  "errorAlreadyConfigured": "Kassa allaqachon sozlangan — dastlabki sozlash ustasi endi mavjud emas.",
+  "errorCannotDeleteSelf": "Kassaning o'z ish joyini o'chirib bo'lmaydi.",
+  "errorNoDrivers": "Kassa uskuna drayverlarisiz yig'ilgan — qurilmalarni qidirish va tekshirish mavjud emas. Administratorga murojaat qiling.",
+  "errorNoNetworkModule": "Bu kassa tarmoq sozlamalarini boshqarmaydi — tizim xizmati yo'q. Administratorga murojaat qiling.",
+  "errorNoSessionRegistry": "Bu kassa seanslar ro'yxatini yuritmaydi. Administratorga murojaat qiling.",
+  "errorNoBackupTransport": "Bu kassada zaxira nusxalar sozlanmagan. Administratorga murojaat qiling.",
+  "errorBackupNotFound": "Zaxira nusxa topilmadi.",
+  "errorCertificatesUnavailable": "Bu kassa sovg'a sertifikatlarini tarmoq orqali chiqarmaydi. Administratorga murojaat qiling.",
+  "errorRefundStale": "Buyruq kassaga yetguncha qaytarish o'zgardi. Amalni takrorlang.",
+  "errorRefundWrongDraft": "Bu qaytarish qoralamasi endi yo'q. Qaytarishni qaytadan oching.",
+  "errorRefundNotStarted": "Qaytarish boshlanmagan — chekni tanlang yoki cheksiz qaytarishni boshlang.",
+  "errorRefundEmpty": "Qaytarishda birorta qator yo'q — qaytariladigan narsa yo'q.",
+  "errorReceiptAlreadyRefunded": "Bu chek bo'yicha qaytarish allaqachon qilingan.",
+  "errorReceiptNotRefundable": "Bu chekni bu yerda qaytarib bo'lmaydi: to'lov boshqa kassaning terminali orqali o'tgan. Qaytarishni to'lov qilingan joyda rasmiylashtiring.",
+  "errorLineNotInReceipt": "Bu tovar chekda yo'q — chek bo'yicha faqat unda sotilgan narsalar qaytariladi.",
+  "errorSaleNotCompleted": "Bu chek bo'yicha sotuv yakunlanmagan — qaytariladigan narsa yo'q.",
+  "errorRefundBusy": "Kassada boshqa qaytarish davom etmoqda. Uni yakunlab, qaytadan urinib ko'ring.",
+  "errorRefundCannotStart": "Kassa qaytarishni boshlay olmadi va sababini aytmadi. Smena va kassa sozlamalarini tekshiring.",
+  "errorRefundInstallmentRefused": "Chek muddatli to'lovga sotilgan — kassa uni qaytarmaydi. Shartnomani bekor qilishni administrator rasmiylashtiradi.",
+  "errorRefundCashlessUnavailable": "Bu pulni kartaga yoki QR orqali qaytarish kerak, lekin qaytarish vositasi yo'q: terminal yoki provayder ulanmagan. Kassa bunday qaytarishni tortmadan naqd bermaydi.",
+  "errorRefundCashlessRefused": "Bank yoki provayder qaytarishni rad etdi. Terminalni tekshirib, qayta urinib ko'ring — avval qaytarilgani ikkinchi marta qaytarilmaydi.",
+  "errorRefundKindNotRefundable": "Bu to'lov turiga qaytarish to'lov turlari ma'lumotnomasida taqiqlangan.",
+  "errorRefundKindUnknown": "Chek ushbu kassa ma'lumotnomasida yo'q to'lov turi bilan to'langan. Kassa u bo'yicha qaytarishni amalga oshirmaydi: nima bilan to'langani noma'lum, buning uchun naqd pul berilmaydi.",
+  "refundDestinationsTitle": "Pul qayerga ketadi",
+  "refundRouteDrawer": "Tortmadan naqd",
+  "refundRouteCard": "Terminal orqali kartaga",
+  "refundRouteManual": "Kassadan tashqari — to'langan usulda",
+  "refundRouteProvider": "QR provayderi orqali",
+  "refundRouteCertificate": "Yangi sertifikat bilan (eskisi so'ndirilgan holda qoladi)",
+  "refundRouteAdvance": "Xaridorning avans to'loviga",
+  "refundRouteBonus": "Bonus hisobiga",
+  "refundRouteDebt": "Xaridor qarzi hisobiga",
+  "errorCertificateRefundNoSource": "Chek qatori sertifikat bilan qaytariladi, lekin unda sertifikat raqami yo'q. Kassa u bo'yicha qaytarishni o'tkazmaydi: yangi sertifikatni nimaga asoslanib yozish noma'lum, kassaning majburiyati esa bekorga o'sardi.",
+  "errorCertificateCashRefundRefused": "Sertifikat uchun naqd pul bilan qaytarib bo'lmaydi — naqd pulsiz qaytarish rekvizitlarini ko'rsating.",
+  "errorCertificatePaysCertificate": "Sertifikat bilan boshqa sertifikat xaridini to'lab bo'lmaydi.",
+  "errorCreditContractUnknown": "Bunday raqamli muddatli to'lov shartnomasi yo'q. Raqamni tekshiring.",
+  "errorCreditContractNotActive": "Muddatli to'lov shartnomasi allaqachon to'langan yoki bekor qilingan — u bo'yicha to'lanadigan narsa yo'q.",
+  "errorCreditOverpayment": "Summa shartnoma bo'yicha qoldiqdan ko'p. Summani tekshiring.",
+  "errorCreditRepaymentInvalid": "To'lov summasi noldan katta bo'lishi kerak.",
+  "errorCreditAllocationRace": "Aynan shu lahzada shartnoma bo'yicha boshqa kassadan to'langan. To'lovni qaytadan qabul qiling.",
+  "errorKindTenderCannotDiscount": "Haqiqiy pul olib keladigan to'lov turini chekda «to'lov emas» deb e'lon qilib bo'lmaydi.",
+  "errorKindAccountMissing": "To'lov turiga qabul qiluvchi hisob biriktirilmagan.",
+  "errorKindCounterpartyRequired": "Keyinga qoldirilgan to'lov turi nomlangan xaridorni talab qiladi.",
+  "errorKindProviderRequired": "Provayder (QR) orqali to'lov turiga provayder kerak.",
+  "errorKindFiscalKindRequired": "To'lov turining fiskal talqini ko'rsatilmagan.",
+  "errorKindChangeNotATender": "Qaytimni faqat haqiqiy pul olib keladigan tur beradi.",
+  "errorKindSystemImmutable": "Tizimli to'lov turining kodi yoki identifikatorini o'zgartirib ham, boshqa turga berib ham bo'lmaydi.",
+  "errorCertificateExpired": "Sertifikat muddati tugagan. Do'kon egasiga murojaat qiling.",
+  "errorCertificateExhausted": "Sertifikatda mablag' qolmagan.",
+  "errorCertificateDuplicate": "Bitta sertifikat to'lovda ikki marta ko'rsatilgan. Takrorni olib tashlang.",
+  "errorCertificateRace": "Sertifikat qoldig'i o'zgardi. To'lovni qaytadan bajaring.",
+  "errorCertificateAccountMissing": "Kassada sertifikatlar bo'yicha majburiyat hisobi yo'q. Administratorga murojaat qiling.",
+  "errorCertificateNumberTaken": "Bunday raqamli sertifikat allaqachon chiqarilgan.",
+  "errorCertificateNominalInvalid": "Sertifikat qiymati noldan katta bo'lishi kerak.",
+  "errorDebtCustomerRequired": "Qarzga sotish xaridorsiz mumkin emas — xaridorni tanlang.",
+  "errorDebtNotSoldHere": "Bu kassada qarzga savdo qilinmaydi — kreditga sotish kassa sozlamalarida oʻchirilgan.",
+  "errorDebtAccountMissing": "Xaridorda hisob yo'q — qarzni yozadigan joy yo'q.",
+  "errorBonusAccountMissing": "Xaridorda bonus hisobi yo'q — bonusni yechish uchun hech narsa yo'q.",
+  "errorPrepaymentCustomerRequired": "Avansni hisobga olish uchun xaridor kerak — uni tanlang.",
+  "errorCreditTermInvalid": "Bo'lib to'lashning bunday muddati rasmiylashtirilmaydi",
+  "errorCreditPrincipalInvalid": "Bo'lib to'lash uchun summa yo'q: chek to'liq qoplangan",
+  "errorCreditFeeInvalid": "Shartnoma bo'yicha ustama noto'g'ri",
+  "errorCreditSchemeUnknown": "Bunday jadval sxemasini kassa bilmaydi",
+  "errorCreditOverdue": "Xaridorning boshqa bo'lib to'lash shartnomasi muddati o'tgan",
+  "errorCreditContractDuplicate": "Bu chekka bo'lib to'lash shartnomasi allaqachon rasmiylashtirilgan",
+  "errorPrepaymentAccountMissing": "Xaridorda hisob yo'q — unda avans bo'lishi mumkin emas.",
+  "errorPrepaymentInsufficient": "Kiritilgan avans yetmadi: u boshqa chek bilan hisobga olingan.",
+  "errorLoyaltyCustomerUnknown": "Xaridor kartotekada topilmadi. Xaridorni qaytadan tanlang.",
+  "errorAmountExceedsReceipt": "Summa chek qiymatidan katta. Summani qaytadan kiriting.",
+  "errorCardChargeUnproven": "Kassa karta orqali to'lovni tasdiqlamadi. To'lov terminalini tekshiring.",
+  "errorPaymentTypeNotAllowed": "Bu to'lov turi ushbu ish joyida ruxsat etilmagan.",
+  "errorPaymentsUnavailable": "Bu kassa sim orqali to'lovni qabul qilmaydi. Administratorga murojaat qiling.",
+  "errorNoRefundService": "Bu kassa sim orqali qaytarishni amalga oshirmaydi. Administratorga murojaat qiling.",
+  "errorRefundAbandonIsTillSide": "Qaytarish qoralamasini ish joyi emas, kassa olib tashlaydi.",
+  "errorNoAnswer": "Kassa javob bermadi. Aloqani tekshirib, qaytadan urinib ko'ring.",
+  "paymentTypeNotAllowedHere": "\"{type}\" bu ish joyiga ruxsat etilmagan. To‘lov turlari uskuna sozlamalarida o‘zgartiriladi; bosilsa ham kassa ruxsatsiz turni rad etadi.",
+  "@paymentTypeNotAllowedHere": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentTypesLimitedHere": "Ish joyi qabul qiladi: {types}.",
+  "@paymentTypesLimitedHere": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDebtNotSoldHere": "Bu kassada qarzga sotilmaydi: kreditga sotish kassa sozlamalarida oʻchirilgan. Tugma bosilsa ham, kassa rad etadi.",
+  "paymentDebtNotPermitted": "Sizga qarzga sotishga ruxsat yoʻq: «qarzga sotish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.",
+  "saleDiscountNotPermitted": "Sizga chegirma berishga ruxsat yoʻq: «chegirma bilan sotish» huquqi kerak. Uni administrator huquqlar sozlamalarida beradi; huquqi yoʻq har kimga kassa rad javob beradi.",
+  "paymentDebtPolicyUnknown": "Kassa hozircha bu yerda qarzga sotiladimi yoʻqmi javob bermadi. Kassa bilan aloqani tekshirib, qayta urinib koʻring.",
+  "paymentOffsetsTitle": "Avans va sertifikatlar",
+  "paymentPrepaymentTitle": "Xaridor avansi",
+  "paymentPrepaymentNeedsCustomer": "Avansni hisobga olish uchun xaridorni telefon raqami boʻyicha toping.",
+  "paymentPrepaymentLoading": "Kassa hali qancha avans kiritilganini javob bermadi.",
+  "paymentPrepaymentNone": "Xaridorning kiritilgan avansi yoʻq.",
+  "paymentPrepaymentBalance": "Oldindan kiritilgan:",
+  "paymentPrepaymentUse": "Avansni hisobga olish",
+  "paymentPrepaymentApplied": "Hisobga olinadi: {amount}",
+  "@paymentPrepaymentApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateTitle": "Sovgʻa sertifikati",
+  "paymentCertificateNumber": "Sertifikat raqami",
+  "paymentCertificatePin": "PIN, boʻlsa",
+  "paymentCertificatePresent": "Tekshirish",
+  "paymentCertificateBalance": "Sertifikatdagi qoldiq: {amount}",
+  "@paymentCertificateBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateApplied": "{amount} yechiladi, {rest} qoladi",
+  "@paymentCertificateApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "rest": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCertificateNotNeeded": "Chek toʻliq yopildi — bu sertifikat kerak boʻlmaydi.",
+  "unfiscalizedTitle": "Fiskallashtirilmagan cheklar",
+  "unfiscalizedEmpty": "Barcha cheklar fiskallashtirilgan",
+  "unfiscalizedEmptyHint": "Bu yerda puli olingan, lekin operator hujjat bermagan cheklar paydo bo'ladi",
+  "unfiscalizedReceiptNo": "Chek №{number}",
+  "unfiscalizedAgeHours": "{hours} soat oldin",
+  "unfiscalizedOverdue": "72 soatlik muddat o'tib ketdi",
+  "unfiscalizedRetry": "Takrorlash",
+  "unfiscalizedRetryDone": "Hujjat olindi: {sign}",
+  "unfiscalizedRetryFailed": "Operator yana rad etdi: {message}",
+  "unfiscalizedNoDocument": "Qator rad javoblari hujjat olib yura boshlashidan oldin yozilgan: takrorlash uchun hech narsa yo'q, uni faqat hisobdan chiqarish mumkin",
+  "unfiscalizedNoOperator": "Fiskal operator sozlanmagan: takrorlashga joy yo'q",
+  "unfiscalizedWriteOff": "Hisobdan chiqarish",
+  "unfiscalizedWriteOffTitle": "Fiskallashtirilmagan chekni hisobdan chiqarish",
+  "unfiscalizedWriteOffBy": "Qaror quyidagi nomga yoziladi: {name}",
+  "unfiscalizedWriteOffReason": "Hisobdan chiqarish sababi",
+  "unfiscalizedWriteOffDone": "Chek ko'rib chiqilgan deb belgilandi",
+  "unfiscalizedWrittenOff": "{name} hisobdan chiqardi: {reason}",
+  "unfiscalizedUnknownUser": "noma'lum foydalanuvchi",
+  "unfiscalizedAtShiftClose": "Smena fiskallashtirilmagan cheklar bilan yopildi: {count}. Raqamlar: {numbers}",
+  "documentsOnTheWayAtShiftClose": "Smena hujjatlari hali operatorda emas: {count} (cheklar {numbers}). Yopish ularning yuborilishini kutadi; aloqa tiklanmasa, Z-hisobot yuborilmaydi — aks holda operator hisoboti kassa bilan mos kelmaydi.",
+  "qrPaidPartial": "Оплачено частично: {paid} из {amount}",
+  "@qrPaidPartial": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanTitle": "Деньги без чека",
+  "qrOrphanHint": "Покупатель заплатил по QR, а чек этими деньгами не закрыт.",
+  "qrOrphanLine": "{amount} · {provider} · {key}",
+  "@qrOrphanLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "provider": {
+        "type": "String"
+      },
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "qrOrphanAfterGiveUp": "Подтверждение пришло после того, как касса перестала ждать",
+  "errorQrIntentUnknown": "Kassa bu QR to'lovini bilmaydi. Chekni yangilang va qayta urinib ko'ring.",
+  "errorQrIntentNotPaid": "QR to'lovini bank hali tasdiqlamadi. Tasdiqni kuting yoki boshqa usulni tanlang.",
+  "errorQrIntentAlreadySettled": "Bu pul allaqachon boshqa chekni yopgan: {message}",
+  "@errorQrIntentAlreadySettled": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrTitle": "QR orqali to'lov",
+  "paymentQrAmount": "QR summasi",
+  "paymentQrStart": "QR ko'rsatish",
+  "paymentQrWaiting": "To'lov kutilmoqda · {seconds} s qoldi",
+  "@paymentQrWaiting": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentQrScanHint": "Xaridor kodni bank ilovasida skanerlaydi",
+  "paymentQrCancel": "Kutishni bekor qilish",
+  "paymentQrNoLink": "Provayder bilan aloqa yo'q — kassa so'rovni o'zi takrorlaydi",
+  "paymentQrPaid": "QR orqali to'landi: {amount}",
+  "@paymentQrPaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrPaidAfterCancel": "Xaridor bekor qilishdan oldin to'lab ulgurdi — {amount} shu chekka tushadi",
+  "@paymentQrPaidAfterCancel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrCancelled": "Kutish bekor qilindi, provayder tasdiqladi",
+  "paymentQrPatienceSpent": "Xaridor belgilangan vaqtda to'lamadi — kassa kutishni to'xtatdi",
+  "paymentQrExpired": "QR kodning muddati provayderda tugadi",
+  "paymentQrFailed": "Provayder QR to'lovini rad etdi",
+  "paymentQrCancelUnconfirmed": "Bekor qilish tasdiqlanmadi — pul hali kelishi mumkin. Kassa aniqlamaguncha boshqa to'lovni qabul qilmang.",
+  "paymentQrRecheck": "Qayta tekshirish",
+  "paymentQrRestart": "Yangi kod",
+  "paymentQrOverReceipt": "QR to'lovidan {amount} chekka sig'maydi",
+  "@paymentQrOverReceipt": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentQrNothingToPay": "Chek allaqachon yopilgan — kod ko'rsatishga hojat yo'q",
+  "errorQrNotConfigured": "Kassada QR provayderi sozlanmagan",
+  "errorQrNetwork": "QR provayderi bilan aloqa yo'q",
+  "errorQrTimeout": "QR provayderi o'z vaqtida javob bermadi",
+  "errorQrProviderBusy": "QR provayderi band — kassa takrorlaydi",
+  "errorQrMalformedReply": "QR provayderi tushunarsiz javob berdi — kassa administratoriga murojaat qiling",
+  "errorQrUnknownIntent": "QR provayderi bu to'lovni bilmaydi",
+  "errorQrRejected": "QR provayderi so'rovni rad etdi",
+  "errorQrReverseUnsupported": "QR provayderi pulni qaytara olmaydi",
+  "errorQrIntentLive": "Bu chekda QR to'lovi kutilmoqda — yangi kod ko'rsatishdan oldin uni bekor qiling",
+  "fiscalReasonNetwork": "Fiskal operator bilan aloqa yo‘q",
+  "fiscalReasonOperatorUnavailable": "Fiskal operator ishlamayapti",
+  "fiscalReasonTokenExpired": "Operator kassa avtorizatsiyasini qabul qilmadi",
+  "fiscalReasonRequestNotBuilt": "Operatorga so‘rov tuzilmadi: fiskal sozlamalardagi server manzilini tekshiring",
+  "fiscalReasonTlsRejected": "Operator bilan himoyalangan ulanish o‘rnatilmadi: server manzilini va kassa soatini tekshiring",
+  "fiscalReasonClientFault": "Operator bilan almashishda kassa nosozligi",
+  "fiscalReasonBadCredentials": "Operator logini yoki paroli noto‘g‘ri",
+  "fiscalReasonCashboxNotFound": "Operator bu kassani topmadi: zavod raqamini tekshiring",
+  "fiscalReasonCashboxBlocked": "Kassa operator tomonidan bloklangan",
+  "fiscalReasonOfflineLimitExceeded": "Avtonom hujjatlar chegarasi oshib ketdi",
+  "fiscalReasonOfflineNotSupported": "Bu kassaga avtonom rejim ruxsat etilmagan",
+  "fiscalReasonDuplicate": "Hujjat operatorda allaqachon ro‘yxatdan o‘tgan, lekin fiskal belgi kassaga berilmadi — uni operator kabinetidan oling",
+  "fiscalReasonValidation": "Operator hujjatni rad etdi: summalar yoki ma’lumotlar mos emas",
+  "fiscalReasonNotEnoughMoney": "Operator ma’lumotiga ko‘ra kassada naqd pul yetarli emas",
+  "fiscalReasonShiftError": "Operatorda smena xatosi",
+  "fiscalReasonUnsupported": "Amal operator tomonidan qo‘llab-quvvatlanmaydi",
+  "fiscalReasonNotConfigured": "Fiskallashtirish sozlanmagan",
+  "fiscalReasonUnknown": "Operator noma’lum sabab bilan rad etdi",
+  "fiscalReasonOfflineWindowExpired": "72 soatlik avtonom oyna tugadi — hujjat berilmadi",
+  "fiscalReasonRowUnreadable": "Navbat qatori shikastlangan: hujjat o‘qilmaydi",
+  "fiscalReasonWithCode": "{reason} (kod {code})",
+  "fiscalReasonLegacy": "Sabab tarjimadan oldin yozilgan: {text}",
+  "fiscalReasonNotRecorded": "Sabab yozilmagan",
+  "fiscalReasonPaymentTypeNotAccepted": "To‘lov turi operator tomonidan qabul qilinmaydi: «kredit» va «tara» OFD 2.0.2 protokolidan chiqarilgan",
+  "errorDeferredListUnavailable": "Kechiktirilgan cheklar ro'yxati mavjud emas",
+  "errorDeferredListUnavailableReason": "Kechiktirilgan cheklar ro'yxati mavjud emas: {reason}",
+  "errorRefundSearchUnavailable": "Bu terminalda qaytarish uchun mahsulot qidirish hali ulanmagan",
+  "errorRefundNothingSelected": "Qoralama o'zgardi — qaytariladigan narsa yo'q. Belgilangan qatorlarni tekshiring.",
+  "errorRefundInvalidAmount": "Bunchani qaytarib bo'lmaydi: miqdor chek bo'yicha sotilgandan ko'p yoki noldan kam bo'lishi mumkin emas.",
+  "errorCertificatePinRequired": "Sertifikatda PIN-kod bor. Sertifikatdagi PIN-kodni kiriting.",
+  "qrSettingsTitle": "QR orqali to'lov",
+  "qrSettingsSubtitle": "QR provayderi: manzil, kod, kalit, kutish",
+  "qrSettingsKindTitle": "QR orqali to'lov qabul qilish",
+  "qrSettingsKindSubtitle": "To'lov ekranidagi «QR» to'lov turi",
+  "qrSettingsUrl": "Provayder manzili",
+  "qrSettingsCode": "Provayder kodi",
+  "qrSettingsKey": "Kirish kaliti",
+  "qrSettingsKeyStoredHint": "Kalit saqlangan. Almashtirish uchun yangisini kiriting",
+  "qrSettingsKeyEmptyHint": "Kalit berilmagan",
+  "qrSettingsClearKey": "Saqlangan kalitni o'chirish",
+  "qrSettingsPatience": "To'lovni kutish, soniya",
+  "qrSettingsSave": "Saqlash",
+  "qrSettingsSaved": "QR sozlamasi saqlandi",
+  "qrSettingsRemove": "Sozlamani olib tashlash",
+  "qrSettingsStatusReady": "Provayder sozlangan",
+  "qrSettingsStatusNotConfigured": "Provayder sozlanmagan — QR orqali to'lov mavjud emas",
+  "qrSettingsInvalidUrl": "Manzil http:// yoki https:// bilan boshlanishi kerak",
+  "qrSettingsCodeRequired": "Provayder kodini kiriting",
+  "qrSettingsInvalidPatience": "Kutish — {min} soniyadan {max} soniyagacha",
+  "qrSettingsSaveFailed": "QR sozlamasini saqlab bo'lmadi",
+  "qrSettingsTillOnly": "QR provayderini sozlash faqat kassaning o'zida mavjud",
+  "installmentTermsTitle": "Muddatli to'lov",
+  "installmentTermsMonths": "Muddati, oy",
+  "installmentTermsScheme": "Jadval turi",
+  "installmentTermsContinue": "Davom etish",
+  "customerPaymentTitle": "To'lov qabul qilish / qarzni to'lash",
+  "customerPaymentCurrentDebt": "Joriy qarz: {amount}",
+  "customerPaymentBalance": "Balans: {amount}",
+  "customerPaymentAmount": "To'lov summasi",
+  "customerPaymentAmountInvalid": "0 dan katta summani kiriting",
+  "customerPaymentFailed": "To'lovni o'tkazishda xato",
+  "customerPaymentSubmit": "To'lov qabul qilish",
+  "errorPrepaymentAmountInvalid": "Avans summasi noldan katta bo'lishi kerak. Summani qaytadan kiriting.",
+  "errorPrepaymentTenderInvalid": "Avans naqd pul, karta yoki QR orqali qabul qilinadi. Boshqa to'lov turini tanlang.",
+  "errorPrepaymentTillAccountMissing": "Bu kassada ushbu to'lov turini qabul qiladigan hisob yo'q. Qabul hisobini sozlab, qayta urining.",
+  "errorPrepaymentIntakeFailed": "Avansni qabul qilib bo'lmadi. Xaridorni tekshiring va qaytadan urinib ko'ring.",
+  "errorPrepaymentRefundExceedsBalance": "Xaridor hisobidagi avans siz bermoqchi bo'lgan summadan kam. Qoldiqni tekshiring va summani kamaytiring.",
+  "errorPrepaymentRefundKeyMissing": "Avansni qaytarish arizasida takror kaliti yo'q — kassa takrorni ikkinchi to'lovdan ajrata olmaydi. Ekranni qaytadan oching va summani yana kiriting.",
+  "errorPrepaymentRefundFailed": "Avansni qaytarib bo‘lmadi. Xaridorni tekshiring va qayta urinib ko‘ring.",
+  "errorPrepaymentRefundUnavailable": "Bu kassa xaridor avansini sim orqali qaytarmaydi. Administratorga murojaat qiling.",
+  "errorPrepaymentIntakeUnavailable": "Bu kassa xaridor avansini sim orqali qabul qilmaydi. Administratorga murojaat qiling.",
+  "errorPrepaymentIntakeKeyMissing": "Bu avans arizasida takrorlash kaliti yo'q, shuning uchun kassa takrorlashni ikkinchi to'lovdan ajrata olmaydi. Ekranni qayta oching va summani qaytadan kiriting.",
+  "errorQrSetupUnavailable": "Bu kassada QR provayder sozlamasi saqlanmaydi. QR orqali toʻlovni kassaning oʻzida sozlang yoki administratorga murojaat qiling.",
+  "errorReceiptTemplatesUnavailable": "Bu kassada chek shablonlari saqlanmaydi. Shablonni kassaning oʻzida sozlang yoki administratorga murojaat qiling.",
+  "errorReceiptTemplateNameless": "Chek shabloni nomga ega boʻlishi shart. Nomini kiriting va qayta saqlang.",
+  "shiftDeskTitle": "Smena",
+  "shiftDeskOverAgeWarning": "Smena 24 soatdan ortiq ochiq — sotuv bloklangan. Uni yoping va yangisini oching.",
+  "shiftDeskOpenedAt": "Ochilgan: {when}",
+  "@shiftDeskOpenedAt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftDeskCountedLabel": "Yashikda sanaldi",
+  "shiftDeskCountedHint": "Hech kim sanamagan boʻlsa, boʻsh qoldiring — kassa oʻz yakunini oladi.",
+  "shiftDeskOpeningCashLabel": "Boshlanishda yashikdagi pul",
+  "shiftDeskClosedNow": "Smena yopildi.",
+  "shiftDeskOpenedNow": "Smena ochildi.",
+  "shiftDeskNoShift": "Kassada ochiq smena yoʻq.",
+  "shiftDeskUnfiscalizedCount": "Fiskal hujjatsiz cheklar: {count}",
+  "@shiftDeskUnfiscalizedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shiftDeskUnfinishedCount": "Tugallanmagan cheklar: {count} — yopish ularni tozalaydi",
+  "@shiftDeskUnfinishedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorShiftDeskNotOpen": "Bu kassada ochiq smena yoʻq — yopadigan narsa yoʻq.",
+  "errorShiftDeskAlreadyOpen": "Bu kassada smena allaqachon ochiq.",
+  "errorShiftDeskUnavailable": "Bu kassa smenalarni sim orqali yuritmaydi. Smenani kassaning oʻzida yoping yoki administratorga murojaat qiling.",
+  "errorShiftDeskActorUnknown": "Smenani kassir ochadi, bu soʻrovda kassir atalmagan. Qaytadan kiring.",
+  "prepaymentIntakeTitle": "Avans qabul qilish",
+  "prepaymentIntakeFind": "Xaridorni topish",
+  "prepaymentIntakeNotFound": "Bunday raqamli xaridor topilmadi.",
+  "prepaymentIntakeSubmit": "Avansni qabul qilish",
+  "prepaymentIntakeAccepted": "Avans qabul qilindi. Oldindan kiritilgan: {amount}",
+  "@prepaymentIntakeAccepted": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentIntakeFiscalFailed": "Pul qabul qilindi, lekin avansning fiskal cheki yozilmadi.",
+  "emulatorSettingsTitle": "O‘rnatilgan emulyatorlar",
+  "emulatorSettingsHint": "Asboblarni ulamasdan chop etish va diagnostikani tekshirish",
+  "emulatorReceiptPrinter": "Chek printeri va pul qutisi",
+  "emulatorEnabledNote": "Soket ochiq. Kassa unga faqat bog‘lanishdagi manzil orqali yetadi",
+  "emulatorDisabledNote": "O‘chiq: soket ochilmagan",
+  "emulatorAddress": "Emulyator manzili",
+  "emulatorAddressHint": "Ushbu IP va portni printer sozlamalariga yozing",
+  "emulatorBindAction": "Printer bog‘lanishiga yozish",
+  "emulatorBindDone": "Printer bog‘lanishi endi emulyatorga qaraydi",
+  "emulatorBindingStale": "Printer bog‘lanishi o‘chirilgan emulyatorga qaraydi — chop etish bajarilmaydi",
+  "emulatorStartFailed": "Emulyatorni ishga tushirib bo‘lmadi",
+  "emulatorFiscalOperator": "Fiskal operator (OFD)",
+  "emulatorFiscalAddressHint": "Ushbu manzilni fiskal sozlamalardagi «Server manzili» maydoniga yozing",
+  "emulatorFiscalBindAction": "Fiskal sozlamalarga yozish",
+  "emulatorFiscalBindNote": "Emulyator manzili, logini, paroli, kaliti va zavod raqamini yozadi hamda kassani sinov kassasi deb e’lon qiladi. Ro‘yxatga olish raqamiga tegilmaydi",
+  "emulatorFiscalBindDone": "Fiskal sozlamalar endi emulyatorga qaraydi",
+  "emulatorFiscalBindingStale": "Fiskal sozlamalar o‘chirilgan emulyatorga qaraydi — fiskallashtirish rad etiladi",
+  "emulatorFiscalLocalModuleWarning": "«Mahalliy modul» maydoni to‘ldirilgan — u server manzilini bosib ketadi, kassa emulyatorga bormaydi",
+  "emulatorFiscalBlockedLive": "Kassa jangovar: operator rekvizitlari to‘ldirilgan. Bu yerda OFD emulyatori taqiqlanadi — soxtaga ketgan chek haqiqiydek ko‘rinadi, ammo xaridorga hujjat bermaydi",
+  "emulatorFiscalBlockedUnknown": "Fiskal sozlamalar o‘qilmadi — OFD emulyatorini yoqib bo‘lmaydi",
+  "diagnosticsFiscalEmulatorBanner": "Operator manzili shu kompyuterga qaraydi — hujjatlar emulyatorga ketadi va fiskal hisoblanmaydi",
+  "diagnosticsTitle": "Uskuna diagnostikasi",
+  "diagnosticsSubtitle": "Kassa asboblarga aslida nima yuborgani",
+  "diagnosticsTabPrinter": "Printer",
+  "diagnosticsTabFiscal": "Fiskallashtirish",
+  "errorDiagnosticsUnavailable": "Bu kassada diagnostikani so'raydigan hech kim yo'q",
+  "diagnosticsPrinterQueueMissing": "Bu ish o'rnida chop etish navbati sozlanmagan",
+  "diagnosticsPrinterNothingSent": "Kassa printerga hozircha hech narsa yubormadi",
+  "diagnosticsAskFailed": "Kassa bu savolga javob bermadi: {reason}",
+  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "diagnosticsAttempts": "urinish {count}",
+  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "diagnosticsJobQueued": "navbatda turibdi",
+  "diagnosticsJobPrinting": "chop etilmoqda",
+  "diagnosticsJobPrinted": "chop etildi",
+  "diagnosticsJobFailed": "chop etilmadi",
+  "diagnosticsJobExpired": "muddati o'tdi",
+  "diagnosticsJobCancelled": "bekor qilindi",
+  "diagnosticsFiscalNotConfigured": "Bu kassada fiskal operator sozlanmagan",
+  "diagnosticsFiscalAccepted": "Operator qabul qildi",
+  "diagnosticsFiscalAcceptedEmpty": "Operator hozircha bironta hujjatni qabul qilmadi",
+  "diagnosticsFiscalQueued": "Navbatda",
+  "diagnosticsFiscalQueuedEmpty": "Navbat bo'sh — yuborilganlarning hammasini operator qabul qildi",
+  "diagnosticsFiscalSign": "Fiskal belgi {value}",
+  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOperatorDoc": "operator hujjati {value}",
+  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalReceiptNo": "chek {value}",
+  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "diagnosticsFiscalOffline": "mustaqil berilgan",
+  "diagnosticsEmulatorBanner": "Printer bog‘lanishi shu kompyuterga qaraydi — port ortida qog‘oz emas, emulyator",
+  "diagnosticsTabDrawer": "Pul qutisi",
+  "drawerDiagnosticsEmpty": "Kassa ishga tushganidan beri quti biror marta ham ochilmadi",
+  "drawerDiagnosticsUnavailable": "Bu kassada quti impulslari yozuvi yo'q — so'raydigan narsa yo'q. Bu quti ochilmagan degani emas.",
+  "drawerDiagnosticsCaveat": "Kassa faqat buyruq qabul qilinganini biladi. Qutining haqiqatan ochilgani haqida ikkala yo‘lda ham qaytar aloqa yo‘q.",
+  "drawerDiagnosticsAccepted": "Buyruq qabul qilindi",
+  "drawerDiagnosticsRefused": "Buyruq rad etildi",
+  "drawerDiagnosticsViaSerial": "ketma-ket port",
+  "drawerDiagnosticsViaPrinter": "printer orqali (ESC p)",
+  "diagnosticsTabScales": "Tarozi",
+  "diagnosticsTabDisplay": "Displey",
+  "scalesDiagnosticsUnbound": "Bu kassaga tarozi bog‘lanmagan.\nUni uskuna sozlamalarida bog‘lang — shunda bu yerda ko‘rsatkich paydo bo‘ladi.",
+  "scalesDiagnosticsWeight": "Tarozi ko‘rsatkichi",
+  "scalesDiagnosticsSilent": "Tarozi hali hech narsa yubormadi",
+  "scalesDiagnosticsStable": "Og‘irlik barqarorlashdi",
+  "scalesDiagnosticsSettling": "Og‘irlik o‘zgarmoqda",
+  "scalesDiagnosticsOverload": "Ortiqcha yuk",
+  "scalesDiagnosticsPort": "Tarozi porti",
+  "scalesDiagnosticsBaudSuffix": "bod",
+  "scalesDiagnosticsConnected": "Port ochiq",
+  "scalesDiagnosticsDisconnected": "Port yopiq",
+  "scalesDiagnosticsCaveat": "Bu — asbob yuborgani. Ko‘rsatkich to‘g‘riligini kassa tekshirmaydi, buning uchun tekshiruv bor.",
+  "displayDiagnosticsEmpty": "Kassa ishga tushganidan beri displeyga hech narsa yuborilmadi",
+  "displayDiagnosticsUnavailable": "Bu kassada displey satrlari yozuvi yo'q — so'raydigan narsa yo'q. Bu displeyga hech narsa yuborilmagan degani emas.",
+  "displayDiagnosticsCurrent": "Hozir displeyda",
+  "displayDiagnosticsCaveat": "Kassa faqat satr portga ketganini biladi. O‘chgan yoki uzilgan displey bu yerda ishlayotganidan farq qilmaydi.",
+  "displayDiagnosticsCallPrice": "narx",
+  "displayDiagnosticsCallTotal": "jami",
+  "displayDiagnosticsCallChange": "qaytim",
+  "displayDiagnosticsCallText": "matn",
+  "displayDiagnosticsCallWelcome": "salomlashuv",
+  "displayDiagnosticsCallClear": "tozalash",
+  "emulatorScaleWeight": "Tovoqdagi og‘irlik",
+  "emulatorScaleWeightHint": "Emulyator puldi: tarozi kassaga shu sonni yuboradi",
+  "emulatorQrProvider": "QR to'lov provayderi",
+  "emulatorQrAddressHint": "Bu manzilni QR provayderi sozlamasiga yozing",
+  "emulatorQrBindAction": "QR sozlamasiga yozish",
+  "emulatorQrBindDone": "QR sozlamasi endi emulyatorga qaraydi",
+  "emulatorQrBindingStale": "QR sozlamasi o'chirilgan emulyatorga qaraydi — kod bo'yicha to'lov rad etiladi",
+  "diagnosticsTabPayment": "To'lov",
+  "diagnosticsPaymentEmulatorBanner": "QR provayderi shu kompyuterda: manzil ortida bank emas, emulyator",
+  "paymentDiagnosticsUnavailable": "Bu ish o'rnida to'lov haqida ma'lumot yo'q",
+  "paymentDiagnosticsQrSection": "QR orqali to'lov",
+  "paymentDiagnosticsQrEmpty": "Kassa hozircha bironta to'lov kodini yaratmadi",
+  "paymentDiagnosticsQrNotConfigured": "Bu kassada QR provayderi sozlanmagan",
+  "paymentDiagnosticsQrAddress": "Provayder: {address}",
+  "paymentDiagnosticsQrUnknown": "Provayderga yuborilgan so'rov tanalarini kassa saqlamaydi. Ko'rinadigani — niyatda qolgani: summa, holat, u tomondagi identifikator va rad etish sababi.",
+  "paymentDiagnosticsTerminalSection": "To'lov terminali",
+  "paymentDiagnosticsTerminalEmpty": "Kassa ishga tushgandan beri to'lov terminaliga bironta kadr ketmadi",
+  "paymentDiagnosticsTerminalUnknown": "Terminal jurnali xotirada turadi: qayta ishga tushirishgacha bo'lgan almashinuvlar saqlanmaydi, terminalning o'zida bajarilgan amallarni esa kassa umuman ko'rmaydi.",
+  "paymentDiagnosticsRequest": "So'rov",
+  "paymentDiagnosticsReply": "Javob",
+  "paymentDiagnosticsNoReply": "Javob bo'lmadi",
+  "paymentDiagnosticsApproval": "Ma'qullash kodi {value}",
+  "paymentDiagnosticsTransaction": "tranzaksiya {value}",
+  "paymentDiagnosticsRefusal": "Rad etildi: {value}",
+  "paymentDiagnosticsConfirmations": "tasdiqlar soni {count}",
+  "paymentDiagnosticsOrphanMoney": "cheksiz pul",
+  "paymentDiagnosticsAfterGiveUp": "kassa kutishni to'xtatgandan keyin tasdiqlandi",
+  "paymentDiagnosticsApproved": "Ma'qullandi",
+  "paymentDiagnosticsDeclined": "Rad etildi",
+  "paymentDiagnosticsOpPurchase": "xarid",
+  "paymentDiagnosticsOpReversal": "storno",
+  "paymentDiagnosticsOpRefund": "qaytarish",
+  "paymentDiagnosticsOpUnknown": "noma'lum turdagi kadr",
+  "certificateIssueTitle": "Sovg'a sertifikatini chiqarish",
+  "certificateIssueHint": "Qog'oz uchun pulni sotuv cheki qabul qiladi. Bu yerda qog'ozga qoldiq ochiladi, kassa majburiyat oladi.",
+  "certificateIssueNumber": "Qog'oz raqami",
+  "certificateIssueNominal": "Nominal",
+  "certificateIssuePin": "PIN (majburiy emas)",
+  "certificateIssueExpiresDays": "Amal qilish muddati, kun (majburiy emas)",
+  "certificateIssueReceipt": "Sotuv chekining raqami (majburiy emas)",
+  "certificateIssueSubmit": "Sertifikat chiqarish",
+  "certificateIssueDone": "{number} sertifikati {amount} summaga chiqarildi",
+  "@certificateIssueDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateIssueFailed": "Sertifikat chiqarilmadi",
+  "certificateIssueNumberRequired": "Qog'oz raqamini kiriting",
+  "certificateIssueNominalInvalid": "Nominal noldan katta bo'lishi kerak",
+  "certificateIssueNotPermitted": "Bu kassirga sertifikat chiqarishga ruxsat yo'q",
+  "certificateSlipTitle": "Slipni qayta chop etish",
+  "certificateSlipHint": "Chiqarishda slip chop etilmadi — qog'ozni takroriy slip bo'yicha berish mumkin.",
+  "certificateSlipNumber": "Sertifikat raqami",
+  "certificateSlipPin": "PIN, agar bo'lsa",
+  "certificateSlipSubmit": "Slipni chop etish",
+  "certificateSlipDone": "{number} sertifikatining slipi chop etishga yuborildi",
+  "@certificateSlipDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateSlipFailed": "Slip chop etishga yuborilmadi",
+  "certificateSlipUnavailable": "Bu kassada slipni chop etadigan qurilma yo'q",
+  "prepaymentRefundTitle": "Avansni qaytarish",
+  "prepaymentRefundHint": "Xaridor oldindan kiritgan pul qaytariladi. Qarz bu bilan to'lanmaydi, bonuslarga tegilmaydi.",
+  "prepaymentRefundBalance": "Oldindan kiritilgan: {amount}",
+  "@prepaymentRefundBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundNothing": "Xaridor hisobida avans yo'q — qaytaradigan narsa yo'q",
+  "prepaymentRefundAmount": "Qaytariladigan summa",
+  "prepaymentRefundTender": "Nima bilan qaytariladi",
+  "prepaymentRefundIntake": "Qabul qilish yozuvining raqami (majburiy emas)",
+  "prepaymentRefundSubmit": "Avansni qaytarish",
+  "prepaymentRefundDone": "Avans qaytarildi. Hisobda qolgani: {amount}",
+  "@prepaymentRefundDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundFailed": "Avans qaytarilmadi",
+  "prepaymentRefundAmountInvalid": "Summa noldan katta bo'lishi kerak",
+  "prepaymentRefundNotPermitted": "Bu kassirga avansni qaytarishga ruxsat yo'q",
+  "prepaymentRefundFiscalFailed": "Pul berildi, lekin avans qaytarimining fiskal cheki yozilmadi.",
+  "agentRefundPrepayment": "Avansni qaytarish"
 }

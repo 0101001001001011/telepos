@@ -116,7 +116,7 @@ import 'package:telepos/hardware/printer/wifi_printer.dart'
 /// `parameters` map is permanently empty and which cannot be
 /// class-filtered (unlike a COM port or a paired Bluetooth device, `lsusb`
 /// output does not say what kind of device it is). Left out rather than
-/// faked; see task-1-report.md.
+/// faked.
 class DeviceDiscoveryLocal implements DeviceDiscovery {
   DeviceDiscoveryLocal({
     required DeviceProfileCatalog catalog,

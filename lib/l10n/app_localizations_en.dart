@@ -200,6 +200,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String paymentCardChargeUnsettled(String amount) {
+    return 'The card has already been charged $amount, and that sum will not reach the receipt. Void it on the payment terminal.';
+  }
+
+  @override
   String get saleRemoveItem => 'Remove item';
 
   @override
@@ -298,6 +303,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get refundCard => 'Card refund';
+
+  @override
+  String get refundConnectionLostHint =>
+      'The terminal will reconnect on its own — work resumes where it stopped';
+
+  @override
+  String get refundConnectionLost => 'Connection to the till lost';
 
   @override
   String get refundNoItems => 'No items to refund';
@@ -400,6 +412,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentDebt => 'Debt';
 
   @override
+  String get paymentInstallment => 'Instalments';
+
+  @override
   String get paymentMixed => 'Mixed';
 
   @override
@@ -479,6 +494,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historyReprint => 'Reprint';
+
+  @override
+  String certificateSlipPrintFailed(String number, String reason) {
+    return 'Certificate slip $number was not printed: $reason';
+  }
 
   @override
   String get historyDetails => 'Details';
@@ -946,6 +966,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginShiftClosed => 'Shift closed';
 
   @override
+  String get loginShiftUnknown => 'Shift: unknown';
+
+  @override
   String get saleQuickProducts => 'Quick products';
 
   @override
@@ -965,6 +988,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saleNoDeferredSales => 'No deferred sales';
+
+  @override
+  String get saleDeferredListNotPermitted =>
+      'Deferred receipts are not open to you: the \"defer receipt\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.';
+
+  @override
+  String get saleDeferNotPermitted =>
+      'You may not defer a receipt: the \"defer receipt\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.';
 
   @override
   String get saleReceiptNo => 'Receipt #';
@@ -1072,6 +1103,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shiftOverAgeMessage =>
       'Sale is blocked. Close the current shift and open a new one to continue.';
+
+  @override
+  String get shiftOverAgeCloseAtTill =>
+      'Sale is blocked. Close the shift at the till and open a new one to continue.';
 
   @override
   String shiftSince(String time) {
@@ -1493,6 +1528,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get printerPrintSuccess => 'Print successful';
 
   @override
+  String get paymentNotFiscalized =>
+      'Receipt not fiscalized — payment recorded';
+
+  @override
+  String get paymentFiscalModuleAbsent =>
+      'Fiscal module unavailable — receipts are not fiscalized';
+
+  @override
+  String get cashDrawerOpenError => 'Cash drawer did not open';
+
+  @override
   String get printerPrintError => 'Print error';
 
   @override
@@ -1810,7 +1856,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get valueCannotBeNegative => 'Value cannot be negative';
 
   @override
-  String maxPercent(int percent) {
+  String maxPercent(String percent) {
     return 'Maximum $percent%';
   }
 
@@ -1824,6 +1870,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discountAmount => 'Discount amount:';
+
+  @override
+  String discountLimitPercent(String percent, String source) {
+    return 'Up to $percent% allowed — $source';
+  }
+
+  @override
+  String discountLimitAmount(String amount, String source) {
+    return 'Up to $amount allowed — $source';
+  }
+
+  @override
+  String discountApprovalAbove(String percent) {
+    return 'Above $percent% a supervisor must approve';
+  }
 
   @override
   String get sumLabel => 'Amount';
@@ -2576,7 +2637,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get terminalHomeSaleNote =>
-      'Selling in the browser is separate work: the sale screen reads the till\'s database directly and does not build for the browser yet.';
+      'The till owns the cart, the receipt number and the shift — the terminal shows the receipt and commands over the wire. Printing, fiscalisation and the cash drawer stay on the till.';
 
   @override
   String get wtNotPortedTitle => 'This screen is on the till only for now';
@@ -5093,6 +5154,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fiscalSettingsPrintVatSubtitle => 'Display VAT amount on receipt';
 
   @override
+  String get fiscalOffsetSection => 'Certificates and advances';
+
+  @override
+  String get fiscalOffsetCertificateSale => 'Receipt for certificate sale';
+
+  @override
+  String get fiscalOffsetCertificateSaleSubtitle =>
+      'Issue a fiscal receipt when a gift certificate is sold';
+
+  @override
+  String get fiscalOffsetLayout => 'Paying with certificate or advance';
+
+  @override
+  String get fiscalOffsetLayoutSubtitle =>
+      'How the offset amount appears on the OFD receipt';
+
+  @override
+  String get fiscalOffsetLayoutDiscount => 'As a discount on goods';
+
+  @override
+  String get fiscalOffsetLayoutSurchargeOnly =>
+      'Receipt for the surcharge only';
+
+  @override
+  String get fiscalOffsetPrepaymentReceipt => 'Receipt for advance payment';
+
+  @override
+  String get fiscalOffsetPrepaymentReceiptSubtitle =>
+      'Issue a fiscal receipt when a customer pays an advance';
+
+  @override
+  String get fiscalOffsetSaveError => 'Could not save the setting';
+
+  @override
+  String get customerPaymentTender => 'Paid with';
+
+  @override
   String get fiscalSettingsVatRate => 'VAT rate: 12% (calculated as 3/28)';
 
   @override
@@ -5911,6 +6009,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncPreparing => 'Preparing...';
 
   @override
+  String refundRefused(String reason) {
+    return 'Refund refused: $reason';
+  }
+
+  @override
   String errorSaveFailed(String details) {
     return 'Save error: $details';
   }
@@ -5936,6 +6039,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnknownGeneric => 'Unknown error';
+
+  @override
+  String errorRefusalUnknownCode(String code) {
+    return 'unknown reason (code $code)';
+  }
+
+  @override
+  String get errorReasonUnknown => 'unknown reason';
 
   @override
   String get errorFillRequired => 'Fill in all required fields';
@@ -5981,6 +6092,26 @@ class AppLocalizationsEn extends AppLocalizations {
       'The till is not set up yet — sign-in is unavailable until the setup wizard has run.';
 
   @override
+  String get errorTillNotConfiguredSale =>
+      'The till is not set up — a receipt cannot be started. Ask an administrator to run the setup wizard.';
+
+  @override
+  String get errorNotAllowed =>
+      'You do not have permission for this action. Ask an administrator.';
+
+  @override
+  String get errorNoSaleModule =>
+      'This till cannot run a receipt: the sale module is not built in. Ask an administrator.';
+
+  @override
+  String get errorTerminalInBody =>
+      'The terminal addressed the till incorrectly. Update the app on this workstation.';
+
+  @override
+  String get errorWholesaleInStart =>
+      'A wholesale receipt does not start this way. Start a normal receipt and switch wholesale on with its own button.';
+
+  @override
   String get errorTerminalLimitReached =>
       'This till already has the maximum number of terminals. Ask an administrator to free up a slot.';
 
@@ -6007,6 +6138,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorDeferredNotFound => 'Deferred receipt not found';
+
+  @override
+  String get errorCartStale =>
+      'The receipt changed while you were working on it. The screen has been refreshed — repeat your last action.';
+
+  @override
+  String get errorCartWrongReceipt =>
+      'This receipt is no longer open. Start a new one or resume a deferred receipt.';
+
+  @override
+  String get errorCartNotStarted =>
+      'No receipt has been started yet. Start a new one or resume a deferred receipt.';
+
+  @override
+  String get errorLineNotFound =>
+      'That line is no longer in the receipt. Refresh it and try again.';
+
+  @override
+  String get errorInvalidAmount =>
+      'Invalid value. An amount cannot be negative, and a discount cannot exceed 100%.';
+
+  @override
+  String get errorDeferredTaken =>
+      'That deferred receipt has already been resumed at another workstation.';
+
+  @override
+  String get errorCartNotEmpty =>
+      'Finish or defer the current receipt first — a deferred one cannot be resumed on top of it.';
+
+  @override
+  String get errorSaleNotStarted =>
+      'The till could not start a receipt and gave no reason. Please try again.';
+
+  @override
+  String get errorShiftNotOpen => 'No shift is open. Open a shift at the till.';
+
+  @override
+  String get errorCardTerminalMisconfigured =>
+      'The payment terminal of this workstation is misconfigured. Check the binding in hardware settings.';
 
   @override
   String errorReceiptNotFound(String receiptNo) {
@@ -7772,6 +7942,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get receiptTemplateDeleteTitle => 'Delete template';
+
+  @override
+  String get receiptTemplateHeaderHint =>
+      'Several lines: greeting, promotion, contacts';
+
+  @override
+  String get receiptTemplateFooterHint =>
+      'Several lines: thanks, return policy, website, social media';
+
+  @override
+  String get receiptTemplateAlignLeft => 'Left';
+
+  @override
+  String get receiptTemplateAlignCenter => 'Center';
+
+  @override
+  String get receiptTemplateAlignRight => 'Right';
+
+  @override
+  String get receiptTemplateBold => 'Bold';
+
+  @override
+  String get receiptTemplateDoubleSize => 'Large (double size)';
+
+  @override
+  String get receiptTemplatePaperWidthHint =>
+      'Paper width is set in the printer settings';
+
+  @override
+  String get receiptTemplateMandatoryNote =>
+      'Mandatory details — receipt number, total, payments, VAT, fiscal sign and QR — are always printed, between the header and the footer';
 
   @override
   String receiptTemplateDeleteConfirm(String name) {
@@ -10357,6 +10558,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get promoTitle => 'Promotions';
 
   @override
+  String get promoSubtitle => 'Buy-one-get-one and gift promotions';
+
+  @override
   String get promoNew => 'New promotion';
 
   @override
@@ -10379,9 +10583,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get promoSupplierTag => 'supplier-funded';
-
-  @override
   String get promoDefaultName11 => '1+1 promotion';
 
   @override
@@ -10392,9 +10593,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get promoRewardLabel => 'Gift (what\'s free)';
-
-  @override
-  String get promoSupplierFunded => 'Supplier-funded promotion';
 
   @override
   String get promoSaveButton => 'Save promotion';
@@ -10883,6 +11081,65 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get discountLimitsTitle => 'Discount limits';
+
+  @override
+  String get discountLimitsSubtitle =>
+      'How much a cashier may give away by hand';
+
+  @override
+  String get discountLimitsIntro =>
+      'A role limit overrides the default. A role without its own row follows “Default”. One hundred percent means “no limit” — a declared value, not an absence.';
+
+  @override
+  String get discountLimitsDefaultRow => 'Default (all roles)';
+
+  @override
+  String get discountLimitsMaxPercent => 'Limit, %';
+
+  @override
+  String get discountLimitsApprovalAbove => 'Approval above, %';
+
+  @override
+  String get discountLimitsApprovalHint => 'empty — not required';
+
+  @override
+  String get discountLimitsInheritHint => 'empty — same as default';
+
+  @override
+  String get discountLimitsTwoDoors =>
+      'Note: “block price decrease” in the sales policy closes only the line price edit. A discount is still allowed up to the limit — at 100 % that means a free line. These are two different doors; to close the second one, set a limit below one hundred.';
+
+  @override
+  String get discountLimitsSaved => 'Limit saved';
+
+  @override
+  String get discountLimitsInherited =>
+      'Row removed: the role follows the default';
+
+  @override
+  String get discountLimitsInvalid => 'The limit is a number from 0 to 100';
+
+  @override
+  String get discountLimitsApprovalNotYet =>
+      'Supervisor approval is not implemented yet: a discount above the threshold is refused with a named reason rather than opening a code prompt.';
+
+  @override
+  String errorDeniedPolicy(String detail) {
+    return 'Forbidden by till settings: $detail';
+  }
+
+  @override
+  String errorDeniedLimit(String detail) {
+    return 'Discount above the allowed one: $detail';
+  }
+
+  @override
+  String errorApprovalRequired(String detail) {
+    return 'Supervisor approval required: $detail';
+  }
+
+  @override
   String get errorBigAmountBlocked =>
       'Sale total exceeds 1,000,000 ₸. Enable the large-amount permission in POS settings.';
 
@@ -10976,6 +11233,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get receiptInputNoRecent => 'No receipts yet';
+
+  @override
+  String get receiptInputRecentUnavailable =>
+      'The recent receipts list is unavailable on this terminal — enter the receipt number manually';
 
   @override
   String get shiftHistoryTitle => 'Shift history';
@@ -11254,10 +11515,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get scannerRulesUnavailable =>
-      'Barcode reading rules are not available in this build.';
-
-  @override
   String get scannerRulesSaved => 'Barcode reading rules saved';
 
   @override
@@ -11360,4 +11617,1529 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get printQueueCancelRefused =>
       'This job can no longer be cancelled: it is printing or already finished';
+
+  @override
+  String get errorPayReceiptNotFound =>
+      'This receipt is no longer open — it cannot be paid. Refresh the screen and start again.';
+
+  @override
+  String get errorPayNotOwner =>
+      'This receipt belongs to another workstation — it cannot be paid from here.';
+
+  @override
+  String get errorPaymentAlreadyTaken =>
+      'This receipt has already been paid. The till will not take the money twice.';
+
+  @override
+  String get errorPaymentInsufficient =>
+      'The amount entered does not cover the receipt. Enter the amount again.';
+
+  @override
+  String get errorPaymentAccountMissing =>
+      'The till has no account for this payment type. Ask an administrator.';
+
+  @override
+  String get errorPaymentAccountNotAllowed =>
+      'That account was not offered for payment. Refresh the account list and choose again.';
+
+  @override
+  String get errorPaymentUnbalanced =>
+      'The payment lines do not add up to the receipt total. Enter the payment again.';
+
+  @override
+  String get errorPaymentKindInactive =>
+      'This payment kind is switched off in the till settings. Choose another one or switch it on in the settings.';
+
+  @override
+  String get errorPaymentKindUnknown =>
+      'The till does not know this payment kind. Ask an administrator.';
+
+  @override
+  String get errorCertificateUnknown =>
+      'No certificate with this number on this till. Check the number.';
+
+  @override
+  String get errorCertificatePinWrong =>
+      'The certificate PIN did not match. Enter it again.';
+
+  @override
+  String get errorCertificateRateLimited =>
+      'Too many failed certificate checks. Wait a few minutes and try again.';
+
+  @override
+  String get errorConnectionLost =>
+      'Connection to the till was lost. Check the network and try again.';
+
+  @override
+  String get errorRunIncomplete =>
+      'The till stopped the operation before finishing it. Check the result on the till before trying again.';
+
+  @override
+  String get errorWireMismatch =>
+      'The workstation and the till did not understand each other — their versions differ. Reload the page; if that does not help, contact an administrator.';
+
+  @override
+  String get errorTillFailed =>
+      'The till could not perform the operation. Try again; if the error repeats, contact an administrator.';
+
+  @override
+  String get errorTerminalChanged =>
+      'You have switched workstations — sign in again.';
+
+  @override
+  String get errorUnknownTerminal =>
+      'This workstation is not paired with the till. Pair it again with a pairing code.';
+
+  @override
+  String get errorAlreadyConfigured =>
+      'The till is already set up — the initial setup wizard is no longer available.';
+
+  @override
+  String get errorCannotDeleteSelf =>
+      'The till\'s own workstation cannot be deleted.';
+
+  @override
+  String get errorNoDrivers =>
+      'The till was built without hardware drivers — device search and checks are unavailable. Contact an administrator.';
+
+  @override
+  String get errorNoNetworkModule =>
+      'This till cannot manage network settings — the system service is missing. Contact an administrator.';
+
+  @override
+  String get errorNoSessionRegistry =>
+      'This till does not keep a session list. Contact an administrator.';
+
+  @override
+  String get errorNoBackupTransport =>
+      'Backups are not set up on this till. Contact an administrator.';
+
+  @override
+  String get errorBackupNotFound => 'Backup not found.';
+
+  @override
+  String get errorCertificatesUnavailable =>
+      'This till does not issue gift certificates over the wire. Contact an administrator.';
+
+  @override
+  String get errorRefundStale =>
+      'The refund changed while the command was on its way to the till. Repeat the action.';
+
+  @override
+  String get errorRefundWrongDraft =>
+      'This refund draft no longer exists. Open the refund again.';
+
+  @override
+  String get errorRefundNotStarted =>
+      'No refund in progress — pick a receipt or start a refund without one.';
+
+  @override
+  String get errorRefundEmpty =>
+      'The refund has no lines — there is nothing to return.';
+
+  @override
+  String get errorReceiptAlreadyRefunded =>
+      'This receipt has already been refunded.';
+
+  @override
+  String get errorReceiptNotRefundable =>
+      'This receipt cannot be refunded here: it was paid through another till\'s card terminal. Refund it where it was paid.';
+
+  @override
+  String get errorLineNotInReceipt =>
+      'This item is not on the receipt — only items sold on it can be refunded against it.';
+
+  @override
+  String get errorSaleNotCompleted =>
+      'The sale on this receipt is not completed — there is nothing to refund.';
+
+  @override
+  String get errorRefundBusy =>
+      'Another refund is already in progress on the till. Finish it and try again.';
+
+  @override
+  String get errorRefundCannotStart =>
+      'The till could not start the refund and gave no reason. Check the shift and the till setup.';
+
+  @override
+  String get errorRefundInstallmentRefused =>
+      'This receipt was sold on installments — the till does not refund it. An administrator handles cancelling the contract.';
+
+  @override
+  String get errorRefundCashlessUnavailable =>
+      'This money must go back to the card or via QR, but there is no way to return it: the terminal or provider is not connected. The till does not pay such a refund in cash.';
+
+  @override
+  String get errorRefundCashlessRefused =>
+      'The bank or provider refused the refund. Check the terminal and retry — anything already returned will not be returned twice.';
+
+  @override
+  String get errorRefundKindNotRefundable =>
+      'Refunds to this payment kind are disabled in the payment kinds catalog.';
+
+  @override
+  String get errorRefundKindUnknown =>
+      'The receipt was paid with a payment kind this till does not know. The refund is refused: the tender cannot be named, and cash is not paid out for it.';
+
+  @override
+  String get refundDestinationsTitle => 'Where the money goes';
+
+  @override
+  String get refundRouteDrawer => 'Cash from the drawer';
+
+  @override
+  String get refundRouteCard => 'To the card via the terminal';
+
+  @override
+  String get refundRouteManual => 'Outside the till — the same way it was paid';
+
+  @override
+  String get refundRouteProvider => 'Via the QR provider';
+
+  @override
+  String get refundRouteCertificate =>
+      'As a new gift certificate (the old one stays redeemed)';
+
+  @override
+  String get refundRouteAdvance => 'To the customer\'s advance';
+
+  @override
+  String get refundRouteBonus => 'To the bonus account';
+
+  @override
+  String get refundRouteDebt => 'Against the customer\'s debt';
+
+  @override
+  String get errorCertificateRefundNoSource =>
+      'A receipt line is refunded to a gift certificate, but it carries no certificate number. The refund is refused: there is nothing to issue the replacement certificate from, and the till\'s liability would grow for nothing.';
+
+  @override
+  String get errorCertificateCashRefundRefused =>
+      'A gift certificate cannot be refunded in cash — provide the bank details for a cashless refund.';
+
+  @override
+  String get errorCertificatePaysCertificate =>
+      'A gift certificate cannot pay for the purchase of another gift certificate.';
+
+  @override
+  String get errorCreditContractUnknown =>
+      'There is no installment contract with this number. Check the number.';
+
+  @override
+  String get errorCreditContractNotActive =>
+      'The installment contract is already paid off or cancelled — there is nothing to pay.';
+
+  @override
+  String get errorCreditOverpayment =>
+      'The amount exceeds what is left on the contract. Check the amount.';
+
+  @override
+  String get errorCreditRepaymentInvalid =>
+      'The repayment amount must be greater than zero.';
+
+  @override
+  String get errorCreditAllocationRace =>
+      'Another till paid on this contract at the same moment. Take the payment again.';
+
+  @override
+  String get errorKindTenderCannotDiscount =>
+      'A payment type that brings in real money cannot be declared a non-payment on the receipt.';
+
+  @override
+  String get errorKindAccountMissing =>
+      'No receiving account is assigned to this payment type.';
+
+  @override
+  String get errorKindCounterpartyRequired =>
+      'A deferred payment type requires a named customer.';
+
+  @override
+  String get errorKindProviderRequired =>
+      'A payment type that goes through a provider (QR) needs a provider.';
+
+  @override
+  String get errorKindFiscalKindRequired =>
+      'The payment type has no fiscal treatment set.';
+
+  @override
+  String get errorKindChangeNotATender =>
+      'Only a payment type that brings in real money can give change.';
+
+  @override
+  String get errorKindSystemImmutable =>
+      'A system payment type\'s code or id cannot be changed or taken by another type.';
+
+  @override
+  String get errorCertificateExpired =>
+      'The certificate has expired. Ask the shop owner.';
+
+  @override
+  String get errorCertificateExhausted =>
+      'The certificate has no balance left.';
+
+  @override
+  String get errorCertificateDuplicate =>
+      'The same certificate is listed twice in this payment. Remove the duplicate.';
+
+  @override
+  String get errorCertificateRace =>
+      'The certificate balance has changed. Take the payment again.';
+
+  @override
+  String get errorCertificateAccountMissing =>
+      'The till has no certificate liability account. Ask an administrator.';
+
+  @override
+  String get errorCertificateNumberTaken =>
+      'A certificate with this number has already been issued.';
+
+  @override
+  String get errorCertificateNominalInvalid =>
+      'The certificate value must be greater than zero.';
+
+  @override
+  String get errorDebtCustomerRequired =>
+      'A credit sale needs a customer — choose one.';
+
+  @override
+  String get errorDebtNotSoldHere =>
+      'This till does not sell on credit — debt sales are turned off in the till settings.';
+
+  @override
+  String get errorDebtAccountMissing =>
+      'The customer has no account — there is nowhere to record the debt.';
+
+  @override
+  String get errorBonusAccountMissing =>
+      'The customer has no bonus account — there are no bonuses to spend.';
+
+  @override
+  String get errorPrepaymentCustomerRequired =>
+      'Offsetting a prepayment needs a customer — choose one.';
+
+  @override
+  String get errorCreditTermInvalid =>
+      'The till does not issue instalments for that term';
+
+  @override
+  String get errorCreditPrincipalInvalid =>
+      'Nothing left to finance: the receipt is fully covered';
+
+  @override
+  String get errorCreditFeeInvalid => 'The contract fee is invalid';
+
+  @override
+  String get errorCreditSchemeUnknown =>
+      'The till does not know that schedule scheme';
+
+  @override
+  String get errorCreditOverdue =>
+      'The customer has another overdue instalment contract';
+
+  @override
+  String get errorCreditContractDuplicate =>
+      'An instalment contract already exists for this receipt';
+
+  @override
+  String get errorPrepaymentAccountMissing =>
+      'The customer has no account — there can be no prepayment on it.';
+
+  @override
+  String get errorPrepaymentInsufficient =>
+      'The prepayment is not enough: it has already been offset by another receipt.';
+
+  @override
+  String get errorLoyaltyCustomerUnknown =>
+      'The customer is not in the directory. Choose the customer again.';
+
+  @override
+  String get errorAmountExceedsReceipt =>
+      'The amount is larger than the receipt total. Enter the amount again.';
+
+  @override
+  String get errorCardChargeUnproven =>
+      'The till could not confirm the card charge. Check the payment terminal.';
+
+  @override
+  String get errorPaymentTypeNotAllowed =>
+      'This payment type is not allowed at this workstation.';
+
+  @override
+  String get errorPaymentsUnavailable =>
+      'This till does not accept payment over the wire. Ask an administrator.';
+
+  @override
+  String get errorNoRefundService =>
+      'This till does not process refunds over the wire. Ask an administrator.';
+
+  @override
+  String get errorRefundAbandonIsTillSide =>
+      'The refund draft is cleared by the till, not by the workstation.';
+
+  @override
+  String get errorNoAnswer =>
+      'The till did not answer. Check the connection and try again.';
+
+  @override
+  String paymentTypeNotAllowedHere(String type) {
+    return '\"$type\" is not allowed at this workplace. Payment types are changed in the hardware settings; the till refuses a disallowed type even if the button is pressed.';
+  }
+
+  @override
+  String paymentTypesLimitedHere(String types) {
+    return 'This workplace accepts: $types.';
+  }
+
+  @override
+  String get paymentDebtNotSoldHere =>
+      'This till does not sell on credit: debt sales are turned off in the till settings. The till refuses even if the button is pressed.';
+
+  @override
+  String get paymentDebtNotPermitted =>
+      'You are not allowed to sell on credit: the \"sell on credit\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.';
+
+  @override
+  String get saleDiscountNotPermitted =>
+      'You are not allowed to give discounts: the \"sell with discount\" permission is required. An administrator grants it in the permission settings; the till refuses anyone without it.';
+
+  @override
+  String get paymentDebtPolicyUnknown =>
+      'The till has not answered yet whether credit sales are allowed here. Check the connection to the till and try again.';
+
+  @override
+  String get paymentOffsetsTitle => 'Prepayment and gift certificates';
+
+  @override
+  String get paymentPrepaymentTitle => 'Customer prepayment';
+
+  @override
+  String get paymentPrepaymentNeedsCustomer =>
+      'Find the customer by phone number to apply their prepayment.';
+
+  @override
+  String get paymentPrepaymentLoading =>
+      'The till has not answered yet how much prepayment is on account.';
+
+  @override
+  String get paymentPrepaymentNone =>
+      'The customer has no prepayment on account.';
+
+  @override
+  String get paymentPrepaymentBalance => 'Paid in advance:';
+
+  @override
+  String get paymentPrepaymentUse => 'Apply prepayment';
+
+  @override
+  String paymentPrepaymentApplied(String amount) {
+    return 'Will be applied: $amount';
+  }
+
+  @override
+  String get paymentCertificateTitle => 'Gift certificate';
+
+  @override
+  String get paymentCertificateNumber => 'Certificate number';
+
+  @override
+  String get paymentCertificatePin => 'PIN, if any';
+
+  @override
+  String get paymentCertificatePresent => 'Check';
+
+  @override
+  String paymentCertificateBalance(String amount) {
+    return 'Certificate balance: $amount';
+  }
+
+  @override
+  String paymentCertificateApplied(String amount, String rest) {
+    return '$amount will be redeemed, $rest stays on it';
+  }
+
+  @override
+  String get paymentCertificateNotNeeded =>
+      'The receipt is already covered — this certificate will not be used.';
+
+  @override
+  String get unfiscalizedTitle => 'Unfiscalized receipts';
+
+  @override
+  String get unfiscalizedEmpty => 'Every receipt has its document';
+
+  @override
+  String get unfiscalizedEmptyHint =>
+      'Receipts that were paid for but got no fiscal document appear here';
+
+  @override
+  String unfiscalizedReceiptNo(int number) {
+    return 'Receipt #$number';
+  }
+
+  @override
+  String unfiscalizedAgeHours(int hours) {
+    return '$hours h ago';
+  }
+
+  @override
+  String get unfiscalizedOverdue => '72 h window has passed';
+
+  @override
+  String get unfiscalizedRetry => 'Retry';
+
+  @override
+  String unfiscalizedRetryDone(String sign) {
+    return 'Document issued: $sign';
+  }
+
+  @override
+  String unfiscalizedRetryFailed(String message) {
+    return 'The operator refused again: $message';
+  }
+
+  @override
+  String get unfiscalizedNoDocument =>
+      'Recorded before failures started carrying the document: there is nothing to retry, it can only be written off';
+
+  @override
+  String get unfiscalizedNoOperator =>
+      'No fiscal operator is configured: there is nowhere to retry';
+
+  @override
+  String get unfiscalizedWriteOff => 'Write off';
+
+  @override
+  String get unfiscalizedWriteOffTitle => 'Write off an unfiscalized receipt';
+
+  @override
+  String unfiscalizedWriteOffBy(String name) {
+    return 'The decision is recorded under: $name';
+  }
+
+  @override
+  String get unfiscalizedWriteOffReason => 'Reason';
+
+  @override
+  String get unfiscalizedWriteOffDone => 'Receipt marked as handled';
+
+  @override
+  String unfiscalizedWrittenOff(String name, String reason) {
+    return 'Written off by $name: $reason';
+  }
+
+  @override
+  String get unfiscalizedUnknownUser => 'unknown user';
+
+  @override
+  String unfiscalizedAtShiftClose(int count, String numbers) {
+    return 'Shift closed with unfiscalized receipts: $count. Numbers: $numbers';
+  }
+
+  @override
+  String documentsOnTheWayAtShiftClose(int count, String numbers) {
+    return 'Shift documents have not reached the operator yet: $count (receipts $numbers). Closing waits for one delivery pass; if the link stays down, the Z report is not sent — otherwise the operator report would disagree with the till.';
+  }
+
+  @override
+  String qrPaidPartial(String paid, String amount) {
+    return 'Partially paid: $paid of $amount';
+  }
+
+  @override
+  String get qrOrphanTitle => 'Money without a receipt';
+
+  @override
+  String get qrOrphanHint =>
+      'The customer paid by QR, and no receipt was closed with that money.';
+
+  @override
+  String qrOrphanLine(String amount, String provider, String key) {
+    return '$amount · $provider · $key';
+  }
+
+  @override
+  String get qrOrphanAfterGiveUp =>
+      'The confirmation arrived after the till stopped waiting';
+
+  @override
+  String get errorQrIntentUnknown =>
+      'The till does not know this QR payment. Refresh the receipt and try again.';
+
+  @override
+  String get errorQrIntentNotPaid =>
+      'The bank has not confirmed the QR payment yet. Wait for the confirmation or choose another method.';
+
+  @override
+  String errorQrIntentAlreadySettled(String message) {
+    return 'This money has already closed another receipt: $message';
+  }
+
+  @override
+  String get paymentQrTitle => 'QR payment';
+
+  @override
+  String get paymentQrAmount => 'QR amount';
+
+  @override
+  String get paymentQrStart => 'Show QR';
+
+  @override
+  String paymentQrWaiting(int seconds) {
+    return 'Waiting for payment · $seconds s left';
+  }
+
+  @override
+  String get paymentQrScanHint =>
+      'The customer scans the code in their banking app';
+
+  @override
+  String get paymentQrCancel => 'Cancel waiting';
+
+  @override
+  String get paymentQrNoLink =>
+      'No link to the provider — the till keeps retrying';
+
+  @override
+  String paymentQrPaid(String amount) {
+    return 'Paid by QR: $amount';
+  }
+
+  @override
+  String paymentQrPaidAfterCancel(String amount) {
+    return 'The customer paid before the cancellation — $amount goes into this receipt';
+  }
+
+  @override
+  String get paymentQrCancelled =>
+      'Waiting cancelled, the provider confirmed the cancellation';
+
+  @override
+  String get paymentQrPatienceSpent =>
+      'The customer did not pay in time — the till stopped waiting';
+
+  @override
+  String get paymentQrExpired => 'The QR code expired at the provider';
+
+  @override
+  String get paymentQrFailed => 'The provider declined the QR payment';
+
+  @override
+  String get paymentQrCancelUnconfirmed =>
+      'Cancellation not confirmed — the money may still arrive. Do not accept another payment until the till finds out.';
+
+  @override
+  String get paymentQrRecheck => 'Check again';
+
+  @override
+  String get paymentQrRestart => 'New code';
+
+  @override
+  String paymentQrOverReceipt(String amount) {
+    return '$amount of the QR payment does not fit into the receipt';
+  }
+
+  @override
+  String get paymentQrNothingToPay =>
+      'The receipt is already covered — nothing to show a code for';
+
+  @override
+  String get errorQrNotConfigured =>
+      'The QR provider is not configured on this till';
+
+  @override
+  String get errorQrNetwork => 'No link to the QR provider';
+
+  @override
+  String get errorQrTimeout => 'The QR provider did not answer in time';
+
+  @override
+  String get errorQrProviderBusy =>
+      'The QR provider is busy — the till will retry';
+
+  @override
+  String get errorQrMalformedReply =>
+      'The QR provider sent an unreadable reply — contact the till administrator';
+
+  @override
+  String get errorQrUnknownIntent =>
+      'The QR provider does not know this payment';
+
+  @override
+  String get errorQrRejected => 'The QR provider rejected the request';
+
+  @override
+  String get errorQrReverseUnsupported => 'The QR provider cannot refund money';
+
+  @override
+  String get errorQrIntentLive =>
+      'A QR payment is already waiting on this receipt — cancel it before showing a new code';
+
+  @override
+  String get fiscalReasonNetwork => 'No connection to the fiscal operator';
+
+  @override
+  String get fiscalReasonOperatorUnavailable =>
+      'The fiscal operator is unavailable';
+
+  @override
+  String get fiscalReasonTokenExpired =>
+      'The operator did not accept the till\'s authorisation';
+
+  @override
+  String get fiscalReasonRequestNotBuilt =>
+      'The request to the operator could not be built: check the server address in fiscal settings';
+
+  @override
+  String get fiscalReasonTlsRejected =>
+      'Secure connection to the operator failed: check the server address and the till\'s clock';
+
+  @override
+  String get fiscalReasonClientFault =>
+      'Till error while exchanging data with the operator';
+
+  @override
+  String get fiscalReasonBadCredentials => 'Wrong operator login or password';
+
+  @override
+  String get fiscalReasonCashboxNotFound =>
+      'The operator does not know this till: check the serial number';
+
+  @override
+  String get fiscalReasonCashboxBlocked =>
+      'The till is blocked by the operator';
+
+  @override
+  String get fiscalReasonOfflineLimitExceeded =>
+      'Offline document limit exceeded';
+
+  @override
+  String get fiscalReasonOfflineNotSupported =>
+      'Offline mode is not allowed for this till';
+
+  @override
+  String get fiscalReasonDuplicate =>
+      'The document is already registered with the operator, but its fiscal sign was not issued to the till — take it from the operator\'s cabinet';
+
+  @override
+  String get fiscalReasonValidation =>
+      'The operator rejected the document: amounts or data do not match';
+
+  @override
+  String get fiscalReasonNotEnoughMoney =>
+      'According to the operator there is not enough cash in the till';
+
+  @override
+  String get fiscalReasonShiftError => 'Shift error at the operator';
+
+  @override
+  String get fiscalReasonUnsupported =>
+      'The operation is not supported by the operator';
+
+  @override
+  String get fiscalReasonNotConfigured => 'Fiscalisation is not configured';
+
+  @override
+  String get fiscalReasonUnknown =>
+      'The operator refused for an unknown reason';
+
+  @override
+  String get fiscalReasonOfflineWindowExpired =>
+      'The 72-hour offline window has expired — no document was issued';
+
+  @override
+  String get fiscalReasonRowUnreadable =>
+      'The queue row is damaged: the document cannot be read';
+
+  @override
+  String fiscalReasonWithCode(String reason, int code) {
+    return '$reason (code $code)';
+  }
+
+  @override
+  String fiscalReasonLegacy(String text) {
+    return 'Reason recorded before translation: $text';
+  }
+
+  @override
+  String get fiscalReasonNotRecorded => 'No reason recorded';
+
+  @override
+  String get fiscalReasonPaymentTypeNotAccepted =>
+      'Payment type not accepted by the operator: “credit” and “tare” were removed in OFD protocol 2.0.2';
+
+  @override
+  String get errorDeferredListUnavailable =>
+      'The list of deferred receipts is unavailable';
+
+  @override
+  String errorDeferredListUnavailableReason(String reason) {
+    return 'The list of deferred receipts is unavailable: $reason';
+  }
+
+  @override
+  String get errorRefundSearchUnavailable =>
+      'Product search for refunds is not available on this terminal yet';
+
+  @override
+  String get errorRefundNothingSelected =>
+      'The draft has changed — there is nothing to refund. Check the selected lines.';
+
+  @override
+  String get errorRefundInvalidAmount =>
+      'This quantity cannot be refunded: it cannot exceed the quantity sold on the receipt or be below zero.';
+
+  @override
+  String get errorCertificatePinRequired =>
+      'This certificate has a PIN. Enter the PIN from the certificate.';
+
+  @override
+  String get qrSettingsTitle => 'QR payments';
+
+  @override
+  String get qrSettingsSubtitle =>
+      'QR provider: address, code, key, waiting time';
+
+  @override
+  String get qrSettingsKindTitle => 'Accept QR payments';
+
+  @override
+  String get qrSettingsKindSubtitle =>
+      'The \"QR\" payment type on the payment screen';
+
+  @override
+  String get qrSettingsUrl => 'Provider address';
+
+  @override
+  String get qrSettingsCode => 'Provider code';
+
+  @override
+  String get qrSettingsKey => 'Access key';
+
+  @override
+  String get qrSettingsKeyStoredHint =>
+      'A key is saved. Enter a new one to replace it';
+
+  @override
+  String get qrSettingsKeyEmptyHint => 'No key set';
+
+  @override
+  String get qrSettingsClearKey => 'Erase the saved key';
+
+  @override
+  String get qrSettingsPatience => 'Payment waiting time, seconds';
+
+  @override
+  String get qrSettingsSave => 'Save';
+
+  @override
+  String get qrSettingsSaved => 'QR settings saved';
+
+  @override
+  String get qrSettingsRemove => 'Remove settings';
+
+  @override
+  String get qrSettingsStatusReady => 'Provider is configured';
+
+  @override
+  String get qrSettingsStatusNotConfigured =>
+      'Provider is not configured — QR payments are unavailable';
+
+  @override
+  String get qrSettingsInvalidUrl =>
+      'The address must start with http:// or https://';
+
+  @override
+  String get qrSettingsCodeRequired => 'Enter the provider code';
+
+  @override
+  String qrSettingsInvalidPatience(String min, String max) {
+    return 'Waiting time must be $min to $max seconds';
+  }
+
+  @override
+  String get qrSettingsSaveFailed => 'Could not save QR settings';
+
+  @override
+  String get qrSettingsTillOnly =>
+      'QR provider settings are available only on the till itself';
+
+  @override
+  String get installmentTermsTitle => 'Installments';
+
+  @override
+  String get installmentTermsMonths => 'Term, months';
+
+  @override
+  String get installmentTermsScheme => 'Schedule type';
+
+  @override
+  String get installmentTermsContinue => 'Continue';
+
+  @override
+  String get customerPaymentTitle => 'Take payment / repay debt';
+
+  @override
+  String customerPaymentCurrentDebt(String amount) {
+    return 'Current debt: $amount';
+  }
+
+  @override
+  String customerPaymentBalance(String amount) {
+    return 'Balance: $amount';
+  }
+
+  @override
+  String get customerPaymentAmount => 'Payment amount';
+
+  @override
+  String get customerPaymentAmountInvalid => 'Enter an amount greater than 0';
+
+  @override
+  String get customerPaymentFailed => 'The payment could not be recorded';
+
+  @override
+  String get customerPaymentSubmit => 'Take payment';
+
+  @override
+  String get errorPrepaymentAmountInvalid =>
+      'The prepayment amount must be greater than zero. Enter the amount again.';
+
+  @override
+  String get errorPrepaymentTenderInvalid =>
+      'A prepayment is taken in cash, by card or by QR. Choose another payment kind.';
+
+  @override
+  String get errorPrepaymentTillAccountMissing =>
+      'This till has no account to receive this payment type. Set up the receiving account and try again.';
+
+  @override
+  String get errorPrepaymentIntakeFailed =>
+      'The prepayment could not be taken. Check the customer and try again.';
+
+  @override
+  String get errorPrepaymentRefundExceedsBalance =>
+      'The customer\'s account holds less prepayment than you are paying out. Check the balance and reduce the amount.';
+
+  @override
+  String get errorPrepaymentRefundKeyMissing =>
+      'The prepayment payout request carries no retry key, so the till cannot tell a retry from a second payout. Reopen the screen and enter the amount again.';
+
+  @override
+  String get errorPrepaymentRefundFailed =>
+      'The prepayment could not be paid out. Check the customer and try again.';
+
+  @override
+  String get errorPrepaymentRefundUnavailable =>
+      'This till does not pay out customer prepayments over the wire. Contact your administrator.';
+
+  @override
+  String get errorPrepaymentIntakeUnavailable =>
+      'This till does not take customer prepayments over the wire. Contact the administrator.';
+
+  @override
+  String get errorPrepaymentIntakeKeyMissing =>
+      'This prepayment request carries no repeat key, so the till cannot tell a retry from a second payment. Reopen the screen and enter the amount again.';
+
+  @override
+  String get errorQrSetupUnavailable =>
+      'This till holds no QR provider settings. Set QR payment up on the till itself, or contact the administrator.';
+
+  @override
+  String get errorReceiptTemplatesUnavailable =>
+      'This till holds no receipt templates. Set the template up on the till itself, or contact the administrator.';
+
+  @override
+  String get errorReceiptTemplateNameless =>
+      'A receipt template must have a name. Enter one and save again.';
+
+  @override
+  String get shiftDeskTitle => 'Shift';
+
+  @override
+  String get shiftDeskOverAgeWarning =>
+      'This shift has been open for more than 24 hours, so selling is blocked. Close it and open a new one.';
+
+  @override
+  String shiftDeskOpenedAt(String when) {
+    return 'Opened: $when';
+  }
+
+  @override
+  String get shiftDeskCountedLabel => 'Counted in the drawer';
+
+  @override
+  String get shiftDeskCountedHint =>
+      'Leave empty if nobody counted — the till will use its own total.';
+
+  @override
+  String get shiftDeskOpeningCashLabel => 'Cash in the drawer at the start';
+
+  @override
+  String get shiftDeskClosedNow => 'The shift is closed.';
+
+  @override
+  String get shiftDeskOpenedNow => 'The shift is open.';
+
+  @override
+  String get shiftDeskNoShift => 'This till has no open shift.';
+
+  @override
+  String shiftDeskUnfiscalizedCount(int count) {
+    return 'Receipts with no fiscal document: $count';
+  }
+
+  @override
+  String shiftDeskUnfinishedCount(int count) {
+    return 'Unfinished receipts: $count — closing will clear them';
+  }
+
+  @override
+  String get errorShiftDeskNotOpen =>
+      'This till has no open shift, so there is nothing to close.';
+
+  @override
+  String get errorShiftDeskAlreadyOpen =>
+      'This till already has an open shift.';
+
+  @override
+  String get errorShiftDeskUnavailable =>
+      'This till does not run shifts over the wire. Close the shift on the till itself, or contact the administrator.';
+
+  @override
+  String get errorShiftDeskActorUnknown =>
+      'A shift is opened by a cashier, and this request names none. Sign in again.';
+
+  @override
+  String get prepaymentIntakeTitle => 'Take a prepayment';
+
+  @override
+  String get prepaymentIntakeFind => 'Find the customer';
+
+  @override
+  String get prepaymentIntakeNotFound => 'No customer with that number.';
+
+  @override
+  String get prepaymentIntakeSubmit => 'Take the prepayment';
+
+  @override
+  String prepaymentIntakeAccepted(String amount) {
+    return 'Prepayment taken. Paid in advance: $amount';
+  }
+
+  @override
+  String get prepaymentIntakeFiscalFailed =>
+      'The money is taken, but no fiscal prepayment receipt was issued.';
+
+  @override
+  String get emulatorSettingsTitle => 'Built-in emulators';
+
+  @override
+  String get emulatorSettingsHint =>
+      'Check printing and diagnostics without attaching devices';
+
+  @override
+  String get emulatorReceiptPrinter => 'Receipt printer and cash drawer';
+
+  @override
+  String get emulatorEnabledNote =>
+      'The socket is up. The till reaches it only via the address in the binding';
+
+  @override
+  String get emulatorDisabledNote => 'Off: no socket is open';
+
+  @override
+  String get emulatorAddress => 'Emulator address';
+
+  @override
+  String get emulatorAddressHint =>
+      'Enter this IP and port in the printer settings';
+
+  @override
+  String get emulatorBindAction => 'Write into the printer binding';
+
+  @override
+  String get emulatorBindDone =>
+      'The printer binding now points at the emulator';
+
+  @override
+  String get emulatorBindingStale =>
+      'The printer binding points at a stopped emulator — printing will fail';
+
+  @override
+  String get emulatorStartFailed => 'Could not start the emulator';
+
+  @override
+  String get emulatorFiscalOperator => 'Fiscal operator (OFD)';
+
+  @override
+  String get emulatorFiscalAddressHint =>
+      'Enter this address in the “Server address” field of the fiscal settings';
+
+  @override
+  String get emulatorFiscalBindAction => 'Write into the fiscal settings';
+
+  @override
+  String get emulatorFiscalBindNote =>
+      'Writes the emulator address, login, password, key and cashbox number, and declares the till a test one. The registration number is left alone';
+
+  @override
+  String get emulatorFiscalBindDone =>
+      'The fiscal settings now point at the emulator';
+
+  @override
+  String get emulatorFiscalBindingStale =>
+      'The fiscal settings point at a stopped emulator — fiscalisation will fail';
+
+  @override
+  String get emulatorFiscalLocalModuleWarning =>
+      'The “Local module” field is filled in — it overrides the server address, so the till will not go to the emulator';
+
+  @override
+  String get emulatorFiscalBlockedLive =>
+      'This is a production till: the operator credentials are filled in. The OFD emulator is forbidden here — a receipt sent to a fake looks genuine but gives the customer no document';
+
+  @override
+  String get emulatorFiscalBlockedUnknown =>
+      'The fiscal settings could not be read — the OFD emulator cannot be enabled';
+
+  @override
+  String get diagnosticsFiscalEmulatorBanner =>
+      'The operator address points at this very computer — documents go to an emulator and are not fiscal';
+
+  @override
+  String get diagnosticsTitle => 'Hardware diagnostics';
+
+  @override
+  String get diagnosticsSubtitle =>
+      'What the till actually sent to the devices';
+
+  @override
+  String get diagnosticsTabPrinter => 'Printer';
+
+  @override
+  String get diagnosticsTabFiscal => 'Fiscalisation';
+
+  @override
+  String get errorDiagnosticsUnavailable =>
+      'There is nobody to ask for diagnostics on this till';
+
+  @override
+  String get diagnosticsPrinterQueueMissing =>
+      'No print queue is configured for this workstation';
+
+  @override
+  String get diagnosticsPrinterNothingSent =>
+      'The till has not sent anything to the printer yet';
+
+  @override
+  String diagnosticsAskFailed(String reason) {
+    return 'The till did not answer this question: $reason';
+  }
+
+  @override
+  String diagnosticsAttempts(int count) {
+    return 'attempts $count';
+  }
+
+  @override
+  String get diagnosticsJobQueued => 'waiting in queue';
+
+  @override
+  String get diagnosticsJobPrinting => 'printing';
+
+  @override
+  String get diagnosticsJobPrinted => 'printed';
+
+  @override
+  String get diagnosticsJobFailed => 'not printed';
+
+  @override
+  String get diagnosticsJobExpired => 'expired';
+
+  @override
+  String get diagnosticsJobCancelled => 'cancelled';
+
+  @override
+  String get diagnosticsFiscalNotConfigured =>
+      'No fiscal operator is configured on this till';
+
+  @override
+  String get diagnosticsFiscalAccepted => 'Accepted by the operator';
+
+  @override
+  String get diagnosticsFiscalAcceptedEmpty =>
+      'The operator has not accepted a single document yet';
+
+  @override
+  String get diagnosticsFiscalQueued => 'In the queue';
+
+  @override
+  String get diagnosticsFiscalQueuedEmpty =>
+      'The queue is empty — everything sent was accepted';
+
+  @override
+  String diagnosticsFiscalSign(String value) {
+    return 'Fiscal sign $value';
+  }
+
+  @override
+  String diagnosticsFiscalOperatorDoc(String value) {
+    return 'operator document $value';
+  }
+
+  @override
+  String diagnosticsFiscalReceiptNo(String value) {
+    return 'receipt $value';
+  }
+
+  @override
+  String get diagnosticsFiscalOffline => 'issued offline';
+
+  @override
+  String get diagnosticsEmulatorBanner =>
+      'The printer binding points at this very computer — an emulator is behind the port, not paper';
+
+  @override
+  String get diagnosticsTabDrawer => 'Cash drawer';
+
+  @override
+  String get drawerDiagnosticsEmpty =>
+      'The drawer has not been opened since the till started';
+
+  @override
+  String get drawerDiagnosticsUnavailable =>
+      'This till keeps no record of drawer pulses — there is nothing to ask. It does not mean the drawer was never opened.';
+
+  @override
+  String get drawerDiagnosticsCaveat =>
+      'The till only knows whether the command was accepted. Whether the drawer actually opened, neither path reports back.';
+
+  @override
+  String get drawerDiagnosticsAccepted => 'Command accepted';
+
+  @override
+  String get drawerDiagnosticsRefused => 'Command refused';
+
+  @override
+  String get drawerDiagnosticsViaSerial => 'serial port';
+
+  @override
+  String get drawerDiagnosticsViaPrinter => 'via the printer (ESC p)';
+
+  @override
+  String get diagnosticsTabScales => 'Scales';
+
+  @override
+  String get diagnosticsTabDisplay => 'Display';
+
+  @override
+  String get scalesDiagnosticsUnbound =>
+      'No scales are bound to this till.\nBind them in hardware settings and a reading will appear here.';
+
+  @override
+  String get scalesDiagnosticsWeight => 'Scale reading';
+
+  @override
+  String get scalesDiagnosticsSilent => 'The scales have sent nothing yet';
+
+  @override
+  String get scalesDiagnosticsStable => 'Weight settled';
+
+  @override
+  String get scalesDiagnosticsSettling => 'Weight changing';
+
+  @override
+  String get scalesDiagnosticsOverload => 'Overload';
+
+  @override
+  String get scalesDiagnosticsPort => 'Scale port';
+
+  @override
+  String get scalesDiagnosticsBaudSuffix => 'baud';
+
+  @override
+  String get scalesDiagnosticsConnected => 'Port open';
+
+  @override
+  String get scalesDiagnosticsDisconnected => 'Port closed';
+
+  @override
+  String get scalesDiagnosticsCaveat =>
+      'This is what the device sent. The till does not verify the reading — that is what calibration is for.';
+
+  @override
+  String get displayDiagnosticsEmpty =>
+      'Nothing has been sent to the display since the till started';
+
+  @override
+  String get displayDiagnosticsUnavailable =>
+      'This till keeps no record of display lines — there is nothing to ask. It does not mean nothing was sent to the display.';
+
+  @override
+  String get displayDiagnosticsCurrent => 'On the display now';
+
+  @override
+  String get displayDiagnosticsCaveat =>
+      'The till only knows the line went into the port. A dark or unplugged display is indistinguishable from a working one here.';
+
+  @override
+  String get displayDiagnosticsCallPrice => 'price';
+
+  @override
+  String get displayDiagnosticsCallTotal => 'total';
+
+  @override
+  String get displayDiagnosticsCallChange => 'change';
+
+  @override
+  String get displayDiagnosticsCallText => 'text';
+
+  @override
+  String get displayDiagnosticsCallWelcome => 'welcome';
+
+  @override
+  String get displayDiagnosticsCallClear => 'clear';
+
+  @override
+  String get emulatorScaleWeight => 'Weight on the pan';
+
+  @override
+  String get emulatorScaleWeightHint =>
+      'Emulator control: this is the number the scales will report';
+
+  @override
+  String get emulatorQrProvider => 'QR payment provider';
+
+  @override
+  String get emulatorQrAddressHint =>
+      'Enter this address in the QR provider settings';
+
+  @override
+  String get emulatorQrBindAction => 'Use in QR settings';
+
+  @override
+  String get emulatorQrBindDone => 'QR settings now point at the emulator';
+
+  @override
+  String get emulatorQrBindingStale =>
+      'QR settings point at a stopped emulator — code payment will fail';
+
+  @override
+  String get diagnosticsTabPayment => 'Payment';
+
+  @override
+  String get diagnosticsPaymentEmulatorBanner =>
+      'The QR provider is on this same computer: an emulator answers, not a bank';
+
+  @override
+  String get paymentDiagnosticsUnavailable =>
+      'There is no payment data on this workstation';
+
+  @override
+  String get paymentDiagnosticsQrSection => 'QR payment';
+
+  @override
+  String get paymentDiagnosticsQrEmpty =>
+      'The till has not created a single payment code yet';
+
+  @override
+  String get paymentDiagnosticsQrNotConfigured =>
+      'No QR provider is configured on this till';
+
+  @override
+  String paymentDiagnosticsQrAddress(String address) {
+    return 'Provider: $address';
+  }
+
+  @override
+  String get paymentDiagnosticsQrUnknown =>
+      'The till does not keep the request bodies sent to the provider. What is shown is what settled in the intent: amount, status, the provider-side id and the refusal reason.';
+
+  @override
+  String get paymentDiagnosticsTerminalSection => 'Payment terminal';
+
+  @override
+  String get paymentDiagnosticsTerminalEmpty =>
+      'No frame has gone to the payment terminal since the till started';
+
+  @override
+  String get paymentDiagnosticsTerminalUnknown =>
+      'The terminal log lives in memory: exchanges from before a restart are not kept, and operations performed on the terminal itself are not seen by the till at all.';
+
+  @override
+  String get paymentDiagnosticsRequest => 'Request';
+
+  @override
+  String get paymentDiagnosticsReply => 'Reply';
+
+  @override
+  String get paymentDiagnosticsNoReply => 'There was no reply';
+
+  @override
+  String paymentDiagnosticsApproval(String value) {
+    return 'Approval code $value';
+  }
+
+  @override
+  String paymentDiagnosticsTransaction(String value) {
+    return 'transaction $value';
+  }
+
+  @override
+  String paymentDiagnosticsRefusal(String value) {
+    return 'Refused: $value';
+  }
+
+  @override
+  String paymentDiagnosticsConfirmations(int count) {
+    return 'confirmations $count';
+  }
+
+  @override
+  String get paymentDiagnosticsOrphanMoney => 'money without a receipt';
+
+  @override
+  String get paymentDiagnosticsAfterGiveUp =>
+      'confirmed after the till stopped waiting';
+
+  @override
+  String get paymentDiagnosticsApproved => 'Approved';
+
+  @override
+  String get paymentDiagnosticsDeclined => 'Declined';
+
+  @override
+  String get paymentDiagnosticsOpPurchase => 'purchase';
+
+  @override
+  String get paymentDiagnosticsOpReversal => 'reversal';
+
+  @override
+  String get paymentDiagnosticsOpRefund => 'refund';
+
+  @override
+  String get paymentDiagnosticsOpUnknown => 'frame of an unknown kind';
+
+  @override
+  String get certificateIssueTitle => 'Issue a gift certificate';
+
+  @override
+  String get certificateIssueHint =>
+      'The sale receipt takes the money for the paper. Here the paper gets its balance and the till takes on the liability.';
+
+  @override
+  String get certificateIssueNumber => 'Paper number';
+
+  @override
+  String get certificateIssueNominal => 'Face value';
+
+  @override
+  String get certificateIssuePin => 'PIN (optional)';
+
+  @override
+  String get certificateIssueExpiresDays => 'Valid for, days (optional)';
+
+  @override
+  String get certificateIssueReceipt => 'Sale receipt number (optional)';
+
+  @override
+  String get certificateIssueSubmit => 'Issue the certificate';
+
+  @override
+  String certificateIssueDone(String number, String amount) {
+    return 'Certificate $number issued for $amount';
+  }
+
+  @override
+  String get certificateIssueFailed => 'The certificate was not issued';
+
+  @override
+  String get certificateIssueNumberRequired => 'Enter the paper number';
+
+  @override
+  String get certificateIssueNominalInvalid =>
+      'The face value must be greater than zero';
+
+  @override
+  String get certificateIssueNotPermitted =>
+      'This cashier may not issue certificates';
+
+  @override
+  String get certificateSlipTitle => 'Print the slip again';
+
+  @override
+  String get certificateSlipHint =>
+      'The slip did not print on issue — hand the paper over by a reprint.';
+
+  @override
+  String get certificateSlipNumber => 'Certificate number';
+
+  @override
+  String get certificateSlipPin => 'PIN, if it has one';
+
+  @override
+  String get certificateSlipSubmit => 'Print the slip';
+
+  @override
+  String certificateSlipDone(String number) {
+    return 'The slip of certificate $number was sent to the printer';
+  }
+
+  @override
+  String get certificateSlipFailed => 'The slip was not sent to the printer';
+
+  @override
+  String get certificateSlipUnavailable =>
+      'This till has nothing to print the slip with';
+
+  @override
+  String get prepaymentRefundTitle => 'Pay a prepayment back';
+
+  @override
+  String get prepaymentRefundHint =>
+      'This returns money the customer paid in advance. It does not settle a debt and does not touch bonuses.';
+
+  @override
+  String prepaymentRefundBalance(String amount) {
+    return 'Paid in advance: $amount';
+  }
+
+  @override
+  String get prepaymentRefundNothing =>
+      'There is no prepayment on the customer\'s account — nothing to pay back';
+
+  @override
+  String get prepaymentRefundAmount => 'Amount to pay back';
+
+  @override
+  String get prepaymentRefundTender => 'How to pay it back';
+
+  @override
+  String get prepaymentRefundIntake => 'Intake entry number (optional)';
+
+  @override
+  String get prepaymentRefundSubmit => 'Pay the prepayment back';
+
+  @override
+  String prepaymentRefundDone(String amount) {
+    return 'The prepayment is paid back. Left on the account: $amount';
+  }
+
+  @override
+  String get prepaymentRefundFailed => 'The prepayment was not paid back';
+
+  @override
+  String get prepaymentRefundAmountInvalid =>
+      'The amount must be greater than zero';
+
+  @override
+  String get prepaymentRefundNotPermitted =>
+      'This cashier may not pay prepayments back';
+
+  @override
+  String get prepaymentRefundFiscalFailed =>
+      'The money is paid out, but no fiscal prepayment-refund receipt was issued.';
+
+  @override
+  String get agentRefundPrepayment => 'Pay the prepayment back';
 }

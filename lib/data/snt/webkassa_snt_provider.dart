@@ -217,6 +217,9 @@ class WebKassaSntProvider implements SntProvider {
       case -1:
       case -2:
       case -3:
+      // −5: 5xx/408/429 без кода оператора (`WebKassaApiClient
+      // .operatorUnavailableCode`).
+      case -5:
         return SntErrorCode.network;
       case 2:
       case 3:

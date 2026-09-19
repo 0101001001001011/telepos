@@ -15,6 +15,15 @@ class CouchDbDocumentMapper {
   static String inventoryDocId(int id) => 'inventory:$id';
   static String supplierReturnDocId(int id) => 'supplier_return:$id';
 
+  /// Запись бонусного журнала. Идентификатор — **пара «породившая касса +
+  /// её номер записи»**, а не местный `id`: местные идентификаторы у двух
+  /// касс совпадают постоянно, и один документ затирал бы другой.
+  ///
+  /// Тот же ключ, что уникален в таблице, поэтому повторная доставка
+  /// попадает в тот же документ, а не заводит соседний.
+  static String bonusEntryDocId(int originPosId, int originEntryId) =>
+      'bonus_entry:$originPosId:$originEntryId';
+
   static String? typeFromDocId(String docId) {
     final idx = docId.indexOf(':');
     return idx > 0 ? docId.substring(0, idx) : null;
@@ -419,6 +428,52 @@ class CouchDbDocumentMapper {
       'discrepancy_count': doc['discrepancy_count'],
       'is_full_count': doc['is_full_count'],
       'state': doc['state'],
+    };
+  }
+
+  /// Запись бонусного журнала — **без `_rev`, и это не пропуск**.
+  ///
+  /// Запись журнала неизменяема: она описывает случившееся движение.
+  /// Конфликт на такой записи означает «эта запись уже там», а не «кто-то
+  /// изменил её под нами», и отправлять `_rev`, чтобы конфликта не было,
+  /// значило бы разрешать перезапись факта. Сломанный `_rev` пуш-очереди
+  /// (`project_telepos_couchdb_sync_broken`) журналу поэтому **не мешает**.
+  static Map<String, dynamic> bonusEntryToDoc(Map<String, dynamic> entry) {
+    return {
+      '_id': bonusEntryDocId(
+        entry['origin_pos_id'] as int,
+        entry['origin_entry_id'] as int,
+      ),
+      'type': 'bonus_entry',
+      'origin_pos_id': entry['origin_pos_id'],
+      'origin_entry_id': entry['origin_entry_id'],
+      'account_id': entry['account_id'],
+      'kind': entry['kind'],
+      // Деньги по проводу — строкой десятичного числа (I159). `double`
+      // здесь потерял бы третий знак молча.
+      'amount': entry['amount']?.toString(),
+      'receipt_no': entry['receipt_no'],
+      'pos_id': entry['pos_id'],
+      'refund_local_id': entry['refund_local_id'],
+      'user_id': entry['user_id'],
+      'reason': entry['reason'],
+      'time': entry['time'],
+    };
+  }
+
+  static Map<String, dynamic> docToBonusEntry(Map<String, dynamic> doc) {
+    return {
+      'origin_pos_id': doc['origin_pos_id'],
+      'origin_entry_id': doc['origin_entry_id'],
+      'account_id': doc['account_id'],
+      'kind': doc['kind'],
+      'amount': doc['amount'],
+      'receipt_no': doc['receipt_no'],
+      'pos_id': doc['pos_id'],
+      'refund_local_id': doc['refund_local_id'],
+      'user_id': doc['user_id'],
+      'reason': doc['reason'],
+      'time': doc['time'],
     };
   }
 

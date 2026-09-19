@@ -5,6 +5,7 @@ import 'package:talker/talker.dart';
 import 'package:telepos/core/constants/enums/service_order_status.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
+import 'package:telepos/data/sale/receipt_numbers.dart';
 import 'package:telepos/domain/entities/service/service_order_entity.dart';
 import 'package:telepos/domain/entities/warranty/warranty_record_entity.dart';
 import 'package:telepos/domain/repositories/warranty_repository.dart';
@@ -21,10 +22,12 @@ class ServiceOrderTransitionUseCaseImpl
     required AppDatabase db,
     required Talker logger,
   }) : _db = db,
-       _logger = logger;
+       _logger = logger,
+       _receiptNumbers = ReceiptNumbers(db);
 
   final AppDatabase _db;
   final Talker _logger;
+  final ReceiptNumbers _receiptNumbers;
 
   static const int _pendingSync = 1;
 
@@ -180,15 +183,23 @@ class ServiceOrderTransitionUseCaseImpl
     final shift = await _db.shiftDao.findOpenedShift();
     final userId = shift?.userId ?? row.userId;
 
-    final lastReceipt = await _db.saleDao.findLastReceiptNo();
-    final receiptNo = (lastReceipt ?? 0) + 1;
-
-    await _db.transaction(() async {
+    // Номер закрепляется атомарно вместе с полной строкой продажи и всем,
+    // что от неё зависит (платёж, баланс счёта, заказ услуги) — тот же
+    // класс, что и `sale_initiation_use_case_impl.dart`/
+    // `create_table_order_use_case_impl.dart` (задача 4, круг правки 1):
+    // `findLastReceiptNo() ?? 0) + 1` здесь на месте делил один и тот же
+    // счётчик с продажей и с созданием заказа стола без всякой защиты от
+    // гонки между ними. `_db.transaction()`, которым раньше был обёрнут
+    // только этот блок, больше не нужен отдельно — `withNext` уже
+    // транзакция, внутри которой всё это и происходит.
+    final receiptNo = await _receiptNumbers.withNext(salePosId, (
+      candidateReceiptNo,
+    ) async {
       await _db
           .into(_db.sales)
           .insert(
             SalesCompanion.insert(
-              receiptNo: receiptNo,
+              receiptNo: candidateReceiptNo,
               posId: salePosId,
               userId: userId,
               amount: remaining,
@@ -197,6 +208,14 @@ class ServiceOrderTransitionUseCaseImpl
               state: const Value(_pendingSync),
               isOfd: const Value(false),
               customerLocalId: Value(row.clientAgentId),
+              // Владелец имеет только чек в работе (state = 0) — этот
+              // чек рождается сразу в «ожидает отправки» (закрытие заказа
+              // услуги, оплата уже проведена), минуя корзину вовсе.
+              // Явный `null`, а не умолчание колонки: колонка сегодня и
+              // так осталась бы пустой без этой строки, но правило
+              // требует решения на каждую запись `state`, а не молчаливого
+              // совпадения с умолчанием.
+              terminalId: const Value(null),
             ),
           );
 
@@ -205,7 +224,7 @@ class ServiceOrderTransitionUseCaseImpl
           .insert(
             PaymentsCompanion.insert(
               userId: userId,
-              receiptNo: Value(receiptNo),
+              receiptNo: Value(candidateReceiptNo),
               posId: Value(salePosId),
               payeeAccountId: cashAccountId,
               amount: remaining,
@@ -224,6 +243,8 @@ class ServiceOrderTransitionUseCaseImpl
       await _db.serviceOrderDao.updateOrder(
         row.copyWith(finalAmount: Value(totalCost)),
       );
+
+      return candidateReceiptNo;
     });
 
     try {

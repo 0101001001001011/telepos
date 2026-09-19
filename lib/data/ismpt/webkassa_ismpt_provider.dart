@@ -188,6 +188,9 @@ class WebKassaIsMptProvider implements IsMptService {
       case -1:
       case -2:
       case -3:
+      // −5: 5xx/408/429 без кода оператора (`WebKassaApiClient
+      // .operatorUnavailableCode`).
+      case -5:
         return IsMptErrorCode.network;
       case 2:
       case 3:

@@ -50,6 +50,17 @@ class SaleMapper {
       customerBin: Value(entity.customerBin),
       orderType: Value(entity.orderType),
       serviceCharge: Value(entity.serviceCharge),
+      // `SaleEntity` не несёт `terminalId` (задача 3, круг 0, сознательно —
+      // ни один читатель домена его не потребовал). `SaleRepositoryImpl
+      // .insert()`, единственный вызывающий этой функции, сегодня не имеет
+      // вызывающего нигде в lib/ (проверено `grep`, тот же вывод, что
+      // `SaleRepository.updateState`/`SaleDao.setState`) — но
+      // `sale_state_owner_guard_test.dart` (круг правки 2) стережёт по
+      // назначению, а не по тому, жив путь или мёртв: запись `state` без
+      // решения по `terminalId` — тот самый класс дыры, который нашёл
+      // `SaleUseCaseImpl.perform`. Явный `null`: сущность и раньше не могла
+      // назначить владельца, эта запись ничего не меняет по поведению.
+      terminalId: const Value(null),
     );
   }
 

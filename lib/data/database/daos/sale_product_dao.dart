@@ -43,6 +43,17 @@ class SaleProductDao extends DatabaseAccessor<AppDatabase>
         saleProductMarks,
       )..where((spm) => spm.saleProductId.equals(saleProductId))).get();
 
+  /// Снимает все марки со строки продажи.
+  ///
+  /// Заведён задачей 7: маркировка строки корзины теперь правится
+  /// командой (`CartService.setMark`), а не собирается один раз при
+  /// завершении продажи. Без снятия прежней марки повторная простановка
+  /// оставляла бы у одной строки две марки, и `findMarksBySaleProduct`
+  /// возвращал бы обе — на фискальный чек уехала бы произвольная.
+  Future<int> deleteMarksBySaleProduct(int saleProductId) => (delete(
+    saleProductMarks,
+  )..where((m) => m.saleProductId.equals(saleProductId))).go();
+
   Future<int> insertMark(int saleProductId, String mark) =>
       into(saleProductMarks).insert(
         SaleProductMarksCompanion.insert(

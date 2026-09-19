@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:telepos/hardware/display/display_platform.dart';
+import 'package:telepos/hardware/serial/serial_port_path.dart';
 
 abstract class SerialPortDisplay {
   Future<bool> open();
@@ -106,8 +107,7 @@ class _FileSerialPortDisplay implements SerialPortDisplay {
     if (_isOpen) return true;
 
     try {
-      final path = Platform.isWindows ? '\\\\.\\$port' : port;
-      _file = await File(path).open(mode: FileMode.write);
+      _file = await openSerialPort(port, mode: FileMode.write);
       _isOpen = true;
       return true;
     } catch (e) {

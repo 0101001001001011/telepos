@@ -1,12 +1,11 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:telepos/presentation/controllers/app/stock_revision.dart';
 import 'package:get_it/get_it.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/inventory/create_inventory_use_case.dart';
-import 'package:telepos/presentation/controllers/catalog/catalog_controller.dart';
-import 'package:telepos/presentation/controllers/stock_registry/stock_registry_controller.dart';
 
 @immutable
 class InventoryProductItem {
@@ -217,8 +216,8 @@ class InventoryNotifier extends Notifier<InventoryState> {
 
       state = state.copyWith(isSaving: false, isActive: !result.success);
 
-      ref.invalidate(catalogControllerProvider);
-      ref.invalidate(stockRegistryControllerProvider);
+      // Задача 36: одна дорога на «остатки изменились» — счётчик.
+      ref.read(stockRevisionProvider.notifier).bump();
 
       return result;
     } catch (e) {

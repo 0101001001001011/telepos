@@ -1,13 +1,17 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:telepos/app/router/app_routes.dart';
 import 'package:telepos/app/theme/app_colors.dart';
+import 'package:telepos/data/fiscal/offline_queueing_provider.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/adaptive/breakpoints.dart';
 import 'package:telepos/presentation/controllers/settings/fiscal_settings_controller.dart';
+import 'package:telepos/presentation/screens/settings/widgets/fiscal_offset_settings_section.dart';
 
 class FiscalSettingsScreen extends ConsumerStatefulWidget {
   const FiscalSettingsScreen({super.key});
@@ -83,6 +87,16 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
     return v ?? FiscalDefaults.vatRatePercent;
   }
 
+  /// Сколько чеков ждут человека. Ноль — и предлагать нечего.
+  Future<int> _unfiscalizedWaiting() async {
+    if (!GetIt.I.isRegistered<FiscalQueueStore>()) return 0;
+    try {
+      return await GetIt.I<FiscalQueueStore>().failedCount();
+    } catch (_) {
+      return 0;
+    }
+  }
+
   Future<void> _save() async {
     _syncFromControllers();
     final ok = await _ctrl.save();
@@ -90,10 +104,24 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
     final state = ref.read(fiscalSettingsControllerProvider);
     if (ok) {
+      // Единственное исключение из «автоматического повтора не бывает», и
+      // оно **не тихое**: человек только что поправил ровно то, из-за чего
+      // оператор отказывал. Повтор всё равно нажимает он сам — здесь ему
+      // лишь называют число и дают дорогу к экрану.
+      final waiting = await _unfiscalizedWaiting();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.fiscalSettingsSaved),
           backgroundColor: AppColors.success,
+          action: waiting == 0
+              ? null
+              : SnackBarAction(
+                  label: l10n.unfiscalizedTitle,
+                  textColor: Colors.white,
+                  onPressed: () =>
+                      context.push(AppRoutes.unfiscalizedReceipts),
+                ),
         ),
       );
     } else {
@@ -130,6 +158,15 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
           onPressed: () => context.pop(),
         ),
         actions: [
+          // Единственный вход на экран нефискализованных чеков: кто
+          // настраивает оператора, тот и разбирает его отказы — и ключ
+          // права у обоих экранов один (`settings.fiscal`).
+          IconButton(
+            key: const ValueKey('fiscal-unfiscalized'),
+            tooltip: l10n.unfiscalizedTitle,
+            icon: const Icon(Icons.receipt_long_outlined),
+            onPressed: () => context.push(AppRoutes.unfiscalizedReceipts),
+          ),
           TextButton(
             onPressed: _save,
             child: Row(
@@ -176,6 +213,16 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
                         title: l10n.fiscalSettingsVatSettings,
                         icon: Icons.calculate,
                         child: _buildVatSettings(settings),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Рядом с настройками оператора, а не в них: лежат
+                      // строкой `ThisPos` и сохраняются сразу (решения
+                      // заказчика 2026-09-14, дорожка A).
+                      _buildSection(
+                        title: l10n.fiscalOffsetSection,
+                        icon: Icons.card_giftcard,
+                        child: const FiscalOffsetSettingsSection(),
                       ),
                     ],
                   ),

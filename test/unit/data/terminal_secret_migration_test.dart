@@ -59,6 +59,32 @@ Future<(String usersSql, String permsSql)> _readUsersAndPermsSql() async {
   return (byName['users']!, byName['user_permissions']!);
 }
 
+/// `sales` без `terminal_id`/`cart_version`/`last_command_key` — задача 2
+/// плана «продажа с браузерного терминала» (миграция v36→v37) трогает
+/// существующую таблицу и требует, чтобы она уже была: без неё подъём
+/// фикстур этого файла (v35) падает на `no such table: sales`, хотя
+/// настоящая база апгрейда таблицу `sales` имеет с самой первой схемы.
+Future<String> _readSalesCreateSql() async {
+  final probe = AppDatabase(NativeDatabase.memory());
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN terminal_id',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN cart_version',
+  );
+  await probe.customStatement(
+    'ALTER TABLE ${probe.sales.actualTableName} DROP COLUMN last_command_key',
+  );
+  final row = await probe
+      .customSelect(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'sales'",
+      )
+      .getSingle();
+  final sql = row.read<String>('sql');
+  await probe.close();
+  return sql;
+}
+
 /// Открывает базу, выглядящую как схема 35: `terminals` — фикстура без
 /// секрета, `users`/`user_permissions` — с текущей базы, `user_version`
 /// принудительно 35. Открытие через [AppDatabase] запускает ровно ветку
@@ -66,7 +92,8 @@ Future<(String usersSql, String permsSql)> _readUsersAndPermsSql() async {
 AppDatabase _openAsIfMigratingFromV35(
   String terminalsSql,
   String usersSql,
-  String permsSql, {
+  String permsSql,
+  String salesSql, {
   required void Function(sqlite3.Database raw) seed,
 }) {
   return AppDatabase(
@@ -75,6 +102,7 @@ AppDatabase _openAsIfMigratingFromV35(
         raw.execute(terminalsSql);
         raw.execute(usersSql);
         raw.execute(permsSql);
+        raw.execute(salesSql);
         raw.execute('PRAGMA user_version = 35');
         seed(raw);
       },
@@ -127,6 +155,7 @@ void main() {
     () async {
       final terminalsSql = await _readV35TerminalsCreateSql();
       final (usersSql, permsSql) = await _readUsersAndPermsSql();
+      final salesSql = await _readSalesCreateSql();
       const oldTerminalId = 1;
       const oldTerminalName = 'Касса «Ысык-Көл» №2';
       const createdAt = 1_700_000_000;
@@ -135,6 +164,7 @@ void main() {
         terminalsSql,
         usersSql,
         permsSql,
+        salesSql,
         seed: (raw) {
           // Непустые, настоящие значения — чтобы «остальная строка цела»
           // проверялось содержимым, а не фактом существования строки.
@@ -199,12 +229,14 @@ void main() {
           .getSingle();
       final currentTerminalsSql = row.read<String>('sql');
       final (usersSql, permsSql) = await _readUsersAndPermsSql();
+      final salesSql = await _readSalesCreateSql();
       await probe.close();
 
       final db = _openAsIfMigratingFromV35(
         currentTerminalsSql,
         usersSql,
         permsSql,
+        salesSql,
         seed: (_) {},
       );
       addTearDown(db.close);

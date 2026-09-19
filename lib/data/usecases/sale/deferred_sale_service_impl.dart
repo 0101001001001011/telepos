@@ -19,44 +19,68 @@ class DeferredSaleServiceImpl implements DeferredSaleService {
   Future<void> deferSale({required int receiptNo}) async {
     final posId = await _getPosId();
 
-    await _db.saleDao.updateState(receiptNo, posId, _stateDeferred);
+    // Отложенный чек не принадлежит никому (I156, правило смысла v37):
+    // владелец очищается тем же ходом, что и перевод в state = 3, иначе
+    // строка осталась бы с чужим (устаревшим) `terminalId` при state,
+    // который по контракту владельца не несёт.
+    await (_db.update(_db.sales)
+          ..where((s) => s.receiptNo.equals(receiptNo) & s.posId.equals(posId)))
+        .write(
+          const SalesCompanion(
+            state: Value(_stateDeferred),
+            terminalId: Value(null),
+          ),
+        );
     _logger.info('DeferredSale: deferred receipt=$receiptNo, pos=$posId');
   }
 
   @override
-  Future<Sale?> undeferSale({required int receiptNo}) async {
+  Future<Sale?> undeferSale({
+    required int receiptNo,
+    required int terminalId,
+  }) async {
     final posId = await _getPosId();
 
-    final inProgress = await _db.saleDao.findInProgress();
-    if (inProgress != null) {
-      await (_db.delete(_db.sales)..where(
-            (s) =>
-                s.receiptNo.equals(inProgress.receiptNo) &
-                s.posId.equals(inProgress.posId),
-          ))
-          .go();
-      _logger.info(
-        'DeferredSale: deleted in-progress receipt=${inProgress.receiptNo}',
-      );
-    }
-
-    await _db.saleDao.updateState(receiptNo, posId, _stateInProgress);
-
-    final sales =
-        await (_db.select(_db.sales)..where(
-              (s) => s.receiptNo.equals(receiptNo) & s.posId.equals(posId),
+    // Условие `state = 3` живёт **в самом обновлении**, а не в проверке
+    // перед ним: между чтением и записью успевает вклиниться второй
+    // поднимающий, и разводить их обязана база. Проигравший получает
+    // `null` — ровно потому, что строка уже не отложена.
+    //
+    // Безусловное обновление, стоявшее здесь до задачи 17, поднимало и
+    // **чужой чек в работе**: `state` в него не смотрел вовсе, и вызов с
+    // номером уже поднятого чека переписывал ему владельца на кассу.
+    // Измерено пробой `deferred_pool_test.dart`: чек, поднятый седьмым
+    // местом, после вызова принадлежал первому.
+    final raised =
+        await (_db.update(_db.sales)..where(
+              (s) =>
+                  s.receiptNo.equals(receiptNo) &
+                  s.posId.equals(posId) &
+                  s.state.equals(_stateDeferred),
             ))
-            .get();
+            .write(
+              SalesCompanion(
+                state: const Value(_stateInProgress),
+                // Владелец — тот, кого назвал вызывающий (правило смысла
+                // `Sales.terminalId`). Своей догадки о владельце у этого
+                // метода больше нет: она приписывала поднятый чек кассе,
+                // кто бы его ни поднял.
+                terminalId: Value(terminalId),
+              ),
+            );
 
-    if (sales.isEmpty) {
+    if (raised == 0) {
       _logger.warning(
-        'DeferredSale: cannot find undeferred sale receipt=$receiptNo',
+        'DeferredSale: receipt=$receiptNo is not deferred, pos=$posId',
       );
       return null;
     }
 
-    _logger.info('DeferredSale: undeferred receipt=$receiptNo, pos=$posId');
-    return sales.first;
+    _logger.info(
+      'DeferredSale: undeferred receipt=$receiptNo, pos=$posId, '
+      'terminal=$terminalId',
+    );
+    return _db.saleDao.findByKey(receiptNo, posId);
   }
 
   @override
@@ -91,11 +115,8 @@ class DeferredSaleServiceImpl implements DeferredSaleService {
     return result;
   }
 
-  Future<int> _getPosId() async {
-    final thisPos = await _db.thisPosDao.get();
-    if (thisPos == null || thisPos.id == null) {
-      throw StateError('DeferredSale: ThisPos not found');
-    }
-    return thisPos.id!;
-  }
+  /// Единая политика номера кассы (`ThisPosDao.requireId`, круг правки 4
+  /// задачи 7): свой бросок здесь был четвёртым способом ответить на один
+  /// и тот же вопрос.
+  Future<int> _getPosId() => _db.thisPosDao.requireId();
 }

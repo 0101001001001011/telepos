@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:telepos/domain/shift/shift_status.dart';
 
 /// Почему касса не впустила.
 ///
@@ -59,7 +60,7 @@ final class AuthSession implements AuthOutcome {
     required this.permissions,
     required this.operatingMode,
     required this.pointMode,
-    required this.shiftOpen,
+    required this.shift,
     required this.issuedAt,
     required this.expiresAt,
     required this.terminalId,
@@ -86,7 +87,9 @@ final class AuthSession implements AuthOutcome {
   /// `PointMode` иначе поменяла бы смысл уже выписанного сеанса.
   final String pointMode;
 
-  final bool shiftOpen;
+  /// Смена на момент выписки сеанса — задача 47: три состояния, а не
+  /// `bool` (разбор в [ShiftStatus]). Касса пишет только измеренное.
+  final ShiftStatus shift;
 
   /// Терминал, под которым выписан этот сеанс — тот, что вкладка передала
   /// `AuthAttempt.terminalId` при входе (`LocalAuthRepository._issue`).
@@ -133,7 +136,7 @@ final class AuthSession implements AuthOutcome {
     permissions: permissions,
     operatingMode: operatingMode,
     pointMode: pointMode,
-    shiftOpen: shiftOpen,
+    shift: shift,
     issuedAt: issuedAt,
     expiresAt: expiresAt ?? this.expiresAt,
     terminalId: terminalId,

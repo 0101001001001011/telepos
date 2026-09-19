@@ -50,7 +50,10 @@ library;
 import 'dart:async';
 
 import 'package:talker/talker.dart';
+import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
+import 'package:telepos/domain/payment/gift_certificate.dart'
+    show certificateRateLimitedCode;
 import 'package:telepos/data/database/daos/security_event_dao.dart';
 import 'package:telepos/domain/wire/wire_guard.dart';
 import 'package:uuid/uuid.dart';
@@ -129,6 +132,17 @@ abstract final class SecurityEventType {
   /// безопасности (2026-08-22). `outcome` — `'intact'`, либо список найденных
   /// проблем через запятую (`broken_link:<id>`, `tail_truncated`).
   static const journalIntegrityChecked = 'security.journalIntegrityChecked';
+
+  /// Замок перебора сертификатов отказал — `CertificateThrottle.admit`,
+  /// пункт 4 A7 (2026-09-15). До этой правки срабатывание не оставляло следа
+  /// (живая приёмка 2026-09-13), хотя это ровно то событие, ради которого
+  /// журнал ведётся: кто-то перебирает номера или ПИНы.
+  ///
+  /// Пишется **одна запись на запирание**, а не на каждый стук в запертое
+  /// ([certificateLockJournalHandler]). `outcome` —
+  /// `certificate_rate_limited(<оси>)`, где оси — какие счёты заперты:
+  /// `number`, `cashier`, `terminal`. Номер сертификата в запись не едет.
+  static const certificateRateLimited = 'certificate.rateLimited';
 }
 
 /// Исходы, общие для нескольких родов события. Исходы отказа — не здесь, см.
@@ -349,6 +363,25 @@ buildWireDeniedJournalHandler({
     );
   };
 }
+
+/// Обработчик `CertificateThrottle.onLocked` — пункт 4 A7 (2026-09-15).
+///
+/// Живёт здесь, рядом с [buildWireDeniedJournalHandler], по тому же доводу:
+/// у записи есть проба без поднятия кассы. Склейки здесь нет — её делает
+/// сам замок (одна запись на запирание ключа, докстринг `onLocked`).
+///
+/// `terminalId` без рабочего места — `0`, тот же сентинел, что у
+/// `wire.denied`.
+void Function(CertificateLock lock) certificateLockJournalHandler(
+  SecurityJournal journal,
+) => (lock) => unawaited(
+  journal.record(
+    eventType: SecurityEventType.certificateRateLimited,
+    outcome: '$certificateRateLimitedCode(${(lock.axes.toList()..sort()).join(',')})',
+    terminalId: lock.terminalId ?? 0,
+    userId: lock.userId,
+  ),
+);
 
 /// Проверка целостности журнала на подъёме кассы — пункт 6 брифа закрытия
 /// долга безопасности (2026-08-22).
