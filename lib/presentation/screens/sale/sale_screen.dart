@@ -354,6 +354,7 @@ class _SaleScreenState extends ConsumerState<SaleScreen>
       productName: item.name,
       barcode: item.barcode ?? '',
       price: item.price,
+      l10n: l10n,
     );
     if (!mounted) return;
 
@@ -414,9 +415,7 @@ class _SaleScreenState extends ConsumerState<SaleScreen>
     void showBlocked() {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Действие запрещено настройками POS (Настройки → Политика продаж)',
-          ),
+          content: Text(AppLocalizations.of(context)!.salePolicyForbids),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );

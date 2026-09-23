@@ -28,7 +28,37 @@ class SettingsSection extends StatelessWidget {
     final theme = Theme.of(context);
     final hairline = AppTokens.hairlineOf(context);
 
+    // Пустая группа с подписью — это СООБЩЕНИЕ, и рисовать его надо в
+    // карточке.
+    //
+    // До этой правки `children: const []` давал карточку нулевой высоты, и
+    // текст подписи повисал голой серой строкой в воздухе — без блока, без
+    // оформления, не как всё остальное на экране. Так выглядели шаги
+    // «Фискализация» и «Терминалы» на американской кассе: всё, что видел
+    // человек, — строчка «Fiscalization is not required for your country»
+    // посреди пустоты. Заметил заказчик, глядя на экран, 2026-09-21.
+    //
+    // Чиним здесь, а не в двух шагах: пустая группа встретится снова, и
+    // следующий раз никто не вспомнит, что её надо обойти.
+    final emptyWithMessage = children.isEmpty && footer != null;
+
     final rows = <Widget>[];
+    if (emptyWithMessage) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTokens.space16,
+            vertical: AppTokens.space16,
+          ),
+          child: Text(
+            footer!,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      );
+    }
     for (var i = 0; i < children.length; i++) {
       rows.add(children[i]);
       if (i != children.length - 1) {
@@ -81,7 +111,9 @@ class SettingsSection extends StatelessWidget {
             children: rows,
           ),
         ),
-        if (footer != null)
+        // Подпись под карточкой — только когда строки есть. Иначе она уже
+        // нарисована ВНУТРИ, и повторять её значит сказать дважды.
+        if (footer != null && !emptyWithMessage)
           Padding(
             padding: const EdgeInsets.only(
               left: AppTokens.space16,

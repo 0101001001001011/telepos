@@ -1,0 +1,44 @@
+{
+  "id": "uz",
+  "title": "Узбекистан",
+  "countryCode": "UZ",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": true,
+  "currencySymbol": "сўм",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "12",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Общая ставка",
+      "isDefault": true
+    },
+    {
+      "code": "exempt",
+      "title": "Освобождённые обороты"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "uz",
+      "name": "НДС",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "12"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Ставка НДС, записанная в продукте до 2026-09-22; проверьте по Налоговому кодексу РУз перед работой"
+}

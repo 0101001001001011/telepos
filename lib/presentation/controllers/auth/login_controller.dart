@@ -15,6 +15,7 @@ import 'package:telepos/domain/auth/auth_user.dart';
 import 'package:telepos/domain/auth/session_token_storage.dart';
 import 'package:telepos/domain/host/host_capabilities.dart';
 import 'package:telepos/domain/terminal/terminal_identity.dart';
+import 'package:telepos/domain/repositories/shift_repository.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/terminal/terminal_secret_storage.dart';
 import 'package:telepos/domain/wire/session_lost.dart';
@@ -200,6 +201,20 @@ class LoginNotifier extends Notifier<LoginState> {
   /// уже поднимаются `AppDatabase`-зависимые контроллеры в этом кодовой базе.
   AuthRepository get _auth => GetIt.instance<AuthRepository>();
 
+  /// Смену на МЕСТНОЙ кассе меряют, а не гадают.
+  ///
+  /// `ShiftStatus.unknown` заведён для браузерного терминала: там ответ про
+  /// смену едет по проводу, и до ответа честно сказать нечего. У кассы база
+  /// под рукой, и показывать ей «Shift: unknown» — значит печатать слово
+  /// разработчика там, где есть измеримый ответ. Заметил заказчик, глядя на
+  /// экран входа после мастера, 2026-09-21.
+  ///
+  /// `null` — репозитория нет (браузерный терминал), и состояние остаётся
+  /// [ShiftStatus.unknown], как и было.
+  ShiftRepository? get _shifts => GetIt.instance.isRegistered<ShiftRepository>()
+      ? GetIt.instance<ShiftRepository>()
+      : null;
+
   TerminalIdentity get _identity => GetIt.instance<TerminalIdentity>();
 
   TerminalRepository get _terminals => GetIt.instance<TerminalRepository>();
@@ -282,6 +297,32 @@ class LoginNotifier extends Notifier<LoginState> {
     return const LoginState();
   }
 
+  /// Спрашивает базу, открыта ли смена, и кладёт ответ в состояние.
+  ///
+  /// Отказ съедается намеренно: значок смены — не повод не пустить кассира
+  /// в кассу. Не ответили — остаётся [ShiftStatus.unknown], то есть ровно
+  /// прежнее поведение.
+  /// Мерка смены, открытая пробе.
+  ///
+  /// Открыта именно она, а не `initialize()`: тот заводит подписки на
+  /// кассиров и сеанс, и пробе про смену пришлось бы поднимать половину
+  /// кассы ради одного значка.
+  @visibleForTesting
+  Future<void> measureShiftForTest() => _measureShift();
+
+  Future<void> _measureShift() async {
+    final shifts = _shifts;
+    if (shifts == null) return;
+    try {
+      final open = await shifts.findOpenedShift();
+      state = state.copyWith(
+        shift: open == null ? ShiftStatus.closed : ShiftStatus.open,
+      );
+    } on Object catch (_) {
+      // Молчим: значок останется «не знаю», и это честно.
+    }
+  }
+
   /// Кассиры приезжают подпиской и обновляются сами.
   ///
   /// Было: один вопрос базе в `initialize()`, и заведённый на кассе кассир
@@ -313,6 +354,9 @@ class LoginNotifier extends Notifier<LoginState> {
     // показать выбор — а если сеанс жив, `_onSession` уведёт с этого экрана
     // раньше, чем человек успеет что-то нажать (см. `_restoreSession`).
     unawaited(_restoreSession());
+    // Смена меряется параллельно со списком кассиров: она нужна значку, а
+    // не входу, и ждать её экран не обязан.
+    unawaited(_measureShift());
     _usersSubscription = _auth.watchUsers().listen(
       (users) {
         final items = users
@@ -1185,7 +1229,11 @@ class LoginNotifier extends Notifier<LoginState> {
     if (roleName == null) return UserRole.cashier.index;
 
     for (final role in UserRole.values) {
-      if (role.name == roleName || role.displayName == roleName) {
+      // Только ключ. Сравнение с `displayName` компенсировало то, что
+      // сеанс выписывался русским словом; теперь в нём ключ, и вторая
+      // ветвь означала бы «принимать роль, названную по-русски», то есть
+      // зависеть от языка при разборе прав.
+      if (role.name == roleName) {
         return role.index;
       }
     }

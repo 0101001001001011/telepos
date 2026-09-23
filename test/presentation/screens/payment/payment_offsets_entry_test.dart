@@ -162,10 +162,7 @@ void main() {
         SystemPaymentKinds.byId(id).copyWith(isActive: true),
       );
     }
-    await LocalCertificateIssuer(
-      db: db,
-      logger: logger,
-    ).issue(
+    await LocalCertificateIssuer(db: db, logger: logger).issue(
       by: fullDiscountAuthority,
       number: 'C-500',
       nominal: d('500'),
@@ -353,8 +350,10 @@ void main() {
     await tester.enterText(phoneField(), _phone);
     await settle(
       tester,
-      until: () =>
-          find.byKey(const Key('payment_prepayment_balance')).evaluate().isNotEmpty,
+      until: () => find
+          .byKey(const Key('payment_prepayment_balance'))
+          .evaluate()
+          .isNotEmpty,
     );
     expect(textOf(tester, const Key('payment_prepayment_balance')), '700');
     expect(
@@ -380,8 +379,9 @@ void main() {
     );
     expect(textOf(tester, paperBalance), contains('500'));
     expect(
-      (await tester.runAsync(() => db.certificateDao.byNumber('C-500')))!
-          .balance,
+      (await tester.runAsync(
+        () => db.certificateDao.byNumber('C-500'),
+      ))!.balance,
       d('500'),
       reason: 'показ остатка ничего не погасил',
     );
@@ -390,13 +390,18 @@ void main() {
     // аванс вторым, остаток — деньгами.
     await tapKey(tester, const Key('payment_prepayment_all'));
     await tester.pump();
-    expect(textOf(tester, const Key('payment_prepayment_applied')), contains('700'));
+    expect(
+      textOf(tester, const Key('payment_prepayment_applied')),
+      contains('700'),
+    );
     final state = container.read(paymentControllerProvider);
     expect(state.offsets.certificates, [d('500')]);
     expect(state.offsets.prepayment, d('700'));
     expect(state.amountToPay, d('300'));
 
-    container.read(paymentControllerProvider.notifier).setCashReceived(d('300'));
+    container
+        .read(paymentControllerProvider.notifier)
+        .setCashReceived(d('300'));
     await tester.pump();
 
     final pay = find.byKey(const Key('payment_complete'));

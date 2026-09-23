@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
+import 'package:get_it/get_it.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
+import 'package:telepos/domain/services/currency_service.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/shift/shift_controller.dart';
 
@@ -154,7 +156,9 @@ class _FiscalCorrectionScreenState
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  l10n.setCorrectionAmountLabel,
+                  l10n.setCorrectionAmountLabel(
+                    GetIt.I<CurrencyService>().code,
+                  ),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -168,7 +172,8 @@ class _FiscalCorrectionScreenState
                   ),
                   decoration: InputDecoration(
                     hintText: '0.00',
-                    suffixText: 'KZT',
+                    // Валюта кассы, а не тенге: чек коррекции — деньги.
+                    suffixText: GetIt.I<CurrencyService>().code,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

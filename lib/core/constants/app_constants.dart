@@ -3,7 +3,7 @@ class AppConstants {
 
   static const appName = 'TelePOS';
 
-  static const appVersion = '3.6.0';
+  static const appVersion = '3.7.0';
 
   static const buildNumber = 19;
 
@@ -96,11 +96,6 @@ class AppConstants {
   static const pinInputTimeout = Duration(minutes: 5);
 
   static const inactivityTimeout = Duration(minutes: 30);
-
-  static const vatRate = 16;
-
-  static const vatNumerator = 4;
-  static const vatDenominator = 29;
 
   static const receiptWidth80mm = 48;
 

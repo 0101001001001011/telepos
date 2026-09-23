@@ -385,7 +385,7 @@ const _wireDirs = ['lib/domain/wire', 'lib/backend', 'lib/web'];
 /// экран. Разбор, почему вкладка вправе назвать только первое, — в докстринге
 /// `lib/domain/shift/shift_desk.dart`.
 final _moneyKeyPattern = RegExp(
-  r'''(["'])(price|total|totalDiscount|amount|discount|quantity|subtotal|percent|stock|change|cashReceived|claimedChange|cardAmount|bonusUsed|prepaymentUsed|bonusBalance|paid|debt|maxQuantity|nominal|balance|paidAmount|maxPercent|approvalAbove|counted|openingCash|systemTotal|expectedCash)\1\s*:''',
+  r'''(["'])(price|total|totalDiscount|amount|discount|quantity|subtotal|percent|stock|change|cashReceived|claimedChange|cardAmount|bonusUsed|prepaymentUsed|bonusBalance|paid|debt|maxQuantity|nominal|balance|paidAmount|maxPercent|approvalAbove|counted|openingCash|systemTotal|expectedCash|taxOnTop|taxRatePercent)\1\s*:''',
 );
 
 final _wireMoneyCallStart = RegExp(r'^wireMoney\(');

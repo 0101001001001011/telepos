@@ -119,59 +119,58 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets(
-    'смена PIN кассира гасит его сеансы и не трогает сторонний',
-    (tester) async {
-      final unrelated = mintUnrelatedSession();
-      final ownSession = registry.mint(
-        userId: cashierId,
-        name: 'Кассир Бота',
-        role: 'cashier',
-        permissions: const {},
-        operatingMode: 0,
-        pointMode: 'cashier',
-        shiftOpen: false,
-        terminalId: 1,
-      );
-      expect(registry.outstanding, 2);
+  testWidgets('смена PIN кассира гасит его сеансы и не трогает сторонний', (
+    tester,
+  ) async {
+    final unrelated = mintUnrelatedSession();
+    final ownSession = registry.mint(
+      userId: cashierId,
+      name: 'Кассир Бота',
+      role: 'cashier',
+      permissions: const {},
+      operatingMode: 0,
+      pointMode: 'cashier',
+      shiftOpen: false,
+      terminalId: 1,
+    );
+    expect(registry.outstanding, 2);
 
-      await pumpScreen(tester);
-      await tester.tap(find.text('Кассир Бота'));
-      await tester.pumpAndSettle();
-      await tester.pump();
-      await tester.pumpAndSettle();
+    await pumpScreen(tester);
+    await tester.tap(find.text('Кассир Бота'));
+    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.text('PIN'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('PIN'));
+    await tester.pumpAndSettle();
 
-      for (final digit in ['5', '6', '7', '8']) {
-        await tapDigit(tester, digit);
-      }
-      await tester.pumpAndSettle();
+    for (final digit in ['5', '6', '7', '8']) {
+      await tapDigit(tester, digit);
+    }
+    await tester.pumpAndSettle();
 
-      final saveButton = find.widgetWithText(ElevatedButton, 'Сохранить');
-      await tester.tap(saveButton);
-      await tester.pumpAndSettle();
+    final saveButton = find.widgetWithText(ElevatedButton, 'Сохранить');
+    await tester.tap(saveButton);
+    await tester.pumpAndSettle();
 
-      expect(
-        registry.lookup(ownSession.token),
-        isNull,
-        reason:
-            'смена PIN обязана погасить живой сеанс, выписанный на этого '
-            'кассира — иначе сеанс на прежнем, уже смененном PIN жил бы до '
-            'истечения по бездействию',
-      );
-      expect(
-        registry.lookup(unrelated.token),
-        isNotNull,
-        reason:
-            'сторонний кассир на той же кассе не должен вылетать из-за '
-            'чужой смены PIN — это и есть отличие revokeForUser от '
-            'revokeAll',
-      );
-      expect(registry.outstanding, 1);
-    },
-  );
+    expect(
+      registry.lookup(ownSession.token),
+      isNull,
+      reason:
+          'смена PIN обязана погасить живой сеанс, выписанный на этого '
+          'кассира — иначе сеанс на прежнем, уже смененном PIN жил бы до '
+          'истечения по бездействию',
+    );
+    expect(
+      registry.lookup(unrelated.token),
+      isNotNull,
+      reason:
+          'сторонний кассир на той же кассе не должен вылетать из-за '
+          'чужой смены PIN — это и есть отличие revokeForUser от '
+          'revokeAll',
+    );
+    expect(registry.outstanding, 1);
+  });
 
   testWidgets(
     'блокировка кассира гасит его сеанс, не трогает сторонний; повторное '
@@ -242,35 +241,34 @@ void main() {
     },
   );
 
-  testWidgets(
-    'удаление пользователя гасит его сеанс и не трогает сторонний',
-    (tester) async {
-      final unrelated = mintUnrelatedSession();
-      registry.mint(
-        userId: cashierId,
-        name: 'Кассир Бота',
-        role: 'cashier',
-        permissions: const {},
-        operatingMode: 0,
-        pointMode: 'cashier',
-        shiftOpen: false,
-        terminalId: 1,
-      );
-      expect(registry.outstanding, 2);
+  testWidgets('удаление пользователя гасит его сеанс и не трогает сторонний', (
+    tester,
+  ) async {
+    final unrelated = mintUnrelatedSession();
+    registry.mint(
+      userId: cashierId,
+      name: 'Кассир Бота',
+      role: 'cashier',
+      permissions: const {},
+      operatingMode: 0,
+      pointMode: 'cashier',
+      shiftOpen: false,
+      terminalId: 1,
+    );
+    expect(registry.outstanding, 2);
 
-      await pumpScreen(tester);
-      await tester.tap(find.text('Кассир Бота'));
-      await tester.pumpAndSettle();
-      await tester.pump();
-      await tester.pumpAndSettle();
+    await pumpScreen(tester);
+    await tester.tap(find.text('Кассир Бота'));
+    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Удалить'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Удалить').last);
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Удалить'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Удалить').last);
+    await tester.pumpAndSettle();
 
-      expect(registry.outstanding, 1);
-      expect(registry.lookup(unrelated.token), isNotNull);
-    },
-  );
+    expect(registry.outstanding, 1);
+    expect(registry.lookup(unrelated.token), isNotNull);
+  });
 }

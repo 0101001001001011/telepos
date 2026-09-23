@@ -532,12 +532,16 @@ class HistoryNotifier extends Notifier<HistoryState> {
       final orderTypeVal = row.read<int?>('order_type') ?? 0;
       final tableName = row.read<String?>('table_name');
       final zone = row.read<String?>('zone');
-      final deviceDesc = switch (orderTypeVal) {
-        0 => 'Стол ${tableName ?? '?'}${zone != null ? ' ($zone)' : ''}',
-        1 => 'Навынос',
-        2 => 'Доставка',
-        _ => '',
-      };
+      // Род заказа уже едет значением (`orderType`), и экран рисует по нему
+      // значок на своём языке. Здесь остаются только ДАННЫЕ — имя стола и
+      // зона; до 2026-09-22 тут же лежали русские слова «Навынос» и
+      // «Доставка», которые на английской кассе так и показывались.
+      final deviceDesc = orderTypeVal == 0
+          ? [
+              if (tableName != null && tableName.isNotEmpty) tableName,
+              if (zone != null && zone.isNotEmpty) zone,
+            ].join(' · ')
+          : '';
 
       items.add(
         HistoryItem(

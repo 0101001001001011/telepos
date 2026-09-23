@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceCostSummary extends StatelessWidget {
   const ServiceCostSummary({
@@ -35,19 +36,19 @@ class ServiceCostSummary extends StatelessWidget {
             _CostRow(
               label: l10n.serviceTotalCost,
               amount: totalCost,
-              currency: l10n.currencySymbol,
+              currency: tillCurrencySymbol(),
             ),
             _CostRow(
               label: l10n.servicePrepaid,
               amount: prepaid,
-              currency: l10n.currencySymbol,
+              currency: tillCurrencySymbol(),
               color: Colors.green,
             ),
             const Divider(height: 16),
             _CostRow(
               label: l10n.serviceRemaining,
               amount: remaining,
-              currency: l10n.currencySymbol,
+              currency: tillCurrencySymbol(),
               isBold: true,
               color: remaining > Decimal.zero ? theme.colorScheme.error : null,
             ),

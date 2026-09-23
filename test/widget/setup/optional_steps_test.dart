@@ -266,12 +266,20 @@ void main() {
   });
 
   testWidgets('где страна без фискализации — ни одного поля', (tester) async {
+    // Здесь стоял Узбекистан — и это закрепляло дефект. Он объявлял
+    // `hasFiscalisation: true`, а таблица мастера про него не знала: шаг
+    // пропускался, а чек печатал фискальный блок. 2026-09-22 два источника
+    // сведены в один `CountryCode.fiscalProtocol`, и Узбекистан получил
+    // ОФД, общий для СНГ.
+    //
+    // Страна без фискализации теперь — та, где её у нас действительно нет:
+    // США. Там фискализации не существует как понятия.
     await _pump(
       tester,
       const FiscalStep(
         state: InitialSetupState(
           currentStep: InitialSetupStep.fiscalSetup,
-          selectedCountry: CountryCode.uzs,
+          selectedCountry: CountryCode.usd,
         ),
       ),
     );

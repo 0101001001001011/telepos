@@ -160,7 +160,11 @@ class _ReceiptTemplateEditorScreenState
       if (mounted) _snack(_reason(e), error: true);
     }
     _headerController.text = _options.header.text;
-    _footerController.text = _options.footer.text;
+    // Незаданный подвал показывается тем, что напечатается, — иначе
+    // владелец видит пустое поле и не понимает, откуда на чеке слова.
+    _footerController.text =
+        _options.footer?.text ??
+        AppLocalizations.of(context)!.receiptLabelThankYou;
     if (!mounted) return;
     setState(() => _isLoading = false);
     // Первый предпросмотр — **сразу**, без задержки: экран открывают, чтобы
@@ -171,7 +175,9 @@ class _ReceiptTemplateEditorScreenState
 
   ReceiptOptions get _currentOptions => _options.copyWith(
     header: _options.header.copyWith(text: _headerController.text),
-    footer: _options.footer.copyWith(text: _footerController.text),
+    footer: (_options.footer ?? const ReceiptTextBlock()).copyWith(
+      text: _footerController.text,
+    ),
   );
 
   /// Правка формы: перерисовать сейчас, спросить чек потом.
@@ -362,7 +368,10 @@ class _ReceiptTemplateEditorScreenState
       _sectionTitle(l10n.receiptTemplatePaperWidth),
       // Ширина ленты — свойство принтера, не шаблона: выбирается на экране
       // «Настройки принтера», здесь только показывается.
-      Text('$_paperWidthMm мм', key: const Key('receipt_template_paper_width')),
+      Text(
+        l10n.globalMillimetres('$_paperWidthMm'),
+        key: const Key('receipt_template_paper_width'),
+      ),
       Text(
         l10n.receiptTemplatePaperWidthHint,
         style: TextStyle(
@@ -397,7 +406,7 @@ class _ReceiptTemplateEditorScreenState
         label: l10n.receiptTemplateFooterText,
         hint: l10n.receiptTemplateFooterHint,
         controller: _footerController,
-        block: _options.footer,
+        block: _options.footer ?? const ReceiptTextBlock(),
         onStyle: (b) => _options = _options.copyWith(footer: b),
       ),
       const SizedBox(height: 16),

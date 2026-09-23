@@ -157,7 +157,8 @@ class CustomerPaymentController
   /// и выдачей стоит второй кассир. Число, по которому кассир принимает
   /// решение, обязано быть свежим; заслон от гонки при этом всё равно не
   /// здесь, а в условной записи внутри транзакции выдачи.
-  Future<Decimal> balanceOf(int agentId) => _useCase.getCustomerBalance(agentId);
+  Future<Decimal> balanceOf(int agentId) =>
+      _useCase.getCustomerBalance(agentId);
 }
 
 final customerPaymentControllerProvider =

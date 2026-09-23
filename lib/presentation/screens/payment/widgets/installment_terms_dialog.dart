@@ -36,12 +36,11 @@ class InstallmentTerms {
 /// Заголовок, подписи и кнопки были литералами по-русски (обход группы F,
 /// проба `test/presentation/dialogs/payment_dialogs_text_test.dart`). Имя
 /// схемы по-прежнему у домена — см. комментарий у `RadioListTile`.
-Future<InstallmentTerms?> showInstallmentTermsDialog(
-  BuildContext context,
-) => showDialog<InstallmentTerms>(
-  context: context,
-  builder: (_) => const _InstallmentTermsDialog(),
-);
+Future<InstallmentTerms?> showInstallmentTermsDialog(BuildContext context) =>
+    showDialog<InstallmentTerms>(
+      context: context,
+      builder: (_) => const _InstallmentTermsDialog(),
+    );
 
 class _InstallmentTermsDialog extends StatefulWidget {
   const _InstallmentTermsDialog();
@@ -105,9 +104,9 @@ class _InstallmentTermsDialogState extends State<_InstallmentTermsDialog> {
         ),
         FilledButton(
           key: const Key('installment_terms_confirm'),
-          onPressed: () => Navigator.of(context).pop(
-            InstallmentTerms(termMonths: _term, scheme: _scheme),
-          ),
+          onPressed: () => Navigator.of(
+            context,
+          ).pop(InstallmentTerms(termMonths: _term, scheme: _scheme)),
           child: Text(l10n.installmentTermsContinue),
         ),
       ],

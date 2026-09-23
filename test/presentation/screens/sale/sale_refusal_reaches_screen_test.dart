@@ -153,8 +153,9 @@ void main() {
     // экрана: два `pumpWidget` подряд `ProviderScope` не пересоздаёт —
     // подмена второго стенда не применяется, и проба падает изнутри
     // Riverpod, ничего не измерив (измерено здесь же, 2026-09-06).
-    final ru = (await AppLocalizations.delegate.load(const Locale('ru')))
-        .errorCartWrongReceipt;
+    final ru = (await AppLocalizations.delegate.load(
+      const Locale('ru'),
+    )).errorCartWrongReceipt;
 
     final stand = await pumpSale(tester, 'kk');
     final kk = ErrorLocalizer.localize(stand.ctx, 'error.cart_wrong_receipt');

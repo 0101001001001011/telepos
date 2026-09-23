@@ -320,11 +320,7 @@ void main() {
             'не проверяются ничем',
       ),
     ]) {
-      expect(
-        stand,
-        contains(needle),
-        reason: 'стенд не зовёт `$needle`: $why',
-      );
+      expect(stand, contains(needle), reason: 'стенд не зовёт `$needle`: $why');
     }
   });
 

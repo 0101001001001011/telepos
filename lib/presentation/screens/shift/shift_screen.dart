@@ -13,6 +13,7 @@ import 'package:telepos/presentation/screens/shift/widgets/cash_operations_tab.d
 import 'package:telepos/presentation/screens/shift/widgets/shift_actions.dart';
 import 'package:telepos/presentation/screens/shift/widgets/shift_info_panel.dart';
 import 'package:telepos/presentation/screens/shift/widgets/total_tab.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class ShiftScreen extends ConsumerStatefulWidget {
   const ShiftScreen({super.key});
@@ -381,7 +382,7 @@ class _MobileLayout extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildInfoItem(context, l10n.shiftSystem, state.systemTotal),
+                  _buildInfoItem(context, l10n.shiftSystem, state.expectedCash),
                   _buildInfoItem(
                     context,
                     l10n.shiftEntered,
@@ -457,10 +458,6 @@ class _MobileLayout extends ConsumerWidget {
   }
 
   String _formatTime(DateTime time) {
-    final h = time.hour.toString().padLeft(2, '0');
-    final m = time.minute.toString().padLeft(2, '0');
-    final d = time.day.toString().padLeft(2, '0');
-    final mo = time.month.toString().padLeft(2, '0');
-    return '$d.$mo $h:$m';
+    return TillConventions.current.formatDateTime(time);
   }
 }

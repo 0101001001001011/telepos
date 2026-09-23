@@ -21,6 +21,10 @@ import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/adaptive/breakpoints.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/presentation/controllers/update/update_controller.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
+import 'package:telepos/domain/sale/big_amount_limit.dart';
+import 'package:telepos/core/constants/enums/country_code.dart';
+import 'package:telepos/core/constants/enums/national_system.dart';
 
 class GeneralSettingsScreen extends ConsumerStatefulWidget {
   const GeneralSettingsScreen({super.key});
@@ -39,12 +43,41 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
   bool _sellInDiscount = false;
   bool _cashInOut = false;
   bool _allowBigAmount = false;
+
+  /// Потолок суммы чека — настройка кассы (схема v57). Пусто = умолчание.
+  final _bigAmountLimitCtrl = TextEditingController();
+
+  /// Адрес торговой точки — печатается на чеке.
+  ///
+  /// До 2026-09-22 его заводил только мастер, и поменять было нечем:
+  /// магазин переехал — на чеке остался прежний адрес.
+  final _storeAddressCtrl = TextEditingController();
   bool _isKassaPriceDecreasingBlocked = false;
 
   @override
   void initState() {
     super.initState();
     _loadPosInfo();
+  }
+
+  /// Сохранить потолок суммы чека.
+  ///
+  /// Пустая строка законна и означает «вернуть к умолчанию»: владелец
+  /// стирает число, а не обязан вспоминать, каким оно было.
+  Future<void> _saveStoreAddress(String value) async {
+    try {
+      await GetIt.I<AppDatabase>().thisPosDao.updateBusinessFlags(
+        storeAddress: value,
+      );
+    } catch (_) {}
+  }
+
+  Future<void> _saveBigAmountLimit(String value) async {
+    try {
+      await GetIt.I<AppDatabase>().thisPosDao.updateBusinessFlags(
+        bigAmountLimit: value,
+      );
+    } catch (_) {}
   }
 
   Future<void> _loadPosInfo() async {
@@ -59,6 +92,8 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
         _sellInDiscount = pos?.sellInDiscount ?? false;
         _cashInOut = pos?.cashInOut ?? false;
         _allowBigAmount = pos?.allowBigAmount ?? false;
+        _bigAmountLimitCtrl.text = pos?.bigAmountLimit ?? '';
+        _storeAddressCtrl.text = pos?.storeAddress ?? '';
         _isKassaPriceDecreasingBlocked =
             pos?.isKassaPriceDecreasingBlocked ?? false;
         _isLoading = false;
@@ -295,6 +330,27 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
                     l10n.generalSettingsIinBin,
                     _posInfo?.iinbin ?? l10n.generalSettingsNotSpecified,
                   ),
+                  // Адрес — ПОЛЕ, а не строка «только смотреть»: это
+                  // обязательный реквизит чека, и магазин переезжает.
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Focus(
+                      onFocusChange: (has) {
+                        if (!has) _saveStoreAddress(_storeAddressCtrl.text);
+                      },
+                      child: TextField(
+                        key: const ValueKey('pos-store-address'),
+                        controller: _storeAddressCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.generalSettingsStoreAddress,
+                          helperText: l10n.generalSettingsStoreAddressHint,
+                          helperMaxLines: 2,
+                          border: const OutlineInputBorder(),
+                        ),
+                        onSubmitted: _saveStoreAddress,
+                      ),
+                    ),
+                  ),
                   _buildInfoRow(
                     l10n.generalSettingsPosId,
                     _posInfo?.id?.toString() ??
@@ -359,7 +415,7 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
                 children: [
                   _buildInfoRow(
                     l10n.generalSettingsCurrencySymbol,
-                    _posInfo?.currencySymbol ?? '₸',
+                    _posInfo?.currencySymbol ?? tillCurrencySymbol(),
                   ),
                   _buildInfoRow(
                     l10n.generalSettingsCurrencyCode,
@@ -379,6 +435,17 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
   }
 
   Widget _buildNavGrid(AppLocalizations l10n, int crossAxisCount) {
+    // Государственные системы — свойство СТРАНЫ. До 2026-09-22 ЭСФ, СНТ,
+    // ЕСУТД и ИС МПТ стояли здесь на кассе любой страны, и владелец
+    // магазина в США видел четыре входа в казахстанский документооборот.
+    final country =
+        (_posInfo?.countryCode != null &&
+            _posInfo!.countryCode! >= 0 &&
+            _posInfo!.countryCode! < CountryCode.values.length)
+        ? CountryCode.values[_posInfo!.countryCode!]
+        : CountryCode.kzt;
+    final systems = country.nationalSystems;
+
     final items = [
       _NavItem(
         title: l10n.generalSettingsTransport,
@@ -415,6 +482,26 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
         onTap: () => context.push(AppRoutes.labelPrinterSettings),
       ),
       _NavItem(
+        title: l10n.taxSettingsTitle,
+        description: l10n.taxSettingsSubtitle,
+        icon: Icons.percent,
+        color: AppColors.info,
+        onTap: () => context.push(AppRoutes.taxSettings),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.taxSettings,
+        ),
+      ),
+      _NavItem(
+        title: l10n.sellingHoursTitle,
+        description: l10n.sellingHoursExplainer,
+        icon: Icons.nightlight_outlined,
+        color: AppColors.warning,
+        onTap: () => context.push(AppRoutes.sellingHours),
+        permissionKey: PermissionKeys.routeToPermissionKey(
+          AppRoutes.sellingHours,
+        ),
+      ),
+      _NavItem(
         title: l10n.generalSettingsFiscal,
         description: l10n.generalSettingsFiscalSubtitle,
         icon: Icons.receipt_long,
@@ -435,34 +522,38 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
           AppRoutes.qrProviderSettings,
         ),
       ),
-      _NavItem(
-        title: l10n.esfSettingsTitle,
-        description: l10n.esfSettingsSubtitle,
-        icon: Icons.description,
-        color: const Color(0xFFEF6C00),
-        onTap: () => context.push(AppRoutes.esfSettings),
-      ),
-      _NavItem(
-        title: l10n.sntTitle,
-        description: l10n.sntSubtitle,
-        icon: Icons.local_shipping,
-        color: const Color(0xFFD84315),
-        onTap: () => context.push(AppRoutes.snt),
-      ),
-      _NavItem(
-        title: l10n.esutdTitle,
-        description: l10n.esutdSubtitle,
-        icon: Icons.local_shipping_outlined,
-        color: const Color(0xFFBF360C),
-        onTap: () => context.push(AppRoutes.esutd),
-      ),
-      _NavItem(
-        title: l10n.ismptSettingsTitle,
-        description: l10n.ismptSettingsSubtitle,
-        icon: Icons.qr_code_2,
-        color: const Color(0xFF6A1B9A),
-        onTap: () => context.push(AppRoutes.ismptSettings),
-      ),
+      if (systems.contains(NationalSystem.electronicInvoice))
+        _NavItem(
+          title: l10n.esfSettingsTitle,
+          description: l10n.esfSettingsSubtitle,
+          icon: Icons.description,
+          color: const Color(0xFFEF6C00),
+          onTap: () => context.push(AppRoutes.esfSettings),
+        ),
+      if (systems.contains(NationalSystem.goodsNote))
+        _NavItem(
+          title: l10n.sntTitle,
+          description: l10n.sntSubtitle,
+          icon: Icons.local_shipping,
+          color: const Color(0xFFD84315),
+          onTap: () => context.push(AppRoutes.snt),
+        ),
+      if (systems.contains(NationalSystem.transportWaybill))
+        _NavItem(
+          title: l10n.esutdTitle,
+          description: l10n.esutdSubtitle,
+          icon: Icons.local_shipping_outlined,
+          color: const Color(0xFFBF360C),
+          onTap: () => context.push(AppRoutes.esutd),
+        ),
+      if (systems.contains(NationalSystem.productMarking))
+        _NavItem(
+          title: l10n.ismptSettingsTitle,
+          description: l10n.ismptSettingsSubtitle,
+          icon: Icons.qr_code_2,
+          color: const Color(0xFF6A1B9A),
+          onTap: () => context.push(AppRoutes.ismptSettings),
+        ),
       _NavItem(
         title: l10n.reorderRulesTitle,
         description: l10n.reorderRulesSubtitle,
@@ -967,6 +1058,40 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
             } catch (_) {}
           },
         ),
+        // Потолок суммы чека. До схемы v57 он был зашит миллионом и отказ
+        // называл «1 млн ₸» на кассе любой страны: миллион тенге — около
+        // двух тысяч долларов, и на американской кассе защиты не было
+        // вовсе. Теперь число ставит владелец.
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+          // Сохранение и по Enter, и по УХОДУ ФОКУСА. Иначе владелец,
+          // набравший число и нажавший на соседний переключатель, теряет его
+          // молча — тот же род дефекта, что «невидимая кнопка сохранения» в
+          // настройках принтера.
+          child: Focus(
+            onFocusChange: (has) {
+              if (!has) _saveBigAmountLimit(_bigAmountLimitCtrl.text);
+            },
+            child: TextField(
+              key: const ValueKey('policy-big-amount-limit'),
+              controller: _bigAmountLimitCtrl,
+              enabled: !_allowBigAmount,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(
+                labelText: l10n.setPolicyBigAmountLimit,
+                helperText: l10n.setPolicyBigAmountLimitDesc(
+                  '$kDefaultBigAmountLimit',
+                ),
+                helperMaxLines: 2,
+                border: const OutlineInputBorder(),
+                suffixText: tillCurrencyCode(),
+              ),
+              onSubmitted: _saveBigAmountLimit,
+            ),
+          ),
+        ),
         SwitchListTile(
           contentPadding: _switchRowPadding,
           value: _isKassaPriceDecreasingBlocked,
@@ -1035,7 +1160,7 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
       children: [
         _buildInfoRow(
           l10n.generalSettingsCurrencySymbol,
-          _posInfo?.currencySymbol ?? '₸',
+          _posInfo?.currencySymbol ?? tillCurrencySymbol(),
         ),
         _buildInfoRow(
           l10n.generalSettingsCurrencyCode,

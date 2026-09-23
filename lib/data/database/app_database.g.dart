@@ -1202,6 +1202,1283 @@ class UpdatePropertiesCompanion extends UpdateCompanion<UpdateProperty> {
   }
 }
 
+class $TaxJurisdictionsTable extends TaxJurisdictions
+    with TableInfo<$TaxJurisdictionsTable, TaxJurisdictionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaxJurisdictionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 64,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _parentIdMeta = const VerificationMeta(
+    'parentId',
+  );
+  @override
+  late final GeneratedColumn<int> parentId = GeneratedColumn<int>(
+    'parent_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _levelMeta = const VerificationMeta('level');
+  @override
+  late final GeneratedColumn<int> level = GeneratedColumn<int>(
+    'level',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(TaxJurisdictionLevel.country),
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _isTillLocationMeta = const VerificationMeta(
+    'isTillLocation',
+  );
+  @override
+  late final GeneratedColumn<bool> isTillLocation = GeneratedColumn<bool>(
+    'is_till_location',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_till_location" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    parentId,
+    level,
+    sortOrder,
+    isActive,
+    isTillLocation,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tax_jurisdictions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TaxJurisdictionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('parent_id')) {
+      context.handle(
+        _parentIdMeta,
+        parentId.isAcceptableOrUnknown(data['parent_id']!, _parentIdMeta),
+      );
+    }
+    if (data.containsKey('level')) {
+      context.handle(
+        _levelMeta,
+        level.isAcceptableOrUnknown(data['level']!, _levelMeta),
+      );
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('is_till_location')) {
+      context.handle(
+        _isTillLocationMeta,
+        isTillLocation.isAcceptableOrUnknown(
+          data['is_till_location']!,
+          _isTillLocationMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaxJurisdictionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaxJurisdictionRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      parentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}parent_id'],
+      ),
+      level: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}level'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      isTillLocation: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_till_location'],
+      )!,
+    );
+  }
+
+  @override
+  $TaxJurisdictionsTable createAlias(String alias) {
+    return $TaxJurisdictionsTable(attachedDatabase, alias);
+  }
+}
+
+class TaxJurisdictionRow extends DataClass
+    implements Insertable<TaxJurisdictionRow> {
+  final int id;
+
+  /// Название так, как его печатают на чеке: «CO State», «Denver», «RTD».
+  ///
+  /// Не переводится: это имя органа, а не слово интерфейса.
+  final String name;
+
+  /// Родитель. `null` — корень (страна).
+  ///
+  /// Самоссылка без внешнего ключа: drift в SQLite оставляет
+  /// `PRAGMA foreign_keys` выключенным, и объявленный ключ создавал бы
+  /// видимость проверки, которой нет. Целостность держит
+  /// `TaxJurisdictionDao`, а цикл ловит сторож.
+  final int? parentId;
+
+  /// Уровень, см. [TaxJurisdictionLevel]. Нужен для подсказок в интерфейсе
+  /// («выберите штат»), а не для расчёта: расчёт идёт по [parentId].
+  final int level;
+
+  /// Порядок печати внутри одного родителя.
+  final int sortOrder;
+
+  /// Выключенная юрисдикция не печатается и в сумму не входит.
+  final bool isActive;
+
+  /// Касса стоит в этой юрисдикции.
+  ///
+  /// Отметок несколько: город **и** спецрайоны. Предки добавляются сами и
+  /// отмечаться не обязаны — доля штата взимается и без упоминания.
+  ///
+  /// Хранится отметкой, а не полем «где касса» в настройке, потому что
+  /// юрисдикций у кассы больше одной: RTD и SCFD накрывают несколько
+  /// городов сразу и предками Денвера не являются. Одно поле выразило бы
+  /// только город, и касса недобрала бы 1,10 %.
+  final bool isTillLocation;
+  const TaxJurisdictionRow({
+    required this.id,
+    required this.name,
+    this.parentId,
+    required this.level,
+    required this.sortOrder,
+    required this.isActive,
+    required this.isTillLocation,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || parentId != null) {
+      map['parent_id'] = Variable<int>(parentId);
+    }
+    map['level'] = Variable<int>(level);
+    map['sort_order'] = Variable<int>(sortOrder);
+    map['is_active'] = Variable<bool>(isActive);
+    map['is_till_location'] = Variable<bool>(isTillLocation);
+    return map;
+  }
+
+  TaxJurisdictionsCompanion toCompanion(bool nullToAbsent) {
+    return TaxJurisdictionsCompanion(
+      id: Value(id),
+      name: Value(name),
+      parentId: parentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentId),
+      level: Value(level),
+      sortOrder: Value(sortOrder),
+      isActive: Value(isActive),
+      isTillLocation: Value(isTillLocation),
+    );
+  }
+
+  factory TaxJurisdictionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaxJurisdictionRow(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      parentId: serializer.fromJson<int?>(json['parentId']),
+      level: serializer.fromJson<int>(json['level']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      isTillLocation: serializer.fromJson<bool>(json['isTillLocation']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'parentId': serializer.toJson<int?>(parentId),
+      'level': serializer.toJson<int>(level),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+      'isActive': serializer.toJson<bool>(isActive),
+      'isTillLocation': serializer.toJson<bool>(isTillLocation),
+    };
+  }
+
+  TaxJurisdictionRow copyWith({
+    int? id,
+    String? name,
+    Value<int?> parentId = const Value.absent(),
+    int? level,
+    int? sortOrder,
+    bool? isActive,
+    bool? isTillLocation,
+  }) => TaxJurisdictionRow(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    parentId: parentId.present ? parentId.value : this.parentId,
+    level: level ?? this.level,
+    sortOrder: sortOrder ?? this.sortOrder,
+    isActive: isActive ?? this.isActive,
+    isTillLocation: isTillLocation ?? this.isTillLocation,
+  );
+  TaxJurisdictionRow copyWithCompanion(TaxJurisdictionsCompanion data) {
+    return TaxJurisdictionRow(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      parentId: data.parentId.present ? data.parentId.value : this.parentId,
+      level: data.level.present ? data.level.value : this.level,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      isTillLocation: data.isTillLocation.present
+          ? data.isTillLocation.value
+          : this.isTillLocation,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaxJurisdictionRow(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('parentId: $parentId, ')
+          ..write('level: $level, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('isActive: $isActive, ')
+          ..write('isTillLocation: $isTillLocation')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    parentId,
+    level,
+    sortOrder,
+    isActive,
+    isTillLocation,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaxJurisdictionRow &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.parentId == this.parentId &&
+          other.level == this.level &&
+          other.sortOrder == this.sortOrder &&
+          other.isActive == this.isActive &&
+          other.isTillLocation == this.isTillLocation);
+}
+
+class TaxJurisdictionsCompanion extends UpdateCompanion<TaxJurisdictionRow> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<int?> parentId;
+  final Value<int> level;
+  final Value<int> sortOrder;
+  final Value<bool> isActive;
+  final Value<bool> isTillLocation;
+  const TaxJurisdictionsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.parentId = const Value.absent(),
+    this.level = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.isTillLocation = const Value.absent(),
+  });
+  TaxJurisdictionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.parentId = const Value.absent(),
+    this.level = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.isTillLocation = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<TaxJurisdictionRow> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<int>? parentId,
+    Expression<int>? level,
+    Expression<int>? sortOrder,
+    Expression<bool>? isActive,
+    Expression<bool>? isTillLocation,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (parentId != null) 'parent_id': parentId,
+      if (level != null) 'level': level,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (isActive != null) 'is_active': isActive,
+      if (isTillLocation != null) 'is_till_location': isTillLocation,
+    });
+  }
+
+  TaxJurisdictionsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<int?>? parentId,
+    Value<int>? level,
+    Value<int>? sortOrder,
+    Value<bool>? isActive,
+    Value<bool>? isTillLocation,
+  }) {
+    return TaxJurisdictionsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      parentId: parentId ?? this.parentId,
+      level: level ?? this.level,
+      sortOrder: sortOrder ?? this.sortOrder,
+      isActive: isActive ?? this.isActive,
+      isTillLocation: isTillLocation ?? this.isTillLocation,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (parentId.present) {
+      map['parent_id'] = Variable<int>(parentId.value);
+    }
+    if (level.present) {
+      map['level'] = Variable<int>(level.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (isTillLocation.present) {
+      map['is_till_location'] = Variable<bool>(isTillLocation.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaxJurisdictionsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('parentId: $parentId, ')
+          ..write('level: $level, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('isActive: $isActive, ')
+          ..write('isTillLocation: $isTillLocation')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TaxCategoriesTable extends TaxCategories
+    with TableInfo<$TaxCategoriesTable, TaxCategory> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaxCategoriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _codeMeta = const VerificationMeta('code');
+  @override
+  late final GeneratedColumn<String> code = GeneratedColumn<String>(
+    'code',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 48,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 96,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isDefaultMeta = const VerificationMeta(
+    'isDefault',
+  );
+  @override
+  late final GeneratedColumn<bool> isDefault = GeneratedColumn<bool>(
+    'is_default',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_default" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, code, title, isDefault];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tax_categories';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TaxCategory> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('code')) {
+      context.handle(
+        _codeMeta,
+        code.isAcceptableOrUnknown(data['code']!, _codeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_codeMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(
+        _isDefaultMeta,
+        isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {code},
+  ];
+  @override
+  TaxCategory map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaxCategory(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      code: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}code'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      isDefault: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_default'],
+      )!,
+    );
+  }
+
+  @override
+  $TaxCategoriesTable createAlias(String alias) {
+    return $TaxCategoriesTable(attachedDatabase, alias);
+  }
+}
+
+class TaxCategory extends DataClass implements Insertable<TaxCategory> {
+  final int id;
+
+  /// Устойчивый код: по нему пресеты попадают в категорию, не завися от
+  /// названия, которое пользователь вправе переименовать.
+  final String code;
+  final String title;
+
+  /// Категория товаров, у которых своей не проставлено.
+  ///
+  /// Ровно одна — держит `TaxCategoryDao`, проверяет сторож. Ноль означал
+  /// бы товар без облагаемости вовсе.
+  final bool isDefault;
+  const TaxCategory({
+    required this.id,
+    required this.code,
+    required this.title,
+    required this.isDefault,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['code'] = Variable<String>(code);
+    map['title'] = Variable<String>(title);
+    map['is_default'] = Variable<bool>(isDefault);
+    return map;
+  }
+
+  TaxCategoriesCompanion toCompanion(bool nullToAbsent) {
+    return TaxCategoriesCompanion(
+      id: Value(id),
+      code: Value(code),
+      title: Value(title),
+      isDefault: Value(isDefault),
+    );
+  }
+
+  factory TaxCategory.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaxCategory(
+      id: serializer.fromJson<int>(json['id']),
+      code: serializer.fromJson<String>(json['code']),
+      title: serializer.fromJson<String>(json['title']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'code': serializer.toJson<String>(code),
+      'title': serializer.toJson<String>(title),
+      'isDefault': serializer.toJson<bool>(isDefault),
+    };
+  }
+
+  TaxCategory copyWith({
+    int? id,
+    String? code,
+    String? title,
+    bool? isDefault,
+  }) => TaxCategory(
+    id: id ?? this.id,
+    code: code ?? this.code,
+    title: title ?? this.title,
+    isDefault: isDefault ?? this.isDefault,
+  );
+  TaxCategory copyWithCompanion(TaxCategoriesCompanion data) {
+    return TaxCategory(
+      id: data.id.present ? data.id.value : this.id,
+      code: data.code.present ? data.code.value : this.code,
+      title: data.title.present ? data.title.value : this.title,
+      isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaxCategory(')
+          ..write('id: $id, ')
+          ..write('code: $code, ')
+          ..write('title: $title, ')
+          ..write('isDefault: $isDefault')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, code, title, isDefault);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaxCategory &&
+          other.id == this.id &&
+          other.code == this.code &&
+          other.title == this.title &&
+          other.isDefault == this.isDefault);
+}
+
+class TaxCategoriesCompanion extends UpdateCompanion<TaxCategory> {
+  final Value<int> id;
+  final Value<String> code;
+  final Value<String> title;
+  final Value<bool> isDefault;
+  const TaxCategoriesCompanion({
+    this.id = const Value.absent(),
+    this.code = const Value.absent(),
+    this.title = const Value.absent(),
+    this.isDefault = const Value.absent(),
+  });
+  TaxCategoriesCompanion.insert({
+    this.id = const Value.absent(),
+    required String code,
+    required String title,
+    this.isDefault = const Value.absent(),
+  }) : code = Value(code),
+       title = Value(title);
+  static Insertable<TaxCategory> custom({
+    Expression<int>? id,
+    Expression<String>? code,
+    Expression<String>? title,
+    Expression<bool>? isDefault,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (code != null) 'code': code,
+      if (title != null) 'title': title,
+      if (isDefault != null) 'is_default': isDefault,
+    });
+  }
+
+  TaxCategoriesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? code,
+    Value<String>? title,
+    Value<bool>? isDefault,
+  }) {
+    return TaxCategoriesCompanion(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      title: title ?? this.title,
+      isDefault: isDefault ?? this.isDefault,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (code.present) {
+      map['code'] = Variable<String>(code.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaxCategoriesCompanion(')
+          ..write('id: $id, ')
+          ..write('code: $code, ')
+          ..write('title: $title, ')
+          ..write('isDefault: $isDefault')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TaxRulesTable extends TaxRules
+    with TableInfo<$TaxRulesTable, TaxRuleRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaxRulesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _jurisdictionIdMeta = const VerificationMeta(
+    'jurisdictionId',
+  );
+  @override
+  late final GeneratedColumn<int> jurisdictionId = GeneratedColumn<int>(
+    'jurisdiction_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<int> kind = GeneratedColumn<int>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(TaxRuleKind.taxed),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Decimal, double> ratePercent =
+      GeneratedColumn<double>(
+        'rate_percent',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      ).withConverter<Decimal>($TaxRulesTable.$converterratePercent);
+  static const VerificationMeta _validFromMeta = const VerificationMeta(
+    'validFrom',
+  );
+  @override
+  late final GeneratedColumn<DateTime> validFrom = GeneratedColumn<DateTime>(
+    'valid_from',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _validToMeta = const VerificationMeta(
+    'validTo',
+  );
+  @override
+  late final GeneratedColumn<DateTime> validTo = GeneratedColumn<DateTime>(
+    'valid_to',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    jurisdictionId,
+    categoryId,
+    kind,
+    ratePercent,
+    validFrom,
+    validTo,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tax_rules';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TaxRuleRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('jurisdiction_id')) {
+      context.handle(
+        _jurisdictionIdMeta,
+        jurisdictionId.isAcceptableOrUnknown(
+          data['jurisdiction_id']!,
+          _jurisdictionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_jurisdictionIdMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    }
+    if (data.containsKey('valid_from')) {
+      context.handle(
+        _validFromMeta,
+        validFrom.isAcceptableOrUnknown(data['valid_from']!, _validFromMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_validFromMeta);
+    }
+    if (data.containsKey('valid_to')) {
+      context.handle(
+        _validToMeta,
+        validTo.isAcceptableOrUnknown(data['valid_to']!, _validToMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaxRuleRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaxRuleRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      jurisdictionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}jurisdiction_id'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      ),
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}kind'],
+      )!,
+      ratePercent: $TaxRulesTable.$converterratePercent.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.double,
+          data['${effectivePrefix}rate_percent'],
+        )!,
+      ),
+      validFrom: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}valid_from'],
+      )!,
+      validTo: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}valid_to'],
+      ),
+    );
+  }
+
+  @override
+  $TaxRulesTable createAlias(String alias) {
+    return $TaxRulesTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Decimal, double> $converterratePercent =
+      const DecimalConverter();
+}
+
+class TaxRuleRow extends DataClass implements Insertable<TaxRuleRow> {
+  final int id;
+  final int jurisdictionId;
+
+  /// `null` — правило для всех категорий, у которых нет своего.
+  ///
+  /// Так выражается обычный случай: «штат берёт 2,9 % со всего, кроме
+  /// еды» — одно правило без категории и одно для еды.
+  final int? categoryId;
+  final int kind;
+
+  /// Доля в процентах. Дробная: 2.90, 5.15, 0.10.
+  final Decimal ratePercent;
+
+  /// С какого дня действует. Обязательна.
+  final DateTime validFrom;
+
+  /// По какой день включительно. `null` — бессрочно.
+  final DateTime? validTo;
+  const TaxRuleRow({
+    required this.id,
+    required this.jurisdictionId,
+    this.categoryId,
+    required this.kind,
+    required this.ratePercent,
+    required this.validFrom,
+    this.validTo,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['jurisdiction_id'] = Variable<int>(jurisdictionId);
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<int>(categoryId);
+    }
+    map['kind'] = Variable<int>(kind);
+    {
+      map['rate_percent'] = Variable<double>(
+        $TaxRulesTable.$converterratePercent.toSql(ratePercent),
+      );
+    }
+    map['valid_from'] = Variable<DateTime>(validFrom);
+    if (!nullToAbsent || validTo != null) {
+      map['valid_to'] = Variable<DateTime>(validTo);
+    }
+    return map;
+  }
+
+  TaxRulesCompanion toCompanion(bool nullToAbsent) {
+    return TaxRulesCompanion(
+      id: Value(id),
+      jurisdictionId: Value(jurisdictionId),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      kind: Value(kind),
+      ratePercent: Value(ratePercent),
+      validFrom: Value(validFrom),
+      validTo: validTo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(validTo),
+    );
+  }
+
+  factory TaxRuleRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaxRuleRow(
+      id: serializer.fromJson<int>(json['id']),
+      jurisdictionId: serializer.fromJson<int>(json['jurisdictionId']),
+      categoryId: serializer.fromJson<int?>(json['categoryId']),
+      kind: serializer.fromJson<int>(json['kind']),
+      ratePercent: serializer.fromJson<Decimal>(json['ratePercent']),
+      validFrom: serializer.fromJson<DateTime>(json['validFrom']),
+      validTo: serializer.fromJson<DateTime?>(json['validTo']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'jurisdictionId': serializer.toJson<int>(jurisdictionId),
+      'categoryId': serializer.toJson<int?>(categoryId),
+      'kind': serializer.toJson<int>(kind),
+      'ratePercent': serializer.toJson<Decimal>(ratePercent),
+      'validFrom': serializer.toJson<DateTime>(validFrom),
+      'validTo': serializer.toJson<DateTime?>(validTo),
+    };
+  }
+
+  TaxRuleRow copyWith({
+    int? id,
+    int? jurisdictionId,
+    Value<int?> categoryId = const Value.absent(),
+    int? kind,
+    Decimal? ratePercent,
+    DateTime? validFrom,
+    Value<DateTime?> validTo = const Value.absent(),
+  }) => TaxRuleRow(
+    id: id ?? this.id,
+    jurisdictionId: jurisdictionId ?? this.jurisdictionId,
+    categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    kind: kind ?? this.kind,
+    ratePercent: ratePercent ?? this.ratePercent,
+    validFrom: validFrom ?? this.validFrom,
+    validTo: validTo.present ? validTo.value : this.validTo,
+  );
+  TaxRuleRow copyWithCompanion(TaxRulesCompanion data) {
+    return TaxRuleRow(
+      id: data.id.present ? data.id.value : this.id,
+      jurisdictionId: data.jurisdictionId.present
+          ? data.jurisdictionId.value
+          : this.jurisdictionId,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      ratePercent: data.ratePercent.present
+          ? data.ratePercent.value
+          : this.ratePercent,
+      validFrom: data.validFrom.present ? data.validFrom.value : this.validFrom,
+      validTo: data.validTo.present ? data.validTo.value : this.validTo,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaxRuleRow(')
+          ..write('id: $id, ')
+          ..write('jurisdictionId: $jurisdictionId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('kind: $kind, ')
+          ..write('ratePercent: $ratePercent, ')
+          ..write('validFrom: $validFrom, ')
+          ..write('validTo: $validTo')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    jurisdictionId,
+    categoryId,
+    kind,
+    ratePercent,
+    validFrom,
+    validTo,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaxRuleRow &&
+          other.id == this.id &&
+          other.jurisdictionId == this.jurisdictionId &&
+          other.categoryId == this.categoryId &&
+          other.kind == this.kind &&
+          other.ratePercent == this.ratePercent &&
+          other.validFrom == this.validFrom &&
+          other.validTo == this.validTo);
+}
+
+class TaxRulesCompanion extends UpdateCompanion<TaxRuleRow> {
+  final Value<int> id;
+  final Value<int> jurisdictionId;
+  final Value<int?> categoryId;
+  final Value<int> kind;
+  final Value<Decimal> ratePercent;
+  final Value<DateTime> validFrom;
+  final Value<DateTime?> validTo;
+  const TaxRulesCompanion({
+    this.id = const Value.absent(),
+    this.jurisdictionId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.ratePercent = const Value.absent(),
+    this.validFrom = const Value.absent(),
+    this.validTo = const Value.absent(),
+  });
+  TaxRulesCompanion.insert({
+    this.id = const Value.absent(),
+    required int jurisdictionId,
+    this.categoryId = const Value.absent(),
+    this.kind = const Value.absent(),
+    required Decimal ratePercent,
+    required DateTime validFrom,
+    this.validTo = const Value.absent(),
+  }) : jurisdictionId = Value(jurisdictionId),
+       ratePercent = Value(ratePercent),
+       validFrom = Value(validFrom);
+  static Insertable<TaxRuleRow> custom({
+    Expression<int>? id,
+    Expression<int>? jurisdictionId,
+    Expression<int>? categoryId,
+    Expression<int>? kind,
+    Expression<double>? ratePercent,
+    Expression<DateTime>? validFrom,
+    Expression<DateTime>? validTo,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (jurisdictionId != null) 'jurisdiction_id': jurisdictionId,
+      if (categoryId != null) 'category_id': categoryId,
+      if (kind != null) 'kind': kind,
+      if (ratePercent != null) 'rate_percent': ratePercent,
+      if (validFrom != null) 'valid_from': validFrom,
+      if (validTo != null) 'valid_to': validTo,
+    });
+  }
+
+  TaxRulesCompanion copyWith({
+    Value<int>? id,
+    Value<int>? jurisdictionId,
+    Value<int?>? categoryId,
+    Value<int>? kind,
+    Value<Decimal>? ratePercent,
+    Value<DateTime>? validFrom,
+    Value<DateTime?>? validTo,
+  }) {
+    return TaxRulesCompanion(
+      id: id ?? this.id,
+      jurisdictionId: jurisdictionId ?? this.jurisdictionId,
+      categoryId: categoryId ?? this.categoryId,
+      kind: kind ?? this.kind,
+      ratePercent: ratePercent ?? this.ratePercent,
+      validFrom: validFrom ?? this.validFrom,
+      validTo: validTo ?? this.validTo,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (jurisdictionId.present) {
+      map['jurisdiction_id'] = Variable<int>(jurisdictionId.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<int>(kind.value);
+    }
+    if (ratePercent.present) {
+      map['rate_percent'] = Variable<double>(
+        $TaxRulesTable.$converterratePercent.toSql(ratePercent.value),
+      );
+    }
+    if (validFrom.present) {
+      map['valid_from'] = Variable<DateTime>(validFrom.value);
+    }
+    if (validTo.present) {
+      map['valid_to'] = Variable<DateTime>(validTo.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaxRulesCompanion(')
+          ..write('id: $id, ')
+          ..write('jurisdictionId: $jurisdictionId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('kind: $kind, ')
+          ..write('ratePercent: $ratePercent, ')
+          ..write('validFrom: $validFrom, ')
+          ..write('validTo: $validTo')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $CategoriesTable extends Categories
     with TableInfo<$CategoriesTable, Category> {
   @override
@@ -2678,6 +3955,17 @@ class $ProductInfosTable extends ProductInfos
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _taxCategoryIdMeta = const VerificationMeta(
+    'taxCategoryId',
+  );
+  @override
+  late final GeneratedColumn<int> taxCategoryId = GeneratedColumn<int>(
+    'tax_category_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _ntinMeta = const VerificationMeta('ntin');
   @override
   late final GeneratedColumn<String> ntin = GeneratedColumn<String>(
@@ -2748,6 +4036,7 @@ class $ProductInfosTable extends ProductInfos
     imagePath,
     isDeleted,
     vatRate,
+    taxCategoryId,
     ntin,
     isMarkable,
     brand,
@@ -2855,6 +4144,15 @@ class $ProductInfosTable extends ProductInfos
         vatRate.isAcceptableOrUnknown(data['vat_rate']!, _vatRateMeta),
       );
     }
+    if (data.containsKey('tax_category_id')) {
+      context.handle(
+        _taxCategoryIdMeta,
+        taxCategoryId.isAcceptableOrUnknown(
+          data['tax_category_id']!,
+          _taxCategoryIdMeta,
+        ),
+      );
+    }
     if (data.containsKey('ntin')) {
       context.handle(
         _ntinMeta,
@@ -2954,6 +4252,10 @@ class $ProductInfosTable extends ProductInfos
         DriftSqlType.int,
         data['${effectivePrefix}vat_rate'],
       ),
+      taxCategoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tax_category_id'],
+      ),
       ntin: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}ntin'],
@@ -3001,7 +4303,32 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
   final String? description;
   final String? imagePath;
   final bool isDeleted;
+
+  /// Целая ставка НДС. **Устаревает, но ещё читается.**
+  ///
+  /// Деньги и чек считает [taxCategoryId] через `tax_rules`. Это поле
+  /// осталось единственным входом для ЭСФ: `SaleUseCaseImpl` берёт его
+  /// напрямую (`vatRate == null ? null : EsfTaxMode.vat`).
+  ///
+  /// Написать здесь «читается только миграцией» я успел — и это было
+  /// неверно. Пока ЭСФ не переведён на выведенную ставку, поле живое, и
+  /// назвать его мёртвым значит пригласить следующего читателя его убрать.
   final int? vatRate;
+
+  /// Налоговая категория: «еда для дома», «готовая еда», «лекарства».
+  ///
+  /// `null` — категория по умолчанию.
+  ///
+  /// # Почему категория, а не ставка
+  ///
+  /// v54 держала здесь процент, и это было неверно. Ставка у товара ломает
+  /// сеть из двух точек в разных штатах: каталог один, а ставка у того же
+  /// молока разная, и владельцу пришлось бы вести два каталога.
+  ///
+  /// Так устроены и библиотека определений SSUTA, и Приложение III
+  /// директивы ЕС: товар относят к определению, а ставку определению даёт
+  /// юрисдикция. См. `lib/domain/tax/tax_resolution.dart`.
+  final int? taxCategoryId;
   final String? ntin;
   final bool isMarkable;
   final String? brand;
@@ -3021,6 +4348,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
     this.imagePath,
     required this.isDeleted,
     this.vatRate,
+    this.taxCategoryId,
     this.ntin,
     required this.isMarkable,
     this.brand,
@@ -3058,6 +4386,9 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
     map['is_deleted'] = Variable<bool>(isDeleted);
     if (!nullToAbsent || vatRate != null) {
       map['vat_rate'] = Variable<int>(vatRate);
+    }
+    if (!nullToAbsent || taxCategoryId != null) {
+      map['tax_category_id'] = Variable<int>(taxCategoryId);
     }
     if (!nullToAbsent || ntin != null) {
       map['ntin'] = Variable<String>(ntin);
@@ -3104,6 +4435,9 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
       vatRate: vatRate == null && nullToAbsent
           ? const Value.absent()
           : Value(vatRate),
+      taxCategoryId: taxCategoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taxCategoryId),
       ntin: ntin == null && nullToAbsent ? const Value.absent() : Value(ntin),
       isMarkable: Value(isMarkable),
       brand: brand == null && nullToAbsent
@@ -3137,6 +4471,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
       imagePath: serializer.fromJson<String?>(json['imagePath']),
       isDeleted: serializer.fromJson<bool>(json['isDeleted']),
       vatRate: serializer.fromJson<int?>(json['vatRate']),
+      taxCategoryId: serializer.fromJson<int?>(json['taxCategoryId']),
       ntin: serializer.fromJson<String?>(json['ntin']),
       isMarkable: serializer.fromJson<bool>(json['isMarkable']),
       brand: serializer.fromJson<String?>(json['brand']),
@@ -3161,6 +4496,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
       'imagePath': serializer.toJson<String?>(imagePath),
       'isDeleted': serializer.toJson<bool>(isDeleted),
       'vatRate': serializer.toJson<int?>(vatRate),
+      'taxCategoryId': serializer.toJson<int?>(taxCategoryId),
       'ntin': serializer.toJson<String?>(ntin),
       'isMarkable': serializer.toJson<bool>(isMarkable),
       'brand': serializer.toJson<String?>(brand),
@@ -3183,6 +4519,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
     Value<String?> imagePath = const Value.absent(),
     bool? isDeleted,
     Value<int?> vatRate = const Value.absent(),
+    Value<int?> taxCategoryId = const Value.absent(),
     Value<String?> ntin = const Value.absent(),
     bool? isMarkable,
     Value<String?> brand = const Value.absent(),
@@ -3206,6 +4543,9 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
     imagePath: imagePath.present ? imagePath.value : this.imagePath,
     isDeleted: isDeleted ?? this.isDeleted,
     vatRate: vatRate.present ? vatRate.value : this.vatRate,
+    taxCategoryId: taxCategoryId.present
+        ? taxCategoryId.value
+        : this.taxCategoryId,
     ntin: ntin.present ? ntin.value : this.ntin,
     isMarkable: isMarkable ?? this.isMarkable,
     brand: brand.present ? brand.value : this.brand,
@@ -3237,6 +4577,9 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
       imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
       isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
       vatRate: data.vatRate.present ? data.vatRate.value : this.vatRate,
+      taxCategoryId: data.taxCategoryId.present
+          ? data.taxCategoryId.value
+          : this.taxCategoryId,
       ntin: data.ntin.present ? data.ntin.value : this.ntin,
       isMarkable: data.isMarkable.present
           ? data.isMarkable.value
@@ -3267,6 +4610,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
           ..write('imagePath: $imagePath, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('vatRate: $vatRate, ')
+          ..write('taxCategoryId: $taxCategoryId, ')
           ..write('ntin: $ntin, ')
           ..write('isMarkable: $isMarkable, ')
           ..write('brand: $brand, ')
@@ -3291,6 +4635,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
     imagePath,
     isDeleted,
     vatRate,
+    taxCategoryId,
     ntin,
     isMarkable,
     brand,
@@ -3314,6 +4659,7 @@ class ProductInfo extends DataClass implements Insertable<ProductInfo> {
           other.imagePath == this.imagePath &&
           other.isDeleted == this.isDeleted &&
           other.vatRate == this.vatRate &&
+          other.taxCategoryId == this.taxCategoryId &&
           other.ntin == this.ntin &&
           other.isMarkable == this.isMarkable &&
           other.brand == this.brand &&
@@ -3335,6 +4681,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
   final Value<String?> imagePath;
   final Value<bool> isDeleted;
   final Value<int?> vatRate;
+  final Value<int?> taxCategoryId;
   final Value<String?> ntin;
   final Value<bool> isMarkable;
   final Value<String?> brand;
@@ -3354,6 +4701,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
     this.imagePath = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.vatRate = const Value.absent(),
+    this.taxCategoryId = const Value.absent(),
     this.ntin = const Value.absent(),
     this.isMarkable = const Value.absent(),
     this.brand = const Value.absent(),
@@ -3374,6 +4722,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
     this.imagePath = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.vatRate = const Value.absent(),
+    this.taxCategoryId = const Value.absent(),
     this.ntin = const Value.absent(),
     this.isMarkable = const Value.absent(),
     this.brand = const Value.absent(),
@@ -3397,6 +4746,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
     Expression<String>? imagePath,
     Expression<bool>? isDeleted,
     Expression<int>? vatRate,
+    Expression<int>? taxCategoryId,
     Expression<String>? ntin,
     Expression<bool>? isMarkable,
     Expression<String>? brand,
@@ -3417,6 +4767,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
       if (imagePath != null) 'image_path': imagePath,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (vatRate != null) 'vat_rate': vatRate,
+      if (taxCategoryId != null) 'tax_category_id': taxCategoryId,
       if (ntin != null) 'ntin': ntin,
       if (isMarkable != null) 'is_markable': isMarkable,
       if (brand != null) 'brand': brand,
@@ -3439,6 +4790,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
     Value<String?>? imagePath,
     Value<bool>? isDeleted,
     Value<int?>? vatRate,
+    Value<int?>? taxCategoryId,
     Value<String?>? ntin,
     Value<bool>? isMarkable,
     Value<String?>? brand,
@@ -3459,6 +4811,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
       imagePath: imagePath ?? this.imagePath,
       isDeleted: isDeleted ?? this.isDeleted,
       vatRate: vatRate ?? this.vatRate,
+      taxCategoryId: taxCategoryId ?? this.taxCategoryId,
       ntin: ntin ?? this.ntin,
       isMarkable: isMarkable ?? this.isMarkable,
       brand: brand ?? this.brand,
@@ -3511,6 +4864,9 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
     if (vatRate.present) {
       map['vat_rate'] = Variable<int>(vatRate.value);
     }
+    if (taxCategoryId.present) {
+      map['tax_category_id'] = Variable<int>(taxCategoryId.value);
+    }
     if (ntin.present) {
       map['ntin'] = Variable<String>(ntin.value);
     }
@@ -3545,6 +4901,7 @@ class ProductInfosCompanion extends UpdateCompanion<ProductInfo> {
           ..write('imagePath: $imagePath, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('vatRate: $vatRate, ')
+          ..write('taxCategoryId: $taxCategoryId, ')
           ..write('ntin: $ntin, ')
           ..write('isMarkable: $isMarkable, ')
           ..write('brand: $brand, ')
@@ -17421,6 +18778,17 @@ class $CashOperationsTable extends CashOperations
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _reasonCodeMeta = const VerificationMeta(
+    'reasonCode',
+  );
+  @override
+  late final GeneratedColumn<int> reasonCode = GeneratedColumn<int>(
+    'reason_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -17433,6 +18801,7 @@ class $CashOperationsTable extends CashOperations
     docTime,
     state,
     kindId,
+    reasonCode,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -17499,6 +18868,12 @@ class $CashOperationsTable extends CashOperations
         kindId.isAcceptableOrUnknown(data['kind_id']!, _kindIdMeta),
       );
     }
+    if (data.containsKey('reason_code')) {
+      context.handle(
+        _reasonCodeMeta,
+        reasonCode.isAcceptableOrUnknown(data['reason_code']!, _reasonCodeMeta),
+      );
+    }
     return context;
   }
 
@@ -17550,6 +18925,10 @@ class $CashOperationsTable extends CashOperations
         DriftSqlType.int,
         data['${effectivePrefix}kind_id'],
       ),
+      reasonCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}reason_code'],
+      ),
     );
   }
 
@@ -17578,6 +18957,43 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
   /// До v47 не хранился, и аванс, принятый картой, уезжал оператору
   /// наличными. `null` у строк старше v47 — «не записано», а не «наличные».
   final int? kindId;
+
+  /// Основание операции числом (v58).
+  ///
+  /// # Зачем столбец, когда есть примечание
+  ///
+  /// До v58 род жил ВНУТРИ примечания: касса писала туда
+  /// `'Зарплата: комментарий кассира'`. Два следствия, оба дефекта.
+  ///
+  /// * **Перевести нельзя.** Слово записано в историю, и на английской
+  ///   кассе подпись под операцией оставалась русской. Ключи словаря
+  ///   (`cashSalary`, `cashUtilities`, …) при этом существовали во всех
+  ///   пяти языках и не спрашивались нигде.
+  /// * **Просуммировать нельзя.** «Сколько ушло на зарплату за месяц» —
+  ///   законный вопрос к кассе, и ответить на него значило разбирать
+  ///   русскую прозу по двоеточию.
+  ///
+  /// Типизованное поле, смазанное в текст, — это потерянное поле. Теперь
+  /// основание хранится числом, примечание несёт ТОЛЬКО то, что напечатал
+  /// человек, а слово выбирается при показе на языке интерфейса.
+  ///
+  /// # Почему «основание», а не «род расхода»
+  ///
+  /// Прозу в примечание писал не только расход. Погашение рассрочки и
+  /// пополнение счёта покупателя — операции ВНЕСЕНИЯ, и туда уезжали
+  /// «Погашение рассрочки №12» и «Вложение на счёт покупателя». Столбец с
+  /// именем `expenseKind` пришлось бы либо обходить, либо толковать
+  /// вопреки имени.
+  ///
+  /// Пространство кодов одно и описано в `domain/cash/cash_operation_kind
+  /// .dart`: 0–5 — роды расхода (ровно `ExpenseType.index`, чтобы не
+  /// заводить второе перечисление для того же понятия), от 100 — основания,
+  /// которые ставит сама касса.
+  ///
+  /// `null` у строк старше v58 — «не записано», а не «прочее»: у них
+  /// основание осталось в примечании, и притворяться, будто оно известно,
+  /// нельзя.
+  final int? reasonCode;
   const CashOperation({
     required this.id,
     this.storeId,
@@ -17589,6 +19005,7 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
     this.docTime,
     this.state,
     this.kindId,
+    this.reasonCode,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -17621,6 +19038,9 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
     if (!nullToAbsent || kindId != null) {
       map['kind_id'] = Variable<int>(kindId);
     }
+    if (!nullToAbsent || reasonCode != null) {
+      map['reason_code'] = Variable<int>(reasonCode);
+    }
     return map;
   }
 
@@ -17648,6 +19068,9 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
       kindId: kindId == null && nullToAbsent
           ? const Value.absent()
           : Value(kindId),
+      reasonCode: reasonCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reasonCode),
     );
   }
 
@@ -17667,6 +19090,7 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
       docTime: serializer.fromJson<int?>(json['docTime']),
       state: serializer.fromJson<int?>(json['state']),
       kindId: serializer.fromJson<int?>(json['kindId']),
+      reasonCode: serializer.fromJson<int?>(json['reasonCode']),
     );
   }
   @override
@@ -17683,6 +19107,7 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
       'docTime': serializer.toJson<int?>(docTime),
       'state': serializer.toJson<int?>(state),
       'kindId': serializer.toJson<int?>(kindId),
+      'reasonCode': serializer.toJson<int?>(reasonCode),
     };
   }
 
@@ -17697,6 +19122,7 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
     Value<int?> docTime = const Value.absent(),
     Value<int?> state = const Value.absent(),
     Value<int?> kindId = const Value.absent(),
+    Value<int?> reasonCode = const Value.absent(),
   }) => CashOperation(
     id: id ?? this.id,
     storeId: storeId.present ? storeId.value : this.storeId,
@@ -17708,6 +19134,7 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
     docTime: docTime.present ? docTime.value : this.docTime,
     state: state.present ? state.value : this.state,
     kindId: kindId.present ? kindId.value : this.kindId,
+    reasonCode: reasonCode.present ? reasonCode.value : this.reasonCode,
   );
   CashOperation copyWithCompanion(CashOperationsCompanion data) {
     return CashOperation(
@@ -17721,6 +19148,9 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
       docTime: data.docTime.present ? data.docTime.value : this.docTime,
       state: data.state.present ? data.state.value : this.state,
       kindId: data.kindId.present ? data.kindId.value : this.kindId,
+      reasonCode: data.reasonCode.present
+          ? data.reasonCode.value
+          : this.reasonCode,
     );
   }
 
@@ -17736,7 +19166,8 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
           ..write('note: $note, ')
           ..write('docTime: $docTime, ')
           ..write('state: $state, ')
-          ..write('kindId: $kindId')
+          ..write('kindId: $kindId, ')
+          ..write('reasonCode: $reasonCode')
           ..write(')'))
         .toString();
   }
@@ -17753,6 +19184,7 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
     docTime,
     state,
     kindId,
+    reasonCode,
   );
   @override
   bool operator ==(Object other) =>
@@ -17767,7 +19199,8 @@ class CashOperation extends DataClass implements Insertable<CashOperation> {
           other.note == this.note &&
           other.docTime == this.docTime &&
           other.state == this.state &&
-          other.kindId == this.kindId);
+          other.kindId == this.kindId &&
+          other.reasonCode == this.reasonCode);
 }
 
 class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
@@ -17781,6 +19214,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
   final Value<int?> docTime;
   final Value<int?> state;
   final Value<int?> kindId;
+  final Value<int?> reasonCode;
   const CashOperationsCompanion({
     this.id = const Value.absent(),
     this.storeId = const Value.absent(),
@@ -17792,6 +19226,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
     this.docTime = const Value.absent(),
     this.state = const Value.absent(),
     this.kindId = const Value.absent(),
+    this.reasonCode = const Value.absent(),
   });
   CashOperationsCompanion.insert({
     this.id = const Value.absent(),
@@ -17804,6 +19239,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
     this.docTime = const Value.absent(),
     this.state = const Value.absent(),
     this.kindId = const Value.absent(),
+    this.reasonCode = const Value.absent(),
   }) : amount = Value(amount),
        type = Value(type);
   static Insertable<CashOperation> custom({
@@ -17817,6 +19253,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
     Expression<int>? docTime,
     Expression<int>? state,
     Expression<int>? kindId,
+    Expression<int>? reasonCode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -17829,6 +19266,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
       if (docTime != null) 'doc_time': docTime,
       if (state != null) 'state': state,
       if (kindId != null) 'kind_id': kindId,
+      if (reasonCode != null) 'reason_code': reasonCode,
     });
   }
 
@@ -17843,6 +19281,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
     Value<int?>? docTime,
     Value<int?>? state,
     Value<int?>? kindId,
+    Value<int?>? reasonCode,
   }) {
     return CashOperationsCompanion(
       id: id ?? this.id,
@@ -17855,6 +19294,7 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
       docTime: docTime ?? this.docTime,
       state: state ?? this.state,
       kindId: kindId ?? this.kindId,
+      reasonCode: reasonCode ?? this.reasonCode,
     );
   }
 
@@ -17893,6 +19333,9 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
     if (kindId.present) {
       map['kind_id'] = Variable<int>(kindId.value);
     }
+    if (reasonCode.present) {
+      map['reason_code'] = Variable<int>(reasonCode.value);
+    }
     return map;
   }
 
@@ -17908,7 +19351,8 @@ class CashOperationsCompanion extends UpdateCompanion<CashOperation> {
           ..write('note: $note, ')
           ..write('docTime: $docTime, ')
           ..write('state: $state, ')
-          ..write('kindId: $kindId')
+          ..write('kindId: $kindId, ')
+          ..write('reasonCode: $reasonCode')
           ..write(')'))
         .toString();
   }
@@ -24033,6 +25477,18 @@ class $ThisPosEntriesTable extends ThisPosEntries
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _taxTreatmentMeta = const VerificationMeta(
+    'taxTreatment',
+  );
+  @override
+  late final GeneratedColumn<int> taxTreatment = GeneratedColumn<int>(
+    'tax_treatment',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _blockOversellMeta = const VerificationMeta(
     'blockOversell',
   );
@@ -24318,6 +25774,17 @@ class $ThisPosEntriesTable extends ThisPosEntries
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _bigAmountLimitMeta = const VerificationMeta(
+    'bigAmountLimit',
+  );
+  @override
+  late final GeneratedColumn<String> bigAmountLimit = GeneratedColumn<String>(
+    'big_amount_limit',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isKassaPriceDecreasingBlockedMeta =
       const VerificationMeta('isKassaPriceDecreasingBlocked');
   @override
@@ -24407,6 +25874,17 @@ class $ThisPosEntriesTable extends ThisPosEntries
     aliasedName,
     true,
     type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _storeAddressMeta = const VerificationMeta(
+    'storeAddress',
+  );
+  @override
+  late final GeneratedColumn<String> storeAddress = GeneratedColumn<String>(
+    'store_address',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
   static const VerificationMeta _countryCodeMeta = const VerificationMeta(
@@ -24615,6 +26093,7 @@ class $ThisPosEntriesTable extends ThisPosEntries
     printerTableView,
     printVatOnReceipt,
     isVatPayer,
+    taxTreatment,
     blockOversell,
     editProduct,
     editPrice,
@@ -24634,6 +26113,7 @@ class $ThisPosEntriesTable extends ThisPosEntries
     isSearchInGlobalProductsEnabled,
     priceCheckEnabled,
     allowBigAmount,
+    bigAmountLimit,
     isKassaPriceDecreasingBlocked,
     usersAllowedToRefund,
     usersAllowedToRefundWithoutReceipt,
@@ -24642,6 +26122,7 @@ class $ThisPosEntriesTable extends ThisPosEntries
     markUpFromDate,
     markUpToDate,
     currencyId,
+    storeAddress,
     countryCode,
     currencyCode,
     currencyNameLong,
@@ -24892,6 +26373,15 @@ class $ThisPosEntriesTable extends ThisPosEntries
         ),
       );
     }
+    if (data.containsKey('tax_treatment')) {
+      context.handle(
+        _taxTreatmentMeta,
+        taxTreatment.isAcceptableOrUnknown(
+          data['tax_treatment']!,
+          _taxTreatmentMeta,
+        ),
+      );
+    }
     if (data.containsKey('block_oversell')) {
       context.handle(
         _blockOversellMeta,
@@ -25051,6 +26541,15 @@ class $ThisPosEntriesTable extends ThisPosEntries
         ),
       );
     }
+    if (data.containsKey('big_amount_limit')) {
+      context.handle(
+        _bigAmountLimitMeta,
+        bigAmountLimit.isAcceptableOrUnknown(
+          data['big_amount_limit']!,
+          _bigAmountLimitMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_kassa_price_decreasing_blocked')) {
       context.handle(
         _isKassaPriceDecreasingBlockedMeta,
@@ -25118,6 +26617,15 @@ class $ThisPosEntriesTable extends ThisPosEntries
       context.handle(
         _currencyIdMeta,
         currencyId.isAcceptableOrUnknown(data['currency_id']!, _currencyIdMeta),
+      );
+    }
+    if (data.containsKey('store_address')) {
+      context.handle(
+        _storeAddressMeta,
+        storeAddress.isAcceptableOrUnknown(
+          data['store_address']!,
+          _storeAddressMeta,
+        ),
       );
     }
     if (data.containsKey('country_code')) {
@@ -25375,6 +26883,10 @@ class $ThisPosEntriesTable extends ThisPosEntries
         DriftSqlType.bool,
         data['${effectivePrefix}is_vat_payer'],
       )!,
+      taxTreatment: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tax_treatment'],
+      )!,
       blockOversell: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}block_oversell'],
@@ -25451,6 +26963,10 @@ class $ThisPosEntriesTable extends ThisPosEntries
         DriftSqlType.bool,
         data['${effectivePrefix}allow_big_amount'],
       )!,
+      bigAmountLimit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}big_amount_limit'],
+      ),
       isKassaPriceDecreasingBlocked: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_kassa_price_decreasing_blocked'],
@@ -25482,6 +26998,10 @@ class $ThisPosEntriesTable extends ThisPosEntries
       currencyId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}currency_id'],
+      ),
+      storeAddress: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}store_address'],
       ),
       countryCode: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -25603,6 +27123,13 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
   final bool printerTableView;
   final bool printVatOnReceipt;
   final bool isVatPayer;
+
+  /// Как налог относится к цене: 0 — включён, 1 — добавляется, 2 — нет.
+  ///
+  /// Настройкой, а не выводом из страны: страна даёт разумное умолчание, но
+  /// последнее слово за пользователем. Иначе под каждый штат пришлось бы
+  /// выпускать версию продукта — решение заказчика 2026-09-21.
+  final int taxTreatment;
   final bool blockOversell;
   final bool editProduct;
   final bool editPrice;
@@ -25622,6 +27149,20 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
   final bool isSearchInGlobalProductsEnabled;
   final bool priceCheckEnabled;
   final bool allowBigAmount;
+
+  /// Потолок суммы чека, выше которого касса просит разрешения
+  /// [allowBigAmount]. Пусто — касса берёт [kDefaultBigAmountLimit].
+  ///
+  /// # Почему настройкой, а не числом в коде
+  ///
+  /// До схемы v57 потолок был зашит: `Decimal.parse('1000000')` в
+  /// `LocalSaleCheckoutService`, и отказ говорил «превышает 1 млн ₸» на
+  /// кассе любой страны. Миллион тенге — это около двух тысяч долларов;
+  /// на американской кассе тот же миллион оказывался в пятьсот раз выше,
+  /// то есть защиты не было вовсе, а текст отказа при этом врал о валюте.
+  ///
+  /// Хранится строкой: деньги — `Decimal`, и через `double` их не гоняют.
+  final String? bigAmountLimit;
   final bool isKassaPriceDecreasingBlocked;
   final int? usersAllowedToRefund;
   final int? usersAllowedToRefundWithoutReceipt;
@@ -25630,6 +27171,22 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
   final String? markUpFromDate;
   final String? markUpToDate;
   final int? currencyId;
+
+  /// Адрес торговой точки — тот, что печатается на чеке.
+  ///
+  /// # Почему у кассы, а не только у фискального оператора
+  ///
+  /// До схемы v56 адрес жил ТОЛЬКО в настройках WebKassa и записывался
+  /// единственной строкой мастера — при включённой казахстанской
+  /// фискализации. Касса вне Казахстана адреса не имела вовсе, и на чеке
+  /// его не было.
+  ///
+  /// Хуже: заполнять его было нечем и там. Поля `legalAddress` и
+  /// `actualAddress` в модели мастера существовали, `updateOrganization`
+  /// их принимал — но ни один экран их не заполнял. То есть **адрес
+  /// продавца не попадал на чек никогда и ни в одной стране**; измерено
+  /// 2026-09-21.
+  final String? storeAddress;
   final int? countryCode;
   final int? currencyCode;
   final String? currencyNameLong;
@@ -25714,6 +27271,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     required this.printerTableView,
     required this.printVatOnReceipt,
     required this.isVatPayer,
+    required this.taxTreatment,
     required this.blockOversell,
     required this.editProduct,
     required this.editPrice,
@@ -25733,6 +27291,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     required this.isSearchInGlobalProductsEnabled,
     required this.priceCheckEnabled,
     required this.allowBigAmount,
+    this.bigAmountLimit,
     required this.isKassaPriceDecreasingBlocked,
     this.usersAllowedToRefund,
     this.usersAllowedToRefundWithoutReceipt,
@@ -25741,6 +27300,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     this.markUpFromDate,
     this.markUpToDate,
     this.currencyId,
+    this.storeAddress,
     this.countryCode,
     this.currencyCode,
     this.currencyNameLong,
@@ -25835,6 +27395,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     map['printer_table_view'] = Variable<bool>(printerTableView);
     map['print_vat_on_receipt'] = Variable<bool>(printVatOnReceipt);
     map['is_vat_payer'] = Variable<bool>(isVatPayer);
+    map['tax_treatment'] = Variable<int>(taxTreatment);
     map['block_oversell'] = Variable<bool>(blockOversell);
     map['edit_product'] = Variable<bool>(editProduct);
     map['edit_price'] = Variable<bool>(editPrice);
@@ -25856,6 +27417,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     );
     map['price_check_enabled'] = Variable<bool>(priceCheckEnabled);
     map['allow_big_amount'] = Variable<bool>(allowBigAmount);
+    if (!nullToAbsent || bigAmountLimit != null) {
+      map['big_amount_limit'] = Variable<String>(bigAmountLimit);
+    }
     map['is_kassa_price_decreasing_blocked'] = Variable<bool>(
       isKassaPriceDecreasingBlocked,
     );
@@ -25885,6 +27449,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     }
     if (!nullToAbsent || currencyId != null) {
       map['currency_id'] = Variable<int>(currencyId);
+    }
+    if (!nullToAbsent || storeAddress != null) {
+      map['store_address'] = Variable<String>(storeAddress);
     }
     if (!nullToAbsent || countryCode != null) {
       map['country_code'] = Variable<int>(countryCode);
@@ -25996,6 +27563,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       printerTableView: Value(printerTableView),
       printVatOnReceipt: Value(printVatOnReceipt),
       isVatPayer: Value(isVatPayer),
+      taxTreatment: Value(taxTreatment),
       blockOversell: Value(blockOversell),
       editProduct: Value(editProduct),
       editPrice: Value(editPrice),
@@ -26015,6 +27583,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       isSearchInGlobalProductsEnabled: Value(isSearchInGlobalProductsEnabled),
       priceCheckEnabled: Value(priceCheckEnabled),
       allowBigAmount: Value(allowBigAmount),
+      bigAmountLimit: bigAmountLimit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bigAmountLimit),
       isKassaPriceDecreasingBlocked: Value(isKassaPriceDecreasingBlocked),
       usersAllowedToRefund: usersAllowedToRefund == null && nullToAbsent
           ? const Value.absent()
@@ -26040,6 +27611,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       currencyId: currencyId == null && nullToAbsent
           ? const Value.absent()
           : Value(currencyId),
+      storeAddress: storeAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(storeAddress),
       countryCode: countryCode == null && nullToAbsent
           ? const Value.absent()
           : Value(countryCode),
@@ -26124,6 +27698,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       printerTableView: serializer.fromJson<bool>(json['printerTableView']),
       printVatOnReceipt: serializer.fromJson<bool>(json['printVatOnReceipt']),
       isVatPayer: serializer.fromJson<bool>(json['isVatPayer']),
+      taxTreatment: serializer.fromJson<int>(json['taxTreatment']),
       blockOversell: serializer.fromJson<bool>(json['blockOversell']),
       editProduct: serializer.fromJson<bool>(json['editProduct']),
       editPrice: serializer.fromJson<bool>(json['editPrice']),
@@ -26147,6 +27722,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       ),
       priceCheckEnabled: serializer.fromJson<bool>(json['priceCheckEnabled']),
       allowBigAmount: serializer.fromJson<bool>(json['allowBigAmount']),
+      bigAmountLimit: serializer.fromJson<String?>(json['bigAmountLimit']),
       isKassaPriceDecreasingBlocked: serializer.fromJson<bool>(
         json['isKassaPriceDecreasingBlocked'],
       ),
@@ -26165,6 +27741,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       markUpFromDate: serializer.fromJson<String?>(json['markUpFromDate']),
       markUpToDate: serializer.fromJson<String?>(json['markUpToDate']),
       currencyId: serializer.fromJson<int?>(json['currencyId']),
+      storeAddress: serializer.fromJson<String?>(json['storeAddress']),
       countryCode: serializer.fromJson<int?>(json['countryCode']),
       currencyCode: serializer.fromJson<int?>(json['currencyCode']),
       currencyNameLong: serializer.fromJson<String?>(json['currencyNameLong']),
@@ -26227,6 +27804,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       'printerTableView': serializer.toJson<bool>(printerTableView),
       'printVatOnReceipt': serializer.toJson<bool>(printVatOnReceipt),
       'isVatPayer': serializer.toJson<bool>(isVatPayer),
+      'taxTreatment': serializer.toJson<int>(taxTreatment),
       'blockOversell': serializer.toJson<bool>(blockOversell),
       'editProduct': serializer.toJson<bool>(editProduct),
       'editPrice': serializer.toJson<bool>(editPrice),
@@ -26250,6 +27828,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       ),
       'priceCheckEnabled': serializer.toJson<bool>(priceCheckEnabled),
       'allowBigAmount': serializer.toJson<bool>(allowBigAmount),
+      'bigAmountLimit': serializer.toJson<String?>(bigAmountLimit),
       'isKassaPriceDecreasingBlocked': serializer.toJson<bool>(
         isKassaPriceDecreasingBlocked,
       ),
@@ -26266,6 +27845,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       'markUpFromDate': serializer.toJson<String?>(markUpFromDate),
       'markUpToDate': serializer.toJson<String?>(markUpToDate),
       'currencyId': serializer.toJson<int?>(currencyId),
+      'storeAddress': serializer.toJson<String?>(storeAddress),
       'countryCode': serializer.toJson<int?>(countryCode),
       'currencyCode': serializer.toJson<int?>(currencyCode),
       'currencyNameLong': serializer.toJson<String?>(currencyNameLong),
@@ -26316,6 +27896,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     bool? printerTableView,
     bool? printVatOnReceipt,
     bool? isVatPayer,
+    int? taxTreatment,
     bool? blockOversell,
     bool? editProduct,
     bool? editPrice,
@@ -26335,6 +27916,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     bool? isSearchInGlobalProductsEnabled,
     bool? priceCheckEnabled,
     bool? allowBigAmount,
+    Value<String?> bigAmountLimit = const Value.absent(),
     bool? isKassaPriceDecreasingBlocked,
     Value<int?> usersAllowedToRefund = const Value.absent(),
     Value<int?> usersAllowedToRefundWithoutReceipt = const Value.absent(),
@@ -26343,6 +27925,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     Value<String?> markUpFromDate = const Value.absent(),
     Value<String?> markUpToDate = const Value.absent(),
     Value<int?> currencyId = const Value.absent(),
+    Value<String?> storeAddress = const Value.absent(),
     Value<int?> countryCode = const Value.absent(),
     Value<int?> currencyCode = const Value.absent(),
     Value<String?> currencyNameLong = const Value.absent(),
@@ -26403,6 +27986,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     printerTableView: printerTableView ?? this.printerTableView,
     printVatOnReceipt: printVatOnReceipt ?? this.printVatOnReceipt,
     isVatPayer: isVatPayer ?? this.isVatPayer,
+    taxTreatment: taxTreatment ?? this.taxTreatment,
     blockOversell: blockOversell ?? this.blockOversell,
     editProduct: editProduct ?? this.editProduct,
     editPrice: editPrice ?? this.editPrice,
@@ -26424,6 +28008,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
         isSearchInGlobalProductsEnabled ?? this.isSearchInGlobalProductsEnabled,
     priceCheckEnabled: priceCheckEnabled ?? this.priceCheckEnabled,
     allowBigAmount: allowBigAmount ?? this.allowBigAmount,
+    bigAmountLimit: bigAmountLimit.present
+        ? bigAmountLimit.value
+        : this.bigAmountLimit,
     isKassaPriceDecreasingBlocked:
         isKassaPriceDecreasingBlocked ?? this.isKassaPriceDecreasingBlocked,
     usersAllowedToRefund: usersAllowedToRefund.present
@@ -26445,6 +28032,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
         : this.markUpFromDate,
     markUpToDate: markUpToDate.present ? markUpToDate.value : this.markUpToDate,
     currencyId: currencyId.present ? currencyId.value : this.currencyId,
+    storeAddress: storeAddress.present ? storeAddress.value : this.storeAddress,
     countryCode: countryCode.present ? countryCode.value : this.countryCode,
     currencyCode: currencyCode.present ? currencyCode.value : this.currencyCode,
     currencyNameLong: currencyNameLong.present
@@ -26550,6 +28138,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       isVatPayer: data.isVatPayer.present
           ? data.isVatPayer.value
           : this.isVatPayer,
+      taxTreatment: data.taxTreatment.present
+          ? data.taxTreatment.value
+          : this.taxTreatment,
       blockOversell: data.blockOversell.present
           ? data.blockOversell.value
           : this.blockOversell,
@@ -26600,6 +28191,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       allowBigAmount: data.allowBigAmount.present
           ? data.allowBigAmount.value
           : this.allowBigAmount,
+      bigAmountLimit: data.bigAmountLimit.present
+          ? data.bigAmountLimit.value
+          : this.bigAmountLimit,
       isKassaPriceDecreasingBlocked: data.isKassaPriceDecreasingBlocked.present
           ? data.isKassaPriceDecreasingBlocked.value
           : this.isKassaPriceDecreasingBlocked,
@@ -26626,6 +28220,9 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
       currencyId: data.currencyId.present
           ? data.currencyId.value
           : this.currencyId,
+      storeAddress: data.storeAddress.present
+          ? data.storeAddress.value
+          : this.storeAddress,
       countryCode: data.countryCode.present
           ? data.countryCode.value
           : this.countryCode,
@@ -26706,6 +28303,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
           ..write('printerTableView: $printerTableView, ')
           ..write('printVatOnReceipt: $printVatOnReceipt, ')
           ..write('isVatPayer: $isVatPayer, ')
+          ..write('taxTreatment: $taxTreatment, ')
           ..write('blockOversell: $blockOversell, ')
           ..write('editProduct: $editProduct, ')
           ..write('editPrice: $editPrice, ')
@@ -26727,6 +28325,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
           )
           ..write('priceCheckEnabled: $priceCheckEnabled, ')
           ..write('allowBigAmount: $allowBigAmount, ')
+          ..write('bigAmountLimit: $bigAmountLimit, ')
           ..write(
             'isKassaPriceDecreasingBlocked: $isKassaPriceDecreasingBlocked, ',
           )
@@ -26741,6 +28340,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
           ..write('markUpFromDate: $markUpFromDate, ')
           ..write('markUpToDate: $markUpToDate, ')
           ..write('currencyId: $currencyId, ')
+          ..write('storeAddress: $storeAddress, ')
           ..write('countryCode: $countryCode, ')
           ..write('currencyCode: $currencyCode, ')
           ..write('currencyNameLong: $currencyNameLong, ')
@@ -26791,6 +28391,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     printerTableView,
     printVatOnReceipt,
     isVatPayer,
+    taxTreatment,
     blockOversell,
     editProduct,
     editPrice,
@@ -26810,6 +28411,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     isSearchInGlobalProductsEnabled,
     priceCheckEnabled,
     allowBigAmount,
+    bigAmountLimit,
     isKassaPriceDecreasingBlocked,
     usersAllowedToRefund,
     usersAllowedToRefundWithoutReceipt,
@@ -26818,6 +28420,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
     markUpFromDate,
     markUpToDate,
     currencyId,
+    storeAddress,
     countryCode,
     currencyCode,
     currencyNameLong,
@@ -26867,6 +28470,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
           other.printerTableView == this.printerTableView &&
           other.printVatOnReceipt == this.printVatOnReceipt &&
           other.isVatPayer == this.isVatPayer &&
+          other.taxTreatment == this.taxTreatment &&
           other.blockOversell == this.blockOversell &&
           other.editProduct == this.editProduct &&
           other.editPrice == this.editPrice &&
@@ -26887,6 +28491,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
               this.isSearchInGlobalProductsEnabled &&
           other.priceCheckEnabled == this.priceCheckEnabled &&
           other.allowBigAmount == this.allowBigAmount &&
+          other.bigAmountLimit == this.bigAmountLimit &&
           other.isKassaPriceDecreasingBlocked ==
               this.isKassaPriceDecreasingBlocked &&
           other.usersAllowedToRefund == this.usersAllowedToRefund &&
@@ -26899,6 +28504,7 @@ class ThisPosEntry extends DataClass implements Insertable<ThisPosEntry> {
           other.markUpFromDate == this.markUpFromDate &&
           other.markUpToDate == this.markUpToDate &&
           other.currencyId == this.currencyId &&
+          other.storeAddress == this.storeAddress &&
           other.countryCode == this.countryCode &&
           other.currencyCode == this.currencyCode &&
           other.currencyNameLong == this.currencyNameLong &&
@@ -26947,6 +28553,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
   final Value<bool> printerTableView;
   final Value<bool> printVatOnReceipt;
   final Value<bool> isVatPayer;
+  final Value<int> taxTreatment;
   final Value<bool> blockOversell;
   final Value<bool> editProduct;
   final Value<bool> editPrice;
@@ -26966,6 +28573,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
   final Value<bool> isSearchInGlobalProductsEnabled;
   final Value<bool> priceCheckEnabled;
   final Value<bool> allowBigAmount;
+  final Value<String?> bigAmountLimit;
   final Value<bool> isKassaPriceDecreasingBlocked;
   final Value<int?> usersAllowedToRefund;
   final Value<int?> usersAllowedToRefundWithoutReceipt;
@@ -26974,6 +28582,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
   final Value<String?> markUpFromDate;
   final Value<String?> markUpToDate;
   final Value<int?> currencyId;
+  final Value<String?> storeAddress;
   final Value<int?> countryCode;
   final Value<int?> currencyCode;
   final Value<String?> currencyNameLong;
@@ -27020,6 +28629,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     this.printerTableView = const Value.absent(),
     this.printVatOnReceipt = const Value.absent(),
     this.isVatPayer = const Value.absent(),
+    this.taxTreatment = const Value.absent(),
     this.blockOversell = const Value.absent(),
     this.editProduct = const Value.absent(),
     this.editPrice = const Value.absent(),
@@ -27039,6 +28649,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     this.isSearchInGlobalProductsEnabled = const Value.absent(),
     this.priceCheckEnabled = const Value.absent(),
     this.allowBigAmount = const Value.absent(),
+    this.bigAmountLimit = const Value.absent(),
     this.isKassaPriceDecreasingBlocked = const Value.absent(),
     this.usersAllowedToRefund = const Value.absent(),
     this.usersAllowedToRefundWithoutReceipt = const Value.absent(),
@@ -27047,6 +28658,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     this.markUpFromDate = const Value.absent(),
     this.markUpToDate = const Value.absent(),
     this.currencyId = const Value.absent(),
+    this.storeAddress = const Value.absent(),
     this.countryCode = const Value.absent(),
     this.currencyCode = const Value.absent(),
     this.currencyNameLong = const Value.absent(),
@@ -27094,6 +28706,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     this.printerTableView = const Value.absent(),
     this.printVatOnReceipt = const Value.absent(),
     this.isVatPayer = const Value.absent(),
+    this.taxTreatment = const Value.absent(),
     this.blockOversell = const Value.absent(),
     this.editProduct = const Value.absent(),
     this.editPrice = const Value.absent(),
@@ -27113,6 +28726,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     this.isSearchInGlobalProductsEnabled = const Value.absent(),
     this.priceCheckEnabled = const Value.absent(),
     this.allowBigAmount = const Value.absent(),
+    this.bigAmountLimit = const Value.absent(),
     this.isKassaPriceDecreasingBlocked = const Value.absent(),
     this.usersAllowedToRefund = const Value.absent(),
     this.usersAllowedToRefundWithoutReceipt = const Value.absent(),
@@ -27121,6 +28735,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     this.markUpFromDate = const Value.absent(),
     this.markUpToDate = const Value.absent(),
     this.currencyId = const Value.absent(),
+    this.storeAddress = const Value.absent(),
     this.countryCode = const Value.absent(),
     this.currencyCode = const Value.absent(),
     this.currencyNameLong = const Value.absent(),
@@ -27168,6 +28783,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     Expression<bool>? printerTableView,
     Expression<bool>? printVatOnReceipt,
     Expression<bool>? isVatPayer,
+    Expression<int>? taxTreatment,
     Expression<bool>? blockOversell,
     Expression<bool>? editProduct,
     Expression<bool>? editPrice,
@@ -27187,6 +28803,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     Expression<bool>? isSearchInGlobalProductsEnabled,
     Expression<bool>? priceCheckEnabled,
     Expression<bool>? allowBigAmount,
+    Expression<String>? bigAmountLimit,
     Expression<bool>? isKassaPriceDecreasingBlocked,
     Expression<int>? usersAllowedToRefund,
     Expression<int>? usersAllowedToRefundWithoutReceipt,
@@ -27195,6 +28812,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     Expression<String>? markUpFromDate,
     Expression<String>? markUpToDate,
     Expression<int>? currencyId,
+    Expression<String>? storeAddress,
     Expression<int>? countryCode,
     Expression<int>? currencyCode,
     Expression<String>? currencyNameLong,
@@ -27249,6 +28867,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
       if (printerTableView != null) 'printer_table_view': printerTableView,
       if (printVatOnReceipt != null) 'print_vat_on_receipt': printVatOnReceipt,
       if (isVatPayer != null) 'is_vat_payer': isVatPayer,
+      if (taxTreatment != null) 'tax_treatment': taxTreatment,
       if (blockOversell != null) 'block_oversell': blockOversell,
       if (editProduct != null) 'edit_product': editProduct,
       if (editPrice != null) 'edit_price': editPrice,
@@ -27270,6 +28889,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
         'is_search_in_global_products_enabled': isSearchInGlobalProductsEnabled,
       if (priceCheckEnabled != null) 'price_check_enabled': priceCheckEnabled,
       if (allowBigAmount != null) 'allow_big_amount': allowBigAmount,
+      if (bigAmountLimit != null) 'big_amount_limit': bigAmountLimit,
       if (isKassaPriceDecreasingBlocked != null)
         'is_kassa_price_decreasing_blocked': isKassaPriceDecreasingBlocked,
       if (usersAllowedToRefund != null)
@@ -27285,6 +28905,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
       if (markUpFromDate != null) 'mark_up_from_date': markUpFromDate,
       if (markUpToDate != null) 'mark_up_to_date': markUpToDate,
       if (currencyId != null) 'currency_id': currencyId,
+      if (storeAddress != null) 'store_address': storeAddress,
       if (countryCode != null) 'country_code': countryCode,
       if (currencyCode != null) 'currency_code': currencyCode,
       if (currencyNameLong != null) 'currency_name_long': currencyNameLong,
@@ -27337,6 +28958,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     Value<bool>? printerTableView,
     Value<bool>? printVatOnReceipt,
     Value<bool>? isVatPayer,
+    Value<int>? taxTreatment,
     Value<bool>? blockOversell,
     Value<bool>? editProduct,
     Value<bool>? editPrice,
@@ -27356,6 +28978,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     Value<bool>? isSearchInGlobalProductsEnabled,
     Value<bool>? priceCheckEnabled,
     Value<bool>? allowBigAmount,
+    Value<String?>? bigAmountLimit,
     Value<bool>? isKassaPriceDecreasingBlocked,
     Value<int?>? usersAllowedToRefund,
     Value<int?>? usersAllowedToRefundWithoutReceipt,
@@ -27364,6 +28987,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     Value<String?>? markUpFromDate,
     Value<String?>? markUpToDate,
     Value<int?>? currencyId,
+    Value<String?>? storeAddress,
     Value<int?>? countryCode,
     Value<int?>? currencyCode,
     Value<String?>? currencyNameLong,
@@ -27415,6 +29039,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
       printerTableView: printerTableView ?? this.printerTableView,
       printVatOnReceipt: printVatOnReceipt ?? this.printVatOnReceipt,
       isVatPayer: isVatPayer ?? this.isVatPayer,
+      taxTreatment: taxTreatment ?? this.taxTreatment,
       blockOversell: blockOversell ?? this.blockOversell,
       editProduct: editProduct ?? this.editProduct,
       editPrice: editPrice ?? this.editPrice,
@@ -27437,6 +29062,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
           this.isSearchInGlobalProductsEnabled,
       priceCheckEnabled: priceCheckEnabled ?? this.priceCheckEnabled,
       allowBigAmount: allowBigAmount ?? this.allowBigAmount,
+      bigAmountLimit: bigAmountLimit ?? this.bigAmountLimit,
       isKassaPriceDecreasingBlocked:
           isKassaPriceDecreasingBlocked ?? this.isKassaPriceDecreasingBlocked,
       usersAllowedToRefund: usersAllowedToRefund ?? this.usersAllowedToRefund,
@@ -27451,6 +29077,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
       markUpFromDate: markUpFromDate ?? this.markUpFromDate,
       markUpToDate: markUpToDate ?? this.markUpToDate,
       currencyId: currencyId ?? this.currencyId,
+      storeAddress: storeAddress ?? this.storeAddress,
       countryCode: countryCode ?? this.countryCode,
       currencyCode: currencyCode ?? this.currencyCode,
       currencyNameLong: currencyNameLong ?? this.currencyNameLong,
@@ -27571,6 +29198,9 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     if (isVatPayer.present) {
       map['is_vat_payer'] = Variable<bool>(isVatPayer.value);
     }
+    if (taxTreatment.present) {
+      map['tax_treatment'] = Variable<int>(taxTreatment.value);
+    }
     if (blockOversell.present) {
       map['block_oversell'] = Variable<bool>(blockOversell.value);
     }
@@ -27632,6 +29262,9 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     if (allowBigAmount.present) {
       map['allow_big_amount'] = Variable<bool>(allowBigAmount.value);
     }
+    if (bigAmountLimit.present) {
+      map['big_amount_limit'] = Variable<String>(bigAmountLimit.value);
+    }
     if (isKassaPriceDecreasingBlocked.present) {
       map['is_kassa_price_decreasing_blocked'] = Variable<bool>(
         isKassaPriceDecreasingBlocked.value,
@@ -27665,6 +29298,9 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
     }
     if (currencyId.present) {
       map['currency_id'] = Variable<int>(currencyId.value);
+    }
+    if (storeAddress.present) {
+      map['store_address'] = Variable<String>(storeAddress.value);
     }
     if (countryCode.present) {
       map['country_code'] = Variable<int>(countryCode.value);
@@ -27755,6 +29391,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
           ..write('printerTableView: $printerTableView, ')
           ..write('printVatOnReceipt: $printVatOnReceipt, ')
           ..write('isVatPayer: $isVatPayer, ')
+          ..write('taxTreatment: $taxTreatment, ')
           ..write('blockOversell: $blockOversell, ')
           ..write('editProduct: $editProduct, ')
           ..write('editPrice: $editPrice, ')
@@ -27776,6 +29413,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
           )
           ..write('priceCheckEnabled: $priceCheckEnabled, ')
           ..write('allowBigAmount: $allowBigAmount, ')
+          ..write('bigAmountLimit: $bigAmountLimit, ')
           ..write(
             'isKassaPriceDecreasingBlocked: $isKassaPriceDecreasingBlocked, ',
           )
@@ -27790,6 +29428,7 @@ class ThisPosEntriesCompanion extends UpdateCompanion<ThisPosEntry> {
           ..write('markUpFromDate: $markUpFromDate, ')
           ..write('markUpToDate: $markUpToDate, ')
           ..write('currencyId: $currencyId, ')
+          ..write('storeAddress: $storeAddress, ')
           ..write('countryCode: $countryCode, ')
           ..write('currencyCode: $currencyCode, ')
           ..write('currencyNameLong: $currencyNameLong, ')
@@ -65662,6 +67301,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $UpdatePropertiesTable updateProperties = $UpdatePropertiesTable(
     this,
   );
+  late final $TaxJurisdictionsTable taxJurisdictions = $TaxJurisdictionsTable(
+    this,
+  );
+  late final $TaxCategoriesTable taxCategories = $TaxCategoriesTable(this);
+  late final $TaxRulesTable taxRules = $TaxRulesTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $CategoryRestrictionsTable categoryRestrictions =
       $CategoryRestrictionsTable(this);
@@ -65835,6 +67479,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PrepaymentRefundsTable prepaymentRefunds =
       $PrepaymentRefundsTable(this);
   late final AdditionalPrinterDao additionalPrinterDao = AdditionalPrinterDao(
+    this as AppDatabase,
+  );
+  late final TaxSettingsDao taxSettingsDao = TaxSettingsDao(
     this as AppDatabase,
   );
   late final AppVersionStatusDao appVersionStatusDao = AppVersionStatusDao(
@@ -66019,6 +67666,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     appVersionStatuses,
     attrDates,
     updateProperties,
+    taxJurisdictions,
+    taxCategories,
+    taxRules,
     categories,
     categoryRestrictions,
     globalProducts,
@@ -66846,6 +68496,662 @@ typedef $$UpdatePropertiesTableProcessedTableManager =
         BaseReferences<_$AppDatabase, $UpdatePropertiesTable, UpdateProperty>,
       ),
       UpdateProperty,
+      PrefetchHooks Function()
+    >;
+typedef $$TaxJurisdictionsTableCreateCompanionBuilder =
+    TaxJurisdictionsCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<int?> parentId,
+      Value<int> level,
+      Value<int> sortOrder,
+      Value<bool> isActive,
+      Value<bool> isTillLocation,
+    });
+typedef $$TaxJurisdictionsTableUpdateCompanionBuilder =
+    TaxJurisdictionsCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<int?> parentId,
+      Value<int> level,
+      Value<int> sortOrder,
+      Value<bool> isActive,
+      Value<bool> isTillLocation,
+    });
+
+class $$TaxJurisdictionsTableFilterComposer
+    extends Composer<_$AppDatabase, $TaxJurisdictionsTable> {
+  $$TaxJurisdictionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get parentId => $composableBuilder(
+    column: $table.parentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get level => $composableBuilder(
+    column: $table.level,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isTillLocation => $composableBuilder(
+    column: $table.isTillLocation,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TaxJurisdictionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TaxJurisdictionsTable> {
+  $$TaxJurisdictionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get parentId => $composableBuilder(
+    column: $table.parentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get level => $composableBuilder(
+    column: $table.level,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isTillLocation => $composableBuilder(
+    column: $table.isTillLocation,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TaxJurisdictionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TaxJurisdictionsTable> {
+  $$TaxJurisdictionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get parentId =>
+      $composableBuilder(column: $table.parentId, builder: (column) => column);
+
+  GeneratedColumn<int> get level =>
+      $composableBuilder(column: $table.level, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<bool> get isTillLocation => $composableBuilder(
+    column: $table.isTillLocation,
+    builder: (column) => column,
+  );
+}
+
+class $$TaxJurisdictionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TaxJurisdictionsTable,
+          TaxJurisdictionRow,
+          $$TaxJurisdictionsTableFilterComposer,
+          $$TaxJurisdictionsTableOrderingComposer,
+          $$TaxJurisdictionsTableAnnotationComposer,
+          $$TaxJurisdictionsTableCreateCompanionBuilder,
+          $$TaxJurisdictionsTableUpdateCompanionBuilder,
+          (
+            TaxJurisdictionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $TaxJurisdictionsTable,
+              TaxJurisdictionRow
+            >,
+          ),
+          TaxJurisdictionRow,
+          PrefetchHooks Function()
+        > {
+  $$TaxJurisdictionsTableTableManager(
+    _$AppDatabase db,
+    $TaxJurisdictionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TaxJurisdictionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TaxJurisdictionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TaxJurisdictionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int?> parentId = const Value.absent(),
+                Value<int> level = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<bool> isTillLocation = const Value.absent(),
+              }) => TaxJurisdictionsCompanion(
+                id: id,
+                name: name,
+                parentId: parentId,
+                level: level,
+                sortOrder: sortOrder,
+                isActive: isActive,
+                isTillLocation: isTillLocation,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<int?> parentId = const Value.absent(),
+                Value<int> level = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<bool> isTillLocation = const Value.absent(),
+              }) => TaxJurisdictionsCompanion.insert(
+                id: id,
+                name: name,
+                parentId: parentId,
+                level: level,
+                sortOrder: sortOrder,
+                isActive: isActive,
+                isTillLocation: isTillLocation,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TaxJurisdictionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TaxJurisdictionsTable,
+      TaxJurisdictionRow,
+      $$TaxJurisdictionsTableFilterComposer,
+      $$TaxJurisdictionsTableOrderingComposer,
+      $$TaxJurisdictionsTableAnnotationComposer,
+      $$TaxJurisdictionsTableCreateCompanionBuilder,
+      $$TaxJurisdictionsTableUpdateCompanionBuilder,
+      (
+        TaxJurisdictionRow,
+        BaseReferences<
+          _$AppDatabase,
+          $TaxJurisdictionsTable,
+          TaxJurisdictionRow
+        >,
+      ),
+      TaxJurisdictionRow,
+      PrefetchHooks Function()
+    >;
+typedef $$TaxCategoriesTableCreateCompanionBuilder =
+    TaxCategoriesCompanion Function({
+      Value<int> id,
+      required String code,
+      required String title,
+      Value<bool> isDefault,
+    });
+typedef $$TaxCategoriesTableUpdateCompanionBuilder =
+    TaxCategoriesCompanion Function({
+      Value<int> id,
+      Value<String> code,
+      Value<String> title,
+      Value<bool> isDefault,
+    });
+
+class $$TaxCategoriesTableFilterComposer
+    extends Composer<_$AppDatabase, $TaxCategoriesTable> {
+  $$TaxCategoriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TaxCategoriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TaxCategoriesTable> {
+  $$TaxCategoriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TaxCategoriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TaxCategoriesTable> {
+  $$TaxCategoriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get code =>
+      $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDefault =>
+      $composableBuilder(column: $table.isDefault, builder: (column) => column);
+}
+
+class $$TaxCategoriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TaxCategoriesTable,
+          TaxCategory,
+          $$TaxCategoriesTableFilterComposer,
+          $$TaxCategoriesTableOrderingComposer,
+          $$TaxCategoriesTableAnnotationComposer,
+          $$TaxCategoriesTableCreateCompanionBuilder,
+          $$TaxCategoriesTableUpdateCompanionBuilder,
+          (
+            TaxCategory,
+            BaseReferences<_$AppDatabase, $TaxCategoriesTable, TaxCategory>,
+          ),
+          TaxCategory,
+          PrefetchHooks Function()
+        > {
+  $$TaxCategoriesTableTableManager(_$AppDatabase db, $TaxCategoriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TaxCategoriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TaxCategoriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TaxCategoriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> code = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+              }) => TaxCategoriesCompanion(
+                id: id,
+                code: code,
+                title: title,
+                isDefault: isDefault,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String code,
+                required String title,
+                Value<bool> isDefault = const Value.absent(),
+              }) => TaxCategoriesCompanion.insert(
+                id: id,
+                code: code,
+                title: title,
+                isDefault: isDefault,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TaxCategoriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TaxCategoriesTable,
+      TaxCategory,
+      $$TaxCategoriesTableFilterComposer,
+      $$TaxCategoriesTableOrderingComposer,
+      $$TaxCategoriesTableAnnotationComposer,
+      $$TaxCategoriesTableCreateCompanionBuilder,
+      $$TaxCategoriesTableUpdateCompanionBuilder,
+      (
+        TaxCategory,
+        BaseReferences<_$AppDatabase, $TaxCategoriesTable, TaxCategory>,
+      ),
+      TaxCategory,
+      PrefetchHooks Function()
+    >;
+typedef $$TaxRulesTableCreateCompanionBuilder =
+    TaxRulesCompanion Function({
+      Value<int> id,
+      required int jurisdictionId,
+      Value<int?> categoryId,
+      Value<int> kind,
+      required Decimal ratePercent,
+      required DateTime validFrom,
+      Value<DateTime?> validTo,
+    });
+typedef $$TaxRulesTableUpdateCompanionBuilder =
+    TaxRulesCompanion Function({
+      Value<int> id,
+      Value<int> jurisdictionId,
+      Value<int?> categoryId,
+      Value<int> kind,
+      Value<Decimal> ratePercent,
+      Value<DateTime> validFrom,
+      Value<DateTime?> validTo,
+    });
+
+class $$TaxRulesTableFilterComposer
+    extends Composer<_$AppDatabase, $TaxRulesTable> {
+  $$TaxRulesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get jurisdictionId => $composableBuilder(
+    column: $table.jurisdictionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Decimal, Decimal, double> get ratePercent =>
+      $composableBuilder(
+        column: $table.ratePercent,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<DateTime> get validFrom => $composableBuilder(
+    column: $table.validFrom,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get validTo => $composableBuilder(
+    column: $table.validTo,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TaxRulesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TaxRulesTable> {
+  $$TaxRulesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get jurisdictionId => $composableBuilder(
+    column: $table.jurisdictionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ratePercent => $composableBuilder(
+    column: $table.ratePercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get validFrom => $composableBuilder(
+    column: $table.validFrom,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get validTo => $composableBuilder(
+    column: $table.validTo,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TaxRulesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TaxRulesTable> {
+  $$TaxRulesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get jurisdictionId => $composableBuilder(
+    column: $table.jurisdictionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Decimal, double> get ratePercent =>
+      $composableBuilder(
+        column: $table.ratePercent,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<DateTime> get validFrom =>
+      $composableBuilder(column: $table.validFrom, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get validTo =>
+      $composableBuilder(column: $table.validTo, builder: (column) => column);
+}
+
+class $$TaxRulesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TaxRulesTable,
+          TaxRuleRow,
+          $$TaxRulesTableFilterComposer,
+          $$TaxRulesTableOrderingComposer,
+          $$TaxRulesTableAnnotationComposer,
+          $$TaxRulesTableCreateCompanionBuilder,
+          $$TaxRulesTableUpdateCompanionBuilder,
+          (
+            TaxRuleRow,
+            BaseReferences<_$AppDatabase, $TaxRulesTable, TaxRuleRow>,
+          ),
+          TaxRuleRow,
+          PrefetchHooks Function()
+        > {
+  $$TaxRulesTableTableManager(_$AppDatabase db, $TaxRulesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TaxRulesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TaxRulesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TaxRulesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> jurisdictionId = const Value.absent(),
+                Value<int?> categoryId = const Value.absent(),
+                Value<int> kind = const Value.absent(),
+                Value<Decimal> ratePercent = const Value.absent(),
+                Value<DateTime> validFrom = const Value.absent(),
+                Value<DateTime?> validTo = const Value.absent(),
+              }) => TaxRulesCompanion(
+                id: id,
+                jurisdictionId: jurisdictionId,
+                categoryId: categoryId,
+                kind: kind,
+                ratePercent: ratePercent,
+                validFrom: validFrom,
+                validTo: validTo,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int jurisdictionId,
+                Value<int?> categoryId = const Value.absent(),
+                Value<int> kind = const Value.absent(),
+                required Decimal ratePercent,
+                required DateTime validFrom,
+                Value<DateTime?> validTo = const Value.absent(),
+              }) => TaxRulesCompanion.insert(
+                id: id,
+                jurisdictionId: jurisdictionId,
+                categoryId: categoryId,
+                kind: kind,
+                ratePercent: ratePercent,
+                validFrom: validFrom,
+                validTo: validTo,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TaxRulesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TaxRulesTable,
+      TaxRuleRow,
+      $$TaxRulesTableFilterComposer,
+      $$TaxRulesTableOrderingComposer,
+      $$TaxRulesTableAnnotationComposer,
+      $$TaxRulesTableCreateCompanionBuilder,
+      $$TaxRulesTableUpdateCompanionBuilder,
+      (TaxRuleRow, BaseReferences<_$AppDatabase, $TaxRulesTable, TaxRuleRow>),
+      TaxRuleRow,
       PrefetchHooks Function()
     >;
 typedef $$CategoriesTableCreateCompanionBuilder =
@@ -68136,6 +70442,7 @@ typedef $$ProductInfosTableCreateCompanionBuilder =
       Value<String?> imagePath,
       Value<bool> isDeleted,
       Value<int?> vatRate,
+      Value<int?> taxCategoryId,
       Value<String?> ntin,
       Value<bool> isMarkable,
       Value<String?> brand,
@@ -68157,6 +70464,7 @@ typedef $$ProductInfosTableUpdateCompanionBuilder =
       Value<String?> imagePath,
       Value<bool> isDeleted,
       Value<int?> vatRate,
+      Value<int?> taxCategoryId,
       Value<String?> ntin,
       Value<bool> isMarkable,
       Value<String?> brand,
@@ -68255,6 +70563,11 @@ class $$ProductInfosTableFilterComposer
 
   ColumnFilters<int> get vatRate => $composableBuilder(
     column: $table.vatRate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get taxCategoryId => $composableBuilder(
+    column: $table.taxCategoryId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -68376,6 +70689,11 @@ class $$ProductInfosTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get taxCategoryId => $composableBuilder(
+    column: $table.taxCategoryId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get ntin => $composableBuilder(
     column: $table.ntin,
     builder: (column) => ColumnOrderings(column),
@@ -68476,6 +70794,11 @@ class $$ProductInfosTableAnnotationComposer
   GeneratedColumn<int> get vatRate =>
       $composableBuilder(column: $table.vatRate, builder: (column) => column);
 
+  GeneratedColumn<int> get taxCategoryId => $composableBuilder(
+    column: $table.taxCategoryId,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get ntin =>
       $composableBuilder(column: $table.ntin, builder: (column) => column);
 
@@ -68562,6 +70885,7 @@ class $$ProductInfosTableTableManager
                 Value<String?> imagePath = const Value.absent(),
                 Value<bool> isDeleted = const Value.absent(),
                 Value<int?> vatRate = const Value.absent(),
+                Value<int?> taxCategoryId = const Value.absent(),
                 Value<String?> ntin = const Value.absent(),
                 Value<bool> isMarkable = const Value.absent(),
                 Value<String?> brand = const Value.absent(),
@@ -68581,6 +70905,7 @@ class $$ProductInfosTableTableManager
                 imagePath: imagePath,
                 isDeleted: isDeleted,
                 vatRate: vatRate,
+                taxCategoryId: taxCategoryId,
                 ntin: ntin,
                 isMarkable: isMarkable,
                 brand: brand,
@@ -68602,6 +70927,7 @@ class $$ProductInfosTableTableManager
                 Value<String?> imagePath = const Value.absent(),
                 Value<bool> isDeleted = const Value.absent(),
                 Value<int?> vatRate = const Value.absent(),
+                Value<int?> taxCategoryId = const Value.absent(),
                 Value<String?> ntin = const Value.absent(),
                 Value<bool> isMarkable = const Value.absent(),
                 Value<String?> brand = const Value.absent(),
@@ -68621,6 +70947,7 @@ class $$ProductInfosTableTableManager
                 imagePath: imagePath,
                 isDeleted: isDeleted,
                 vatRate: vatRate,
+                taxCategoryId: taxCategoryId,
                 ntin: ntin,
                 isMarkable: isMarkable,
                 brand: brand,
@@ -75606,6 +77933,7 @@ typedef $$CashOperationsTableCreateCompanionBuilder =
       Value<int?> docTime,
       Value<int?> state,
       Value<int?> kindId,
+      Value<int?> reasonCode,
     });
 typedef $$CashOperationsTableUpdateCompanionBuilder =
     CashOperationsCompanion Function({
@@ -75619,6 +77947,7 @@ typedef $$CashOperationsTableUpdateCompanionBuilder =
       Value<int?> docTime,
       Value<int?> state,
       Value<int?> kindId,
+      Value<int?> reasonCode,
     });
 
 class $$CashOperationsTableFilterComposer
@@ -75678,6 +78007,11 @@ class $$CashOperationsTableFilterComposer
 
   ColumnFilters<int> get kindId => $composableBuilder(
     column: $table.kindId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get reasonCode => $composableBuilder(
+    column: $table.reasonCode,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -75740,6 +78074,11 @@ class $$CashOperationsTableOrderingComposer
     column: $table.kindId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get reasonCode => $composableBuilder(
+    column: $table.reasonCode,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CashOperationsTableAnnotationComposer
@@ -75780,6 +78119,11 @@ class $$CashOperationsTableAnnotationComposer
 
   GeneratedColumn<int> get kindId =>
       $composableBuilder(column: $table.kindId, builder: (column) => column);
+
+  GeneratedColumn<int> get reasonCode => $composableBuilder(
+    column: $table.reasonCode,
+    builder: (column) => column,
+  );
 }
 
 class $$CashOperationsTableTableManager
@@ -75825,6 +78169,7 @@ class $$CashOperationsTableTableManager
                 Value<int?> docTime = const Value.absent(),
                 Value<int?> state = const Value.absent(),
                 Value<int?> kindId = const Value.absent(),
+                Value<int?> reasonCode = const Value.absent(),
               }) => CashOperationsCompanion(
                 id: id,
                 storeId: storeId,
@@ -75836,6 +78181,7 @@ class $$CashOperationsTableTableManager
                 docTime: docTime,
                 state: state,
                 kindId: kindId,
+                reasonCode: reasonCode,
               ),
           createCompanionCallback:
               ({
@@ -75849,6 +78195,7 @@ class $$CashOperationsTableTableManager
                 Value<int?> docTime = const Value.absent(),
                 Value<int?> state = const Value.absent(),
                 Value<int?> kindId = const Value.absent(),
+                Value<int?> reasonCode = const Value.absent(),
               }) => CashOperationsCompanion.insert(
                 id: id,
                 storeId: storeId,
@@ -75860,6 +78207,7 @@ class $$CashOperationsTableTableManager
                 docTime: docTime,
                 state: state,
                 kindId: kindId,
+                reasonCode: reasonCode,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -78850,6 +81198,7 @@ typedef $$ThisPosEntriesTableCreateCompanionBuilder =
       Value<bool> printerTableView,
       Value<bool> printVatOnReceipt,
       Value<bool> isVatPayer,
+      Value<int> taxTreatment,
       Value<bool> blockOversell,
       Value<bool> editProduct,
       Value<bool> editPrice,
@@ -78869,6 +81218,7 @@ typedef $$ThisPosEntriesTableCreateCompanionBuilder =
       Value<bool> isSearchInGlobalProductsEnabled,
       Value<bool> priceCheckEnabled,
       Value<bool> allowBigAmount,
+      Value<String?> bigAmountLimit,
       Value<bool> isKassaPriceDecreasingBlocked,
       Value<int?> usersAllowedToRefund,
       Value<int?> usersAllowedToRefundWithoutReceipt,
@@ -78877,6 +81227,7 @@ typedef $$ThisPosEntriesTableCreateCompanionBuilder =
       Value<String?> markUpFromDate,
       Value<String?> markUpToDate,
       Value<int?> currencyId,
+      Value<String?> storeAddress,
       Value<int?> countryCode,
       Value<int?> currencyCode,
       Value<String?> currencyNameLong,
@@ -78925,6 +81276,7 @@ typedef $$ThisPosEntriesTableUpdateCompanionBuilder =
       Value<bool> printerTableView,
       Value<bool> printVatOnReceipt,
       Value<bool> isVatPayer,
+      Value<int> taxTreatment,
       Value<bool> blockOversell,
       Value<bool> editProduct,
       Value<bool> editPrice,
@@ -78944,6 +81296,7 @@ typedef $$ThisPosEntriesTableUpdateCompanionBuilder =
       Value<bool> isSearchInGlobalProductsEnabled,
       Value<bool> priceCheckEnabled,
       Value<bool> allowBigAmount,
+      Value<String?> bigAmountLimit,
       Value<bool> isKassaPriceDecreasingBlocked,
       Value<int?> usersAllowedToRefund,
       Value<int?> usersAllowedToRefundWithoutReceipt,
@@ -78952,6 +81305,7 @@ typedef $$ThisPosEntriesTableUpdateCompanionBuilder =
       Value<String?> markUpFromDate,
       Value<String?> markUpToDate,
       Value<int?> currencyId,
+      Value<String?> storeAddress,
       Value<int?> countryCode,
       Value<int?> currencyCode,
       Value<String?> currencyNameLong,
@@ -79125,6 +81479,11 @@ class $$ThisPosEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get taxTreatment => $composableBuilder(
+    column: $table.taxTreatment,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get blockOversell => $composableBuilder(
     column: $table.blockOversell,
     builder: (column) => ColumnFilters(column),
@@ -79220,6 +81579,11 @@ class $$ThisPosEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get bigAmountLimit => $composableBuilder(
+    column: $table.bigAmountLimit,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isKassaPriceDecreasingBlocked => $composableBuilder(
     column: $table.isKassaPriceDecreasingBlocked,
     builder: (column) => ColumnFilters(column),
@@ -79259,6 +81623,11 @@ class $$ThisPosEntriesTableFilterComposer
 
   ColumnFilters<int> get currencyId => $composableBuilder(
     column: $table.currencyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get storeAddress => $composableBuilder(
+    column: $table.storeAddress,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -79493,6 +81862,11 @@ class $$ThisPosEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get taxTreatment => $composableBuilder(
+    column: $table.taxTreatment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get blockOversell => $composableBuilder(
     column: $table.blockOversell,
     builder: (column) => ColumnOrderings(column),
@@ -79589,6 +81963,11 @@ class $$ThisPosEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get bigAmountLimit => $composableBuilder(
+    column: $table.bigAmountLimit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isKassaPriceDecreasingBlocked => $composableBuilder(
     column: $table.isKassaPriceDecreasingBlocked,
     builder: (column) => ColumnOrderings(column),
@@ -79628,6 +82007,11 @@ class $$ThisPosEntriesTableOrderingComposer
 
   ColumnOrderings<int> get currencyId => $composableBuilder(
     column: $table.currencyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get storeAddress => $composableBuilder(
+    column: $table.storeAddress,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -79846,6 +82230,11 @@ class $$ThisPosEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get taxTreatment => $composableBuilder(
+    column: $table.taxTreatment,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get blockOversell => $composableBuilder(
     column: $table.blockOversell,
     builder: (column) => column,
@@ -79934,6 +82323,11 @@ class $$ThisPosEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get bigAmountLimit => $composableBuilder(
+    column: $table.bigAmountLimit,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isKassaPriceDecreasingBlocked => $composableBuilder(
     column: $table.isKassaPriceDecreasingBlocked,
     builder: (column) => column,
@@ -79973,6 +82367,11 @@ class $$ThisPosEntriesTableAnnotationComposer
 
   GeneratedColumn<int> get currencyId => $composableBuilder(
     column: $table.currencyId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get storeAddress => $composableBuilder(
+    column: $table.storeAddress,
     builder: (column) => column,
   );
 
@@ -80116,6 +82515,7 @@ class $$ThisPosEntriesTableTableManager
                 Value<bool> printerTableView = const Value.absent(),
                 Value<bool> printVatOnReceipt = const Value.absent(),
                 Value<bool> isVatPayer = const Value.absent(),
+                Value<int> taxTreatment = const Value.absent(),
                 Value<bool> blockOversell = const Value.absent(),
                 Value<bool> editProduct = const Value.absent(),
                 Value<bool> editPrice = const Value.absent(),
@@ -80136,6 +82536,7 @@ class $$ThisPosEntriesTableTableManager
                     const Value.absent(),
                 Value<bool> priceCheckEnabled = const Value.absent(),
                 Value<bool> allowBigAmount = const Value.absent(),
+                Value<String?> bigAmountLimit = const Value.absent(),
                 Value<bool> isKassaPriceDecreasingBlocked =
                     const Value.absent(),
                 Value<int?> usersAllowedToRefund = const Value.absent(),
@@ -80147,6 +82548,7 @@ class $$ThisPosEntriesTableTableManager
                 Value<String?> markUpFromDate = const Value.absent(),
                 Value<String?> markUpToDate = const Value.absent(),
                 Value<int?> currencyId = const Value.absent(),
+                Value<String?> storeAddress = const Value.absent(),
                 Value<int?> countryCode = const Value.absent(),
                 Value<int?> currencyCode = const Value.absent(),
                 Value<String?> currencyNameLong = const Value.absent(),
@@ -80194,6 +82596,7 @@ class $$ThisPosEntriesTableTableManager
                 printerTableView: printerTableView,
                 printVatOnReceipt: printVatOnReceipt,
                 isVatPayer: isVatPayer,
+                taxTreatment: taxTreatment,
                 blockOversell: blockOversell,
                 editProduct: editProduct,
                 editPrice: editPrice,
@@ -80214,6 +82617,7 @@ class $$ThisPosEntriesTableTableManager
                     isSearchInGlobalProductsEnabled,
                 priceCheckEnabled: priceCheckEnabled,
                 allowBigAmount: allowBigAmount,
+                bigAmountLimit: bigAmountLimit,
                 isKassaPriceDecreasingBlocked: isKassaPriceDecreasingBlocked,
                 usersAllowedToRefund: usersAllowedToRefund,
                 usersAllowedToRefundWithoutReceipt:
@@ -80224,6 +82628,7 @@ class $$ThisPosEntriesTableTableManager
                 markUpFromDate: markUpFromDate,
                 markUpToDate: markUpToDate,
                 currencyId: currencyId,
+                storeAddress: storeAddress,
                 countryCode: countryCode,
                 currencyCode: currencyCode,
                 currencyNameLong: currencyNameLong,
@@ -80273,6 +82678,7 @@ class $$ThisPosEntriesTableTableManager
                 Value<bool> printerTableView = const Value.absent(),
                 Value<bool> printVatOnReceipt = const Value.absent(),
                 Value<bool> isVatPayer = const Value.absent(),
+                Value<int> taxTreatment = const Value.absent(),
                 Value<bool> blockOversell = const Value.absent(),
                 Value<bool> editProduct = const Value.absent(),
                 Value<bool> editPrice = const Value.absent(),
@@ -80293,6 +82699,7 @@ class $$ThisPosEntriesTableTableManager
                     const Value.absent(),
                 Value<bool> priceCheckEnabled = const Value.absent(),
                 Value<bool> allowBigAmount = const Value.absent(),
+                Value<String?> bigAmountLimit = const Value.absent(),
                 Value<bool> isKassaPriceDecreasingBlocked =
                     const Value.absent(),
                 Value<int?> usersAllowedToRefund = const Value.absent(),
@@ -80304,6 +82711,7 @@ class $$ThisPosEntriesTableTableManager
                 Value<String?> markUpFromDate = const Value.absent(),
                 Value<String?> markUpToDate = const Value.absent(),
                 Value<int?> currencyId = const Value.absent(),
+                Value<String?> storeAddress = const Value.absent(),
                 Value<int?> countryCode = const Value.absent(),
                 Value<int?> currencyCode = const Value.absent(),
                 Value<String?> currencyNameLong = const Value.absent(),
@@ -80351,6 +82759,7 @@ class $$ThisPosEntriesTableTableManager
                 printerTableView: printerTableView,
                 printVatOnReceipt: printVatOnReceipt,
                 isVatPayer: isVatPayer,
+                taxTreatment: taxTreatment,
                 blockOversell: blockOversell,
                 editProduct: editProduct,
                 editPrice: editPrice,
@@ -80371,6 +82780,7 @@ class $$ThisPosEntriesTableTableManager
                     isSearchInGlobalProductsEnabled,
                 priceCheckEnabled: priceCheckEnabled,
                 allowBigAmount: allowBigAmount,
+                bigAmountLimit: bigAmountLimit,
                 isKassaPriceDecreasingBlocked: isKassaPriceDecreasingBlocked,
                 usersAllowedToRefund: usersAllowedToRefund,
                 usersAllowedToRefundWithoutReceipt:
@@ -80381,6 +82791,7 @@ class $$ThisPosEntriesTableTableManager
                 markUpFromDate: markUpFromDate,
                 markUpToDate: markUpToDate,
                 currencyId: currencyId,
+                storeAddress: storeAddress,
                 countryCode: countryCode,
                 currencyCode: currencyCode,
                 currencyNameLong: currencyNameLong,
@@ -99453,6 +101864,12 @@ class $AppDatabaseManager {
       $$AttrDatesTableTableManager(_db, _db.attrDates);
   $$UpdatePropertiesTableTableManager get updateProperties =>
       $$UpdatePropertiesTableTableManager(_db, _db.updateProperties);
+  $$TaxJurisdictionsTableTableManager get taxJurisdictions =>
+      $$TaxJurisdictionsTableTableManager(_db, _db.taxJurisdictions);
+  $$TaxCategoriesTableTableManager get taxCategories =>
+      $$TaxCategoriesTableTableManager(_db, _db.taxCategories);
+  $$TaxRulesTableTableManager get taxRules =>
+      $$TaxRulesTableTableManager(_db, _db.taxRules);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db, _db.categories);
   $$CategoryRestrictionsTableTableManager get categoryRestrictions =>

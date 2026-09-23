@@ -145,9 +145,17 @@ void main() {
       wholesale: false,
       meta: m(firstKey, 0),
     );
-    view = await cart.addByBarcode(terminalId, barcodeA, mv(view, firstKey + 1));
+    view = await cart.addByBarcode(
+      terminalId,
+      barcodeA,
+      mv(view, firstKey + 1),
+    );
     final receiptNo = view.receiptNo!;
-    await cart.defer(terminalId, mv(view, firstKey + 2), by: fullDiscountAuthority);
+    await cart.defer(
+      terminalId,
+      mv(view, firstKey + 2),
+      by: fullDiscountAuthority,
+    );
     return receiptNo;
   }
 
@@ -158,21 +166,24 @@ void main() {
 
   // ── решение 4: чек в работе чужим не виден ───────────────────────────
 
-  test('отложенный чек виден всем рабочим местам, чек в работе — нет', () async {
-    var a = await cart.start(terminalId: 7, wholesale: false, meta: m(1, 0));
-    a = await cart.addByBarcode(7, barcodeA, mv(a, 2));
+  test(
+    'отложенный чек виден всем рабочим местам, чек в работе — нет',
+    () async {
+      var a = await cart.start(terminalId: 7, wholesale: false, meta: m(1, 0));
+      a = await cart.addByBarcode(7, barcodeA, mv(a, 2));
 
-    expect(
-      await cart.watchDeferred(by: fullDiscountAuthority).first,
-      isEmpty,
-      reason: 'набираемый чек показан всей кассе до «Отложить» (решение 4)',
-    );
+      expect(
+        await cart.watchDeferred(by: fullDiscountAuthority).first,
+        isEmpty,
+        reason: 'набираемый чек показан всей кассе до «Отложить» (решение 4)',
+      );
 
-    await cart.defer(7, mv(a, 3), by: fullDiscountAuthority);
-    final pool = await cart.watchDeferred(by: fullDiscountAuthority).first;
+      await cart.defer(7, mv(a, 3), by: fullDiscountAuthority);
+      final pool = await cart.watchDeferred(by: fullDiscountAuthority).first;
 
-    expect(pool.map((c) => c.receiptNo), [a.receiptNo]);
-  });
+      expect(pool.map((c) => c.receiptNo), [a.receiptNo]);
+    },
+  );
 
   test('чужой чек в работе не виден в пуле ни одному другому месту', () async {
     // Девятое место набирает своё — и не откладывает.
@@ -183,16 +194,19 @@ void main() {
     final deferredNo = await deferOneCart(firstKey: 10);
 
     final pool = await cart.watchDeferred(by: fullDiscountAuthority).first;
-    expect(
-      pool.map((c) => c.receiptNo),
-      [deferredNo],
-      reason: 'чек девятого места в работе утёк в общий пул',
-    );
+    expect(pool.map((c) => c.receiptNo), [
+      deferredNo,
+    ], reason: 'чек девятого места в работе утёк в общий пул');
 
     // И поднять его через пул нельзя даже по угаданному номеру: он не
     // отложен, а в работе у другого.
     expect(
-      () => cart.loadDeferred(11, nine.receiptNo!, m(20, 0), by: fullDiscountAuthority),
+      () => cart.loadDeferred(
+        11,
+        nine.receiptNo!,
+        m(20, 0),
+        by: fullDiscountAuthority,
+      ),
       throwsA(
         isA<WireRefusal>().having((r) => r.code, 'code', cartDeferredTakenCode),
       ),
@@ -215,60 +229,74 @@ void main() {
     );
   });
 
-  test('одновременный подъём одного чека: один хозяин, второму — отказ', () async {
-    final receiptNo = await deferOneCart();
+  test(
+    'одновременный подъём одного чека: один хозяин, второму — отказ',
+    () async {
+      final receiptNo = await deferOneCart();
 
-    // Одновременно, а не по очереди: последовательная проба выше зеленеет
-    // и при снятой защите — второму достаётся уже изменённая строка, и
-    // отказ приходит сам собой. Здесь обе команды входят в кассу до того,
-    // как любая из них дописала строку.
-    final results = await Future.wait([
-      outcome(cart.loadDeferred(7, receiptNo, m(4, 0), by: fullDiscountAuthority)),
-      outcome(cart.loadDeferred(9, receiptNo, m(5, 0), by: fullDiscountAuthority)),
-    ]);
+      // Одновременно, а не по очереди: последовательная проба выше зеленеет
+      // и при снятой защите — второму достаётся уже изменённая строка, и
+      // отказ приходит сам собой. Здесь обе команды входят в кассу до того,
+      // как любая из них дописала строку.
+      final results = await Future.wait([
+        outcome(
+          cart.loadDeferred(7, receiptNo, m(4, 0), by: fullDiscountAuthority),
+        ),
+        outcome(
+          cart.loadDeferred(9, receiptNo, m(5, 0), by: fullDiscountAuthority),
+        ),
+      ]);
 
-    final won = results.whereType<CartView>().toList();
-    final refused = results.whereType<WireRefusal>().toList();
+      final won = results.whereType<CartView>().toList();
+      final refused = results.whereType<WireRefusal>().toList();
 
-    expect(won, hasLength(1), reason: 'чек поднят дважды — два хозяина у чека');
-    expect(refused, hasLength(1));
-    expect(
-      refused.single.code,
-      cartDeferredTakenCode,
-      reason: 'проигравший обязан узнать причину по коду, а не по пустоте',
-    );
+      expect(
+        won,
+        hasLength(1),
+        reason: 'чек поднят дважды — два хозяина у чека',
+      );
+      expect(refused, hasLength(1));
+      expect(
+        refused.single.code,
+        cartDeferredTakenCode,
+        reason: 'проигравший обязан узнать причину по коду, а не по пустоте',
+      );
 
-    // Страховка от вырождения: «никто не поднял» зеленит защиту и ломает
-    // продукт — победитель обязан существовать и получить строки.
-    expect(won.single.receiptNo, receiptNo);
-    expect(won.single.lines, hasLength(1));
+      // Страховка от вырождения: «никто не поднял» зеленит защиту и ломает
+      // продукт — победитель обязан существовать и получить строки.
+      expect(won.single.receiptNo, receiptNo);
+      expect(won.single.lines, hasLength(1));
 
-    // База согласна со снимком: один владелец, состояние «в работе».
-    final row = await db.saleDao.findByKey(receiptNo, 1);
-    expect(row!.state, 0);
-    expect(row.terminalId, won.single.terminalId);
-    expect(
-      row.terminalId,
-      anyOf(7, 9),
-      reason: 'владельцем стал не тот, кто поднял',
-    );
+      // База согласна со снимком: один владелец, состояние «в работе».
+      final row = await db.saleDao.findByKey(receiptNo, 1);
+      expect(row!.state, 0);
+      expect(row.terminalId, won.single.terminalId);
+      expect(
+        row.terminalId,
+        anyOf(7, 9),
+        reason: 'владельцем стал не тот, кто поднял',
+      );
 
-    // И проигравший остался без чека — а не с чужим.
-    final loserId = row.terminalId == 7 ? 9 : 7;
-    expect((await cart.watch(loserId).first).receiptNo, isNull);
-    expect(await cart.watchDeferred(by: fullDiscountAuthority).first, isEmpty);
+      // И проигравший остался без чека — а не с чужим.
+      final loserId = row.terminalId == 7 ? 9 : 7;
+      expect((await cart.watch(loserId).first).receiptNo, isNull);
+      expect(
+        await cart.watchDeferred(by: fullDiscountAuthority).first,
+        isEmpty,
+      );
 
-    // Целостность после операции, а не только её ответ (`qa-depth`):
-    // проигравший не завёл себе чека «про запас» и не сжёг номер, строки
-    // остались при своём чеке и не удвоились.
-    final allSales = await db.select(db.sales).get();
-    expect(
-      allSales,
-      hasLength(1),
-      reason: 'проигравший гонку оставил после себя лишний чек',
-    );
-    expect(await db.saleProductDao.countBySale(receiptNo, 1), 1);
-  });
+      // Целостность после операции, а не только её ответ (`qa-depth`):
+      // проигравший не завёл себе чека «про запас» и не сжёг номер, строки
+      // остались при своём чеке и не удвоились.
+      final allSales = await db.select(db.sales).get();
+      expect(
+        allSales,
+        hasLength(1),
+        reason: 'проигравший гонку оставил после себя лишний чек',
+      );
+      expect(await db.saleProductDao.countBySale(receiptNo, 1), 1);
+    },
+  );
 
   // ── деньги и объём ───────────────────────────────────────────────────
 
@@ -305,7 +333,8 @@ void main() {
     sum = await cart.addByBarcode(7, '4870002222222', mv(sum, 3));
     await cart.defer(7, mv(sum, 4), by: fullDiscountAuthority);
 
-    final card = (await cart.watchDeferred(by: fullDiscountAuthority).first).single;
+    final card =
+        (await cart.watchDeferred(by: fullDiscountAuthority).first).single;
 
     expect(
       card.total.toString(),
@@ -337,56 +366,72 @@ void main() {
     final first = await deferOneCart(firstKey: 1);
     final second = await deferOneCart(firstKey: 10);
 
-    var third = await cart.start(terminalId: 9, wholesale: false, meta: m(20, 0));
+    var third = await cart.start(
+      terminalId: 9,
+      wholesale: false,
+      meta: m(20, 0),
+    );
     third = await cart.addByBarcode(9, '4870003333333', mv(third, 21));
     final thirdNo = third.receiptNo!;
     await cart.defer(9, mv(third, 22), by: fullDiscountAuthority);
 
     final pool = await cart.watchDeferred(by: fullDiscountAuthority).first;
-    expect(
-      pool.map((c) => c.receiptNo),
-      [thirdNo, second, first],
-      reason: 'пул отдал не все чеки или отдал их в произвольном порядке',
-    );
+    expect(pool.map((c) => c.receiptNo), [
+      thirdNo,
+      second,
+      first,
+    ], reason: 'пул отдал не все чеки или отдал их в произвольном порядке');
     expect(pool.map((c) => c.userName), everyElement('Айгүл Смағұлова'));
     expect(pool.first.firstLineName, 'Ысык-Көл суу');
 
     // Пул общий: чек, отложенный девятым местом, поднимает седьмое.
-    final taken = await cart.loadDeferred(7, thirdNo, m(30, 0), by: fullDiscountAuthority);
+    final taken = await cart.loadDeferred(
+      7,
+      thirdNo,
+      m(30, 0),
+      by: fullDiscountAuthority,
+    );
     expect(taken.lines.single.name, 'Ысык-Көл суу');
   });
 
   // ── владелец в базе ──────────────────────────────────────────────────
 
-  test('откладывание освобождает владельца, подъём занимает — в базе', () async {
-    var view = await cart.start(terminalId: 7, wholesale: false, meta: m(1, 0));
-    view = await cart.addByBarcode(7, barcodeA, mv(view, 2));
-    final receiptNo = view.receiptNo!;
+  test(
+    'откладывание освобождает владельца, подъём занимает — в базе',
+    () async {
+      var view = await cart.start(
+        terminalId: 7,
+        wholesale: false,
+        meta: m(1, 0),
+      );
+      view = await cart.addByBarcode(7, barcodeA, mv(view, 2));
+      final receiptNo = view.receiptNo!;
 
-    final owned = await db.saleDao.findByKey(receiptNo, 1);
-    expect(owned!.terminalId, 7, reason: 'у чека в работе владелец есть');
-    expect(owned.state, 0);
+      final owned = await db.saleDao.findByKey(receiptNo, 1);
+      expect(owned!.terminalId, 7, reason: 'у чека в работе владелец есть');
+      expect(owned.state, 0);
 
-    await cart.defer(7, mv(view, 3), by: fullDiscountAuthority);
+      await cart.defer(7, mv(view, 3), by: fullDiscountAuthority);
 
-    final free = await db.saleDao.findByKey(receiptNo, 1);
-    expect(
-      free!.terminalId,
-      isNull,
-      reason: 'отложенный чек остался за рабочим местом — пул не общий',
-    );
-    expect(free.state, 3);
+      final free = await db.saleDao.findByKey(receiptNo, 1);
+      expect(
+        free!.terminalId,
+        isNull,
+        reason: 'отложенный чек остался за рабочим местом — пул не общий',
+      );
+      expect(free.state, 3);
 
-    await cart.loadDeferred(9, receiptNo, m(4, 0), by: fullDiscountAuthority);
+      await cart.loadDeferred(9, receiptNo, m(4, 0), by: fullDiscountAuthority);
 
-    final taken = await db.saleDao.findByKey(receiptNo, 1);
-    expect(
-      taken!.terminalId,
-      9,
-      reason: 'владельцем стал не поднявший — снимок мог соврать, база нет',
-    );
-    expect(taken.state, 0);
-  });
+      final taken = await db.saleDao.findByKey(receiptNo, 1);
+      expect(
+        taken!.terminalId,
+        9,
+        reason: 'владельцем стал не поднявший — снимок мог соврать, база нет',
+      );
+      expect(taken.state, 0);
+    },
+  );
 
   // ── запертый чек ─────────────────────────────────────────────────────
 
@@ -399,7 +444,11 @@ void main() {
 
     // Путь освобождения первый и главный: то же рабочее место
     // возвращается и продолжает чек «с холода» — `start` без номера.
-    final back = await cart.start(terminalId: 9, wholesale: false, meta: m(5, 0));
+    final back = await cart.start(
+      terminalId: 9,
+      wholesale: false,
+      meta: m(5, 0),
+    );
     expect(
       back.receiptNo,
       receiptNo,
@@ -421,17 +470,29 @@ void main() {
     // И второй путь освобождения — тот же, что у любого чека: владелец
     // откладывает его обратно в общий пул, и он снова достаётся всем.
     await cart.defer(9, mv(back, 7), by: fullDiscountAuthority);
-    expect((await cart.watchDeferred(by: fullDiscountAuthority).first).map((c) => c.receiptNo), [
+    expect(
+      (await cart.watchDeferred(by: fullDiscountAuthority).first).map(
+        (c) => c.receiptNo,
+      ),
+      [receiptNo],
+    );
+    final afterAll = await cart.loadDeferred(
+      7,
       receiptNo,
-    ]);
-    final afterAll = await cart.loadDeferred(7, receiptNo, m(8, 0), by: fullDiscountAuthority);
+      m(8, 0),
+      by: fullDiscountAuthority,
+    );
     expect(afterAll.lines, hasLength(1));
   });
 
   // ── удаление чужого чека ─────────────────────────────────────────────
 
   test('поднятие отложенного больше не удаляет чужой чек в работе', () async {
-    var other = await cart.start(terminalId: 9, wholesale: false, meta: m(1, 0));
+    var other = await cart.start(
+      terminalId: 9,
+      wholesale: false,
+      meta: m(1, 0),
+    );
     other = await cart.addByBarcode(9, barcodeB, mv(other, 2));
     final deferredNo = await deferOneCart(firstKey: 10);
 
@@ -447,39 +508,46 @@ void main() {
     expect(row!.terminalId, 9);
   });
 
-  test('undeferSale поднимает чек названному месту и ничего не удаляет', () async {
-    // Прямая проба на `DeferredSaleServiceImpl` — потому что удаление
-    // живёт там, а не в корзине. `LocalCartService.loadDeferred` эту
-    // ветку обходит (её докстринг это и объясняет), и проба выше зелёная
-    // не потому, что удаления нет, а потому, что до него не доходят.
-    await db.terminalDao.ensureSelf(fallbackName: 'Касса-1');
+  test(
+    'undeferSale поднимает чек названному месту и ничего не удаляет',
+    () async {
+      // Прямая проба на `DeferredSaleServiceImpl` — потому что удаление
+      // живёт там, а не в корзине. `LocalCartService.loadDeferred` эту
+      // ветку обходит (её докстринг это и объясняет), и проба выше зелёная
+      // не потому, что удаления нет, а потому, что до него не доходят.
+      await db.terminalDao.ensureSelf(fallbackName: 'Касса-1');
 
-    // Чек в работе у браузерного терминала.
-    var mine = await cart.start(terminalId: 9, wholesale: false, meta: m(1, 0));
-    mine = await cart.addByBarcode(9, barcodeB, mv(mine, 2));
-    final deferredNo = await deferOneCart(firstKey: 10);
+      // Чек в работе у браузерного терминала.
+      var mine = await cart.start(
+        terminalId: 9,
+        wholesale: false,
+        meta: m(1, 0),
+      );
+      mine = await cart.addByBarcode(9, barcodeB, mv(mine, 2));
+      final deferredNo = await deferOneCart(firstKey: 10);
 
-    // Поднимает **девятое** место, а не касса.
-    final raised = await deferredService.undeferSale(
-      receiptNo: deferredNo,
-      terminalId: 9,
-    );
+      // Поднимает **девятое** место, а не касса.
+      final raised = await deferredService.undeferSale(
+        receiptNo: deferredNo,
+        terminalId: 9,
+      );
 
-    expect(raised, isNotNull);
-    expect(
-      raised!.terminalId,
-      9,
-      reason: 'владельца назвал вызывающий, а не terminals.self()',
-    );
+      expect(raised, isNotNull);
+      expect(
+        raised!.terminalId,
+        9,
+        reason: 'владельца назвал вызывающий, а не terminals.self()',
+      );
 
-    final untouched = await db.saleDao.findByKey(mine.receiptNo!, 1);
-    expect(
-      untouched,
-      isNotNull,
-      reason: 'undeferSale удалила чек в работе, о котором её не спрашивали',
-    );
-    expect(untouched!.terminalId, 9);
-  });
+      final untouched = await db.saleDao.findByKey(mine.receiptNo!, 1);
+      expect(
+        untouched,
+        isNotNull,
+        reason: 'undeferSale удалила чек в работе, о котором её не спрашивали',
+      );
+      expect(untouched!.terminalId, 9);
+    },
+  );
 
   test('undeferSale не поднимает чек, который уже подняли', () async {
     await db.terminalDao.ensureSelf(fallbackName: 'Касса-1');

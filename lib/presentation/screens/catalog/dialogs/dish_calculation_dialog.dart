@@ -16,6 +16,7 @@ import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/domain/entities/dish/dish_ingredient_entity.dart';
 import 'package:telepos/domain/entities/dish/dish_costing_entity.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class DishCalculationDialog extends StatefulWidget {
   const DishCalculationDialog({
@@ -400,21 +401,23 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
               children: [
                 _summaryChip(
                   label: l10n.dishCostLabel,
-                  value: '${costing.dishCost.toStringAsFixed(2)} ₸',
+                  value:
+                      '${costing.dishCost.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                   icon: Icons.calculate,
                   color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
                 _summaryChip(
                   label: l10n.dishPriceLabel,
-                  value: '${costing.sellingPrice.toStringAsFixed(2)} ₸',
+                  value:
+                      '${costing.sellingPrice.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                   icon: Icons.sell,
                   color: AppColors.info,
                 ),
                 const SizedBox(width: 8),
                 _summaryChip(
                   label: l10n.dishProfitLabel,
-                  value: '${profit.toStringAsFixed(2)} ₸',
+                  value: '${profit.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                   icon: isProfit ? Icons.trending_up : Icons.trending_down,
                   color: isProfit
                       ? AppColors.success
@@ -1519,7 +1522,7 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${profit.toStringAsFixed(2)} ₸',
+                      '${profit.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -1544,7 +1547,8 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
                         Expanded(
                           child: _costingCard(
                             label: l10n.dishCostOfDish,
-                            value: '${costing.dishCost.toStringAsFixed(2)} ₸',
+                            value:
+                                '${costing.dishCost.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                             icon: Icons.calculate,
                             valueStyle: AppTextStyles.h2.copyWith(
                               color: AppColors.primary,
@@ -1556,7 +1560,7 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
                           child: _costingCard(
                             label: l10n.dishSellingPrice,
                             value:
-                                '${costing.sellingPrice.toStringAsFixed(2)} ₸',
+                                '${costing.sellingPrice.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                             icon: Icons.sell,
                           ),
                         ),
@@ -1591,7 +1595,8 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
                 children: [
                   _costingCard(
                     label: l10n.dishCostOfDish,
-                    value: '${costing.dishCost.toStringAsFixed(2)} ₸',
+                    value:
+                        '${costing.dishCost.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                     icon: Icons.calculate,
                     valueStyle: AppTextStyles.h2.copyWith(
                       color: AppColors.primary,
@@ -1600,7 +1605,8 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
                   const SizedBox(height: 12),
                   _costingCard(
                     label: l10n.dishSellingPrice,
-                    value: '${costing.sellingPrice.toStringAsFixed(2)} ₸',
+                    value:
+                        '${costing.sellingPrice.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                     icon: Icons.sell,
                   ),
                   const SizedBox(height: 12),
@@ -2109,13 +2115,15 @@ class _DishCalculationDialogState extends State<DishCalculationDialog>
                 _yieldRow(
                   icon: Icons.calculate,
                   label: l10n.dishCostPerServing,
-                  value: '${costing.costPerServing.toStringAsFixed(2)} ₸',
+                  value:
+                      '${costing.costPerServing.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                 ),
                 const Divider(height: 1),
                 _yieldRow(
                   icon: Icons.sell,
                   label: l10n.dishPricePerServing,
-                  value: '${costing.pricePerServing.toStringAsFixed(2)} ₸',
+                  value:
+                      '${costing.pricePerServing.toStringAsFixed(2)} ${tillCurrencySymbol()}',
                 ),
                 const Divider(height: 1),
                 _yieldRow(

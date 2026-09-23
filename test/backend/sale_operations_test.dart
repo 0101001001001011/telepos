@@ -1521,6 +1521,7 @@ class _RecordingCart implements CartService {
     int receiptNo,
     CartCommandMeta meta, {
     required DiscountAuthority by,
+    int? deferredPosId,
   }) async => _record(terminalId, meta, 'loadDeferred($receiptNo)');
 
   @override

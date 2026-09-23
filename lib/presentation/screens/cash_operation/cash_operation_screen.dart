@@ -357,9 +357,7 @@ class _CashOperationScreenState extends ConsumerState<CashOperationScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                'Действие запрещено настройками POS (Настройки → Политика продаж)',
-              ),
+              content: Text(AppLocalizations.of(context)!.salePolicyForbids),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -431,6 +429,24 @@ class _CashOperationScreenState extends ConsumerState<CashOperationScreen> {
 
       if (result.success) {
         ref.invalidate(shiftControllerProvider);
+      }
+
+      // Отказ говорится СЛОВАМИ и экран НЕ закрывается: до 2026-09-22 он
+      // закрывался одинаково при удаче и отказе, и внесение выше потолка
+      // исчезало молча — кассир был уверен, что деньги в ящике.
+      if (!result.success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                cashRefusalText(AppLocalizations.of(context)!, result),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              duration: const Duration(seconds: 6),
+            ),
+          );
+        }
+        return;
       }
 
       if (mounted) {
@@ -777,9 +793,7 @@ class _CashOperationDialogState extends State<_CashOperationDialog> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                'Действие запрещено настройками POS (Настройки → Политика продаж)',
-              ),
+              content: Text(AppLocalizations.of(context)!.salePolicyForbids),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -849,6 +863,23 @@ class _CashOperationDialogState extends State<_CashOperationDialog> {
         );
       }
 
+      // То же правило, что и на полноэкранной версии: отказ виден, и окно
+      // остаётся открытым — сумму ещё можно поправить.
+      if (!result.success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                cashRefusalText(AppLocalizations.of(context)!, result),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              duration: const Duration(seconds: 6),
+            ),
+          );
+        }
+        return;
+      }
+
       if (mounted) {
         Navigator.of(context).pop(result);
       }
@@ -859,3 +890,16 @@ class _CashOperationDialogState extends State<_CashOperationDialog> {
     }
   }
 }
+
+/// Слова отказа кассовой операции.
+///
+/// Заведено 2026-09-22: при отказе экран просто закрывался, и кассир видел
+/// ровно то же, что при успехе. Внесение выше потолка исчезало молча.
+String cashRefusalText(AppLocalizations l10n, CashOperationResult result) =>
+    switch (result.refusal) {
+      CashAmountRefusal.notPositive => l10n.cashRefusedNotPositive,
+      CashAmountRefusal.aboveCeiling => l10n.cashRefusedAboveCeiling(
+        result.limit ?? '',
+      ),
+      null => l10n.cashOpError(result.errorDetail ?? ''),
+    };

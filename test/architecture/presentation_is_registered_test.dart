@@ -57,14 +57,10 @@ const _allowed = <String, ({int count, String reason})>{
   // Различать «порта нет» и «печатать нечем» обязательно: первое — про
   // сборку, второе — про кассу, и пустой список вместо любого из них отправил
   // бы наладчика искать беду в принтере, которого никто не спрашивал.
-  'lib/presentation/screens/diagnostics/printer_diagnostics_tab.dart: HardwareDiagnosticsRepository': (
-    count: 1,
-    reason: 'названо: errorDiagnosticsUnavailable',
-  ),
-  'lib/presentation/screens/diagnostics/fiscal_diagnostics_tab.dart: HardwareDiagnosticsRepository': (
-    count: 1,
-    reason: 'названо: errorDiagnosticsUnavailable',
-  ),
+  'lib/presentation/screens/diagnostics/printer_diagnostics_tab.dart: HardwareDiagnosticsRepository':
+      (count: 1, reason: 'названо: errorDiagnosticsUnavailable'),
+  'lib/presentation/screens/diagnostics/fiscal_diagnostics_tab.dart: HardwareDiagnosticsRepository':
+      (count: 1, reason: 'названо: errorDiagnosticsUnavailable'),
   // Запись `scales_diagnostics_tab.dart: ScalesService` отсюда **снята**
   // пунктом 4 того же плана: вкладка весов больше не знает `ScalesService`
   // вовсе. Вместе с ней на тот же порт переведены вкладки ящика и дисплея —
@@ -80,25 +76,40 @@ const _allowed = <String, ({int count, String reason})>{
   // других значениями (`available`, `bound`) с провода. Свести их в пустой
   // список значило бы отправить наладчика искать обрыв в проводке исправного
   // ящика.
-  'lib/presentation/screens/diagnostics/drawer_diagnostics_tab.dart: HardwareDiagnosticsRepository': (
-    count: 1,
-    reason: 'названо: errorDiagnosticsUnavailable',
-  ),
-  'lib/presentation/screens/diagnostics/scales_diagnostics_tab.dart: HardwareDiagnosticsRepository': (
-    count: 1,
-    reason: 'названо: errorDiagnosticsUnavailable',
-  ),
-  'lib/presentation/screens/diagnostics/display_diagnostics_tab.dart: HardwareDiagnosticsRepository': (
-    count: 1,
-    reason: 'названо: errorDiagnosticsUnavailable',
-  ),
-  'lib/presentation/screens/diagnostics/payment_diagnostics_tab.dart: AppDatabase': (
+  'lib/presentation/common/utils/country_preset_rate.dart: CountryRateHint': (
     count: 1,
     reason:
-        'ОТКРЫТО: намерения оплаты по коду лежат в базе кассы; на планшете '
-        'вкладка говорит «данных об оплате на этом рабочем месте нет». '
-        'Закрывается теми же операциями провода на чтение диагностики',
+        'законное состояние: подсказка ставки читается из поставляемых '
+        'наборов, а их читает слой данных. В браузерной сборке этого '
+        'договора нет по построению — ресурсов кассы у вкладки нет вовсе. '
+        'Отсутствие НАЗВАНО словами: мастер говорит, что ставку назовёт '
+        'настройка (`setupVatPayerRateUnknown`), а не показывает пустоту и '
+        'не выдумывает число',
   ),
+  'lib/presentation/controllers/shift/shift_controller.dart: DeferredClaimPort':
+      (
+        count: 1,
+        reason:
+            'законное состояние: обмена между кассами может не быть вовсе '
+            '(одна касса в магазине), и тогда отзывать отложенные чеки не у '
+            'кого — они просто чистятся у себя. В браузерной сборке порта нет '
+            'по построению: закрытие смены уезжает на кассу проводом, и чистит '
+            'их она',
+      ),
+  'lib/presentation/screens/diagnostics/drawer_diagnostics_tab.dart: HardwareDiagnosticsRepository':
+      (count: 1, reason: 'названо: errorDiagnosticsUnavailable'),
+  'lib/presentation/screens/diagnostics/scales_diagnostics_tab.dart: HardwareDiagnosticsRepository':
+      (count: 1, reason: 'названо: errorDiagnosticsUnavailable'),
+  'lib/presentation/screens/diagnostics/display_diagnostics_tab.dart: HardwareDiagnosticsRepository':
+      (count: 1, reason: 'названо: errorDiagnosticsUnavailable'),
+  'lib/presentation/screens/diagnostics/payment_diagnostics_tab.dart: AppDatabase':
+      (
+        count: 1,
+        reason:
+            'ОТКРЫТО: намерения оплаты по коду лежат в базе кассы; на планшете '
+            'вкладка говорит «данных об оплате на этом рабочем месте нет». '
+            'Закрывается теми же операциями провода на чтение диагностики',
+      ),
   'lib/presentation/screens/diagnostics/payment_diagnostics_tab.dart: QrProviderSetupRepository': (
     count: 1,
     reason:
@@ -109,12 +120,13 @@ const _allowed = <String, ({int count, String reason})>{
         'процесс и есть всегда',
   ),
   // ── продажа, оплата, возврат ──────────────────────────────────────────────
-  'lib/presentation/common/mixins/barcode_scanner_mixin.dart: EmulatedScannerSourceFactory': (
-    count: 1,
-    reason:
-        'эмулятор сканера есть только в стендовой сборке кассы; в продукте '
-        'и браузере его нет законно',
-  ),
+  'lib/presentation/common/mixins/barcode_scanner_mixin.dart: EmulatedScannerSourceFactory':
+      (
+        count: 1,
+        reason:
+            'эмулятор сканера есть только в стендовой сборке кассы; в продукте '
+            'и браузере его нет законно',
+      ),
   // `sale_controller.dart: BatchTrackingUseCase` и `: WmsConfigUseCase`
   // отсюда сняты — пункт 11 ревизии 2026-09-19. Ревизия предлагала закрыть
   // это «проверкой партии на кассе при добавлении строки», и так и сделано:
@@ -168,20 +180,20 @@ const _allowed = <String, ({int count, String reason})>{
         'при закрытии молча пуста',
   ),
   // ── вход ─────────────────────────────────────────────────────────────────
-  'lib/presentation/controllers/auth/login_controller.dart: CashierOnDutyHolder': (
-    count: 1,
-    reason:
-        'кто вошёл на кассе — пишет экран входа; в браузере кассир приходит '
-        'с сеансом провода, держателя там нет',
-  ),
-  'lib/presentation/controllers/auth/login_controller.dart: SessionTokenStorage': (
-    count: 1,
-    reason: 'хранилище токена есть у браузера; у кассы вход без токена',
-  ),
-  'lib/presentation/controllers/auth/login_controller.dart: TerminalSecretStorage': (
-    count: 1,
-    reason: 'секрет терминала есть только у браузерной вкладки',
-  ),
+  'lib/presentation/controllers/auth/login_controller.dart: CashierOnDutyHolder':
+      (
+        count: 1,
+        reason:
+            'кто вошёл на кассе — пишет экран входа; в браузере кассир приходит '
+            'с сеансом провода, держателя там нет',
+      ),
+  'lib/presentation/controllers/auth/login_controller.dart: SessionTokenStorage':
+      (
+        count: 1,
+        reason: 'хранилище токена есть у браузера; у кассы вход без токена',
+      ),
+  'lib/presentation/controllers/auth/login_controller.dart: TerminalSecretStorage':
+      (count: 1, reason: 'секрет терминала есть только у браузерной вкладки'),
   'lib/presentation/controllers/app/current_user_provider.dart: AppDatabase': (
     count: 1,
     reason: 'читатель — чат персонала на кассе; в браузере базы нет',
@@ -189,38 +201,30 @@ const _allowed = <String, ({int count, String reason})>{
   // ── фискализация ─────────────────────────────────────────────────────────
   'lib/presentation/screens/fiscal/unfiscalized_receipts_screen.dart: FiscalProviderRegistry': (
     count: 1,
-    reason: 'экран только кассы; без реестра повтор назван «оператор не настроен»',
+    reason:
+        'экран только кассы; без реестра повтор назван «оператор не настроен»',
   ),
-  'lib/presentation/screens/fiscal/unfiscalized_receipts_screen.dart: FiscalSettingsSource': (
-    count: 1,
-    reason: 'та же развилка экрана нефискализованных',
-  ),
-  'lib/presentation/screens/fiscal/widgets/orphan_qr_money_panel.dart: AppDatabase': (
-    count: 1,
-    reason: 'панель только кассы; в браузере базы нет',
-  ),
-  'lib/presentation/screens/settings/fiscal_settings_screen.dart: FiscalQueueStore': (
-    count: 1,
-    reason: 'счётчик очереди фискализации; без очереди — ноль законно',
-  ),
+  'lib/presentation/screens/fiscal/unfiscalized_receipts_screen.dart: FiscalSettingsSource':
+      (count: 1, reason: 'та же развилка экрана нефискализованных'),
+  'lib/presentation/screens/fiscal/widgets/orphan_qr_money_panel.dart: AppDatabase':
+      (count: 1, reason: 'панель только кассы; в браузере базы нет'),
+  'lib/presentation/screens/settings/fiscal_settings_screen.dart: FiscalQueueStore':
+      (
+        count: 1,
+        reason: 'счётчик очереди фискализации; без очереди — ноль законно',
+      ),
   // ── настройки кассы ──────────────────────────────────────────────────────
   // `ScannerRulesRepository` здесь **больше не записан** — пункт 11 ревизии
   // 2026-09-19. Запись правил сканера приехала на провод
   // (`TillOps.scannerRulesSave`), `WtScannerRules` реализует пишущий договор
   // целиком, и `main_web.dart` привязывает его. Запись, оставленная тут,
   // краснела бы как устаревшая — это тоже сторож.
-  'lib/presentation/screens/settings/hardware_settings_screen.dart: DeviceDiscovery': (
-    count: 1,
-    reason: 'названо: deviceSearchUnavailable',
-  ),
-  'lib/presentation/screens/settings/hardware_settings_screen.dart: DeviceCheck': (
-    count: 1,
-    reason: 'названо: проверка устройства недоступна',
-  ),
-  'lib/presentation/screens/settings/printer_settings_screen.dart: PrintQueue': (
-    count: 1,
-    reason: 'названо: printQueueUnavailable',
-  ),
+  'lib/presentation/screens/settings/hardware_settings_screen.dart: DeviceDiscovery':
+      (count: 1, reason: 'названо: deviceSearchUnavailable'),
+  'lib/presentation/screens/settings/hardware_settings_screen.dart: DeviceCheck':
+      (count: 1, reason: 'названо: проверка устройства недоступна'),
+  'lib/presentation/screens/settings/printer_settings_screen.dart: PrintQueue':
+      (count: 1, reason: 'названо: printQueueUnavailable'),
   // Решение заказчика 2026-09-18: оба экрана шаблона перестали спрашивать
   // `ReceiptPrintService` и `AppDatabase` — между ними и кассой встал
   // доменный порт с двумя реализациями (кассовая и провод). Прежние две
@@ -232,30 +236,24 @@ const _allowed = <String, ({int count, String reason})>{
   // список вместо слов был бы хуже: «шаблонов нет» и «спросить не у кого» —
   // для владельца разные вещи, и на первом он завёл бы второй шаблон
   // поверх невидимого первого.
-  'lib/presentation/screens/settings/receipt/receipt_templates_screen.dart: ReceiptTemplateSetupRepository': (
-    count: 1,
-    reason: 'названо: errorReceiptTemplatesUnavailable',
-  ),
-  'lib/presentation/screens/settings/receipt/receipt_template_editor_screen.dart: ReceiptTemplateSetupRepository': (
-    count: 1,
-    reason: 'названо: errorReceiptTemplatesUnavailable',
-  ),
+  'lib/presentation/screens/settings/receipt/receipt_templates_screen.dart: ReceiptTemplateSetupRepository':
+      (count: 1, reason: 'названо: errorReceiptTemplatesUnavailable'),
+  'lib/presentation/screens/settings/receipt/receipt_template_editor_screen.dart: ReceiptTemplateSetupRepository':
+      (count: 1, reason: 'названо: errorReceiptTemplatesUnavailable'),
   // Смена с браузерного терминала — решение заказчика того же дня. Та же
   // развилка и тот же довод: на доме терминала без порта остаётся снимок
   // входа (единственное, что у такой сборки есть), на экране смены —
   // фраза `errorShiftDeskUnavailable`.
-  'lib/presentation/screens/terminal/terminal_home_screen.dart: ShiftDeskRepository': (
-    count: 1,
-    reason: 'без порта значок остаётся снимком входа — названо в докстринге',
-  ),
-  'lib/presentation/screens/terminal/terminal_shift_screen.dart: ShiftDeskRepository': (
-    count: 1,
-    reason: 'названо: errorShiftDeskUnavailable',
-  ),
-  'lib/presentation/controllers/settings/qr_payment_setup_controller.dart: QrProviderSetupRepository': (
-    count: 1,
-    reason: 'настройка провайдера QR — только на кассе',
-  ),
+  'lib/presentation/screens/terminal/terminal_home_screen.dart: ShiftDeskRepository':
+      (
+        count: 1,
+        reason:
+            'без порта значок остаётся снимком входа — названо в докстринге',
+      ),
+  'lib/presentation/screens/terminal/terminal_shift_screen.dart: ShiftDeskRepository':
+      (count: 1, reason: 'названо: errorShiftDeskUnavailable'),
+  'lib/presentation/controllers/settings/qr_payment_setup_controller.dart: QrProviderSetupRepository':
+      (count: 1, reason: 'настройка провайдера QR — только на кассе'),
   'lib/presentation/screens/settings/emulator_settings_screen.dart: QrProviderSetupRepository': (
     count: 1,
     reason:
@@ -265,26 +263,16 @@ const _allowed = <String, ({int count, String reason})>{
         'по-прежнему показан и его можно вписать руками, а кнопка «вписать» не '
         'показывается. Прятать число было бы хуже, чем прятать кнопку',
   ),
-  'lib/presentation/controllers/settings/auth_settings_controller.dart: SessionRegistry': (
-    count: 1,
-    reason: 'реестр сеансов живёт в процессе кассы',
-  ),
-  'lib/presentation/controllers/settings/auth_settings_controller.dart: SecurityJournal': (
-    count: 1,
-    reason: 'журнал безопасности кассы; запись — лучшее усилие',
-  ),
-  'lib/presentation/controllers/settings/auth_settings_controller.dart: Talker': (
-    count: 1,
-    reason: 'журнал приложения при записи отказа',
-  ),
-  'lib/presentation/screens/settings/user_management_screen.dart: SessionRegistry': (
-    count: 1,
-    reason: 'реестр сеансов живёт в процессе кассы',
-  ),
-  'lib/presentation/screens/settings/user_management_screen.dart: SecurityJournal': (
-    count: 1,
-    reason: 'журнал безопасности кассы; запись — лучшее усилие',
-  ),
+  'lib/presentation/controllers/settings/auth_settings_controller.dart: SessionRegistry':
+      (count: 1, reason: 'реестр сеансов живёт в процессе кассы'),
+  'lib/presentation/controllers/settings/auth_settings_controller.dart: SecurityJournal':
+      (count: 1, reason: 'журнал безопасности кассы; запись — лучшее усилие'),
+  'lib/presentation/controllers/settings/auth_settings_controller.dart: Talker':
+      (count: 1, reason: 'журнал приложения при записи отказа'),
+  'lib/presentation/screens/settings/user_management_screen.dart: SessionRegistry':
+      (count: 1, reason: 'реестр сеансов живёт в процессе кассы'),
+  'lib/presentation/screens/settings/user_management_screen.dart: SecurityJournal':
+      (count: 1, reason: 'журнал безопасности кассы; запись — лучшее усилие'),
   'lib/presentation/screens/settings/user_management_screen.dart: Talker': (
     count: 1,
     reason: 'журнал приложения при записи отказа',
@@ -299,18 +287,17 @@ const _allowed = <String, ({int count, String reason})>{
     reason: 'версия на заставке; без конфигурации сборки — без номера',
   ),
   // ── склад и отчёты ───────────────────────────────────────────────────────
-  'lib/presentation/controllers/supply/supply_controller.dart: WmsConfigUseCase': (
-    count: 1,
-    reason: 'склад включается конфигурацией кассы',
-  ),
+  'lib/presentation/controllers/supply/supply_controller.dart: WmsConfigUseCase':
+      (count: 1, reason: 'склад включается конфигурацией кассы'),
   'lib/presentation/screens/reports/tabs/products_tab.dart: WmsConfigUseCase': (
     count: 1,
     reason: 'отчёт по складу — только при включённом складе',
   ),
-  'lib/presentation/controllers/reports/kz_reports_controller.dart: CalculateCogsUseCase': (
-    count: 1,
-    reason: 'себестоимость — при собранном модуле; иначе отчёт без неё',
-  ),
+  'lib/presentation/controllers/reports/kz_reports_controller.dart: CalculateCogsUseCase':
+      (
+        count: 1,
+        reason: 'себестоимость — при собранном модуле; иначе отчёт без неё',
+      ),
   'lib/presentation/screens/wms/marking_codes_screen.dart: IsMptService': (
     count: 1,
     reason: 'ИС МПТ подключается настройкой',
@@ -320,70 +307,40 @@ const _allowed = <String, ({int count, String reason})>{
     count: 1,
     reason: 'настройки синхронизации — где они заведены',
   ),
-  'lib/presentation/controllers/sync/sync_controller.dart: CouchDbSyncCoordinator': (
-    count: 1,
-    reason: 'транспорт CouchDB включается настройкой',
-  ),
-  'lib/presentation/controllers/transport/transport_controller.dart: TelegramSyncEngine': (
-    count: 1,
-    reason: 'транспорт Telegram включается настройкой',
-  ),
-  'lib/presentation/controllers/transport/transport_controller.dart: CouchDbSyncCoordinator': (
-    count: 1,
-    reason: 'транспорт CouchDB включается настройкой',
-  ),
-  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: TelegramInitializer': (
-    count: 1,
-    reason: 'сброс служб Telegram — тех, что были собраны',
-  ),
-  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: TelegramAuthService': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: AutoSetupService': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: AutoChannelCreator': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: TdLibClient': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: ChannelRegistry': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/screens/telegram/staff_chat_screen.dart: StaffIdentityService': (
-    count: 3,
-    reason: 'чат персонала — при подключённом Telegram',
-  ),
+  'lib/presentation/controllers/sync/sync_controller.dart: CouchDbSyncCoordinator':
+      (count: 1, reason: 'транспорт CouchDB включается настройкой'),
+  'lib/presentation/controllers/transport/transport_controller.dart: TelegramSyncEngine':
+      (count: 1, reason: 'транспорт Telegram включается настройкой'),
+  'lib/presentation/controllers/transport/transport_controller.dart: CouchDbSyncCoordinator':
+      (count: 1, reason: 'транспорт CouchDB включается настройкой'),
+  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: TelegramInitializer':
+      (count: 1, reason: 'сброс служб Telegram — тех, что были собраны'),
+  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: TelegramAuthService':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: AutoSetupService':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: AutoChannelCreator':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: TdLibClient':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/controllers/telegram/telegram_setup_controller.dart: ChannelRegistry':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/screens/telegram/staff_chat_screen.dart: StaffIdentityService':
+      (count: 3, reason: 'чат персонала — при подключённом Telegram'),
   'lib/presentation/screens/telegram/staff_chat_screen.dart: Talker': (
     count: 1,
     reason: 'журнал приложения',
   ),
-  'lib/presentation/screens/telegram/staff_chat_screen.dart: StaffChatService': (
-    count: 1,
-    reason: 'чат персонала — при подключённом Telegram',
-  ),
-  'lib/presentation/screens/telegram/telegram_settings_screen.dart: TelegramAuthService': (
-    count: 2,
-    reason: 'настройки Telegram — при собранных службах',
-  ),
-  'lib/presentation/screens/telegram/telegram_settings_screen.dart: ChannelRegistry': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/screens/telegram/telegram_settings_screen.dart: TelegramCredentials': (
-    count: 1,
-    reason: 'то же',
-  ),
-  'lib/presentation/screens/telegram/telegram_settings_screen.dart: AutoChannelCreator': (
-    count: 1,
-    reason: 'то же',
-  ),
+  'lib/presentation/screens/telegram/staff_chat_screen.dart: StaffChatService':
+      (count: 1, reason: 'чат персонала — при подключённом Telegram'),
+  'lib/presentation/screens/telegram/telegram_settings_screen.dart: TelegramAuthService':
+      (count: 2, reason: 'настройки Telegram — при собранных службах'),
+  'lib/presentation/screens/telegram/telegram_settings_screen.dart: ChannelRegistry':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/screens/telegram/telegram_settings_screen.dart: TelegramCredentials':
+      (count: 1, reason: 'то же'),
+  'lib/presentation/screens/telegram/telegram_settings_screen.dart: AutoChannelCreator':
+      (count: 1, reason: 'то же'),
   // Повтор печати слипа сертификата — дыра 1 ревизии 2026-09-19, порт
   // сменился решением заказчика 2026-09-18.
   //
@@ -407,9 +364,23 @@ const _allowed = <String, ({int count, String reason})>{
   // намеренно: сборка, где выпуска нет, а экран выпуска есть, — это ошибка
   // контейнера, а не состояние кассы, и падение резолва про неё честнее
   // любого «недоступно».
-  'lib/presentation/screens/certificate/certificate_issue_screen.dart: CertificateSlipReprinter': (
+  'lib/presentation/screens/certificate/certificate_issue_screen.dart: CertificateSlipReprinter':
+      (count: 1, reason: 'названо: certificateSlipUnavailable'),
+
+  // Смена на экране входа — измеримая величина, но только у КАССЫ.
+  //
+  // У браузерного терминала репозитория смен нет: ответ про смену едет к
+  // нему по проводу, и до ответа честно сказать нечего. Развилка здесь
+  // именно про это, и её отсутствие означало бы одно из двух — либо касса
+  // показывает «не знаю» там, где база под рукой (так и было до
+  // 2026-09-21, заметил заказчик), либо терминал врёт «закрыта», не
+  // спросив.
+  //
+  // Названо состоянием, а не пряткой: `ShiftStatus.unknown` остаётся
+  // видимым значением со своим словом на экране.
+  'lib/presentation/controllers/auth/login_controller.dart: ShiftRepository': (
     count: 1,
-    reason: 'названо: certificateSlipUnavailable',
+    reason: 'названо: ShiftStatus.unknown',
   ),
 };
 
@@ -419,7 +390,9 @@ void main() {
     final comments = RegExp(r'//[^\n]*');
     final found = <String, int>{};
 
-    for (final entity in Directory('lib/presentation').listSync(recursive: true)) {
+    for (final entity in Directory(
+      'lib/presentation',
+    ).listSync(recursive: true)) {
       if (entity is! File || !entity.path.endsWith('.dart')) continue;
       final path = entity.path.replaceAll(r'\', '/');
       // Докстринг, рассказывающий историю снятой проверки, развилкой не

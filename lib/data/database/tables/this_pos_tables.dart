@@ -111,6 +111,19 @@ class ThisPosEntries extends Table {
 
   BoolColumn get isVatPayer => boolean().withDefault(const Constant(true))();
 
+  /// Как налог относится к цене: 0 — включён, 1 — добавляется, 2 — нет.
+  ///
+  /// Настройкой, а не выводом из страны: страна даёт разумное умолчание, но
+  /// последнее слово за пользователем. Иначе под каждый штат пришлось бы
+  /// выпускать версию продукта — решение заказчика 2026-09-21.
+  IntColumn get taxTreatment => integer().withDefault(const Constant(0))();
+
+  // Ставки у кассы нет и быть не может: она складывается из долей
+  // юрисдикций, в которых касса стоит, и зависит от категории товара и
+  // даты. Держать здесь ещё и число значило бы завести второй источник
+  // правды, который разойдётся с первым. См. `tax_rules` и
+  // `lib/domain/tax/tax_resolution.dart`.
+
   BoolColumn get blockOversell =>
       boolean().withDefault(const Constant(false))();
 
@@ -162,6 +175,20 @@ class ThisPosEntries extends Table {
   BoolColumn get allowBigAmount =>
       boolean().withDefault(const Constant(false))();
 
+  /// Потолок суммы чека, выше которого касса просит разрешения
+  /// [allowBigAmount]. Пусто — касса берёт [kDefaultBigAmountLimit].
+  ///
+  /// # Почему настройкой, а не числом в коде
+  ///
+  /// До схемы v57 потолок был зашит: `Decimal.parse('1000000')` в
+  /// `LocalSaleCheckoutService`, и отказ говорил «превышает 1 млн ₸» на
+  /// кассе любой страны. Миллион тенге — это около двух тысяч долларов;
+  /// на американской кассе тот же миллион оказывался в пятьсот раз выше,
+  /// то есть защиты не было вовсе, а текст отказа при этом врал о валюте.
+  ///
+  /// Хранится строкой: деньги — `Decimal`, и через `double` их не гоняют.
+  TextColumn get bigAmountLimit => text().nullable()();
+
   BoolColumn get isKassaPriceDecreasingBlocked =>
       boolean().withDefault(const Constant(false))();
 
@@ -178,6 +205,22 @@ class ThisPosEntries extends Table {
   TextColumn get markUpToDate => text().nullable()();
 
   IntColumn get currencyId => integer().nullable()();
+
+  /// Адрес торговой точки — тот, что печатается на чеке.
+  ///
+  /// # Почему у кассы, а не только у фискального оператора
+  ///
+  /// До схемы v56 адрес жил ТОЛЬКО в настройках WebKassa и записывался
+  /// единственной строкой мастера — при включённой казахстанской
+  /// фискализации. Касса вне Казахстана адреса не имела вовсе, и на чеке
+  /// его не было.
+  ///
+  /// Хуже: заполнять его было нечем и там. Поля `legalAddress` и
+  /// `actualAddress` в модели мастера существовали, `updateOrganization`
+  /// их принимал — но ни один экран их не заполнял. То есть **адрес
+  /// продавца не попадал на чек никогда и ни в одной стране**; измерено
+  /// 2026-09-21.
+  TextColumn get storeAddress => text().nullable()();
 
   IntColumn get countryCode => integer().nullable()();
 

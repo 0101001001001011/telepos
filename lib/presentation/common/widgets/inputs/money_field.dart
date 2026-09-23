@@ -289,28 +289,3 @@ class MoneyDisplay extends StatelessWidget {
     );
   }
 }
-
-class CurrencySymbols {
-  CurrencySymbols._();
-
-  static const kzt = '₸';
-  static const rub = '₽';
-  static const usd = '\$';
-  static const eur = '€';
-  static const kgs = 'с';
-  static const uzs = 'сум';
-  static const tmt = 'm';
-
-  static String fromCode(String code) {
-    return switch (code.toUpperCase()) {
-      'KZT' => kzt,
-      'RUB' => rub,
-      'USD' => usd,
-      'EUR' => eur,
-      'KGS' => kgs,
-      'UZS' => uzs,
-      'TMT' => tmt,
-      _ => code,
-    };
-  }
-}

@@ -43,8 +43,7 @@ import 'package:telepos/presentation/controllers/stock_registry/stock_registry_c
 /// Сколько раз каждый из четырёх собрался.
 final builds = <String, int>{};
 
-void _counted(String name) =>
-    builds[name] = (builds[name] ?? 0) + 1;
+void _counted(String name) => builds[name] = (builds[name] ?? 0) + 1;
 
 class _SpyShift extends ShiftNotifier {
   @override
@@ -86,11 +85,13 @@ class _SpyStock extends StockRegistryNotifier {
 /// только внутри провайдера. Целями остаются настоящие четыре — этот нужен
 /// лишь как держатель `Ref`, и ничего не наблюдает сам.
 final _afterSale = Provider<void Function()>(
-  (ref) => () => refreshAfterSaleCompleted(ref),
+  (ref) =>
+      () => refreshAfterSaleCompleted(ref),
 );
 
 final _afterStart = Provider<void Function()>(
-  (ref) => () => refreshShiftAfterSaleStart(ref),
+  (ref) =>
+      () => refreshShiftAfterSaleStart(ref),
 );
 
 ProviderContainer _container() => ProviderContainer(
@@ -124,11 +125,12 @@ void main() {
     addTearDown(container.dispose);
     _listenAll(container);
 
-    expect(
-      builds,
-      {'shift': 1, 'history': 1, 'catalog': 1, 'stock': 1},
-      reason: 'предпосылка: все четыре собрались по одному разу',
-    );
+    expect(builds, {
+      'shift': 1,
+      'history': 1,
+      'catalog': 1,
+      'stock': 1,
+    }, reason: 'предпосылка: все четыре собрались по одному разу');
 
     container.read(_afterSale)();
     // `invalidate` откладывает пересборку до конца микрозадачи; слушатели

@@ -139,34 +139,11 @@ void main() {
       });
     });
 
-    group('VAT calculations', () {
-      test('vatFromSum uses 4/29 formula', () {
-        final sum = Decimal.fromInt(2900);
-        expect(DecimalUtil.vatFromSum(sum), Decimal.fromInt(400));
-      });
-
-      test('vatFromSum with other values', () {
-        final sum = Decimal.fromInt(1160);
-        expect(DecimalUtil.vatFromSum(sum), Decimal.fromInt(160));
-      });
-
-      test('addVat adds 16%', () {
-        final sum = Decimal.fromInt(1000);
-        expect(DecimalUtil.addVat(sum), Decimal.fromInt(1160));
-      });
-
-      test('removeVat removes 16%', () {
-        final sum = Decimal.fromInt(1160);
-        expect(DecimalUtil.removeVat(sum), Decimal.fromInt(1000));
-      });
-
-      test('VAT round trip', () {
-        final original = Decimal.fromInt(1000);
-        final withVat = DecimalUtil.addVat(original);
-        final restored = DecimalUtil.removeVat(withVat);
-        expect(restored, original);
-      });
-    });
+    // Группа «VAT calculations» снята 2026-09-22 вместе с
+    // `DecimalUtil.vatFromSum`/`addVat`/`removeVat`. Она проходила и потому
+    // создавала впечатление, что арифметика налога проверена; на деле те
+    // три записи формулы не звал никто, кроме неё самой, а продукт считал
+    // налог в `lib/domain/tax/tax_amounts.dart`.
 
     group('formatMoney', () {
       test('formats with thousand separators', () {
@@ -324,16 +301,8 @@ void main() {
       expect(Decimal.parse('100').withCurrency, '100.00 тг');
     });
 
-    test('vat calculates VAT', () {
-      expect(Decimal.fromInt(2900).vat, Decimal.fromInt(400));
-    });
-
-    test('withVat adds VAT', () {
-      expect(Decimal.fromInt(1000).withVat, Decimal.fromInt(1160));
-    });
-
-    test('withoutVat removes VAT', () {
-      expect(Decimal.fromInt(1160).withoutVat, Decimal.fromInt(1000));
-    });
+    // Пробы `vat`, `withVat`, `withoutVat` сняты вместе с самими
+    // обёртками 2026-09-22: они считали по ставке, зашитой в
+    // `AppConstants`, и к настройкам кассы отношения не имели.
   });
 }

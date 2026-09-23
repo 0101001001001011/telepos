@@ -898,7 +898,8 @@ void main() {
       expect(
         rows.map((p) => p.payeeAccountId).toSet(),
         {posAccountId},
-        reason: 'обе строки на счёте кассы — ровно то, что старый ключ '
+        reason:
+            'обе строки на счёте кассы — ровно то, что старый ключ '
             'запрещал',
       );
       expect(rows.map((p) => p.kindId).toList(), [
@@ -1274,22 +1275,29 @@ void main() {
       }
     }
 
-    test('две привязки терминала — названный отказ, а не ручной путь', () async {
-      await bindBroken(7, twice: true);
-      final view = await receiptWith(quantity: 2);
+    test(
+      'две привязки терминала — названный отказ, а не ручной путь',
+      () async {
+        await bindBroken(7, twice: true);
+        final view = await receiptWith(quantity: 2);
 
-      await expectLater(
-        payments.chargeCard(7, d('1000'), mv(view, 9)),
-        throwsA(
-          isA<WireRefusal>().having(
-            (r) => r.code,
-            'code',
-            'card_terminal_misconfigured',
+        await expectLater(
+          payments.chargeCard(7, d('1000'), mv(view, 9)),
+          throwsA(
+            isA<WireRefusal>().having(
+              (r) => r.code,
+              'code',
+              'card_terminal_misconfigured',
+            ),
           ),
-        ),
-      );
-      expect(terminal.calls, isEmpty, reason: 'касса не выбирает терминал сама');
-    });
+        );
+        expect(
+          terminal.calls,
+          isEmpty,
+          reason: 'касса не выбирает терминал сама',
+        );
+      },
+    );
 
     test(
       'привязка без адреса не пропускает код одобрения, введённый руками',
@@ -1676,7 +1684,6 @@ class _RecordingBonuses implements BonusService {
 
   @override
   Future<BonusBalance> getBonusBalance(int phone) => throw UnimplementedError();
-
 }
 
 /// Драйвер платёжного терминала, который ничего не открывает и всё

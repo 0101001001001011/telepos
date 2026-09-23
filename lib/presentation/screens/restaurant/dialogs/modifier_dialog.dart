@@ -4,6 +4,7 @@ import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/restaurant/selected_modifier.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 class ModifierGroupWithOptions {
   const ModifierGroupWithOptions({required this.group, required this.options});
@@ -128,6 +129,7 @@ class _ModifierDialogState extends State<ModifierDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth > 600 ? 480.0 : screenWidth * 0.92;
 
@@ -193,7 +195,9 @@ class _ModifierDialogState extends State<ModifierDialog> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: widget.groups.map(_buildGroup).toList(),
+                  children: widget.groups
+                      .map((g) => _buildGroup(context, g))
+                      .toList(),
                 ),
               ),
             ),
@@ -212,8 +216,8 @@ class _ModifierDialogState extends State<ModifierDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Итого',
+                        Text(
+                          l10n.globalTotal,
                           style: TextStyle(
                             color: Color(0xFF9898B8),
                             fontSize: 12,
@@ -247,8 +251,8 @@ class _ModifierDialogState extends State<ModifierDialog> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 32),
                       ),
-                      child: const Text(
-                        'Добавить',
+                      child: Text(
+                        l10n.globalAdd,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -265,7 +269,8 @@ class _ModifierDialogState extends State<ModifierDialog> {
     );
   }
 
-  Widget _buildGroup(ModifierGroupWithOptions gwo) {
+  Widget _buildGroup(BuildContext context, ModifierGroupWithOptions gwo) {
+    final l10n = AppLocalizations.of(context)!;
     final isSingle = gwo.group.modifierType == 0;
     final selected = _selections[gwo.group.id] ?? {};
 
@@ -299,7 +304,7 @@ class _ModifierDialogState extends State<ModifierDialog> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'Обязательно',
+                    l10n.modifierRequired,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                       fontSize: 10,
@@ -311,7 +316,7 @@ class _ModifierDialogState extends State<ModifierDialog> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
-                    'макс. ${gwo.group.maxSelection}',
+                    l10n.modifierMax(gwo.group.maxSelection),
                     style: const TextStyle(
                       color: Color(0xFF6B6B8D),
                       fontSize: 11,

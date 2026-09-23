@@ -106,7 +106,7 @@ class MockSaleNotifier extends Notifier<SaleState> implements SaleNotifier {
   Future<bool> deferSale() async => true;
 
   @override
-  Future<void> loadDeferredSale(int receiptNo) async {}
+  Future<void> loadDeferredSale(int receiptNo, {int? fromPosId}) async {}
 
   @override
   Future<void> toggleMode() async {}

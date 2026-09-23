@@ -68,7 +68,7 @@ class LocalAuthRepository implements AuthRepository {
           (user) => AuthUser(
             id: user.id,
             name: user.name ?? 'N/A',
-            role: UserRole.fromIndex(user.role ?? 0).displayName,
+            role: UserRole.fromIndex(user.role ?? 0).name,
             // Не сам хэш, а факт его наличия — это всё, что нужно знать
             // экрану.
             hasPin: user.passwordEnc != null && user.passwordEnc!.isNotEmpty,
@@ -471,7 +471,17 @@ class LocalAuthRepository implements AuthRepository {
     return _sessions.mint(
       userId: user.id,
       name: user.name ?? 'N/A',
-      role: role.displayName,
+      // Устойчивый КЛЮЧ (`cashier`), а не слово для человека.
+      //
+      // Здесь стоял `role.displayName` — «Кассир», — и провод сличал его с
+      // ключом: `TillOperations._authorityOf` ищет
+      // `UserRole.values.where((r) => r.name == session.role)`. Совпадения
+      // не бывало никогда, `roleIndex` выходил −1, и предел скидки,
+      // заданный роли, на браузерном терминале НЕ ДЕЙСТВОВАЛ: находился
+      // только общий предел `anyRole`.
+      //
+      // Слово для человека выбирается при показе — `role_label.dart`.
+      role: role.name,
       permissions: PointModePermissions.effective(
         ofRole: ofRole,
         at: pointMode,

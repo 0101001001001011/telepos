@@ -83,7 +83,10 @@ abstract interface class FirstLaunchRepository {
 
   Future<List<FoundBackup>> findAvailableBackups();
 
-  Future<bool> restoreFromBackup(FoundBackup backup, {BootProgress? onProgress});
+  Future<bool> restoreFromBackup(
+    FoundBackup backup, {
+    BootProgress? onProgress,
+  });
 
   /// Pulls the organization's shared catalog down onto a till that is joining
   /// an existing organization.

@@ -6,6 +6,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/history/history_controller.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class HistoryFilters extends ConsumerStatefulWidget {
   const HistoryFilters({super.key, this.compact = false, this.mobile = false});
@@ -119,9 +120,9 @@ class _HistoryFiltersState extends ConsumerState<HistoryFilters> {
                   value: HistoryItemType.serviceOrder,
                   child: Text(dl10n.serviceQueueTitle),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: HistoryItemType.restaurantOrder,
-                  child: Text('Ресторан'),
+                  child: Text(dl10n.restaurantModeRestaurant),
                 ),
               ];
             },
@@ -246,9 +247,9 @@ class _HistoryFiltersState extends ConsumerState<HistoryFilters> {
               value: HistoryItemType.serviceOrder,
               label: Text(l10n.serviceQueueTitle),
             ),
-            const ButtonSegment(
+            ButtonSegment(
               value: HistoryItemType.restaurantOrder,
-              label: Text('Ресторан'),
+              label: Text(l10n.restaurantModeRestaurant),
             ),
           ],
           selected: {state.typeFilter},
@@ -333,10 +334,10 @@ class _HistoryFiltersState extends ConsumerState<HistoryFilters> {
           icon: const Icon(Icons.build, size: 16),
           label: Text(l10n.serviceQueueTitle),
         ),
-        const ButtonSegment(
+        ButtonSegment(
           value: HistoryItemType.restaurantOrder,
-          icon: Icon(Icons.restaurant, size: 16),
-          label: Text('Ресторан'),
+          icon: const Icon(Icons.restaurant, size: 16),
+          label: Text(l10n.restaurantModeRestaurant),
         ),
       ],
       selected: {state.typeFilter},
@@ -425,9 +426,7 @@ class _HistoryFiltersState extends ConsumerState<HistoryFilters> {
   }
 
   String _formatDate(DateTime date) {
-    final d = date.day.toString().padLeft(2, '0');
-    final m = date.month.toString().padLeft(2, '0');
-    return '$d.$m.${date.year}';
+    return TillConventions.current.formatDate(date);
   }
 }
 

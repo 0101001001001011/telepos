@@ -52,7 +52,10 @@ void main() {
     await GetIt.I.reset();
   });
 
-  void wire({String baseUrl = 'https://pay.example.kz', bool configured = true}) {
+  void wire({
+    String baseUrl = 'https://pay.example.kz',
+    bool configured = true,
+  }) {
     GetIt.I
       ..registerSingleton<AppDatabase>(db)
       ..registerSingleton<QrProviderSetupRepository>(

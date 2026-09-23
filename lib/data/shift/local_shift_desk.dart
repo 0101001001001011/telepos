@@ -3,7 +3,9 @@ import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
 
 import 'package:telepos/domain/account/account_type.dart';
+import 'package:telepos/domain/cash/cash_operation_kind.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/sale/deferred_claim_port.dart';
 import 'package:telepos/data/shift/shift_age_rule.dart';
 import 'package:telepos/data/database/watch_source.dart';
 import 'package:telepos/data/services/shift_service_impl.dart';
@@ -50,8 +52,13 @@ class LocalShiftDesk implements ShiftDeskRepository {
     ShiftService? shifts,
     Talker? logger,
     ShiftAgeRule? age,
+    // Отзыв отложенных чеков с общего сервера при закрытии смены. `null` —
+    // обмена нет, и тогда чеки просто чистятся у себя: соседних касс, для
+    // которых их надо отзывать, в этом случае и не существует.
+    DeferredClaimPort? claim,
   }) : _db = db,
        _logger = logger,
+       _claim = claim,
        // Служба смены собирается здесь, когда её не дали, — тем же приёмом и
        // по тому же доводу, что `LocalPaymentService` собирает выпуск
        // сертификатов и стойку QR: у неё нет ни одного состояния, зависящего
@@ -78,6 +85,7 @@ class LocalShiftDesk implements ShiftDeskRepository {
   final int? actorUserId;
 
   final AppDatabase _db;
+  final DeferredClaimPort? _claim;
   final ShiftService _shifts;
   final Talker? _logger;
 
@@ -123,11 +131,17 @@ class LocalShiftDesk implements ShiftDeskRepository {
       openingCash: openingCash,
       systemTotal: await _systemTotal(),
       // Та же формула, что у `ShiftState.expectedCash`: начало + наличная
-      // выручка − наличные возвраты − (изъятия + дивиденды).
+      // выручка − наличные возвраты + внесения − (изъятия + дивиденды).
+      //
+      // Внесения появились здесь 2026-09-22. Прежде их не было ни в одном
+      // из двух путей: строки оплаты внесение не создаёт, значит в выручку
+      // не попадало, — и ящик, пополненный на 100, объявлялся излишним на
+      // те же 100 при закрытии.
       expectedCash:
           openingCash +
           sales.cashSales -
-          sales.cashRefunds -
+          sales.cashRefunds +
+          cash.investment -
           (cash.expense + cash.dividend),
       unfinishedSales: await _unfinishedSales(),
       unfiscalizedCount: unfiscalized.count,
@@ -158,12 +172,20 @@ class LocalShiftDesk implements ShiftDeskRepository {
     final before = await read();
 
     await _cleanUpUnfinishedSales();
+    await _clearDeferredSales();
 
-    // «Насчитали» против «системного итога» — **то же правило**, каким жил
-    // кассовый экран (`hasCounted ? enteredTotal : systemTotal`). `null`
-    // означает «никто не считал», а не ноль: ноль в ящике — законный
-    // результат пересчёта (докстринг [ShiftDeskRepository.close]).
-    final cashInPos = counted ?? before.systemTotal;
+    // Не считали — записывается **ожидание**, и это правка 2026-09-22.
+    //
+    // Стояло `before.systemTotal`, то есть остаток счёта кассы, тогда как
+    // расхождение строкой ниже считается от `before.expectedCash`. Два
+    // разных числа про одно и то же: на смене с подъёмными они расходились
+    // ровно на подъёмные, и Z-отчёт закрытия без пересчёта занижал
+    // наличные на всю сумму, с которой смену открыли.
+    //
+    // `null` по-прежнему означает «никто не считал», а не ноль: ноль в
+    // ящике — законный результат пересчёта (докстринг
+    // [ShiftDeskRepository.close]).
+    final cashInPos = counted ?? before.expectedCash;
 
     await _persistReconciliation(shift, counted, before.expectedCash);
 
@@ -215,6 +237,61 @@ class LocalShiftDesk implements ShiftDeskRepository {
     }
   }
 
+  /// Отложенные чеки чистятся закрытием смены — решение заказчика
+  /// 2026-09-19.
+  ///
+  /// # Почему именно здесь, а не кнопкой кассира
+  ///
+  /// Вернётся покупатель или нет, касса знать не может, и держать корзину
+  /// вечно — копить мусор, который однажды поднимут. Но права удалять
+  /// отложенные кассиру **не дают**: он мог бы снести корзину соседней
+  /// кассы, а её владелец узнал бы об этом, только когда покупатель
+  /// вернётся. Закрытие смены — действие с собственным замком, и чистка
+  /// висит на нём.
+  ///
+  /// # Чистятся ТОЛЬКО свои
+  ///
+  /// Чужие строки в нашей базе — копии, приехавшие обменом. Удалить их
+  /// значило бы решить за соседнюю кассу, что её смена кончилась. Они
+  /// пропадут сами, когда их отзовёт владелец, и вернутся следующим
+  /// обменом, если ещё живы.
+  ///
+  /// # Отзыв на сервере — до удаления
+  ///
+  /// Стереть чек только у себя мало: документ остался бы отложенным, и
+  /// соседняя касса показывала бы корзину, которой уже нет. Отзыв —
+  /// лучшее усилие: нет связи — закрытие смены всё равно состоится.
+  Future<void> _clearDeferredSales() async {
+    final ownPosId = (await _db.thisPosDao.get())?.id;
+    if (ownPosId == null) return;
+
+    final deferred = await _db.saleDao.findByState(3);
+    for (final sale in deferred) {
+      if (sale.posId != ownPosId) continue;
+      // Лучшее усилие, и это не небрежность: остаться с незакрытой сменой
+      // хуже, чем с лишней строкой в чужом пуле — она пропадёт при первом
+      // же подъёме, а незакрытая смена ломает день.
+      try {
+        await _claim?.withdraw(receiptNo: sale.receiptNo, posId: sale.posId);
+      } on Object catch (e) {
+        _logger?.warning(
+          'ShiftDesk: отозвать чек ${sale.receiptNo} не вышло ($e); '
+          'закрытие смены продолжается',
+        );
+      }
+      await _db.saleProductDao.deleteBySale(sale.receiptNo, sale.posId);
+      await _db.paymentDao.deleteBySale(sale.receiptNo, sale.posId);
+      await (_db.delete(_db.sales)..where(
+            (s) =>
+                s.receiptNo.equals(sale.receiptNo) & s.posId.equals(sale.posId),
+          ))
+          .go();
+      _logger?.info(
+        'ShiftDesk: отложенный чек ${sale.receiptNo} снят закрытием смены',
+      );
+    }
+  }
+
   /// Излишек или недостача — кассовой операцией, как и на экране кассы.
   ///
   /// **Не пишется вовсе, когда никто не считал** ([counted] `null`):
@@ -243,20 +320,37 @@ class LocalShiftDesk implements ShiftDeskRepository {
 
       await _db.cashOperationDao.insert(
         CashOperationsCompanion.insert(
-          amount: reconciliation,
-          // 0 — внесение, 1 — изъятие: `CashOperationType.index`, тот же
-          // порядок, каким их читает `_loadCashOperations` экрана смены.
-          type: isOverage ? 0 : 1,
+          // Сумма положительна у любого рода, как у прочих операций;
+          // сторону несёт род. Прежде недостача писалась ОТРИЦАТЕЛЬНЫМ
+          // числом под родом «изъятие» — то есть отчёт по изъятиям вычитал
+          // её вместо того, чтобы прибавить.
+          amount: isOverage ? reconciliation : -reconciliation,
+          type: isOverage
+              ? kCashOpReconciliationOverage
+              : kCashOpReconciliationShortage,
           accountId: Value(accountId),
           userId: Value(shift.userId),
-          note: Value(isOverage ? 'Излишек смены' : 'Недостача смены'),
+          // Примечания нет: повод и сторона сказаны родом, а подпись
+          // строки берётся из словаря. Здесь лежала русская проза,
+          // дословно повторявшая переведённую подпись, — на
+          // английской кассе она и показывалась по-русски.
           docTime: Value(now),
           state: const Value(1),
         ),
       );
+
+      // Строку журнала писали и раньше, а вот остаток счёта — нет:
+      // `cashOperationDao.insert` баланса не трогает, в отличие от
+      // `CashInOutControllerImpl`, который его двигает всегда. Оттого
+      // журнал и остаток расходились навсегда, и следующая смена
+      // открывалась от остатка, которого в ящике нет.
+      if (accountId != null) {
+        await _db.accountDao.updateBalance(accountId, counted);
+      }
+
       _logger?.info(
         'ShiftDesk: reconciliation shift=${shift.id} amount=$reconciliation '
-        '(${isOverage ? 'излишек' : 'недостача'})',
+        '(${isOverage ? 'излишек' : 'недостача'}), остаток счёта → $counted',
       );
     } catch (e, st) {
       _logger?.error('ShiftDesk: reconciliation failed: $e', e, st);
@@ -297,11 +391,23 @@ class LocalShiftDesk implements ShiftDeskRepository {
     }
   }
 
-  /// Изъятия и дивиденды смены. Внесения здесь не считаются: в «должно
-  /// быть» они уже вошли выручкой, и вычитать их не из чего.
-  Future<({Decimal expense, Decimal dividend})> _cashTotals(
+  /// Движения наличных за смену, разложенные по роду.
+  ///
+  /// # Что здесь было неверно до 2026-09-22
+  ///
+  /// Внесений этот разбор не возвращал вовсе, и докстринг объяснял почему:
+  /// «в „должно быть“ они уже вошли выручкой». **Неправда.** Внесение
+  /// наличных строки оплаты не создаёт — `CashInOutControllerImpl`
+  /// `_createOperation` пишет строку операции и двигает остаток счёта, и
+  /// только. В выручку оно не попадало, слагаемым не стояло, и ящик,
+  /// пополненный на 100, объявлялся излишним ровно на 100.
+  ///
+  /// Сведение с пересчётом (роды 3 и 4) не считается **намеренно** — оно
+  /// правит запись о деньгах, а не деньги; см. `isCashMovement`.
+  Future<({Decimal investment, Decimal expense, Decimal dividend})> _cashTotals(
     int shiftOpenTime,
   ) async {
+    var investment = Decimal.zero;
     var expense = Decimal.zero;
     var dividend = Decimal.zero;
     try {
@@ -317,25 +423,26 @@ class LocalShiftDesk implements ShiftDeskRepository {
         final total = Decimal.parse(
           row.read<double>('total').toStringAsFixed(3),
         );
-        // 0 — внесение (в «должно быть» оно уже вошло выручкой), 1 —
-        // изъятие, **всё остальное** — дивиденд. Именно `default`, а не
-        // `case 2`: экран кассы читает типы тем же правилом
-        // (`_loadCashOperations`: `0 => investment, 1 => expense, _ =>
-        // dividend`), и тип 3, появись он завтра, у экрана вычитался бы, а
-        // здесь — молча нет.
+        // Роды перечислены поимённо. `default => dividend` стоял здесь и
+        // сам предупреждал в докстринге, что тип 3 «появись он завтра»
+        // молча пойдёт в дивиденды, — тип 3 появился, и предупреждение
+        // сбылось бы недостачей, вычтенной из ожидания вторым разом.
         switch (row.read<int>('type')) {
-          case 0:
-            break;
-          case 1:
+          case kCashOpInvestment:
+            investment += total;
+          case kCashOpExpense:
             expense += total;
-          default:
+          case kCashOpDividend:
             dividend += total;
+          default:
+            // Сведение: деньги не двигало — в суммы не входит.
+            break;
         }
       }
     } catch (e) {
       _logger?.error('ShiftDesk: cashTotals failed: $e');
     }
-    return (expense: expense, dividend: dividend);
+    return (investment: investment, expense: expense, dividend: dividend);
   }
 
   /// Наличная выручка и наличные возвраты смены — **теми же двумя

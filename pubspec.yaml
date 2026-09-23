@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 3.6.0+21
+version: 3.7.0+22
 environment:
   sdk: ^3.8.1
 
@@ -184,6 +184,12 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  # Курсор в кадре съёмочной дорожки: `SetCursorPos` из user32.dll через
+  # `dart:ffi` (`integration_test/support/cursor.dart`). Правила съёмки
+  # требуют, чтобы курсор вёлся к цели, а сценарный тест физическую мышь
+  # не двигает. Резолвился транзитивно; здесь назван явно, потому что
+  # используется напрямую.
+  ffi: ^2.1.3
   # Виртуальное время для теста стены `LoginThrottle` (задача 7, правка 1,
   # 2026-08-21): без него измерение 10^4 неудач по одному ключу либо ждало бы
   # часы настоящего времени прогона, либо не проверяло бы настоящий
@@ -219,6 +225,9 @@ flutter:
 
   # Assets
   assets:
+    # Налоговые пресеты: страна, штат, город. Добавить страну — положить
+    # сюда json, не трогая код (решение заказчика 2026-09-21).
+    - assets/tax_presets/
     # Images - Logos
     - assets/images/logos/
     # Images - Status icons (OFD, Sync)

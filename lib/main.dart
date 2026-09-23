@@ -58,6 +58,7 @@ import 'package:telepos/app/di/service_locator.dart';
 import 'package:telepos/app/router/app_router.dart';
 import 'package:telepos/app/telepos_app.dart';
 import 'package:telepos/core/locale/locale_provider.dart';
+import 'package:telepos/domain/services/currency_service.dart';
 import 'package:telepos/core/logging/app_logger.dart';
 import 'package:telepos/data/logging/syslog_log_sink.dart';
 import 'package:telepos/data/pki/certificate_address_watch.dart';
@@ -257,10 +258,12 @@ void main(List<String> args) {
       if (GetIt.I.isRegistered<QrPaymentDesk>()) {
         unawaited(
           GetIt.I<QrPaymentDesk>().reconcile().then(
-            (orphans) =>
-                talker.info('QR: boot reconcile, orphan money ${orphans.length}'),
-            onError: (Object e) =>
-                talker.warning('QR: boot reconcile failed: ${safeErrorText(e)}'),
+            (orphans) => talker.info(
+              'QR: boot reconcile, orphan money ${orphans.length}',
+            ),
+            onError: (Object e) => talker.warning(
+              'QR: boot reconcile failed: ${safeErrorText(e)}',
+            ),
           ),
         );
       }
@@ -369,7 +372,12 @@ class _NativeAppShellState extends ConsumerState<NativeAppShell> {
       final storeName = ref.read(storeNameProvider).asData?.value ?? 'TelePOS';
       await ref
           .read(customerWindowServiceProvider)
-          .open(monitorIndex: choice.monitor, storeName: storeName);
+          .open(
+            monitorIndex: choice.monitor,
+            storeName: storeName,
+            currencySymbol: _tillCurrencySymbol(),
+            languageCode: ref.read(localeProvider).languageCode,
+          );
     } catch (_) {}
   }
 
@@ -378,10 +386,31 @@ class _NativeAppShellState extends ConsumerState<NativeAppShell> {
     final router = ref.watch(routerProvider);
 
     ref.listen(saleControllerProvider, (prev, next) {
-      ref.read(customerWindowServiceProvider).push(customerDataFromSale(next));
+      ref
+          .read(customerWindowServiceProvider)
+          .push(
+            customerDataFromSale(
+              next,
+              currencySymbol: _tillCurrencySymbol(),
+              languageCode: ref.read(localeProvider).languageCode,
+            ),
+          );
     });
 
     return TelePosApp(router: router);
+  }
+}
+
+/// Знак валюты кассы для окна покупателя.
+///
+/// Пустая строка, если касса ещё не настроена: окно тогда покажет голое
+/// число. Выдуманный знак валюты на экране покупателя — заявление о цене.
+String _tillCurrencySymbol() {
+  if (!GetIt.I.isRegistered<CurrencyService>()) return '';
+  try {
+    return GetIt.I<CurrencyService>().symbol;
+  } catch (_) {
+    return '';
   }
 }
 

@@ -126,7 +126,7 @@ class CreateServiceOrderUseCaseImpl implements CreateServiceOrderUseCase {
         );
       } else {
         _logger.warning(
-          'Service prepayment $orderNumber not booked: ${result.errorMessage}',
+          'Service prepayment $orderNumber not booked: ${result.refusal?.name ?? result.errorDetail}',
         );
       }
     } catch (e) {

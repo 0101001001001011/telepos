@@ -68,8 +68,13 @@ String _deferredErrorText(BuildContext context, Object error) =>
 /// «600.00 · Айгуль · Молоко 1л» — сумма, кассир, первый товар. Пустые
 /// части опускаются: у чека, отложенного до появления пользователя в
 /// `Users`, имени нет, а первого товара нет у чека, отложенного пустым.
-String _deferredSubtitle(DeferredCart cart) {
+String _deferredSubtitle(DeferredCart cart, AppLocalizations l10n) {
   final parts = <String>[cart.total.toStringAsFixed(2)];
+  // Корзина соседней кассы помечается ЯВНО, и решает это касса
+  // (`DeferredCart.foreign`), а не экран: своего номера кассы экран не
+  // знает. Без пометки кассир видит чужой чек как свой и не понимает,
+  // почему подъём отказывается без связи.
+  if (cart.foreign) parts.add(l10n.deferredFromTill('${cart.posId}'));
   final user = cart.userName;
   if (user != null && user.trim().isNotEmpty) parts.add(user.trim());
   final firstLine = cart.firstLineName;
@@ -184,7 +189,7 @@ class DeferredSalesDialog extends ConsumerWidget {
                         // первый товар различают его надёжнее суммы: два чека на
                         // одну сумму по номеру и цене неразличимы — обоснование
                         // состава в докстринге `DeferredCart`.
-                        subtitle: Text(_deferredSubtitle(sale)),
+                        subtitle: Text(_deferredSubtitle(sale, l10n)),
                         trailing: IconButton(
                           icon: const Icon(
                             Icons.restore,
@@ -193,7 +198,13 @@ class DeferredSalesDialog extends ConsumerWidget {
                           onPressed: () {
                             ref
                                 .read(saleControllerProvider.notifier)
-                                .loadDeferredSale(sale.receiptNo);
+                                .loadDeferredSale(
+                                  sale.receiptNo,
+                                  // Касса-владелец — из карточки пула:
+                                  // чужой чек отличается от своего только
+                                  // ею, и по номеру чека её не угадать.
+                                  fromPosId: sale.posId,
+                                );
                             Navigator.of(context).pop();
                           },
                         ),

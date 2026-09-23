@@ -12,6 +12,7 @@ import 'package:telepos/presentation/screens/settings/general_settings_screen.da
 import 'package:telepos/presentation/screens/settings/printer_settings_screen.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/screens/settings/fiscal_settings_screen.dart';
+import '../../../support/till_currency.dart';
 
 void main() {
   late AppDatabase db;
@@ -29,6 +30,7 @@ void main() {
     if (!getIt.isRegistered<Talker>()) {
       getIt.registerSingleton<Talker>(Talker());
     }
+    registerTillCurrency(db: db);
   });
 
   tearDown(() async {

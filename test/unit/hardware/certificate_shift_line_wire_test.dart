@@ -71,6 +71,7 @@ void main() {
     cashStart: Decimal.zero,
     cashEnd: d('1250.00'),
     cashIncome: Decimal.zero,
+    cashDiscrepancy: Decimal.zero,
     cashExpense: Decimal.zero,
     certificatesIssued: issued,
     certificatesRedeemed: redeemed,
@@ -256,7 +257,8 @@ void main() {
           cashStart: Decimal.zero,
           cashEnd: d('1250.00'),
           cashIncome: Decimal.zero,
-          cashExpense: Decimal.zero,
+          cashDiscrepancy: Decimal.zero,
+    cashExpense: Decimal.zero,
           certificatesIssued: d('5000.00'),
           certificatesRedeemed: d('1200.50'),
         );

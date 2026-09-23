@@ -53,7 +53,9 @@ void main() {
           ],
           supportedLocales: const [Locale('en'), Locale('ru')],
           locale: const Locale('ru'),
-          home: const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
+          home: const Scaffold(
+            body: SaleScreen(shiftClose: ShiftCloseAtTill()),
+          ),
         ),
       ),
     );
@@ -544,7 +546,9 @@ void main() {
               ],
               supportedLocales: const [Locale('en'), Locale('ru')],
               locale: const Locale('ru'),
-              home: const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
+              home: const Scaffold(
+                body: SaleScreen(shiftClose: ShiftCloseAtTill()),
+              ),
             ),
           ),
         ),

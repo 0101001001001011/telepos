@@ -681,9 +681,7 @@ class WifiPrinterManager extends BufferedPrinterManager {
         );
       } catch (e) {
         await _dropSocket();
-        return PrintResult.error(
-          'Печать на $host:$port не подтверждена - $e',
-        );
+        return PrintResult.error('Печать на $host:$port не подтверждена - $e');
       }
     } finally {
       _releaseSocket();

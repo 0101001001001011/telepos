@@ -15,6 +15,7 @@ import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/core/logging/app_talker.dart';
 import 'package:telepos/presentation/common/dialogs/app_error_dialog.dart';
+import 'package:telepos/presentation/common/utils/boot_stage_label.dart';
 import 'package:telepos/presentation/common/dialogs/confirmation_dialog.dart';
 import 'package:telepos/presentation/common/dialogs/information_dialog.dart';
 import 'package:telepos/presentation/common/dialogs/input_dialog.dart';
@@ -66,8 +67,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     }
 
     final status = await GetIt.I<AppBootstrap>().start(
-      onProgress: (progress, message) {
-        _updateProgress(progress, message);
+      onProgress: (progress, stage, [detail]) {
+        // Слова берутся ЗДЕСЬ, где язык известен. Слой подъёма везёт код.
+        final words = AppLocalizations.of(context);
+        _updateProgress(
+          progress,
+          words == null ? '' : bootStageLabel(stage, words, detail: detail),
+        );
       },
     );
 
@@ -95,8 +101,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           talker.info('Existing user, loading global data');
           _updateProgress(0.5, l10n?.splashLoadingOrg ?? '');
           await firstLaunch.loadGlobalData(
-            onProgress: (progress, message) {
-              _updateProgress(0.5 + progress * 0.4, message);
+            onProgress: (progress, stage, [detail]) {
+              final words = AppLocalizations.of(context);
+              _updateProgress(
+                0.5 + progress * 0.4,
+                words == null
+                    ? ''
+                    : bootStageLabel(stage, words, detail: detail),
+              );
             },
           );
           if (mounted) context.go(AppRoutes.initialSetup);
@@ -345,96 +357,116 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
+      // Ширина задаётся ЯВНО, и это не украшение.
+      //
+      // `Scaffold` отдаёт телу СВОБОДНЫЕ ограничения по ширине, и голая
+      // колонка сжимается до самого широкого ребёнка — здесь до полосы
+      // прогресса в 560 пикселей. На узком окне разницы не видно, а на
+      // широком весь сплеш уезжал к левому краю: знак, название и полоса
+      // стояли на 304-м пикселе вместо 640-го.
+      //
+      // Заметил заказчик, глядя на запись, 2026-09-21. Проба меряет числом:
+      // глазами это неотличимо от кадра, снятого до того, как запись
+      // подогнала размер окна.
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
             padding: const EdgeInsets.all(AppTokens.space24),
-            child: Column(
-              children: [
-                const Spacer(),
-                // Знак приложения — залитый квадрат со скруглением, как метка
-                // приложения в Telegram, а не иконка Material на белом.
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    color: AppColors.tgBlue,
-                    borderRadius: BorderRadius.circular(
-                      AppTokens.radiusSection * 1.5,
+            // Ширина колонки — вся доступная, выравнивание внутри —
+            // по центру (умолчание). `CrossAxisAlignment.stretch` здесь не
+            // годится: он растянул бы и квадратный знак приложения, у
+            // которого ширина задана семьюдесятью двумя пикселями.
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  const Spacer(),
+                  // Знак приложения — залитый квадрат со скруглением, как метка
+                  // приложения в Telegram, а не иконка Material на белом.
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: AppColors.tgBlue,
+                      borderRadius: BorderRadius.circular(
+                        AppTokens.radiusSection * 1.5,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.point_of_sale,
+                      size: 36,
+                      color: AppColors.tgSheet,
                     ),
                   ),
-                  child: const Icon(
-                    Icons.point_of_sale,
-                    size: 36,
-                    color: AppColors.tgSheet,
+                  const SizedBox(height: AppTokens.space24),
+                  Text(
+                    l10n?.appName ?? 'TelePOS',
+                    style: AppTypography.title,
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: AppTokens.space24),
-                Text(
-                  l10n?.appName ?? 'TelePOS',
-                  style: AppTypography.title,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppTokens.space8),
-                Text(
-                  l10n?.splashSubtitle ?? 'Point of Sale System',
-                  style: AppTypography.body.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  const SizedBox(height: AppTokens.space8),
+                  Text(
+                    l10n?.splashSubtitle ?? 'Point of Sale System',
+                    style: AppTypography.body.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppTokens.space48),
+                  const SizedBox(height: AppTokens.space48),
 
-                // Тонкая линия вместо материальной полосы: прогресс здесь —
-                // фон, а не главное на экране.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: AppTokens.columnMaxWidthTablet,
-                  ),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          AppTokens.railHeight,
-                        ),
-                        // Дорожка полосы не задаётся: `progressIndicatorTheme`
-                        // отдаёт под неё роль `hairline`, и это ровно тот же
-                        // цвет в светлой теме — но уже другой в тёмной.
-                        child: LinearProgressIndicator(
-                          value: _progress,
-                          minHeight: AppTokens.railHeight,
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                            AppColors.tgBlue,
+                  // Тонкая линия вместо материальной полосы: прогресс здесь —
+                  // фон, а не главное на экране.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: AppTokens.columnMaxWidthTablet,
+                    ),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppTokens.railHeight,
+                          ),
+                          // Дорожка полосы не задаётся: `progressIndicatorTheme`
+                          // отдаёт под неё роль `hairline`, и это ровно тот же
+                          // цвет в светлой теме — но уже другой в тёмной.
+                          child: LinearProgressIndicator(
+                            value: _progress,
+                            minHeight: AppTokens.railHeight,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              AppColors.tgBlue,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: AppTokens.space12),
-                      Text(
-                        _statusText,
-                        style: AppTypography.label.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        const SizedBox(height: AppTokens.space12),
+                        Text(
+                          _statusText,
+                          style: AppTypography.label.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const Spacer(),
+                  const Spacer(),
 
-                Container(
-                  height: hairline,
-                  width: 32,
-                  color: AppColors.tgHairline,
-                ),
-                const SizedBox(height: AppTokens.space12),
-                Text(
-                  'v$_version',
-                  style: AppTypography.label.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  Container(
+                    height: hairline,
+                    width: 32,
+                    color: AppColors.tgHairline,
                   ),
-                ),
-              ],
+                  const SizedBox(height: AppTokens.space12),
+                  Text(
+                    'v$_version',
+                    style: AppTypography.label.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

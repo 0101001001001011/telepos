@@ -3,6 +3,7 @@ import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/role_label.dart';
 
 class UserItem {
   const UserItem({
@@ -148,7 +149,10 @@ class _UserCard extends StatelessWidget {
                     ),
                     if (user.role != null)
                       Text(
-                        user.role!,
+                        userRoleLabelOfKey(
+                          user.role!,
+                          AppLocalizations.of(context)!,
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
                       ),

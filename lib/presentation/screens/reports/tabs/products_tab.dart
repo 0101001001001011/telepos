@@ -12,11 +12,13 @@ import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/report_dao.dart';
 import 'package:telepos/domain/usecases/wms/wms_config_use_case.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/reports/report_models.dart';
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_chart_card.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_export_button.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_money_format.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 ReportDao get _reportDao {
   final db = GetIt.I<AppDatabase>();
@@ -61,7 +63,9 @@ final _categoryProvider =
       return rows.map((r) {
         return CategoryPerformance(
           categoryId: r.read<int?>('category_id'),
-          name: r.read<String?>('name') ?? 'Без категории',
+          // Пустое имя означает «без категории»; подпись подставляется в UI,
+          // потому что у провайдера нет BuildContext для словаря.
+          name: r.read<String?>('name') ?? '',
           revenue: r.readDecimal('revenue'),
           qty: r.readDecimal('qty'),
         );
@@ -173,6 +177,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final reportState = ref.watch(reportsProvider);
     final range = reportState.dateRange;
 
@@ -195,16 +200,16 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
         children: [
           productsAsync.when(
             data: (data) => _buildTopProductsChart(context, data),
-            loading: () => _buildChartLoading('Топ-10 товаров'),
-            error: (e, _) => _buildChartError('Топ-10 товаров', e),
+            loading: () => _buildChartLoading(l10n.repTop10Products),
+            error: (e, _) => _buildChartError(l10n.repTop10Products, e),
           ),
 
           const SizedBox(height: 16),
 
           abcAsync.when(
             data: (data) => _buildAbcCard(context, data),
-            loading: () => _buildChartLoading('ABC-анализ'),
-            error: (e, _) => _buildChartError('ABC-анализ', e),
+            loading: () => _buildChartLoading(l10n.setWmsAbcAnalysis),
+            error: (e, _) => _buildChartError(l10n.setWmsAbcAnalysis, e),
           ),
 
           const SizedBox(height: 16),
@@ -215,15 +220,15 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
               final children = [
                 categoryAsync.when(
                   data: (data) => _buildCategoryPieChart(data),
-                  loading: () => _buildChartLoading('Категории'),
-                  error: (e, _) => _buildChartError('Категории', e),
+                  loading: () => _buildChartLoading(l10n.syncTypeCategories),
+                  error: (e, _) => _buildChartError(l10n.syncTypeCategories, e),
                 ),
                 if (isWide) const SizedBox(width: 16),
                 if (!isWide) const SizedBox(height: 16),
                 lowStockAsync.when(
                   data: (data) => _buildLowStockTable(context, data),
-                  loading: () => _buildChartLoading('Низкий остаток'),
-                  error: (e, _) => _buildChartError('Низкий остаток', e),
+                  loading: () => _buildChartLoading(l10n.repLowStock),
+                  error: (e, _) => _buildChartError(l10n.repLowStock, e),
                 ),
               ];
 
@@ -249,13 +254,14 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
     BuildContext context,
     List<ProductRanking> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Топ-10 товаров',
-        subtitle: 'Нет данных за выбранный период',
+        title: l10n.repTop10Products,
+        subtitle: l10n.repNoDataForPeriod,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -271,13 +277,13 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
     final maxRevenue = reversedRevenues.reduce(math.max);
 
     return ReportChartCard(
-      title: 'Топ-10 товаров',
-      subtitle: 'по выручке (нажмите для деталей)',
+      title: l10n.repTop10Products,
+      subtitle: l10n.repByRevenueTapHint,
       height: math.max(280, reversed.length * 36.0),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'products_top',
-        ['Товар', 'Выручка', 'Количество'],
+        [l10n.inventoryProduct, l10n.repColRevenue, l10n.globalQuantity],
         data
             .map(
               (d) => [
@@ -300,8 +306,8 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
                 final item = reversed[group.x.toInt()];
                 return BarTooltipItem(
                   '${item.name}\n'
-                  '${ReportMoney.full(item.revenue)} ₸\n'
-                  '${item.qtySold.toStringAsFixed(1)} шт',
+                  '${ReportMoney.withCurrency(item.revenue)}\n'
+                  '${l10n.repPieces(item.qtySold.toStringAsFixed(1))}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 12,
@@ -406,6 +412,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
   }
 
   void _showProductDetailDialog(BuildContext context, ProductRanking product) {
+    final l10n = AppLocalizations.of(context)!;
     final avgPrice = product.qtySold > Decimal.zero
         ? (product.revenue / product.qtySold)
               .toDecimal(scaleOnInfinitePrecision: 3)
@@ -423,23 +430,23 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DetailRow(
-              label: 'Выручка',
-              value: '${ReportMoney.full(product.revenue)} ₸',
+              label: l10n.repColRevenue,
+              value: ReportMoney.withCurrency(product.revenue),
             ),
             _DetailRow(
-              label: 'Продано',
-              value: '${product.qtySold.toStringAsFixed(1)} шт',
+              label: l10n.repColSold,
+              value: l10n.repPieces(product.qtySold.toStringAsFixed(1)),
             ),
             _DetailRow(
-              label: 'Средняя цена',
-              value: '${ReportMoney.full(avgPrice)} ₸',
+              label: l10n.repAvgPrice,
+              value: ReportMoney.withCurrency(avgPrice),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Закрыть'),
+            child: Text(l10n.globalClose),
           ),
         ],
       ),
@@ -447,13 +454,16 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
   }
 
   Widget _buildCategoryPieChart(List<CategoryPerformance> data) {
+    final l10n = AppLocalizations.of(context)!;
+    String nameOf(CategoryPerformance d) =>
+        d.name.isEmpty ? l10n.repNoCategory : d.name;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Категории',
-        subtitle: 'Нет данных',
+        title: l10n.syncTypeCategories,
+        subtitle: l10n.serviceNoOrders,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -481,13 +491,13 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
     ];
 
     return ReportChartCard(
-      title: 'Категории',
-      subtitle: 'распределение выручки (нажмите на сектор)',
+      title: l10n.syncTypeCategories,
+      subtitle: l10n.repRevenueDistributionTapHint,
       onExport: () => ReportExportButton.exportCsv(
         context,
         'products_categories',
-        ['Категория', 'Выручка'],
-        data.map((d) => [d.name, d.revenue.toStringAsFixed(2)]).toList(),
+        [l10n.quickProductCategory, l10n.repColRevenue],
+        data.map((d) => [nameOf(d), d.revenue.toStringAsFixed(2)]).toList(),
       ),
       height: 260,
       child: Row(
@@ -537,7 +547,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                '${data[i].name}\n${ReportMoney.full(data[i].revenue)} ₸',
+                                '${nameOf(data[i])}\n${ReportMoney.withCurrency(data[i].revenue)}',
                                 style: const TextStyle(
                                   color: AppColors.white,
                                   fontSize: 10,
@@ -566,7 +576,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
                   for (var i = 0; i < data.length; i++) ...[
                     _LegendItem(
                       color: pieColors[i % pieColors.length],
-                      label: data[i].name,
+                      label: nameOf(data[i]),
                       value: ReportMoney.full(data[i].revenue),
                       isHighlighted: i == _touchedCategoryIndex,
                     ),
@@ -582,13 +592,14 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
   }
 
   Widget _buildLowStockTable(BuildContext context, List<LowStockItem> data) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Низкий остаток',
-        subtitle: 'Все товары в наличии',
+        title: l10n.repLowStock,
+        subtitle: l10n.repAllInStock,
         child: Center(
           child: Text(
-            'Нет товаров с низким остатком',
+            l10n.repNoLowStock,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -600,13 +611,13 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
     final critical = Decimal.fromInt(3);
 
     return ReportChartCard(
-      title: 'Низкий остаток',
-      subtitle: '${data.length} товаров (остаток < 10, нажмите для деталей)',
+      title: l10n.repLowStock,
+      subtitle: l10n.repLowStockCountHint(data.length),
       height: math.max(250, (data.length * 48 + 56).toDouble()),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'products_low_stock',
-        ['Товар', 'Остаток', 'Цена'],
+        [l10n.inventoryProduct, l10n.catalogQuantity, l10n.globalPrice],
         data
             .map(
               (d) => [
@@ -622,24 +633,33 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
         child: DataTable(
           headingRowColor: WidgetStateProperty.all(selectedSurfaceOf(context)),
           columnSpacing: 24,
-          columns: const [
+          columns: [
             DataColumn(
               label: Text(
-                'Товар',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                l10n.inventoryProduct,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
             ),
             DataColumn(
               label: Text(
-                'Остаток',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                l10n.catalogQuantity,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
               numeric: true,
             ),
             DataColumn(
               label: Text(
-                'Цена',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                l10n.globalPrice,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
               numeric: true,
             ),
@@ -683,7 +703,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
                   ),
                   DataCell(
                     Text(
-                      '${ReportMoney.full(item.sellingPrice)} ₸',
+                      ReportMoney.withCurrency(item.sellingPrice),
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
@@ -696,6 +716,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
   }
 
   void _showLowStockDetailDialog(BuildContext context, LowStockItem item) {
+    final l10n = AppLocalizations.of(context)!;
     final stockValue = (item.stock * item.sellingPrice).money;
     showDialog(
       context: context,
@@ -709,16 +730,16 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DetailRow(
-              label: 'Текущий остаток',
-              value: '${item.stock.toStringAsFixed(1)} шт',
+              label: l10n.repCurrentStock,
+              value: l10n.repPieces(item.stock.toStringAsFixed(1)),
             ),
             _DetailRow(
-              label: 'Цена продажи',
-              value: '${ReportMoney.full(item.sellingPrice)} ₸',
+              label: l10n.catalogPrice,
+              value: ReportMoney.withCurrency(item.sellingPrice),
             ),
             _DetailRow(
-              label: 'Стоимость остатка',
-              value: '${ReportMoney.full(stockValue)} ₸',
+              label: l10n.repStockValue,
+              value: ReportMoney.withCurrency(stockValue),
             ),
             const SizedBox(height: 8),
             if (item.stock < Decimal.fromInt(3))
@@ -737,10 +758,10 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
                       color: Theme.of(context).colorScheme.error,
                       size: 16,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Критически низкий остаток! Требуется срочная поставка.',
+                        l10n.repStockCritical,
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.error,
@@ -755,7 +776,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Закрыть'),
+            child: Text(l10n.globalClose),
           ),
         ],
       ),
@@ -763,13 +784,14 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
   }
 
   Widget _buildAbcCard(BuildContext context, List<_AbcRow> data) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'ABC-анализ',
-        subtitle: 'Нет данных за выбранный период',
+        title: l10n.setWmsAbcAnalysis,
+        subtitle: l10n.repNoDataForPeriod,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -811,14 +833,17 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
               ),
               const SizedBox(height: 4),
               Text(
-                '${cntOf(c)} тов · ${shareOf(c).toStringAsFixed(0)}%',
+                l10n.repAbcGroupSummary(
+                  cntOf(c),
+                  shareOf(c).toStringAsFixed(0),
+                ),
                 style: TextStyle(
                   fontSize: 12,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               Text(
-                '${ReportMoney.full(revOf(c))} ₸',
+                ReportMoney.withCurrency(revOf(c)),
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ],
@@ -828,13 +853,19 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
     }
 
     return ReportChartCard(
-      title: 'ABC-анализ',
-      subtitle: 'ходовые (A), средние (B), редкие (C) — по вкладу в выручку',
+      title: l10n.setWmsAbcAnalysis,
+      subtitle: l10n.repAbcLegend,
       height: math.max(300, data.length * 40.0 + 140),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'products_abc',
-        ['Товар', 'Категория', 'Выручка', 'Доля %', 'Накопит. %'],
+        [
+          l10n.inventoryProduct,
+          l10n.quickProductCategory,
+          l10n.repColRevenue,
+          l10n.repColSharePct,
+          l10n.repColCumulativePct,
+        ],
         data
             .map(
               (r) => [
@@ -851,9 +882,9 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
         children: [
           Row(
             children: [
-              summary('A', 'ходовые'),
-              summary('B', 'средние'),
-              summary('C', 'редкие'),
+              summary('A', l10n.repAbcFast),
+              summary('B', l10n.repAbcMedium),
+              summary('C', l10n.repAbcRare),
             ],
           ),
           const SizedBox(height: 12),
@@ -893,7 +924,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
                             ),
                           ),
                           Text(
-                            '${ReportMoney.full(r.revenue)} ₸',
+                            ReportMoney.withCurrency(r.revenue),
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -936,7 +967,7 @@ class _ProductsTabState extends ConsumerState<ProductsTab> {
       title: title,
       child: Center(
         child: Text(
-          'Ошибка: $error',
+          AppLocalizations.of(context)!.repErrorWith('$error'),
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 13,
@@ -1037,7 +1068,7 @@ class _LegendItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  '$value ₸',
+                  '$value ${tillCurrencySymbol()}',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

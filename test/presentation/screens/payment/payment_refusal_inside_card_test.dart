@@ -123,7 +123,8 @@ void main() {
       routes: [
         GoRoute(
           path: '/sale',
-          builder: (context, state) => const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
+          builder: (context, state) =>
+              const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
         ),
         GoRoute(
           path: '/payment',

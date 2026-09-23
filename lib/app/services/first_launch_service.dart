@@ -1,3 +1,4 @@
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:telepos/app/config/local_properties.dart';
@@ -135,30 +136,30 @@ class FirstLaunchService implements FirstLaunchRepository {
     if (backupService == null) return false;
 
     try {
-      onProgress?.call(0.1, 'Скачивание бэкапа...');
+      onProgress?.call(0.1, BootStage.downloadingBackup);
 
       final backupData = await backupService.downloadBackup(backup.messageId);
       if (backupData == null) {
-        onProgress?.call(0.0, 'Ошибка: не удалось скачать бэкап');
+        onProgress?.call(0.0, BootStage.backupDownloadFailed);
         return false;
       }
 
-      onProgress?.call(0.5, 'Восстановление базы данных...');
+      onProgress?.call(0.5, BootStage.restoringDatabase);
 
       final restored = await backupService.restoreDatabase(backupData);
       if (!restored) {
-        onProgress?.call(0.0, 'Ошибка: не удалось восстановить базу данных');
+        onProgress?.call(0.0, BootStage.databaseRestoreFailed);
         return false;
       }
 
-      onProgress?.call(0.8, 'Настройка POS Key...');
+      onProgress?.call(0.8, BootStage.applyingPosKey);
 
       savePosKey(backup.posKey);
 
-      onProgress?.call(1.0, 'Восстановление завершено');
+      onProgress?.call(1.0, BootStage.restoreDone);
       return true;
     } catch (e) {
-      onProgress?.call(0.0, 'Ошибка: ${safeErrorText(e)}');
+      onProgress?.call(0.0, BootStage.failed, safeErrorText(e));
       return false;
     }
   }
@@ -169,51 +170,51 @@ class FirstLaunchService implements FirstLaunchRepository {
     if (backupService == null) return false;
 
     try {
-      onProgress?.call(0.1, 'Загрузка пользователей...');
+      onProgress?.call(0.1, BootStage.loadingUsers);
       await backupService.syncGlobalUsers();
 
-      onProgress?.call(0.3, 'Загрузка контрагентов...');
+      onProgress?.call(0.3, BootStage.loadingAgents);
       await backupService.syncGlobalAgents();
 
-      onProgress?.call(0.5, 'Загрузка категорий...');
+      onProgress?.call(0.5, BootStage.loadingCategories);
       await backupService.syncGlobalCategories();
 
-      onProgress?.call(0.7, 'Загрузка товаров...');
+      onProgress?.call(0.7, BootStage.loadingProducts);
       await backupService.syncGlobalProducts();
 
-      onProgress?.call(0.9, 'Загрузка настроек...');
+      onProgress?.call(0.9, BootStage.loadingSettings);
       await backupService.syncGlobalConfig();
 
-      onProgress?.call(1.0, 'Синхронизация завершена');
+      onProgress?.call(1.0, BootStage.syncDone);
       return true;
     } catch (e) {
-      onProgress?.call(0.0, 'Ошибка: ${safeErrorText(e)}');
+      onProgress?.call(0.0, BootStage.failed, safeErrorText(e));
       return false;
     }
   }
 
   Future<bool> createAndUploadBackup({
     String? description,
-    void Function(double progress, String message)? onProgress,
+    BootProgress? onProgress,
   }) async {
     final backupService = _backupService;
     if (backupService == null) return false;
 
     try {
-      onProgress?.call(0.3, 'Создание бэкапа...');
+      onProgress?.call(0.3, BootStage.creatingBackup);
       final uploaded = await backupService.createAndUploadBackup(
         description: description,
       );
 
       if (uploaded) {
-        onProgress?.call(1.0, 'Бэкап создан и загружен');
+        onProgress?.call(1.0, BootStage.backupDone);
       } else {
-        onProgress?.call(0.0, 'Ошибка создания бэкапа');
+        onProgress?.call(0.0, BootStage.backupCreateFailed);
       }
 
       return uploaded;
     } catch (e) {
-      onProgress?.call(0.0, 'Ошибка: ${safeErrorText(e)}');
+      onProgress?.call(0.0, BootStage.failed, safeErrorText(e));
       return false;
     }
   }

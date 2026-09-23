@@ -18,11 +18,9 @@ class SaleDiscountDao extends DatabaseAccessor<AppDatabase>
     with _$SaleDiscountDaoMixin {
   SaleDiscountDao(super.db);
 
-  Future<List<SaleDiscount>> findBySale(int receiptNo, int posId) =>
-      (select(saleDiscounts)..where(
-            (d) => d.receiptNo.equals(receiptNo) & d.posId.equals(posId),
-          ))
-          .get();
+  Future<List<SaleDiscount>> findBySale(int receiptNo, int posId) => (select(
+    saleDiscounts,
+  )..where((d) => d.receiptNo.equals(receiptNo) & d.posId.equals(posId))).get();
 
   /// Сколько отдано по каждому происхождению за отрезок времени.
   ///

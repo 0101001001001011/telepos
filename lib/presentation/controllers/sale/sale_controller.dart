@@ -138,6 +138,7 @@ class SaleState {
     this.agentName,
     this.error,
     this.warning,
+    this.taxOnTop,
   });
 
   /// Снимок корзины в форме экрана.
@@ -186,6 +187,12 @@ class SaleState {
       agentName: view.agentId == null ? null : previous.agentName,
       warning: previous.warning,
       error: keepError ? previous.error : null,
+      // Налог сверх цены — из снимка, а не пересчитанный здесь.
+      //
+      // Пересчитать значило бы завести второй расчёт денег рядом с
+      // кассовым: на дубле урока 1.3 экран оплаты показал сдачу 2,21
+      // доллара, а касса выдала 1,62 — экран считал итог без налога.
+      taxOnTop: view.taxOnTop,
     );
   }
 
@@ -230,8 +237,21 @@ class SaleState {
 
   /// Итог чека. Считается из тех же цен, что показывает таблица строк —
   /// округление применено кассой один раз, при сборке снимка.
-  Decimal get total =>
+  /// Сумма позиций без налога сверху.
+  Decimal get netTotal =>
       items.fold(Decimal.zero, (sum, item) => sum + item.total);
+
+  /// Налог сверх цены — снимком из корзины. `null` при налоге в цене.
+  ///
+  /// Обнуляемое, а не ноль умолчанием: конструктор `const`, а
+  /// `Decimal.zero` константой времени компиляции не является.
+  final Decimal? taxOnTop;
+
+  /// Налог сверх цены числом.
+  Decimal get taxAdded => taxOnTop ?? Decimal.zero;
+
+  /// Сколько платит покупатель — то же число, что возьмёт касса.
+  Decimal get total => netTotal + taxAdded;
 
   SaleItem? get selectedItem {
     if (selectedItemId == null) return null;
@@ -276,6 +296,11 @@ class SaleState {
       agentName: clearAgentName ? null : (agentName ?? this.agentName),
       error: clearError ? null : (error ?? this.error),
       warning: clearWarning ? null : (warning ?? this.warning),
+      // Налог переносится, как и остальные суммы снимка. [copyWith] здесь
+      // меняет ТОЛЬКО экранное — выбор, поиск, отказ; потерять на нём
+      // деньги значило бы показать кассиру другой итог после нажатия, не
+      // изменившего чек.
+      taxOnTop: taxOnTop,
     );
   }
 }
@@ -953,9 +978,18 @@ class SaleNotifier extends Notifier<SaleState> {
     return true;
   }
 
-  Future<void> loadDeferredSale(int receiptNo) {
+  /// Поднять отложенный чек. [fromPosId] — касса, на которой он отложен;
+  /// `null` — своя.
+  ///
+  /// Номер кассы несёт **карточка пула**, а не экран: чужой чек отличается
+  /// от своего только им, и угадывать его по номеру чека нельзя — пока чек
+  /// соседа не доехал, обе кассы могут выдать один номер.
+  Future<void> loadDeferredSale(int receiptNo, {int? fromPosId}) {
     final by = _authority;
-    return _command((t, m) => _cart.loadDeferred(t, receiptNo, m, by: by));
+    return _command(
+      (t, m) =>
+          _cart.loadDeferred(t, receiptNo, m, by: by, deferredPosId: fromPosId),
+    );
   }
 
   /// Подхватывает заказ ресторана как чек в работе.
@@ -1056,8 +1090,9 @@ class SaleNotifier extends Notifier<SaleState> {
     final line = state.selectedItem;
     if (line == null) return;
     try {
-      final expired = await GetIt.I<ExpiryWarningReader>()
-          .isPickedBatchExpired(line.productId);
+      final expired = await GetIt.I<ExpiryWarningReader>().isPickedBatchExpired(
+        line.productId,
+      );
       if (expired && !_disposed) _emit(state.copyWith(warning: line.name));
     } catch (e) {
       talker.warning('Sale: expiry warning: $e');

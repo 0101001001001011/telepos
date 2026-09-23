@@ -153,20 +153,18 @@ class RecordingCustomerDisplay implements CustomerDisplayManager {
   Future<void> clear() => _record(CustomerDisplayCall.clear, '', _inner.clear);
 
   @override
-  Future<void> showPrice(Decimal price) =>
-      _record(
-        CustomerDisplayCall.price,
-        price.toStringAsFixed(2),
-        () => _inner.showPrice(price),
-      );
+  Future<void> showPrice(Decimal price) => _record(
+    CustomerDisplayCall.price,
+    price.toStringAsFixed(2),
+    () => _inner.showPrice(price),
+  );
 
   @override
-  Future<void> showTotal(Decimal total) =>
-      _record(
-        CustomerDisplayCall.total,
-        total.toStringAsFixed(2),
-        () => _inner.showTotal(total),
-      );
+  Future<void> showTotal(Decimal total) => _record(
+    CustomerDisplayCall.total,
+    total.toStringAsFixed(2),
+    () => _inner.showTotal(total),
+  );
 
   @override
   Future<void> showText(String text) =>
@@ -177,10 +175,9 @@ class RecordingCustomerDisplay implements CustomerDisplayManager {
       _record(CustomerDisplayCall.welcome, '', _inner.showWelcome);
 
   @override
-  Future<void> showChange(Decimal change) =>
-      _record(
-        CustomerDisplayCall.change,
-        change.toStringAsFixed(2),
-        () => _inner.showChange(change),
-      );
+  Future<void> showChange(Decimal change) => _record(
+    CustomerDisplayCall.change,
+    change.toStringAsFixed(2),
+    () => _inner.showChange(change),
+  );
 }

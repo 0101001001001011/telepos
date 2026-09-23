@@ -116,7 +116,9 @@ void main() {
         find.byKey(const ValueKey('auth-settings-session-minutes')),
         '45',
       );
-      await tester.tap(find.byKey(const ValueKey('auth-settings-session-save')));
+      await tester.tap(
+        find.byKey(const ValueKey('auth-settings-session-save')),
+      );
       await tester.pumpAndSettle();
 
       expect((await db.thisPosDao.authSettings()).sessionIdleMinutes, 45);
@@ -131,35 +133,36 @@ void main() {
     },
   );
 
-  testWidgets(
-    'неверный ввод (0, отрицательное, не число) не пишется в базу',
-    (tester) async {
-      await pumpScreen(tester);
+  testWidgets('неверный ввод (0, отрицательное, не число) не пишется в базу', (
+    tester,
+  ) async {
+    await pumpScreen(tester);
 
-      for (final bad in ['0', '-5', 'abc', '']) {
-        await tester.enterText(
-          find.byKey(const ValueKey('auth-settings-session-minutes')),
-          bad,
-        );
-        await tester.tap(
-          find.byKey(const ValueKey('auth-settings-session-save')),
-        );
-        await tester.pumpAndSettle();
+    for (final bad in ['0', '-5', 'abc', '']) {
+      await tester.enterText(
+        find.byKey(const ValueKey('auth-settings-session-minutes')),
+        bad,
+      );
+      await tester.tap(
+        find.byKey(const ValueKey('auth-settings-session-save')),
+      );
+      await tester.pumpAndSettle();
 
-        expect(
-          (await db.thisPosDao.authSettings()).sessionIdleMinutes,
-          30,
-          reason: 'ввод "$bad" не должен был дойти до базы',
-        );
-      }
-    },
-  );
+      expect(
+        (await db.thisPosDao.authSettings()).sessionIdleMinutes,
+        30,
+        reason: 'ввод "$bad" не должен был дойти до базы',
+      );
+    }
+  });
 
   testWidgets(
     'смена срока действует немедленно на уже поднятый SessionRegistry — '
     'без перезапуска кассы',
     (tester) async {
-      final registry = SessionRegistry(idleTimeout: const Duration(minutes: 30));
+      final registry = SessionRegistry(
+        idleTimeout: const Duration(minutes: 30),
+      );
       GetIt.I.registerSingleton<SessionRegistry>(registry);
 
       await pumpScreen(tester);

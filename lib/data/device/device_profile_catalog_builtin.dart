@@ -361,7 +361,10 @@ class BuiltinDeviceProfileCatalog implements DeviceProfileCatalog {
       deviceClass: DeviceClass.customerDisplay,
       title: 'Дисплей покупателя VFD (последовательный)',
       protocol: DeviceProtocol.serialDisplay,
-      capabilities: DeviceCapabilities(defaultBaudRate: 9600, displayColumns: 20),
+      capabilities: DeviceCapabilities(
+        defaultBaudRate: 9600,
+        displayColumns: 20,
+      ),
       connectionParams: [
         DeviceConnectionParam(
           key: 'comPort',
@@ -375,7 +378,10 @@ class BuiltinDeviceProfileCatalog implements DeviceProfileCatalog {
       deviceClass: DeviceClass.customerDisplay,
       title: 'Customer Display LCD 2x20',
       protocol: DeviceProtocol.serialDisplay,
-      capabilities: DeviceCapabilities(defaultBaudRate: 2400, displayColumns: 20),
+      capabilities: DeviceCapabilities(
+        defaultBaudRate: 2400,
+        displayColumns: 20,
+      ),
       connectionParams: [
         DeviceConnectionParam(
           key: 'comPort',
@@ -395,7 +401,10 @@ class BuiltinDeviceProfileCatalog implements DeviceProfileCatalog {
       deviceClass: DeviceClass.customerDisplay,
       title: 'Дисплей покупателя LED (8 символов)',
       protocol: DeviceProtocol.serialDisplay,
-      capabilities: DeviceCapabilities(defaultBaudRate: 9600, displayColumns: 8),
+      capabilities: DeviceCapabilities(
+        defaultBaudRate: 9600,
+        displayColumns: 8,
+      ),
       connectionParams: [
         DeviceConnectionParam(
           key: 'comPort',

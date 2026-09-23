@@ -221,8 +221,7 @@ abstract final class InstallmentScheduler {
       for (var i = 0; i < termMonths; i++)
         InstallmentScheduleLine(
           seq: i,
-          dueDate:
-              _addMonths(firstDueDate, i).millisecondsSinceEpoch ~/ 1000,
+          dueDate: _addMonths(firstDueDate, i).millisecondsSinceEpoch ~/ 1000,
           principalDue: MoneyMillis.amount(principalParts[i]),
           feeDue: MoneyMillis.amount(feeParts[i]),
         ),
@@ -277,13 +276,6 @@ abstract final class InstallmentScheduler {
     // приём Dart, а не арифметика високосных лет своими руками.
     final lastDay = DateTime(year, month + 1, 0).day;
     final day = from.day < lastDay ? from.day : lastDay;
-    return DateTime(
-      year,
-      month,
-      day,
-      from.hour,
-      from.minute,
-      from.second,
-    );
+    return DateTime(year, month, day, from.hour, from.minute, from.second);
   }
 }

@@ -86,9 +86,12 @@ class ReceiptTemplateDao extends DatabaseAccessor<AppDatabase>
         header: (header != null && header.trim().isNotEmpty)
             ? base.header.copyWith(text: header.trim())
             : base.header,
+        // `null` у подвала значит «не задан», и благодарность поставит
+        // печать на своём языке. Тут её не подставить: языка в слое данных
+        // нет.
         footer: (footer != null && footer.trim().isNotEmpty)
-            ? base.footer.copyWith(text: footer.trim())
-            : base.footer,
+            ? ReceiptTextBlock(text: footer.trim())
+            : null,
       );
       await into(receiptTemplates).insert(
         ReceiptTemplatesCompanion.insert(

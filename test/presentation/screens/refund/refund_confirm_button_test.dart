@@ -300,7 +300,10 @@ void main() {
     await settle(tester);
 
     await pressRefund(tester);
-    expect(find.textContaining('Смена не открыта. Откройте смену на кассе.'), findsOneWidget);
+    expect(
+      find.textContaining('Смена не открыта. Откройте смену на кассе.'),
+      findsOneWidget,
+    );
 
     // Полоса уходит сама; кассир жмёт второй раз.
     for (var i = 0; i < 30; i++) {

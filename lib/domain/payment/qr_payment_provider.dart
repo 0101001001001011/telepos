@@ -71,8 +71,7 @@ abstract interface class QrPaymentProvider {
 /// никогда ни одного.
 @immutable
 class QrProviderReply<T> {
-  const QrProviderReply.ok(T this.value)
-    : refusal = null;
+  const QrProviderReply.ok(T this.value) : refusal = null;
 
   const QrProviderReply.refused(QrRefusal this.refusal) : value = null;
 

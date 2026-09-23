@@ -7,6 +7,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/data/device/device_profile_catalog_builtin.dart';
 import 'package:telepos/domain/device/device_check.dart';
 import 'package:telepos/domain/device/device_class.dart';
@@ -30,9 +31,13 @@ void main() {
     test('недостижимая касса — названное состояние, а не белый экран', () async {
       // Правило, подтверждённое 2026-08-04 трижды за один день: отказ приходит
       // значением (И144). Заставка обязана сказать, что кассы нет.
+      // Копим КОД и подробность: по проводу едет код, а причина отказа —
+      // отдельной строкой рядом с ним.
       final said = <String>[];
-      final status = await WtAppBootstrap(dispatcherThatRefuses())
-          .start(onProgress: (_, text) => said.add(text));
+      final status = await WtAppBootstrap(dispatcherThatRefuses()).start(
+        onProgress: (_, stage, [detail]) =>
+            said.add('${stage.name}:${detail ?? ''}'),
+      );
 
       expect(status, AppInitStatus.databaseFailure);
       expect(
@@ -45,7 +50,7 @@ void main() {
     test('успех кассы доезжает как есть', () async {
       final status = await WtAppBootstrap(
         answering('{"ok":true,"body":{"status":"success"}}'),
-      ).start(onProgress: (_, _) {});
+      ).start(onProgress: (_, _, [_]) {});
 
       expect(status, AppInitStatus.success);
     });
@@ -75,7 +80,7 @@ void main() {
 
       final ok = await repo.restoreFromBackup(
         _backup(42),
-        onProgress: (value, _) => seen.add(value),
+        onProgress: (value, _, [_]) => seen.add(value),
       );
 
       expect(ok, isTrue);
@@ -89,7 +94,11 @@ void main() {
       final seen = <String>[];
       final ok = await WtFirstLaunchRepository(
         answering('{"kind":"progress","value":0.5,"text":"Разворачиваем"}'),
-      ).restoreFromBackup(_backup(1), onProgress: (_, text) => seen.add(text));
+      ).restoreFromBackup(
+        _backup(1),
+        onProgress: (_, stage, [detail]) =>
+            seen.add('${stage.name}:${detail ?? ''}'),
+      );
 
       expect(ok, isFalse);
       expect(seen.last, contains('run_incomplete'));
@@ -102,7 +111,10 @@ void main() {
           '{"kind":"progress","value":0.3,"text":"Скачиваем"}',
           '{"ok":false,"code":"run_failed","detail":"копии нет"}',
         ),
-      ).loadGlobalData(onProgress: (_, text) => seen.add(text));
+      ).loadGlobalData(
+        onProgress: (_, stage, [detail]) =>
+            seen.add('${stage.name}:${detail ?? ''}'),
+      );
 
       expect(ok, isFalse);
       expect(seen.last, contains('run_failed'));

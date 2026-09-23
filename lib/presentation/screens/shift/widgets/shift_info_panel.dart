@@ -6,6 +6,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/shift/shift_controller.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class ShiftInfoPanel extends StatelessWidget {
   const ShiftInfoPanel({super.key, required this.state});
@@ -188,10 +189,15 @@ class ShiftInfoPanel extends StatelessWidget {
           ),
           child: Column(
             children: [
+              // `expectedCash`, а не `systemTotal`. Подпись говорит
+              // «должно быть», и стоять под ней обязано то самое число, с
+              // которым сличают пересчёт. Прежде стоял остаток счёта
+              // кассы, не видевший подъёмных: кассир клал в ящик 200 $, а
+              // панель показывала 0.00.
               _buildTotalRow(
                 context,
                 l10n.shiftSystemTotal,
-                state.systemTotal,
+                state.expectedCash,
                 bold: true,
               ),
               const SizedBox(height: 12),
@@ -406,10 +412,6 @@ class ShiftInfoPanel extends StatelessWidget {
   }
 
   String _formatDateTime(DateTime time) {
-    final d = time.day.toString().padLeft(2, '0');
-    final m = time.month.toString().padLeft(2, '0');
-    final h = time.hour.toString().padLeft(2, '0');
-    final min = time.minute.toString().padLeft(2, '0');
-    return '$d.$m.${time.year} $h:$min';
+    return TillConventions.current.formatDateTime(time);
   }
 }

@@ -1,4 +1,6 @@
+import 'package:telepos/core/constants/enums/tax_treatment.dart';
 import 'package:decimal/decimal.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
 
 import 'package:telepos/domain/entities/receipt/receipt_options.dart';
 import 'package:telepos/domain/print/print_document_id.dart';
@@ -43,7 +45,7 @@ class ReceiptFiscalInfo {
 }
 
 class SaleReceiptData {
-  const SaleReceiptData({
+  SaleReceiptData({
     required this.receiptNo,
     required this.posId,
     required this.posName,
@@ -67,10 +69,130 @@ class SaleReceiptData {
     this.fiscal,
     this.isVatPayer = false,
     this.vatAmount,
-    this.vatRatePercent = 16,
+    Decimal? vatRatePercent,
+    this.taxTreatment = TaxTreatment.inclusive,
+    this.hasFiscalisation = true,
+    this.taxJurisdictions = const [],
+    this.currencyBeforeAmount = false,
     this.currencySymbol = '₸',
     this.fiscalState,
-  });
+  }) : vatRatePercent = vatRatePercent ?? Decimal.zero {
+    // Сумма составляющих обязана равняться объявленной ставке.
+    //
+    // Расхождение — ОТКАЗ, а не молчаливое округление: чек с разбивкой,
+    // которая не сходится, врёт покупателю о налоговом документе. Лучше не
+    // собрать такой чек вовсе и починить настройку, чем выдать красивую
+    // неправду и узнать о ней от налоговой.
+    if (taxJurisdictions.isNotEmpty) {
+      final sum = taxJurisdictions.fold<Decimal>(
+        Decimal.zero,
+        (a, j) => a + j.ratePercent,
+      );
+      if (sum != this.vatRatePercent) {
+        throw ArgumentError(
+          'Разбивка по юрисдикциям даёт $sum%, а ставка чека — '
+          '${this.vatRatePercent}%. Эти два числа обязаны совпадать: '
+          'покупатель читает разбивку как объяснение ставки.',
+        );
+      }
+    }
+  }
+
+  /// Из каких юрисдикций сложилась ставка. Пусто — разбивки нет.
+  final List<TaxJurisdiction> taxJurisdictions;
+
+  /// Печатать ли знак валюты перед суммами итогов.
+  ///
+  /// Соглашение страны, а не налоговое правило: в США пишут `$11.93`, в
+  /// Казахстане сумму оставляют голой, а `₸` ставят только у сдачи. В
+  /// справочнике стран это уже есть — `currencyAfterAmount`, и у доллара
+  /// он `false`.
+  ///
+  /// До 2026-09-21 знак валюты попадал на чек ТОЛЬКО в строке сдачи. При
+  /// оплате картой сдачи нет, и в американском чеке не оказывалось ни
+  /// одного доллара — нашлось на сборке демонстрационного документа.
+  ///
+  /// Умолчание `false` оставляет казахстанскую ленту байт в байт прежней.
+  final bool currencyBeforeAmount;
+
+  /// Сумма позиций ВНЕ обложения.
+  ///
+  /// Названа отдельно, а не растворена в итоге: покупатель по ней понимает,
+  /// почему налог меньше, чем он прикинул по сумме чека.
+  Decimal get exemptTotal => products
+      .where((l) => l.isTaxExempt)
+      .fold<Decimal>(Decimal.zero, (sum, l) => sum + l.total);
+
+  /// Налог, разложенный по ставкам.
+  ///
+  /// Ставка позиции, если задана; иначе ставка чека. Группы идут по
+  /// убыванию ставки: облагаемое выше освобождённого, как на бумаге и
+  /// принято.
+  ///
+  /// Налог считается ПО СТРОКАМ и суммируется — так же, как его считает
+  /// фискальный документ. Разница с расчётом «от итога» не теоретическая:
+  /// на чеке из шести позиций при 16% она составила копейку, и бумага у
+  /// покупателя расходилась с документом у налоговой.
+  List<ReceiptTaxGroup> get taxByRate {
+    // «Плательщик НДС» выключает налог только там, где такой регистр
+    // существует.
+    //
+    // В США его нет: налог с продаж собирает любой продавец, у которого
+    // есть облагаемые продажи, и флаг из фискальных настроек — понятие
+    // чужой страны. До этой правки он выключал налоговый блок на
+    // американском чеке целиком; измерено на дубле урока 1.3, 2026-09-21.
+    //
+    // Для уклада «налог сверху» заслонкой служит сама ставка: ноль — и
+    // групп не будет без всякого флага.
+    if (taxTreatment == TaxTreatment.inclusive && !isVatPayer) {
+      return const [];
+    }
+
+    final bases =
+        <
+          String,
+          ({
+            Decimal rate,
+            Decimal base,
+            Decimal tax,
+            List<TaxJurisdiction> shares,
+          })
+        >{};
+    for (final line in products) {
+      // Освобождённое в облагаемую базу не входит — ни в какую группу.
+      if (line.isTaxExempt) continue;
+      final rate = line.taxRatePercent ?? vatRatePercent;
+      final key = rate.toString();
+      final lineTax = taxTreatment == TaxTreatment.exclusive
+          ? taxOnNet(line.total, rate)
+          : taxFromGross(line.total, rate);
+      final prev = bases[key];
+      bases[key] = prev == null
+          ? (rate: rate, base: line.total, tax: lineTax, shares: line.taxShares)
+          : (
+              rate: rate,
+              base: prev.base + line.total,
+              tax: prev.tax + lineTax,
+              // Доли берутся у первой строки группы: у одинаковой ставки
+              // состав одинаков по построению — он её и даёт.
+              shares: prev.shares.isEmpty ? line.taxShares : prev.shares,
+            );
+    }
+
+    final groups =
+        bases.values
+            .map(
+              (g) => ReceiptTaxGroup(
+                ratePercent: g.rate,
+                base: g.base,
+                tax: g.tax,
+                jurisdictions: g.shares,
+              ),
+            )
+            .toList()
+          ..sort((a, b) => b.ratePercent.compareTo(a.ratePercent));
+    return groups;
+  }
 
   final int receiptNo;
   final int posId;
@@ -101,7 +223,25 @@ class SaleReceiptData {
 
   final Decimal? vatAmount;
 
-  final int vatRatePercent;
+  /// Ставка налога в процентах — дробная.
+  ///
+  /// Была `int`, и 8,25% ввести было нельзя вовсе: комбинированные ставки
+  /// США почти всегда дробные, и целое число отсекало не «сложные штаты», а
+  /// почти все. См. план `2026-09-21-us-tax-engine.md`, этап 1.
+  final Decimal vatRatePercent;
+
+  /// Как налог относится к цене в стране кассы.
+  ///
+  /// Умолчание — «включён в цену»: так печатали все чеки до 2026-09-21, и
+  /// касса, которую не перенастраивали, обязана печатать ровно так же.
+  final TaxTreatment taxTreatment;
+
+  /// Есть ли в стране фискализация как обязанность кассы.
+  ///
+  /// Где её нет (США), отметка «нефискальный чек» не печатается: покупатель
+  /// читает её как «чек недействителен», а не как справку о законе, которого
+  /// в его стране не существует.
+  final bool hasFiscalisation;
 
   final String currencySymbol;
 
@@ -133,7 +273,7 @@ class SaleReceiptData {
 }
 
 class RefundReceiptData {
-  const RefundReceiptData({
+  RefundReceiptData({
     required this.refundId,
     required this.originalReceiptNo,
     required this.posId,
@@ -151,9 +291,11 @@ class RefundReceiptData {
     this.fiscal,
     this.isVatPayer = false,
     this.vatAmount,
-    this.vatRatePercent = 16,
+    Decimal? vatRatePercent,
+    this.taxTreatment = TaxTreatment.inclusive,
+    this.hasFiscalisation = true,
     this.currencySymbol = '₸',
-  });
+  }) : vatRatePercent = vatRatePercent ?? Decimal.zero;
 
   final int refundId;
   final int? originalReceiptNo;
@@ -177,7 +319,25 @@ class RefundReceiptData {
 
   final Decimal? vatAmount;
 
-  final int vatRatePercent;
+  /// Ставка налога в процентах — дробная.
+  ///
+  /// Была `int`, и 8,25% ввести было нельзя вовсе: комбинированные ставки
+  /// США почти всегда дробные, и целое число отсекало не «сложные штаты», а
+  /// почти все. См. план `2026-09-21-us-tax-engine.md`, этап 1.
+  final Decimal vatRatePercent;
+
+  /// Как налог относится к цене в стране кассы.
+  ///
+  /// Умолчание — «включён в цену»: так печатали все чеки до 2026-09-21, и
+  /// касса, которую не перенастраивали, обязана печатать ровно так же.
+  final TaxTreatment taxTreatment;
+
+  /// Есть ли в стране фискализация как обязанность кассы.
+  ///
+  /// Где её нет (США), отметка «нефискальный чек» не печатается: покупатель
+  /// читает её как «чек недействителен», а не как справку о законе, которого
+  /// в его стране не существует.
+  final bool hasFiscalisation;
 
   final String currencySymbol;
 
@@ -185,6 +345,51 @@ class RefundReceiptData {
       fiscal?.hasAny ?? (fiscalNumber != null && fiscalNumber!.isNotEmpty);
 
   int get itemCount => products.length;
+}
+
+/// Доля одной юрисдикции в общей ставке налога.
+///
+/// В США ставка складывается: штат + округ + город + спецрайоны. В Колорадо
+/// города с самоуправлением администрируют свою часть сами, и разбивка на
+/// чеке там не украшение. В СНГ ставка одна, и список пуст — требовать
+/// разбивку везде значило бы сломать всё, что работало.
+class TaxJurisdiction {
+  const TaxJurisdiction({required this.name, required this.ratePercent});
+
+  /// Название как его печатают: «State», «Denver», «RTD».
+  ///
+  /// Данные настройки, а не словарь: имена юрисдикций не переводятся — это
+  /// названия органов, а не слова интерфейса.
+  final String name;
+
+  /// Доля этой юрисдикции в процентах.
+  final Decimal ratePercent;
+}
+
+/// Сводка налога по одной ставке: сколько облагалось и сколько начислено.
+///
+/// Чек с разными ставками обязан показать их порознь — иначе покупатель не
+/// поймёт, с чего именно взят налог. В Евросоюзе разбивка по ставкам
+/// требуется прямо, в США она обычна.
+class ReceiptTaxGroup {
+  const ReceiptTaxGroup({
+    required this.ratePercent,
+    required this.base,
+    required this.tax,
+    this.jurisdictions = const [],
+  });
+
+  /// Ставка в процентах.
+  final Decimal ratePercent;
+
+  /// Облагаемая база — сумма позиций, облагаемых по этой ставке.
+  final Decimal base;
+
+  /// Начисленный налог.
+  final Decimal tax;
+
+  /// Из чего сложилась ИМЕННО ЭТА ставка.
+  final List<TaxJurisdiction> jurisdictions;
 }
 
 class ReceiptProductLine {
@@ -196,6 +401,9 @@ class ReceiptProductLine {
     Decimal? discountAmount,
     this.originalPrice,
     this.discountLabel,
+    this.taxRatePercent,
+    this.isTaxExempt = false,
+    this.taxShares = const [],
   }) : discountAmount = discountAmount ?? Decimal.zero;
 
   final String name;
@@ -204,6 +412,36 @@ class ReceiptProductLine {
   final Decimal total;
   final Decimal discountAmount;
   final Decimal? originalPrice;
+
+  /// Ставка налога ИМЕННО ЭТОЙ позиции, в процентах.
+  ///
+  /// `null` — ставка не задана, берётся ставка чека. Так живёт Казахстан:
+  /// одна ставка на всё, и правка этапа 2 его не касается.
+  ///
+  /// Задана — позиция облагается по ней. В США это обычное дело: продукты
+  /// освобождены, готовая еда облагается, и одна ставка на чек даёт неверный
+  /// налог, сколько её ни подбирай. Поле у товара в базе было
+  /// (`nomenclature_tables.dart`) и доезжало до фискального оператора, но до
+  /// денег и до чека не доходило никогда.
+  final Decimal? taxRatePercent;
+
+  /// Позиция ВНЕ обложения — не то же, что ставка ноль.
+  ///
+  /// Ставка ноль означает «облагается, но по нулевой ставке»: позиция входит
+  /// в облагаемую базу, и налоговая ждёт её в отчёте. Освобождение означает
+  /// «вне обложения»: в базу позиция не входит вовсе.
+  ///
+  /// До 2026-09-21 различить их было нечем, и на чеке обе выглядели
+  /// одинаково — «0 %».
+  final bool isTaxExempt;
+
+  /// Из каких юрисдикций сложилась ставка ЭТОЙ строки.
+  ///
+  /// У строки, а не у чека: в Денвере еда для дома облагается городом и
+  /// освобождена штатом, и состав её 6,25 % — не тот, что у обычных
+  /// 9,15 %. Одна разбивка на чек утверждала бы про обе ставки один
+  /// состав, и для одной из них это была бы неправда.
+  final List<TaxJurisdiction> taxShares;
 
   /// Откуда скидка — словами, для покупателя: «подарок акции», «скидка
   /// кассира». `null` — происхождение не записано.
@@ -362,6 +600,12 @@ abstract class ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+
+    /// Расхождение пересчёта с ожиданием; ноль — строки на бумаге не
+    /// будет. Без него денежный блок бланка не сходился бы при любом
+    /// пересчитанном ящике: «итого» не равнялось бы `начало + приход −
+    /// расход`, и прочитать, откуда разница, было бы неоткуда.
+    required Decimal cashDiscrepancy,
     required Decimal certificatesIssued,
     required Decimal certificatesRedeemed,
   });
@@ -417,6 +661,7 @@ abstract class ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal cashDiscrepancy,
     required Decimal certificatesIssued,
     required Decimal certificatesRedeemed,
   });

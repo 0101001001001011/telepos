@@ -61,6 +61,7 @@ import 'package:telepos/domain/sale/payment_service.dart'
 import 'package:telepos/domain/wire/pay_ops.dart' show troublesToWireJson;
 import 'package:telepos/domain/sale/cart_view.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/startup/startup_state_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
@@ -1040,7 +1041,7 @@ void _registerTerminalScope() {
 class _BootedTill implements AppBootstrap {
   @override
   Future<AppInitStatus> start({required BootProgress onProgress}) async {
-    onProgress(1.0, 'готово');
+    onProgress(1.0, BootStage.ready);
     return AppInitStatus.success;
   }
 }

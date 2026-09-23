@@ -431,6 +431,16 @@ abstract class PermissionKeys {
     '/orders': navOrders,
     '/printer-settings': settingsPrinter,
     '/fiscal-settings': settingsFiscal,
+
+    // Налоги — тем же ключом, что и фискальная настройка, и намеренно не
+    // своим. Аудитория одна: ставки и фискализация — две стороны одного
+    // разговора с налоговой, и держатель одного ключа неизбежно держит
+    // второй. Новый ключ пришлось бы раздавать миграцией, и до неё он молча
+    // стал бы отказом для каждого, кто настройку налогов уже вёл.
+    '/tax-settings': settingsFiscal,
+    // Часы запрета продажи — та же ответственность, что у налога:
+    // правило, за которое отвечают перед проверяющим.
+    '/selling-hours': settingsFiscal,
     '/hardware-settings': settingsHardware,
 
     // Встроенные эмуляторы — тем же ключом, что и оборудование, и намеренно
@@ -689,54 +699,12 @@ abstract class PermissionKeys {
     return null;
   }
 
-  static String label(String key) {
-    return switch (key) {
-      navSale => 'Продажа',
-      navRefund => 'Возврат',
-      navShift => 'Смена',
-      navHistory => 'История',
-      navCatalog => 'Каталог',
-      navAgent => 'Контрагенты',
-      navSupply => 'Приёмка',
-      navCashOperation => 'Кассовые операции',
-      navSettings => 'Настройки',
-      navSync => 'Синхронизация',
-      navReports => 'Отчёты',
-      navServiceQueue => 'Очередь заказов',
-      navServiceIntake => 'Приём заказов',
-      navTables => 'Столы',
-      navOrders => 'Заказы',
-      opEditPrice => 'Редактирование цены',
-      opSellDiscount => 'Продажа со скидкой',
-      opSellDebt => 'Продажа в долг',
-      opCashInOut => 'Внесение / изъятие',
-      opCancelPayment => 'Отмена оплаты',
-      opDeferSale => 'Отложенная продажа',
-      opRefund => 'Возврат товара',
-      opRefundWithoutReceipt => 'Возврат без чека',
-      opIssueCertificate => 'Выпуск подарочного сертификата',
-      opCreditRepay => 'Погашение рассрочки',
-      settingsUsers => 'Пользователи',
-      settingsAccounts => 'Счета оплаты',
-      settingsPrinter => 'Принтер',
-      settingsFiscal => 'Фискализация',
-      settingsHardware => 'Оборудование',
-      settingsRestaurant => 'Ресторан',
-      settingsTransport => 'Транспорт',
-      settingsTelegram => 'Telegram',
-      settingsTerminalService => 'Браузерные терминалы',
-      settingsLogJournal => 'Журнал работы',
-      settingsAppliance => 'Система (TelePOS OS)',
-      _ => key,
-    };
-  }
-
-  static String groupLabel(String groupKey) {
-    return switch (groupKey) {
-      'navigation' => 'Навигация',
-      'operations' => 'Операции',
-      'settings' => 'Настройки',
-      _ => groupKey,
-    };
-  }
+  // `label` и `groupLabel` жили здесь и возвращали тридцать шесть русских
+  // слов — «Продажа», «Кассовые операции», «Браузерные терминалы», — и экран
+  // управления пользователями рисовал их на любой кассе. Экранный сторож
+  // молчал: `lib/core` он не читает.
+  //
+  // Слово переехало в `presentation/common/utils/permission_label.dart`.
+  // Ключ права остался строкой: он хранится в правах пользователя и ездит
+  // по проводу, менять его нельзя.
 }

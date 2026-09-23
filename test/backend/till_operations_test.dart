@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/backend/api_server.dart';
 import 'package:telepos/backend/certificate_throttle.dart';
 import 'package:telepos/backend/pairing_invites.dart';
@@ -190,7 +191,12 @@ void main() {
     // Ровно то, чего не было: `http_first_launch_repository.dart` писал о себе,
     // что канала для этого нет, и двигал полосу с 0.1 сразу на 1.0.
     firstLaunch.backups = [_backup(42)];
-    firstLaunch.restoreProgress = [(0.2, 'Скачиваем'), (0.7, 'Разворачиваем')];
+    // Этапами, а не словами: по проводу едет код, и проба обязана мерить
+    // то, что едет на самом деле.
+    firstLaunch.restoreProgress = [
+      (0.2, BootStage.downloadingBackup),
+      (0.7, BootStage.restoringDatabase),
+    ];
     final server = FakeQuicServer();
     final operations = build();
     final wire = TillWire(
@@ -885,7 +891,7 @@ class RecordingBindings implements DeviceBindingRepository {
 
 class ScriptedFirstLaunch implements FirstLaunchRepository {
   List<FoundBackup> backups = const [];
-  List<(double, String)> restoreProgress = const [];
+  List<(double, BootStage)> restoreProgress = const [];
   int? restoredMessageId;
 
   @override
@@ -897,8 +903,8 @@ class ScriptedFirstLaunch implements FirstLaunchRepository {
 
   @override
   Future<bool> loadGlobalData({BootProgress? onProgress}) async {
-    for (final (value, message) in restoreProgress) {
-      onProgress?.call(value, message);
+    for (final (value, stage) in restoreProgress) {
+      onProgress?.call(value, stage);
     }
     return true;
   }
@@ -909,8 +915,8 @@ class ScriptedFirstLaunch implements FirstLaunchRepository {
     BootProgress? onProgress,
   }) async {
     restoredMessageId = backup.messageId;
-    for (final (value, message) in restoreProgress) {
-      onProgress?.call(value, message);
+    for (final (value, stage) in restoreProgress) {
+      onProgress?.call(value, stage);
     }
     return true;
   }

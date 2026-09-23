@@ -351,7 +351,9 @@ class LoginThrottle {
   @visibleForTesting
   Duration delayFor({required int terminalId, int? userId}) {
     final byWho = _delayForCount(_ledger.countOf(_whoKey(userId)));
-    final byTerminal = _delayForCount(_ledger.countOf(_terminalKey(terminalId)));
+    final byTerminal = _delayForCount(
+      _ledger.countOf(_terminalKey(terminalId)),
+    );
     return byWho > byTerminal ? byWho : byTerminal;
   }
 

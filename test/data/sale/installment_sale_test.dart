@@ -86,7 +86,11 @@ void main() {
   }
 
   Future<void> seedCustomer({String balance = '0'}) async {
-    await seedAccount(agentMainAccountId, AccountType.agentMain, value: balance);
+    await seedAccount(
+      agentMainAccountId,
+      AccountType.agentMain,
+      value: balance,
+    );
     await db
         .into(db.agents)
         .insert(
@@ -202,94 +206,96 @@ void main() {
 
   tearDown(() async => db.close());
 
-  test('чек 1000, первый взнос 200 — договор на 800 и график из 3 строк',
-      () async {
-    await seedCustomer();
-    final view = await receiptWith(); // 2 × 500 = 1000
+  test(
+    'чек 1000, первый взнос 200 — договор на 800 и график из 3 строк',
+    () async {
+      await seedCustomer();
+      final view = await receiptWith(); // 2 × 500 = 1000
 
-    final outcome = await payments.complete(
-      terminalId,
-      PaymentRequest(
-        type: PaymentType.installment,
-        customerId: customerId,
-        cashReceived: d('200'),
-        installmentTermMonths: 3,
-        installmentScheme: InstallmentScheme.equalInstalments.code,
-      ),
-      mv(view, 9),
-    );
+      final outcome = await payments.complete(
+        terminalId,
+        PaymentRequest(
+          type: PaymentType.installment,
+          customerId: customerId,
+          cashReceived: d('200'),
+          installmentTermMonths: 3,
+          installmentScheme: InstallmentScheme.equalInstalments.code,
+        ),
+        mv(view, 9),
+      );
 
-    expect(outcome.amount, d('1000'));
-    // **Товар отдан за 1000, и это главное число фискальной стороны.**
-    // Оператору уезжает вся сумма чека: 200 наличными и 800 обязательством
-    // (`FiscalTreatment.credit`). Уехал бы один взнос — `Σ line` (1000) не
-    // сошлось бы с `Σ payments` (200), и оператор ответил бы кодом 9.
-    expect(outcome.paid, d('200'), reason: 'живыми деньгами пришло 200');
-    expect(outcome.debt, d('800'), reason: 'остальное — обязательство');
-    expect(outcome.change, Decimal.zero);
+      expect(outcome.amount, d('1000'));
+      // **Товар отдан за 1000, и это главное число фискальной стороны.**
+      // Оператору уезжает вся сумма чека: 200 наличными и 800 обязательством
+      // (`FiscalTreatment.credit`). Уехал бы один взнос — `Σ line` (1000) не
+      // сошлось бы с `Σ payments` (200), и оператор ответил бы кодом 9.
+      expect(outcome.paid, d('200'), reason: 'живыми деньгами пришло 200');
+      expect(outcome.debt, d('800'), reason: 'остальное — обязательство');
+      expect(outcome.change, Decimal.zero);
 
-    // ── строки оплаты ────────────────────────────────────────────────
-    final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
-    expect(rows.length, 2, reason: 'наличные и рассрочка — две строки');
+      // ── строки оплаты ────────────────────────────────────────────────
+      final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
+      expect(rows.length, 2, reason: 'наличные и рассрочка — две строки');
 
-    final cashRow = rows.firstWhere(
-      (r) => r.kindId == SystemPaymentKindIds.cash,
-    );
-    expect(cashRow.amount, d('200'));
-    expect(cashRow.payeeAccountId, posAccountId);
+      final cashRow = rows.firstWhere(
+        (r) => r.kindId == SystemPaymentKindIds.cash,
+      );
+      expect(cashRow.amount, d('200'));
+      expect(cashRow.payeeAccountId, posAccountId);
 
-    final creditRow = rows.firstWhere(
-      (r) => r.kindId == SystemPaymentKindIds.installment,
-    );
-    expect(creditRow.amount, d('800'));
-    expect(
-      creditRow.payeeAccountId,
-      agentMainAccountId,
-      reason: 'обязательство лежит на расчётном счёте покупателя',
-    );
-    expect(
-      creditRow.reference,
-      'РС-1-${view.receiptNo}',
-      reason: 'строка без номера договора необъяснима',
-    );
+      final creditRow = rows.firstWhere(
+        (r) => r.kindId == SystemPaymentKindIds.installment,
+      );
+      expect(creditRow.amount, d('800'));
+      expect(
+        creditRow.payeeAccountId,
+        agentMainAccountId,
+        reason: 'обязательство лежит на расчётном счёте покупателя',
+      );
+      expect(
+        creditRow.reference,
+        'РС-1-${view.receiptNo}',
+        reason: 'строка без номера договора необъяснима',
+      );
 
-    // ── деньги ────────────────────────────────────────────────────────
-    expect(await balanceOf(posAccountId), d('200'), reason: 'в ящике 200');
-    expect(
-      await balanceOf(agentMainAccountId),
-      d('-800'),
-      reason: 'покупатель должен 800, а не 1000',
-    );
+      // ── деньги ────────────────────────────────────────────────────────
+      expect(await balanceOf(posAccountId), d('200'), reason: 'в ящике 200');
+      expect(
+        await balanceOf(agentMainAccountId),
+        d('-800'),
+        reason: 'покупатель должен 800, а не 1000',
+      );
 
-    // ── сам договор ───────────────────────────────────────────────────
-    final contract = await credit.byNumber('РС-1-${view.receiptNo}');
-    expect(contract, isNotNull);
-    expect(contract!.contract.principal, d('800'));
-    expect(contract.contract.downPayment, d('200'));
-    expect(contract.contract.feeTotal, Decimal.zero);
-    expect(contract.contract.termMonths, 3);
-    expect(contract.contract.scheme, InstallmentScheme.equalInstalments);
-    expect(contract.contract.status, CreditContractStatus.active);
-    expect(contract.contract.agentLocalId, customerId);
-    expect(
-      contract.contract.receivableAccountId,
-      agentMainAccountId,
-      reason: 'снимок счёта на момент подписи',
-    );
-    expect(contract.contract.receiptNo, view.receiptNo);
+      // ── сам договор ───────────────────────────────────────────────────
+      final contract = await credit.byNumber('РС-1-${view.receiptNo}');
+      expect(contract, isNotNull);
+      expect(contract!.contract.principal, d('800'));
+      expect(contract.contract.downPayment, d('200'));
+      expect(contract.contract.feeTotal, Decimal.zero);
+      expect(contract.contract.termMonths, 3);
+      expect(contract.contract.scheme, InstallmentScheme.equalInstalments);
+      expect(contract.contract.status, CreditContractStatus.active);
+      expect(contract.contract.agentLocalId, customerId);
+      expect(
+        contract.contract.receivableAccountId,
+        agentMainAccountId,
+        reason: 'снимок счёта на момент подписи',
+      );
+      expect(contract.contract.receiptNo, view.receiptNo);
 
-    // ── график ────────────────────────────────────────────────────────
-    expect(contract.schedule.length, 3);
-    expect(
-      contract.schedule.fold(Decimal.zero, (Decimal s, e) => s + e.totalDue),
-      d('800'),
-    );
-    expect([for (final e in contract.schedule) e.seq], [0, 1, 2]);
-    expect(
-      [for (final e in contract.schedule) e.paid],
-      [Decimal.zero, Decimal.zero, Decimal.zero],
-    );
-  });
+      // ── график ────────────────────────────────────────────────────────
+      expect(contract.schedule.length, 3);
+      expect(
+        contract.schedule.fold(Decimal.zero, (Decimal s, e) => s + e.totalDue),
+        d('800'),
+      );
+      expect([for (final e in contract.schedule) e.seq], [0, 1, 2]);
+      expect(
+        [for (final e in contract.schedule) e.paid],
+        [Decimal.zero, Decimal.zero, Decimal.zero],
+      );
+    },
+  );
 
   test('без первого взноса договор на всю сумму чека', () async {
     await seedCustomer();
@@ -334,49 +340,50 @@ void main() {
       expect(all.length, 1);
     });
 
-    test('повтор той же команды отдаёт прежний итог и НЕ второй договор',
-        () async {
-      await seedCustomer();
-      final view = await receiptWith();
-      final meta = mv(view, 9);
+    test(
+      'повтор той же команды отдаёт прежний итог и НЕ второй договор',
+      () async {
+        await seedCustomer();
+        final view = await receiptWith();
+        final meta = mv(view, 9);
 
-      final first = await payments.complete(
-        terminalId,
-        PaymentRequest(
-          type: PaymentType.installment,
-          customerId: customerId,
-          installmentTermMonths: 3,
-          installmentScheme: InstallmentScheme.equalInstalments.code,
-        ),
-        meta,
-      );
-      final second = await payments.complete(
-        terminalId,
-        PaymentRequest(
-          type: PaymentType.installment,
-          customerId: customerId,
-          installmentTermMonths: 3,
-          installmentScheme: InstallmentScheme.equalInstalments.code,
-        ),
-        meta,
-      );
+        final first = await payments.complete(
+          terminalId,
+          PaymentRequest(
+            type: PaymentType.installment,
+            customerId: customerId,
+            installmentTermMonths: 3,
+            installmentScheme: InstallmentScheme.equalInstalments.code,
+          ),
+          meta,
+        );
+        final second = await payments.complete(
+          terminalId,
+          PaymentRequest(
+            type: PaymentType.installment,
+            customerId: customerId,
+            installmentTermMonths: 3,
+            installmentScheme: InstallmentScheme.equalInstalments.code,
+          ),
+          meta,
+        );
 
-      expect(second.repeat, isTrue);
-      expect(second.amount, first.amount);
-      expect(
-        (await db.creditDao.rowsByAgent(customerId)).length,
-        1,
-        reason: 'повтор ключа — не вторая продажа',
-      );
-      expect(
-        await balanceOf(agentMainAccountId),
-        d('-1000'),
-        reason: 'долг не удвоился',
-      );
-    });
+        expect(second.repeat, isTrue);
+        expect(second.amount, first.amount);
+        expect(
+          (await db.creditDao.rowsByAgent(customerId)).length,
+          1,
+          reason: 'повтор ключа — не вторая продажа',
+        );
+        expect(
+          await balanceOf(agentMainAccountId),
+          d('-1000'),
+          reason: 'долг не удвоился',
+        );
+      },
+    );
 
-    test('вторая оплата ЧУЖИМ ключом отвергается до единой записи',
-        () async {
+    test('вторая оплата ЧУЖИМ ключом отвергается до единой записи', () async {
       await seedCustomer();
       final view = await receiptWith();
 
@@ -413,8 +420,7 @@ void main() {
   });
 
   group('отказы раскладки', () {
-    test('срок не назван — credit_term_invalid, и ни одной записи',
-        () async {
+    test('срок не назван — credit_term_invalid, и ни одной записи', () async {
       await seedCustomer();
       final view = await receiptWith();
 
@@ -440,31 +446,33 @@ void main() {
       expect(await balanceOf(agentMainAccountId), Decimal.zero);
     });
 
-    test('схема неизвестна — credit_scheme_unknown, а не подстановка',
-        () async {
-      await seedCustomer();
-      final view = await receiptWith();
+    test(
+      'схема неизвестна — credit_scheme_unknown, а не подстановка',
+      () async {
+        await seedCustomer();
+        final view = await receiptWith();
 
-      await expectLater(
-        payments.complete(
-          terminalId,
-          PaymentRequest(
-            type: PaymentType.installment,
-            customerId: customerId,
-            installmentTermMonths: 3,
-            installmentScheme: 'annuity_v2',
+        await expectLater(
+          payments.complete(
+            terminalId,
+            PaymentRequest(
+              type: PaymentType.installment,
+              customerId: customerId,
+              installmentTermMonths: 3,
+              installmentScheme: 'annuity_v2',
+            ),
+            mv(view, 9),
           ),
-          mv(view, 9),
-        ),
-        throwsA(
-          isA<WireRefusal>().having(
-            (e) => e.code,
-            'code',
-            creditSchemeUnknownCode,
+          throwsA(
+            isA<WireRefusal>().having(
+              (e) => e.code,
+              'code',
+              creditSchemeUnknownCode,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     test('покупатель не назван — долг записать не на кого', () async {
       final view = await receiptWith();
@@ -488,33 +496,35 @@ void main() {
       );
     });
 
-    test('чек покрыт деньгами целиком — рассрочку не на что оформлять',
-        () async {
-      await seedCustomer();
-      final view = await receiptWith();
+    test(
+      'чек покрыт деньгами целиком — рассрочку не на что оформлять',
+      () async {
+        await seedCustomer();
+        final view = await receiptWith();
 
-      await expectLater(
-        payments.complete(
-          terminalId,
-          PaymentRequest(
-            type: PaymentType.installment,
-            customerId: customerId,
-            cashReceived: d('1000'),
-            installmentTermMonths: 3,
-            installmentScheme: InstallmentScheme.equalInstalments.code,
+        await expectLater(
+          payments.complete(
+            terminalId,
+            PaymentRequest(
+              type: PaymentType.installment,
+              customerId: customerId,
+              cashReceived: d('1000'),
+              installmentTermMonths: 3,
+              installmentScheme: InstallmentScheme.equalInstalments.code,
+            ),
+            mv(view, 9),
           ),
-          mv(view, 9),
-        ),
-        throwsA(
-          isA<WireRefusal>().having(
-            (e) => e.code,
-            'code',
-            creditPrincipalInvalidCode,
+          throwsA(
+            isA<WireRefusal>().having(
+              (e) => e.code,
+              'code',
+              creditPrincipalInvalidCode,
+            ),
           ),
-        ),
-      );
-      expect(await balanceOf(posAccountId), Decimal.zero);
-    });
+        );
+        expect(await balanceOf(posAccountId), Decimal.zero);
+      },
+    );
 
     test('вид выключен оператором — касса рассрочку не принимает', () async {
       await seedCustomer();
@@ -537,42 +547,40 @@ void main() {
           mv(view, 9),
         ),
         throwsA(
-          isA<WireRefusal>().having(
-            (e) => e.code,
-            'code',
-            payKindInactiveCode,
-          ),
+          isA<WireRefusal>().having((e) => e.code, 'code', payKindInactiveCode),
         ),
       );
     });
 
-    test('на этой кассе в кредит не торгуют — тот же тумблер, что у долга',
-        () async {
-      await seedCustomer();
-      await (db.update(db.thisPosEntries)..where((t) => t.id.equals(1)))
-          .write(const ThisPosEntriesCompanion(sellInDebt: Value(false)));
-      final view = await receiptWith();
+    test(
+      'на этой кассе в кредит не торгуют — тот же тумблер, что у долга',
+      () async {
+        await seedCustomer();
+        await (db.update(db.thisPosEntries)..where((t) => t.id.equals(1)))
+            .write(const ThisPosEntriesCompanion(sellInDebt: Value(false)));
+        final view = await receiptWith();
 
-      await expectLater(
-        payments.complete(
-          terminalId,
-          PaymentRequest(
-            type: PaymentType.installment,
-            customerId: customerId,
-            installmentTermMonths: 3,
-            installmentScheme: InstallmentScheme.equalInstalments.code,
+        await expectLater(
+          payments.complete(
+            terminalId,
+            PaymentRequest(
+              type: PaymentType.installment,
+              customerId: customerId,
+              installmentTermMonths: 3,
+              installmentScheme: InstallmentScheme.equalInstalments.code,
+            ),
+            mv(view, 9),
           ),
-          mv(view, 9),
-        ),
-        throwsA(
-          isA<WireRefusal>().having(
-            (e) => e.code,
-            'code',
-            payDebtNotSoldHereCode,
+          throwsA(
+            isA<WireRefusal>().having(
+              (e) => e.code,
+              'code',
+              payDebtNotSoldHereCode,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   });
 
   group('просрочка замечается тем, кому она дороже всего', () {
@@ -595,12 +603,17 @@ void main() {
         ),
         mv(first, 9),
       );
-      final contractId =
-          (await db.creditDao.rowByReceipt(receiptNo: first.receiptNo!, posId: 1))!
-              .id;
-      final touched = await (db.update(db.creditScheduleEntries)
-            ..where((e) => e.contractId.equals(contractId) & e.seq.equals(0)))
-          .write(const CreditScheduleEntriesCompanion(dueDate: Value(1000)));
+      final contractId = (await db.creditDao.rowByReceipt(
+        receiptNo: first.receiptNo!,
+        posId: 1,
+      ))!.id;
+      final touched =
+          await (db.update(db.creditScheduleEntries)..where(
+                (e) => e.contractId.equals(contractId) & e.seq.equals(0),
+              ))
+              .write(
+                const CreditScheduleEntriesCompanion(dueDate: Value(1000)),
+              );
       expect(touched, 1, reason: 'фикстура обязана попасть в строку');
 
       expect(await credit.hasOverdue(customerId), isTrue);

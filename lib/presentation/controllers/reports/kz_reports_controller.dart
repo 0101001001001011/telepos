@@ -7,6 +7,8 @@ import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/report_dao.dart';
 import 'package:telepos/domain/usecases/cogs/calculate_cogs_use_case.dart';
+import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
 
 int _toTs(DateTime dt) => dt.millisecondsSinceEpoch ~/ 1000;
 
@@ -43,12 +45,14 @@ class VatReport {
   Decimal get totalNet => (totalGross - totalVat).money;
 }
 
-Decimal vatFromGross(Decimal gross, int ratePercent) {
-  if (ratePercent <= 0) return Decimal.zero;
-  final rate = Decimal.fromInt(ratePercent);
-  final denom = Decimal.fromInt(100 + ratePercent);
-  return (gross * rate / denom).toDecimal(scaleOnInfinitePrecision: 6).money;
-}
+/// Налог отчёта — ОБЩЕЙ формулой продукта.
+///
+/// Здесь лежала шестая её запись, со своим округлением
+/// (`scaleOnInfinitePrecision: 6` против 10 у общей). Отчёт по НДС мог
+/// разойтись с чеком и фискальным документом на копейку — а именно по
+/// этому отчёту и отчитываются перед налоговой.
+Decimal vatFromGross(Decimal gross, int ratePercent) =>
+    taxFromGross(gross, Decimal.fromInt(ratePercent));
 
 final vatReportProvider = FutureProvider.family<VatReport, DateTimeRange>((
   ref,
@@ -117,7 +121,8 @@ final arApReportProvider = FutureProvider<ArApReport>((ref) async {
       .map(
         (r) => AgentBalance(
           localId: r.read<int>('local_id'),
-          name: r.read<String?>('name') ?? 'Без имени',
+          // Пусто — значит имени НЕТ. Экран подставит слово своим языком.
+          name: r.read<String?>('name') ?? '',
           agentType: r.read<int?>('agent_type') ?? -1,
           balance: r.readDecimal('balance'),
         ),
@@ -171,7 +176,7 @@ final cashCollectionReportProvider =
             (r) => CashCollectionItem(
               id: r.read<int>('id'),
               amount: r.readDecimal('amount'),
-              accountName: r.read<String?>('account_name') ?? 'Касса',
+              accountName: r.read<String?>('account_name') ?? '',
               userName: r.read<String?>('user_name') ?? '—',
               note: r.read<String?>('note'),
               docTime: r.read<int?>('doc_time'),
@@ -287,22 +292,18 @@ class WriteoffBucket {
   final int docCount;
   final Decimal total;
 
-  String get reasonLabel {
-    switch (reason) {
-      case 0:
-        return 'Бой';
-      case 1:
-        return 'Просрочка';
-      case 2:
-        return 'Порча';
-      case 3:
-        return 'Утеря';
-      case 4:
-        return 'Прочее';
-      default:
-        return 'Не указана';
-    }
-  }
+  /// Причина списания словами языка интерфейса.
+  ///
+  /// Словарь — доводом: это модель отчёта, контекста у неё нет. Тот же
+  /// приём, что у `_reasonLabel` на экранах списания и оборудования.
+  String reasonLabel(AppLocalizations l10n) => switch (reason) {
+    0 => l10n.writeoffReasonBreakage,
+    1 => l10n.writeoffReasonExpired,
+    2 => l10n.writeoffReasonDamage,
+    3 => l10n.writeoffReasonLoss,
+    4 => l10n.writeoffReasonOther,
+    _ => l10n.writeoffReasonUnspecified,
+  };
 }
 
 @immutable
@@ -433,20 +434,14 @@ class CashBookEntry {
   final String accountName;
   final String ref;
 
-  String get kindLabel {
-    switch (kind) {
-      case 0:
-        return 'Продажа';
-      case 1:
-        return 'Внесение';
-      case 2:
-        return 'Расход';
-      case 3:
-        return 'Изъятие';
-      default:
-        return '—';
-    }
-  }
+  /// Род движения денег словами языка интерфейса.
+  String kindLabel(AppLocalizations l10n) => switch (kind) {
+    0 => l10n.historySale,
+    1 => l10n.cashOpTypeInvestment,
+    2 => l10n.cashOpTypeExpense,
+    3 => l10n.cashOpTypeDividend,
+    _ => '—',
+  };
 }
 
 @immutable
@@ -490,7 +485,7 @@ final cashBookReportProvider =
             income: income,
             expense: expense,
             balanceAfter: balance,
-            accountName: r.read<String?>('account_name') ?? 'Касса',
+            accountName: r.read<String?>('account_name') ?? '',
             ref: r.read<String?>('ref') ?? '',
           ),
         );

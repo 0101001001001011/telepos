@@ -27,7 +27,9 @@ void main() {
     GetIt.I.allowReassignment = true;
     db = AppDatabase.forTesting(NativeDatabase.memory());
     GetIt.I.registerSingleton<AppDatabase>(db);
-    GetIt.I.registerSingleton<SecurityJournal>(SecurityJournal(db.securityEventDao));
+    GetIt.I.registerSingleton<SecurityJournal>(
+      SecurityJournal(db.securityEventDao),
+    );
     // Мастер настройки — иначе `terminalDao.self()` (актёрский терминал
     // экрана, см. `_actingTerminalId`) отдаёт `null`.
     await db.terminalDao.ensureSelf(fallbackName: 'Касса-1');
@@ -159,10 +161,7 @@ void main() {
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
 
-      await tester.enterText(
-        find.byType(TextFormField).first,
-        'Новый Кассир',
-      );
+      await tester.enterText(find.byType(TextFormField).first, 'Новый Кассир');
 
       await tester.tap(find.text('PIN'));
       await tester.pumpAndSettle();
@@ -187,101 +186,99 @@ void main() {
       expect(
         createdRows.single.outcome,
         'cashier',
-        reason: 'умолчание дропдауна роли в форме заведения — кассир '
+        reason:
+            'умолчание дропдауна роли в форме заведения — кассир '
             '(_selectedRole = widget.user?.role ?? 3)',
       );
     },
   );
 
-  testWidgets(
-    'ГЛАВНЫЙ ТЕСТ (БЛОКЕР 1): повышение кассира до владельца пишет '
-    'user.roleChanged — до этой правки при роли «владелец» не писалось ни '
-    'одной строки, хотя updateUser(role: ...) выполнялся',
-    (tester) async {
-      await pumpScreen(tester);
-      await tester.tap(find.text('Кассир Бота'));
-      await tester.pumpAndSettle();
-      await tester.pump();
-      await tester.pumpAndSettle();
+  testWidgets('ГЛАВНЫЙ ТЕСТ (БЛОКЕР 1): повышение кассира до владельца пишет '
+      'user.roleChanged — до этой правки при роли «владелец» не писалось ни '
+      'одной строки, хотя updateUser(role: ...) выполнялся', (tester) async {
+    await pumpScreen(tester);
+    await tester.tap(find.text('Кассир Бота'));
+    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(DropdownButtonFormField<int>));
-      await tester.pumpAndSettle();
-      // `.last`, не голый finder: фон (список пользователей) уже показывает
-      // бейдж «Владелец» у другого, засеянного пользователя — тем же
-      // приёмом, что и `find.text(digit)` в `tapDigit` рядом.
-      await tester.tap(find.text('Владелец').last);
-      await tester.pumpAndSettle();
+    await tester.tap(find.byType(DropdownButtonFormField<int>));
+    await tester.pumpAndSettle();
+    // `.last`, не голый finder: фон (список пользователей) уже показывает
+    // бейдж «Владелец» у другого, засеянного пользователя — тем же
+    // приёмом, что и `find.text(digit)` в `tapDigit` рядом.
+    await tester.tap(find.text('Владелец').last);
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Сохранить'));
-      await tester.pumpAndSettle();
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Сохранить'));
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
 
-      final rows = await db.securityEventDao.findAll();
-      final roleRows = rows.where(
-        (r) => r.eventType == SecurityEventType.roleChanged,
-      );
-      expect(
-        roleRows,
-        hasLength(1),
-        reason: 'смена роли обязана оставить след даже когда роль — '
-            'владелец',
-      );
-      expect(roleRows.single.userId, cashierId);
-      expect(roleRows.single.outcome, 'cashier->owner');
+    final rows = await db.securityEventDao.findAll();
+    final roleRows = rows.where(
+      (r) => r.eventType == SecurityEventType.roleChanged,
+    );
+    expect(
+      roleRows,
+      hasLength(1),
+      reason:
+          'смена роли обязана оставить след даже когда роль — '
+          'владелец',
+    );
+    expect(roleRows.single.userId, cashierId);
+    expect(roleRows.single.outcome, 'cashier->owner');
 
-      // Права НЕ пишутся при повышении до владельца (Правка Б-3) — и это
-      // по-прежнему так: permissionsChanged не заводится вовсе, потому что
-      // сама запись прав не происходит (см. докстринг `_save`).
-      final permRows = rows.where(
-        (r) => r.eventType == SecurityEventType.permissionsChanged,
-      );
-      expect(
-        permRows,
-        isEmpty,
-        reason: 'при повышении до владельца userPermissionDao.setPermissions '
-            'не зовётся вовсе — событие о незаписанных правах было бы '
-            'неправдой',
-      );
-    },
-  );
+    // Права НЕ пишутся при повышении до владельца (Правка Б-3) — и это
+    // по-прежнему так: permissionsChanged не заводится вовсе, потому что
+    // сама запись прав не происходит (см. докстринг `_save`).
+    final permRows = rows.where(
+      (r) => r.eventType == SecurityEventType.permissionsChanged,
+    );
+    expect(
+      permRows,
+      isEmpty,
+      reason:
+          'при повышении до владельца userPermissionDao.setPermissions '
+          'не зовётся вовсе — событие о незаписанных правах было бы '
+          'неправдой',
+    );
+  });
 
-  testWidgets(
-    'смена роли кассир→администратор пишет и roleChanged, и '
-    'permissionsChanged — оба события, каждое своё',
-    (tester) async {
-      await pumpScreen(tester);
-      await tester.tap(find.text('Кассир Бота'));
-      await tester.pumpAndSettle();
-      await tester.pump();
-      await tester.pumpAndSettle();
+  testWidgets('смена роли кассир→администратор пишет и roleChanged, и '
+      'permissionsChanged — оба события, каждое своё', (tester) async {
+    await pumpScreen(tester);
+    await tester.tap(find.text('Кассир Бота'));
+    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(DropdownButtonFormField<int>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Администратор'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.byType(DropdownButtonFormField<int>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Администратор'));
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Сохранить'));
-      await tester.pumpAndSettle();
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Сохранить'));
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
 
-      final rows = await db.securityEventDao.findAll();
-      final roleRows = rows.where(
-        (r) => r.eventType == SecurityEventType.roleChanged,
-      );
-      expect(roleRows, hasLength(1));
-      expect(roleRows.single.outcome, 'cashier->administrator');
+    final rows = await db.securityEventDao.findAll();
+    final roleRows = rows.where(
+      (r) => r.eventType == SecurityEventType.roleChanged,
+    );
+    expect(roleRows, hasLength(1));
+    expect(roleRows.single.outcome, 'cashier->administrator');
 
-      final permRows = rows.where(
-        (r) => r.eventType == SecurityEventType.permissionsChanged,
-      );
-      expect(
-        permRows,
-        hasLength(1),
-        reason: 'администратор — не владелец, права пишутся, значит и своё '
-            'событие тоже',
-      );
-    },
-  );
+    final permRows = rows.where(
+      (r) => r.eventType == SecurityEventType.permissionsChanged,
+    );
+    expect(
+      permRows,
+      hasLength(1),
+      reason:
+          'администратор — не владелец, права пишутся, значит и своё '
+          'событие тоже',
+    );
+  });
 
   testWidgets(
     'сохранение БЕЗ смены роли не пишет roleChanged — не выдумывает событие '

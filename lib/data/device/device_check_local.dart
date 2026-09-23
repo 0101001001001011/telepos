@@ -549,12 +549,9 @@ class DeviceCheckLocal implements DeviceCheck {
     }
 
     final heard = <ScalesReading>[];
-    final subscription = scale.weightStream.listen(
-      (reading) {
-        if (!reading.hasError) heard.add(reading);
-      },
-      onError: (Object _) {},
-    );
+    final subscription = scale.weightStream.listen((reading) {
+      if (!reading.hasError) heard.add(reading);
+    }, onError: (Object _) {});
 
     try {
       final reading = await scale.requestWeight(

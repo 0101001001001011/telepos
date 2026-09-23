@@ -1,0 +1,62 @@
+{
+  "id": "ru",
+  "title": "Россия",
+  "countryCode": "RU",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": true,
+  "currencySymbol": "₽",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "22",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Общая ставка",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "Пониженная ставка"
+    },
+    {
+      "code": "zero",
+      "title": "Нулевая ставка"
+    },
+    {
+      "code": "exempt",
+      "title": "Освобождённые обороты"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "ru",
+      "name": "НДС",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "22"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "zero",
+          "kind": "taxed",
+          "ratePercent": "0"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Ставка НДС, записанная в продукте до 2026-09-22; проверьте по Налоговому кодексу РФ перед работой"
+}

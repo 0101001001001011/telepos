@@ -95,8 +95,10 @@ class TelegramCredentials {
         (await _secureStorage.read(key: _apiIdKey))?.trim() ?? '',
       );
       final storedHash = (await _secureStorage.read(key: _apiHashKey))?.trim();
-      if (storedId != null && storedId > 0 &&
-          storedHash != null && storedHash.isNotEmpty) {
+      if (storedId != null &&
+          storedId > 0 &&
+          storedHash != null &&
+          storedHash.isNotEmpty) {
         return (apiId: storedId, apiHash: storedHash);
       }
     } catch (e) {

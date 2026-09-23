@@ -1,0 +1,53 @@
+{
+  "id": "ae",
+  "title": "ОАЭ",
+  "countryCode": "AE",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "AED",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "5",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Standard rate",
+      "isDefault": true
+    },
+    {
+      "code": "zero",
+      "title": "Zero rate"
+    },
+    {
+      "code": "exempt",
+      "title": "Exempt"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "ae",
+      "name": "VAT",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "5"
+        },
+        {
+          "category": "zero",
+          "kind": "taxed",
+          "ratePercent": "0"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "UAE VAT: standard and zero rate; проверьте перед работой"
+}

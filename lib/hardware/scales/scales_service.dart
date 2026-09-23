@@ -185,10 +185,7 @@ class ScalesService {
     // marker with no number at all — `OL`, `-OL-`, `OL kg`. Word-bounded and
     // case-sensitive so it cannot fire on a stray "ol" inside a word.
     if (_overloadToken.hasMatch(line)) {
-      return ScalesReading(
-        weight: Decimal.zero,
-        status: ScalesStatus.overload,
-      );
+      return ScalesReading(weight: Decimal.zero, status: ScalesStatus.overload);
     }
 
     final field = _WeightField.parse(line);
@@ -221,10 +218,7 @@ class ScalesService {
     // full-scale value, blanks, or nothing there — so it is not read, and the
     // absence of a readable number does not suppress the report.
     if (status == ScalesStatus.overload) {
-      return ScalesReading(
-        weight: Decimal.zero,
-        status: ScalesStatus.overload,
-      );
+      return ScalesReading(weight: Decimal.zero, status: ScalesStatus.overload);
     }
 
     if (parts.length < 3) return null;
@@ -232,11 +226,7 @@ class ScalesService {
     final field = _WeightField.parse(parts[2]);
     if (field == null) return null;
 
-    return ScalesReading(
-      weight: field.value,
-      unit: field.unit,
-      status: status,
-    );
+    return ScalesReading(weight: field.value, unit: field.unit, status: status);
   }
 
   /// `<marker><padded number>` — `$` settled, anything else moving.
@@ -316,24 +306,21 @@ Future<ScalesReading> awaitSettledReading(
   ScalesReading? lastHeard;
   final settled = Completer<ScalesReading>();
 
-  final subscription = readings.listen(
-    (reading) {
-      if (reading.hasError) return;
-      lastHeard = reading;
-      if (settled.isCompleted) return;
-      if (reading.status == ScalesStatus.overload) {
-        settled.complete(
-          ScalesReading.error(
-            'Перегрузка весов: вес превышает предел взвешивания',
-            status: ScalesStatus.overload,
-          ),
-        );
-      } else if (reading.isStable) {
-        settled.complete(reading);
-      }
-    },
-    onError: (Object _) {},
-  );
+  final subscription = readings.listen((reading) {
+    if (reading.hasError) return;
+    lastHeard = reading;
+    if (settled.isCompleted) return;
+    if (reading.status == ScalesStatus.overload) {
+      settled.complete(
+        ScalesReading.error(
+          'Перегрузка весов: вес превышает предел взвешивания',
+          status: ScalesStatus.overload,
+        ),
+      );
+    } else if (reading.isStable) {
+      settled.complete(reading);
+    }
+  }, onError: (Object _) {});
 
   try {
     return await settled.future.timeout(timeout);

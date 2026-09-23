@@ -315,11 +315,13 @@ void main() {
       expect(
         rows.map((p) => p.seq).toList(),
         [0, 1],
-        reason: 'нумерация от нуля на каждой попытке — иначе новый ключ '
+        reason:
+            'нумерация от нуля на каждой попытке — иначе новый ключ '
             '`{receiptNo, posId, seq}` становится украшением молча',
       );
       expect(
-        rows.firstWhere((p) => p.kindId == SystemPaymentKindIds.debt)
+        rows
+            .firstWhere((p) => p.kindId == SystemPaymentKindIds.debt)
             .payeeAccountId,
         agentMainAccountId,
       );

@@ -25,8 +25,7 @@ class QrProviderConfigs extends Table {
   TextColumn get apiKey => text().nullable()();
 
   /// Сколько касса ждёт покупателя, секундами.
-  IntColumn get patienceSeconds =>
-      integer().withDefault(const Constant(180))();
+  IntColumn get patienceSeconds => integer().withDefault(const Constant(180))();
 
   IntColumn get updatedAt => integer()();
 

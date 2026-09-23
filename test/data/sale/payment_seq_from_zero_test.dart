@@ -65,7 +65,8 @@ void main() {
     expect(
       hits,
       isEmpty,
-      reason: 'seq обязан считаться от нуля на каждой попытке — иначе '
+      reason:
+          'seq обязан считаться от нуля на каждой попытке — иначе '
           'уникальный ключ {receiptNo, posId, seq} становится украшением '
           'молча (оговорка задачи 8 у Payments.uniqueKeys)',
     );
@@ -109,8 +110,10 @@ final next =
       // форму — он обязан её называть, иначе оговорку не прочитать.
       // Сторож, краснеющий на объяснении, отключают в первый же день.
       expect(_matches('// nothing here about MAX(seq) + 1 at all'), isFalse);
-      expect(_matches('/// `seq`, продолжающий нумерацию («максимум + 1»)'),
-          isFalse);
+      expect(
+        _matches('/// `seq`, продолжающий нумерацию («максимум + 1»)'),
+        isFalse,
+      );
     });
 
     test('чужой seq мимо оплаты не задевается', () {
@@ -118,9 +121,9 @@ final next =
       // «максимум + 1» там законен. Отбор — по упоминанию `payments` в
       // файле; здесь проверяется, что отбор вообще что-то отбирает.
       expect(
-        File('lib/data/database/daos/service_order_dao.dart')
-            .readAsStringSync()
-            .contains('payments'),
+        File(
+          'lib/data/database/daos/service_order_dao.dart',
+        ).readAsStringSync().contains('payments'),
         isFalse,
       );
     });

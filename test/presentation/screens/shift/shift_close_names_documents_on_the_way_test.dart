@@ -35,6 +35,7 @@ import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/screens/shift/widgets/shift_actions.dart';
 
 import '../../../fixtures/test_states.dart';
+import '../../../support/till_currency.dart';
 
 void main() {
   tearDown(() async => GetIt.I.reset());
@@ -60,6 +61,9 @@ void main() {
   ) async {
     GetIt.I.allowReassignment = true;
     GetIt.I.registerSingleton<ShiftService>(_StubShifts(summary));
+    // Окно закрытия называет сумму — значит нужна валюта кассы. Служба
+    // НАСТОЯЩАЯ: среда собирает тот же граф, что и касса.
+    registerTillCurrency();
 
     await tester.pumpWidget(wrap());
     await tester.pumpAndSettle();

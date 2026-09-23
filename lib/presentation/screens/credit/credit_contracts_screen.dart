@@ -7,6 +7,7 @@ import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/payment/credit_contract.dart';
 import 'package:telepos/domain/payment/credit_service.dart';
 import 'package:telepos/domain/wire/wire_refusal.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/hardware/printer/receipt/credit_contract_receipt_builder.dart';
 import 'package:telepos/app/theme/app_typography.dart';
 
@@ -101,7 +102,9 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
       _found = view;
       // «Нет такого» говорится словами, а не пустым экраном: пустота
       // читается как «ищет», и кассир ждёт.
-      _error = view == null ? 'Договора $number в базе кассы нет' : null;
+      _error = view == null
+          ? AppLocalizations.of(context)!.creditContractNotFound(number)
+          : null;
     });
   }
 
@@ -117,7 +120,11 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text('Рассрочки — ${widget.agentName}')),
+    appBar: AppBar(
+      title: Text(
+        AppLocalizations.of(context)!.creditContractsTitleFor(widget.agentName),
+      ),
+    ),
     body: _loading
         ? const Center(child: CircularProgressIndicator())
         : Column(
@@ -130,8 +137,10 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
                       child: TextField(
                         key: const Key('credit_search_number'),
                         controller: _numberController,
-                        decoration: const InputDecoration(
-                          labelText: 'Номер договора с бумажки',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(
+                            context,
+                          )!.creditContractNumberLabel,
                         ),
                         onSubmitted: (_) => _findByNumber(),
                       ),
@@ -140,7 +149,9 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
                     OutlinedButton(
                       key: const Key('credit_search_button'),
                       onPressed: _findByNumber,
-                      child: const Text('Найти'),
+                      child: Text(
+                        AppLocalizations.of(context)!.receiptInputFind,
+                      ),
                     ),
                   ],
                 ),
@@ -148,9 +159,11 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
               if (_found != null) _card(_found!),
               Expanded(
                 child: _contracts.isEmpty
-                    ? const Center(
-                        key: Key('credit_contracts_empty'),
-                        child: Text('Живых договоров рассрочки нет'),
+                    ? Center(
+                        key: const Key('credit_contracts_empty'),
+                        child: Text(
+                          AppLocalizations.of(context)!.creditNoLiveContracts,
+                        ),
                       )
                     : ListView.builder(
                         key: const Key('credit_contracts_list'),
@@ -183,6 +196,7 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
   );
 
   Widget _card(CreditContractView view) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final standing = view.standingAt(now);
     final c = view.contract;
@@ -200,13 +214,15 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: AppTheme.spacingSmall),
-            Text('${c.termMonths} мес., ${c.scheme.label}'),
-            Text('Осталось: ${standing.outstanding}'),
+            Text('${l10n.unitMonthsShort(c.termMonths)}, ${c.scheme.label}'),
+            Text(l10n.creditOutstanding('${standing.outstanding}')),
             if (standing.isOverdue)
               Text(
                 key: Key('credit_overdue_${c.number}'),
-                'ПРОСРОЧЕНО: ${standing.overdueAmount} '
-                '(${standing.overdueEntries} платежей)',
+                l10n.creditOverdue(
+                  '${standing.overdueAmount}',
+                  standing.overdueEntries,
+                ),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.error,
                   fontWeight: FontWeight.bold,
@@ -214,8 +230,10 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
               )
             else if (standing.nextDueDate != null)
               Text(
-                'Ближайший платёж ${_date(standing.nextDueDate!)}: '
-                '${standing.nextDueAmount}',
+                l10n.creditNextPayment(
+                  _date(standing.nextDueDate!),
+                  '${standing.nextDueAmount}',
+                ),
               ),
             const SizedBox(height: AppTheme.spacingSmall),
             Row(
@@ -224,7 +242,7 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
                   child: FilledButton(
                     key: Key('credit_repay_${c.number}'),
                     onPressed: () => _repay(view, standing),
-                    child: const Text('Принять платёж'),
+                    child: Text(l10n.creditTakePayment),
                   ),
                 ),
                 const SizedBox(width: AppTheme.spacingSmall),
@@ -232,7 +250,7 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
                   child: OutlinedButton(
                     key: Key('credit_print_${c.number}'),
                     onPressed: () => _print(view),
-                    child: const Text('Печать договора'),
+                    child: Text(l10n.creditPrintContract),
                   ),
                 ),
               ],
@@ -263,7 +281,9 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
     final thisPos = await db.thisPosDao.get();
     final posAccountId = thisPos?.accountId;
     if (posAccountId == null) {
-      setState(() => _error = 'У кассы нет счёта — принять деньги некуда');
+      setState(
+        () => _error = AppLocalizations.of(context)!.creditNoTillAccount,
+      );
       return;
     }
     final shift = await db.shiftDao.findOpenedShift();
@@ -283,9 +303,13 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
         SnackBar(
           content: Text(
             result.closed
-                ? 'Договор ${result.contractNumber} закрыт'
-                : 'Принято ${result.allocated}, осталось '
-                      '${result.standing.outstanding}',
+                ? AppLocalizations.of(
+                    context,
+                  )!.creditContractClosed(result.contractNumber)
+                : AppLocalizations.of(context)!.creditPartiallyPaid(
+                    '${result.allocated}',
+                    '${result.standing.outstanding}',
+                  ),
           ),
         ),
       );
@@ -299,6 +323,7 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
   }
 
   Future<void> _print(CreditContractView view) async {
+    final l10n = AppLocalizations.of(context)!;
     final db = GetIt.I<AppDatabase>();
     final thisPos = await db.thisPosDao.get();
     final text = CreditContractReceiptBuilder(
@@ -312,12 +337,15 @@ class _CreditContractsScreenState extends State<CreditContractsScreen> {
       builder: (_) => AlertDialog(
         key: const Key('credit_contract_preview'),
         content: SingleChildScrollView(
-          child: Text(text, style: const TextStyle(fontFamily: AppTypography.familyMono)),
+          child: Text(
+            text,
+            style: const TextStyle(fontFamily: AppTypography.familyMono),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
+            child: Text(l10n.globalClose),
           ),
         ],
       ),
@@ -345,45 +373,50 @@ class _RepayDialogState extends State<_RepayDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    key: const Key('credit_repay_dialog'),
-    title: Text('Платёж по ${widget.number}'),
-    content: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Остаток показан числом: досрочное погашение целиком — это ровно
-        // он, и касса отвергнет всё, что больше.
-        Text('Осталось по договору: ${widget.outstanding}'),
-        const SizedBox(height: AppTheme.spacingSmall),
-        TextField(
-          key: const Key('credit_repay_amount'),
-          controller: _controller,
-          autofocus: true,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          decoration: const InputDecoration(labelText: 'Сумма платежа'),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      key: const Key('credit_repay_dialog'),
+      title: Text(l10n.creditPaymentFor('${widget.number}')),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Остаток показан числом: досрочное погашение целиком — это ровно
+          // он, и касса отвергнет всё, что больше.
+          Text(l10n.creditOutstandingOnContract('${widget.outstanding}')),
+          const SizedBox(height: AppTheme.spacingSmall),
+          TextField(
+            key: const Key('credit_repay_amount'),
+            controller: _controller,
+            autofocus: true,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(labelText: l10n.creditPaymentAmount),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.globalCancel),
+        ),
+        TextButton(
+          key: const Key('credit_repay_whole'),
+          onPressed: () => Navigator.of(context).pop(widget.outstanding),
+          child: Text(l10n.creditPayInFull),
+        ),
+        FilledButton(
+          key: const Key('credit_repay_confirm'),
+          onPressed: () {
+            final parsed = Decimal.tryParse(
+              _controller.text.replaceAll(',', '.'),
+            );
+            if (parsed == null) return;
+            Navigator.of(context).pop(parsed);
+          },
+          child: Text(l10n.creditAccept),
         ),
       ],
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.of(context).pop(),
-        child: const Text('Отмена'),
-      ),
-      TextButton(
-        key: const Key('credit_repay_whole'),
-        onPressed: () => Navigator.of(context).pop(widget.outstanding),
-        child: const Text('Погасить целиком'),
-      ),
-      FilledButton(
-        key: const Key('credit_repay_confirm'),
-        onPressed: () {
-          final parsed = Decimal.tryParse(_controller.text.replaceAll(',', '.'));
-          if (parsed == null) return;
-          Navigator.of(context).pop(parsed);
-        },
-        child: const Text('Принять'),
-      ),
-    ],
-  );
+    );
+  }
 }

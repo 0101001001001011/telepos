@@ -151,14 +151,13 @@ class ThrottledPaymentService
   /// половина, подделка в пробе) — тогда `null` честен: стойки нет, и
   /// операция откажет названной причиной.
   @override
-  QrProviderSetupRepository? get qrProviderSetup =>
-      switch (_inner) {
-        final QrProviderSetupHost host => host.qrProviderSetup,
-        // Образцом, а не `is` с продвижением: [QrProviderSetupHost] не
-        // наследник `PaymentService`, и продвижения по такой проверке в Dart
-        // нет вовсе — `inner.qrProviderSetup` не собралось бы.
-        _ => null,
-      };
+  QrProviderSetupRepository? get qrProviderSetup => switch (_inner) {
+    final QrProviderSetupHost host => host.qrProviderSetup,
+    // Образцом, а не `is` с продвижением: [QrProviderSetupHost] не
+    // наследник `PaymentService`, и продвижения по такой проверке в Dart
+    // нет вовсе — `inner.qrProviderSetup` не собралось бы.
+    _ => null,
+  };
 
   /// Шаблон чека — насквозь, тем же приёмом и по тому же доводу, что
   /// настройка QR выше: замок перебора сертификатов не имеет отношения к
@@ -166,11 +165,10 @@ class ThrottledPaymentService
   /// шаблон по проводу «не поддерживается» ровно потому, что рядом включили
   /// замок.
   @override
-  ReceiptTemplateSetupRepository? get receiptTemplates =>
-      switch (_inner) {
-        final ReceiptTemplateSetupHost host => host.receiptTemplates,
-        _ => null,
-      };
+  ReceiptTemplateSetupRepository? get receiptTemplates => switch (_inner) {
+    final ReceiptTemplateSetupHost host => host.receiptTemplates,
+    _ => null,
+  };
 
   @override
   Future<QrTender> startQr(

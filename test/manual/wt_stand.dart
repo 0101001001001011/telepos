@@ -300,6 +300,7 @@ import 'package:telepos/domain/payment/payment_kind.dart'
     show SystemPaymentKindIds, SystemPaymentKinds;
 import 'package:telepos/domain/payment/qr_provider_settings.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart' as domain
     show Terminal;
@@ -1908,12 +1909,20 @@ Handler _standControl(
       // проверка PIN проверяла бы свой собственный формат, а не формат,
       // который реально пишет касса.
       case 'stand/seed-cashiers':
+        // Имена задаются доводом, а не запечены: съёмка видеоинструкции
+        // идёт по-английски, и русское «Кассир С PIN» на экране входа
+        // испортило бы кадр. Умолчание прежнее — ни одна живая проверка,
+        // уже описанная в этом файле, звать его иначе не обязана.
+        final withPinName =
+            request.url.queryParameters['name'] ?? _cashierWithPinName;
+        final noPinName =
+            request.url.queryParameters['name2'] ?? _cashierNoPinName;
         final withPinId = await db.userDao.createCashier(
-          name: _cashierWithPinName,
+          name: withPinName,
           passwordEnc: PinCredential.create(_cashierWithPin),
         );
         final noPinId = await db.userDao.createCashier(
-          name: _cashierNoPinName,
+          name: noPinName,
           passwordEnc: null,
         );
         // Задача 14: `createCashier` не пишет ни одной строки прав, и до
@@ -1935,16 +1944,16 @@ Handler _standControl(
         });
         stdout.writeln(
           '[стенд] заведены кассиры: '
-          '#$withPinId «$_cashierWithPinName» (PIN $_cashierWithPin), '
-          '#$noPinId «$_cashierNoPinName» (без PIN)',
+          '#$withPinId «$withPinName» (PIN $_cashierWithPin), '
+          '#$noPinId «$noPinName» (без PIN)',
         );
         return _json({
           'withPin': {
             'id': withPinId,
-            'name': _cashierWithPinName,
+            'name': withPinName,
             'pin': _cashierWithPin,
           },
-          'noPin': {'id': noPinId, 'name': _cashierNoPinName},
+          'noPin': {'id': noPinId, 'name': noPinName},
         });
 
       // Задача 8 (живая проверка авторизации): кассир с явно отнятым
@@ -2885,13 +2894,13 @@ class _StandBootstrap implements AppBootstrap {
 
   @override
   Future<AppInitStatus> start({required BootProgress onProgress}) async {
-    onProgress(0.5, 'Проверка базы данных...');
+    onProgress(0.5, BootStage.initialisingDatabase);
     try {
       await _db.customSelect('SELECT 1 AS test').getSingle();
     } catch (_) {
       return AppInitStatus.databaseFailure;
     }
-    onProgress(1.0, 'Готово');
+    onProgress(1.0, BootStage.ready);
     return AppInitStatus.success;
   }
 }

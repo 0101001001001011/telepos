@@ -1,0 +1,71 @@
+{
+  "id": "fr",
+  "title": "Франция",
+  "countryCode": "FR",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "€",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "20",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Taux normal",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "Taux intermédiaire"
+    },
+    {
+      "code": "reduced2",
+      "title": "Taux réduit"
+    },
+    {
+      "code": "super",
+      "title": "Taux particulier"
+    },
+    {
+      "code": "exempt",
+      "title": "Exonéré"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "fr",
+      "name": "TVA",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "20"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "reduced2",
+          "kind": "taxed",
+          "ratePercent": "5.5"
+        },
+        {
+          "category": "super",
+          "kind": "taxed",
+          "ratePercent": "2.1"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "TVA: taux normal, intermédiaire, réduit et particulier; проверьте по CGI перед работой"
+}

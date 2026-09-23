@@ -87,13 +87,13 @@ class PrepaymentIntakeDao extends DatabaseAccessor<AppDatabase>
     String? error,
   }) async {
     if (sign == null && error == null) return;
-    await (update(prepaymentIntakes)
-          ..where((r) => r.intakeKey.equals(intakeKey)))
-        .write(
-          PrepaymentIntakesCompanion(
-            fiscalSign: Value(sign),
-            fiscalError: Value(error),
-          ),
-        );
+    await (update(
+      prepaymentIntakes,
+    )..where((r) => r.intakeKey.equals(intakeKey))).write(
+      PrepaymentIntakesCompanion(
+        fiscalSign: Value(sign),
+        fiscalError: Value(error),
+      ),
+    );
   }
 }

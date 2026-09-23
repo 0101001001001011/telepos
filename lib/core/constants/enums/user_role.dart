@@ -14,12 +14,15 @@ enum UserRole {
     return UserRole.cashier;
   }
 
-  String get displayName {
-    return switch (this) {
-      UserRole.owner => 'Владелец',
-      UserRole.administrator => 'Администратор',
-      UserRole.user => 'Пользователь',
-      UserRole.cashier => 'Кассир',
-    };
-  }
+  // `displayName` здесь БЫЛ и возвращал русские слова. Подпись для
+  // человека давно переехала в `presentation/common/utils/role_label.dart`,
+  // но геттер остался — и его звали ещё в двух местах, где слову не место:
+  //
+  // * `LocalAuthRepository` выписывал им РОЛЬ СЕАНСА, а провод сличал её с
+  //   устойчивым ключом (`r.name == session.role`). Совпадения не бывало
+  //   никогда, `DiscountAuthority.roleIndex` выходил −1, и предел скидки,
+  //   заданный роли, на браузерном терминале не действовал;
+  // * экран входа сличал имя роли с русским словом, компенсируя первое.
+  //
+  // По проводу и в базе едет ключ (`cashier`), слово выбирается при показе.
 }

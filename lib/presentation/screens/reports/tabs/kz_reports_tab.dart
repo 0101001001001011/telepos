@@ -8,6 +8,7 @@ import 'package:telepos/presentation/controllers/reports/kz_reports_controller.d
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_chart_card.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_money_format.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class KzReportsTab extends ConsumerWidget {
   const KzReportsTab({super.key});
@@ -110,9 +111,9 @@ class KzReportsTab extends ConsumerWidget {
     return ReportChartCard(
       title: l10n.repF910Title,
       subtitle: l10n.repF910Subtitle(
-        ReportMoney.full(report.taxableIncome),
+        ReportMoney.withCurrency(report.taxableIncome),
         report.taxRatePercent.toString(),
-        ReportMoney.full(report.estimatedTax),
+        ReportMoney.withCurrency(report.estimatedTax),
       ),
       height: _tableHeight(3),
       child: SingleChildScrollView(
@@ -121,7 +122,10 @@ class KzReportsTab extends ConsumerWidget {
           columns: [
             DataColumn(label: Text(l10n.repColIndicator)),
             DataColumn(label: Text(l10n.repColCount), numeric: true),
-            DataColumn(label: Text(l10n.repColSumTenge), numeric: true),
+            DataColumn(
+              label: Text(l10n.repColSumTenge(tillCurrencySymbol())),
+              numeric: true,
+            ),
           ],
           rows: [
             DataRow(
@@ -207,8 +211,8 @@ class KzReportsTab extends ConsumerWidget {
     return ReportChartCard(
       title: l10n.repF300Title,
       subtitle: l10n.repF300Subtitle(
-        ReportMoney.full(report.taxableTurnover),
-        ReportMoney.full(report.outputVat),
+        ReportMoney.withCurrency(report.taxableTurnover),
+        ReportMoney.withCurrency(report.outputVat),
       ),
       height: _tableHeight(rows.length),
       child: rows.isEmpty
@@ -239,9 +243,9 @@ class KzReportsTab extends ConsumerWidget {
     return ReportChartCard(
       title: l10n.repCashBookTitle,
       subtitle: l10n.repCashBookSubtitle(
-        ReportMoney.full(report.totalIncome),
-        ReportMoney.full(report.totalExpense),
-        ReportMoney.full(report.closingBalance),
+        ReportMoney.withCurrency(report.totalIncome),
+        ReportMoney.withCurrency(report.totalExpense),
+        ReportMoney.withCurrency(report.closingBalance),
       ),
       height: _tableHeight(display.length),
       child: display.isEmpty
@@ -261,7 +265,7 @@ class KzReportsTab extends ConsumerWidget {
                     DataRow(
                       cells: [
                         DataCell(Text(_fmtDate(e.ts))),
-                        DataCell(Text(e.kindLabel)),
+                        DataCell(Text(e.kindLabel(l10n))),
                         DataCell(
                           Text(
                             e.income > Decimal.zero
@@ -298,8 +302,8 @@ class KzReportsTab extends ConsumerWidget {
     return ReportChartCard(
       title: l10n.repVatPeriodTitle,
       subtitle: l10n.repVatPeriodSubtitle(
-        ReportMoney.full(report.totalVat),
-        ReportMoney.full(report.totalGross),
+        ReportMoney.withCurrency(report.totalVat),
+        ReportMoney.withCurrency(report.totalGross),
       ),
       height: _tableHeight(report.buckets.length),
       child: report.buckets.isEmpty
@@ -370,7 +374,7 @@ class KzReportsTab extends ConsumerWidget {
                           SizedBox(
                             width: 160,
                             child: Text(
-                              b.name,
+                              b.name.isEmpty ? l10n.supplyNoName : b.name,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -408,7 +412,7 @@ class KzReportsTab extends ConsumerWidget {
       title: l10n.repCashCollectionTitle,
       subtitle: l10n.repCashCollectionSubtitle(
         report.count,
-        ReportMoney.full(report.total),
+        ReportMoney.withCurrency(report.total),
       ),
       height: _tableHeight(report.items.length),
       child: report.items.isEmpty
@@ -427,7 +431,13 @@ class KzReportsTab extends ConsumerWidget {
                     DataRow(
                       cells: [
                         DataCell(Text(_fmtDate(i.docTime))),
-                        DataCell(Text(i.accountName)),
+                        DataCell(
+                          Text(
+                            i.accountName.isEmpty
+                                ? l10n.cashTitle
+                                : i.accountName,
+                          ),
+                        ),
                         DataCell(Text(i.userName)),
                         DataCell(
                           Text(
@@ -455,7 +465,7 @@ class KzReportsTab extends ConsumerWidget {
     return ReportChartCard(
       title: l10n.repProfitMarginTitle,
       subtitle: l10n.repProfitMarginSubtitle(
-        ReportMoney.full(report.totalProfit),
+        ReportMoney.withCurrency(report.totalProfit),
         report.totalMarginPct.toStringAsFixed(1),
         note,
       ),
@@ -480,7 +490,7 @@ class KzReportsTab extends ConsumerWidget {
                           SizedBox(
                             width: 140,
                             child: Text(
-                              i.name,
+                              i.name.isEmpty ? l10n.supplyNoName : i.name,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -516,7 +526,7 @@ class KzReportsTab extends ConsumerWidget {
       title: l10n.repWriteoffTitle,
       subtitle: l10n.repWriteoffSubtitle(
         report.docCount,
-        ReportMoney.full(report.total),
+        ReportMoney.withCurrency(report.total),
       ),
       height: _tableHeight(report.buckets.length),
       child: report.buckets.isEmpty
@@ -533,7 +543,7 @@ class KzReportsTab extends ConsumerWidget {
                   for (final b in report.buckets)
                     DataRow(
                       cells: [
-                        DataCell(Text(b.reasonLabel)),
+                        DataCell(Text(b.reasonLabel(l10n))),
                         DataCell(Text('${b.docCount}')),
                         DataCell(
                           Text(

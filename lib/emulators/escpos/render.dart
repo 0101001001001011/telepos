@@ -110,7 +110,10 @@ List<EscPosEvent> parseEscPos(List<int> bytes) {
           }
           flushText();
           out.add(
-            EscPosEvent('bold', bytes[i + 2] == 0 ? 'жирный выкл' : 'жирный вкл'),
+            EscPosEvent(
+              'bold',
+              bytes[i + 2] == 0 ? 'жирный выкл' : 'жирный вкл',
+            ),
           );
           i += 3;
         case 0x2D: // ESC - n
@@ -150,7 +153,7 @@ List<EscPosEvent> parseEscPos(List<int> bytes) {
             EscPosEvent(
               'drawer',
               'ЯЩИК ОТКРЫТ: контакт ${bytes[i + 2]}, импульс '
-              '${bytes[i + 3]}/${bytes[i + 4]}',
+                  '${bytes[i + 3]}/${bytes[i + 4]}',
             ),
           );
           i += 5;
@@ -229,7 +232,7 @@ List<EscPosEvent> parseEscPos(List<int> bytes) {
               EscPosEvent(
                 'unknown',
                 'обрыв: GS ( k объявил $len байт, в потоке '
-                '${bytes.length - i - 5}',
+                    '${bytes.length - i - 5}',
               ),
             );
             i = bytes.length;
@@ -239,9 +242,7 @@ List<EscPosEvent> parseEscPos(List<int> bytes) {
           // Функция 180 (`1P0`): данные QR-кода.
           if (body.length >= 3 && body[0] == 0x31 && body[1] == 0x50) {
             flushText();
-            out.add(
-              EscPosEvent('qr', _decode(body.sublist(3), codePage)),
-            );
+            out.add(EscPosEvent('qr', _decode(body.sublist(3), codePage)));
           }
           i = end;
         case 0x6B: // GS k — линейный штрихкод

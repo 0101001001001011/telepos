@@ -76,7 +76,11 @@ void main() {
         final shown = fiscalReasonText(l10n, stored);
         expect(shown.trim(), isNotEmpty, reason: '$locale/$kind');
         expect(shown, isNot(contains('fiscal(')), reason: '$locale/$kind');
-        expect(shown, contains('9'), reason: '$locale/$kind: код оператора потерян');
+        expect(
+          shown,
+          contains('9'),
+          reason: '$locale/$kind: код оператора потерян',
+        );
         if (locale == 'en' || locale == 'uz') {
           // Латиница: фраза, совпавшая с русской, — подставленный шаблон.
           expect(
@@ -109,10 +113,7 @@ void main() {
         expect(FiscalFailureReason.parse(reason.encode()), reason);
       }
     }
-    expect(
-      FiscalFailureReason.parse('Превышено автономное окно 72ч'),
-      isNull,
-    );
+    expect(FiscalFailureReason.parse('Превышено автономное окно 72ч'), isNull);
     final ru = lookupAppLocalizations(const Locale('ru'));
     expect(
       fiscalReasonText(ru, 'Касса заблокирована'),
@@ -122,7 +123,11 @@ void main() {
     expect(fiscalReasonText(ru, null), ru.fiscalReasonNotRecorded);
     expect(
       FiscalFailureReason.fromResult(
-        FiscalResult.failure('x', code: FiscalErrorCode.network, rawErrorCode: -1),
+        FiscalResult.failure(
+          'x',
+          code: FiscalErrorCode.network,
+          rawErrorCode: -1,
+        ),
       ).rawCode,
       isNull,
       reason: 'отрицательный код транспорта человеку ничего не говорит',
@@ -157,8 +162,7 @@ void main() {
         scanned++;
         final source = entity.readAsStringSync();
         for (final m in literal.allMatches(source)) {
-          final line =
-              '\n'.allMatches(source.substring(0, m.start)).length + 1;
+          final line = '\n'.allMatches(source.substring(0, m.start)).length + 1;
           hits.add('${entity.path}:$line');
         }
       }

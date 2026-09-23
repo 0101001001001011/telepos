@@ -3,6 +3,7 @@ import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/agent/agent_controller.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class AgentTable extends StatelessWidget {
   const AgentTable({
@@ -128,9 +129,7 @@ class AgentTable extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    final d = date.day.toString().padLeft(2, '0');
-    final m = date.month.toString().padLeft(2, '0');
-    return '$d.$m.${date.year}';
+    return TillConventions.current.formatDate(date);
   }
 
   void _onSelect(BuildContext context, AgentItem item) {

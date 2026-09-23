@@ -242,69 +242,77 @@ void main() {
 
   tearDown(() async => db.close());
 
-  test('аванс и QR на одном чеке: комната делится, а не выдаётся дважды',
-      () async {
-    await enableBoth();
-    await seedCustomerWithAdvance('600');
-    await paidIntent('q-mix', '600');
-    final view = await receiptWith(); // 2 × 500 = 1000
+  test(
+    'аванс и QR на одном чеке: комната делится, а не выдаётся дважды',
+    () async {
+      await enableBoth();
+      await seedCustomerWithAdvance('600');
+      await paidIntent('q-mix', '600');
+      final view = await receiptWith(); // 2 × 500 = 1000
 
-    final outcome = await payments.complete(
-      7,
-      PaymentRequest(
-        type: PaymentType.cash,
-        customerId: customerId,
-        prepaymentUsed: d('600'),
-        prepaymentReference: 'АВ-7',
-        qrIntentKey: 'q-mix',
-      ),
-      mv(view, 9),
-    );
+      final outcome = await payments.complete(
+        7,
+        PaymentRequest(
+          type: PaymentType.cash,
+          customerId: customerId,
+          prepaymentUsed: d('600'),
+          prepaymentReference: 'АВ-7',
+          qrIntentKey: 'q-mix',
+        ),
+        mv(view, 9),
+      );
 
-    expect(outcome.amount, d('1000'));
-    expect(outcome.paid, d('1000'));
-    expect(outcome.debt, Decimal.zero);
+      expect(outcome.amount, d('1000'));
+      expect(outcome.paid, d('1000'));
+      expect(outcome.debt, Decimal.zero);
 
-    final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
+      final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
 
-    // **Урезан аванс, а не QR** — вот всё утверждение этой пробы.
-    final qr = rows.singleWhere((r) => r.kindId == SystemPaymentKindIds.qr);
-    expect(
-      qr.amount,
-      d('600'),
-      reason: 'деньги провайдер уже взял, сдачи QR не даёт: урезанная '
-          'строка оставила бы заплаченное вне чека',
-    );
-    expect(qr.payeeAccountId, bankAccountId);
+      // **Урезан аванс, а не QR** — вот всё утверждение этой пробы.
+      final qr = rows.singleWhere((r) => r.kindId == SystemPaymentKindIds.qr);
+      expect(
+        qr.amount,
+        d('600'),
+        reason:
+            'деньги провайдер уже взял, сдачи QR не даёт: урезанная '
+            'строка оставила бы заплаченное вне чека',
+      );
+      expect(qr.payeeAccountId, bankAccountId);
 
-    final offset = rows.singleWhere(
-      (r) => r.kindId == SystemPaymentKindIds.prepayment,
-    );
-    expect(
-      offset.amount,
-      d('400'),
-      reason: 'аванс добирает остаток чека ПОСЛЕ QR, а не вместе с ним: '
-          '1000 − 600 = 400',
-    );
-    expect(offset.payeeAccountId, agentMainAccountId);
-    expect(offset.reference, 'АВ-7');
+      final offset = rows.singleWhere(
+        (r) => r.kindId == SystemPaymentKindIds.prepayment,
+      );
+      expect(
+        offset.amount,
+        d('400'),
+        reason:
+            'аванс добирает остаток чека ПОСЛЕ QR, а не вместе с ним: '
+            '1000 − 600 = 400',
+      );
+      expect(offset.payeeAccountId, agentMainAccountId);
+      expect(offset.reference, 'АВ-7');
 
-    // I172 — отдельно от полей, а не вместо них.
-    expect(rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount), d('1000'));
-    expect(rows.length, 2, reason: 'наличной строки на нулевую сдачу нет');
+      // I172 — отдельно от полей, а не вместо них.
+      expect(
+        rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount),
+        d('1000'),
+      );
+      expect(rows.length, 2, reason: 'наличной строки на нулевую сдачу нет');
 
-    // Живых денег в ящике нет ни от одного из двух.
-    expect(await balanceOf(posAccountId), Decimal.zero);
-    // QR — тендер: деньги посчитаны на банковский счёт.
-    expect(await balanceOf(bankAccountId), d('600'));
-    // Незачтённые 200 остались авансом покупателя, а не сгорели.
-    expect(
-      await balanceOf(agentMainAccountId),
-      d('200'),
-      reason: 'обратный порядок урезал бы QR, зачёл 600 авансом и обнулил '
-          'счёт — сумма сошлась бы так же, а 200 чужих денег пропали бы',
-    );
-  });
+      // Живых денег в ящике нет ни от одного из двух.
+      expect(await balanceOf(posAccountId), Decimal.zero);
+      // QR — тендер: деньги посчитаны на банковский счёт.
+      expect(await balanceOf(bankAccountId), d('600'));
+      // Незачтённые 200 остались авансом покупателя, а не сгорели.
+      expect(
+        await balanceOf(agentMainAccountId),
+        d('200'),
+        reason:
+            'обратный порядок урезал бы QR, зачёл 600 авансом и обнулил '
+            'счёт — сумма сошлась бы так же, а 200 чужих денег пропали бы',
+      );
+    },
+  );
 
   test('аванс покрывает то, что осталось после QR, а не весь чек', () async {
     await enableBoth();
@@ -340,8 +348,7 @@ void main() {
     expect(await balanceOf(agentMainAccountId), d('4900'));
   });
 
-  test('QR закрыл чек целиком — строки зачёта нет вовсе, аванс цел',
-      () async {
+  test('QR закрыл чек целиком — строки зачёта нет вовсе, аванс цел', () async {
     await enableBoth();
     await seedCustomerWithAdvance('600');
     await paidIntent('q-all', '1000');
@@ -359,11 +366,9 @@ void main() {
     );
 
     final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
-    expect(
-      rows.map((r) => r.kindId),
-      [SystemPaymentKindIds.qr],
-      reason: 'зачитывать нечего: строка на ноль — это строка ни о чём',
-    );
+    expect(rows.map((r) => r.kindId), [
+      SystemPaymentKindIds.qr,
+    ], reason: 'зачитывать нечего: строка на ноль — это строка ни о чём');
     expect(
       await balanceOf(agentMainAccountId),
       d('600'),
@@ -371,8 +376,7 @@ void main() {
     );
   });
 
-  test('QR не идёт условной записью зачёта — он тендер, а не offset',
-      () async {
+  test('QR не идёт условной записью зачёта — он тендер, а не offset', () async {
     // **Замер, а не пересказ справочника.** Ветвь зачёта в
     // `SaleUseCaseImpl.perform` спрашивает род расчёта и род счёта
     // (`isOffset && !isBonus`) и списывает деньги через `claimCredit` —
@@ -399,7 +403,8 @@ void main() {
     expect(
       await balanceOf(bankAccountId),
       before + d('600'),
-      reason: 'тендер кладёт деньги на счёт (post), а не снимает их с него '
+      reason:
+          'тендер кладёт деньги на счёт (post), а не снимает их с него '
           '(claimCredit)',
     );
     // А зачёт по той же операции — снял.
@@ -428,7 +433,8 @@ void main() {
     expect(
       after.settledReceiptNo,
       view.receiptNo,
-      reason: 'соседство с зачётом аванса не должно уводить пометку в чужой '
+      reason:
+          'соседство с зачётом аванса не должно уводить пометку в чужой '
           'чек',
     );
   });

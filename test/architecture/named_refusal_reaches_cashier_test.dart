@@ -220,7 +220,8 @@ void main() {
   test('у каждого кода, который провод или касса могут отдать, есть ключ '
       'словаря', () {
     final missing =
-        codeScan.codes.where((c) => !saleRefusalErrorKeys.containsKey(c))
+        codeScan.codes
+            .where((c) => !saleRefusalErrorKeys.containsKey(c))
             .toList()
           ..sort();
     expect(
@@ -330,14 +331,19 @@ void main() {
               if (shown.startsWith('error.')) 'на экране ключ',
             ];
             if (problems.isNotEmpty) {
-              wrong.add('$locale $outer ${error.runtimeType}: "$shown" — '
-                  '${problems.join(', ')}');
+              wrong.add(
+                '$locale $outer ${error.runtimeType}: "$shown" — '
+                '${problems.join(', ')}',
+              );
             }
           }
         }
       }
-      expect(wrong.take(20).toList(), isEmpty,
-          reason: 'всего: ${wrong.length}');
+      expect(
+        wrong.take(20).toList(),
+        isEmpty,
+        reason: 'всего: ${wrong.length}',
+      );
     },
   );
 
@@ -359,15 +365,19 @@ void main() {
           '"detail":"pay.certificate: сеанс неизвестен или истёк"}';
       Object? caught;
       try {
-        await WtPaymentService(answering(frame)).findCertificate(
-          'PS-0003',
-          pin: '1234',
-        );
+        await WtPaymentService(
+          answering(frame),
+        ).findCertificate('PS-0003', pin: '1234');
       } on Object catch (e) {
         caught = e;
       }
-      expect(caught, isA<SessionLost>(), reason: 'экран входа по-прежнему '
-          'ловит тип — он не должен смениться');
+      expect(
+        caught,
+        isA<SessionLost>(),
+        reason:
+            'экран входа по-прежнему '
+            'ловит тип — он не должен смениться',
+      );
 
       final wrong = <String>[];
       for (final locale in _locales) {
@@ -387,13 +397,17 @@ void main() {
           }
         }
       }
-      expect(wrong.take(20).toList(), isEmpty,
-          reason: 'всего: ${wrong.length}');
+      expect(
+        wrong.take(20).toList(),
+        isEmpty,
+        reason: 'всего: ${wrong.length}',
+      );
     },
   );
 
-  testWidgets('терминал сменён и терминал не заведён — свои фразы, не общая',
-      (tester) async {
+  testWidgets('терминал сменён и терминал не заведён — свои фразы, не общая', (
+    tester,
+  ) async {
     final stand = await _pumpLocale(tester, 'ru');
     for (final (frame, expected) in [
       (
@@ -447,10 +461,7 @@ void main() {
       stand.ctx,
       'error.search_failed:${readableTypeName('minified:dl')}',
     );
-    expect(
-      shown,
-      stand.l10n.errorSearchFailed(stand.l10n.errorReasonUnknown),
-    );
+    expect(shown, stand.l10n.errorSearchFailed(stand.l10n.errorReasonUnknown));
     expect(shown, isNot(contains('minified')));
   });
 
@@ -460,8 +471,9 @@ void main() {
     // `readableTypeName`. Поэтому эта половина — текстовая, и прочитанное
     // считается: `runtimeType` встречается в теле ровно один раз, и это
     // довод `readableTypeName`.
-    final source = File('lib/core/errors/safe_error_text.dart')
-        .readAsStringSync();
+    final source = File(
+      'lib/core/errors/safe_error_text.dart',
+    ).readAsStringSync();
     final code = source
         .split('\n')
         .where((l) => !l.trimLeft().startsWith('//'))

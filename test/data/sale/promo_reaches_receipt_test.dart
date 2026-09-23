@@ -349,7 +349,11 @@ void main() {
           ),
         ],
         payments: [
-          PaymentEntry(kindId: SystemPaymentKindIds.cash, payeeAccountId: posAccountId, amount: d('200')),
+          PaymentEntry(
+            kindId: SystemPaymentKindIds.cash,
+            payeeAccountId: posAccountId,
+            amount: d('200'),
+          ),
         ],
         change: Decimal.zero,
         selectiveOfd: false,

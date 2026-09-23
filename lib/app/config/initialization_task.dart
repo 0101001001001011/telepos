@@ -1,3 +1,4 @@
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'dart:async';
 
 import 'package:drift/drift.dart';
@@ -19,38 +20,36 @@ class InitializationTask {
 
   AppDatabase get _db => GetIt.I<AppDatabase>();
 
-  Future<AppInitStatus> run({
-    required void Function(double progress, String message) onProgress,
-  }) async {
+  Future<AppInitStatus> run({required BootProgress onProgress}) async {
     _logger.info('InitializationTask: starting');
 
     try {
-      onProgress(0.0, 'Загрузка конфигурации...');
+      onProgress(0.0, BootStage.loadingConfig);
       await _loadPosConfiguration();
 
-      onProgress(0.15, 'Загрузка контрагентов...');
+      onProgress(0.15, BootStage.loadingAgents);
       await _loadAgents();
 
-      onProgress(0.30, 'Загрузка счетов...');
+      onProgress(0.30, BootStage.loadingAccounts);
       await _loadAccounts();
 
-      onProgress(0.45, 'Загрузка кассиров...');
+      onProgress(0.45, BootStage.loadingCashiers);
       await _loadUsers();
 
-      onProgress(0.60, 'Загрузка товаров...');
+      onProgress(0.60, BootStage.loadingProducts);
       await _loadProducts();
 
-      onProgress(0.75, 'Проверка нумерации чеков...');
+      onProgress(0.75, BootStage.checkingReceiptNumbers);
       await _loadLastReceiptNo();
 
-      onProgress(0.85, 'Проверка отчётов...');
+      onProgress(0.85, BootStage.checkingReports);
       await _loadLastReport();
 
-      onProgress(0.95, 'Завершение инициализации...');
+      onProgress(0.95, BootStage.finishingInitialisation);
       await _setIsSyncedOnce();
       _schedulePrintQueueStart();
 
-      onProgress(1.0, 'Данные загружены');
+      onProgress(1.0, BootStage.dataLoaded);
       _logger.info('InitializationTask: completed successfully');
 
       return AppInitStatus.success;

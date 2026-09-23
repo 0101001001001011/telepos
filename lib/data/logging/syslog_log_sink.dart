@@ -176,7 +176,9 @@ Future<LogSink> openSyslogSink({
     );
   } on Object catch (error) {
     responses.close();
-    return UnavailableLogSink('the syslog isolate could not be started: $error');
+    return UnavailableLogSink(
+      'the syslog isolate could not be started: $error',
+    );
   }
 
   final firstReply = Completer<Object?>();
@@ -302,9 +304,7 @@ void syslogWorkerMain(List<Object?> boot) {
     }
     final opened = RkSyslogSink.open(settings);
     if (opened case RkSyslogFailure(:final status, :final detail)) {
-      reply.send(
-        '${status.wireName}${detail.isEmpty ? '' : ': $detail'}',
-      );
+      reply.send('${status.wireName}${detail.isEmpty ? '' : ': $detail'}');
       return;
     }
     sink = opened.valueOrNull;

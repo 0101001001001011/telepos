@@ -116,24 +116,27 @@ void main() {
   });
 
   group('Обёртка памяти', () {
-    test('строка доходит до настоящего дисплея, а не остаётся в журнале', () async {
-      final spy = _SpyDisplay();
-      final display = RecordingCustomerDisplay(spy, journal);
+    test(
+      'строка доходит до настоящего дисплея, а не остаётся в журнале',
+      () async {
+        final spy = _SpyDisplay();
+        final display = RecordingCustomerDisplay(spy, journal);
 
-      await display.showTotal(Decimal.parse('1250.00'));
+        await display.showTotal(Decimal.parse('1250.00'));
 
-      // `1250`, а не `1250.00`: соглядатай печатает Decimal как есть. Важно
-      // здесь другое — что вызов вообще дошёл; запись суммы проверяется
-      // строкой ниже, и она обязана совпасть с той, что уходит в порт.
-      expect(
-        spy.calls,
-        ['total:1250'],
-        reason:
-            'обёртка, которая пишет в журнал и не пишет в порт, выглядит '
-            'идеально: журнал полон, дисплей тёмен',
-      );
-      expect(journal.recent().single.text, '1250.00');
-    });
+        // `1250`, а не `1250.00`: соглядатай печатает Decimal как есть. Важно
+        // здесь другое — что вызов вообще дошёл; запись суммы проверяется
+        // строкой ниже, и она обязана совпасть с той, что уходит в порт.
+        expect(
+          spy.calls,
+          ['total:1250'],
+          reason:
+              'обёртка, которая пишет в журнал и не пишет в порт, выглядит '
+              'идеально: журнал полон, дисплей тёмен',
+        );
+        expect(journal.recent().single.text, '1250.00');
+      },
+    );
 
     test('отказ порта попадает в журнал и не проглатывается', () async {
       final spy = _SpyDisplay()..throwOnNext = StateError('COM9 занят');

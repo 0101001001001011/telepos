@@ -231,9 +231,11 @@ RefusalCodeScan scanRefusalCodes() {
         continue;
       }
       final expression =
-          name ?? text.substring(m.start + m.group(0)!.length - 1).split(
-            RegExp(r'[\s(\[=!?]'),
-          ).first;
+          name ??
+          text
+              .substring(m.start + m.group(0)!.length - 1)
+              .split(RegExp(r'[\s(\[=!?]'))
+              .first;
       final exemption = '$path|$expression';
       if (refusalPassThrough.containsKey(exemption)) {
         usedPassThrough.add(exemption);

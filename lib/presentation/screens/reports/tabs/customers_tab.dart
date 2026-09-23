@@ -11,6 +11,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/report_dao.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/reports/report_models.dart';
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_chart_card.dart';
@@ -39,18 +40,25 @@ final _topCustomersProvider =
       return rows.map((r) {
         return CustomerRanking(
           localId: r.read<int?>('customer_local_id') ?? 0,
-          name: r.read<String?>('name') ?? 'Без имени',
+          // Подпись «без имени» — дело интерфейса: у провайдера нет
+          // `BuildContext`, поэтому пустое имя доезжает пустым, а словарь
+          // подставляется на месте показа (`_nameOf`).
+          name: r.read<String?>('name') ?? '',
           revenue: r.readDecimal('revenue'),
           saleCount: r.read<int>('sale_count'),
         );
       }).toList();
     });
 
+String _nameOf(CustomerRanking c, AppLocalizations l10n) =>
+    c.name.isEmpty ? l10n.supplyNoName : c.name;
+
 class CustomersTab extends ConsumerWidget {
   const CustomersTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final reportState = ref.watch(reportsProvider);
     final range = reportState.dateRange;
 
@@ -82,7 +90,7 @@ class CustomersTab extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(
         child: Text(
-          'Ошибка: $e',
+          l10n.repErrorWith('$e'),
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 13,
@@ -96,6 +104,7 @@ class CustomersTab extends ConsumerWidget {
   // взять его можно только из `Theme.of`. Без него подпись красилась дневной
   // константой и в тёмной теме сливалась с фоном.
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -103,12 +112,12 @@ class CustomersTab extends ConsumerWidget {
           Icon(Icons.people_outline, size: 64, color: AppColors.textDisabled),
           const SizedBox(height: 16),
           Text(
-            'Нет данных о клиентах',
+            l10n.repNoCustomerData,
             style: AppTextStyles.h3.copyWith(color: AppColors.textDisabled),
           ),
           const SizedBox(height: 8),
           Text(
-            'Продажи без привязки к клиенту не отображаются',
+            l10n.repSalesWithoutCustomerHidden,
             style: context.styles.caption,
           ),
         ],
@@ -120,13 +129,14 @@ class CustomersTab extends ConsumerWidget {
     BuildContext context,
     List<CustomerRanking> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Топ-10 клиентов',
-        subtitle: 'Нет данных',
+        title: l10n.repTop10Customers,
+        subtitle: l10n.serviceNoOrders,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -142,17 +152,17 @@ class CustomersTab extends ConsumerWidget {
     final reversedRevenues = reversed.map((d) => d.revenue.toDouble()).toList();
 
     return ReportChartCard(
-      title: 'Топ-10 клиентов',
-      subtitle: 'по выручке (нажмите для деталей)',
+      title: l10n.repTop10Customers,
+      subtitle: l10n.repByRevenueTapHint,
       height: math.max(220, data.length * 36.0),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'customers_top',
-        ['Клиент', 'Продажи', 'Выручка'],
+        [l10n.paymentCustomerDefault, l10n.syncSales, l10n.repColRevenue],
         data
             .map(
               (d) => [
-                d.name,
+                _nameOf(d, l10n),
                 d.saleCount.toString(),
                 d.revenue.toStringAsFixed(2),
               ],
@@ -169,7 +179,11 @@ class CustomersTab extends ConsumerWidget {
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final customer = reversed[group.x.toInt()];
                 return BarTooltipItem(
-                  '${customer.name}\n${ReportMoney.full(customer.revenue)} ₸ (${customer.saleCount} чеков)',
+                  l10n.repCustomerTooltip(
+                    _nameOf(customer, l10n),
+                    ReportMoney.withCurrency(customer.revenue),
+                    customer.saleCount,
+                  ),
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 12,
@@ -224,7 +238,7 @@ class CustomersTab extends ConsumerWidget {
                   if (idx < 0 || idx >= reversed.length) {
                     return const SizedBox.shrink();
                   }
-                  final name = reversed[idx].name;
+                  final name = _nameOf(reversed[idx], l10n);
                   return SideTitleWidget(
                     axisSide: meta.axisSide,
                     child: SizedBox(
@@ -278,6 +292,7 @@ class CustomersTab extends ConsumerWidget {
     BuildContext context,
     CustomerRanking customer,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final avgCheck = customer.saleCount > 0
         ? (customer.revenue / Decimal.fromInt(customer.saleCount))
               .toDecimal(scaleOnInfinitePrecision: 3)
@@ -287,7 +302,7 @@ class CustomersTab extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          customer.name,
+          _nameOf(customer, l10n),
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         content: Column(
@@ -295,23 +310,23 @@ class CustomersTab extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DetailRow(
-              label: 'Выручка',
-              value: '${ReportMoney.full(customer.revenue)} ₸',
+              label: l10n.repColRevenue,
+              value: ReportMoney.withCurrency(customer.revenue),
             ),
             _DetailRow(
-              label: 'Количество чеков',
+              label: l10n.repReceiptCountLabel,
               value: '${customer.saleCount}',
             ),
             _DetailRow(
-              label: 'Средний чек',
-              value: '${ReportMoney.full(avgCheck)} ₸',
+              label: l10n.repKpiAvgCheck,
+              value: ReportMoney.withCurrency(avgCheck),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Закрыть'),
+            child: Text(l10n.globalClose),
           ),
         ],
       ),
@@ -322,6 +337,7 @@ class CustomersTab extends ConsumerWidget {
     BuildContext context,
     List<CustomerRanking> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
@@ -344,7 +360,7 @@ class CustomersTab extends ConsumerWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Все клиенты',
+                    l10n.repAllCustomers,
                     style: AppTextStyles.h3.copyWith(fontSize: 16),
                   ),
                 ),
@@ -352,11 +368,15 @@ class CustomersTab extends ConsumerWidget {
                   onPressed: () => ReportExportButton.exportCsv(
                     context,
                     'customers_all',
-                    ['Клиент', 'Продажи', 'Выручка'],
+                    [
+                      l10n.paymentCustomerDefault,
+                      l10n.syncSales,
+                      l10n.repColRevenue,
+                    ],
                     data
                         .map(
                           (d) => [
-                            d.name,
+                            _nameOf(d, l10n),
                             d.saleCount.toString(),
                             d.revenue.toStringAsFixed(2),
                           ],
@@ -364,7 +384,7 @@ class CustomersTab extends ConsumerWidget {
                         .toList(),
                   ),
                   icon: const Icon(Icons.download_rounded, size: 20),
-                  tooltip: 'Экспорт',
+                  tooltip: l10n.repExport,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   visualDensity: VisualDensity.compact,
                 ),
@@ -377,24 +397,33 @@ class CustomersTab extends ConsumerWidget {
               headingRowColor: WidgetStateProperty.all(
                 context.semantic.canvas.withValues(alpha: 0.5),
               ),
-              columns: const [
+              columns: [
                 DataColumn(
                   label: Text(
-                    'Клиент',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                    l10n.paymentCustomerDefault,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
                 DataColumn(
                   label: Text(
-                    'Продажи',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                    l10n.syncSales,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                   numeric: true,
                 ),
                 DataColumn(
                   label: Text(
-                    'Выручка',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                    l10n.repColRevenue,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                   numeric: true,
                 ),
@@ -409,7 +438,7 @@ class CustomersTab extends ConsumerWidget {
                       SizedBox(
                         width: 200,
                         child: Text(
-                          customer.name,
+                          _nameOf(customer, l10n),
                           style: const TextStyle(fontSize: 13),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -424,7 +453,7 @@ class CustomersTab extends ConsumerWidget {
                     ),
                     DataCell(
                       Text(
-                        '${ReportMoney.full(customer.revenue)} ₸',
+                        ReportMoney.withCurrency(customer.revenue),
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,

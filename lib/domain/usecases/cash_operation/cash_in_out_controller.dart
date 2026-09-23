@@ -42,7 +42,10 @@ abstract class CashInOutController {
   // дорога: `CashOperationReceiptService.printReceipt`, и она идёт через
   // очередь.
 
-  static final Decimal maxAmount = Decimal.fromInt(1000000);
+  /// Здесь лежал ВТОРОЙ потолок суммы, зашитый тем же миллионом, что и
+  /// потолок чека. Два числа для одного правила разошлись бы на первой же
+  /// правке одного из них; с 2026-09-22 потолок один и он настраивается —
+  /// `this_pos_entries.big_amount_limit`, см. `bigAmountLimitOf`.
 }
 
 enum CashInOutType { investment, expense, dividend }
@@ -61,22 +64,45 @@ enum ExpenseType {
   custom,
 }
 
+/// Итог кассовой операции.
+///
+/// # Почему отказ здесь — код, а не текст
+///
+/// Прежде отказ вёз русскую фразу, собранную в слое данных. Экран её даже
+/// не показывал: при `success == false` он просто закрывался
+/// (`_close(result)`), и кассир видел ровно то же, что при успехе.
+/// Внесение выше потолка **исчезало молча** — измерено 2026-09-22.
 class CashOperationResult {
   const CashOperationResult({
     required this.success,
     this.operationId,
-    this.errorMessage,
+    this.refusal,
+    this.limit,
+    this.errorDetail,
   });
 
   final bool success;
   final int? operationId;
-  final String? errorMessage;
+
+  /// Причина отказа кодом; `null` — операция прошла.
+  final CashAmountRefusal? refusal;
+
+  /// Потолок со знаком валюты, когда отказ именно в нём.
+  final String? limit;
+
+  /// Подробность для журнала, когда отказ не про сумму.
+  final String? errorDetail;
 
   factory CashOperationResult.created(int id) =>
       CashOperationResult(success: true, operationId: id);
 
-  factory CashOperationResult.failed(String message) =>
-      CashOperationResult(success: false, errorMessage: message);
+  factory CashOperationResult.refused(
+    CashAmountRefusal refusal, {
+    String? limit,
+  }) => CashOperationResult(success: false, refusal: refusal, limit: limit);
+
+  factory CashOperationResult.failed(String detail) =>
+      CashOperationResult(success: false, errorDetail: detail);
 }
 
 class CashOperationInfo {
@@ -101,17 +127,48 @@ class CashOperationInfo {
   final int? customFieldItemId;
 }
 
+/// Отказ ввода суммы кассовой операции.
+///
+/// # Почему код, а не фраза
+///
+/// До 2026-09-22 здесь лежал готовый русский текст («Сумма должна быть
+/// больше 0», «Сумма не может превышать 1000000»), и экран мог только
+/// показать его как есть. Кассир с английским интерфейсом прочёл бы
+/// русское предложение — если бы экран вообще звал проверку: он её не
+/// звал, и верхнего предела у кассовых операций не было вовсе.
+///
+/// Теперь отказ называется кодом, а слова подбирает экран. Потолок
+/// приезжает вместе с кодом — со знаком валюты, собранным кассой.
+enum CashAmountRefusal {
+  /// Сумма нулевая или отрицательная.
+  notPositive,
+
+  /// Сумма выше потолка кассы (`this_pos_entries.big_amount_limit`).
+  aboveCeiling,
+}
+
 class CashOperationValidation {
-  const CashOperationValidation({required this.isValid, this.errorMessage});
+  const CashOperationValidation({
+    required this.isValid,
+    this.refusal,
+    this.limit,
+  });
 
   final bool isValid;
-  final String? errorMessage;
+
+  /// Причина отказа — кодом; `null`, когда сумма принята.
+  final CashAmountRefusal? refusal;
+
+  /// Потолок со знаком валюты, когда отказ именно в нём.
+  final String? limit;
 
   factory CashOperationValidation.valid() =>
       const CashOperationValidation(isValid: true);
 
-  factory CashOperationValidation.invalid(String message) =>
-      CashOperationValidation(isValid: false, errorMessage: message);
+  factory CashOperationValidation.invalid(
+    CashAmountRefusal refusal, {
+    String? limit,
+  }) => CashOperationValidation(isValid: false, refusal: refusal, limit: limit);
 }
 
 extension CashInOutTypeExtension on CashInOutType {
@@ -135,22 +192,12 @@ extension ExpenseTypeExtension on ExpenseType {
     return ExpenseType.values[index];
   }
 
-  String get displayName {
-    switch (this) {
-      case ExpenseType.other:
-        return 'Другое';
-      case ExpenseType.smallPurchases:
-        return 'Закуп мелочей';
-      case ExpenseType.salary:
-        return 'Зарплата';
-      case ExpenseType.utilities:
-        return 'Коммунальные';
-      case ExpenseType.collection:
-        return 'Инкассация';
-      case ExpenseType.custom:
-        return 'Кастомный';
-    }
-  }
+  // `displayName` здесь БЫЛ и возвращал русские слова. Он шёл двумя
+  // дорогами сразу: в выпадающий список формы расхода (на английской кассе
+  // кассир выбирал «Зарплату») и в `cash_operations.note`, склеенный с
+  // комментарием человека, — то есть в историю, откуда слово уже не
+  // перевести. Слово переехало в `presentation/common/utils/
+  // cash_operation_label.dart`, род хранится числом (схема v58).
 
   bool get requiresNote => this == ExpenseType.other;
 }

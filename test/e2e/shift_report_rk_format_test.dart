@@ -22,6 +22,7 @@ void main() {
     cashStart: Decimal.parse('5000.00'),
     cashEnd: Decimal.parse('19000.50'),
     cashIncome: Decimal.parse('15000.50'),
+    cashDiscrepancy: Decimal.zero,
     cashExpense: Decimal.parse('1000.00'),
     certificatesIssued: Decimal.zero,
     certificatesRedeemed: Decimal.zero,
@@ -55,8 +56,13 @@ void main() {
       expect(t, contains('ВОЗВРАТЫ'));
       expect(t, contains('ДЕНЕЖНЫЕ ОПЕРАЦИИ'));
       expect(t, contains('На начало:'));
-      expect(t, contains('Внесения:'));
-      expect(t, contains('Изъятия:'));
+      // «Приход»/«Расход», а не «Внесения»/«Изъятия»: с 2026-09-22 в этих
+      // строках стоит ВЕСЬ приход и ВЕСЬ расход ящика — выручка с
+      // внесениями и возвраты с изъятиями, — иначе денежный блок бланка не
+      // сходился бы. Прежние подписи называли лишь один род операций из
+      // нескольких сложенных.
+      expect(t, contains('Приход:'));
+      expect(t, contains('Расход:'));
       expect(t, contains('ИТОГО В КАССЕ:'));
       expect(t, contains('ТОО Новая Заря'));
       expect(t, contains('Касса №1'));

@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
 
 /// Сборка позиции фискального документа — и **единственное место, где
 /// рождается число поля `Discount`**.
@@ -52,8 +53,6 @@ import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 class FiscalPositionBuilder {
   const FiscalPositionBuilder();
 
-  static final Decimal _hundred = Decimal.fromInt(100);
-
   /// Разряды денег в конверте — те же, что у `WebKassaProvider._money`.
   static const int moneyScale = 2;
 
@@ -82,14 +81,18 @@ class FiscalPositionBuilder {
   /// пересчёта не выполняется вовсе.
   ///
   /// Разрядов теперь с запасом, и округляет **только** `round`.
-  static Decimal vatFromGross(Decimal lineTotal, Decimal ratePercent) {
-    if (ratePercent <= Decimal.zero) return Decimal.zero;
-    final denominator = _hundred + ratePercent;
-    final rational = (lineTotal * ratePercent) / denominator;
-    return rational
-        .toDecimal(scaleOnInfinitePrecision: moneyScale + 8)
-        .round(scale: moneyScale);
-  }
+  /// Налог позиции — ОБЩЕЙ формулой продукта (`tax_amounts.dart`).
+  ///
+  /// Здесь лежала вторая её запись: та же арифметика, набранная другими
+  /// словами (`denominator` вместо `hundred + ratePercent`). Сторож
+  /// «формула живёт в одном месте» её не видел — он искал НАПИСАНИЕ, а не
+  /// вычисление, и на этом же месте пропустил третью запись, `VatCalculator`
+  /// с зашитыми 4/29 под ставку 16 %.
+  ///
+  /// Округление совпадает: `moneyScale + 8` — это 10, ровно столько же
+  /// берёт `taxFromGross`, а итог обе округляют до сотых.
+  static Decimal vatFromGross(Decimal lineTotal, Decimal ratePercent) =>
+      taxFromGross(lineTotal, ratePercent);
 
   /// Скидка строки — число поля `Discount` позиции.
   ///
@@ -227,9 +230,7 @@ class FiscalPositionBuilder {
     final target = bonus.round(scale: moneyScale);
     if (target <= Decimal.zero) return zeros;
 
-    final weights = [
-      for (final t in lineTotals) t.round(scale: moneyScale),
-    ];
+    final weights = [for (final t in lineTotals) t.round(scale: moneyScale)];
     final total = weights.fold(Decimal.zero, (Decimal a, b) => a + b);
     if (total <= Decimal.zero) return zeros;
 
@@ -296,7 +297,10 @@ class FiscalPositionBuilder {
     // бонус. Оператор пересчитывает НДС от неё же, и разойтись с ним
     // нельзя: расхождение — тот же отказ кодом 9.
     final tax = _buildTax(
-      lineTotal: taxableLine(lineTotal: lineTotal, extraDiscount: extraDiscount),
+      lineTotal: taxableLine(
+        lineTotal: lineTotal,
+        extraDiscount: extraDiscount,
+      ),
       productVatRate: productVatRate,
       settings: settings,
     );

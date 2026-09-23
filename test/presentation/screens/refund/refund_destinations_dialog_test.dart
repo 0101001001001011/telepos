@@ -78,8 +78,11 @@ void main() {
       ..registerSingleton<TerminalIdentity>(FakeTerminalIdentity())
       ..registerSingleton<TerminalRepository>(
         FakeTerminalRepository(
-          self: () async =>
-              const Terminal(id: 1, name: 'Планшет', pointMode: PointMode.cashier),
+          self: () async => const Terminal(
+            id: 1,
+            name: 'Планшет',
+            pointMode: PointMode.cashier,
+          ),
         ),
       )
       ..registerSingleton<RefundService>(_DraftWithDestinations());

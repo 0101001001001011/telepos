@@ -1,0 +1,71 @@
+{
+  "id": "it",
+  "title": "Италия",
+  "countryCode": "IT",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "€",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "22",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Aliquota ordinaria",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "Aliquota ridotta"
+    },
+    {
+      "code": "reduced2",
+      "title": "Aliquota ridotta 5%"
+    },
+    {
+      "code": "super",
+      "title": "Aliquota minima"
+    },
+    {
+      "code": "exempt",
+      "title": "Esente"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "it",
+      "name": "IVA",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "22"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "reduced2",
+          "kind": "taxed",
+          "ratePercent": "5"
+        },
+        {
+          "category": "super",
+          "kind": "taxed",
+          "ratePercent": "4"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "IVA: aliquota ordinaria e ridotte; проверьте перед работой"
+}

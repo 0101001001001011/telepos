@@ -148,9 +148,7 @@ class _PrepaymentPanelState extends ConsumerState<PrepaymentPanel> {
             ElevatedButton(
               key: const Key('payment_prepayment_all'),
               onPressed: () {
-                ref
-                    .read(paymentControllerProvider.notifier)
-                    .useAllPrepayment();
+                ref.read(paymentControllerProvider.notifier).useAllPrepayment();
                 _amountController.text = '$balance';
               },
               style: ElevatedButton.styleFrom(
@@ -432,10 +430,7 @@ class _OffsetSection extends StatelessWidget {
           ),
           const SizedBox(height: AppTheme.spacingSmall),
           if (reason != null)
-            Text(
-              reason,
-              style: context.styles.caption.copyWith(color: muted),
-            )
+            Text(reason, style: context.styles.caption.copyWith(color: muted))
           else
             ...children,
         ],
@@ -469,9 +464,7 @@ class _OffsetsPanelCompactState extends ConsumerState<OffsetsPanelCompact> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final split = ref.watch(
-      paymentControllerProvider.select((s) => s.offsets),
-    );
+    final split = ref.watch(paymentControllerProvider.select((s) => s.offsets));
     final covered = split.qr + split.prepayment + split.certificate;
 
     return Container(

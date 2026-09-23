@@ -9,6 +9,7 @@ import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/widgets/scroll_assist.dart';
 import 'package:telepos/presentation/controllers/stock_registry/stock_registry_controller.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class StockRegistryScreen extends ConsumerWidget {
   const StockRegistryScreen({super.key});
@@ -802,9 +803,7 @@ class _StockRegistryFiltersState extends ConsumerState<_StockRegistryFilters> {
   }
 
   String _formatDate(DateTime date) {
-    final d = date.day.toString().padLeft(2, '0');
-    final m = date.month.toString().padLeft(2, '0');
-    return '$d.$m.${date.year}';
+    return TillConventions.current.formatDate(date);
   }
 }
 
@@ -986,11 +985,7 @@ class _StockRegistryTable extends ConsumerWidget {
   }
 
   String _formatDateTime(DateTime time) {
-    final d = time.day.toString().padLeft(2, '0');
-    final m = time.month.toString().padLeft(2, '0');
-    final h = time.hour.toString().padLeft(2, '0');
-    final min = time.minute.toString().padLeft(2, '0');
-    return '$d.$m.${time.year} $h:$min';
+    return TillConventions.current.formatDateTime(time);
   }
 
   void _showDetails(BuildContext context, StockRegistryItem item) {
@@ -1274,11 +1269,7 @@ class _StockRegistryCard extends StatelessWidget {
   }
 
   String _formatDateTime(DateTime time) {
-    final d = time.day.toString().padLeft(2, '0');
-    final m = time.month.toString().padLeft(2, '0');
-    final h = time.hour.toString().padLeft(2, '0');
-    final min = time.minute.toString().padLeft(2, '0');
-    return '$d.$m.${time.year} $h:$min';
+    return TillConventions.current.formatDateTime(time);
   }
 
   void _showDetails(BuildContext context) {
@@ -1428,8 +1419,8 @@ class _CreateActionsFab extends ConsumerWidget {
               _CreateMenuItem(
                 icon: Icons.playlist_add_check,
                 color: AppColors.primary,
-                title: 'Заявка поставщику',
-                subtitle: 'Дозаказ товаров с низким остатком',
+                title: AppLocalizations.of(context)!.supplierOrderTitle,
+                subtitle: l10n.stockLowStockReorder,
                 onTap: () {
                   Navigator.of(sheetCtx).pop();
                   router.go(AppRoutes.supplierOrder);

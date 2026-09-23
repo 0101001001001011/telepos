@@ -9,6 +9,7 @@ abstract class CreateProductInfoUseCase {
     String? description,
     String? imagePath,
     int? vatRate,
+    int? taxCategoryId,
     String? ntin,
     bool isMarkable = false,
     String? brand,

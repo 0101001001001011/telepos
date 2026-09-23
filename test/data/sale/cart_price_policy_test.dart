@@ -379,23 +379,26 @@ void main() {
       expect(sale!.isWholesale, isFalse, reason: 'чек остался розничным');
     });
 
-    test('отказ доходит до денег: новая строка идёт по 500, не по 300', () async {
-      // **Главная проба группы.** Остальные мерят флаг и код; эта мерит то,
-      // ради чего настройка заведена: цену, по которой товар уедет в чек.
-      // Без неё «опт не включился» могло бы означать что угодно, вплоть до
-      // того, что оптовой цены у товара просто нет.
-      var view = await oneLine();
-      await setEditPrice(false);
+    test(
+      'отказ доходит до денег: новая строка идёт по 500, не по 300',
+      () async {
+        // **Главная проба группы.** Остальные мерят флаг и код; эта мерит то,
+        // ради чего настройка заведена: цену, по которой товар уедет в чек.
+        // Без неё «опт не включился» могло бы означать что угодно, вплоть до
+        // того, что оптовой цены у товара просто нет.
+        var view = await oneLine();
+        await setEditPrice(false);
 
-      await expectLater(
-        () => cart.setWholesale(7, true, mv(view, 3), by: full),
-        deniedPolicy,
-      );
+        await expectLater(
+          () => cart.setWholesale(7, true, mv(view, 3), by: full),
+          deniedPolicy,
+        );
 
-      view = await cart.addByBarcode(7, barcode, mv(view, 4));
-      expect(view.lines.single.price, d('500'));
-      expect(view.lines.single.quantity, d('2'), reason: 'слилось в строку');
-    });
+        view = await cart.addByBarcode(7, barcode, mv(view, 4));
+        expect(view.lines.single.price, d('500'));
+        expect(view.lines.single.quantity, d('2'), reason: 'слилось в строку');
+      },
+    );
 
     test('нет права — forbidden, а не denied_policy: право первым', () async {
       // Тот же порядок «кому → где → сколько», что у правки цены: кассир
@@ -427,55 +430,72 @@ void main() {
       expect(sale!.isWholesale, isFalse);
     });
 
-    test('управляющая: тумблер включён — опт включается и меняет цену', () async {
-      // Починка не заперла всех подряд: с разрешающей настройкой и правом
-      // всё работает как до ревизии, включая саму оптовую цену.
-      var view = await oneLine();
-      await setEditPrice(true);
+    test(
+      'управляющая: тумблер включён — опт включается и меняет цену',
+      () async {
+        // Починка не заперла всех подряд: с разрешающей настройкой и правом
+        // всё работает как до ревизии, включая саму оптовую цену.
+        var view = await oneLine();
+        await setEditPrice(true);
 
-      view = await cart.setWholesale(7, true, mv(view, 3), by: full);
-      view = await cart.addByBarcode(7, barcode, mv(view, 4));
+        view = await cart.setWholesale(7, true, mv(view, 3), by: full);
+        view = await cart.addByBarcode(7, barcode, mv(view, 4));
 
-      expect(
-        view.lines.map((l) => l.price),
-        containsAll([d('500'), d('300')]),
-        reason: 'старая строка по рознице, новая по опту',
-      );
-    });
+        expect(
+          view.lines.map((l) => l.price),
+          containsAll([d('500'), d('300')]),
+          reason: 'старая строка по рознице, новая по опту',
+        );
+      },
+    );
   });
 
   group('опт закрыт той же настройкой: второй вход, start(wholesale)', () {
-    test('новый оптовый чек при выключенном тумблере — denied_policy', () async {
-      // Вход, которого не было в плане ревизии. `sale_controller._start`
-      // передаёт сюда `state.mode == SaleMode.wholesale`, а режим переживает
-      // завершённый чек: владелец, выключивший тумблер при открытом оптовом
-      // чеке, получал следующий чек снова оптовым — мимо `setWholesale` и
-      // мимо её проверки.
-      await setEditPrice(false);
+    test(
+      'новый оптовый чек при выключенном тумблере — denied_policy',
+      () async {
+        // Вход, которого не было в плане ревизии. `sale_controller._start`
+        // передаёт сюда `state.mode == SaleMode.wholesale`, а режим переживает
+        // завершённый чек: владелец, выключивший тумблер при открытом оптовом
+        // чеке, получал следующий чек снова оптовым — мимо `setWholesale` и
+        // мимо её проверки.
+        await setEditPrice(false);
 
-      await expectLater(
-        () => cart.start(terminalId: 11, wholesale: true, meta: m(1)),
-        deniedPolicy,
-      );
+        await expectLater(
+          () => cart.start(terminalId: 11, wholesale: true, meta: m(1)),
+          deniedPolicy,
+        );
 
-      final mine = await cart.currentView(11);
-      expect(mine.receiptNo, isNull, reason: 'чек не заведён вовсе');
-    });
+        final mine = await cart.currentView(11);
+        expect(mine.receiptNo, isNull, reason: 'чек не заведён вовсе');
+      },
+    );
 
-    test('розничный чек при выключенном тумблере начинается как раньше', () async {
-      // Диверсия второго рода: «отказывать всякому `start`» прошло бы пробу
-      // выше и остановило бы торговлю целиком.
-      await setEditPrice(false);
+    test(
+      'розничный чек при выключенном тумблере начинается как раньше',
+      () async {
+        // Диверсия второго рода: «отказывать всякому `start`» прошло бы пробу
+        // выше и остановило бы торговлю целиком.
+        await setEditPrice(false);
 
-      final view = await cart.start(terminalId: 12, wholesale: false, meta: m(1));
+        final view = await cart.start(
+          terminalId: 12,
+          wholesale: false,
+          meta: m(1),
+        );
 
-      expect(view.receiptNo, isNotNull);
-    });
+        expect(view.receiptNo, isNotNull);
+      },
+    );
 
     test('управляющая: тумблер включён — оптовый чек начинается', () async {
       await setEditPrice(true);
 
-      final view = await cart.start(terminalId: 13, wholesale: true, meta: m(1));
+      final view = await cart.start(
+        terminalId: 13,
+        wholesale: true,
+        meta: m(1),
+      );
 
       final sale = await db.saleDao.findByKey(view.receiptNo!, view.posId);
       expect(sale!.isWholesale, isTrue);

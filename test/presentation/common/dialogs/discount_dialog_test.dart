@@ -102,7 +102,6 @@ void main() {
   });
 
   group('Предел виден ДО ввода', () {
-
     Widget host(DiscountCap? cap, {Decimal? subtotal}) => MaterialApp(
       theme: AppTheme.light,
       localizationsDelegates: const [

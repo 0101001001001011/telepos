@@ -85,7 +85,9 @@ class _PrintSpy implements ReceiptPrintService {
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #printRefundReceipt) {
       receipts.add(invocation.positionalArguments.single as RefundReceiptData);
-      return Future<PrintSubmitOutcome>.value(PrintSubmitOutcome.accepted('p1'));
+      return Future<PrintSubmitOutcome>.value(
+        PrintSubmitOutcome.accepted('p1'),
+      );
     }
     return super.noSuchMethod(invocation);
   }
@@ -185,16 +187,16 @@ void main() {
     }
   }
 
-  Future<int> refund(int receiptNo, String amount, {String quantity = '2'}) async {
+  Future<int> refund(
+    int receiptNo,
+    String amount, {
+    String quantity = '2',
+  }) async {
     await db
         .into(db.refunds)
         .insert(RefundsCompanion.insert(userId: _cashier, time: 2000));
     final refundId = (await db.select(db.refunds).get()).last.localId;
-    await RefundUseCaseImpl(
-      db: db,
-      logger: logger,
-      fiscal: fiscal,
-    ).perform(
+    await RefundUseCaseImpl(db: db, logger: logger, fiscal: fiscal).perform(
       refundLocalId: refundId,
       amount: d(amount),
       userId: _cashier,
@@ -237,7 +239,9 @@ void main() {
         );
     await db
         .into(db.users)
-        .insert(const UsersCompanion(id: Value(_cashier), name: Value('Айгуль')));
+        .insert(
+          const UsersCompanion(id: Value(_cashier), name: Value('Айгуль')),
+        );
     await db
         .into(db.shifts)
         .insert(
@@ -410,41 +414,44 @@ void main() {
       expect(await balanceOf(_bankAccount), d('5000'));
     });
 
-    test('вид с запретом возврата — названный отказ до единой записи', () async {
-      await db.paymentKindDao.put(
-        SystemPaymentKinds.byId(
-          SystemPaymentKindIds.card,
-        ).copyWith(refundAllowed: false),
-      );
-      await receipt(9, [
-        (
-          accountId: _bankAccount,
-          kindId: SystemPaymentKindIds.card,
-          amount: '1000',
-          reference: null,
-          transactionId: null,
-        ),
-      ]);
-
-      await expectLater(
-        refund(9, '1000'),
-        throwsA(
-          isA<WireRefusal>().having(
-            (r) => r.code,
-            'code',
-            'refund_kind_not_refundable',
+    test(
+      'вид с запретом возврата — названный отказ до единой записи',
+      () async {
+        await db.paymentKindDao.put(
+          SystemPaymentKinds.byId(
+            SystemPaymentKindIds.card,
+          ).copyWith(refundAllowed: false),
+        );
+        await receipt(9, [
+          (
+            accountId: _bankAccount,
+            kindId: SystemPaymentKindIds.card,
+            amount: '1000',
+            reference: null,
+            transactionId: null,
           ),
-        ),
-      );
-      final refundId = (await db.select(db.refunds).get()).last.localId;
-      expect(await db.paymentDao.findByRefund(refundId), isEmpty);
-      expect(await balanceOf(_bankAccount), d('5000'));
-      expect(
-        (await db.productInfoDao.findByUcode(100))!.quantity,
-        d('100'),
-        reason: 'товар на остаток не лёг — отказ стоит раньше транзакции',
-      );
-    });
+        ]);
+
+        await expectLater(
+          refund(9, '1000'),
+          throwsA(
+            isA<WireRefusal>().having(
+              (r) => r.code,
+              'code',
+              'refund_kind_not_refundable',
+            ),
+          ),
+        );
+        final refundId = (await db.select(db.refunds).get()).last.localId;
+        expect(await db.paymentDao.findByRefund(refundId), isEmpty);
+        expect(await balanceOf(_bankAccount), d('5000'));
+        expect(
+          (await db.productInfoDao.findByUcode(100))!.quantity,
+          d('100'),
+          reason: 'товар на остаток не лёг — отказ стоит раньше транзакции',
+        );
+      },
+    );
   });
 
   group('фискальный возврат по видам', () {
@@ -509,7 +516,8 @@ void main() {
       expect(
         args[#cashAmount],
         d('400'),
-        reason: 'долг остатком уезжал оператору наличными: 1000 при 400 из ящика',
+        reason:
+            'долг остатком уезжал оператору наличными: 1000 при 400 из ящика',
       );
     });
 
@@ -541,11 +549,7 @@ void main() {
           .insert(RefundsCompanion.insert(userId: _cashier, time: 2000));
       final refundId = (await db.select(db.refunds).get()).last.localId;
 
-      await RefundUseCaseImpl(
-        db: db,
-        logger: logger,
-        fiscal: fiscal,
-      ).perform(
+      await RefundUseCaseImpl(db: db, logger: logger, fiscal: fiscal).perform(
         refundLocalId: refundId,
         amount: d('1000'),
         userId: _cashier,
@@ -630,11 +634,7 @@ void main() {
           db: db,
           logger: logger,
           initiation: RefundInitiationUseCaseImpl(db: db, logger: logger),
-          refunds: RefundUseCaseImpl(
-            db: db,
-            logger: logger,
-            fiscal: fiscal,
-          ),
+          refunds: RefundUseCaseImpl(db: db, logger: logger, fiscal: fiscal),
           canBeRefunded: CanSaleBeRefundedUseCaseImpl(db: db, logger: logger),
           drawer: drawer,
         );
@@ -731,10 +731,21 @@ void main() {
       );
     });
 
-    for (final (label, drawer) in <(String, Future<bool> Function())>[
-      ('ответил «не открылся»', () async => false),
-      ('бросил', () async => throw StateError('COM3: порт занят')),
-    ]) {
+    // Третьим членом — ОЖИДАЕМАЯ подпись беды. Два случая говорят разное, и
+    // до 2026-09-22 это различие было стёрто: чистый отказ вёз дословный
+    // повтор словарного заголовка по-русски, и на английской кассе выходило
+    // «Cash drawer did not open: денежный ящик не открылся».
+    for (final (label, drawer, detail)
+        in <(String, Future<bool> Function(), Matcher)>[
+          // Ящик отказал чисто: сверх заголовка сказать нечего.
+          ('ответил «не открылся»', () async => false, isEmpty),
+          // Ящик бросил: подпись НЕСЁТ причину, и она кассиру нужна.
+          (
+            'бросил',
+            () async => throw StateError('COM3: порт занят'),
+            isNotEmpty,
+          ),
+        ]) {
       test('ящик $label: возврат состоялся, беда названа тому месту, которое '
           'возвращало, и только один раз', () async {
         await certificateAndCash(23);
@@ -773,7 +784,7 @@ void main() {
         );
         expect(troubles.single.kind, CompletionTroubleKind.drawer);
         expect(troubles.single.receiptNo, outcome.refundLocalId);
-        expect(troubles.single.message, isNotEmpty);
+        expect(troubles.single.message, detail);
         expect(
           await service.hardwareTroubles(terminal, outcome.refundLocalId),
           isEmpty,
@@ -783,136 +794,136 @@ void main() {
     }
   });
 
-  test('снимок черновика говорит, куда уйдут деньги, до подтверждения', () async {
-    await db.certificateDao.insertCertificate(
-      number: 'C-V',
-      nominal: d('500'),
-      issuedAt: 1000,
-      status: CertificateStatus.redeemed,
-      liabilityAccountId: _liabilityAccount,
-    );
-    await receipt(7, [
-      (
-        accountId: _liabilityAccount,
-        kindId: SystemPaymentKindIds.certificate,
-        amount: '500',
-        reference: 'C-V',
-        transactionId: null,
-      ),
-      (
-        accountId: _posAccount,
-        kindId: SystemPaymentKindIds.cash,
-        amount: '500',
-        reference: null,
-        transactionId: null,
-      ),
-    ]);
-    final service = LocalRefundService(
-      db: db,
-      logger: logger,
-      initiation: RefundInitiationUseCaseImpl(db: db, logger: logger),
-      refunds: RefundUseCaseImpl(
+  test(
+    'снимок черновика говорит, куда уйдут деньги, до подтверждения',
+    () async {
+      await db.certificateDao.insertCertificate(
+        number: 'C-V',
+        nominal: d('500'),
+        issuedAt: 1000,
+        status: CertificateStatus.redeemed,
+        liabilityAccountId: _liabilityAccount,
+      );
+      await receipt(7, [
+        (
+          accountId: _liabilityAccount,
+          kindId: SystemPaymentKindIds.certificate,
+          amount: '500',
+          reference: 'C-V',
+          transactionId: null,
+        ),
+        (
+          accountId: _posAccount,
+          kindId: SystemPaymentKindIds.cash,
+          amount: '500',
+          reference: null,
+          transactionId: null,
+        ),
+      ]);
+      final service = LocalRefundService(
         db: db,
         logger: logger,
-        fiscal: fiscal,
-      ),
-      canBeRefunded: CanSaleBeRefundedUseCaseImpl(db: db, logger: logger),
-      drawer: () async => true,
-    );
+        initiation: RefundInitiationUseCaseImpl(db: db, logger: logger),
+        refunds: RefundUseCaseImpl(db: db, logger: logger, fiscal: fiscal),
+        canBeRefunded: CanSaleBeRefundedUseCaseImpl(db: db, logger: logger),
+        drawer: () async => true,
+      );
 
-    final whole = await service.loadReceipt(
-      7,
-      7,
-      _posId,
-      const CartCommandMeta(key: 'v1', baseVersion: 0, receiptNo: null),
-    );
-    Map<RefundRoute, Decimal> shown(RefundView v) => {
-      for (final x in v.destinations) x.route: x.amount,
-    };
-    expect(shown(whole), {
-      RefundRoute.certificate: d('500'),
-      RefundRoute.drawer: d('500'),
-    });
-    expect(
-      whole.destinations.first.detail,
-      'C-V',
-      reason: 'кассир видит, на какой именно сертификат',
-    );
+      final whole = await service.loadReceipt(
+        7,
+        7,
+        _posId,
+        const CartCommandMeta(key: 'v1', baseVersion: 0, receiptNo: null),
+      );
+      Map<RefundRoute, Decimal> shown(RefundView v) => {
+        for (final x in v.destinations) x.route: x.amount,
+      };
+      expect(shown(whole), {
+        RefundRoute.certificate: d('500'),
+        RefundRoute.drawer: d('500'),
+      });
+      expect(
+        whole.destinations.first.detail,
+        'C-V',
+        reason: 'кассир видит, на какой именно сертификат',
+      );
 
-    final half = await service.setLineQuantity(
-      7,
-      whole.lines.single.id,
-      d('1'),
-      CartCommandMeta(
-        key: 'v2',
-        baseVersion: whole.version,
-        receiptNo: whole.draftNo,
-      ),
-    );
-    expect(
-      shown(half),
-      {RefundRoute.certificate: d('500')},
-      reason: 'снимок считает тем же правилом, что проведение',
-    );
-  });
-
-  test('чек возврата печатает то, чем вернулось, а не пропорцию чека', () async {
-    final printer = _PrintSpy();
-    GetIt.I.registerSingleton<ReceiptPrintService>(printer);
-    await db.certificateDao.insertCertificate(
-      number: 'C-P',
-      nominal: d('500'),
-      issuedAt: 1000,
-      status: CertificateStatus.redeemed,
-      liabilityAccountId: _liabilityAccount,
-    );
-    await db.customUpdate(
-      "UPDATE gift_certificates SET balance_millis = 0 WHERE number = 'C-P'",
-    );
-    await receipt(6, [
-      (
-        accountId: _liabilityAccount,
-        kindId: SystemPaymentKindIds.certificate,
-        amount: '500',
-        reference: 'C-P',
-        transactionId: null,
-      ),
-      (
-        accountId: _posAccount,
-        kindId: SystemPaymentKindIds.cash,
-        amount: '500',
-        reference: null,
-        transactionId: null,
-      ),
-    ]);
-    final refundId = await refund(6, '500', quantity: '1');
-
-    await LocalRefundReceiptPrinter(db: db, logger: logger).printRefund(
-      outcome: RefundOutcome(
-        refundLocalId: refundId,
-        amount: d('500'),
-        lineCount: 1,
-        paymentCount: 1,
-        saleReceiptNo: 6,
-        salePosId: _posId,
-      ),
-      lines: [
-        RefundLine(
-          id: '1',
-          productId: 100,
-          name: 'Кофе',
-          quantity: d('1'),
-          price: d('500'),
+      final half = await service.setLineQuantity(
+        7,
+        whole.lines.single.id,
+        d('1'),
+        CartCommandMeta(
+          key: 'v2',
+          baseVersion: whole.version,
+          receiptNo: whole.draftNo,
         ),
-      ],
-      userId: _cashier,
-    );
+      );
+      expect(shown(half), {
+        RefundRoute.certificate: d('500'),
+      }, reason: 'снимок считает тем же правилом, что проведение');
+    },
+  );
 
-    final lines = printer.receipts.single.payments;
-    expect(
-      [for (final l in lines) (l.amount, l.isCash)],
-      [(d('500'), false)],
-      reason: 'чек обязан говорить то же, что строки сторно',
-    );
-  });
+  test(
+    'чек возврата печатает то, чем вернулось, а не пропорцию чека',
+    () async {
+      final printer = _PrintSpy();
+      GetIt.I.registerSingleton<ReceiptPrintService>(printer);
+      await db.certificateDao.insertCertificate(
+        number: 'C-P',
+        nominal: d('500'),
+        issuedAt: 1000,
+        status: CertificateStatus.redeemed,
+        liabilityAccountId: _liabilityAccount,
+      );
+      await db.customUpdate(
+        "UPDATE gift_certificates SET balance_millis = 0 WHERE number = 'C-P'",
+      );
+      await receipt(6, [
+        (
+          accountId: _liabilityAccount,
+          kindId: SystemPaymentKindIds.certificate,
+          amount: '500',
+          reference: 'C-P',
+          transactionId: null,
+        ),
+        (
+          accountId: _posAccount,
+          kindId: SystemPaymentKindIds.cash,
+          amount: '500',
+          reference: null,
+          transactionId: null,
+        ),
+      ]);
+      final refundId = await refund(6, '500', quantity: '1');
+
+      await LocalRefundReceiptPrinter(db: db, logger: logger).printRefund(
+        outcome: RefundOutcome(
+          refundLocalId: refundId,
+          amount: d('500'),
+          lineCount: 1,
+          paymentCount: 1,
+          saleReceiptNo: 6,
+          salePosId: _posId,
+        ),
+        lines: [
+          RefundLine(
+            id: '1',
+            productId: 100,
+            name: 'Кофе',
+            quantity: d('1'),
+            price: d('500'),
+          ),
+        ],
+        userId: _cashier,
+      );
+
+      final lines = printer.receipts.single.payments;
+      expect(
+        [for (final l in lines) (l.amount, l.isCash)],
+        [(d('500'), false)],
+        reason: 'чек обязан говорить то же, что строки сторно',
+      );
+    },
+  );
 }

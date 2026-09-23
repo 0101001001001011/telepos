@@ -38,70 +38,56 @@ void main() {
 
   Future<void> settle() => Future<void>.delayed(Duration.zero);
 
-  test(
-    'ГЛАВНЫЙ ТЕСТ: setWalkUpEnabled пишет auth.settingsChanged c '
-    'действующим userId',
-    () async {
-      final controller = container.read(
-        authSettingsControllerProvider.notifier,
-      );
+  test('ГЛАВНЫЙ ТЕСТ: setWalkUpEnabled пишет auth.settingsChanged c '
+      'действующим userId', () async {
+    final controller = container.read(authSettingsControllerProvider.notifier);
 
-      await controller.setWalkUpEnabled(true);
-      await settle();
+    await controller.setWalkUpEnabled(true);
+    await settle();
 
-      final rows = await db.securityEventDao.findAll();
-      final settingsRows = rows.where(
-        (r) => r.eventType == SecurityEventType.authSettingsChanged,
-      );
-      expect(settingsRows, hasLength(1));
-      expect(settingsRows.single.outcome, 'walkUp=true');
-      expect(
-        settingsRows.single.userId,
-        9,
-        reason: 'действующий — тот, кто вошёл на этой вкладке, известный '
-            'через appStateProvider',
-      );
-    },
-  );
+    final rows = await db.securityEventDao.findAll();
+    final settingsRows = rows.where(
+      (r) => r.eventType == SecurityEventType.authSettingsChanged,
+    );
+    expect(settingsRows, hasLength(1));
+    expect(settingsRows.single.outcome, 'walkUp=true');
+    expect(
+      settingsRows.single.userId,
+      9,
+      reason:
+          'действующий — тот, кто вошёл на этой вкладке, известный '
+          'через appStateProvider',
+    );
+  });
 
-  test(
-    'ГЛАВНЫЙ ТЕСТ: setSessionIdleMinutes пишет auth.settingsChanged с '
-    'новым значением в outcome',
-    () async {
-      final controller = container.read(
-        authSettingsControllerProvider.notifier,
-      );
+  test('ГЛАВНЫЙ ТЕСТ: setSessionIdleMinutes пишет auth.settingsChanged с '
+      'новым значением в outcome', () async {
+    final controller = container.read(authSettingsControllerProvider.notifier);
 
-      final ok = await controller.setSessionIdleMinutes(45);
-      await settle();
+    final ok = await controller.setSessionIdleMinutes(45);
+    await settle();
 
-      expect(ok, isTrue);
-      final rows = await db.securityEventDao.findAll();
-      final settingsRows = rows.where(
-        (r) => r.eventType == SecurityEventType.authSettingsChanged,
-      );
-      expect(settingsRows, hasLength(1));
-      expect(settingsRows.single.outcome, 'sessionIdleMinutes=45');
-    },
-  );
+    expect(ok, isTrue);
+    final rows = await db.securityEventDao.findAll();
+    final settingsRows = rows.where(
+      (r) => r.eventType == SecurityEventType.authSettingsChanged,
+    );
+    expect(settingsRows, hasLength(1));
+    expect(settingsRows.single.outcome, 'sessionIdleMinutes=45');
+  });
 
-  test(
-    'значение вне допустимых границ не пишет событие — ничего не '
-    'применилось, писать нечего',
-    () async {
-      final controller = container.read(
-        authSettingsControllerProvider.notifier,
-      );
+  test('значение вне допустимых границ не пишет событие — ничего не '
+      'применилось, писать нечего', () async {
+    final controller = container.read(authSettingsControllerProvider.notifier);
 
-      final ok = await controller.setSessionIdleMinutes(0);
-      await settle();
+    final ok = await controller.setSessionIdleMinutes(0);
+    await settle();
 
-      expect(ok, isFalse);
-      final rows = await db.securityEventDao.findAll();
-      expect(
-        rows.where((r) => r.eventType == SecurityEventType.authSettingsChanged),
-        isEmpty,
-      );
-    },
-  );
+    expect(ok, isFalse);
+    final rows = await db.securityEventDao.findAll();
+    expect(
+      rows.where((r) => r.eventType == SecurityEventType.authSettingsChanged),
+      isEmpty,
+    );
+  });
 }

@@ -188,11 +188,7 @@ void main() {
         contains('кредит'),
         reason: 'названо, чего именно нет на этой кассе',
       );
-      expect(
-        text,
-        contains('настройк'),
-        reason: 'названо, где это меняется',
-      );
+      expect(text, contains('настройк'), reason: 'названо, где это меняется');
       expect(
         text,
         isNot(contains('право')),

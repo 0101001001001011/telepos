@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+import 'package:telepos/core/locale/till_language.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -950,15 +953,18 @@ class InitialSetupNotifier extends Notifier<InitialSetupState> {
           userComplete;
 
       if (!allComplete) {
+        // КОДЫ, а не слова: перечень доезжает до экрана доводом отказа
+        // `error.setup_incomplete`, и до 2026-09-22 иностранец читал в нём
+        // «организация, касса, фискализация» по-русски.
         final missing = <String>[
-          if (!orgComplete) 'организация',
-          if (!posComplete) 'касса',
-          if (!fiscalComplete) 'фискализация',
-          if (!equipComplete) 'оборудование',
-          if (!terminalComplete) 'платёжные терминалы',
-          if (!rulesComplete) 'правила',
-          if (!userComplete) 'пользователь',
-        ].join(', ');
+          if (!orgComplete) 'org',
+          if (!posComplete) 'pos',
+          if (!fiscalComplete) 'fiscal',
+          if (!equipComplete) 'equipment',
+          if (!terminalComplete) 'terminals',
+          if (!rulesComplete) 'rules',
+          if (!userComplete) 'user',
+        ].join(',');
         SetupLogger.warning(
           'finishSetup: данные неполные — не хватает: $missing',
         );
@@ -1008,6 +1014,14 @@ class InitialSetupNotifier extends Notifier<InitialSetupState> {
       employees: state.employees,
       firstUser: state.firstUser,
       secondUser: state.secondUser,
+      // Имя карточного счёта — на языке интерфейса. В слое данных стояло
+      // зашитое «Банк (карта)», и американская касса заводила счёт с
+      // русским именем, которое потом показывалось в отчётах. Имя счёта —
+      // данные: человек правит его на экране счетов, поэтому слово
+      // выбирается ОДИН РАЗ, здесь, а не при каждом показе.
+      acquiringAccountName: lookupAppLocalizations(
+        Locale(TillLanguage.current.languageCode),
+      ).accountBankCard,
     );
   }
 

@@ -1057,6 +1057,38 @@ contain no branches of the form "if there is no fiscalization, then somehow".
   declaration here was missing — which is how a rule kept by four probes can
   still be absent from the document that is supposed to govern it.
 
+- **I175.** The till's cash is **one number, derived one way**:
+  `drawer = opening count + cash sales − cash refunds + cash in − cash out`.
+  Everything that claims to say how much is in the drawer — the POS account
+  balance, the shift's expectation, and the `TOTAL IN DRAWER` line of the
+  Z-report — equals that sum at every moment of a shift. A count that a person
+  makes by hand is authoritative over the ledger, and the difference between
+  them is posted as a **visible cash operation of its own kind**, never
+  absorbed into the balance and never typed as a deposit or a withdrawal.
+  *Why it is an invariant and not a preference:* on 2026-09-22 the tree held
+  six ways for these numbers to disagree, and they disagreed by the whole
+  opening float. The opening declaration was written to `shifts.opening_cash`
+  and nowhere else, so the panel labelled *Expected in register* read 0.00 with
+  $200 in the drawer; a cash deposit entered the expectation through no term at
+  all, so paying 100 into the drawer produced a 100 overage; the close
+  reconciliation wrote its row with `cashOperationDao.insert`, which does not
+  move a balance, so the journal and the ledger parted permanently; a close
+  without a recount recorded the ledger while the screen compared against the
+  expectation; the Z-report was never handed this shift's float and printed the
+  **previous** shift's closing count; and the screens showed a discrepancy
+  computed from the ledger while the till recorded one computed from the
+  expectation. Each of the six was individually green.
+  *Why one identity rather than six correct sites:* the sites are not the
+  problem — agreement between them is. Two implementations of this sum exist by
+  design (`ShiftState.expectedCash` for the local screen,
+  `LocalShiftDesk.read` for the wire), and the probe compares **them**, not
+  each against a constant.
+  *Probe:* `test/e2e/journeys/ops_cash_ledger_identity_test.dart` for the
+  identity through the real DI graph, and
+  `test/data/print/zreport_cash_block_balances_test.dart` for the same equality
+  **on the printed paper** — numbers can agree in memory and still not add up
+  in a form whose line was never printed.
+
 Money that leaves the till also has to survive the wire, and that is a separate
 rule with a separate probe: **I159** (a decimal string, never `double`), in
 section 7a. **I157** is I21 restated for two workstations, and **I160** is I22–I23
@@ -3326,7 +3358,7 @@ observability do not work.
 | 5a | Backup and restore | I97–I101 |
 | 5b | Limits of offline operation | I102–I104 |
 | 6 | Validation at four levels | I17–I19 |
-| 7 | Money | I20–I25, I172 |
+| 7 | Money | I20–I25, I172, I175 |
 | 7a | Operations between tills | I105–I107, I156–I165, I168, I173 |
 | 8 | Devices | I26–I31, I141–I142, I167, I169 |
 | 9 | Point-of-sale modes | I32–I35, I139 |
@@ -3351,7 +3383,7 @@ observability do not work.
 | 22b | How invariants are checked | I123, I129–I133 |
 | 22c | Guarding against gaps | I134–I138 |
 
-That is 175 invariants in total: I1–I165 and I167–I174 with no gaps, plus I11a
+That is 176 invariants in total: I1–I165 and I167–I175 with no gaps, plus I11a
 and I55a. **I166 is the one number that is reserved and not written**; the
 reason is below. The count is stated because it was wrong for ten of them — the
 line said 155 (I1–I153) long after I154–I163 had been written, and a stale total

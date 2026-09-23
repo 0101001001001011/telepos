@@ -48,7 +48,11 @@ class ReceiptTextBlock {
         cleaned.writeCharCode(unit);
       }
     }
-    final all = cleaned.toString().split('\n').map((l) => l.trimRight()).toList();
+    final all = cleaned
+        .toString()
+        .split('\n')
+        .map((l) => l.trimRight())
+        .toList();
     var start = 0;
     var end = all.length;
     while (start < end && all[start].trim().isEmpty) {

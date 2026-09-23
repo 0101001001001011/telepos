@@ -65,7 +65,7 @@ void main() {
       });
       expect(legacy.header.text, 'ТОО Ромашка');
       expect(legacy.header.align, ReceiptTextAlign.center);
-      expect(legacy.footer.lines, ['Спасибо!', 'Возврат 14 дней']);
+      expect(legacy.footer!.lines, ['Спасибо!', 'Возврат 14 дней']);
       expect(legacy.showCashier, isFalse);
       final stored = legacy.encode();
       for (final gone in ['paperWidth', 'showQr', 'showBin', 'showVat']) {
@@ -73,9 +73,22 @@ void main() {
       }
     });
 
-    test('подвал старого шаблона без ключа — благодарность по умолчанию', () {
-      expect(ReceiptOptions.fromJson({}).footer.text, 'Спасибо за покупку!');
-      expect(ReceiptOptions.fromJson({'footerText': ''}).footer.isEmpty, isTrue);
+    test('подвал старого шаблона: «не задан» и «стёрт» — разные вещи', () {
+      // Здесь стояло `expect(..., 'Спасибо за покупку!')`: русская строка
+      // была зашита в разборщике и уезжала на чек любого языка. Теперь
+      // незаданный подвал — `null`, а слова ставит печать, зная язык.
+      expect(
+        ReceiptOptions.fromJson({}).footer,
+        isNull,
+        reason: 'ключа не было — подвал не задан, и это не то же, что пустой',
+      );
+      expect(
+        ReceiptOptions.fromJson({'footerText': ''}).footer?.isEmpty,
+        isTrue,
+        reason:
+            'владелец стёр подвал нарочно; вернуть ему благодарность '
+            'значило бы не услышать',
+      );
     });
 
     test('оформление блоков переживает сохранение', () {
@@ -93,8 +106,8 @@ void main() {
       expect(back.header.align, ReceiptTextAlign.right);
       expect(back.header.bold, isTrue);
       expect(back.header.doubleSize, isTrue);
-      expect(back.footer.align, ReceiptTextAlign.left);
-      expect(back.footer.bold, isFalse);
+      expect(back.footer!.align, ReceiptTextAlign.left);
+      expect(back.footer!.bold, isFalse);
     });
   });
 }

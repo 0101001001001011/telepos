@@ -138,11 +138,15 @@ void main() {
       });
     });
 
+    // Подпись пункта меню больше не хранится в `NavDestination`: поле
+    // `label` было русским словом и жило только запасным значением на
+    // случай отсутствующего словаря (2026-09-22). Проба смотрит маршрут —
+    // то, чем пункт меню и опознаётся.
     group('fromRoute', () {
       test('resolves /sale for retail', () {
         final dest = NavDestinations.fromRoute('/sale', OperatingMode.retail);
         expect(dest, isNotNull);
-        expect(dest!.label, 'Продажа');
+        expect(dest!.route, '/sale');
       });
 
       test('resolves /tables for restaurant', () {
@@ -151,7 +155,7 @@ void main() {
           OperatingMode.restaurant,
         );
         expect(dest, isNotNull);
-        expect(dest!.label, 'Столы');
+        expect(dest!.route, '/tables');
       });
 
       test('resolves /service-queue for service', () {
@@ -160,7 +164,7 @@ void main() {
           OperatingMode.service,
         );
         expect(dest, isNotNull);
-        expect(dest!.label, 'Очередь');
+        expect(dest!.route, '/service-queue');
       });
 
       test('returns null for unknown route', () {

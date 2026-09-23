@@ -144,6 +144,7 @@ List<File> _dartFilesUnder(String dir) {
 
 final _salesCompanionPattern = RegExp(r'\bSalesCompanion(\.insert)?\(');
 final _salesInsertPattern = RegExp(r'\bSalesCompanion\.insert\(');
+
 /// Обычный конструктор — намеренно не `.insert`: то, что регекс `(\.insert)?`
 /// в [_salesCompanionPattern] делает необязательным, здесь обязано
 /// отсутствовать, иначе `SalesCompanion.insert(...)` совпал бы дважды под
@@ -180,6 +181,7 @@ final _rawSalesWritePattern = RegExp(
   r'(INSERT[^;]*?INTO\s+sales\b|UPDATE\s+sales\s+SET)',
   caseSensitive: false,
 );
+
 /// Только вставки — подмножество [_rawSalesWritePattern] без `UPDATE`, для
 /// правила 4 (вставка обязана нести `state`, обновление — не обязано).
 final _rawSalesInsertPattern = RegExp(
@@ -202,236 +204,221 @@ void main() {
     },
   );
 
-  test(
-    'SalesCompanion(...): запись state несёт решение по terminalId',
-    () {
-      final offenders = <String>[];
-      var stateWritesFound = 0;
+  test('SalesCompanion(...): запись state несёт решение по terminalId', () {
+    final offenders = <String>[];
+    var stateWritesFound = 0;
 
-      for (final file in files) {
-        final source = file.readAsStringSync();
-        final calls = _callsMatching(source, _salesCompanionPattern);
-        for (final call in calls) {
-          if (!_stateArgPattern.hasMatch(call)) continue;
-          stateWritesFound++;
-          if (!_terminalIdArgPattern.hasMatch(call)) {
-            offenders.add(
-              '${file.path}: '
-              '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
-            );
-          }
+    for (final file in files) {
+      final source = file.readAsStringSync();
+      final calls = _callsMatching(source, _salesCompanionPattern);
+      for (final call in calls) {
+        if (!_stateArgPattern.hasMatch(call)) continue;
+        stateWritesFound++;
+        if (!_terminalIdArgPattern.hasMatch(call)) {
+          offenders.add(
+            '${file.path}: '
+            '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
+          );
         }
       }
+    }
 
-      // Страховка: ноль найденных записей state — не «всё чисто», а
-      // сломанный обход (переименование SalesCompanion, рефакторинг DAO).
-      expect(
-        stateWritesFound,
-        greaterThan(0),
-        reason:
-            'ни одной записи state через SalesCompanion не нашлось во всём '
-            'lib/ — сам сторож сломан (переименование? рефакторинг, '
-            'унёсший все вызовы?)',
-      );
+    // Страховка: ноль найденных записей state — не «всё чисто», а
+    // сломанный обход (переименование SalesCompanion, рефакторинг DAO).
+    expect(
+      stateWritesFound,
+      greaterThan(0),
+      reason:
+          'ни одной записи state через SalesCompanion не нашлось во всём '
+          'lib/ — сам сторож сломан (переименование? рефакторинг, '
+          'унёсший все вызовы?)',
+    );
 
-      expect(
-        offenders,
-        isEmpty,
-        reason:
-            'запись Sales.state не решает, что делать с владельцем '
-            '(terminalId) — ровно так осталась незамеченной '
-            'SaleUseCaseImpl.perform (completeSale, круг правки 2 задачи 3). '
-            'Правило: владельца имеет только state = 0 — любой другой '
-            'переход обязан нести terminalId явно (обычно const Value(null)); '
-            'переход в 0 — тоже явно, тем, кто поднимает чек. '
-            'Нашедшиеся места:\n${offenders.join('\n')}',
-      );
-    },
-  );
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'запись Sales.state не решает, что делать с владельцем '
+          '(terminalId) — ровно так осталась незамеченной '
+          'SaleUseCaseImpl.perform (completeSale, круг правки 2 задачи 3). '
+          'Правило: владельца имеет только state = 0 — любой другой '
+          'переход обязан нести terminalId явно (обычно const Value(null)); '
+          'переход в 0 — тоже явно, тем, кто поднимает чек. '
+          'Нашедшиеся места:\n${offenders.join('\n')}',
+    );
+  });
 
-  test(
-    'сырой SQL в sales: запись state несёт terminal_id в том же списке',
-    () {
-      final offenders = <String>[];
-      var rawWritesFound = 0;
+  test('сырой SQL в sales: запись state несёт terminal_id в том же списке', () {
+    final offenders = <String>[];
+    var rawWritesFound = 0;
 
-      for (final file in files) {
-        final source = file.readAsStringSync();
-        for (final match in _rawSalesWritePattern.allMatches(source)) {
-          final windowEnd = (match.start + 800).clamp(0, source.length);
-          final window = source.substring(match.start, windowEnd);
-          if (!_rawStateColumnPattern.hasMatch(window)) continue;
-          rawWritesFound++;
-          if (!_rawTerminalIdColumnPattern.hasMatch(window)) {
-            offenders.add(
-              '${file.path}: '
-              '${window.replaceAll(RegExp(r'\s+'), ' ').trim().substring(0, 160)}…',
-            );
-          }
+    for (final file in files) {
+      final source = file.readAsStringSync();
+      for (final match in _rawSalesWritePattern.allMatches(source)) {
+        final windowEnd = (match.start + 800).clamp(0, source.length);
+        final window = source.substring(match.start, windowEnd);
+        if (!_rawStateColumnPattern.hasMatch(window)) continue;
+        rawWritesFound++;
+        if (!_rawTerminalIdColumnPattern.hasMatch(window)) {
+          offenders.add(
+            '${file.path}: '
+            '${window.replaceAll(RegExp(r'\s+'), ' ').trim().substring(0, 160)}…',
+          );
         }
       }
+    }
 
-      expect(
-        rawWritesFound,
-        greaterThan(0),
-        reason:
-            'ни одной сырой записи state в sales не нашлось во всём lib/ — '
-            'сам сторож сломан (переименование таблицы? весь код перешёл '
-            'на SalesCompanion?)',
-      );
+    expect(
+      rawWritesFound,
+      greaterThan(0),
+      reason:
+          'ни одной сырой записи state в sales не нашлось во всём lib/ — '
+          'сам сторож сломан (переименование таблицы? весь код перешёл '
+          'на SalesCompanion?)',
+    );
 
-      expect(
-        offenders,
-        isEmpty,
-        reason:
-            'сырой SQL пишет Sales.state, не упоминая terminal_id в том же '
-            'списке колонок — то же правило, что у SalesCompanion(...), '
-            'через другую форму записи. Нашедшиеся места:\n'
-            '${offenders.join('\n')}',
-      );
-    },
-  );
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'сырой SQL пишет Sales.state, не упоминая terminal_id в том же '
+          'списке колонок — то же правило, что у SalesCompanion(...), '
+          'через другую форму записи. Нашедшиеся места:\n'
+          '${offenders.join('\n')}',
+    );
+  });
 
-  test(
-    'SalesCompanion.insert(...): каждая вставка несёт state явно '
-    '(круг правки 2 задачи 4)',
-    () {
-      final offenders = <String>[];
-      var insertsFound = 0;
+  test('SalesCompanion.insert(...): каждая вставка несёт state явно '
+      '(круг правки 2 задачи 4)', () {
+    final offenders = <String>[];
+    var insertsFound = 0;
 
-      for (final file in files) {
-        final source = file.readAsStringSync();
-        final calls = _callsMatching(source, _salesInsertPattern);
-        for (final call in calls) {
-          insertsFound++;
-          if (!_stateArgPattern.hasMatch(call)) {
-            offenders.add(
-              '${file.path}: '
-              '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
-            );
-          }
+    for (final file in files) {
+      final source = file.readAsStringSync();
+      final calls = _callsMatching(source, _salesInsertPattern);
+      for (final call in calls) {
+        insertsFound++;
+        if (!_stateArgPattern.hasMatch(call)) {
+          offenders.add(
+            '${file.path}: '
+            '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
+          );
         }
       }
+    }
 
-      // Страховка: та же логика, что у правила 1 — ноль найденных вставок
-      // не «всё чисто», а сломанный обход.
-      expect(
-        insertsFound,
-        greaterThan(0),
-        reason:
-            'ни одной вставки SalesCompanion.insert не нашлось во всём '
-            'lib/ — сам сторож сломан (переименование? рефакторинг, '
-            'унёсший все вызовы?)',
-      );
+    // Страховка: та же логика, что у правила 1 — ноль найденных вставок
+    // не «всё чисто», а сломанный обход.
+    expect(
+      insertsFound,
+      greaterThan(0),
+      reason:
+          'ни одной вставки SalesCompanion.insert не нашлось во всём '
+          'lib/ — сам сторож сломан (переименование? рефакторинг, '
+          'унёсший все вызовы?)',
+    );
 
-      expect(
-        offenders,
-        isEmpty,
-        reason:
-            'вставка новой строки Sales не несёт state вовсе — ровно так '
-            'воспроизвелась бы находка круга правки 1 (строка без '
-            'состояния, которую «Печать последнего чека» находит как '
-            'настоящий последний чек), только без промежуточного шага '
-            '«бронь, потом дозаполнение»: один вызывающий, который просто '
-            'не подумал о state. Правило: КАЖДАЯ вставка обязана решить '
-            'state явно (правила 1–2 выше — только «если решаешь state, '
-            'то полностью»; это правило — «решай state вообще»). '
-            'Нашедшиеся места:\n${offenders.join('\n')}',
-      );
-    },
-  );
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'вставка новой строки Sales не несёт state вовсе — ровно так '
+          'воспроизвелась бы находка круга правки 1 (строка без '
+          'состояния, которую «Печать последнего чека» находит как '
+          'настоящий последний чек), только без промежуточного шага '
+          '«бронь, потом дозаполнение»: один вызывающий, который просто '
+          'не подумал о state. Правило: КАЖДАЯ вставка обязана решить '
+          'state явно (правила 1–2 выше — только «если решаешь state, '
+          'то полностью»; это правило — «решай state вообще»). '
+          'Нашедшиеся места:\n${offenders.join('\n')}',
+    );
+  });
 
-  test(
-    'сырой SQL: INSERT INTO sales несёт state в списке колонок '
-    '(круг правки 2 задачи 4)',
-    () {
-      final offenders = <String>[];
-      var rawInsertsFound = 0;
+  test('сырой SQL: INSERT INTO sales несёт state в списке колонок '
+      '(круг правки 2 задачи 4)', () {
+    final offenders = <String>[];
+    var rawInsertsFound = 0;
 
-      for (final file in files) {
-        final source = file.readAsStringSync();
-        for (final match in _rawSalesInsertPattern.allMatches(source)) {
-          rawInsertsFound++;
-          final windowEnd = (match.start + 800).clamp(0, source.length);
-          final window = source.substring(match.start, windowEnd);
-          if (!_rawStateColumnPattern.hasMatch(window)) {
-            offenders.add(
-              '${file.path}: '
-              '${window.replaceAll(RegExp(r'\s+'), ' ').trim().substring(0, 160)}…',
-            );
-          }
+    for (final file in files) {
+      final source = file.readAsStringSync();
+      for (final match in _rawSalesInsertPattern.allMatches(source)) {
+        rawInsertsFound++;
+        final windowEnd = (match.start + 800).clamp(0, source.length);
+        final window = source.substring(match.start, windowEnd);
+        if (!_rawStateColumnPattern.hasMatch(window)) {
+          offenders.add(
+            '${file.path}: '
+            '${window.replaceAll(RegExp(r'\s+'), ' ').trim().substring(0, 160)}…',
+          );
         }
       }
+    }
 
-      expect(
-        rawInsertsFound,
-        greaterThan(0),
-        reason:
-            'ни одной сырой вставки в sales не нашлось во всём lib/ — сам '
-            'сторож сломан (переименование таблицы? весь код перешёл на '
-            'SalesCompanion?)',
-      );
+    expect(
+      rawInsertsFound,
+      greaterThan(0),
+      reason:
+          'ни одной сырой вставки в sales не нашлось во всём lib/ — сам '
+          'сторож сломан (переименование таблицы? весь код перешёл на '
+          'SalesCompanion?)',
+    );
 
-      expect(
-        offenders,
-        isEmpty,
-        reason:
-            'сырая вставка в sales не несёт state в списке колонок — то же '
-            'правило, что у SalesCompanion.insert(...), через другую форму '
-            'записи. Нашедшиеся места:\n${offenders.join('\n')}',
-      );
-    },
-  );
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'сырая вставка в sales не несёт state в списке колонок — то же '
+          'правило, что у SalesCompanion.insert(...), через другую форму '
+          'записи. Нашедшиеся места:\n${offenders.join('\n')}',
+    );
+  });
 
-  test(
-    'SalesCompanion(...) обычным конструктором: несущий все обязательные '
-    'колонки новой строки обязан нести и state (круг правки 3 задачи 4)',
-    () {
-      final offenders = <String>[];
-      var fullRowConstructionsFound = 0;
+  test('SalesCompanion(...) обычным конструктором: несущий все обязательные '
+      'колонки новой строки обязан нести и state (круг правки 3 задачи 4)', () {
+    final offenders = <String>[];
+    var fullRowConstructionsFound = 0;
 
-      for (final file in files) {
-        final source = file.readAsStringSync();
-        final calls = _callsMatching(source, _bareSalesCompanionPattern);
-        for (final call in calls) {
-          if (!_looksLikeFullSalesRow(call)) continue;
-          fullRowConstructionsFound++;
-          if (!_stateArgPattern.hasMatch(call)) {
-            offenders.add(
-              '${file.path}: '
-              '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
-            );
-          }
+    for (final file in files) {
+      final source = file.readAsStringSync();
+      final calls = _callsMatching(source, _bareSalesCompanionPattern);
+      for (final call in calls) {
+        if (!_looksLikeFullSalesRow(call)) continue;
+        fullRowConstructionsFound++;
+        if (!_stateArgPattern.hasMatch(call)) {
+          offenders.add(
+            '${file.path}: '
+            '${call.replaceAll(RegExp(r'\s+'), ' ').trim()}',
+          );
         }
       }
+    }
 
-      // Страховка: находка круга правки 3 — SaleMapper.toDrift — обязана
-      // остаться найденной. Ноль здесь значит, что признак (все пять
-      // обязательных колонок) сломан, а не что вставок такой формы нет.
-      expect(
-        fullRowConstructionsFound,
-        greaterThan(0),
-        reason:
-            'ни одного конструктора SalesCompanion(...), несущего все пять '
-            'обязательных колонок, не нашлось во всём lib/ — либо '
-            'SaleMapper.toDrift переписан не в эту форму, либо признак '
-            '(receiptNo+posId+userId+amount+time) сломан.',
-      );
+    // Страховка: находка круга правки 3 — SaleMapper.toDrift — обязана
+    // остаться найденной. Ноль здесь значит, что признак (все пять
+    // обязательных колонок) сломан, а не что вставок такой формы нет.
+    expect(
+      fullRowConstructionsFound,
+      greaterThan(0),
+      reason:
+          'ни одного конструктора SalesCompanion(...), несущего все пять '
+          'обязательных колонок, не нашлось во всём lib/ — либо '
+          'SaleMapper.toDrift переписан не в эту форму, либо признак '
+          '(receiptNo+posId+userId+amount+time) сломан.',
+    );
 
-      expect(
-        offenders,
-        isEmpty,
-        reason:
-            'SalesCompanion(...) строит новую строку Sales (несёт все пять '
-            'обязательных колонок — receiptNo, posId, userId, amount, '
-            'time), но не решает state. Ровно так эта дыра осталась '
-            'незамеченной правилом 3: SaleMapper.toDrift строит компаньон '
-            'обычным конструктором (не `.insert`), а SaleRepositoryImpl '
-            '.insert() вставляет его через промежуточную переменную — '
-            'правило 3 ловит только литерал `SalesCompanion.insert(`, эту '
-            'форму не видит вовсе. Нашедшиеся места:\n'
-            '${offenders.join('\n')}',
-      );
-    },
-  );
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'SalesCompanion(...) строит новую строку Sales (несёт все пять '
+          'обязательных колонок — receiptNo, posId, userId, amount, '
+          'time), но не решает state. Ровно так эта дыра осталась '
+          'незамеченной правилом 3: SaleMapper.toDrift строит компаньон '
+          'обычным конструктором (не `.insert`), а SaleRepositoryImpl '
+          '.insert() вставляет его через промежуточную переменную — '
+          'правило 3 ловит только литерал `SalesCompanion.insert(`, эту '
+          'форму не видит вовсе. Нашедшиеся места:\n'
+          '${offenders.join('\n')}',
+    );
+  });
 }

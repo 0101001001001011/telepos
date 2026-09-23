@@ -85,6 +85,8 @@ import 'package:telepos/data/database/daos/security_event_dao.dart';
 import 'package:telepos/data/database/tables/security_tables.dart';
 import 'package:telepos/data/database/tables/cash_operation_tables.dart';
 import 'package:telepos/data/database/tables/config_tables.dart';
+import 'package:telepos/data/database/daos/tax_settings_dao.dart';
+import 'package:telepos/data/database/tables/tax_tables.dart';
 import 'package:telepos/data/database/tables/custom_field_tables.dart';
 import 'package:telepos/data/database/tables/bonus_tables.dart';
 import 'package:telepos/data/database/tables/payment_intent_tables.dart';
@@ -141,6 +143,9 @@ part 'app_database.g.dart';
     AppVersionStatuses,
     AttrDates,
     UpdateProperties,
+    TaxJurisdictions,
+    TaxCategories,
+    TaxRules,
     Categories,
     CategoryRestrictions,
     GlobalProducts,
@@ -245,6 +250,7 @@ part 'app_database.g.dart';
   ],
   daos: [
     AdditionalPrinterDao,
+    TaxSettingsDao,
     AppVersionStatusDao,
     AttrDateDao,
     UpdatePropertyDao,
@@ -402,7 +408,7 @@ class AppDatabase extends _$AppDatabase {
   final String? legacyHardwareSettingsBlobJson;
 
   @override
-  int get schemaVersion => 53;
+  int get schemaVersion => 58;
 
   Future<void> checkpointWal() async {
     await customStatement('PRAGMA wal_checkpoint(TRUNCATE)');
@@ -616,6 +622,200 @@ class AppDatabase extends _$AppDatabase {
       variables: [Variable.withString(name)],
     ).get();
     return rows.isNotEmpty;
+  }
+
+  /// Добавляет колонку, которой больше нет в объявлении таблицы.
+  ///
+  /// Ступень миграции обязана воспроизводить состояние СВОЕЙ версии, а не
+  /// сегодняшней. Колонку, убранную позже, `_safeAddColumn` добавить уже не
+  /// может — её неоткуда взять; отсюда сырой DDL.
+  Future<void> _addLegacyColumn(
+    String table,
+    String column,
+    String type,
+  ) async {
+    if (!await _tableExists(table)) return;
+    if (await _columnExists(table, column)) return;
+    await customStatement('ALTER TABLE $table ADD COLUMN $column $type');
+  }
+
+  /// Убирает колонку, если она есть.
+  ///
+  /// Терпимость к отсутствию намеренна: до кассы могла не доехать ступень,
+  /// которая её заводила, и падать на этом значило бы остановить обновление
+  /// из-за того, что убирать нечего.
+  Future<void> _dropLegacyColumn(String table, String column) async {
+    if (!await _columnExists(table, column)) return;
+    await customStatement('ALTER TABLE $table DROP COLUMN $column');
+  }
+
+  /// Есть ли колонка. `_tableExists` для колонок.
+  ///
+  /// Нужен потому, что v55 читает то, что завела v54, а до кассы она могла
+  /// и не доехать: обновление с v53 проходит обе ступени подряд, но
+  /// фикстуры старых проб содержат лишь нужные им таблицы.
+  Future<bool> _columnExists(String table, String column) async {
+    if (!await _tableExists(table)) return false;
+    final rows = await customSelect('PRAGMA table_info($table)').get();
+    return rows.any((r) => r.read<String>('name') == column);
+  }
+
+  /// Переносит плоскую настройку v54 в категории и правила v55.
+  ///
+  /// # Что здесь главное
+  ///
+  /// Не заведение таблиц — это видно чтением DDL. Главное, что **ставки, уже
+  /// заданные на работающей кассе, остаются теми же числами**. Касса,
+  /// которую никто не перенастраивал, обязана после обновления печатать
+  /// ровно тот же налог: заметил бы разницу покупатель, а не мы.
+  ///
+  /// Способ: старая ставка кассы становится правилом корневой юрисдикции,
+  /// а каждая отличная ставка товара — своей категорией с правилом той же
+  /// юрисдикции. Названия у таких категорий машинные («Ставка 12 %») —
+  /// пользователь вправе их переименовать, но придумывать за него
+  /// «продукты» или «лекарства» мы не станем: это утверждение об
+  /// облагаемости, за которое отвечает налогоплательщик.
+  Future<void> _migrateTaxSettingsToCategories() async {
+    if (!await _tableExists('tax_categories')) return;
+
+    // Далёкое прошлое: правила, перенесённые с работающей кассы, обязаны
+    // действовать и для чеков, перепечатанных задним числом.
+    final since = DateTime.utc(2000);
+
+    Future<int> categoryId(
+      String code,
+      String title, {
+      bool byDefault = false,
+    }) async {
+      final found = await customSelect(
+        'SELECT id FROM tax_categories WHERE code = ?',
+        variables: [Variable.withString(code)],
+      ).get();
+      if (found.isNotEmpty) return found.first.read<int>('id');
+      await customStatement(
+        'INSERT INTO tax_categories (code, title, is_default) VALUES (?, ?, ?)',
+        [code, title, if (byDefault) 1 else 0],
+      );
+      final row = await customSelect(
+        'SELECT id FROM tax_categories WHERE code = ?',
+        variables: [Variable.withString(code)],
+      ).getSingle();
+      return row.read<int>('id');
+    }
+
+    final standard = await categoryId('standard', 'Standard', byDefault: true);
+
+    // Корневая юрисдикция. Если их уже завели — берём первую без родителя:
+    // плоский список v54 состоял только из корней.
+    int? root;
+    final roots = await customSelect(
+      'SELECT id FROM tax_jurisdictions WHERE parent_id IS NULL '
+      'ORDER BY sort_order, id',
+    ).get();
+    if (roots.isNotEmpty) {
+      root = roots.first.read<int>('id');
+      // Плоский список становится набором, в котором стоит касса: до v55
+      // все его доли складывались безусловно, и так обязано остаться.
+      await customStatement(
+        'UPDATE tax_jurisdictions SET is_till_location = 1',
+      );
+    }
+
+    Decimal? tillRate;
+    if (await _columnExists('this_pos_entries', 'tax_rate_percent')) {
+      final rows = await customSelect(
+        'SELECT tax_rate_percent FROM this_pos_entries '
+        'WHERE tax_rate_percent IS NOT NULL',
+      ).get();
+      if (rows.isNotEmpty) {
+        tillRate = Decimal.parse(
+          rows.first.read<double>('tax_rate_percent').toString(),
+        );
+      }
+    }
+
+    if (root == null && tillRate != null) {
+      // Ставка была, а юрисдикций не было: заводим одну, чтобы ставке было
+      // где жить. Без неё касса после обновления считала бы ноль.
+      await customStatement(
+        'INSERT INTO tax_jurisdictions (name, parent_id, level, sort_order, '
+        'is_active, is_till_location) VALUES (?, NULL, 0, 0, 1, 1)',
+        ['Tax'],
+      );
+      root = (await customSelect(
+        'SELECT id FROM tax_jurisdictions ORDER BY id DESC LIMIT 1',
+      ).getSingle()).read<int>('id');
+    }
+
+    if (root == null) return;
+
+    Future<void> rule(int? category, int kind, Decimal rate) async {
+      await customStatement(
+        'INSERT INTO tax_rules (jurisdiction_id, category_id, kind, '
+        'rate_percent, valid_from) VALUES (?, ?, ?, ?, ?)',
+        [
+          root,
+          category,
+          kind,
+          rate.toDouble(),
+          since.millisecondsSinceEpoch ~/ 1000,
+        ],
+      );
+    }
+
+    // Правило без категории — «всё остальное по ставке кассы».
+    final hasWildcard = (await customSelect(
+      'SELECT 1 FROM tax_rules WHERE jurisdiction_id = ? AND category_id IS NULL',
+      variables: [Variable.withInt(root)],
+    ).get()).isNotEmpty;
+    if (!hasWildcard) {
+      await rule(null, 0, tillRate ?? Decimal.zero);
+    }
+
+    if (!await _columnExists('product_infos', 'tax_rate_percent')) return;
+
+    // Освобождённые товары — в свою категорию: освобождение и ноль это
+    // разные режимы, и слить их значило бы потерять различие, ради
+    // которого оно и заводилось.
+    if (await _columnExists('product_infos', 'is_tax_exempt')) {
+      final exemptCount = (await customSelect(
+        'SELECT 1 FROM product_infos WHERE is_tax_exempt = 1 LIMIT 1',
+      ).get()).isNotEmpty;
+      if (exemptCount) {
+        final exempt = await categoryId('exempt', 'Tax exempt');
+        await rule(exempt, 2, Decimal.zero);
+        await customStatement(
+          'UPDATE product_infos SET tax_category_id = ? WHERE is_tax_exempt = 1',
+          [exempt],
+        );
+      }
+    }
+
+    // Каждая отличная от кассовой ставка товара — своя категория.
+    final distinct = await customSelect(
+      'SELECT DISTINCT tax_rate_percent FROM product_infos '
+      'WHERE tax_rate_percent IS NOT NULL AND tax_category_id IS NULL',
+    ).get();
+    for (final row in distinct) {
+      final raw = row.read<double>('tax_rate_percent');
+      final rate = Decimal.parse(raw.toString());
+      if (rate == tillRate) continue;
+      final id = await categoryId('rate-$rate', 'Ставка $rate %');
+      await rule(id, 0, rate);
+      await customStatement(
+        'UPDATE product_infos SET tax_category_id = ? '
+        'WHERE tax_rate_percent = ? AND tax_category_id IS NULL',
+        [id, raw],
+      );
+    }
+
+    // Всё прочее — в категорию по умолчанию. Явно, а не через `null`:
+    // `null` означает «категория по умолчанию», и обе записи верны, но
+    // одна из них лишняя, а два способа сказать одно расходятся.
+    await customStatement(
+      'UPDATE product_infos SET tax_category_id = ? WHERE tax_category_id IS NULL',
+      [standard],
+    );
   }
 
   Future<void> _rebuildPaymentsWithKind(Migrator m) async {
@@ -840,7 +1040,8 @@ class AppDatabase extends _$AppDatabase {
     // `insertOrIgnore` (довод — в ветке `from < 39`) и содержимое те же:
     // правильность по-прежнему сторожит `migration_v40_bonus_journal_test`.
     await batch(
-      (b) => b.insertAll(bonusEntries, entries, mode: InsertMode.insertOrIgnore),
+      (b) =>
+          b.insertAll(bonusEntries, entries, mode: InsertMode.insertOrIgnore),
     );
   }
 
@@ -2226,6 +2427,144 @@ class AppDatabase extends _$AppDatabase {
         // повторённая после, защиты не получит. Она живёт секунды;
         // выдуманная память врала бы годами.
         await _safeCreateTable(m, prepaymentRefunds);
+      }
+
+      if (from < 54) {
+        // Налоговая настройка — таблицами, а не кодом.
+        //
+        // Решение заказчика 2026-09-21: «под каждый штат разработкой
+        // заниматься не будем; пресеты устареют, поэтому пользователь
+        // должен иметь возможность всё установить сам».
+        //
+        // До v54 движок считал правильно, но настроить его было нечем:
+        // уклад брался из перечисления стран, доли юрисдикций передавались
+        // кодом, освобождение жило только в данных чека. Любая новая
+        // юрисдикция означала выпуск новой версии продукта.
+        await m.createTable(taxJurisdictions);
+
+        // Наличие таблиц проверяется отдельно: `_safeAddColumn` спасает от
+        // повторной КОЛОНКИ, но не от отсутствующей ТАБЛИЦЫ. Фикстуры
+        // старых проб миграций содержат лишь те таблицы, что им нужны, и
+        // без этой проверки v54 роняла двадцать две чужие пробы.
+        if (await _tableExists('this_pos_entries')) {
+          await _safeAddColumn(m, thisPosEntries, thisPosEntries.taxTreatment);
+        }
+
+        // Три колонки ниже v55 убрала: ставка перестала лежать числом. Но
+        // ступень v54 обязана воспроизводить СВОЁ состояние — обновление с
+        // v53 проходит обе подряд, и v55 читает то, что завела v54. Отсюда
+        // сырой DDL: у этих колонок больше нет объявления в таблице.
+        await _addLegacyColumn(
+          'this_pos_entries',
+          'tax_rate_percent',
+          'REAL NULL',
+        );
+        await _addLegacyColumn(
+          'product_infos',
+          'tax_rate_percent',
+          'REAL NULL',
+        );
+        await _addLegacyColumn(
+          'product_infos',
+          'is_tax_exempt',
+          'INTEGER NOT NULL DEFAULT 0',
+        );
+
+        // Перенос целых ставок в дробные. Без него товары, у которых
+        // ставка была задана, потеряли бы её молча: новая колонка пуста, а
+        // пустая означает «ставка кассы».
+        //
+        // `vatRate` после переноса не читается ничем, кроме этой строки.
+        if (await _tableExists('product_infos')) {
+          await customStatement(
+            'UPDATE product_infos SET tax_rate_percent = vat_rate '
+            'WHERE vat_rate IS NOT NULL',
+          );
+        }
+      }
+
+      if (from < 58) {
+        // Основание операции переехало из прозы примечания в свой столбец.
+        //
+        // Прежние строки НЕ разбираются: разбор означал бы искать в
+        // примечании русские слова, то есть закрепить ровно ту ошибку, из-за
+        // которой столбец и заводится. У старых строк основание остаётся
+        // пустым, и подпись им даёт примечание, как и прежде.
+        if (await _tableExists('cash_operations')) {
+          await _safeAddColumn(m, cashOperations, cashOperations.reasonCode);
+        }
+      }
+
+      if (from < 57) {
+        // Потолок суммы чека стал настройкой. Прежним кассам он не
+        // меняется: пусто означает «то самое число, что было зашито»
+        // (`kDefaultBigAmountLimit`), и касса, работавшая вчера, работает
+        // сегодня так же.
+        if (await _tableExists('this_pos_entries')) {
+          await _safeAddColumn(
+            m,
+            thisPosEntries,
+            thisPosEntries.bigAmountLimit,
+          );
+        }
+      }
+
+      if (from < 56) {
+        // Адрес торговой точки. До неё он жил только в настройках WebKassa
+        // и на чеке не появлялся никогда: заполнять его было нечем — поля
+        // мастера существовали, но ни один экран их не спрашивал.
+        if (await _tableExists('this_pos_entries')) {
+          await _safeAddColumn(m, thisPosEntries, thisPosEntries.storeAddress);
+
+          // Перенос того, что успели ввести через настройку ОФД: касса,
+          // где адрес был, обязана сохранить его на чеке.
+          if (await _tableExists('webkassa_configs')) {
+            await customStatement(
+              "UPDATE this_pos_entries SET store_address = ("
+              "SELECT address FROM webkassa_configs "
+              "WHERE address IS NOT NULL AND address <> '' LIMIT 1) "
+              "WHERE store_address IS NULL",
+            );
+          }
+        }
+      }
+
+      if (from < 55) {
+        // Ставка перестаёт быть числом у товара и становится выводимой.
+        //
+        // v54, выпущенная в тот же день, прикрепляла к товару процент, а
+        // юрисдикции держала плоским списком. Разбор мировой практики
+        // (docs/internal/research/2026-09-21-tax-configuration-models.md)
+        // показал, что так не устроено нигде: ставку выводят из юрисдикции,
+        // КАТЕГОРИИ товара и даты.
+        //
+        // Ставка у товара ломает сеть из двух точек в разных штатах: каталог
+        // один, а ставка у того же молока разная. Плоский список не выражает
+        // самоуправление: Денвер облагает еду, которую штат освободил.
+        await m.createTable(taxCategories);
+        await m.createTable(taxRules);
+
+        if (await _tableExists('tax_jurisdictions')) {
+          await _safeAddColumn(m, taxJurisdictions, taxJurisdictions.parentId);
+          await _safeAddColumn(m, taxJurisdictions, taxJurisdictions.level);
+          await _safeAddColumn(
+            m,
+            taxJurisdictions,
+            taxJurisdictions.isTillLocation,
+          );
+        }
+        if (await _tableExists('product_infos')) {
+          await _safeAddColumn(m, productInfos, productInfos.taxCategoryId);
+        }
+
+        await _migrateTaxSettingsToCategories();
+
+        // Старые колонки убираются только ПОСЛЕ переноса. Оставить их
+        // значило бы завести второй источник правды о ставке: два места
+        // говорят о налоге, и однажды они разойдутся.
+        await _dropLegacyColumn('product_infos', 'tax_rate_percent');
+        await _dropLegacyColumn('product_infos', 'is_tax_exempt');
+        await _dropLegacyColumn('this_pos_entries', 'tax_rate_percent');
       }
     },
 

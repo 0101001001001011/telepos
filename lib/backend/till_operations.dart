@@ -82,6 +82,7 @@ import 'package:telepos/domain/refund/refund_service.dart';
 import 'package:telepos/domain/setup/setup_draft_json.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
@@ -602,7 +603,7 @@ class TillOperations {
   /// не у транспорта, и это пережило снятие HTTP: пока транспорта было два,
   /// памятка на каждый из них подняла бы кассу дважды на машине, где есть оба.
   Future<AppInitStatus> boot() async =>
-      _bootResult ??= await _bootstrap.start(onProgress: (_, _) {});
+      _bootResult ??= await _bootstrap.start(onProgress: (_, _, [_]) {});
 
   /// Одноразовые вопросы, включая `auth.login` и `auth.logout` — их логика
   /// целиком в [_auth] (`LocalAuthRepository`), здесь только перевод кадра.
@@ -2611,13 +2612,18 @@ class TillOperations {
     // возвращается изнутри генератора, которого слушают.
     Future<void> pump() async {
       try {
-        final ok = await work((value, message) {
+        final ok = await work((value, stage, [detail]) {
           if (frames.isClosed) return;
           // Число за краем — признак того, что его выдумали. Приёмник такой
           // кадр отвергает целиком, поэтому здесь оно приводится к отрезку:
           // окончание работы удостоверяет [DoneFrame], а не полоса, и врать о
           // завершении число не может.
-          frames.add(ProgressFrame(value.clamp(0.0, 1.0).toDouble(), message));
+          // По проводу едет КОД этапа, а не слова: терминал переводит его
+          // сам, на своём языке. Слова здесь означали бы, что касса решает
+          // за терминал, на каком языке говорить с его кассиром.
+          frames.add(
+            ProgressFrame(value.clamp(0.0, 1.0).toDouble(), stage.name),
+          );
         });
         frames.add(DoneFrame({'ok': ok}));
       } on Object catch (error, stackTrace) {

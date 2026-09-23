@@ -30,6 +30,7 @@ enum BuiltinEmulatorKind {
   /// **данным**, а не по намерению; проверка и её довод живут на
   /// `BuiltinEmulatorHost.refusalFor`.
   fiscalOperator,
+
   /// Провайдер оплаты по QR/СБП. Сокетом, как принтер, — только HTTP.
   ///
   /// Его «привязка» живёт **не** в `device_bindings`: у провайдера свой адрес

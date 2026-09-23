@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker/talker.dart';
+import 'package:telepos/core/constants/enums/tax_treatment.dart';
+import 'package:telepos/data/services/receipt_strings.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/print/bound_receipt_paper_width.dart';
 import 'package:telepos/data/print/print_submission.dart';
@@ -12,10 +14,11 @@ import 'package:telepos/domain/print/print_queue.dart';
 import 'package:telepos/domain/print/receipt_paper_width_source.dart';
 import 'package:telepos/domain/sale/payment_service.dart' show FiscalState;
 import 'package:telepos/domain/services/receipt_print_service.dart';
-import 'package:telepos/domain/usecases/fiscal/vat_calculator.dart';
 import 'package:telepos/hardware/printer/escpos_text_preview.dart';
 import 'package:telepos/hardware/printer/printer_manager.dart';
 import 'package:telepos/hardware/printer/receipt_builder.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 /// Строка подвала под «НЕФИСКАЛЬНЫЙ ЧЕК», называющая **причину**.
 ///
@@ -38,19 +41,26 @@ import 'package:telepos/hardware/printer/receipt_builder.dart';
 ///   первое — беда (деньги взяты, документа нет), и молчать о ней на
 ///   бумаге нельзя.
 ///
-/// Возвращается **строка, а не ключ локализации**: чек печатается на
-/// языке страны, а не интерфейса, и остальной подвал (`НЕФИСКАЛЬНЫЙ
-/// ЧЕК`, `ФИСК. ПРИЗНАК`, `ОФФЛАЙН`) устроен так же.
-String? noFiscalDocumentReason(FiscalState? state) => switch (state) {
-  null => null,
-  FiscalState.notRequired => null,
-  FiscalState.done => null,
-  FiscalState.queued => null,
-  FiscalState.operatorAbsent => 'Фискальный оператор не настроен',
-  FiscalState.fiscalModuleAbsent => 'Модуль фискализации недоступен',
-  FiscalState.failed => 'Документ не оформлен — обратитесь к кассиру',
-  FiscalState.unchanged => null,
-};
+/// Слова берутся из словаря печати ([ReceiptStringsResolver]) — как и
+/// весь остальной подвал (`НЕФИСКАЛЬНЫЙ ЧЕК`, `ФИСК. ПРИЗНАК`,
+/// `ОФФЛАЙН`). Довод необязателен: у фоновых вызовов резолвера нет, и
+/// тогда берётся язык, выбранный в кассе.
+String? noFiscalDocumentReason(
+  FiscalState? state, {
+  ReceiptStringsResolver? strings,
+}) {
+  final l10n = (strings ?? defaultReceiptStrings)();
+  return switch (state) {
+    null => null,
+    FiscalState.notRequired => null,
+    FiscalState.done => null,
+    FiscalState.queued => null,
+    FiscalState.operatorAbsent => l10n.rcpFiscalOperatorNotSet,
+    FiscalState.fiscalModuleAbsent => l10n.rcpFiscalModuleUnavailable,
+    FiscalState.failed => l10n.rcpDocumentNotIssued,
+    FiscalState.unchanged => null,
+  };
+}
 
 /// Собирает чеки и **сдаёт их в очередь печати**, а не пишет в принтер.
 ///
@@ -86,10 +96,21 @@ String? noFiscalDocumentReason(FiscalState? state) => switch (state) {
 /// [renderSalePreviewText] — это **те же байты**, разобранные в текст, а не
 /// вторая раскладка.
 class ReceiptPrintServiceImpl implements ReceiptPrintService {
-  ReceiptPrintServiceImpl({ReceiptPaperWidthSource? paperWidth, Talker? logger})
-    : _paperWidth = paperWidth ?? BoundReceiptPaperWidth(logger: logger),
-      _logger = logger,
-      _submission = PrintSubmission(logger: logger);
+  ReceiptPrintServiceImpl({
+    ReceiptPaperWidthSource? paperWidth,
+    Talker? logger,
+    ReceiptStringsResolver? strings,
+  }) : _paperWidth = paperWidth ?? BoundReceiptPaperWidth(logger: logger),
+       _logger = logger,
+       _strings = strings ?? defaultReceiptStrings,
+       _submission = PrintSubmission(logger: logger);
+
+  /// Слова печатных документов на языке кассы.
+  ///
+  /// Доводом, а не обращением к глобальному состоянию: пробе нужно
+  /// подменить язык, не влияя на соседние прогоны. Умолчание берёт язык,
+  /// выбранный в кассе (`ReceiptLanguage`).
+  final ReceiptStringsResolver _strings;
 
   /// Срок задания — общий для всех документов, обоснование на
   /// [PrintSubmission.documentLifetime].
@@ -161,6 +182,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal cashDiscrepancy,
     required Decimal certificatesIssued,
     required Decimal certificatesRedeemed,
   }) {
@@ -180,6 +202,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         cashEnd: cashEnd,
         cashIncome: cashIncome,
         cashExpense: cashExpense,
+        cashDiscrepancy: cashDiscrepancy,
         certificatesIssued: certificatesIssued,
         certificatesRedeemed: certificatesRedeemed,
       ).build(),
@@ -306,6 +329,21 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       guestCount: data.guestCount,
       waiterName: data.waiterName,
       serviceChargeAmount: data.serviceChargeAmount,
+      // Дубликат — КОПИЯ чека, а не другой документ. До 2026-09-21 эти поля
+      // не переносились вовсе, и дубликат печатался с умолчаниями: без
+      // продавца, без фискального блока и без единой строки налога
+      // (`isVatPayer` по умолчанию `false`). Покупатель, которому выдали
+      // дубликат вместо утерянного чека, получал бумагу, не совпадающую с
+      // оригиналом ни по реквизитам, ни по налогу.
+      seller: data.seller,
+      fiscal: data.fiscal,
+      isVatPayer: data.isVatPayer,
+      vatAmount: data.vatAmount,
+      vatRatePercent: data.vatRatePercent,
+      taxTreatment: data.taxTreatment,
+      hasFiscalisation: data.hasFiscalisation,
+      currencySymbol: data.currencySymbol,
+      fiscalState: data.fiscalState,
     );
     return printSaleReceipt(duplicateData);
   }
@@ -389,28 +427,29 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal certificatesIssued,
     required Decimal certificatesRedeemed,
   }) {
+    final l10n = _strings();
     final receipt = ReceiptBuilder(charWidth: width)..init();
     if (storeName.isNotEmpty) receipt.addCentered(storeName, bold: true);
     if (posName.isNotEmpty) receipt.addCentered(posName);
     receipt
       ..addEmptyLine()
-      ..addCentered('X-ОТЧЁТ', bold: true, doubleSize: true)
-      ..addCentered('ПРОМЕЖУТОЧНЫЙ (без гашения)')
+      ..addCentered(l10n.rcpXReport, bold: true, doubleSize: true)
+      ..addCentered(l10n.rcpInterim)
       ..addEmptyLine()
-      ..addRow('Дата:', _formatDateTime(dateTime))
-      ..addRow('Кассир:', cashierName)
+      ..addRow(l10n.rcpDate, _formatDateTime(dateTime))
+      ..addRow(l10n.rcpCashier, cashierName)
       ..addLine()
-      ..addLeft('ПРОДАЖИ')
-      ..addRow('Количество:', '$saleCount')
-      ..addRow('Сумма:', _formatDecimal(saleTotal))
+      ..addLeft(l10n.rcpSales)
+      ..addRow(l10n.rcpCount, '$saleCount')
+      ..addRow(l10n.rcpAmount, _formatDecimal(saleTotal))
       ..addLine()
-      ..addLeft('ВОЗВРАТЫ')
-      ..addRow('Количество:', '$refundCount')
-      ..addRow('Сумма:', _formatDecimal(refundTotal));
+      ..addLeft(l10n.rcpRefunds)
+      ..addRow(l10n.rcpCount, '$refundCount')
+      ..addRow(l10n.rcpAmount, _formatDecimal(refundTotal));
     _addCertificateBlock(receipt, certificatesIssued, certificatesRedeemed);
     receipt
       ..addDoubleLine()
-      ..addRow('ИТОГО В КАССЕ:', _formatDecimal(cashInDrawer), bold: true)
+      ..addRow(l10n.rcpTotalInDrawer, _formatDecimal(cashInDrawer), bold: true)
       ..addNewLines(3)
       ..cut();
     return receipt;
@@ -431,6 +470,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal cashDiscrepancy,
     required Decimal certificatesIssued,
     required Decimal certificatesRedeemed,
   }) async {
@@ -458,6 +498,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         cashEnd: cashEnd,
         cashIncome: cashIncome,
         cashExpense: cashExpense,
+        cashDiscrepancy: cashDiscrepancy,
         certificatesIssued: certificatesIssued,
         certificatesRedeemed: certificatesRedeemed,
       );
@@ -482,37 +523,48 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required Decimal cashEnd,
     required Decimal cashIncome,
     required Decimal cashExpense,
+    required Decimal cashDiscrepancy,
     required Decimal certificatesIssued,
     required Decimal certificatesRedeemed,
   }) {
+    final l10n = _strings();
     final receipt = ReceiptBuilder(charWidth: width)..init();
     if (storeName.isNotEmpty) receipt.addCentered(storeName, bold: true);
     if (posName.isNotEmpty) receipt.addCentered(posName);
     receipt
       ..addEmptyLine()
-      ..addCentered('Z-ОТЧЁТ', bold: true, doubleSize: true)
-      ..addCentered('ЗАКРЫТИЕ СМЕНЫ')
+      ..addCentered(l10n.rcpZReport, bold: true, doubleSize: true)
+      ..addCentered(l10n.rcpShiftClose)
       ..addEmptyLine()
-      ..addRow('Кассир:', cashierName)
-      ..addRow('Начало:', _formatDateTime(shiftStart))
-      ..addRow('Окончание:', _formatDateTime(shiftEnd))
+      ..addRow(l10n.rcpCashier, cashierName)
+      ..addRow(l10n.rcpShiftStart, _formatDateTime(shiftStart))
+      ..addRow(l10n.rcpShiftEnd, _formatDateTime(shiftEnd))
       ..addDoubleLine()
-      ..addLeft('ПРОДАЖИ')
-      ..addRow('Количество:', '$saleCount')
-      ..addRow('Сумма:', _formatDecimal(saleTotal))
+      ..addLeft(l10n.rcpSales)
+      ..addRow(l10n.rcpCount, '$saleCount')
+      ..addRow(l10n.rcpAmount, _formatDecimal(saleTotal))
       ..addLine()
-      ..addLeft('ВОЗВРАТЫ')
-      ..addRow('Количество:', '$refundCount')
-      ..addRow('Сумма:', _formatDecimal(refundTotal));
+      ..addLeft(l10n.rcpRefunds)
+      ..addRow(l10n.rcpCount, '$refundCount')
+      ..addRow(l10n.rcpAmount, _formatDecimal(refundTotal));
     _addCertificateBlock(receipt, certificatesIssued, certificatesRedeemed);
     receipt
       ..addLine()
-      ..addLeft('ДЕНЕЖНЫЕ ОПЕРАЦИИ')
-      ..addRow('На начало:', _formatDecimal(cashStart))
-      ..addRow('Внесения:', _formatDecimal(cashIncome))
-      ..addRow('Изъятия:', _formatDecimal(cashExpense))
+      ..addLeft(l10n.rcpCashOps)
+      ..addRow(l10n.rcpOpeningFloat, _formatDecimal(cashStart))
+      ..addRow(l10n.rcpCashIn, _formatDecimal(cashIncome))
+      ..addRow(l10n.rcpCashOut, _formatDecimal(cashExpense));
+    // Строка печатается только при ненулевом расхождении: у сошедшейся
+    // смены её нет, и «Излишек 0.00» не притворяется находкой.
+    if (cashDiscrepancy != Decimal.zero) {
+      receipt.addRow(
+        cashDiscrepancy > Decimal.zero ? l10n.shiftSurplus : l10n.shiftShortage,
+        _formatDecimal(cashDiscrepancy),
+      );
+    }
+    receipt
       ..addDoubleLine()
-      ..addRow('ИТОГО В КАССЕ:', _formatDecimal(cashEnd), bold: true)
+      ..addRow(l10n.rcpTotalInDrawer, _formatDecimal(cashEnd), bold: true)
       ..addNewLines(3)
       ..cut();
     return receipt;
@@ -599,12 +651,13 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   ) {
     final receipt = ReceiptBuilder(charWidth: width)..init();
     final cur = data.currencySymbol;
+    final l10n = _strings();
 
     _addTemplateHeader(receipt, options);
 
     if (data.isDuplicate) {
       receipt
-        ..addCentered('*** ДУБЛИКАТ ***', bold: true)
+        ..addCentered(l10n.rcpDuplicate, bold: true)
         ..addEmptyLine();
     }
 
@@ -617,29 +670,29 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
     receipt.addLine();
 
-    receipt.addRow('Касса', _cashboxId(data.fiscal, data.posName));
-    receipt.addRow('Чек №', '${data.receiptNo}');
+    receipt.addRow(l10n.rcpTill, _cashboxId(data.fiscal, data.posName));
+    receipt.addRow(l10n.rcpReceiptNo, '${data.receiptNo}');
     if (options.showCashier) {
-      receipt.addRow('Кассир:', data.cashierName);
+      receipt.addRow(l10n.rcpCashier, data.cashierName);
     }
     if (data.tableName != null) {
       final tableInfo = data.zoneName != null
           ? '${data.tableName} (${data.zoneName})'
           : data.tableName!;
-      receipt.addRow('Стол:', tableInfo);
+      receipt.addRow(l10n.rcpTable, tableInfo);
     }
     if (data.waiterName != null) {
-      receipt.addRow('Официант:', data.waiterName!);
+      receipt.addRow(l10n.rcpWaiter, data.waiterName!);
     }
     if (data.guestCount != null) {
-      receipt.addRow('Гостей:', '${data.guestCount}');
+      receipt.addRow(l10n.rcpGuests, '${data.guestCount}');
     }
     if (data.customerName != null) {
-      receipt.addRow('Клиент:', data.customerName!);
+      receipt.addRow(l10n.rcpCustomer, data.customerName!);
     }
     receipt
       ..addCentered(_formatDateTime(data.dateTime))
-      ..addCentered('ПРОДАЖА', bold: true);
+      ..addCentered(l10n.rcpSale, bold: true);
 
     receipt.addLine();
 
@@ -649,38 +702,115 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
     if (data.totalDiscount > Decimal.zero) {
       receipt
-        ..addRow('Подытог:', _formatDecimal(data.subtotal))
-        ..addRow('Скидка:', '-${_formatDecimal(data.totalDiscount)}');
+        ..addRow(l10n.rcpSubtotal, _formatDecimal(data.subtotal))
+        ..addRow(l10n.rcpDiscount, '-${_formatDecimal(data.totalDiscount)}');
     }
     if (data.serviceChargeAmount != null &&
         data.serviceChargeAmount! > Decimal.zero) {
       receipt.addRow(
-        'Сервисный сбор:',
+        l10n.rcpServiceFee,
         _formatDecimal(data.serviceChargeAmount!),
       );
     }
+    // Налог сверху (США): подытог → налог → итог. Это не украшение формы,
+    // а единственный способ показать покупателю, за что он платит сверх
+    // ценника: на ценнике налога не было. При налоге, включённом в цену,
+    // подытог с налогом совпал бы с итогом, и строка была бы шумом.
+    if (data.taxTreatment == TaxTreatment.exclusive) {
+      final groups = data.taxByRate;
+      final totalTax = groups.fold<Decimal>(
+        Decimal.zero,
+        (sum, g) => sum + g.tax,
+      );
+      if (totalTax > Decimal.zero || groups.length > 1) {
+        receipt.addRow(
+          l10n.rcpSubtotal,
+          _formatDecimal(data.totalAmount - totalTax),
+        );
+        // По строке на ставку: в одной корзине их бывает несколько, и одна
+        // общая строка не даёт покупателю понять, с чего именно взят налог.
+        // Освобождённая группа тоже печатается — «ноль» здесь утверждение,
+        // а не пустота.
+        for (final group in groups) {
+          receipt.addRow(
+            '${l10n.rcpSalesTax} ${group.ratePercent}%:',
+            _formatDecimal(group.tax),
+          );
+
+          // Разбивка — под СВОЕЙ ставкой и с отступом: это объяснение
+          // именно её, а не отдельные начисления.
+          //
+          // Под своей, а не одна на чек. Одна на чек и стояла, и на дубле
+          // урока 1.3 это дало неправду на бумаге: под «Sales tax 6.25%»
+          // печатался состав из четырёх долей, включая CO State 2.90%, —
+          // а штат еду для дома не облагал вовсе, и 6,25 % складываются
+          // без него.
+          //
+          // Доли группы, а если их нет — общие для чека: у кассы с одной
+          // ставкой состав один, и старые сборщики его так и передают.
+          final shares = group.jurisdictions.isNotEmpty
+              ? group.jurisdictions
+              : (groups.length == 1 ? data.taxJurisdictions : const []);
+          for (final j in shares) {
+            // Два знака после запятой у КАЖДОЙ доли, даже если она круглая.
+            // `Decimal.toString()` срезает нули, и разбивка выходила рваной:
+            // «2.9 / 5.15 / 1 / 0.1». На налоговом документе доли ставки
+            // принято печатать в одной точности — иначе «1%» читается как
+            // неточность, а не как ровно один процент.
+            receipt.addRow(
+              '  ${j.name}',
+              '${j.ratePercent.toStringAsFixed(2)}%',
+            );
+          }
+        }
+
+        // Освобождённое — отдельной строкой, а не растворённым в итоге.
+        if (data.exemptTotal > Decimal.zero) {
+          receipt.addRow(l10n.rcpTaxExempt, _formatDecimal(data.exemptTotal));
+        }
+      }
+    }
+
     receipt.addRow(
-      'ИТОГО:',
-      '=${_formatDecimal(data.totalAmount)}',
+      l10n.rcpTotal,
+      data.currencyBeforeAmount
+          ? '$cur${_formatDecimal(data.totalAmount)}'
+          : '=${_formatDecimal(data.totalAmount)}',
       bold: true,
     );
 
     for (final payment in data.payments) {
       receipt.addRow(
         _paymentLabel(payment),
-        '=${_formatDecimal(payment.amount)}',
+        data.currencyBeforeAmount
+            ? '$cur${_formatDecimal(payment.amount)}'
+            : '=${_formatDecimal(payment.amount)}',
       );
     }
     if (data.change != null && data.change! > Decimal.zero) {
-      receipt.addRow('Сдача:', '${_formatDecimal(data.change!)} $cur');
+      // Знак валюты с той же стороны, что и у итога. До этой правки итог
+      // печатался «$7.79», а сдача «2.21 $» — две стороны в одном чеке, и
+      // ни одна из них не была решением: сдача просто не спрашивала
+      // настройку.
+      receipt.addRow(
+        l10n.rcpChange,
+        data.currencyBeforeAmount
+            ? '$cur${_formatDecimal(data.change!)}'
+            : '${_formatDecimal(data.change!)} $cur',
+      );
     }
-    _addVatLines(
-      receipt,
-      data.isVatPayer,
-      data.vatRatePercent,
-      data.vatAmount,
-      data.totalAmount,
-    );
+    // Извлечение налога из брутто осмысленно только там, где он в цену
+    // включён. При налоге сверху он уже показан отдельной строкой выше, и
+    // второй раз выводить его значит показать покупателю налог дважды.
+    if (data.taxTreatment == TaxTreatment.inclusive) {
+      _addVatLines(
+        receipt,
+        data.isVatPayer,
+        data.vatRatePercent,
+        data.vatAmount,
+        data.totalAmount,
+      );
+    }
 
     _addFiscalBlock(
       receipt,
@@ -689,6 +819,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       isFiscal: data.isFiscal,
       customerBin: null,
       fiscalState: data.fiscalState,
+      hasFiscalisation: data.hasFiscalisation,
     );
 
     _addFooter(receipt, options);
@@ -702,12 +833,13 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     int width,
   ) {
     final receipt = ReceiptBuilder(charWidth: width)..init();
+    final l10n = _strings();
 
     _addTemplateHeader(receipt, options);
 
     if (data.isDuplicate) {
       receipt
-        ..addCentered('*** ДУБЛИКАТ ***', bold: true)
+        ..addCentered(l10n.rcpDuplicate, bold: true)
         ..addEmptyLine();
     }
 
@@ -720,20 +852,20 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
     receipt.addLine();
 
-    receipt.addRow('Касса', _cashboxId(data.fiscal, data.posName));
-    receipt.addRow('Возврат №', '${data.refundId}');
+    receipt.addRow(l10n.rcpTill, _cashboxId(data.fiscal, data.posName));
+    receipt.addRow(l10n.rcpRefundNo, '${data.refundId}');
     if (data.originalReceiptNo != null) {
-      receipt.addRow('Чек продажи №', '${data.originalReceiptNo}');
+      receipt.addRow(l10n.rcpSaleReceiptNo, '${data.originalReceiptNo}');
     }
     if (options.showCashier) {
-      receipt.addRow('Кассир:', data.cashierName);
+      receipt.addRow(l10n.rcpCashier, data.cashierName);
     }
     if (data.customerName != null) {
-      receipt.addRow('Клиент:', data.customerName!);
+      receipt.addRow(l10n.rcpCustomer, data.customerName!);
     }
     receipt
       ..addCentered(_formatDateTime(data.dateTime))
-      ..addCentered('ВОЗВРАТ', bold: true);
+      ..addCentered(l10n.rcpRefund, bold: true);
 
     receipt.addLine();
 
@@ -742,7 +874,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     receipt.addLine();
 
     receipt.addRow(
-      'ИТОГО:',
+      l10n.rcpTotal,
       '=${_formatDecimal(data.totalAmount)}',
       bold: true,
     );
@@ -838,12 +970,13 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     int width,
   ) {
     final receipt = ReceiptBuilder(charWidth: width)..init();
+    final l10n = _strings();
 
     _addTemplateHeader(receipt, options);
 
     if (data.isDuplicate) {
       receipt
-        ..addCentered('*** ДУБЛИКАТ ***', bold: true)
+        ..addCentered(l10n.rcpDuplicate, bold: true)
         ..addEmptyLine();
     }
 
@@ -856,22 +989,26 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
 
     receipt
       ..addLine()
-      ..addCentered('ПОДАРОЧНЫЙ СЕРТИФИКАТ', bold: true)
+      ..addCentered(l10n.rcpGiftCertificate, bold: true)
       ..addEmptyLine()
-      ..addCentered('Сертификат №')
+      ..addCentered(l10n.rcpCertNo)
       ..addCenteredWrapped(data.number, bold: true)
       ..addEmptyLine()
-      ..addRow('Номинал:', '=${_formatDecimal(data.amount)}', bold: true);
+      ..addRow(
+        l10n.rcpCertFaceValue,
+        '=${_formatDecimal(data.amount)}',
+        bold: true,
+      );
 
     // Срок — **словом**, а не молчанием: пустая строка читается как «срок
     // забыли напечатать», и спорить об этом придётся у кассы.
     final expiresAt = data.expiresAt;
     receipt.addRow(
-      'Действует до:',
-      expiresAt == null ? 'без срока' : _formatDate(expiresAt),
+      l10n.rcpCertValidUntil,
+      expiresAt == null ? l10n.rcpCertNoExpiry : _formatDate(expiresAt),
     );
 
-    if (data.hasPin) receipt.addCentered('ПИН задан');
+    if (data.hasPin) receipt.addCentered(l10n.rcpCertPinSet);
 
     // Бумажка, рождённая возвратом, обязана объяснить себя: старая погашена
     // навсегда (решение 2, 2026-09-16), и без этих строк покупатель придёт
@@ -880,22 +1017,22 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     if (refundLocalId != null) {
       receipt
         ..addLine()
-        ..addRow('Выпущен возвратом №', '$refundLocalId');
+        ..addRow(l10n.rcpCertIssuedByRefund, '$refundLocalId');
       final source = data.sourceNumber;
       if (source != null && source.isNotEmpty) {
         receipt
-          ..addCentered('Взамен сертификата')
+          ..addCentered(l10n.rcpCertInsteadOf)
           ..addCenteredWrapped(source);
       }
     }
 
     receipt.addLine();
-    receipt.addRow('Касса:', data.posName);
-    if (options.showCashier) receipt.addRow('Кассир:', data.cashierName);
+    receipt.addRow(l10n.rcpTillColon, data.posName);
+    if (options.showCashier) receipt.addRow(l10n.rcpCashier, data.cashierName);
     receipt
       ..addCentered(_formatDateTime(data.dateTime))
       ..addLine()
-      ..addCentered('НЕ ФИСКАЛЬНЫЙ ДОКУМЕНТ', bold: true);
+      ..addCentered(l10n.rcpNotFiscalDocument, bold: true);
 
     _addFooter(receipt, options);
 
@@ -916,9 +1053,10 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   }
 
   String _paymentLabel(ReceiptPaymentLine payment) {
-    if (payment.isCash) return 'НАЛИЧНЫМИ';
+    final l10n = _strings();
+    if (payment.isCash) return l10n.rcpCash;
     final name = payment.name.trim();
-    return name.isEmpty ? 'КАРТА' : name.toUpperCase();
+    return name.isEmpty ? l10n.rcpCard : name.toUpperCase();
   }
 
   void _addItemLines(
@@ -926,14 +1064,20 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     List<ReceiptProductLine> products,
     ReceiptOptions options,
   ) {
+    final l10n = _strings();
     var index = 0;
     for (final product in products) {
       index++;
       final namePrefix = options.showItemNumbers ? '$index. ' : '';
       receipt.addLeft('$namePrefix${product.name}');
       final qtyPrice =
-          '${_formatDecimal(product.quantity)} шт x ${_formatDecimal(product.price)}';
-      receipt.addRow(qtyPrice, '=${_formatDecimal(product.total)}');
+          '${_formatDecimal(product.quantity)} ${l10n.rcpQuantityShort} '
+          'x ${_formatDecimal(product.price)}';
+      // Освобождённая позиция помечается коротко и у самой суммы: без
+      // пометки покупатель не поймёт, почему налог меньше, чем он прикинул
+      // по итогу чека.
+      final mark = product.isTaxExempt ? ' ${l10n.rcpTaxExemptMark}' : '';
+      receipt.addRow(qtyPrice, '=${_formatDecimal(product.total)}$mark');
       if (product.hasDiscount) {
         // Скидка называет **происхождение**, когда оно записано (задача
         // 13): «подарок акции», а не безымянное число. Покупатель,
@@ -942,8 +1086,9 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
         //
         // Чеки, проданные до v40, происхождения не несут — там остаётся
         // прежнее «Скидка:». Выдумывать им имя нельзя.
+        final label = product.discountLabel;
         receipt.addRow(
-          '  ${product.discountLabel ?? 'Скидка'}:',
+          label == null ? '  ${l10n.rcpDiscount}' : '  $label:',
           '-${_formatDecimal(product.discountAmount)}',
         );
       }
@@ -954,15 +1099,22 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   void _addVatLines(
     ReceiptBuilder receipt,
     bool isVatPayer,
-    int vatRatePercent,
+    Decimal vatRatePercent,
     Decimal? vatAmount,
     Decimal total,
   ) {
     if (!isVatPayer) return;
-    final vat = vatAmount ?? VatCalculator.extractVatFromGross(total);
+    // Запасной расчёт — по ставке ЭТОГО чека и общей формулой продукта.
+    // Здесь стоял `VatCalculator.extractVatFromGross`, считавший по
+    // зашитым 16 % (4/29) независимо от того, что напечатано строкой
+    // выше: чек мог объявить ставку 12 % и показать налог по 16 %.
+    final vat = vatAmount ?? taxFromGross(total, vatRatePercent);
     receipt
-      ..addRow('ПО НАЛОГУ А:', '$vatRatePercent%')
-      ..addRow('НДС-$vatRatePercent%:', '=${_formatDecimal(vat)}');
+      ..addRow(_strings().rcpTaxA, '$vatRatePercent%')
+      ..addRow(
+        '${_strings().rcpVat}-$vatRatePercent%:',
+        '=${_formatDecimal(vat)}',
+      );
   }
 
   /// Продавец: название и БИН/ИИН — всегда, адрес — по шаблону. Длинные
@@ -977,7 +1129,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
       receipt.addCenteredWrapped(storeName, bold: true);
     }
     if (seller?.binIin?.isNotEmpty ?? false) {
-      receipt.addCentered('БИН/ИИН: ${seller!.binIin}');
+      receipt.addCentered('${_strings().rcpBinIin} ${seller!.binIin}');
     }
     if (options.showAddress && (seller?.address?.isNotEmpty ?? false)) {
       receipt.addCenteredWrapped(seller!.address!);
@@ -993,49 +1145,55 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     required bool isFiscal,
     required String? customerBin,
     FiscalState? fiscalState,
+    bool hasFiscalisation = true,
   }) {
+    final l10n = _strings();
+    // Где фискализации нет как понятия (США), отметки о ней не печатаем
+    // вовсе. «NON-FISCAL RECEIPT» покупатель читает как «чек
+    // недействителен», а не как справку о чужом законе.
+    if (!hasFiscalisation) return;
     if (!isFiscal || fiscal == null) {
       receipt
         ..addLine()
-        ..addCentered('НЕФИСКАЛЬНЫЙ ЧЕК', bold: true);
-      final why = noFiscalDocumentReason(fiscalState);
+        ..addCentered(l10n.rcpNonFiscalReceipt, bold: true);
+      final why = noFiscalDocumentReason(fiscalState, strings: _strings);
       if (why != null) receipt.addCenteredWrapped(why);
       return;
     }
 
     receipt.addLine(char: '*');
     if (fiscal.ofdName?.isNotEmpty ?? false) {
-      receipt.addCenteredWrapped('ОФД ${fiscal.ofdName}');
+      receipt.addCenteredWrapped('${l10n.rcpOfdName} ${fiscal.ofdName}');
     }
     if (fiscal.fiscalSign?.isNotEmpty ?? false) {
-      receipt.addRow('ФИСК. ПРИЗНАК:', fiscal.fiscalSign!);
+      receipt.addRow(l10n.rcpFiscalSign, fiscal.fiscalSign!);
     }
     final fn = fiscal.fiscalNumber ?? fallbackFiscalNumber;
     if (fn != null && fn.isNotEmpty) {
-      receipt.addRow('ФН:', fn);
+      receipt.addRow(l10n.rcpFiscalFn, fn);
     }
     if (fiscal.rnm?.isNotEmpty ?? false) {
-      receipt.addRow('РНМ:', fiscal.rnm!);
+      receipt.addRow(l10n.rcpFiscalRnm, fiscal.rnm!);
     }
     if (fiscal.znm?.isNotEmpty ?? false) {
-      receipt.addRow('ЗНМ:', fiscal.znm!);
+      receipt.addRow(l10n.rcpFiscalZnm, fiscal.znm!);
     }
-    receipt.addRow('ВРЕМЯ:', _formatDateTime(DateTime.now()));
+    receipt.addRow(l10n.rcpFiscalTime, _formatDateTime(DateTime.now()));
     if (customerBin != null && customerBin.isNotEmpty) {
-      receipt.addRow('ИИН покупателя:', customerBin);
+      receipt.addRow(l10n.rcpCustomerTaxId, customerBin);
     }
     if (fiscal.isOffline) {
-      receipt.addCentered('*** ОФФЛАЙН ***', bold: true);
+      receipt.addCentered(l10n.rcpOffline, bold: true);
     }
     final ticketUrl = fiscal.ticketUrl;
     if (ticketUrl != null && ticketUrl.isNotEmpty) {
       receipt
         ..addEmptyLine()
-        ..addCenteredWrapped('Для проверки чека зайдите на')
+        ..addCenteredWrapped(l10n.rcpVerifyAt)
         ..addCenteredWrapped(ticketUrl);
     }
 
-    receipt.addCentered('ФИСКАЛЬНЫЙ ЧЕК', bold: true);
+    receipt.addCentered(l10n.rcpFiscalReceipt, bold: true);
 
     if (ticketUrl != null && ticketUrl.isNotEmpty) {
       receipt
@@ -1047,23 +1205,43 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
   /// Подвал шаблона — после обязательной части, перед протяжкой и резом.
   /// Пустой подвал не даёт ни одной строки.
   void _addFooter(ReceiptBuilder receipt, ReceiptOptions options) {
-    if (!options.footer.isEmpty) {
+    // Три состояния подвала, а не два.
+    //
+    // `null` — не задан: печатается благодарность на языке чека. Держать
+    // её словами в `ReceiptOptions` нельзя — это `const` в слое
+    // сущностей, и до правки там лежала русская строка, уезжавшая на
+    // американский чек.
+    //
+    // Пустой — стёрт владельцем нарочно, и печатать нечего. Слить его с
+    // «не задан» значило бы возвращать благодарность тому, кто её убрал.
+    final footer = options.footer;
+    if (footer != null && footer.isEmpty) {
       receipt
-        ..addEmptyLine()
-        ..addTextBlock(options.footer);
+        ..addNewLines(3)
+        ..cut();
+      return;
     }
+
+    final block =
+        footer ?? ReceiptTextBlock(text: _strings().receiptLabelThankYou);
+    receipt
+      ..addEmptyLine()
+      ..addTextBlock(block);
     receipt
       ..addNewLines(3)
       ..cut();
   }
 
-  String _formatDateTime(DateTime dt) {
-    final d = dt.day.toString().padLeft(2, '0');
-    final m = dt.month.toString().padLeft(2, '0');
-    final h = dt.hour.toString().padLeft(2, '0');
-    final min = dt.minute.toString().padLeft(2, '0');
-    return '$d.$m.${dt.year} $h:$min';
-  }
+  /// Дата на бумаге — по условиям СТРАНЫ кассы.
+  ///
+  /// Здесь стояло `ДД.ММ.ГГГГ` всегда. Для американца «05.09.2026» — это
+  /// девятое мая, а не пятое сентября: дата читается другим днём, и на чеке
+  /// нет ничего, что сказало бы, какое прочтение верное.
+  ///
+  /// Условия держит ядро (`TillConventions`), как и язык бумаги по
+  /// соседству: слою данных знать о них можно, ядру о слое данных — нет.
+  String _formatDateTime(DateTime dt) =>
+      TillConventions.current.formatDateTime(dt);
 
   @override
   Future<PrintSubmitOutcome> printPreCheck(PreCheckData data) async {
@@ -1079,10 +1257,7 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
             '@${data.dateTime.millisecondsSinceEpoch}',
         copyIndex: 0,
       );
-      return await _submit(
-        _buildPreCheck(data, await _columns()),
-        documentId,
-      );
+      return await _submit(_buildPreCheck(data, await _columns()), documentId);
     } catch (e) {
       return _cannotIdentify(PrintDocumentKind.preCheck, e);
     }
@@ -1328,15 +1503,16 @@ class ReceiptPrintServiceImpl implements ReceiptPrintService {
     Decimal redeemed,
   ) {
     if (issued == Decimal.zero && redeemed == Decimal.zero) return;
+    final l10n = _strings();
     receipt
       ..addLine()
       // Скобки, а не тире. Измерено на эмуляторе принтера: длинное тире в
       // CP866 отсутствует и печатается «?» — строка «СЕРТИФИКАТЫ ? НЕ
       // ВЫРУЧКА» вышла бы на ленту молча, без единой ошибки. Сторож —
       // `certificate_shift_line_wire_test.dart`, случай «ни одного «?»».
-      ..addLeft('СЕРТИФИКАТЫ (НЕ ВЫРУЧКА)')
-      ..addRow('Выпущено (долг кассы):', _formatDecimal(issued))
-      ..addRow('Погашено (товаром):', _formatDecimal(redeemed));
+      ..addLeft(l10n.rcpCertificatesNotRevenue)
+      ..addRow(l10n.rcpCertIssuedDebt, _formatDecimal(issued))
+      ..addRow(l10n.rcpCertRedeemed, _formatDecimal(redeemed));
   }
 
   String _formatDecimal(Decimal value) {

@@ -866,9 +866,7 @@ class WebKassaEmulator {
           ..headers.contentType = ContentType.json
           ..write(jsonEncode({'stopping': true}));
         await request.response.close();
-        unawaited(
-          Future<void>.delayed(const Duration(milliseconds: 50), stop),
-        );
+        unawaited(Future<void>.delayed(const Duration(milliseconds: 50), stop));
         return;
       default:
         request.response

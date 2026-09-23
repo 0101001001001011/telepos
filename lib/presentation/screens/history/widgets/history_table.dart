@@ -6,6 +6,7 @@ import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/history/history_controller.dart';
 import 'package:telepos/presentation/screens/history/widgets/history_details_dialog.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class HistoryTable extends ConsumerWidget {
   const HistoryTable({super.key, required this.items, this.compact = false});
@@ -148,7 +149,7 @@ class HistoryTable extends ConsumerWidget {
           isService
               ? _buildServiceStatusBadge(context, item.orderStatus)
               : isRestaurant
-              ? _buildRestaurantTypeBadge(item.orderType)
+              ? _buildRestaurantTypeBadge(context, item.orderType)
               : _buildPaymentTypeBadge(context, item.paymentType),
         ),
 
@@ -178,11 +179,12 @@ class HistoryTable extends ConsumerWidget {
     return Icon(icon, size: 18, color: color);
   }
 
-  Widget _buildRestaurantTypeBadge(int? orderType) {
+  Widget _buildRestaurantTypeBadge(BuildContext context, int? orderType) {
+    final l10n = AppLocalizations.of(context)!;
     final (label, color) = switch (orderType) {
-      0 => ('В зале', Colors.deepOrange),
-      1 => ('Навынос', Colors.blue),
-      2 => ('Доставка', Colors.green),
+      0 => (l10n.restaurantOrderDineIn, Colors.deepOrange),
+      1 => (l10n.restaurantOrderTakeout, Colors.blue),
+      2 => (l10n.restaurantOrderDelivery, Colors.green),
       _ => ('?', Colors.grey),
     };
     return Container(
@@ -339,11 +341,7 @@ class HistoryTable extends ConsumerWidget {
   }
 
   String _formatDateTime(DateTime time) {
-    final d = time.day.toString().padLeft(2, '0');
-    final m = time.month.toString().padLeft(2, '0');
-    final h = time.hour.toString().padLeft(2, '0');
-    final min = time.minute.toString().padLeft(2, '0');
-    return '$d.$m.${time.year} $h:$min';
+    return TillConventions.current.formatDateTime(time);
   }
 
   void _showDetails(BuildContext context, HistoryItem item) {

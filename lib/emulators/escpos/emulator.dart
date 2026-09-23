@@ -171,7 +171,10 @@ class EscPosEmulator {
         await Future<void>.delayed(latency);
       }
       if (faults.takeSilence()) {
-        _log('silence', 'опрос DLE EOT $n оставлен без ответа: отказ «silence»');
+        _log(
+          'silence',
+          'опрос DLE EOT $n оставлен без ответа: отказ «silence»',
+        );
         continue;
       }
       if (faults.takeGarbage()) {
@@ -189,7 +192,7 @@ class EscPosEmulator {
       _log(
         'status',
         'DLE EOT $n → 0x${byte.toRadixString(16).padLeft(2, '0')} '
-        '(${faults.describeState()})',
+            '(${faults.describeState()})',
       );
     }
     return seen;
@@ -242,11 +245,13 @@ class EscPosEmulator {
     }
     final kicks = _countDrawerKicks(job);
     drawerKicks += kicks;
-    final rendered = labels ? renderLabels(job) : renderReceipt(job, width: width);
+    final rendered = labels
+        ? renderLabels(job)
+        : renderReceipt(job, width: width);
     _log(
       'job',
       'задание ${job.length} байт принято'
-      '${kicks > 0 ? ', открытий ящика: $kicks' : ''}',
+          '${kicks > 0 ? ', открытий ящика: $kicks' : ''}',
       rendered: rendered,
     );
   }
@@ -312,11 +317,10 @@ class EscPosEmulator {
           answer = journal;
         case '/_emul/last':
           answer = {
-            'rendered': journal.reversed
-                .firstWhere(
-                  (e) => e['rendered'] != null,
-                  orElse: () => const {'rendered': ''},
-                )['rendered'],
+            'rendered': journal.reversed.firstWhere(
+              (e) => e['rendered'] != null,
+              orElse: () => const {'rendered': ''},
+            )['rendered'],
           };
         case '/_emul/stop':
           request.response

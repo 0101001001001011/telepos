@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/service/service_catalog_controller.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceTypeDialog extends ConsumerStatefulWidget {
   const ServiceTypeDialog({super.key});
@@ -53,7 +54,7 @@ class _ServiceTypeDialogState extends ConsumerState<ServiceTypeDialog> {
                     },
                     title: Text(item.name),
                     subtitle: Text(
-                      '${item.price} ${l10n.currencySymbol}'
+                      '${item.price} ${tillCurrencySymbol()}'
                       '${item.estimatedDurationMinutes != null ? ' / ${item.estimatedDurationMinutes} ${l10n.serviceCatalogDuration}' : ''}',
                     ),
                     secondary: item.requiresDevice

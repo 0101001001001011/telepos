@@ -21,6 +21,8 @@ import 'package:telepos/domain/device/device_class.dart';
 import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 import 'package:telepos/domain/setup/setup_draft.dart';
 import 'package:telepos/domain/setup/setup_repository.dart';
+import 'package:telepos/data/tax/tax_preset_catalog.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 /// Commits a finished wizard into this machine's database — the binding a
 /// desktop till or the appliance uses.
@@ -62,7 +64,7 @@ class LocalSetupRepository implements SetupRepository {
       'cashBoxName': pos.cashBoxName,
       'isVatPayer': org.isVatPayer,
       'operatingMode': operatingMode.name,
-      
+
       'fiscalEnabled': fiscal.enabled,
       'fiscalType': fiscal.fiscalType.name,
     });
@@ -90,8 +92,16 @@ class LocalSetupRepository implements SetupRepository {
     SetupLogger.info('completeSetup [3/9]: TelePOS Main account создан');
 
     SetupLogger.info('completeSetup [3b/9]: Создание Bank (card) account...');
+    // Имя приходит из мастера — он знает язык интерфейса. Здесь было
+    // зашито русское «Банк (карта)», и на американской кассе счёт с этим
+    // именем показывался в отчётах. Запасное имя английское, а не русское:
+    // язык кассы по умолчанию тут неизвестен, и латиница читается везде.
+    final bankAccountName =
+        (draft.acquiringAccountName?.trim().isNotEmpty ?? false)
+        ? draft.acquiringAccountName!.trim()
+        : 'Bank (card)';
     final bankAccountId = await db.accountDao.createAcquiringAccount(
-      name: 'Банк (карта)',
+      name: bankAccountName,
       acquirerId: 0,
     );
     SetupLogger.info(
@@ -255,6 +265,18 @@ class LocalSetupRepository implements SetupRepository {
       await db.userDao.createOwner(name: ownerName, passwordEnc: null);
     }
 
+    // Адрес торговой точки — в саму кассу, а не только в настройки ОФД.
+    //
+    // Раньше он записывался единственной строкой ниже, внутри ветки
+    // WebKassa: касса вне Казахстана адреса не получала вовсе, и на чеке
+    // его не было.
+    final storeAddress = org.actualAddress ?? org.legalAddress;
+    if (storeAddress != null && storeAddress.isNotEmpty) {
+      await db
+          .update(db.thisPosEntries)
+          .write(ThisPosEntriesCompanion(storeAddress: Value(storeAddress)));
+    }
+
     if (fiscal.enabled && fiscal.fiscalType == FiscalType.webkassa) {
       SetupLogger.info('completeSetup [7/9]: Настройка WebKassa...');
       final posConfig = await db.thisPosDao.get();
@@ -314,8 +336,6 @@ class LocalSetupRepository implements SetupRepository {
     await _createDeviceBindings(draft, cashBoxName);
     SetupLogger.info('completeSetup [7b/9]: Устройства терминала созданы');
 
-
-
     SetupLogger.info('completeSetup [8/9]: Импорт глобального каталога...');
     await _importGlobalProducts();
     SetupLogger.info('completeSetup [8/9]: Импорт каталога завершён');
@@ -325,7 +345,64 @@ class LocalSetupRepository implements SetupRepository {
     );
     _triggerInitialSync();
 
+    await _seedTaxFromPreset(country);
+
     SetupLogger.info('completeSetup: ВСЕ ШАГИ ЗАВЕРШЕНЫ УСПЕШНО');
+  }
+
+  /// Завести налоговую настройку из набора страны.
+  ///
+  /// # Зачем это здесь
+  ///
+  /// Наборы существовали и применялись ТОЛЬКО с экрана налогов. Касса,
+  /// прошедшая мастер, оставалась без налоговой настройки вовсе, и ставка
+  /// бралась умолчанием, зашитым в код: казахстанские 16 % в Германии, где
+  /// 19, и в Польше, где 23.
+  ///
+  /// Заказчик 2026-09-22: «вдруг завтра поменяют и сделают 18 %, и всё,
+  /// работа кассы встанет тогда в России». Набор — отправная точка, а не
+  /// власть: дальше касса живёт своей настройкой, и обновление продукта её
+  /// не трогает (README наборов, правило 1).
+  ///
+  /// # Почему в слое данных, а не в мастере
+  ///
+  /// Первая редакция звала это из контроллера мастера — и потянула в
+  /// презентацию каталог наборов и базу. Сторожа поймали сразу в двух
+  /// местах: `layering_test` нарушением И5, `browser_routes_test` тем, что
+  /// браузерная сборка перестала собираться. Здесь же и страна под рукой, и
+  /// база своя.
+  ///
+  /// # Почему отказ не роняет настройку
+  ///
+  /// Налог можно настроить и потом, экраном. Уронить здесь завершение
+  /// мастера значило бы не пустить кассира к продаже из-за того, что он
+  /// поправит за минуту.
+  ///
+  /// # Чего это НЕ делает
+  ///
+  /// Не выбирает город. В США ставка задаётся городом, набора страны там
+  /// нет вовсе: такой кассе налог настраивают экраном, и мастер честно
+  /// ничего не заводит.
+  Future<void> _seedTaxFromPreset(CountryCode country) async {
+    try {
+      final catalog = await TaxPresetCatalog.load(rootBundle);
+      final matching = catalog.matching(countryCode: country.isoCode);
+      // Ровно один набор на страну — иначе выбор делает случай, а не
+      // человек. Несколько (как у городов США) настраиваются экраном.
+      if (matching.length != 1) {
+        SetupLogger.info(
+          'completeSetup: наборов для ${country.isoCode} — '
+          '${matching.length}, налог настраивается экраном',
+        );
+        return;
+      }
+      await _db.taxSettingsDao.applyPreset(matching.single);
+      SetupLogger.info(
+        'completeSetup: налог заведён из набора «${matching.single.id}»',
+      );
+    } catch (e, stack) {
+      SetupLogger.error('completeSetup: набор налога не применён', e, stack);
+    }
   }
 
   /// Writes this new user's permission rows straight from
@@ -409,7 +486,10 @@ class LocalSetupRepository implements SetupRepository {
   /// are collected but no per-class function ever reads them, so a v26→v27
   /// upgrade never produces a scale binding either. This method faithfully
   /// reproduces that same gap rather than quietly fixing it out of scope.
-  Future<void> _createDeviceBindings(SetupDraft draft, String cashBoxName) async {
+  Future<void> _createDeviceBindings(
+    SetupDraft draft,
+    String cashBoxName,
+  ) async {
     try {
       final eq = draft.equipment;
       final pos = draft.posConfig;

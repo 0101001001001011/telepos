@@ -48,6 +48,11 @@
   "loginBlocked": "Пользователь заблокирован",
   "loginSessionExpired": "Сессия истекла",
   "loginShiftRequired": "Откройте смену для входа",
+  "staffRoleOwner": "Владелец",
+  "staffRoleAdministrator": "Администратор",
+  "staffRoleUser": "Пользователь",
+  "staffRoleCashier": "Кассир",
+  "staffRoleUnknown": "Неизвестно",
   "loginCashier": "Кассир",
   "loginAdmin": "Администратор",
   "loginManager": "Менеджер",
@@ -270,6 +275,12 @@
   "agentSaveSuccess": "Контрагент сохранён",
   "agentDeleteConfirm": "Удалить контрагента?",
   "cashTitle": "Касса",
+  "cashReasonCreditRepayment": "Погашение рассрочки",
+  "cashReasonCustomerTopUp": "Пополнение счёта покупателя",
+  "accountBankCard": "Банк (карта)",
+  "accountCertificateLiability": "Обязательства по сертификатам",
+  "serviceConsumableFallback": "Расходник",
+  "serviceAutoAddedByNorm": "Добавлено по норме расхода",
   "cashInvestment": "Внесение",
   "cashExpense": "Выплата",
   "cashBalance": "Баланс кассы",
@@ -278,11 +289,6 @@
   "cashReasonPlaceholder": "Укажите причину",
   "cashSuccess": "Операция выполнена",
   "cashExpenseTypes": "Тип расхода",
-  "cashSalary": "Зарплата",
-  "cashRent": "Аренда",
-  "cashUtilities": "Коммунальные",
-  "cashSupplies": "Закупки",
-  "cashOther": "Прочее",
   "discountTitle": "Скидка",
   "discountPercent": "Процент",
   "discountFixed": "Фиксированная",
@@ -459,7 +465,7 @@
   "loginWithoutPin": "Войти без PIN",
   "loginShiftOpen": "Смена открыта",
   "loginShiftClosed": "Смена закрыта",
-  "loginShiftUnknown": "Смена: неизвестно",
+  "loginShiftUnknown": "Смена: касса не ответила",
   "saleQuickProducts": "Быстрые товары",
   "saleIncrease": "Увеличить",
   "saleDecrease": "Уменьшить",
@@ -1022,14 +1028,6 @@
     }
   },
   "allBreadcrumb": "Все",
-  "productPrice": "{price} ₸",
-  "@productPrice": {
-    "placeholders": {
-      "price": {
-        "type": "String"
-      }
-    }
-  },
   "maxBonusPercent": "Можно списать до {percent}% от суммы чека",
   "@maxBonusPercent": {
     "placeholders": {
@@ -1434,7 +1432,7 @@
   "@setupVatPayerRate": {
     "placeholders": {
       "rate": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -1568,13 +1566,13 @@
   "setupFiscalDisablesRounding": "При включённой фискализации округление автоматически отключается",
   "setupUserCreationTitle": "Создание пользователей",
   "setupUserCreationDescription": "Создайте пользователей для работы с кассой",
-  "setupAdminLabel": "АДМИНИСТРАТОР",
+  "setupAdminLabel": "Администратор",
   "setupAdminSubtitle": "Владелец кассы",
   "setupUserNameLabel": "Имя",
   "setupUserPinLabel": "PIN",
   "setupUserPinConfirmLabel": "Подтверждение",
   "setupAdminPinDefault": "По умолчанию: 0000",
-  "setupSellerLabel": "ПРОДАВЕЦ",
+  "setupSellerLabel": "Продавец",
   "setupSellerOptional": "Опционально",
   "setupSellerPinDefault": "По умолчанию: 1111",
   "setupAdminPinMismatch": "PIN-коды администратора не совпадают",
@@ -1621,7 +1619,7 @@
   "@setupVatPayerSummary": {
     "placeholders": {
       "rate": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -2470,6 +2468,13 @@
   "countryUzbekistan": "Узбекистан",
   "countryUSA": "США",
   "countryTurkmenistan": "Туркменистан",
+  "permNavServiceQueue": "Очередь заказов",
+  "permNavServiceIntake": "Приём заказов",
+  "permSellWithDiscount": "Продажа со скидкой",
+  "permCashInOut": "Внесение / изъятие",
+  "permRefundGoods": "Возврат товара",
+  "permRefundWithoutReceipt": "Возврат без чека",
+  "permGroupNavigation": "Навигация",
   "permEditPrice": "Редактирование цены",
   "permSellInDebt": "Продажа в долг",
   "permDiscounts": "Скидки",
@@ -2748,7 +2753,7 @@
     }
   },
   "shiftConfirmCloseQuestion": "Вы уверены, что хотите закрыть смену?",
-  "shiftFixedAmount": "Будет зафиксирована сумма: {amount} KZT",
+  "shiftFixedAmount": "Будет зафиксирована сумма: {amount}",
   "@shiftFixedAmount": {
     "placeholders": {
       "amount": {
@@ -2767,6 +2772,7 @@
   "shiftCashSales": "Наличные",
   "shiftCardSales": "Карта",
   "shiftRefundsTotal": "Возвраты",
+  "cashOpeningCount": "Пересчёт при открытии",
   "shiftShortage": "Недостача",
   "shiftSurplus": "Излишек",
   "shiftBalances": "Сходится",
@@ -3480,7 +3486,6 @@
     }
   },
   "paymentDefaultLabel": "По умолчанию",
-  "currencySymbol": "₸",
   "serviceIntakeTitle": "Приём заказа",
   "serviceIntakeClient": "Клиент",
   "serviceIntakeDevice": "Устройство / Предмет",
@@ -5259,7 +5264,7 @@
   "setCorrectionIntro": "Чек коррекции исправляет ранее пробитую или не пробитую сумму. Укажите причину и сумму. Если оператор не поддерживает коррекцию — это будет показано честно.",
   "setCorrectionReasonLabel": "Причина коррекции",
   "setCorrectionReasonHint": "напр. самостоятельная корректировка",
-  "setCorrectionAmountLabel": "Сумма коррекции, KZT",
+  "setCorrectionAmountLabel": "Сумма коррекции, {currency}",
   "setCorrectionPaymentLabel": "Способ оплаты",
   "setCorrectionCash": "Наличные",
   "setCorrectionCard": "Карта",
@@ -5354,7 +5359,7 @@
       }
     }
   },
-  "dishTotalYieldSummary": "Итого: {cost} ₸  |  Выход: {yield}",
+  "dishTotalYieldSummary": "Итого: {cost}  |  Выход: {yield}",
   "@dishTotalYieldSummary": {
     "placeholders": {
       "cost": {
@@ -5595,7 +5600,7 @@
   "repKpiLoadError": "Ошибка загрузки KPI",
   "repColIndicator": "Показатель",
   "repColCount": "Кол-во",
-  "repColSumTenge": "Сумма, ₸",
+  "repColSumTenge": "Сумма, {currency}",
   "repColRow": "Строка",
   "repColTurnoverExclVat": "Оборот (без НДС)",
   "repColVat": "НДС",
@@ -5625,7 +5630,7 @@
   "repColDocuments": "Документов",
   "repColCostShort": "Себест.",
   "repF910Title": "ф.910 — Доход (упрощёнка)",
-  "repF910Subtitle": "Облагаемый доход: {income} ₸ • налог {rate}%: {tax} ₸",
+  "repF910Subtitle": "Облагаемый доход: {income} • налог {rate}%: {tax}",
   "@repF910Subtitle": {
     "placeholders": {
       "income": {
@@ -5643,7 +5648,7 @@
   "repF910RowRefunds": "Возвраты (минус)",
   "repF910RowTaxableIncome": "Облагаемый доход",
   "repF300Title": "ф.300 — НДС (декларация)",
-  "repF300Subtitle": "Облагаемый оборот: {turnover} ₸ • начисленный НДС: {vat} ₸",
+  "repF300Subtitle": "Облагаемый оборот: {turnover} • начисленный НДС: {vat}",
   "@repF300Subtitle": {
     "placeholders": {
       "turnover": {
@@ -5664,7 +5669,7 @@
   },
   "repF300ZeroRatedTurnover": "Необлагаемый / 0% оборот",
   "repCashBookTitle": "Кассовая книга (КО-4)",
-  "repCashBookSubtitle": "Приход: {income} • Расход: {expense} • Остаток: {balance} ₸",
+  "repCashBookSubtitle": "Приход: {income} • Расход: {expense} • Остаток: {balance}",
   "@repCashBookSubtitle": {
     "placeholders": {
       "income": {
@@ -5679,7 +5684,7 @@
     }
   },
   "repVatPeriodTitle": "НДС за период",
-  "repVatPeriodSubtitle": "НДС: {vat} ₸ • база: {base} ₸",
+  "repVatPeriodSubtitle": "НДС: {vat} • база: {base}",
   "@repVatPeriodSubtitle": {
     "placeholders": {
       "vat": {
@@ -5706,7 +5711,7 @@
     }
   },
   "repCashCollectionTitle": "Инкассация",
-  "repCashCollectionSubtitle": "{count} операций • всего: {total} ₸",
+  "repCashCollectionSubtitle": "{count} операций • всего: {total}",
   "@repCashCollectionSubtitle": {
     "placeholders": {
       "count": {
@@ -5719,7 +5724,7 @@
   },
   "repProfitCogsTitle": "Прибыль / Маржа (COGS)",
   "repProfitMarginTitle": "Прибыль / Маржа",
-  "repProfitMarginSubtitle": "Прибыль: {profit} ₸ • маржа {margin}% • {note}",
+  "repProfitMarginSubtitle": "Прибыль: {profit} • маржа {margin}% • {note}",
   "@repProfitMarginSubtitle": {
     "placeholders": {
       "profit": {
@@ -5736,7 +5741,7 @@
   "repProfitCostRealCogs": "себестоимость: реальный COGS",
   "repProfitCostWholesale": "себестоимость: оптовая цена (нет CalculateCogsUseCase)",
   "repWriteoffTitle": "Списания",
-  "repWriteoffSubtitle": "{count} документов • всего: {total} ₸",
+  "repWriteoffSubtitle": "{count} документов • всего: {total}",
   "@repWriteoffSubtitle": {
     "placeholders": {
       "count": {
@@ -5871,7 +5876,7 @@
       }
     }
   },
-  "errorBigAmountBlocked": "Сумма продажи превышает 1 млн ₸. Включите разрешение на крупные суммы в настройках кассы.",
+  "errorBigAmountBlocked": "Сумма продажи выше потолка кассы ({limit}). Поднимите потолок или включите разрешение на крупные суммы в настройках кассы.",
   "errorMarkRequired": "Требуется код маркировки: {name}",
   "@errorMarkRequired": {
     "placeholders": {
@@ -6708,9 +6713,21 @@
   "diagnosticsPrinterQueueMissing": "Очередь печати на этом рабочем месте не настроена",
   "diagnosticsPrinterNothingSent": "Касса пока ничего не отправляла в принтер",
   "diagnosticsAskFailed": "Касса не ответила на этот вопрос: {reason}",
-  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "@diagnosticsAskFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsAttempts": "попыток {count}",
-  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "@diagnosticsAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "diagnosticsJobQueued": "ждёт очереди",
   "diagnosticsJobPrinting": "печатается",
   "diagnosticsJobPrinted": "напечатано",
@@ -6723,11 +6740,29 @@
   "diagnosticsFiscalQueued": "В очереди",
   "diagnosticsFiscalQueuedEmpty": "Очередь пуста — всё, что отправляли, оператор принял",
   "diagnosticsFiscalSign": "Фискальный признак {value}",
-  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalSign": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalOperatorDoc": "документ оператора {value}",
-  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalOperatorDoc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalReceiptNo": "чек {value}",
-  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalReceiptNo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalOffline": "выдан автономно",
   "diagnosticsEmulatorBanner": "Привязка принтера смотрит на этот же компьютер — за портом эмулятор, а не бумага",
   "diagnosticsTabDrawer": "Ящик",
@@ -6775,7 +6810,13 @@
   "paymentDiagnosticsQrEmpty": "Касса пока не заводила ни одного кода оплаты",
   "paymentDiagnosticsQrNotConfigured": "Провайдер QR на этой кассе не настроен",
   "paymentDiagnosticsQrAddress": "Провайдер: {address}",
-  "@paymentDiagnosticsQrAddress": {"placeholders": {"address": {"type": "String"}}},
+  "@paymentDiagnosticsQrAddress": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "paymentDiagnosticsQrUnknown": "Тела запросов к провайдеру касса не хранит. Видно то, что осело в намерении: сумма, состояние, ид на той стороне и причина отказа.",
   "paymentDiagnosticsTerminalSection": "Терминал оплаты",
   "paymentDiagnosticsTerminalEmpty": "С запуска кассы в терминал оплаты не уходило ни одного кадра",
@@ -6784,13 +6825,37 @@
   "paymentDiagnosticsReply": "Ответ",
   "paymentDiagnosticsNoReply": "Ответа не было",
   "paymentDiagnosticsApproval": "Код одобрения {value}",
-  "@paymentDiagnosticsApproval": {"placeholders": {"value": {"type": "String"}}},
+  "@paymentDiagnosticsApproval": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "paymentDiagnosticsTransaction": "транзакция {value}",
-  "@paymentDiagnosticsTransaction": {"placeholders": {"value": {"type": "String"}}},
+  "@paymentDiagnosticsTransaction": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "paymentDiagnosticsRefusal": "Отказ: {value}",
-  "@paymentDiagnosticsRefusal": {"placeholders": {"value": {"type": "String"}}},
+  "@paymentDiagnosticsRefusal": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "paymentDiagnosticsConfirmations": "подтверждений {count}",
-  "@paymentDiagnosticsConfirmations": {"placeholders": {"count": {"type": "int"}}},
+  "@paymentDiagnosticsConfirmations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "paymentDiagnosticsOrphanMoney": "деньги без чека",
   "paymentDiagnosticsAfterGiveUp": "подтверждено после того, как касса перестала ждать",
   "paymentDiagnosticsApproved": "Одобрено",
@@ -6867,5 +6932,1053 @@
   "prepaymentRefundAmountInvalid": "Сумма должна быть больше нуля",
   "prepaymentRefundNotPermitted": "Выдача аванса этому кассиру не разрешена",
   "prepaymentRefundFiscalFailed": "Деньги выданы, но фискальный чек возврата аванса не выписан.",
-  "agentRefundPrepayment": "Выдать аванс"
+  "agentRefundPrepayment": "Выдать аванс",
+  "repTitle": "Отчеты",
+  "repTabAnalytics": "Аналитика",
+  "repTabFinance": "Финансы",
+  "repTabForecasts": "Прогнозы",
+  "repTabTaxKz": "Налоги/КЗ",
+  "repRangeDays7": "7 дней",
+  "repRangeDays30": "30 дней",
+  "repRangeCustom": "Произвольно",
+  "repKpiChange": "Изменение",
+  "repSubtitleVsPrev": "vs пред. период",
+  "repChartRevenueByDay": "Выручка по дням",
+  "repChartTop5Products": "Топ-5 товаров",
+  "repChartPaymentMethods": "Способы оплаты",
+  "settingsRestartRequired": "Изменения применяются при следующем запуске кассы.",
+  "hardwareRestartRequired": "Изменения устройств применяются при следующем запуске кассы.",
+  "hardwareDeviceDisabled": "Устройство отключено.",
+  "hardwareCustomerDisplayGraphic": "Графический экран покупателя (2-й монитор)",
+  "hardwareCustomerDisplayGraphicOff": "Графический экран покупателя отключён.",
+  "hardwarePaymentKinds": "Виды оплаты рабочего места",
+  "hardwarePaymentKindsUnrestricted": "Ограничений нет: рабочее место принимает все виды оплаты.",
+  "fiscalSettingsDirectOfdLabel": "Прямое подключение ОФД",
+  "markupAuto": "Авто-наценка",
+  "markupSave": "Сохранить наценки",
+  "creditContractNumberLabel": "Номер договора с бумажки",
+  "creditNoLiveContracts": "Живых договоров рассрочки нет",
+  "supplierOrderTitle": "Заявка поставщику",
+  "supplierOrderAllStocked": "Все товары в достаточном количестве",
+  "supplierOrderNotNeeded": "Дозаказ не требуется",
+  "hwScaleTitle": "Весы",
+  "hwReceiptPrinterTitle": "Чековый принтер",
+  "repRangeDays14": "14 дней",
+  "repForecastSmaLowData": "SMA (мало данных)",
+  "repNoCategory": "Без категории",
+  "repAllCustomers": "Все клиенты",
+  "repAllInStock": "Все товары в наличии",
+  "repAllCovered30": "Все товары обеспечены на 30+ дней",
+  "repColDays": "Дней",
+  "repColDaysLeft": "Дней до конца",
+  "repColSharePct": "Доля %",
+  "repColChangePct": "Изменение %",
+  "repColSalesCount": "Кол-во продаж",
+  "repReceiptCountLabel": "Количество чеков",
+  "repStockCritical": "Критически низкий остаток! Требуется срочная поставка.",
+  "repColCumulativePct": "Накопит. %",
+  "repNotEnoughSalesData": "Недостаточно данных о продажах за выбранный период",
+  "repNoForecastData": "Нет данных для прогноза",
+  "repNoDataLast90": "Нет данных за последние 90 дней",
+  "repNoCustomerData": "Нет данных о клиентах",
+  "repNoLowStock": "Нет товаров с низким остатком",
+  "repLowStock": "Низкий остаток",
+  "repNewPrice": "Новая цена",
+  "repColEstimatedAmount": "Ориент. сумма",
+  "repColSeatings": "Посадок",
+  "repForecast": "Прогноз",
+  "repRevenueForecast": "Прогноз выручки",
+  "repRevenueForecastHw": "Прогноз выручки (Holt-Winters)",
+  "repStockoutForecast": "Прогноз исчерпания остатков",
+  "repStockForecast": "Прогноз остатков",
+  "repSalesWithoutCustomerHidden": "Продажи без привязки к клиенту не отображаются",
+  "repColSalesPerDay": "Продажи/день",
+  "repColSold": "Продано",
+  "repHourlyDistribution": "Распределение по часам",
+  "repColRecommendedOrder": "Рек. заказ",
+  "repRecommendedPurchases": "Рекомендуемые закупки",
+  "repColAvgSalesPerDay": "Ср. продажи/день",
+  "repColAvgCheckShort": "Ср. чек",
+  "repAvgPrice": "Средняя цена",
+  "repOldPrice": "Старая цена",
+  "repStockValue": "Стоимость остатка",
+  "repColTable": "Стол",
+  "repCurrentStock": "Текущий остаток",
+  "repTop10Customers": "Топ-10 клиентов",
+  "repTop10Products": "Топ-10 товаров",
+  "repActual": "Факт",
+  "repColHour": "Час",
+  "repExport": "Экспорт",
+  "repCashierPerformance": "Эффективность кассиров",
+  "repWeightedAvgHint": "взвешенное среднее (последние дни имеют больший вес)",
+  "repSalesCountByHour": "количество продаж по часам",
+  "repNoUrgentItems": "нет срочных позиций",
+  "repByRevenueTapHint": "по выручке (нажмите для деталей)",
+  "repDistributionTapHint": "распределение (нажмите на сектор)",
+  "repRevenueDistributionTapHint": "распределение выручки (нажмите на сектор)",
+  "repAbcRare": "редкие",
+  "repAbcMedium": "средние",
+  "repAbcFast": "ходовые",
+  "repAbcLegend": "ходовые (A), средние (B), редкие (C) — по вкладу в выручку",
+  "repReturnsCount": "{count} возвратов",
+  "@repReturnsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repAbcGroupSummary": "{count} тов · {pct}%",
+  "@repAbcGroupSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "repCustomerTooltip": "{name}\n{amount} ({count} чеков)",
+  "@repCustomerTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repDaysCountTapHint": "{count} дней (нажмите для деталей)",
+  "@repDaysCountTapHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repCashiersCount": "{count} кассиров",
+  "@repCashiersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repLowStockCountHint": "{count} товаров (остаток < 10, нажмите для деталей)",
+  "@repLowStockCountHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repOrdersShort": "{count} зак.",
+  "@repOrdersShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repOrdersRevenueTooltip": "{count} зак.\n{amount}",
+  "@repOrdersRevenueTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repPieces": "{qty} шт",
+  "@repPieces": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "repPiecesDot": "{qty} шт.",
+  "@repPiecesDot": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "repForecastSubtitle": "{actual} дней факт + {horizon} дней прогноз ({algorithm})",
+  "@repForecastSubtitle": {
+    "placeholders": {
+      "actual": {
+        "type": "int"
+      },
+      "horizon": {
+        "type": "int"
+      },
+      "algorithm": {
+        "type": "String"
+      }
+    }
+  },
+  "repSalesCountLine": "{count} продаж",
+  "@repSalesCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repReceiptsCount": "{count} чеков",
+  "@repReceiptsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repSupplierTooltip": "{name}\n{count} поставок",
+  "@repSupplierTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repSeatingsLine": "{count} посадок",
+  "@repSeatingsLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repDayOffset": "+{n} день",
+  "@repDayOffset": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "repHoltWintersSeason": "Holt-Winters (сезон={season})",
+  "@repHoltWintersSeason": {
+    "placeholders": {
+      "season": {
+        "type": "int"
+      }
+    }
+  },
+  "repInvestmentsLine": "Вложения: {amount}",
+  "@repInvestmentsLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repDividendsLine": "Дивиденды: {amount}",
+  "@repDividendsLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repMarginLine": "Маржа: {pct}%",
+  "@repMarginLine": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "repKpiLoadErrorWith": "Ошибка загрузки KPI: {error}",
+  "@repKpiLoadErrorWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "repErrorWith": "Ошибка: {error}",
+  "@repErrorWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "repProfitLine": "Прибыль: {amount}",
+  "@repProfitLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repExpensesLine": "Расходы: {amount}",
+  "@repExpensesLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repLeadTimeHint": "срок поставки {lead} дн. + страховой запас {safety} дн.",
+  "@repLeadTimeHint": {
+    "placeholders": {
+      "lead": {
+        "type": "int"
+      },
+      "safety": {
+        "type": "int"
+      }
+    }
+  },
+  "markupHint": "Наценка в % на категорию. При приходе товара розничная цена пересчитывается из закупочной: закуп × (1 + наценка%).",
+  "creditContractsTitle": "Рассрочки",
+  "creditContractsTitleFor": "Рассрочки — {agent}",
+  "@creditContractsTitleFor": {
+    "placeholders": {
+      "agent": {
+        "type": "String"
+      }
+    }
+  },
+  "repExportedTo": "Экспортировано: {path}",
+  "@repExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "repExportFailed": "Ошибка экспорта: {error}",
+  "@repExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hwSetupIncompleteDevices": "Мастер настройки ещё не завершён — устройства сохранить некуда",
+  "hwSetupIncompleteCheck": "Мастер настройки ещё не завершён — проверять пока нечего",
+  "settingsSetupIncompleteSave": "Мастер настройки ещё не завершён — сохранить некуда",
+  "hwProfileCatalogUnavailable": "Каталог профилей устройств недоступен — настройки устройств сейчас нельзя изменить.",
+  "printerProfileCatalogUnavailable": "Каталог профилей устройств недоступен — настройки принтера сейчас нельзя изменить.",
+  "labelPrinterProfileCatalogUnavailable": "Каталог профилей устройств недоступен — настройки принтера этикеток сейчас нельзя изменить.",
+  "hwPaymentKindsUnsupported": "Эта сборка не умеет сохранять виды оплаты рабочего места.",
+  "hwPaymentKindsEnforcedByTill": "Запрет проверяет касса: терминал, которому вид оплаты не разрешён, получит отказ, даже если кнопка на его экране осталась.",
+  "hwCustomerDisplayGraphicDesc": "Красивый графический экран для клиента на втором мониторе: позиции чека, количество и итог в реальном времени.",
+  "hwCustomerDisplayMonitor": "Монитор для экрана покупателя",
+  "hwCustomerDisplayMonitorHint": "POS остаётся на основном мониторе. Открывается автоматически при следующем запуске кассы.",
+  "hwNoProfilesForClass": "Нет доступных моделей для этого класса устройств.",
+  "hwNoConnectionParams": "Эта модель не требует дополнительных параметров подключения.",
+  "hwMonitorWithSize": "Монитор {index} — {size}",
+  "@hwMonitorWithSize": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "hwMonitorNumbered": "Монитор {index}",
+  "@hwMonitorNumbered": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "hwPaymentKindsError": "Виды оплаты: {error}",
+  "@hwPaymentKindsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hwPaymentKindsUnknown": "В настройке этого рабочего места записаны виды, которых эта версия не знает: {list}. Ограничение по ним не действует. Выберите виды заново, чтобы починить запись — пока вы этого не сделали, она остаётся как есть.",
+  "@hwPaymentKindsUnknown": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "hwParamOptional": "{description} (необязательно)",
+  "@hwParamOptional": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "globalMillimetres": "{value} мм",
+  "@globalMillimetres": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "devProfilePrinterEscpos80mm": "Чековый принтер ESC/POS 80 мм",
+  "devProfilePrinterEscpos58mm": "Чековый принтер ESC/POS 58 мм (компактный, без ножа)",
+  "devProfilePrinterEscposUsb": "Чековый принтер ESC/POS, USB/спулер",
+  "devProfilePrinterEscposBluetooth": "Чековый принтер ESC/POS, Bluetooth",
+  "devProfilePrinterEscposSerial": "Чековый принтер ESC/POS, последовательный порт",
+  "devProfilePrinterLabelZpl104": "Принтер этикеток ZPL 104 мм",
+  "devProfilePrinterLabelEpl58": "Принтер этикеток EPL 58 мм",
+  "devProfileScannerUsbHid": "USB-сканер штрихкода (HID)",
+  "devProfileScannerBluetoothHid": "Bluetooth-сканер штрихкода (HID)",
+  "devProfileScannerCamera": "Сканер по камере устройства",
+  "devProfileScannerSerial": "Сканер штрихкода, последовательный порт",
+  "devProfileScaleCasPd2": "Весы CAS PD-II (последовательные)",
+  "devProfileScaleCasErPlus": "Весы CAS ER-Plus",
+  "devProfileDrawerViaPrinter": "Денежный ящик через принтер (RJ11)",
+  "devProfileDrawerStandalone": "Автономный денежный ящик (RJ11)",
+  "devProfileDisplayVfd": "Дисплей покупателя VFD (последовательный)",
+  "devProfileDisplayLcd2x20": "Дисплей покупателя LCD 2x20",
+  "devProfileDisplayLed8": "Дисплей покупателя LED (8 символов)",
+  "devProfilePaymentKaspiPos": "Терминал Kaspi POS",
+  "devParamPrinterIpAddress": "IP-адрес сетевого принтера",
+  "devParamTcpPort9100": "TCP-порт, по умолчанию 9100",
+  "devParamPrinterDevicePath": "Путь к устройству или имя очереди печати",
+  "devParamPrinterMac": "MAC-адрес сопряжённого Bluetooth-принтера",
+  "devParamPrinterComPort": "Последовательный порт принтера, например COM4",
+  "devParamLabelPrinterIp": "IP-адрес принтера этикеток",
+  "devParamScannerMac": "MAC-адрес сопряжённого Bluetooth-сканера",
+  "devParamScannerComPort": "Последовательный порт сканера, например COM5",
+  "devParamScaleComPort": "Последовательный порт весов, например COM3",
+  "devParamDrawerComPort": "Последовательный порт интерфейсной платы ящика",
+  "devParamDisplayComPort": "Последовательный порт дисплея покупателя",
+  "devParamKaspiIp": "IP-адрес терминала Kaspi POS",
+  "devParamKaspiPort": "Порт терминала, обычно 8888",
+  "devParamCameraId": "Какую камеру использовать",
+  "rcpTill": "Касса",
+  "rcpTillColon": "Касса:",
+  "rcpReceiptNo": "Чек №",
+  "rcpCashier": "Кассир:",
+  "rcpCustomer": "Клиент:",
+  "rcpDate": "Дата:",
+  "rcpBinIin": "БИН/ИИН:",
+  "rcpThankYou": "Спасибо за покупку!",
+  "rcpSale": "ПРОДАЖА",
+  "rcpSubtotal": "Подытог:",
+  "rcpDiscount": "Скидка:",
+  "rcpServiceFee": "Сервисный сбор:",
+  "rcpTotal": "ИТОГО:",
+  "rcpChange": "Сдача:",
+  "rcpCash": "НАЛИЧНЫМИ",
+  "rcpCard": "КАРТА",
+  "rcpQuantityShort": "шт",
+  "rcpRefund": "ВОЗВРАТ",
+  "rcpRefundNo": "Возврат №",
+  "rcpSaleReceiptNo": "Чек продажи №",
+  "rcpDuplicate": "*** ДУБЛИКАТ ***",
+  "rcpTable": "Стол:",
+  "rcpWaiter": "Официант:",
+  "rcpGuests": "Гостей:",
+  "rcpFiscalReceipt": "ФИСКАЛЬНЫЙ ЧЕК",
+  "rcpNonFiscalReceipt": "НЕФИСКАЛЬНЫЙ ЧЕК",
+  "rcpNotFiscalDocument": "НЕ ФИСКАЛЬНЫЙ ДОКУМЕНТ",
+  "rcpFiscalSign": "ФИСК. ПРИЗНАК:",
+  "rcpFiscalFn": "ФН:",
+  "rcpFiscalRnm": "РНМ:",
+  "rcpFiscalZnm": "ЗНМ:",
+  "rcpFiscalTime": "ВРЕМЯ:",
+  "rcpOfdName": "ОФД",
+  "rcpOffline": "*** ОФФЛАЙН ***",
+  "rcpVerifyAt": "Для проверки чека зайдите на",
+  "rcpCustomerTaxId": "ИИН покупателя:",
+  "rcpTaxA": "ПО НАЛОГУ А:",
+  "rcpFiscalOperatorNotSet": "Фискальный оператор не настроен",
+  "rcpFiscalModuleUnavailable": "Модуль фискализации недоступен",
+  "rcpDocumentNotIssued": "Документ не оформлен — обратитесь к кассиру",
+  "rcpXReport": "X-ОТЧЁТ",
+  "rcpZReport": "Z-ОТЧЁТ",
+  "rcpInterim": "ПРОМЕЖУТОЧНЫЙ (без гашения)",
+  "rcpShiftClose": "ЗАКРЫТИЕ СМЕНЫ",
+  "rcpShiftStart": "Начало:",
+  "rcpShiftEnd": "Окончание:",
+  "rcpSales": "ПРОДАЖИ",
+  "rcpRefunds": "ВОЗВРАТЫ",
+  "rcpCount": "Количество:",
+  "rcpAmount": "Сумма:",
+  "rcpCashOps": "ДЕНЕЖНЫЕ ОПЕРАЦИИ",
+  "rcpOpeningFloat": "На начало:",
+  "rcpSlipTitle": "КВИТАНЦИЯ",
+  "rcpType": "Тип:",
+  "rcpComment": "Комментарий:",
+  "rcpCashIn": "Приход:",
+  "rcpCashOut": "Расход:",
+  "rcpTotalInDrawer": "ИТОГО В КАССЕ:",
+  "rcpCertificatesNotRevenue": "СЕРТИФИКАТЫ (НЕ ВЫРУЧКА)",
+  "rcpCertIssuedDebt": "Выпущено (долг кассы):",
+  "rcpCertRedeemed": "Погашено (товаром):",
+  "rcpGiftCertificate": "ПОДАРОЧНЫЙ СЕРТИФИКАТ",
+  "rcpCertNo": "Сертификат №",
+  "rcpCertFaceValue": "Номинал:",
+  "rcpCertValidUntil": "Действует до:",
+  "rcpCertNoExpiry": "без срока",
+  "rcpCertPinSet": "ПИН задан",
+  "rcpCertIssuedByRefund": "Выпущен возвратом №",
+  "rcpCertInsteadOf": "Взамен сертификата",
+  "rcpVat": "НДС",
+  "rcpSalesTax": "Налог с продаж",
+  "rcpTaxExempt": "Не облагается",
+  "rcpTaxExemptMark": "осв.",
+  "taxSettingsTitle": "Налоги",
+  "taxSettingsSubtitle": "Ставки, юрисдикции и категории товаров",
+  "taxSettingsIntro": "Ставка не задаётся одним числом: она складывается из долей юрисдикций, в которых стоит касса, и зависит от категории товара и даты. Готовый набор можно взять пресетом и потом править.",
+  "taxSettingsNotConfigured": "Налог не настроен: касса считает ноль.",
+  "taxSettingsPresetSection": "Готовый набор",
+  "taxSettingsCountry": "Страна",
+  "taxSettingsRegion": "Штат или область",
+  "taxSettingsCity": "Город",
+  "taxSettingsPreset": "Набор",
+  "taxSettingsApplyPreset": "Применить набор",
+  "taxSettingsPresetReplaces": "Применение заменит текущую настройку целиком. Сложить два набора нельзя: касса взяла бы двойной налог.",
+  "taxSettingsPresetSource": "Источник: {source}",
+  "@taxSettingsPresetSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSettingsPresetValidFrom": "Ставки действуют с {date}",
+  "@taxSettingsPresetValidFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSettingsPresetApplied": "Набор применён",
+  "taxSettingsCurrentSection": "Текущая настройка",
+  "taxSettingsRateForStandard": "Обычный товар: {rate}%",
+  "@taxSettingsRateForStandard": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSettingsJurisdictions": "Юрисдикции",
+  "taxSettingsCategories": "Категории товаров",
+  "taxSettingsTillLocation": "Касса стоит здесь",
+  "taxSettingsTillLocationHint": "Отметок может быть несколько: город и спецрайоны. Вышестоящие добавляются сами.",
+  "taxSettingsRules": "Правила",
+  "taxSettingsRuleTaxed": "облагается",
+  "taxSettingsRuleZero": "нулевая ставка",
+  "taxSettingsRuleExempt": "освобождено",
+  "taxSettingsAllCategories": "все категории",
+  "taxSettingsAddJurisdiction": "Добавить юрисдикцию",
+  "taxSettingsAddCategory": "Добавить категорию",
+  "taxSettingsAddRule": "Добавить правило",
+  "taxSettingsName": "Название",
+  "taxSettingsCode": "Код",
+  "taxSettingsRate": "Ставка, %",
+  "taxSettingsValidFrom": "Действует с",
+  "taxSettingsParent": "Вышестоящая",
+  "taxSettingsNoParent": "нет (корень)",
+  "taxSettingsLevel": "Уровень",
+  "taxSettingsLevelCountry": "Страна",
+  "taxSettingsLevelState": "Штат",
+  "taxSettingsLevelCounty": "Округ",
+  "taxSettingsLevelCity": "Город",
+  "taxSettingsLevelDistrict": "Спецрайон",
+  "taxSettingsDelete": "Удалить",
+  "taxSettingsDeleteJurisdictionWarning": "Вместе с ней уйдут её правила и вложенные юрисдикции.",
+  "taxSettingsResponsibility": "Числа из наборов собраны из открытых источников и названы ссылкой. За правильность налога отвечает налогоплательщик, а не программа.",
+  "taxSettingsNoPresetsForCountry": "Для этой страны готовых наборов нет — настройте вручную.",
+  "taxSettingsAdd": "Добавить",
+  "taxSettingsCancel": "Отмена",
+  "setupStoreAddressHint": "ул. Абая, 10, Алматы",
+  "setupStoreAddressHelper": "Печатается на чеке. Без него покупатель не увидит, где сделана покупка.",
+  "countryKz": "Казахстан",
+  "countryRu": "Россия",
+  "countryKg": "Кыргызстан",
+  "countryUz": "Узбекистан",
+  "countryUs": "США",
+  "countryTm": "Туркменистан",
+  "currencyKzt": "Казахстанский тенге",
+  "currencyRub": "Российский рубль",
+  "currencyKgs": "Кыргызский сом",
+  "currencyUzs": "Узбекский сум",
+  "currencyUsd": "Доллар США",
+  "currencyTmt": "Туркменский манат",
+  "setupStepSalesTax": "Налог с продаж",
+  "setupSalesTaxPayerTitle": "Собираю налог с продаж",
+  "setupSalesTaxPayerSubtitle": "Ставки задаются по юрисдикциям в «Настройки → Налоги»",
+  "setupSalesTaxPayerDescription": "Налог добавляется сверх цены на ценнике и печатается на чеке отдельной строкой.",
+  "setupSalesTaxNonPayerTitle": "Без налога с продаж",
+  "setupSalesTaxNonPayerSubtitle": "К цене ничего не добавляется",
+  "setupSalesTaxNonPayerDescription": "К цене ничего не добавляется, и строки налога на чеке нет.",
+  "bootLoadingConfig": "Загрузка конфигурации...",
+  "bootCheckingPosKey": "Проверка ключа POS...",
+  "bootLoadingAgents": "Загрузка контрагентов...",
+  "bootLoadingAccounts": "Загрузка счетов...",
+  "bootInitialisingDatabase": "Инициализация базы данных...",
+  "bootLoadingCashiers": "Загрузка кассиров...",
+  "bootLoadingPosData": "Загрузка данных POS...",
+  "bootLoadingProducts": "Загрузка товаров...",
+  "bootCheckingReceiptNumbers": "Проверка нумерации чеков...",
+  "bootCheckingLicence": "Проверка лицензии...",
+  "bootCheckingReports": "Проверка отчётов...",
+  "bootFinishingInitialisation": "Завершение инициализации...",
+  "bootStartingBackgroundJobs": "Запуск фоновых задач...",
+  "bootReady": "Готово",
+  "bootDataLoaded": "Данные загружены",
+  "bootTillNotResponding": "Касса не отвечает: {code}",
+  "@bootTillNotResponding": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "bootDownloadingBackup": "Скачивание бэкапа...",
+  "bootBackupDownloadFailed": "Не удалось скачать бэкап",
+  "bootRestoringDatabase": "Восстановление базы данных...",
+  "bootDatabaseRestoreFailed": "Не удалось восстановить базу данных",
+  "bootApplyingPosKey": "Настройка ключа кассы...",
+  "bootRestoreDone": "Восстановление завершено",
+  "bootCreatingBackup": "Создание бэкапа...",
+  "bootBackupCreateFailed": "Не удалось создать бэкап",
+  "bootBackupDone": "Бэкап создан и загружен",
+  "bootLoadingUsers": "Загрузка пользователей...",
+  "bootLoadingCategories": "Загрузка категорий...",
+  "bootLoadingSettings": "Загрузка настроек...",
+  "bootSyncDone": "Синхронизация завершена",
+  "bootFailed": "Ошибка",
+  "countryDeu": "Германия",
+  "currencyDeu": "Евро",
+  "countryFra": "Франция",
+  "currencyFra": "Евро",
+  "countryEsp": "Испания",
+  "currencyEsp": "Евро",
+  "countryIta": "Италия",
+  "currencyIta": "Евро",
+  "countryGbr": "Великобритания",
+  "currencyGbr": "Фунт стерлингов",
+  "countryPol": "Польша",
+  "currencyPol": "Польский злотый",
+  "countryTur": "Турция",
+  "currencyTur": "Турецкая лира",
+  "countryChn": "Китай",
+  "currencyChn": "Китайский юань",
+  "countryJpn": "Япония",
+  "currencyJpn": "Японская иена",
+  "countryKor": "Южная Корея",
+  "currencyKor": "Южнокорейская вона",
+  "countryAre": "ОАЭ",
+  "currencyAre": "Дирхам ОАЭ",
+  "countrySau": "Саудовская Аравия",
+  "currencySau": "Саудовский риял",
+  "countryInd": "Индия",
+  "currencyInd": "Индийская рупия",
+  "countryCan": "Канада",
+  "currencyCan": "Канадский доллар",
+  "countryAus": "Австралия",
+  "currencyAus": "Австралийский доллар",
+  "agentPaymentAccepted": "Оплата принята",
+  "catalogCategoryHasChildren": "Категория содержит подкатегории",
+  "creditOutstanding": "Осталось: {amount}",
+  "@creditOutstanding": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "creditTakePayment": "Принять платёж",
+  "creditPrintContract": "Печать договора",
+  "creditPaymentFor": "Платёж по {number}",
+  "@creditPaymentFor": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "creditOutstandingOnContract": "Осталось по договору: {amount}",
+  "@creditOutstandingOnContract": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "creditPayInFull": "Погасить целиком",
+  "creditAccept": "Принять",
+  "displayProduct": "Товар",
+  "markupSaved": "Наценки сохранены: {count} категорий с наценкой",
+  "@markupSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "genericErrorWith": "Ошибка: {detail}",
+  "@genericErrorWith": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceAttachPhoto": "Фото",
+  "serviceAttachVideo": "Видео",
+  "shiftCorrectionReceipt": "Чек коррекции",
+  "supplierChoose": "Выберите поставщика",
+  "supplierProduct": "Товар",
+  "supplierStock": "Остаток",
+  "supplierOrderQty": "Заказать",
+  "supplierCreateRequest": "Сформировать заявку",
+  "supplierNeedQuantity": "Укажите количество хотя бы по одному товару",
+  "unitMonthsShort": "{count} мес.",
+  "@unitMonthsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitDaysShort": "{count} дн.",
+  "@unitDaysShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "displayWelcome": "Добро пожаловать!",
+  "displayWelcomeSubtitle": "Мы рады видеть вас",
+  "displayPromoFree": "Акция · бесплатно",
+  "displayDiscountAmount": "Скидка −{amount}",
+  "@displayDiscountAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "displayWindowTitle": "Экран покупателя",
+  "shiftXReportPrinted": "X-отчёт распечатан",
+  "shiftXReportPrintedOffline": "X-отчёт распечатан (фискальный X в очереди, связи нет)",
+  "shiftXReportFailed": "Не удалось распечатать X-отчёт",
+  "creditContractNotFound": "Договора {number} в базе кассы нет",
+  "@creditContractNotFound": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "creditOverdue": "ПРОСРОЧЕНО: {amount} ({count} платежей)",
+  "@creditOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "creditNextPayment": "Ближайший платёж {date}: {amount}",
+  "@creditNextPayment": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "creditNoTillAccount": "У кассы нет счёта — принять деньги некуда",
+  "creditContractClosed": "Договор {number} закрыт",
+  "@creditContractClosed": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "creditPartiallyPaid": "Принято {paid}, осталось {left}",
+  "@creditPartiallyPaid": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "creditPaymentAmount": "Сумма платежа",
+  "serviceWarrantyAndQuality": "Гарантия и качество",
+  "serviceWarrantyDays": "Гарантия: {days} дн.",
+  "@serviceWarrantyDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceWarrantyNotSet": "Гарантия не установлена",
+  "serviceQualityRatingTitle": "Оценка качества",
+  "serviceQualityRatingValue": "Оценка: {rating}/5",
+  "@serviceQualityRatingValue": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceRepairMedia": "Фото/видео ремонта",
+  "serviceNoRepairMedia": "Нет медиа ремонта",
+  "supplierLabel": "Поставщик:",
+  "supplierLinesToOrder": "Позиций к заказу: {count}",
+  "@supplierLinesToOrder": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supplierRequestCreated": "Заявка сформирована: {count} поз.",
+  "@supplierRequestCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifierRequired": "Обязательно",
+  "modifierMax": "макс. {count}",
+  "@modifierMax": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "writeoffReasonUnspecified": "Не указана",
+  "labelSampleProduct": "Образец товара",
+  "markupCategoryNumbered": "Категория #{id}",
+  "@markupCategoryNumbered": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "salePolicyForbids": "Действие запрещено настройками POS (Настройки → Политика продаж)",
+  "labelPrintFailed": "Ошибка печати этикетки",
+  "labelPrintFromTillOnly": "Печать этикеток — с кассы, не с терминала",
+  "orphanQrTillNotRegistered": "База кассы не зарегистрирована — неразобранные деньги по QR спросить не у кого",
+  "stockLowStockReorder": "Дозаказ товаров с низким остатком",
+  "serviceNoteNeedsApproval": "Требует согласования клиента",
+  "deferredFromTill": "касса {id}",
+  "@deferredFromTill": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "dishSummary": "Ингредиентов: {count}, себестоимость: {cost}",
+  "@dishSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentIssueTo": "Выдача аванса покупателю ({name})",
+  "@prepaymentIssueTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentFrom": "Аванс покупателя ({name})",
+  "@prepaymentFrom": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prepaymentRefundTo": "Возврат аванса покупателю ({name})",
+  "@prepaymentRefundTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "setupPartOrganization": "организация",
+  "setupPartTill": "касса",
+  "setupPartFiscal": "фискализация",
+  "setupPartEquipment": "оборудование",
+  "setupPartTerminals": "платёжные терминалы",
+  "setupPartRules": "правила",
+  "setupPartUser": "пользователь",
+  "customerPaymentNote": "Погашение долга / оплата ({name})",
+  "@customerPaymentNote": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatMembersUnavailable": "Список участников не загрузился",
+  "chatMe": "Я",
+  "@repColSumTenge": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "setPolicyBigAmountLimit": "Потолок суммы чека",
+  "setPolicyBigAmountLimitDesc": "Выше этой суммы касса просит разрешения. Пусто — {fallback}.",
+  "@errorBigAmountBlocked": {
+    "placeholders": {
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "@setCorrectionAmountLabel": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "@setPolicyBigAmountLimitDesc": {
+    "placeholders": {
+      "fallback": {
+        "type": "String"
+      }
+    }
+  },
+  "cashRefusedNotPositive": "Сумма должна быть больше нуля",
+  "cashRefusedAboveCeiling": "Сумма выше потолка кассы ({limit}). Поднимите потолок в настройках или включите разрешение на крупные суммы.",
+  "@cashRefusedAboveCeiling": {
+    "placeholders": {
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "errorProductHasNoPrice": "У товара «{name}» не заведена цена — продать его нельзя. Заведите цену в каталоге.",
+  "@errorProductHasNoPrice": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sellingHoursTitle": "Часы запрета продажи",
+  "sellingHoursAdd": "Добавить окно",
+  "sellingHoursCategory": "Категория",
+  "sellingHoursFrom": "С (ЧЧ:ММ)",
+  "sellingHoursTo": "До (ЧЧ:ММ)",
+  "sellingHoursActive": "Запрет действует",
+  "sellingHoursBanned": "Продажа запрещена {window}",
+  "@sellingHoursBanned": {
+    "placeholders": {
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "sellingHoursOff": "Окно {window} выключено",
+  "@sellingHoursOff": {
+    "placeholders": {
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "sellingHoursBroken": "Часы «{window}» не разобраны — запрет не работает",
+  "@sellingHoursBroken": {
+    "placeholders": {
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "sellingHoursBadTime": "Время записывается как ЧЧ:ММ, например 23:00",
+  "sellingHoursPreviewDay": "Запрет внутри суток: {window}",
+  "@sellingHoursPreviewDay": {
+    "placeholders": {
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "sellingHoursPreviewNight": "Ночной запрет через полночь: {window}",
+  "@sellingHoursPreviewNight": {
+    "placeholders": {
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "sellingHoursExplainer": "Часы задаёте вы: закон в каждой стране свой и меняется. Запрет на категорию действует и на все вложенные в неё.",
+  "sellingHoursNoCategories": "Сначала заведите категории в каталоге — запрет ставится на категорию.",
+  "sellingHoursCategoryGone": "Категория #{id} удалена",
+  "@sellingHoursCategoryGone": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "errorSellingHoursBanned": "«{category}» сейчас продавать нельзя: запрет {window}.",
+  "@errorSellingHoursBanned": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSellingHoursBannedNoWindow": "«{category}» сейчас продавать нельзя.",
+  "@errorSellingHoursBannedNoWindow": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "generalSettingsStoreAddress": "Адрес торговой точки",
+  "generalSettingsStoreAddressHint": "Печатается на чеке. Поменяйте, если магазин переехал."
 }

@@ -154,9 +154,9 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
   }
 
   Future<void> _deleteCategory(_CategoryNode node) async {
+    final l10n = AppLocalizations.of(context)!;
     if (node.productCount > 0) {
       if (!mounted) return;
-      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.catalogCategoryHasProducts),
@@ -171,7 +171,7 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Категория содержит подкатегории'),
+          content: Text(l10n.catalogCategoryHasChildren),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -179,7 +179,6 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
     }
 
     if (!mounted) return;
-    final l10n = AppLocalizations.of(context)!;
 
     final confirmed = await showDialog<bool>(
       context: context,

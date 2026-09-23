@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 /// Браузерная половина шва — см. докстринг `sale_hardware.dart`.
 ///
@@ -33,6 +34,7 @@ class SaleHardware {
     required String productName,
     required String barcode,
     required Decimal price,
+    required AppLocalizations l10n,
     int copies = 1,
-  }) async => 'Печать этикеток — с кассы, не с терминала';
+  }) async => l10n.labelPrintFromTillOnly;
 }

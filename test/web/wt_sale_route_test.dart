@@ -78,6 +78,7 @@ import 'package:telepos/data/usecases/sale/sale_round_option_use_case_impl.dart'
 import 'package:telepos/domain/auth/auth_repository.dart';
 import 'package:telepos/domain/sale/cart_service.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/startup/startup_state_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart' show Terminal, PointMode;
@@ -301,7 +302,7 @@ class _Till {
 class _BootedTill implements AppBootstrap {
   @override
   Future<AppInitStatus> start({required BootProgress onProgress}) async {
-    onProgress(1.0, 'готово');
+    onProgress(1.0, BootStage.ready);
     return AppInitStatus.success;
   }
 }

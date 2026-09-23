@@ -176,8 +176,8 @@ class _TotalTabState extends ConsumerState<TotalTab> {
             Expanded(
               child: OutlinedButton(
                 onPressed: () {
-                  notifier.setManualTotal(state.systemTotal);
-                  _controller.text = state.systemTotal.toStringAsFixed(2);
+                  notifier.setManualTotal(state.expectedCash);
+                  _controller.text = state.expectedCash.toStringAsFixed(2);
                 },
                 child: Text(l10n.shiftEqualsSystem),
               ),
@@ -221,7 +221,7 @@ class _TotalTabState extends ConsumerState<TotalTab> {
             children: [
               Text(l10n.shiftSystemTotal, style: AppTextStyles.body),
               Text(
-                state.systemTotal.toStringAsFixed(2),
+                state.expectedCash.toStringAsFixed(2),
                 style: AppTextStyles.h3,
               ),
             ],

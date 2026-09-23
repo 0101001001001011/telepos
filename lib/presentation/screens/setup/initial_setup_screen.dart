@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:telepos/app/router/app_routes.dart';
 import 'package:telepos/app/theme/app_tokens.dart';
 import 'package:telepos/core/logging/setup_logger.dart';
+import 'package:telepos/core/constants/enums/country_code.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/tax_step_words.dart';
 import 'package:telepos/presentation/common/help/help_button.dart';
 import 'package:telepos/presentation/common/widgets/language_switcher.dart';
 import 'package:telepos/presentation/controllers/setup/initial_setup_controller.dart';
@@ -109,7 +111,7 @@ class _InitialSetupScreenState extends ConsumerState<InitialSetupScreen> {
               // приписанная поверх подписи, — это стиль, заданный экраном, а
               // тема для того и существует, чтобы его там не было.
               Text(
-                _getStepTitle(state.currentStep, l10n),
+                _getStepTitle(state.currentStep, l10n, state.selectedCountry),
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(width: AppTokens.space4),
@@ -132,12 +134,18 @@ class _InitialSetupScreenState extends ConsumerState<InitialSetupScreen> {
   // Рельс живёт в `WizardScaffold`, то есть у шага, и это верное место: шаг
   // знает, который он по счёту, а оболочка — нет.
 
-  String _getStepTitle(InitialSetupStep step, AppLocalizations l10n) {
+  String _getStepTitle(
+    InitialSetupStep step,
+    AppLocalizations l10n,
+    CountryCode? country,
+  ) {
     return switch (step) {
       InitialSetupStep.checking => l10n.setupStepChecking,
       InitialSetupStep.countrySelection => l10n.setupStepCountry,
       InitialSetupStep.organizationSetup => l10n.setupStepOrganization,
-      InitialSetupStep.vatSelection => l10n.setupStepVat,
+      // Название шага — тоже по укладу: в шапке «НДС» на американской
+      // кассе выглядело бы как чужой налог.
+      InitialSetupStep.vatSelection => TaxStepWords.of(country, l10n).stepTitle,
       InitialSetupStep.employeeSetup => l10n.setupStepUsers,
       InitialSetupStep.posSetup => l10n.setupStepPos,
       InitialSetupStep.fiscalSetup => l10n.setupStepFiscal,

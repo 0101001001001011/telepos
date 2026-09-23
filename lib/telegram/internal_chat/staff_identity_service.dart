@@ -181,19 +181,7 @@ class StaffMember {
 
 enum StaffRole { owner, administrator, user, cashier, unknown }
 
-extension StaffRoleExtension on StaffRole {
-  String get displayName {
-    switch (this) {
-      case StaffRole.owner:
-        return 'Владелец';
-      case StaffRole.administrator:
-        return 'Администратор';
-      case StaffRole.user:
-        return 'Пользователь';
-      case StaffRole.cashier:
-        return 'Кассир';
-      case StaffRole.unknown:
-        return 'Неизвестно';
-    }
-  }
-}
+// `StaffRoleExtension.displayName` жил здесь и возвращал «Владелец»,
+// «Администратор», «Кассир» — и не спрашивался НИКЕМ. Мёртвое слово
+// для человека вне словаря: появись у него вызывающий, роль в чате
+// заговорила бы по-русски на любой кассе.

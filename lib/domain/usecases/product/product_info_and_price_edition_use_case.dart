@@ -12,6 +12,8 @@ abstract class ProductInfoAndPriceEditionUseCase {
     int? measure,
     int? vatRate,
     bool vatRateSet = false,
+    int? taxCategoryId,
+    bool taxCategorySet = false,
     String? ntin,
     bool? isMarkable,
     String? brand,

@@ -14,6 +14,7 @@ import 'package:telepos/presentation/controllers/agent/supplier_payment_controll
 import 'package:telepos/presentation/dialogs/record_customer_payment_dialog.dart';
 import 'package:telepos/app/router/app_routes.dart';
 import 'package:telepos/presentation/dialogs/record_supplier_payment_dialog.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class AgentDetailsDialog extends ConsumerStatefulWidget {
   const AgentDetailsDialog({super.key, required this.agent, this.onSelect});
@@ -323,7 +324,7 @@ class _AgentDetailsDialogState extends ConsumerState<AgentDetailsDialog> {
             ).toString(),
           ),
           icon: const Icon(Icons.event_repeat_outlined, size: 18),
-          label: const Text('Рассрочки'),
+          label: Text(AppLocalizations.of(context)!.creditContractsTitle),
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 14),
           ),
@@ -390,9 +391,7 @@ class _AgentDetailsDialogState extends ConsumerState<AgentDetailsDialog> {
             : (isSupplier ? _handleSupplierPayment : _handleRecordPayment),
         icon: const Icon(Icons.payments, size: 18),
         label: Text(
-          isSupplier
-              ? l10n.supplierRepayTitle
-              : 'Принять оплату / погасить долг',
+          isSupplier ? l10n.supplierRepayTitle : l10n.customerPaymentTitle,
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.success,
@@ -419,10 +418,11 @@ class _AgentDetailsDialogState extends ConsumerState<AgentDetailsDialog> {
     final currentQuery = ref.read(agentSearchProvider).searchQuery;
     ref.read(agentSearchProvider.notifier).search(currentQuery);
 
+    final l10n = AppLocalizations.of(context)!;
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Оплата принята'),
+      SnackBar(
+        content: Text(l10n.agentPaymentAccepted),
         backgroundColor: AppColors.success,
       ),
     );
@@ -455,9 +455,7 @@ class _AgentDetailsDialogState extends ConsumerState<AgentDetailsDialog> {
   }
 
   String _formatDate(DateTime date) {
-    final d = date.day.toString().padLeft(2, '0');
-    final m = date.month.toString().padLeft(2, '0');
-    return '$d.$m.${date.year}';
+    return TillConventions.current.formatDate(date);
   }
 
   Future<void> _handleDelete() async {

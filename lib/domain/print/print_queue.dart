@@ -190,10 +190,7 @@ abstract interface class PrintQueue {
   /// Обязательного значения по умолчанию здесь нет намеренно: умолчание,
   /// выбираемое реализацией, — это две реализации, разошедшиеся в поведении
   /// на том, о чём контракт молчит.
-  Future<PrintSubmitOutcome> retry(
-    String jobId, {
-    required Duration extendBy,
-  });
+  Future<PrintSubmitOutcome> retry(String jobId, {required Duration extendBy});
 
   /// Отменяет задание. Возвращает `false`, если задание неизвестно или уже
   /// в терминальном состоянии.

@@ -143,10 +143,22 @@ class _OrganizationStepState extends ConsumerState<OrganizationStep> {
                 onChanged: (v) =>
                     controller().updateOrganization(legalAddress: v),
               ),
+              // Адрес торговой точки — ОДНО поле, и оно здесь.
+              //
+              // 2026-09-21 я завёл второе такое же в разделе «Компания», не
+              // заметив этого. Два поля с одной подписью писали в одно
+              // значение `actualAddress` разными контроллерами: они не
+              // синхронны, и побеждало то, которое тронули последним.
+              // Заметил заказчик, глядя на экран.
+              //
+              // Пояснение переехало сюда: до него адрес выглядел
+              // необязательной мелочью, а он печатается на чеке.
               SettingsFieldTile(
                 metrics: metrics,
                 label: l10n.setupActualAddressLabel,
                 controller: _actualAddress,
+                hint: l10n.setupStoreAddressHint,
+                helper: l10n.setupStoreAddressHelper,
                 onChanged: (v) =>
                     controller().updateOrganization(actualAddress: v),
               ),

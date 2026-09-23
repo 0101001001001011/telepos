@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:telepos/core/constants/enums/tax_treatment.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
 import 'package:meta/meta.dart';
 import 'package:telepos/domain/discount/discount_origin.dart';
 
@@ -66,6 +68,8 @@ class CartLine {
     required this.discounts,
     this.barcode,
     this.mark,
+    this.taxRatePercent,
+    this.isTaxExempt = false,
   });
 
   /// Строка с единственной ручной скидкой — самый частый случай и вся
@@ -129,9 +133,32 @@ class CartLine {
   /// Код маркировки (Data Matrix), если товар маркируемый. `null` иначе.
   final String? mark;
 
+  /// Выведенная ставка налога этой строки. `null` — налог не настроен.
+  ///
+  /// Выведенная, а не взятая у товара: зависит от юрисдикций кассы,
+  /// категории товара и даты (`lib/domain/tax/tax_resolution.dart`).
+  final Decimal? taxRatePercent;
+
+  /// Строка вне налоговой базы — не то же, что ставка ноль.
+  final bool isTaxExempt;
+
   Decimal get subtotal => price * quantity;
 
+  /// Сумма строки БЕЗ налога сверху.
   Decimal get total => subtotal - discount;
+
+  /// Налог сверх цены для этой строки.
+  ///
+  /// Только для уклада «налог сверху»: при налоге, включённом в цену, он
+  /// уже внутри [total], и прибавлять его значило бы взять дважды.
+  Decimal taxOnTop() {
+    if (isTaxExempt) return Decimal.zero;
+    final rate = taxRatePercent;
+    if (rate == null || rate == Decimal.zero) return Decimal.zero;
+    // Той же функцией, что и чек: две копии денежной формулы расходятся
+    // тогда, когда кто-то поправит одну и не найдёт вторую.
+    return taxOnNet(total, rate);
+  }
 
   /// Сравнение по значению — тем же приёмом, что [CartCommandMeta].
   ///
@@ -154,7 +181,9 @@ class CartLine {
       // происхождения.
       _sameDiscounts(other.discounts, discounts) &&
       other.barcode == barcode &&
-      other.mark == mark;
+      other.mark == mark &&
+      other.taxRatePercent == taxRatePercent &&
+      other.isTaxExempt == isTaxExempt;
 
   static bool _sameDiscounts(List<CartDiscount> a, List<CartDiscount> b) {
     if (a.length != b.length) return false;
@@ -174,6 +203,8 @@ class CartLine {
     Object.hashAll(discounts),
     barcode,
     mark,
+    taxRatePercent,
+    isTaxExempt,
   );
 }
 
@@ -243,6 +274,7 @@ class CartView {
     required this.wholesale,
     this.receiptNo,
     this.agentId,
+    this.taxTreatment = TaxTreatment.inclusive,
   });
 
   final int posId;
@@ -265,12 +297,40 @@ class CartView {
   /// Агент (представитель поставщика), если продажа оформлена на него.
   final int? agentId;
 
+  /// Налог в цене или сверх неё — снимок настройки кассы на момент сборки.
+  ///
+  /// В снимке, а не спрошенный у базы при расчёте: корзина ездит по
+  /// проводу, и браузерный терминал обязан считать итог теми же правилами,
+  /// что и касса, не имея доступа к её настройке.
+  final TaxTreatment taxTreatment;
+
   Decimal get subtotal => lines.fold(Decimal.zero, (s, l) => s + l.subtotal);
 
   Decimal get totalDiscount =>
       lines.fold(Decimal.zero, (s, l) => s + l.discount);
 
-  Decimal get total => subtotal - totalDiscount;
+  /// Налог сверх цены по всей корзине.
+  ///
+  /// Ноль при укладе «налог включён в цену»: там он уже внутри цен, и
+  /// прибавлять его значило бы взять с покупателя дважды.
+  Decimal get taxOnTop => taxTreatment == TaxTreatment.exclusive
+      ? lines.fold(Decimal.zero, (s, l) => s + l.taxOnTop())
+      : Decimal.zero;
+
+  /// Сумма позиций за вычетом скидок и БЕЗ налога сверху.
+  Decimal get netTotal => subtotal - totalDiscount;
+
+  /// Сколько платит покупатель.
+  ///
+  /// # Почему налог здесь, а не в чеке
+  ///
+  /// При укладе «налог сверху» (США) на ценнике налога нет, и он
+  /// добавляется к сумме к оплате. До этой правки [total] был подытогом:
+  /// касса брала с покупателя цену без налога, а чек печатал её как итог.
+  /// Дыра денежная, и лежала она здесь, а не в печати — измерено на дубле
+  /// урока 1.3, 2026-09-21: корзина на 7,79 доллара напечатала «TOTAL:
+  /// $7.79» и не начислила ни цента.
+  Decimal get total => netTotal + taxOnTop;
 
   /// Сравнение по значению, включая строки — вручную, поэлементно: список
   /// `==` в Dart сравнивает по ссылке, а не по содержимому (круг правки 1
@@ -283,6 +343,7 @@ class CartView {
         other.version != version ||
         other.wholesale != wholesale ||
         other.receiptNo != receiptNo ||
+        other.taxTreatment != taxTreatment ||
         other.agentId != agentId ||
         other.lines.length != lines.length) {
       return false;
@@ -372,6 +433,7 @@ class DeferredCart {
     required this.userId,
     this.userName,
     this.firstLineName,
+    this.foreign = false,
   });
 
   final int receiptNo;
@@ -391,6 +453,17 @@ class DeferredCart {
   /// Имя первой строки чека — `null`, если чек отложен пустым или товар
   /// исчез из каталога.
   final String? firstLineName;
+
+  /// Чек отложен на **соседней** кассе.
+  ///
+  /// Решает это касса, а не экран: экрану пришлось бы лезть в базу за
+  /// собственным номером, а он его не знает и знать не должен. [posId] у
+  /// карточки был и раньше, но до 2026-09-19 всегда совпадал со своей
+  /// кассой — сравнивать было не с чем.
+  ///
+  /// Кассиру это видно не ради любопытства: чужую корзину нельзя поднять
+  /// без связи, и без пометки отказ выглядел бы беспричинным.
+  final bool foreign;
 
   /// Сравнение по значению — тем же приёмом, что [CartCommandMeta] и
   /// [CartLine] (круг правки 1 задачи 6).

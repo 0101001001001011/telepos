@@ -27,16 +27,10 @@ class CurrencyServiceImpl implements CurrencyService {
   List<Currency> get availableCurrencies => Currency.values;
 
   @override
-  List<int> get denominations => _currency.denominations;
-
-  @override
   String get symbol => _currency.symbol;
 
   @override
   String get code => _currency.code;
-
-  @override
-  int get vatRate => _country.vatRate;
 
   @override
   Future<void> load() async {
@@ -111,10 +105,5 @@ class CurrencyServiceImpl implements CurrencyService {
   @override
   double? parseAmount(String text) {
     return _currency.parseAmount(text);
-  }
-
-  @override
-  double calculateVatFromSum(double sum) {
-    return _country.calculateVatFromSum(sum);
   }
 }

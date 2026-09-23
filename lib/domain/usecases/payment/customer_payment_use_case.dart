@@ -183,21 +183,10 @@ class CustomerPaymentResult {
 }
 
 extension CustomerPaymentDecisionExtension on CustomerPaymentDecision {
-  String get displayName {
-    switch (this) {
-      case CustomerPaymentDecision.investment:
-        return 'Вложение';
-      case CustomerPaymentDecision.deposit:
-        return 'Депозит';
-    }
-  }
+  // `displayName` и `description` здесь БЫЛИ и возвращали русские
+  // слова. `description` не спрашивал никто; `displayName` уезжал в
+  // `cash_operations.note` — то есть слово для человека писалось в
+  // историю. Род операции виден по самой строке (счёт покупателя,
+  // вид оплаты), а слово, если понадобится, выбирается при показе.
 
-  String get description {
-    switch (this) {
-      case CustomerPaymentDecision.investment:
-        return 'Пополнение основного счёта покупателя';
-      case CustomerPaymentDecision.deposit:
-        return 'Авансовый платёж на депозитный счёт';
-    }
-  }
 }

@@ -64,11 +64,19 @@ void main() {
       expect(engine.isSyncing, false);
     });
 
-    test('pushDocuments returns 0 when not configured', () async {
+    test('ненастроенная касса не отмечает НИЧЕГО и никого не винит', () async {
+      // Исход стал перечислением вместо числа (шаг 1 спеки
+      // `2026-07-29-sync-correctness-design.md`). Здесь важны обе половины:
+      // подтверждённых нет — значит очередь не тронется; отклонённых тоже
+      // нет — ни один документ не отвергнут по существу, сервера просто
+      // не настроено. Слить их в «0» значило бы потерять эту разницу.
       final result = await engine.pushDocuments([
         {'_id': 'test:1', 'type': 'test', 'value': 42},
       ]);
-      expect(result, 0);
+
+      expect(result.confirmed, isEmpty);
+      expect(result.rejected, isEmpty);
+      expect(result.anyConfirmed, isFalse);
     });
 
     test('pullChanges returns empty when not configured', () async {

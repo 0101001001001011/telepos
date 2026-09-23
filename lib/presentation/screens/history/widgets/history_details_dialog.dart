@@ -11,6 +11,7 @@ import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/services/receipt_print_service.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/history/history_controller.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class HistoryDetailsDialog extends ConsumerStatefulWidget {
   const HistoryDetailsDialog({super.key, required this.item});
@@ -535,11 +536,7 @@ class _HistoryDetailsDialogState extends ConsumerState<HistoryDetailsDialog> {
   }
 
   String _formatDateTime(DateTime time) {
-    final d = time.day.toString().padLeft(2, '0');
-    final m = time.month.toString().padLeft(2, '0');
-    final h = time.hour.toString().padLeft(2, '0');
-    final min = time.minute.toString().padLeft(2, '0');
-    return '$d.$m.${time.year} $h:$min';
+    return TillConventions.current.formatDateTime(time);
   }
 
   Future<void> _handlePrint() async {

@@ -89,7 +89,11 @@ void main() {
       wholesale: false,
       meta: m('t$terminalId-1', 0),
     );
-    view = await cart.addByBarcode(terminalId, _barcode, mv(view, 't$terminalId-2'));
+    view = await cart.addByBarcode(
+      terminalId,
+      _barcode,
+      mv(view, 't$terminalId-2'),
+    );
     return cart.setQuantity(
       terminalId,
       view.lines.single.id,
@@ -197,18 +201,20 @@ void main() {
   });
 
   group('вход закрыт, пока касса не готова', () {
-    test('провайдер не настроен — названный отказ, провайдера не зовут',
-        () async {
-      await enableQr();
-      final view = await receipt();
+    test(
+      'провайдер не настроен — названный отказ, провайдера не зовут',
+      () async {
+        await enableQr();
+        final view = await receipt();
 
-      await expectLater(
-        payments.startQr(_terminal, d('1000'), mv(view, 'a1')),
-        refusedWith(qrNotConfiguredCode),
-      );
-      expect(await db.select(db.paymentIntents).get(), isEmpty);
-      expect(emulator.byId, isEmpty);
-    });
+        await expectLater(
+          payments.startQr(_terminal, d('1000'), mv(view, 'a1')),
+          refusedWith(qrNotConfiguredCode),
+        );
+        expect(await db.select(db.paymentIntents).get(), isEmpty);
+        expect(emulator.byId, isEmpty);
+      },
+    );
 
     test('вид выключен — отказ кассы раньше провайдера', () async {
       await configure();
@@ -223,15 +229,17 @@ void main() {
 
     // Пункт 9 C (2026-09-15): тот же ответ, что дал бы `startQr`, — до
     // нажатия и без чека.
-    test('готовность QR называет ту же беду, что startQr, и не зовёт провайдера',
-        () async {
-      expect(await payments.qrUnavailableReason(), payKindInactiveCode);
-      await enableQr();
-      expect(await payments.qrUnavailableReason(), qrNotConfiguredCode);
-      await configure();
-      expect(await payments.qrUnavailableReason(), isNull);
-      expect(emulator.byId, isEmpty);
-    });
+    test(
+      'готовность QR называет ту же беду, что startQr, и не зовёт провайдера',
+      () async {
+        expect(await payments.qrUnavailableReason(), payKindInactiveCode);
+        await enableQr();
+        expect(await payments.qrUnavailableReason(), qrNotConfiguredCode);
+        await configure();
+        expect(await payments.qrUnavailableReason(), isNull);
+        expect(emulator.byId, isEmpty);
+      },
+    );
 
     test('сумма больше чека — отказ, кода нет', () async {
       await configure();
@@ -318,8 +326,16 @@ void main() {
       await enableQr();
       final view = await receipt();
 
-      final first = await payments.startQr(_terminal, d('1000'), mv(view, 'a1'));
-      final again = await payments.startQr(_terminal, d('1000'), mv(view, 'a1'));
+      final first = await payments.startQr(
+        _terminal,
+        d('1000'),
+        mv(view, 'a1'),
+      );
+      final again = await payments.startQr(
+        _terminal,
+        d('1000'),
+        mv(view, 'a1'),
+      );
 
       expect(again.intentKey, first.intentKey);
       expect(emulator.byId, hasLength(1));
@@ -341,68 +357,89 @@ void main() {
   });
 
   group('кассир прервал ожидание', () {
-    test('отмена подтверждена — фаза, отметка и состояние у провайдера',
-        () async {
-      await configure();
-      await enableQr();
-      final view = await receipt();
+    test(
+      'отмена подтверждена — фаза, отметка и состояние у провайдера',
+      () async {
+        await configure();
+        await enableQr();
+        final view = await receipt();
 
-      final shown = await payments.startQr(_terminal, d('1000'), mv(view, 'a1'));
-      final after = await payments.cancelQr(_terminal, shown.intentKey);
+        final shown = await payments.startQr(
+          _terminal,
+          d('1000'),
+          mv(view, 'a1'),
+        );
+        final after = await payments.cancelQr(_terminal, shown.intentKey);
 
-      expect(after.phase, QrTenderPhase.cashierCancelled);
-      final intent = (await db.paymentIntentDao.byKey(shown.intentKey))!;
-      expect(intent.abandonedAt, isNotNull);
-      expect(intent.status, QrIntentStatus.cancelled);
-      expect(emulator.byKey[shown.intentKey]!.status, kCancelled);
+        expect(after.phase, QrTenderPhase.cashierCancelled);
+        final intent = (await db.paymentIntentDao.byKey(shown.intentKey))!;
+        expect(intent.abandonedAt, isNotNull);
+        expect(intent.status, QrIntentStatus.cancelled);
+        expect(emulator.byKey[shown.intentKey]!.status, kCancelled);
 
-      await expectLater(
-        payments.complete(
+        await expectLater(
+          payments.complete(
+            _terminal,
+            PaymentRequest(
+              type: PaymentType.cash,
+              qrIntentKey: shown.intentKey,
+            ),
+            mv(view, 'pay1'),
+          ),
+          refusedWith(payQrNotPaidCode),
+        );
+
+        // Отменённый код больше не живой — новый показывается.
+        final next = await payments.startQr(
+          _terminal,
+          d('1000'),
+          mv(view, 'a2'),
+        );
+        expect(next.phase, QrTenderPhase.waiting);
+      },
+    );
+
+    test(
+      'покупатель заплатил раньше, чем дошла отмена — деньги идут в чек',
+      () async {
+        await configure();
+        await enableQr();
+        final view = await receipt();
+
+        final shown = await payments.startQr(
+          _terminal,
+          d('1000'),
+          mv(view, 'a1'),
+        );
+        // Оплата случилась между последним опросом и нажатием «Отменить».
+        emulator.confirm(emulator.byKey[shown.intentKey]!);
+
+        final after = await payments.cancelQr(_terminal, shown.intentKey);
+        expect(after.phase, QrTenderPhase.paidAfterGiveUp);
+        expect(after.usable, isTrue);
+
+        final beforeSettle = (await db.paymentIntentDao.byKey(
+          shown.intentKey,
+        ))!;
+        expect(beforeSettle.abandonedAt, isNotNull);
+        expect(beforeSettle.isPaidAfterGiveUp, isTrue);
+
+        await payments.complete(
           _terminal,
           PaymentRequest(type: PaymentType.cash, qrIntentKey: shown.intentKey),
           mv(view, 'pay1'),
-        ),
-        refusedWith(payQrNotPaidCode),
-      );
-
-      // Отменённый код больше не живой — новый показывается.
-      final next = await payments.startQr(_terminal, d('1000'), mv(view, 'a2'));
-      expect(next.phase, QrTenderPhase.waiting);
-    });
-
-    test('покупатель заплатил раньше, чем дошла отмена — деньги идут в чек',
-        () async {
-      await configure();
-      await enableQr();
-      final view = await receipt();
-
-      final shown = await payments.startQr(_terminal, d('1000'), mv(view, 'a1'));
-      // Оплата случилась между последним опросом и нажатием «Отменить».
-      emulator.confirm(emulator.byKey[shown.intentKey]!);
-
-      final after = await payments.cancelQr(_terminal, shown.intentKey);
-      expect(after.phase, QrTenderPhase.paidAfterGiveUp);
-      expect(after.usable, isTrue);
-
-      final beforeSettle = (await db.paymentIntentDao.byKey(shown.intentKey))!;
-      expect(beforeSettle.abandonedAt, isNotNull);
-      expect(beforeSettle.isPaidAfterGiveUp, isTrue);
-
-      await payments.complete(
-        _terminal,
-        PaymentRequest(type: PaymentType.cash, qrIntentKey: shown.intentKey),
-        mv(view, 'pay1'),
-      );
-      final row = (await db.paymentDao.findBySale(
-        view.receiptNo!,
-        view.posId,
-      )).singleWhere((p) => p.kindId == SystemPaymentKindIds.qr);
-      expect(row.reference, shown.intentKey);
-      expect(row.amount, d('1000'));
-      final settled = (await db.paymentIntentDao.byKey(shown.intentKey))!;
-      expect(settled.settledReceiptNo, view.receiptNo);
-      expect(settled.isOrphanMoney, isFalse);
-    });
+        );
+        final row = (await db.paymentDao.findBySale(
+          view.receiptNo!,
+          view.posId,
+        )).singleWhere((p) => p.kindId == SystemPaymentKindIds.qr);
+        expect(row.reference, shown.intentKey);
+        expect(row.amount, d('1000'));
+        final settled = (await db.paymentIntentDao.byKey(shown.intentKey))!;
+        expect(settled.settledReceiptNo, view.receiptNo);
+        expect(settled.isOrphanMoney, isFalse);
+      },
+    );
 
     test('отмена не дошла — «не подтверждена»; повторная проверка отменяет, '
         'не сдвигая отметку', () async {
@@ -410,7 +447,11 @@ void main() {
       await enableQr();
       final view = await receipt();
 
-      final shown = await payments.startQr(_terminal, d('1000'), mv(view, 'a1'));
+      final shown = await payments.startQr(
+        _terminal,
+        d('1000'),
+        mv(view, 'a1'),
+      );
       emulator
         ..fault = 'kill'
         ..faultsLeft = 1;
@@ -442,7 +483,11 @@ void main() {
       await enableQr();
       final view = await receipt();
 
-      final shown = await payments.startQr(_terminal, d('1000'), mv(view, 'a1'));
+      final shown = await payments.startQr(
+        _terminal,
+        d('1000'),
+        mv(view, 'a1'),
+      );
       await Future<void>.delayed(const Duration(milliseconds: 1100));
 
       final after = await payments.pollQr(_terminal, shown.intentKey);
@@ -455,65 +500,80 @@ void main() {
       expect(emulator.byKey[shown.intentKey]!.status, kCancelled);
     });
 
-    test('брошенный код отменяется перед новым, даже если никто не спрашивал',
-        () async {
-      await configure(patience: const Duration(seconds: 1));
-      await enableQr();
-      final view = await receipt();
+    test(
+      'брошенный код отменяется перед новым, даже если никто не спрашивал',
+      () async {
+        await configure(patience: const Duration(seconds: 1));
+        await enableQr();
+        final view = await receipt();
 
-      final abandoned = await payments.startQr(
-        _terminal,
-        d('1000'),
-        mv(view, 'a1'),
-      );
-      // Вкладка закрыта — опросов нет.
-      await Future<void>.delayed(const Duration(milliseconds: 1100));
+        final abandoned = await payments.startQr(
+          _terminal,
+          d('1000'),
+          mv(view, 'a1'),
+        );
+        // Вкладка закрыта — опросов нет.
+        await Future<void>.delayed(const Duration(milliseconds: 1100));
 
-      final next = await payments.startQr(_terminal, d('1000'), mv(view, 'a2'));
-      expect(next.phase, QrTenderPhase.waiting);
-      final old = (await db.paymentIntentDao.byKey(abandoned.intentKey))!;
-      expect(old.abandonedAt, isNotNull);
-      expect(emulator.byKey[abandoned.intentKey]!.status, kCancelled);
-    });
+        final next = await payments.startQr(
+          _terminal,
+          d('1000'),
+          mv(view, 'a2'),
+        );
+        expect(next.phase, QrTenderPhase.waiting);
+        final old = (await db.paymentIntentDao.byKey(abandoned.intentKey))!;
+        expect(old.abandonedAt, isNotNull);
+        expect(emulator.byKey[abandoned.intentKey]!.status, kCancelled);
+      },
+    );
   });
 
   group('намерение принадлежит рабочему месту', () {
-    test('чужая вкладка не опросит, не отменит и не закроет им свой чек',
-        () async {
-      await configure();
-      await enableQr();
-      final mine = await receipt();
-      final theirs = await receipt(terminalId: 8);
+    test(
+      'чужая вкладка не опросит, не отменит и не закроет им свой чек',
+      () async {
+        await configure();
+        await enableQr();
+        final mine = await receipt();
+        final theirs = await receipt(terminalId: 8);
 
-      final shown = await payments.startQr(_terminal, d('1000'), mv(mine, 'a1'));
+        final shown = await payments.startQr(
+          _terminal,
+          d('1000'),
+          mv(mine, 'a1'),
+        );
 
-      await expectLater(
-        payments.pollQr(8, shown.intentKey),
-        refusedWith(payQrIntentUnknownCode),
-      );
-      await expectLater(
-        payments.cancelQr(8, shown.intentKey),
-        refusedWith(payQrIntentUnknownCode),
-      );
-      expect(emulator.byKey[shown.intentKey]!.status, kPending);
+        await expectLater(
+          payments.pollQr(8, shown.intentKey),
+          refusedWith(payQrIntentUnknownCode),
+        );
+        await expectLater(
+          payments.cancelQr(8, shown.intentKey),
+          refusedWith(payQrIntentUnknownCode),
+        );
+        expect(emulator.byKey[shown.intentKey]!.status, kPending);
 
-      emulator.confirm(emulator.byKey[shown.intentKey]!);
-      expect(
-        (await payments.pollQr(_terminal, shown.intentKey)).phase,
-        QrTenderPhase.paid,
-      );
+        emulator.confirm(emulator.byKey[shown.intentKey]!);
+        expect(
+          (await payments.pollQr(_terminal, shown.intentKey)).phase,
+          QrTenderPhase.paid,
+        );
 
-      await expectLater(
-        payments.complete(
-          8,
-          PaymentRequest(type: PaymentType.cash, qrIntentKey: shown.intentKey),
-          mv(theirs, 'pay8'),
-        ),
-        refusedWith(payQrIntentUnknownCode),
-      );
-      final intent = (await db.paymentIntentDao.byKey(shown.intentKey))!;
-      expect(intent.settledAt, isNull, reason: 'деньги не ушли в чужой чек');
-    });
+        await expectLater(
+          payments.complete(
+            8,
+            PaymentRequest(
+              type: PaymentType.cash,
+              qrIntentKey: shown.intentKey,
+            ),
+            mv(theirs, 'pay8'),
+          ),
+          refusedWith(payQrIntentUnknownCode),
+        );
+        final intent = (await db.paymentIntentDao.byKey(shown.intentKey))!;
+        expect(intent.settledAt, isNull, reason: 'деньги не ушли в чужой чек');
+      },
+    );
 
     // Пункт 10 C (2026-09-15): проверка владельца стояла только у намерений
     // с `terminalId` — намерение без рабочего места опрашивал, отменял и

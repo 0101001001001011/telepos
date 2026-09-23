@@ -1,6 +1,18 @@
+import 'package:telepos/domain/startup/boot_stage.dart';
+
 /// Progress reported while the application comes up: a fraction from 0 to 1 and
 /// a line to show the operator.
-typedef BootProgress = void Function(double progress, String message);
+/// Ход подъёма: насколько далеко и НА КАКОМ этапе.
+///
+/// Этапом, а не словами. Слой подъёма отвечает на вопрос «где мы сейчас»;
+/// какими словами об этом сказать, знает только тот, кто знает язык, —
+/// заставка. До 2026-09-21 здесь ехал готовый русский текст, и английская
+/// касса показывала «Готово».
+///
+/// [detail] — подробность для тех немногих этапов, где она есть: код
+/// отказа у `BootStage.tillNotResponding`. Для остальных `null`.
+typedef BootProgress =
+    void Function(double progress, BootStage stage, [String? detail]);
 
 /// How far the application got before it was ready to be used.
 enum AppInitStatus {

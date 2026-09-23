@@ -387,7 +387,5 @@ abstract interface class PrepaymentRefundService {
   /// [PrepaymentIntakeService.acceptPrepayment]; здесь он вдвое весомее:
   /// кассир, получивший отказ «уже выдано», пошёл бы сверять ящик, а не
   /// верить кассе.
-  Future<PrepaymentRefundOutcome> payOutPrepayment(
-    PrepaymentRefundRequest ask,
-  );
+  Future<PrepaymentRefundOutcome> payOutPrepayment(PrepaymentRefundRequest ask);
 }

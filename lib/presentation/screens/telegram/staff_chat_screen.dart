@@ -19,6 +19,8 @@ import '../../../presentation/controllers/app/current_user_provider.dart';
 import '../../../telegram/internal_chat/staff_chat_service.dart';
 import '../../../telegram/internal_chat/staff_identity_service.dart';
 import '../../../domain/entities/telegram/telegram_message.dart';
+import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/staff_role_label.dart';
 
 final _telegramLinkStatusProvider = FutureProvider<bool>((ref) async {
   final user = await ref.watch(currentUserProvider.future);
@@ -741,7 +743,7 @@ class _StaffChatScreenState extends ConsumerState<StaffChatScreen> {
       id: DateTime.now().millisecondsSinceEpoch,
       text: text,
       senderId: _currentUserTelegramId ?? 1,
-      senderName: _currentUser?.name ?? 'Я',
+      senderName: _currentUser?.name ?? AppLocalizations.of(context)!.chatMe,
       timestamp: DateTime.now(),
       isMe: true,
       isSent: false,
@@ -1111,20 +1113,34 @@ class _StaffChatScreenState extends ConsumerState<StaffChatScreen> {
                 _buildParticipantTile(
                   member.name,
                   member.isLinked,
-                  member.role.displayName,
+                  staffRoleLabel(
+                    member.role,
+                    AppLocalizations.of(context)!,
+                  ),
                 ),
             ],
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
+          // Отказ говорится СЛОВАМИ. Здесь стояли два выдуманных участника —
+          // «Менеджер Алия» и «Кассир Нурлан» — с признаком «привязан»:
+          // экран показывал несуществующих людей как настоящих, и кассир не
+          // мог отличить их от живого списка. Своя строка остаётся: про себя
+          // экран знает и без загрузки.
           error: (_, __) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildParticipantTile('Менеджер Алия', true, 'Администратор'),
-              _buildParticipantTile('Кассир Нурлан', true, 'Кассир'),
               _buildParticipantTile(
-                _currentUser?.name ?? 'Я',
+                _currentUser?.name ?? AppLocalizations.of(ctx)!.chatMe,
                 _currentUserTelegramId != null,
                 '',
+              ),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(ctx)!.chatMembersUnavailable,
+                style: TextStyle(
+                  color: Theme.of(ctx).colorScheme.error,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),

@@ -120,7 +120,9 @@ class _PaymentDiagnosticsTabState extends State<PaymentDiagnosticsTab> {
                 padding: const EdgeInsets.all(12),
                 children: [
                   if (onEmulator)
-                    _EmulatorBanner(text: l10n.diagnosticsPaymentEmulatorBanner),
+                    _EmulatorBanner(
+                      text: l10n.diagnosticsPaymentEmulatorBanner,
+                    ),
                   _Section(
                     title: l10n.paymentDiagnosticsQrSection,
                     note: data.providerUrl == null || data.providerUrl!.isEmpty
@@ -339,7 +341,10 @@ class _ExchangeCard extends StatelessWidget {
         ),
         subtitle: Text('${_time(exchange.at)} · ${exchange.address}'),
         children: [
-          _Detail(label: l10n.paymentDiagnosticsRequest, value: exchange.request),
+          _Detail(
+            label: l10n.paymentDiagnosticsRequest,
+            value: exchange.request,
+          ),
           _Detail(
             label: l10n.paymentDiagnosticsReply,
             value: exchange.response ?? l10n.paymentDiagnosticsNoReply,
@@ -403,7 +408,10 @@ class _Detail extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Text(
                 value,
-                style: const TextStyle(fontFamily: AppTypography.familyMono, fontSize: 12),
+                style: const TextStyle(
+                  fontFamily: AppTypography.familyMono,
+                  fontSize: 12,
+                ),
               ),
             ),
         ],

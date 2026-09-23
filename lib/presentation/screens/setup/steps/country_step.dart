@@ -11,6 +11,7 @@ import 'package:telepos/presentation/common/widgets/settings/settings_section.da
 import 'package:telepos/presentation/common/widgets/wizard/wizard_error_note.dart';
 import 'package:telepos/presentation/common/widgets/wizard/wizard_hero.dart';
 import 'package:telepos/presentation/common/widgets/wizard/wizard_scaffold.dart';
+import 'package:telepos/presentation/common/utils/country_label.dart';
 import 'package:telepos/presentation/controllers/setup/initial_setup_controller.dart';
 
 /// Первый шаг мастера: страна.
@@ -69,9 +70,10 @@ class CountryStep extends ConsumerWidget {
                     _flag(country),
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  title: country.countryName,
+                  title: countryTitle(country, l10n),
                   subtitle:
-                      '${country.currencyName} (${country.currencyShort})',
+                      '${currencyTitle(country, l10n)} '
+                      '(${country.currencyShort})',
                   // Ставка НДС из подзаголовка убрана намеренно: её
                   // спрашивают следующим шагом, и показывать ответ до того,
                   // как задан вопрос, незачем.
@@ -97,5 +99,20 @@ class CountryStep extends ConsumerWidget {
     CountryCode.uzs => '🇺🇿',
     CountryCode.usd => '🇺🇸',
     CountryCode.tmt => '🇹🇲',
+    CountryCode.deu => '🇩🇪',
+    CountryCode.fra => '🇫🇷',
+    CountryCode.esp => '🇪🇸',
+    CountryCode.ita => '🇮🇹',
+    CountryCode.gbr => '🇬🇧',
+    CountryCode.pol => '🇵🇱',
+    CountryCode.tur => '🇹🇷',
+    CountryCode.chn => '🇨🇳',
+    CountryCode.jpn => '🇯🇵',
+    CountryCode.kor => '🇰🇷',
+    CountryCode.are => '🇦🇪',
+    CountryCode.sau => '🇸🇦',
+    CountryCode.ind => '🇮🇳',
+    CountryCode.can => '🇨🇦',
+    CountryCode.aus => '🇦🇺',
   };
 }

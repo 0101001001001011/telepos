@@ -1,3 +1,4 @@
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/services/currency_service.dart';
 import 'package:telepos/presentation/controllers/sale/sale_controller.dart';
 import 'package:telepos/presentation/screens/customer_display/customer_display_data.dart';
 
@@ -17,22 +19,31 @@ final storeNameProvider = FutureProvider<String>((ref) async {
   return 'TelePOS';
 });
 
-CustomerDisplayData customerDataFromSale(SaleState state) =>
-    CustomerDisplayData(
-      lines: state.items
-          .map(
-            (it) => CustomerDisplayLine(
-              name: it.name,
-              quantity: it.quantity,
-              total: it.total,
-              discount: it.discount,
-            ),
-          )
-          .toList(),
-      subtotal: state.subtotal,
-      totalDiscount: state.totalDiscount,
-      total: state.total,
-    );
+/// Полезная нагрузка для окна покупателя.
+///
+/// Валюта и язык — доводы, а не умолчание: окно их взять неоткуда (у второго
+/// движка нет ни базы, ни настроек), а выдумать нельзя.
+CustomerDisplayData customerDataFromSale(
+  SaleState state, {
+  required String currencySymbol,
+  required String languageCode,
+}) => CustomerDisplayData(
+  currencySymbol: currencySymbol,
+  languageCode: languageCode,
+  lines: state.items
+      .map(
+        (it) => CustomerDisplayLine(
+          name: it.name,
+          quantity: it.quantity,
+          total: it.total,
+          discount: it.discount,
+        ),
+      )
+      .toList(),
+  subtotal: state.subtotal,
+  totalDiscount: state.totalDiscount,
+  total: state.total,
+);
 
 class CustomerDisplayScreen extends ConsumerWidget {
   const CustomerDisplayScreen({super.key});
@@ -41,8 +52,15 @@ class CustomerDisplayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(saleControllerProvider);
     final storeName = ref.watch(storeNameProvider).asData?.value ?? 'TelePOS';
+    // Здесь касса рисует дисплей САМА, в своём движке: валюта и язык у неё
+    // под рукой. Довод всё равно передаётся явно — чтобы у экрана покупателя
+    // не завелось двух способов узнать валюту.
     return CustomerDisplayView(
-      data: customerDataFromSale(state),
+      data: customerDataFromSale(
+        state,
+        currencySymbol: GetIt.I<CurrencyService>().symbol,
+        languageCode: Localizations.localeOf(context).languageCode,
+      ),
       storeName: storeName,
     );
   }
@@ -146,8 +164,8 @@ class _Welcome extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          const Text(
-            'Добро пожаловать!',
+          Text(
+            AppLocalizations.of(context)!.displayWelcome,
             style: TextStyle(
               color: Colors.white,
               fontSize: 40,
@@ -156,7 +174,7 @@ class _Welcome extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Мы рады видеть вас',
+            AppLocalizations.of(context)!.displayWelcomeSubtitle,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.75),
               fontSize: 20,
@@ -174,6 +192,7 @@ class _Cart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
@@ -186,11 +205,14 @@ class _Cart extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
             child: Row(
               children: [
-                Expanded(flex: 5, child: Text('Товар', style: _th())),
+                Expanded(
+                  flex: 5,
+                  child: Text(l10n.displayProduct, style: _th()),
+                ),
                 Expanded(
                   flex: 2,
                   child: Text(
-                    'Кол-во',
+                    l10n.tableHeaderQty,
                     style: _th(),
                     textAlign: TextAlign.center,
                   ),
@@ -198,7 +220,7 @@ class _Cart extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'Сумма',
+                    l10n.globalAmount,
                     style: _th(),
                     textAlign: TextAlign.right,
                   ),
@@ -215,7 +237,8 @@ class _Cart extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.08),
                 height: 1,
               ),
-              itemBuilder: (context, i) => _CartRow(line: data.lines[i]),
+              itemBuilder: (context, i) =>
+                  _CartRow(line: data.lines[i], money: data.money),
             ),
           ),
         ],
@@ -231,8 +254,11 @@ class _Cart extends StatelessWidget {
 }
 
 class _CartRow extends StatelessWidget {
-  const _CartRow({required this.line});
+  const _CartRow({required this.line, required this.money});
   final CustomerDisplayLine line;
+
+  /// Деньги со знаком валюты — тем же способом, что и в итоге снизу.
+  final String Function(Decimal) money;
 
   @override
   Widget build(BuildContext context) {
@@ -260,8 +286,10 @@ class _CartRow extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       line.isFree
-                          ? 'Акция · бесплатно'
-                          : 'Скидка −${line.discount} ₸',
+                          ? AppLocalizations.of(context)!.displayPromoFree
+                          : AppLocalizations.of(
+                              context,
+                            )!.displayDiscountAmount(money(line.discount)),
                       style: const TextStyle(
                         color: AppColors.warning,
                         fontSize: 14,
@@ -283,7 +311,7 @@ class _CartRow extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Text(
-              '${line.total} ₸',
+              money(line.total),
               textAlign: TextAlign.right,
               style: const TextStyle(
                 color: Colors.white,
@@ -322,14 +350,14 @@ class _TotalBar extends StatelessWidget {
         children: [
           if (data.totalDiscount > Decimal.zero) ...[
             _line(
-              'Сумма',
-              '${data.subtotal} ₸',
+              AppLocalizations.of(context)!.globalAmount,
+              data.money(data.subtotal),
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 6),
             _line(
-              'Скидка',
-              '−${data.totalDiscount} ₸',
+              AppLocalizations.of(context)!.globalDiscount,
+              '−${data.money(data.totalDiscount)}',
               color: Theme.of(context).colorScheme.error,
             ),
             const Divider(height: 20),
@@ -339,7 +367,7 @@ class _TotalBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'ИТОГО',
+                AppLocalizations.of(context)!.receiptTotal,
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -348,7 +376,7 @@ class _TotalBar extends StatelessWidget {
                 ),
               ),
               Text(
-                '${data.total} ₸',
+                data.money(data.total),
                 style: const TextStyle(
                   fontSize: 44,
                   fontWeight: FontWeight.w800,

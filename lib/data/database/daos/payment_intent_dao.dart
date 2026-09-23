@@ -78,10 +78,10 @@ class PaymentIntentDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<PaymentIntent?> byProviderIntentId(String providerIntentId) async {
-    final row = await (select(
-      paymentIntents,
-    )..where((i) => i.providerIntentId.equals(providerIntentId)))
-        .getSingleOrNull();
+    final row =
+        await (select(paymentIntents)
+              ..where((i) => i.providerIntentId.equals(providerIntentId)))
+            .getSingleOrNull();
     return row == null ? null : toDomain(row);
   }
 
@@ -221,13 +221,11 @@ class PaymentIntentDao extends DatabaseAccessor<AppDatabase>
   /// их именно по этой отметке), а разбор беды видел бы время последней
   /// попытки вместо времени решения.
   Future<void> markAbandoned(int id, DateTime at) =>
-      (update(paymentIntents)
-            ..where((i) => i.id.equals(id) & i.abandonedAt.isNull()))
-          .write(
-            PaymentIntentsCompanion(
-              abandonedAt: Value(at.millisecondsSinceEpoch),
-            ),
-          );
+      (update(
+        paymentIntents,
+      )..where((i) => i.id.equals(id) & i.abandonedAt.isNull())).write(
+        PaymentIntentsCompanion(abandonedAt: Value(at.millisecondsSinceEpoch)),
+      );
 
   /// Живые намерения чека — провайдер ещё не сказал последнего слова, и
   /// касса **не** перестала ждать.
@@ -331,17 +329,17 @@ class PaymentIntentDao extends DatabaseAccessor<AppDatabase>
     // пройти через `DecimalConverter`, и любой ручной `toDouble()` на этом
     // месте был бы деньгами в `double` (I159).
     final changed =
-        await (update(paymentIntents)
-              ..where((i) => i.id.equals(id) & i.reversedAt.isNull()))
-            .write(
-              PaymentIntentsCompanion(
-                reversedAmount: Value(amount),
-                reversedAt: Value(at.millisecondsSinceEpoch),
-                status: whole
-                    ? Value(QrIntentStatus.reversed.code)
-                    : const Value.absent(),
-              ),
-            );
+        await (update(
+          paymentIntents,
+        )..where((i) => i.id.equals(id) & i.reversedAt.isNull())).write(
+          PaymentIntentsCompanion(
+            reversedAmount: Value(amount),
+            reversedAt: Value(at.millisecondsSinceEpoch),
+            status: whole
+                ? Value(QrIntentStatus.reversed.code)
+                : const Value.absent(),
+          ),
+        );
     return changed > 0;
   }
 

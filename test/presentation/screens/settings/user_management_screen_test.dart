@@ -131,8 +131,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final allowed = await db.userPermissionDao.getAllowedKeys(ownerId);
-      final expectedDefaults =
-          PermissionKeys.roleDefaults[UserRole.cashier]!;
+      final expectedDefaults = PermissionKeys.roleDefaults[UserRole.cashier]!;
 
       expect(
         allowed,

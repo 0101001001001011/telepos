@@ -31,6 +31,7 @@ class CatalogItem {
     this.isQuickProduct = false,
     this.isDeleted = false,
     this.vatRate,
+    this.taxCategoryId,
     this.ntin,
     this.isMarkable = false,
     this.brand,
@@ -53,6 +54,9 @@ class CatalogItem {
   final bool isDeleted;
 
   final int? vatRate;
+
+  /// Налоговая категория. По ней выводится ставка позиции в чеке.
+  final int? taxCategoryId;
 
   final String? ntin;
 
@@ -333,6 +337,7 @@ class CatalogNotifier extends Notifier<CatalogState> {
             isQuickProduct: quickProduct != null,
             isDeleted: product.isDeleted,
             vatRate: product.vatRate,
+            taxCategoryId: product.taxCategoryId,
             ntin: product.ntin,
             isMarkable: product.isMarkable,
             brand: product.brand,
@@ -431,6 +436,7 @@ class CatalogNotifier extends Notifier<CatalogState> {
     String? description,
     String? imagePath,
     int? vatRate,
+    int? taxCategoryId,
     String? ntin,
     bool isMarkable = false,
     String? brand,
@@ -449,6 +455,7 @@ class CatalogNotifier extends Notifier<CatalogState> {
         description: description,
         imagePath: imagePath,
         vatRate: vatRate,
+        taxCategoryId: taxCategoryId,
         ntin: ntin,
         isMarkable: isMarkable,
         brand: brand,
@@ -483,6 +490,8 @@ class CatalogNotifier extends Notifier<CatalogState> {
     String? imagePath,
     int? vatRate,
     bool vatRateSet = false,
+    int? taxCategoryId,
+    bool taxCategorySet = false,
     String? ntin,
     bool? isMarkable,
     String? brand,
@@ -492,10 +501,9 @@ class CatalogNotifier extends Notifier<CatalogState> {
     try {
       final pos = await _db.thisPosDao.get();
       if (pos != null && !pos.editProduct) {
-        state = state.copyWith(
-          error:
-              'Действие запрещено настройками POS (Настройки → Политика продаж)',
-        );
+        // Ключ, а не фраза: экран покажет её на своём языке
+        // (`ErrorLocalizer`). До 2026-09-22 здесь ехала русская строка.
+        state = state.copyWith(error: 'error.sale_policy_forbids');
         return false;
       }
       await _editProduct.edit(
@@ -508,6 +516,8 @@ class CatalogNotifier extends Notifier<CatalogState> {
         measure: measure,
         vatRate: vatRate,
         vatRateSet: vatRateSet,
+        taxCategoryId: taxCategoryId,
+        taxCategorySet: taxCategorySet,
         ntin: ntin,
         isMarkable: isMarkable,
         brand: brand,

@@ -31,8 +31,7 @@ class RefusingSntProvider implements SntProvider {
       SntResult.notConfigured();
 
   @override
-  Future<SntResult> submit(SntDocument doc) async =>
-      SntResult.notConfigured();
+  Future<SntResult> submit(SntDocument doc) async => SntResult.notConfigured();
 
   @override
   Future<SntResult> confirmInbound(SntDocument doc) async =>

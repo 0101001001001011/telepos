@@ -131,7 +131,9 @@ class QrTender {
       paidAmount: intent.paidAmount,
       qrPayload: phase == QrTenderPhase.waiting ? intent.qrPayload : null,
       receiptNo: intent.receiptNo,
-      secondsLeft: phase == QrTenderPhase.waiting ? (left < 0 ? 0 : left) : null,
+      secondsLeft: phase == QrTenderPhase.waiting
+          ? (left < 0 ? 0 : left)
+          : null,
       settledReceiptNo: intent.settledReceiptNo,
       refusalCode: refusalCode ?? intent.refusalCode,
     );

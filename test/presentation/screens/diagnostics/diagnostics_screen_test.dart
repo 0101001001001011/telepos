@@ -149,9 +149,18 @@ void main() {
     await bindPrinterTo('192.168.1.50');
     await mount(tester);
 
-    expect(find.byKey(const ValueKey('diagnostics-tab-printer')), findsOneWidget);
-    expect(find.byKey(const ValueKey('diagnostics-tab-fiscal')), findsOneWidget);
-    expect(find.byKey(const ValueKey('diagnostics-tab-drawer')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('diagnostics-tab-printer')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('diagnostics-tab-fiscal')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('diagnostics-tab-drawer')),
+      findsOneWidget,
+    );
 
     // Пройти по всем, а не по одной: у каждой вкладки свои зависимости из
     // контейнера, и незарегистрированная всплывает только при открытии.
@@ -172,7 +181,9 @@ void main() {
     }
   });
 
-  testWidgets('принтер в сети магазина — пометки эмулятора нет', (tester) async {
+  testWidgets('принтер в сети магазина — пометки эмулятора нет', (
+    tester,
+  ) async {
     await bindPrinterTo('192.168.1.50');
     await mount(tester);
 
@@ -197,18 +208,19 @@ void main() {
     );
   });
 
-  testWidgets('эмулятор, запущенный руками под именем localhost, тоже помечен', (
-    tester,
-  ) async {
-    // Признак — адрес, а не выключатель встроенного эмулятора: касса, чья
-    // привязка направлена на процесс, поднятый из командной строки, ничем не
-    // отличается и обязана быть помечена так же.
-    await bindPrinterTo('localhost');
-    await mount(tester);
+  testWidgets(
+    'эмулятор, запущенный руками под именем localhost, тоже помечен',
+    (tester) async {
+      // Признак — адрес, а не выключатель встроенного эмулятора: касса, чья
+      // привязка направлена на процесс, поднятый из командной строки, ничем не
+      // отличается и обязана быть помечена так же.
+      await bindPrinterTo('localhost');
+      await mount(tester);
 
-    expect(
-      find.byKey(const ValueKey('diagnostics-emulator-banner')),
-      findsOneWidget,
-    );
-  });
+      expect(
+        find.byKey(const ValueKey('diagnostics-emulator-banner')),
+        findsOneWidget,
+      );
+    },
+  );
 }

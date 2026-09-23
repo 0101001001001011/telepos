@@ -163,7 +163,7 @@ class _PrepaymentRefundScreenState
           amount: amount,
           tenderKindId: _tenderKindId,
           intakeOperationId: int.tryParse(_intake.text.trim()),
-          note: 'Возврат аванса покупателю (${widget.agentName})',
+          note: l10n.prepaymentRefundTo(widget.agentName),
         );
 
     if (!mounted) return;

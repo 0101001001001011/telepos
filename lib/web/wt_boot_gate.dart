@@ -67,7 +67,9 @@ class _WtBootGateState extends ConsumerState<WtBootGate> {
             ? outcome.reason
             : '${snapshot.error ?? 'причина не названа'}';
 
-        return _Framed(child: WtUnavailableScreen(reason: reason, onRetry: _retry));
+        return _Framed(
+          child: WtUnavailableScreen(reason: reason, onRetry: _retry),
+        );
       },
     );
   }

@@ -4,6 +4,7 @@ import 'package:telepos/app/theme/app_tokens.dart';
 import 'package:telepos/app/theme/input_mode.dart';
 import 'package:telepos/app/theme/wizard_metrics.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/tax_step_words.dart';
 import 'package:telepos/presentation/common/adaptive/breakpoints.dart';
 import 'package:telepos/presentation/common/utils/error_localizer.dart';
 import 'package:telepos/presentation/common/widgets/settings/settings_section.dart';
@@ -11,6 +12,7 @@ import 'package:telepos/presentation/common/widgets/settings/settings_tile.dart'
 import 'package:telepos/presentation/common/widgets/wizard/wizard_error_note.dart';
 import 'package:telepos/presentation/common/widgets/wizard/wizard_scaffold.dart';
 import 'package:telepos/presentation/controllers/setup/initial_setup_controller.dart';
+import 'package:telepos/presentation/common/utils/country_preset_rate.dart';
 
 /// Итог: то, ради чего строка «название — значение» и заводилась.
 ///
@@ -36,7 +38,16 @@ class SummaryStep extends ConsumerWidget {
     final pos = state.posConfig;
     final fiscal = state.fiscalConfig;
     final eq = state.equipmentConfig;
-    final vatRate = state.selectedCountry?.vatRate ?? 0;
+    // Ставка — из НАБОРА страны, как и на самом шаге налога. Здесь стояло
+    // `country.vatRate`, число в коде: сводка называла бы устаревшую ставку
+    // ещё и в подтверждении, которое человек читает последним.
+    final vatRate = ref
+        .watch(countryStandardRateProvider(state.selectedCountry))
+        .asData
+        ?.value;
+    // Сводка обязана говорить тем же словом, что и сам шаг: иначе мастер
+    // спрашивает про налог с продаж, а в конце отчитывается про НДС.
+    final taxWords = TaxStepWords.of(state.selectedCountry, l10n);
 
     final devices = <String>[
       if (eq.printerEnabled) l10n.setupSummaryPrinter,
@@ -71,16 +82,27 @@ class SummaryStep extends ConsumerWidget {
               SettingsTile(
                 metrics: metrics,
                 title: state.selectedCountry?.taxIdLabel ?? l10n.setupSummaryId,
-                value: org.taxId ?? l10n.setupNotConfigured,
+                // С разделителями страны: «84-1234567», а не девять голых
+                // цифр. Тот же форматировщик, что печатает чек.
+                value: org.taxId == null
+                    ? l10n.setupNotConfigured
+                    : (state.selectedCountry?.formatTaxId(org.taxId!) ??
+                          org.taxId!),
                 onTap: () =>
                     controller().goToStep(InitialSetupStep.organizationSetup),
               ),
               SettingsTile(
                 metrics: metrics,
-                title: l10n.setupSummaryVat,
+                title: taxWords.stepTitle,
                 value: org.isVatPayer
-                    ? l10n.setupVatPayerSummary(vatRate)
-                    : l10n.setupVatNonPayerTitle,
+                    // Ставку числом — только там, где она одна на страну.
+                    // Где налог складывается из долей юрисдикций, «(0%)»
+                    // было бы неправдой: ноль здесь значит «ставки ещё не
+                    // заведены», а не «налога нет».
+                    ? ((vatRate != null && vatRate.isNotEmpty)
+                          ? l10n.setupVatPayerSummary(vatRate)
+                          : taxWords.payerTitle)
+                    : taxWords.nonPayerTitle,
                 onTap: () =>
                     controller().goToStep(InitialSetupStep.vatSelection),
               ),

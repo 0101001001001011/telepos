@@ -711,7 +711,15 @@ class LocalRefundService implements RefundService {
       return CompletionTrouble(
         kind: CompletionTroubleKind.drawer,
         receiptNo: refundLocalId,
-        message: 'денежный ящик не открылся',
+        // ПУСТО, а не подпись. Здесь стояло «денежный ящик не открылся» —
+        // дословный повтор словарного заголовка, который экран и так
+        // показывает, только по-русски: на английской кассе выходило «Cash
+        // drawer did not open: денежный ящик не открылся». Поймано пробным
+        // проходом главы 7 (2026-09-22).
+        //
+        // Подпись остаётся там, где она НЕСЁТ причину: «порт занят»,
+        // «бумаги нет». Пустая означает «сверх заголовка сказать нечего».
+        message: '',
       );
     } catch (e, st) {
       final safe = safeErrorText(e);

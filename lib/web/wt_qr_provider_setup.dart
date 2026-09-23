@@ -82,7 +82,8 @@ class WtQrProviderSetup implements QrProviderSetupRepository {
   );
 
   @override
-  Future<void> clear() => _named(() => _wire.ask(TillOps.qrProviderClear, null));
+  Future<void> clear() =>
+      _named(() => _wire.ask(TillOps.qrProviderClear, null));
 
   @override
   Future<void> setKindActive(bool active) =>

@@ -10,13 +10,14 @@
 ///
 /// Переезд ничего не стоил и ничего не изменил: здесь нет ни виджета, ни
 /// `BuildContext`, ни локализации — чистый Dart над доменными типами
-/// (`SaleReceiptData`, `Decimal`, `VatCalculator`). Место ему в домене было
+/// (`SaleReceiptData`, `Decimal`, `taxFromGross`). Место ему в домене было
 /// и до переезда.
 library;
 
 import 'package:decimal/decimal.dart';
 import 'package:telepos/domain/services/receipt_print_service.dart';
-import 'package:telepos/domain/usecases/fiscal/vat_calculator.dart';
+import 'package:telepos/domain/fiscal/fiscal_settings.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
 
 SaleReceiptData sampleSaleReceiptData({
   required String storeName,
@@ -80,8 +81,10 @@ SaleReceiptData sampleSaleReceiptData({
       ticketUrl: 'https://consumer.oofd.kz/ticket/abc123',
     ),
     isVatPayer: isVatPayer,
-    vatAmount: isVatPayer ? VatCalculator.extractVatFromGross(total) : null,
-    vatRatePercent: VatCalculator.standardRatePercent,
+    vatAmount: isVatPayer
+        ? taxFromGross(total, FiscalDefaults.vatRatePercent)
+        : null,
+    vatRatePercent: FiscalDefaults.vatRatePercent,
     currencySymbol: currencySymbol,
   );
 }

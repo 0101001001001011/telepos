@@ -1,8 +1,8 @@
 import 'package:decimal/decimal.dart';
 
-abstract class FindProductByCodeUseCase {
-  Future<ProductWithPrice?> find(String code);
-}
+// Здесь жил договор `FindProductByCodeUseCase` — зарегистрированный в
+// контейнере и не спрошенный ни разу (2026-09-22). Снят; тип
+// `ProductWithPrice` остаётся: им пользуется живой поиск по штрихкоду.
 
 class ProductWithPrice {
   const ProductWithPrice({

@@ -150,11 +150,12 @@ void main() {
   /// Покупатель с расчётным и бонусным счётом. Оба нужны сразу: чек
   /// «все четыре зачёта» ниже спрашивает и то, и другое, а разводить
   /// покупателей по пробам значило бы мерить разные картотеки.
-  Future<void> seedCustomer({
-    String advance = '0',
-    String bonus = '0',
-  }) async {
-    await seedAccount(agentMainAccountId, AccountType.agentMain, value: advance);
+  Future<void> seedCustomer({String advance = '0', String bonus = '0'}) async {
+    await seedAccount(
+      agentMainAccountId,
+      AccountType.agentMain,
+      value: advance,
+    );
     await seedAccount(bonusAccountId, AccountType.cashback, value: bonus);
     await db
         .into(db.agents)
@@ -356,7 +357,8 @@ void main() {
     expect(
       byAdvance.amount,
       d('400'),
-      reason: 'аванс добирает остаток ПОСЛЕ сертификата: 1000 − 600 = 400. '
+      reason:
+          'аванс добирает остаток ПОСЛЕ сертификата: 1000 − 600 = 400. '
           'Взяли бы обе задачи потолок `amount − bonus` порознь — вышло бы '
           'два зачёта по 600 и toPay = −200',
     );
@@ -373,7 +375,8 @@ void main() {
     expect(
       await liabilityBalance(),
       Decimal.zero,
-      reason: 'общая ветвь зачёта не переворачивает знак: обязательство '
+      reason:
+          'общая ветвь зачёта не переворачивает знак: обязательство '
           'уменьшилось, а не выросло до 1200',
     );
     // Незачтённые 200 остались авансом покупателя, а не сгорели.
@@ -485,7 +488,8 @@ void main() {
     expect(
       await balanceOf(agentMainAccountId),
       d('-400'),
-      reason: 'обязательство сертификата — не долг покупателя: пропусти '
+      reason:
+          'обязательство сертификата — не долг покупателя: пропусти '
           'слагаемое, и здесь было бы −1000',
     );
     expect((await cert('C-3')).balance, Decimal.zero);

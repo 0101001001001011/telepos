@@ -234,11 +234,7 @@ void main() {
 
     test('признак «не эмулятор» доезжает тоже — а не теряется в умолчании', () {
       final json = fiscalDiagnosticsToWireJson(
-        const FiscalDiagnosticsView(
-          configured: true,
-          accepted: [],
-          queued: [],
-        ),
+        const FiscalDiagnosticsView(configured: true, accepted: [], queued: []),
       );
       expect(json['onLoopback'], isFalse);
       expect(fiscalDiagnosticsFromWireJson(json).onLoopback, isFalse);

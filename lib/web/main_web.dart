@@ -374,9 +374,7 @@ Future<void> _run() async {
     // означал бы вторую подписку на ту же кассу и второй кэш того же
     // состояния. Читающий договор просит `BarcodeScannerMixin`, пишущий —
     // `hardware_settings_screen.dart`.
-    ..registerLazySingleton<ScannerRulesRepository>(
-      () => WtScannerRules(wire),
-    )
+    ..registerLazySingleton<ScannerRulesRepository>(() => WtScannerRules(wire))
     ..registerLazySingleton<ScannerRulesReader>(
       () => GetIt.I<ScannerRulesRepository>(),
     )

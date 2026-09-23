@@ -4,7 +4,9 @@ import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_semantic_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/cash_operation_label.dart';
 import 'package:telepos/presentation/controllers/shift/shift_controller.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class CashOperationsTab extends ConsumerWidget {
   const CashOperationsTab({super.key, this.compact = false});
@@ -258,12 +260,25 @@ class _OperationTile extends StatelessWidget {
       CashOperationType.investment => AppColors.success,
       CashOperationType.expense => AppColors.warning,
       CashOperationType.dividend => Theme.of(context).colorScheme.error,
+      // Сведение с пересчётом: излишек — тем же цветом, что приход,
+      // недостача — цветом ошибки. Строку видно наравне с прочими: смысл
+      // её в том и есть, чтобы расхождение не пропало из журнала.
+      CashOperationType.reconciliationOverage => AppColors.success,
+      CashOperationType.reconciliationShortage =>
+        Theme.of(context).colorScheme.error,
+      CashOperationType.openingCountOverage => AppColors.success,
+      CashOperationType.openingCountShortage =>
+        Theme.of(context).colorScheme.error,
     };
 
     final icon = switch (operation.type) {
       CashOperationType.investment => Icons.add_circle_outline,
       CashOperationType.expense => Icons.remove_circle_outline,
       CashOperationType.dividend => Icons.output,
+      CashOperationType.reconciliationOverage => Icons.balance,
+      CashOperationType.reconciliationShortage => Icons.balance,
+      CashOperationType.openingCountOverage => Icons.balance,
+      CashOperationType.openingCountShortage => Icons.balance,
     };
 
     return ListTile(
@@ -281,9 +296,9 @@ class _OperationTile extends StatelessWidget {
         operation.localizedTypeLabel(AppLocalizations.of(context)!),
         style: AppTextStyles.body,
       ),
-      subtitle: operation.note != null
+      subtitle: _subtitle(context) != null
           ? Text(
-              operation.note!,
+              _subtitle(context)!,
               style: AppTextStyles.body.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -314,10 +329,21 @@ class _OperationTile extends StatelessWidget {
     );
   }
 
+  /// Подпись под названием операции: род расхода на языке интерфейса плюс
+  /// комментарий человека.
+  ///
+  /// Здесь стояло голое `operation.note`, и до схемы v58 в нём лежало
+  /// склеенное кассой `'Зарплата: за август'` — русское слово, записанное в
+  /// историю. На английской кассе подпись под каждым расходом была русской,
+  /// и переводить её было негде: слово уже в базе.
+  String? _subtitle(BuildContext context) => cashOperationSubtitle(
+    reasonCode: operation.reasonCode,
+    note: operation.note,
+    l10n: AppLocalizations.of(context)!,
+  );
+
   String _formatTime(DateTime time) {
-    final h = time.hour.toString().padLeft(2, '0');
-    final m = time.minute.toString().padLeft(2, '0');
-    return '$h:$m';
+    return TillConventions.current.formatDateTime(time);
   }
 }
 
@@ -332,6 +358,15 @@ class _CompactOperationTile extends StatelessWidget {
       CashOperationType.investment => AppColors.success,
       CashOperationType.expense => AppColors.warning,
       CashOperationType.dividend => Theme.of(context).colorScheme.error,
+      // Сведение с пересчётом: излишек — тем же цветом, что приход,
+      // недостача — цветом ошибки. Строку видно наравне с прочими: смысл
+      // её в том и есть, чтобы расхождение не пропало из журнала.
+      CashOperationType.reconciliationOverage => AppColors.success,
+      CashOperationType.reconciliationShortage =>
+        Theme.of(context).colorScheme.error,
+      CashOperationType.openingCountOverage => AppColors.success,
+      CashOperationType.openingCountShortage =>
+        Theme.of(context).colorScheme.error,
     };
 
     return Row(

@@ -136,11 +136,11 @@ void main() {
       'https://sbp.bank/api',
       reason: 'подготовка: настройка до экрана доехала',
     );
+    expect(_everything(tester).where((t) => t.contains(_secret)), isEmpty);
     expect(
-      _everything(tester).where((t) => t.contains(_secret)),
-      isEmpty,
+      find.text('Ключ сохранён. Введите новый, чтобы заменить'),
+      findsOneWidget,
     );
-    expect(find.text('Ключ сохранён. Введите новый, чтобы заменить'), findsOneWidget);
   });
 
   testWidgets('новый ключ уходит в порт, ввод скрыт, поле очищается', (
@@ -156,7 +156,10 @@ void main() {
     );
     expect(tester.widget<EditableText>(keyField).obscureText, isTrue);
 
-    await tester.enterText(find.byKey(const Key('qr-settings-key')), 'новый-ключ');
+    await tester.enterText(
+      find.byKey(const Key('qr-settings-key')),
+      'новый-ключ',
+    );
     await tester.tap(find.byKey(const Key('qr-settings-save')));
     for (var i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 20));
@@ -206,7 +209,10 @@ void main() {
     GetIt.I.registerSingleton<QrProviderSetupRepository>(port);
     await _pump(tester);
 
-    await tester.enterText(find.byKey(const Key('qr-settings-url')), 'sbp.bank');
+    await tester.enterText(
+      find.byKey(const Key('qr-settings-url')),
+      'sbp.bank',
+    );
     await tester.tap(find.byKey(const Key('qr-settings-save')));
     for (var i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 20));
@@ -256,9 +262,9 @@ void main() {
     // здесь было бы ложью: на кассе владельцу откажут ровно так же.
     expect(find.byKey(const Key('qr-settings-till-only')), findsNothing);
     expect(
-      _everything(tester).where(
-        (t) => t.contains('эта касса не держит настройки провайдера QR'),
-      ),
+      _everything(
+        tester,
+      ).where((t) => t.contains('эта касса не держит настройки провайдера QR')),
       isEmpty,
       reason: 'текст кассы написан по-русски внутри кассы и на экран не едет',
     );

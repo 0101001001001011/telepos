@@ -9,7 +9,9 @@ import 'package:telepos/presentation/common/widgets/settings/settings_choice_til
 import 'package:telepos/presentation/common/widgets/settings/settings_section.dart';
 import 'package:telepos/presentation/common/widgets/wizard/wizard_error_note.dart';
 import 'package:telepos/presentation/common/widgets/wizard/wizard_scaffold.dart';
+import 'package:telepos/presentation/common/utils/tax_step_words.dart';
 import 'package:telepos/presentation/controllers/setup/initial_setup_controller.dart';
+import 'package:telepos/presentation/common/utils/country_preset_rate.dart';
 
 /// Шаг НДС: платит организация налог или нет.
 ///
@@ -33,7 +35,20 @@ class VatStep extends ConsumerWidget {
         ref.read(initialSetupControllerProvider.notifier);
 
     final isVatPayer = state.organization.isVatPayer;
-    final vatRate = state.selectedCountry?.vatRate ?? 0;
+    // Слова — по укладу страны: в США НДС нет, там налог с продаж, и он
+    // добавляется сверх ценника. Спрашивать американский магазин
+    // «плательщик ли он НДС» значит задавать вопрос из чужой страны.
+    // Ставка — из НАБОРА страны, а не из числа в коде: закон её меняет, а
+    // набор правится файлом и настройкой.
+    final rate = ref
+        .watch(countryStandardRateProvider(state.selectedCountry))
+        .asData
+        ?.value;
+    final words = TaxStepWords.of(
+      state.selectedCountry,
+      l10n,
+      standardRatePercent: rate,
+    );
 
     return WizardScaffold(
       totalSteps: state.totalSteps,
@@ -47,27 +62,25 @@ class VatStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SettingsSection(
-            header: l10n.setupStepVat,
+            header: words.stepTitle,
             // Описания обоих режимов — одним абзацем под списком, а не
             // мелким текстом внутри каждой строки: внутри строки они
             // соревнуются с самим выбором и проигрывают ему.
             footer:
-                '${l10n.setupVatPayerDescription}\n\n'
-                '${l10n.setupVatNonPayerDescription}',
+                '${words.payerDescription}\n\n'
+                '${words.nonPayerDescription}',
             children: [
               SettingsChoiceTile(
                 metrics: metrics,
-                title: l10n.setupVatPayerTitle,
-                subtitle: vatRate > 0
-                    ? l10n.setupVatPayerRate(vatRate)
-                    : l10n.setupVatPayerRateUnknown,
+                title: words.payerTitle,
+                subtitle: words.payerSubtitle,
                 selected: isVatPayer,
                 onTap: () => controller().setVatPayer(true),
               ),
               SettingsChoiceTile(
                 metrics: metrics,
-                title: l10n.setupVatNonPayerTitle,
-                subtitle: l10n.setupVatNonPayerSubtitle,
+                title: words.nonPayerTitle,
+                subtitle: words.nonPayerSubtitle,
                 selected: !isVatPayer,
                 onTap: () => controller().setVatPayer(false),
               ),

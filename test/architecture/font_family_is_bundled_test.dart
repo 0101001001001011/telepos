@@ -36,10 +36,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('каждое имя гарнитуры в lib/ объявлено в pubspec.yaml', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();
-    final declared = RegExp(r'^\s*- family:\s*(\S+)', multiLine: true)
-        .allMatches(pubspec)
-        .map((m) => m.group(1)!)
-        .toSet();
+    final declared = RegExp(
+      r'^\s*- family:\s*(\S+)',
+      multiLine: true,
+    ).allMatches(pubspec).map((m) => m.group(1)!).toSet();
     expect(
       declared,
       isNotEmpty,

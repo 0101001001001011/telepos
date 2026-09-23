@@ -240,11 +240,9 @@ void main() {
         await tester.tap(find.text('Готово'));
         await tester.pumpAndSettle();
 
-        expect(
-          controller.recorded,
-          [Decimal.fromInt(7)],
-          reason: 'деньги записаны — и записаны как Decimal, а не double',
-        );
+        expect(controller.recorded, [
+          Decimal.fromInt(7),
+        ], reason: 'деньги записаны — и записаны как Decimal, а не double');
         expect(
           receipts.asked,
           [_RecordingCashInOutController.operationId],

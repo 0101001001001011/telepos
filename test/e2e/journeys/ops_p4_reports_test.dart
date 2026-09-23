@@ -12,6 +12,7 @@ import 'package:telepos/data/database/daos/account_dao.dart';
 import 'package:telepos/presentation/controllers/reports/kz_reports_controller.dart';
 
 import '../support/harness.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 void main() {
   final h = E2eHarness();
@@ -312,7 +313,14 @@ void main() {
       d('500'),
       reason: '320.250 + 179.750 = 500, Decimal-exact',
     );
-    expect(boy.reasonLabel, 'Бой');
+    // Подпись причины теперь берётся у словаря доводом: до 2026-09-22
+    // модель отчёта возвращала русское слово, и на английской кассе
+    // владелец читал «Бой» в отчёте о списаниях.
+    expect(boy.reasonLabel(lookupAppLocalizations(const Locale('ru'))), 'Бой');
+    expect(
+      boy.reasonLabel(lookupAppLocalizations(const Locale('en'))),
+      'Breakage',
+    );
 
     final prosrochka = report.buckets.firstWhere((b) => b.reason == 1);
     expect(prosrochka.total, d('1000'));

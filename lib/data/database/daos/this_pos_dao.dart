@@ -62,6 +62,16 @@ class ThisPosDao extends DatabaseAccessor<AppDatabase> with _$ThisPosDaoMixin {
     bool? sellInDiscount,
     bool? cashInOut,
     bool? allowBigAmount,
+
+    /// Потолок суммы чека; пустая строка означает «вернуть к умолчанию».
+    String? bigAmountLimit,
+
+    /// Адрес торговой точки — тот, что печатается на чеке.
+    ///
+    /// До 2026-09-22 его заводил ТОЛЬКО мастер настройки, и поменять было
+    /// нечем: магазин переехал — на чеке остался прежний адрес. А это
+    /// обязательный реквизит документа во многих странах.
+    String? storeAddress,
     bool? isKassaPriceDecreasingBlocked,
   }) => (update(thisPosEntries)..where((tp) => tp.rId.equals(true))).write(
     ThisPosEntriesCompanion(
@@ -76,6 +86,12 @@ class ThisPosDao extends DatabaseAccessor<AppDatabase> with _$ThisPosDaoMixin {
       allowBigAmount: allowBigAmount == null
           ? const Value.absent()
           : Value(allowBigAmount),
+      bigAmountLimit: bigAmountLimit == null
+          ? const Value.absent()
+          : Value(bigAmountLimit.trim().isEmpty ? null : bigAmountLimit.trim()),
+      storeAddress: storeAddress == null
+          ? const Value.absent()
+          : Value(storeAddress.trim().isEmpty ? null : storeAddress.trim()),
       isKassaPriceDecreasingBlocked: isKassaPriceDecreasingBlocked == null
           ? const Value.absent()
           : Value(isKassaPriceDecreasingBlocked),

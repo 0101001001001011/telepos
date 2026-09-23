@@ -536,7 +536,10 @@ class _SystemTerminalScreenState extends ConsumerState<SystemTerminalScreen> {
                   autofocus: true,
                   enabled: !_busy,
                   textInputAction: TextInputAction.go,
-                  style: const TextStyle(fontFamily: AppTypography.familyMono, fontSize: 14),
+                  style: const TextStyle(
+                    fontFamily: AppTypography.familyMono,
+                    fontSize: 14,
+                  ),
                   decoration: InputDecoration(
                     hintText: l10n.sysmTerminalHint,
                     prefixText: '\$ ',

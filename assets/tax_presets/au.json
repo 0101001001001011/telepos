@@ -1,0 +1,53 @@
+{
+  "id": "au",
+  "title": "Австралия",
+  "countryCode": "AU",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "$",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "10",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "GST",
+      "isDefault": true
+    },
+    {
+      "code": "zero",
+      "title": "GST-free"
+    },
+    {
+      "code": "exempt",
+      "title": "Input taxed"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "au",
+      "name": "GST",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "zero",
+          "kind": "taxed",
+          "ratePercent": "0"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Australian GST: standard rate and GST-free supplies; проверьте перед работой"
+}

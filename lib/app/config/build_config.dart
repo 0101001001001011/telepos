@@ -1,10 +1,12 @@
+import 'package:telepos/app/config/app_version.dart';
+
 enum BuildMode { dev, test, prod }
 
 enum HttpLoggingLevel { none, basic, headers, body }
 
 class BuildConfig {
   const BuildConfig({
-    this.version = '1.0.0',
+    this.version = kAppVersion,
     this.mode = BuildMode.dev,
     this.host = 'prod',
     this.restApiVersion = '1.0',
@@ -24,7 +26,12 @@ class BuildConfig {
     );
 
     return BuildConfig(
-      version: const String.fromEnvironment('VERSION', defaultValue: '1.0.0'),
+      // Умолчание — настоящая версия продукта, а не выдуманная `1.0.0`:
+      // сборка без `--dart-define=VERSION` показывала зрителю чужое число.
+      version: const String.fromEnvironment(
+        'VERSION',
+        defaultValue: kAppVersion,
+      ),
       mode: _parseMode(modeStr),
       host: host,
       restApiVersion: restApiVer,

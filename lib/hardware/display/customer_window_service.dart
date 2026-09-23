@@ -17,15 +17,24 @@ class CustomerWindowService {
 
   bool get isOpen => _controller != null;
 
+  /// Открыть окно покупателя на выбранном мониторе.
+  ///
+  /// [currencySymbol] и [languageCode] — доводы, а не умолчания: окно живёт в
+  /// отдельном движке, у которого нет ни базы кассы, ни настроек. Всё, что оно
+  /// знает о мире, оно получает отсюда.
   Future<bool> open({
     required int monitorIndex,
     required String storeName,
+    required String currencySymbol,
+    required String languageCode,
   }) async {
     try {
       final bounds = await _monitorBounds(monitorIndex);
       final args = jsonEncode({
         'businessId': kCustomerDisplayBusinessId,
         'storeName': storeName,
+        'currencySymbol': currencySymbol,
+        'languageCode': languageCode,
         if (bounds != null) ...{
           'x': bounds.x,
           'y': bounds.y,

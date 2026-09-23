@@ -458,13 +458,18 @@ class WtCartService implements CartService {
     int receiptNo,
     CartCommandMeta meta, {
     required DiscountAuthority by,
+    int? deferredPosId,
   }) => _queued(
     terminalId,
     meta,
     // `receiptNo` — номер ПОДНИМАЕМОГО чека, `meta.receiptNo` — номер того,
     // что у места уже есть. Перепутать их значит получить
     // `cart_wrong_receipt` (ловушка названа в `CartService.loadDeferred`).
-    () => _ask(SaleOps.loadDeferred, (receiptNo: receiptNo, meta: meta)),
+    () => _ask(SaleOps.loadDeferred, (
+      receiptNo: receiptNo,
+      meta: meta,
+      deferredPosId: deferredPosId,
+    )),
   );
 
   @override

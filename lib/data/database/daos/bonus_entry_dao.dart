@@ -286,15 +286,12 @@ class BonusEntryDao extends DatabaseAccessor<AppDatabase>
   /// именно по нему.
   Future<int> ownPosId() => _originPosId();
 
-  Future<List<BonusEntry>> findByAccount(int accountId) => (select(
-    bonusEntries,
-  )..where((e) => e.accountId.equals(accountId))).get();
+  Future<List<BonusEntry>> findByAccount(int accountId) =>
+      (select(bonusEntries)..where((e) => e.accountId.equals(accountId))).get();
 
-  Future<List<BonusEntry>> findBySale(int receiptNo, int posId) =>
-      (select(bonusEntries)..where(
-            (e) => e.receiptNo.equals(receiptNo) & e.posId.equals(posId),
-          ))
-          .get();
+  Future<List<BonusEntry>> findBySale(int receiptNo, int posId) => (select(
+    bonusEntries,
+  )..where((e) => e.receiptNo.equals(receiptNo) & e.posId.equals(posId))).get();
 
   /// Счета, у которых записанный остаток разошёлся с журналом.
   ///
@@ -306,10 +303,9 @@ class BonusEntryDao extends DatabaseAccessor<AppDatabase>
   /// вовсе: счёт с остатком и пустым журналом — самое опасное расхождение,
   /// и «нет записей — нечего сверять» пропустило бы ровно его.
   Future<List<BonusDivergence>> divergences() async {
-    final accounts =
-        await (db.select(db.accounts)
-              ..where((a) => a.type.isIn(BonusAccountTypes.values)))
-            .get();
+    final accounts = await (db.select(
+      db.accounts,
+    )..where((a) => a.type.isIn(BonusAccountTypes.values))).get();
 
     final out = <BonusDivergence>[];
     for (final a in accounts) {
@@ -317,11 +313,7 @@ class BonusEntryDao extends DatabaseAccessor<AppDatabase>
       final journal = await balanceOf(a.id);
       if (stored != journal) {
         out.add(
-          BonusDivergence(
-            accountId: a.id,
-            stored: stored,
-            journal: journal,
-          ),
+          BonusDivergence(accountId: a.id, stored: stored, journal: journal),
         );
       }
     }
@@ -404,6 +396,5 @@ class BonusDivergence {
   final Decimal journal;
 
   @override
-  String toString() =>
-      'счёт $accountId: записано $stored, по журналу $journal';
+  String toString() => 'счёт $accountId: записано $stored, по журналу $journal';
 }

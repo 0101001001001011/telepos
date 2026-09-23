@@ -23,7 +23,8 @@ typedef CardRefundDriver =
     });
 
 /// Какой платёжный терминал у рабочего места.
-typedef PaymentTerminalLookup = Future<KaspiPosConfig?> Function(int? terminalId);
+typedef PaymentTerminalLookup =
+    Future<KaspiPosConfig?> Function(int? terminalId);
 
 /// Кассовая реализация [RefundTenderGateway] — задача 26.
 ///

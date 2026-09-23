@@ -247,13 +247,14 @@ void main() {
     expect(
       await balanceOf(agentMainAccountId),
       Decimal.zero,
-      reason: 'счёт покупателя ушёл в минус — аванс зачтён дважды, и '
+      reason:
+          'счёт покупателя ушёл в минус — аванс зачтён дважды, и '
           'покупателю записан долг, которого он не брал',
     );
 
-    final claimed = await (db.select(db.payments)
-          ..where((p) => p.kindId.equals(SystemPaymentKindIds.prepayment)))
-        .get();
+    final claimed = await (db.select(
+      db.payments,
+    )..where((p) => p.kindId.equals(SystemPaymentKindIds.prepayment))).get();
     expect(
       claimed.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount),
       d('1000'),
@@ -263,8 +264,11 @@ void main() {
 
     expect(
       refusal,
-      isA<WireRefusal>()
-          .having((e) => e.code, 'code', payPrepaymentInsufficientCode),
+      isA<WireRefusal>().having(
+        (e) => e.code,
+        'code',
+        payPrepaymentInsufficientCode,
+      ),
       reason: 'второй обязан получить названный отказ, а не пройти',
     );
 
@@ -281,16 +285,22 @@ void main() {
   test('условная запись не даёт списать больше остатка и в одиночку', () async {
     // Обратная сторона: без всякой гонки списание сверх остатка обязано
     // не состояться, а не увести счёт в минус.
-    expect(await db.accountDao.claimCredit(agentMainAccountId, d('1500')),
-        isFalse);
+    expect(
+      await db.accountDao.claimCredit(agentMainAccountId, d('1500')),
+      isFalse,
+    );
     expect(await balanceOf(agentMainAccountId), d('1000'));
 
-    expect(await db.accountDao.claimCredit(agentMainAccountId, d('1000')),
-        isTrue);
+    expect(
+      await db.accountDao.claimCredit(agentMainAccountId, d('1000')),
+      isTrue,
+    );
     expect(await balanceOf(agentMainAccountId), Decimal.zero);
 
-    expect(await db.accountDao.claimCredit(agentMainAccountId, d('0.001')),
-        isFalse);
+    expect(
+      await db.accountDao.claimCredit(agentMainAccountId, d('0.001')),
+      isFalse,
+    );
     expect(await balanceOf(agentMainAccountId), Decimal.zero);
   });
 }

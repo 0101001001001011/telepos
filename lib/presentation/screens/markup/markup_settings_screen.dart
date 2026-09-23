@@ -8,6 +8,7 @@ import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 class _CategoryMarkUp {
   _CategoryMarkUp({
@@ -16,7 +17,9 @@ class _CategoryMarkUp {
     required this.markup,
   });
   final int categoryId;
-  final String name;
+
+  /// Название категории; `null` — названия нет, экран подставит номер.
+  final String? name;
   final Decimal markup;
 }
 
@@ -31,7 +34,9 @@ final _categoryMarkUpsProvider = FutureProvider<List<_CategoryMarkUp>>((
       .map(
         (c) => _CategoryMarkUp(
           categoryId: c.id,
-          name: c.name ?? 'Категория #${c.id}',
+          // Имя без названия — не текст, а НОМЕР: экран подставит слово
+          // сам, когда будет знать язык.
+          name: c.name,
           markup: byCat[c.id] ?? Decimal.zero,
         ),
       )
@@ -66,6 +71,7 @@ class _MarkUpSettingsScreenState extends ConsumerState<MarkUpSettingsScreen> {
   );
 
   Future<void> _save(List<_CategoryMarkUp> rows) async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _saving = true);
     final db = GetIt.I<AppDatabase>();
     var applied = 0;
@@ -80,7 +86,7 @@ class _MarkUpSettingsScreenState extends ConsumerState<MarkUpSettingsScreen> {
     setState(() => _saving = false);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Наценки сохранены: $applied категорий с наценкой'),
+        content: Text(l10n.markupSaved(applied)),
         backgroundColor: AppColors.success,
       ),
     );
@@ -88,22 +94,23 @@ class _MarkUpSettingsScreenState extends ConsumerState<MarkUpSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final rowsAsync = ref.watch(_categoryMarkUpsProvider);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
-        title: const Text('Авто-наценка'),
+        title: Text(AppLocalizations.of(context)!.markupAuto),
       ),
       body: rowsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Ошибка: $e')),
+        error: (e, _) => Center(child: Text(l10n.genericErrorWith('$e'))),
         data: (rows) {
           if (rows.isEmpty) {
             return Center(
               child: Text(
-                'Нет категорий',
+                l10n.catalogNoCategories,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -117,8 +124,7 @@ class _MarkUpSettingsScreenState extends ConsumerState<MarkUpSettingsScreen> {
                 padding: const EdgeInsets.all(16),
                 color: selectedSurfaceOf(context),
                 child: Text(
-                  'Наценка в % на категорию. При приходе товара розничная цена '
-                  'пересчитывается из закупочной: закуп × (1 + наценка%).',
+                  AppLocalizations.of(context)!.markupHint,
                   style: TextStyle(
                     fontSize: 13,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -152,7 +158,12 @@ class _MarkUpSettingsScreenState extends ConsumerState<MarkUpSettingsScreen> {
                             size: 20,
                           ),
                           const SizedBox(width: 12),
-                          Expanded(child: Text(row.name)),
+                          Expanded(
+                            child: Text(
+                              row.name ??
+                                  l10n.markupCategoryNumbered(row.categoryId),
+                            ),
+                          ),
                           SizedBox(
                             width: 110,
                             child: TextField(
@@ -202,7 +213,7 @@ class _MarkUpSettingsScreenState extends ConsumerState<MarkUpSettingsScreen> {
                             ),
                           )
                         : const Icon(TeleposIcons.save),
-                    label: const Text('Сохранить наценки'),
+                    label: Text(AppLocalizations.of(context)!.markupSave),
                   ),
                 ),
               ),

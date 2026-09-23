@@ -17,18 +17,25 @@ class BillsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(shiftControllerProvider);
     final notifier = ref.read(shiftControllerProvider.notifier);
+    // Номиналы — по стране кассы. Здесь стояла общая константа, и на
+    // американской кассе кассир пересчитывал купюры, которых не бывает.
+    // Пока страна не прочитана — умолчание: счётчик купюр не повод не
+    // открыть смену.
+    final bills =
+        ref.watch(billDenominationsProvider).value ?? billDenominationsOf(null);
 
     if (compact) {
-      return _buildCompactLayout(context, state, notifier);
+      return _buildCompactLayout(context, state, notifier, bills);
     }
 
-    return _buildFullLayout(context, state, notifier);
+    return _buildFullLayout(context, state, notifier, bills);
   }
 
   Widget _buildFullLayout(
     BuildContext context,
     ShiftState state,
     ShiftNotifier notifier,
+    List<int> bills,
   ) {
     final l10n = AppLocalizations.of(context)!;
 
@@ -39,10 +46,10 @@ class BillsTab extends ConsumerWidget {
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
-              itemCount: kBillDenominations.length,
+              itemCount: bills.length,
               separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (context, index) {
-                final denomination = kBillDenominations[index];
+                final denomination = bills[index];
                 final count = state.billCounts[denomination] ?? 0;
                 final sum = Decimal.fromInt(denomination * count);
 
@@ -97,6 +104,7 @@ class BillsTab extends ConsumerWidget {
     BuildContext context,
     ShiftState state,
     ShiftNotifier notifier,
+    List<int> bills,
   ) {
     final l10n = AppLocalizations.of(context)!;
 
@@ -111,9 +119,9 @@ class BillsTab extends ConsumerWidget {
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
           ),
-          itemCount: kBillDenominations.length,
+          itemCount: bills.length,
           itemBuilder: (context, index) {
-            final denomination = kBillDenominations[index];
+            final denomination = bills[index];
             final count = state.billCounts[denomination] ?? 0;
 
             return _CompactBillCounter(

@@ -11,6 +11,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/report_dao.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/reports/report_models.dart';
 import 'package:telepos/presentation/common/widgets/scroll_assist.dart';
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
@@ -107,6 +108,7 @@ class _SalesTabState extends ConsumerState<SalesTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final reportState = ref.watch(reportsProvider);
     final range = reportState.dateRange;
 
@@ -130,24 +132,24 @@ class _SalesTabState extends ConsumerState<SalesTab> {
           children: [
             revenueAsync.when(
               data: (data) => _buildRevenueByDayChart(context, data),
-              loading: () => _buildChartLoading('Выручка по дням'),
-              error: (e, _) => _buildChartError('Выручка по дням', e),
+              loading: () => _buildChartLoading(l10n.repChartRevenueByDay),
+              error: (e, _) => _buildChartError(l10n.repChartRevenueByDay, e),
             ),
 
             const SizedBox(height: 16),
 
             hourlyAsync.when(
               data: (data) => _buildHourlyChart(context, data),
-              loading: () => _buildChartLoading('Распределение по часам'),
-              error: (e, _) => _buildChartError('Распределение по часам', e),
+              loading: () => _buildChartLoading(l10n.repHourlyDistribution),
+              error: (e, _) => _buildChartError(l10n.repHourlyDistribution, e),
             ),
 
             const SizedBox(height: 16),
 
             cashierAsync.when(
               data: (data) => _buildCashierTable(context, data),
-              loading: () => _buildChartLoading('Эффективность кассиров'),
-              error: (e, _) => _buildChartError('Эффективность кассиров', e),
+              loading: () => _buildChartLoading(l10n.repCashierPerformance),
+              error: (e, _) => _buildChartError(l10n.repCashierPerformance, e),
             ),
           ],
         ),
@@ -159,13 +161,14 @@ class _SalesTabState extends ConsumerState<SalesTab> {
     BuildContext context,
     List<RevenueByDay> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Выручка по дням',
-        subtitle: 'Нет данных за выбранный период',
+        title: l10n.repChartRevenueByDay,
+        subtitle: l10n.repNoDataForPeriod,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -180,13 +183,13 @@ class _SalesTabState extends ConsumerState<SalesTab> {
     final interval = _niceInterval(maxRevenue);
 
     return ReportChartCard(
-      title: 'Выручка по дням',
-      subtitle: '${data.length} дней (нажмите для деталей)',
+      title: l10n.repChartRevenueByDay,
+      subtitle: l10n.repDaysCountTapHint(data.length),
       height: 280,
       onExport: () => ReportExportButton.exportCsv(
         context,
         'sales_revenue_by_day',
-        ['Дата', 'Выручка', 'Количество'],
+        [l10n.globalDate, l10n.repColRevenue, l10n.globalQuantity],
         [
           for (var i = 0; i < data.length; i++)
             [
@@ -209,8 +212,8 @@ class _SalesTabState extends ConsumerState<SalesTab> {
                 final d = dates[idx];
                 return BarTooltipItem(
                   '${d.day}.${d.month.toString().padLeft(2, '0')}\n'
-                  '${ReportMoney.full(item.revenue)} ₸\n'
-                  '${item.count} чеков',
+                  '${ReportMoney.withCurrency(item.revenue)}\n'
+                  '${l10n.repReceiptsCount(item.count)}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 12,
@@ -311,6 +314,7 @@ class _SalesTabState extends ConsumerState<SalesTab> {
   }
 
   void _showDayDetailDialog(BuildContext context, RevenueByDay day) {
+    final l10n = AppLocalizations.of(context)!;
     final d = _dateFromBucket(day.dayTimestamp);
     final avgCheck = day.count > 0
         ? (day.revenue / Decimal.fromInt(day.count))
@@ -329,20 +333,20 @@ class _SalesTabState extends ConsumerState<SalesTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DetailRow(
-              label: 'Выручка',
-              value: '${ReportMoney.full(day.revenue)} ₸',
+              label: l10n.repColRevenue,
+              value: ReportMoney.withCurrency(day.revenue),
             ),
-            _DetailRow(label: 'Количество чеков', value: '${day.count}'),
+            _DetailRow(label: l10n.repReceiptCountLabel, value: '${day.count}'),
             _DetailRow(
-              label: 'Средний чек',
-              value: '${ReportMoney.full(avgCheck)} ₸',
+              label: l10n.repKpiAvgCheck,
+              value: ReportMoney.withCurrency(avgCheck),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Закрыть'),
+            child: Text(l10n.globalClose),
           ),
         ],
       ),
@@ -353,13 +357,14 @@ class _SalesTabState extends ConsumerState<SalesTab> {
     BuildContext context,
     List<HourlyDistribution> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Распределение по часам',
-        subtitle: 'Нет данных за выбранный период',
+        title: l10n.repHourlyDistribution,
+        subtitle: l10n.repNoDataForPeriod,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -381,13 +386,13 @@ class _SalesTabState extends ConsumerState<SalesTab> {
     final countInterval = _niceInterval(maxCount);
 
     return ReportChartCard(
-      title: 'Распределение по часам',
-      subtitle: 'количество продаж по часам',
+      title: l10n.repHourlyDistribution,
+      subtitle: l10n.repSalesCountByHour,
       height: 280,
       onExport: () => ReportExportButton.exportCsv(
         context,
         'sales_hourly',
-        ['Час', 'Количество', 'Выручка'],
+        [l10n.repColHour, l10n.globalQuantity, l10n.repColRevenue],
         fullDay
             .map(
               (d) => [
@@ -409,8 +414,8 @@ class _SalesTabState extends ConsumerState<SalesTab> {
                 final item = fullDay[group.x.toInt()];
                 return BarTooltipItem(
                   '${item.hour}:00 - ${item.hour}:59\n'
-                  '${item.count} продаж\n'
-                  '${ReportMoney.full(item.revenue)} ₸',
+                  '${l10n.repSalesCountLine(item.count)}\n'
+                  '${ReportMoney.withCurrency(item.revenue)}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 12,
@@ -503,13 +508,14 @@ class _SalesTabState extends ConsumerState<SalesTab> {
     BuildContext context,
     List<CashierPerformance> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Эффективность кассиров',
-        subtitle: 'Нет данных за выбранный период',
+        title: l10n.repCashierPerformance,
+        subtitle: l10n.repNoDataForPeriod,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -519,13 +525,13 @@ class _SalesTabState extends ConsumerState<SalesTab> {
     }
 
     return ReportChartCard(
-      title: 'Эффективность кассиров',
-      subtitle: '${data.length} кассиров',
+      title: l10n.repCashierPerformance,
+      subtitle: l10n.repCashiersCount(data.length),
       height: math.max(250, (data.length * 48 + 56).toDouble()),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'sales_cashiers',
-        ['Кассир', 'Продажи', 'Выручка'],
+        [l10n.loginCashier, l10n.syncSales, l10n.repColRevenue],
         data
             .map(
               (d) => [
@@ -541,24 +547,33 @@ class _SalesTabState extends ConsumerState<SalesTab> {
         child: DataTable(
           headingRowColor: WidgetStateProperty.all(selectedSurfaceOf(context)),
           columnSpacing: 32,
-          columns: const [
+          columns: [
             DataColumn(
               label: Text(
-                'Кассир',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                l10n.loginCashier,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
             ),
             DataColumn(
               label: Text(
-                'Продажи',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                l10n.syncSales,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
               numeric: true,
             ),
             DataColumn(
               label: Text(
-                'Выручка',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                l10n.repColRevenue,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
               numeric: true,
             ),
@@ -578,7 +593,7 @@ class _SalesTabState extends ConsumerState<SalesTab> {
                   ),
                   DataCell(
                     Text(
-                      '${ReportMoney.full(cashier.revenue)} ₸',
+                      ReportMoney.withCurrency(cashier.revenue),
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -605,7 +620,7 @@ class _SalesTabState extends ConsumerState<SalesTab> {
       title: title,
       child: Center(
         child: Text(
-          'Ошибка: $error',
+          AppLocalizations.of(context)!.repErrorWith('$error'),
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 13,

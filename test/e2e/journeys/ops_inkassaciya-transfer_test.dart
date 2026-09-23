@@ -104,7 +104,7 @@ void main() {
       expect(
         result.success,
         isTrue,
-        reason: 'инкассация must succeed: ${result.errorMessage}',
+        reason: 'инкассация must succeed: ${result.refusal?.name ?? result.errorDetail}',
       );
 
       expect(

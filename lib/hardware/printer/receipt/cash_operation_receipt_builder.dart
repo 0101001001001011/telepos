@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
+import 'package:flutter/widgets.dart' show Locale;
+import 'package:telepos/core/locale/till_language.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/domain/entities/cash_operation/cash_operation_receipt_data.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_in_out_controller.dart';
 import 'package:telepos/hardware/paper_charset.dart';
@@ -60,18 +63,18 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
     sb.writeln('=' * paperWidth);
     sb.writeln(_centerText(data.companyName));
     sb.writeln('=' * paperWidth);
-    sb.writeln(_centerText('КВИТАНЦИЯ #${data.receiptNumber}'));
+    sb.writeln(_centerText('${_l10n.rcpSlipTitle} #${data.receiptNumber}'));
     sb.writeln('-' * paperWidth);
-    sb.writeln('Тип: ${_getTypeText(data.type)}');
-    sb.writeln('Дата: ${_formatDateTime(data.docTime)}');
+    sb.writeln('${_l10n.rcpType} ${_getTypeText(data.type)}');
+    sb.writeln('${_l10n.rcpDate} ${_formatDateTime(data.docTime)}');
     if (data.cashierName != null) {
-      sb.writeln('Кассир: ${data.cashierName}');
+      sb.writeln('${_l10n.rcpCashier} ${data.cashierName}');
     }
     sb.writeln('-' * paperWidth);
     sb.writeln(_formatAmountLine());
     sb.writeln('-' * paperWidth);
     if (data.note != null && data.note!.isNotEmpty) {
-      sb.writeln('Комментарий: ${data.note}');
+      sb.writeln('${_l10n.rcpComment} ${data.note}');
     }
     sb.writeln('=' * paperWidth);
     return sb.toString();
@@ -89,7 +92,7 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
   void _printReceiptNumber() {
     _addCommand(EscPosCommands.alignCenter);
     _addCommand(EscPosCommands.sizeDoubleHeight);
-    _printLine('КВИТАНЦИЯ #${data.receiptNumber}');
+    _printLine('${_l10n.rcpSlipTitle} #${data.receiptNumber}');
     _addCommand(EscPosCommands.sizeNormal);
   }
 
@@ -100,17 +103,17 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
 
   void _printOperationType() {
     _addCommand(EscPosCommands.alignLeft);
-    _printLine('Тип: ${_getTypeText(data.type)}');
+    _printLine('${_l10n.rcpType} ${_getTypeText(data.type)}');
   }
 
   void _printDateTime() {
     _addCommand(EscPosCommands.alignLeft);
-    _printLine('Дата: ${_formatDateTime(data.docTime)}');
+    _printLine('${_l10n.rcpDate} ${_formatDateTime(data.docTime)}');
   }
 
   void _printCashier() {
     _addCommand(EscPosCommands.alignLeft);
-    _printLine('Кассир: ${data.cashierName}');
+    _printLine('${_l10n.rcpCashier} ${data.cashierName}');
   }
 
   void _printAmount() {
@@ -122,7 +125,7 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
 
   void _printNote() {
     _addCommand(EscPosCommands.alignLeft);
-    _printLine('Комментарий: ${data.note}');
+    _printLine('${_l10n.rcpComment} ${data.note}');
   }
 
   void _printFooter() {
@@ -143,14 +146,22 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
     _buffer.addAll(command);
   }
 
+  /// Словарь на языке кассы — это ПЕЧАТНЫЙ документ, его читает человек с
+  /// бумаги. Все строки здесь были русскими литералами на любой кассе:
+  /// «КВИТАНЦИЯ», «Тип:», «Кассир:», «Сумма:», «ВНЕСЕНИЕ». Сторож печатных
+  /// документов их не видел — он собирает чек, X- и Z-отчёт, а квитанцию
+  /// кассовой операции не собирал.
+  AppLocalizations get _l10n =>
+      lookupAppLocalizations(Locale(TillLanguage.current.languageCode));
+
   String _getTypeText(CashInOutType type) {
     switch (type) {
       case CashInOutType.investment:
-        return 'ВНЕСЕНИЕ';
+        return _l10n.cashInvestment.toUpperCase();
       case CashInOutType.expense:
-        return 'РАСХОД';
+        return _l10n.cashExpense.toUpperCase();
       case CashInOutType.dividend:
-        return 'ИЗЪЯТИЕ';
+        return _l10n.cashWithdrawal.toUpperCase();
     }
   }
 
@@ -170,7 +181,7 @@ class CashOperationReceiptBuilder implements ReceiptBuilder {
   /// выйдет на колонку шире ленты: измерено пробой
   /// `receipt_paper_width_wire_test` — 33 колонки вместо 32 и 49 вместо 48.
   String _formatAmountLine() {
-    const label = 'Сумма:';
+    final label = _l10n.rcpAmount;
     final amount = _formatAmount(data.amount);
     final value = _paper('$amount ${data.currencySymbol}');
     final padding = paperWidth - label.length - value.length;

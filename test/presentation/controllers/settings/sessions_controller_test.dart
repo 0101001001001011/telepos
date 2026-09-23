@@ -44,8 +44,10 @@ class _SpyLoginNotifier extends LoginNotifier {
 }
 
 class _FakeSessionAdmin implements SessionAdmin {
-  _FakeSessionAdmin({Stream<List<LiveSession>>? watchStream, this.throwOnRevoke})
-    : _watchStream = watchStream ?? const Stream.empty();
+  _FakeSessionAdmin({
+    Stream<List<LiveSession>>? watchStream,
+    this.throwOnRevoke,
+  }) : _watchStream = watchStream ?? const Stream.empty();
 
   final Stream<List<LiveSession>> _watchStream;
   final Object? throwOnRevoke;
@@ -66,63 +68,57 @@ const _sessionLost = SessionLost('auth.sessions: сеанс неизвестен
 void main() {
   tearDown(() => GetIt.instance.reset());
 
-  test(
-    'revoke(): SessionLost гасит сеанс через LoginNotifier, а не оседает '
-    'текстом в state.error',
-    () async {
-      GetIt.I.registerSingleton<SessionAdmin>(
-        _FakeSessionAdmin(throwOnRevoke: _sessionLost),
-      );
-      final spy = _SpyLoginNotifier();
-      final container = ProviderContainer(
-        overrides: [loginControllerProvider.overrideWith(() => spy)],
-      );
-      addTearDown(container.dispose);
+  test('revoke(): SessionLost гасит сеанс через LoginNotifier, а не оседает '
+      'текстом в state.error', () async {
+    GetIt.I.registerSingleton<SessionAdmin>(
+      _FakeSessionAdmin(throwOnRevoke: _sessionLost),
+    );
+    final spy = _SpyLoginNotifier();
+    final container = ProviderContainer(
+      overrides: [loginControllerProvider.overrideWith(() => spy)],
+    );
+    addTearDown(container.dispose);
 
-      final controller = container.read(sessionsControllerProvider.notifier);
-      final result = await controller.revoke(1);
+    final controller = container.read(sessionsControllerProvider.notifier);
+    final result = await controller.revoke(1);
 
-      expect(result, isFalse);
-      expect(
-        spy.sessionLostCalls,
-        1,
-        reason:
-            'красный без правки: голый `catch (e)` заворачивал SessionLost '
-            'в safeErrorText вместо гашения сеанса',
-      );
-      expect(spy.lastError, same(_sessionLost));
-    },
-  );
+    expect(result, isFalse);
+    expect(
+      spy.sessionLostCalls,
+      1,
+      reason:
+          'красный без правки: голый `catch (e)` заворачивал SessionLost '
+          'в safeErrorText вместо гашения сеанса',
+    );
+    expect(spy.lastError, same(_sessionLost));
+  });
 
-  test(
-    'load(): отказ живой подписки SessionLost гасит сеанс, не оставляет '
-    'экран в вечной загрузке',
-    () async {
-      final streamController = StreamController<List<LiveSession>>();
-      addTearDown(streamController.close);
-      GetIt.I.registerSingleton<SessionAdmin>(
-        _FakeSessionAdmin(watchStream: streamController.stream),
-      );
-      final spy = _SpyLoginNotifier();
-      final container = ProviderContainer(
-        overrides: [loginControllerProvider.overrideWith(() => spy)],
-      );
-      addTearDown(container.dispose);
+  test('load(): отказ живой подписки SessionLost гасит сеанс, не оставляет '
+      'экран в вечной загрузке', () async {
+    final streamController = StreamController<List<LiveSession>>();
+    addTearDown(streamController.close);
+    GetIt.I.registerSingleton<SessionAdmin>(
+      _FakeSessionAdmin(watchStream: streamController.stream),
+    );
+    final spy = _SpyLoginNotifier();
+    final container = ProviderContainer(
+      overrides: [loginControllerProvider.overrideWith(() => spy)],
+    );
+    addTearDown(container.dispose);
 
-      final controller = container.read(sessionsControllerProvider.notifier);
-      controller.load();
-      streamController.addError(_sessionLost);
-      await Future<void>.delayed(Duration.zero);
+    final controller = container.read(sessionsControllerProvider.notifier);
+    controller.load();
+    streamController.addError(_sessionLost);
+    await Future<void>.delayed(Duration.zero);
 
-      expect(
-        spy.sessionLostCalls,
-        1,
-        reason:
-            'красный без правки: `.listen(...)` без onError не ловит отказ '
-            'подписки вовсе — экран остаётся в загрузке навсегда, а ошибка '
-            'уходит необработанной в зону',
-      );
-      expect(spy.lastError, same(_sessionLost));
-    },
-  );
+    expect(
+      spy.sessionLostCalls,
+      1,
+      reason:
+          'красный без правки: `.listen(...)` без onError не ловит отказ '
+          'подписки вовсе — экран остаётся в загрузке навсегда, а ошибка '
+          'уходит необработанной в зону',
+    );
+    expect(spy.lastError, same(_sessionLost));
+  });
 }

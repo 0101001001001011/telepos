@@ -101,9 +101,7 @@ void main() {
         ),
       );
 
-  testWidgets('принятый оператором документ виден с признаком', (
-    tester,
-  ) async {
+  testWidgets('принятый оператором документ виден с признаком', (tester) async {
     await acceptReceipt(operationId: 1, fiscalNo: 'ФП-4210');
     bindPort(queue: _EmptyQueue());
 
@@ -253,10 +251,7 @@ void main() {
     ]) {
       await GetIt.I.reset();
       useSettings(
-        FiscalSettings(
-          operatorType: FiscalOperatorType.webkassa,
-          baseUrl: url,
-        ),
+        FiscalSettings(operatorType: FiscalOperatorType.webkassa, baseUrl: url),
       );
       await mount(tester);
       expect(
@@ -325,7 +320,6 @@ void main() {
     },
   );
 }
-
 
 /// Фискальные настройки как есть. `noSuchMethod` бросает: случайная новая
 /// зависимость вкладки обязана падать громко, а не возвращать правдоподобное.

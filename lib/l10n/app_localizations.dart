@@ -368,6 +368,36 @@ abstract class AppLocalizations {
   /// **'Откройте смену для входа'**
   String get loginShiftRequired;
 
+  /// No description provided for @staffRoleOwner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Владелец'**
+  String get staffRoleOwner;
+
+  /// No description provided for @staffRoleAdministrator.
+  ///
+  /// In ru, this message translates to:
+  /// **'Администратор'**
+  String get staffRoleAdministrator;
+
+  /// No description provided for @staffRoleUser.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пользователь'**
+  String get staffRoleUser;
+
+  /// No description provided for @staffRoleCashier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кассир'**
+  String get staffRoleCashier;
+
+  /// No description provided for @staffRoleUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Неизвестно'**
+  String get staffRoleUnknown;
+
   /// No description provided for @loginCashier.
   ///
   /// In ru, this message translates to:
@@ -1154,6 +1184,42 @@ abstract class AppLocalizations {
   /// **'Касса'**
   String get cashTitle;
 
+  /// No description provided for @cashReasonCreditRepayment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Погашение рассрочки'**
+  String get cashReasonCreditRepayment;
+
+  /// No description provided for @cashReasonCustomerTopUp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пополнение счёта покупателя'**
+  String get cashReasonCustomerTopUp;
+
+  /// No description provided for @accountBankCard.
+  ///
+  /// In ru, this message translates to:
+  /// **'Банк (карта)'**
+  String get accountBankCard;
+
+  /// No description provided for @accountCertificateLiability.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обязательства по сертификатам'**
+  String get accountCertificateLiability;
+
+  /// No description provided for @serviceConsumableFallback.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расходник'**
+  String get serviceConsumableFallback;
+
+  /// No description provided for @serviceAutoAddedByNorm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавлено по норме расхода'**
+  String get serviceAutoAddedByNorm;
+
   /// No description provided for @cashInvestment.
   ///
   /// In ru, this message translates to:
@@ -1201,36 +1267,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Тип расхода'**
   String get cashExpenseTypes;
-
-  /// No description provided for @cashSalary.
-  ///
-  /// In ru, this message translates to:
-  /// **'Зарплата'**
-  String get cashSalary;
-
-  /// No description provided for @cashRent.
-  ///
-  /// In ru, this message translates to:
-  /// **'Аренда'**
-  String get cashRent;
-
-  /// No description provided for @cashUtilities.
-  ///
-  /// In ru, this message translates to:
-  /// **'Коммунальные'**
-  String get cashUtilities;
-
-  /// No description provided for @cashSupplies.
-  ///
-  /// In ru, this message translates to:
-  /// **'Закупки'**
-  String get cashSupplies;
-
-  /// No description provided for @cashOther.
-  ///
-  /// In ru, this message translates to:
-  /// **'Прочее'**
-  String get cashOther;
 
   /// No description provided for @discountTitle.
   ///
@@ -1931,7 +1967,7 @@ abstract class AppLocalizations {
   /// No description provided for @loginShiftUnknown.
   ///
   /// In ru, this message translates to:
-  /// **'Смена: неизвестно'**
+  /// **'Смена: касса не ответила'**
   String get loginShiftUnknown;
 
   /// No description provided for @saleQuickProducts.
@@ -3962,12 +3998,6 @@ abstract class AppLocalizations {
   /// **'Все'**
   String get allBreadcrumb;
 
-  /// No description provided for @productPrice.
-  ///
-  /// In ru, this message translates to:
-  /// **'{price} ₸'**
-  String productPrice(String price);
-
   /// No description provided for @maxBonusPercent.
   ///
   /// In ru, this message translates to:
@@ -5136,7 +5166,7 @@ abstract class AppLocalizations {
   ///
   /// In ru, this message translates to:
   /// **'Ставка НДС: {rate}%'**
-  String setupVatPayerRate(int rate);
+  String setupVatPayerRate(String rate);
 
   /// No description provided for @setupVatPayerRateUnknown.
   ///
@@ -5921,7 +5951,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAdminLabel.
   ///
   /// In ru, this message translates to:
-  /// **'АДМИНИСТРАТОР'**
+  /// **'Администратор'**
   String get setupAdminLabel;
 
   /// No description provided for @setupAdminSubtitle.
@@ -5957,7 +5987,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupSellerLabel.
   ///
   /// In ru, this message translates to:
-  /// **'ПРОДАВЕЦ'**
+  /// **'Продавец'**
   String get setupSellerLabel;
 
   /// No description provided for @setupSellerOptional.
@@ -6216,7 +6246,7 @@ abstract class AppLocalizations {
   ///
   /// In ru, this message translates to:
   /// **'Плательщик НДС ({rate}%)'**
-  String setupVatPayerSummary(int rate);
+  String setupVatPayerSummary(String rate);
 
   /// No description provided for @setupSummaryWkPosId.
   ///
@@ -9254,6 +9284,48 @@ abstract class AppLocalizations {
   /// **'Туркменистан'**
   String get countryTurkmenistan;
 
+  /// No description provided for @permNavServiceQueue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очередь заказов'**
+  String get permNavServiceQueue;
+
+  /// No description provided for @permNavServiceIntake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приём заказов'**
+  String get permNavServiceIntake;
+
+  /// No description provided for @permSellWithDiscount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа со скидкой'**
+  String get permSellWithDiscount;
+
+  /// No description provided for @permCashInOut.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внесение / изъятие'**
+  String get permCashInOut;
+
+  /// No description provided for @permRefundGoods.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат товара'**
+  String get permRefundGoods;
+
+  /// No description provided for @permRefundWithoutReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат без чека'**
+  String get permRefundWithoutReceipt;
+
+  /// No description provided for @permGroupNavigation.
+  ///
+  /// In ru, this message translates to:
+  /// **'Навигация'**
+  String get permGroupNavigation;
+
   /// No description provided for @permEditPrice.
   ///
   /// In ru, this message translates to:
@@ -10175,7 +10247,7 @@ abstract class AppLocalizations {
   /// No description provided for @shiftFixedAmount.
   ///
   /// In ru, this message translates to:
-  /// **'Будет зафиксирована сумма: {amount} KZT'**
+  /// **'Будет зафиксирована сумма: {amount}'**
   String shiftFixedAmount(String amount);
 
   /// No description provided for @shiftCloseWithDiscrepancy.
@@ -10243,6 +10315,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Возвраты'**
   String get shiftRefundsTotal;
+
+  /// No description provided for @cashOpeningCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пересчёт при открытии'**
+  String get cashOpeningCount;
 
   /// No description provided for @shiftShortage.
   ///
@@ -12049,12 +12127,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'По умолчанию'**
   String get paymentDefaultLabel;
-
-  /// No description provided for @currencySymbol.
-  ///
-  /// In ru, this message translates to:
-  /// **'₸'**
-  String get currencySymbol;
 
   /// No description provided for @serviceIntakeTitle.
   ///
@@ -18791,8 +18863,8 @@ abstract class AppLocalizations {
   /// No description provided for @setCorrectionAmountLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Сумма коррекции, KZT'**
-  String get setCorrectionAmountLabel;
+  /// **'Сумма коррекции, {currency}'**
+  String setCorrectionAmountLabel(String currency);
 
   /// No description provided for @setCorrectionPaymentLabel.
   ///
@@ -19133,7 +19205,7 @@ abstract class AppLocalizations {
   /// No description provided for @dishTotalYieldSummary.
   ///
   /// In ru, this message translates to:
-  /// **'Итого: {cost} ₸  |  Выход: {yield}'**
+  /// **'Итого: {cost}  |  Выход: {yield}'**
   String dishTotalYieldSummary(String cost, String yield);
 
   /// No description provided for @dishGostNorms.
@@ -19786,8 +19858,8 @@ abstract class AppLocalizations {
   /// No description provided for @repColSumTenge.
   ///
   /// In ru, this message translates to:
-  /// **'Сумма, ₸'**
-  String get repColSumTenge;
+  /// **'Сумма, {currency}'**
+  String repColSumTenge(String currency);
 
   /// No description provided for @repColRow.
   ///
@@ -19966,7 +20038,7 @@ abstract class AppLocalizations {
   /// No description provided for @repF910Subtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Облагаемый доход: {income} ₸ • налог {rate}%: {tax} ₸'**
+  /// **'Облагаемый доход: {income} • налог {rate}%: {tax}'**
   String repF910Subtitle(String income, String rate, String tax);
 
   /// No description provided for @repF910RowSalesIncome.
@@ -19996,7 +20068,7 @@ abstract class AppLocalizations {
   /// No description provided for @repF300Subtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Облагаемый оборот: {turnover} ₸ • начисленный НДС: {vat} ₸'**
+  /// **'Облагаемый оборот: {turnover} • начисленный НДС: {vat}'**
   String repF300Subtitle(String turnover, String vat);
 
   /// No description provided for @repF300TaxableTurnoverRate.
@@ -20020,7 +20092,7 @@ abstract class AppLocalizations {
   /// No description provided for @repCashBookSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Приход: {income} • Расход: {expense} • Остаток: {balance} ₸'**
+  /// **'Приход: {income} • Расход: {expense} • Остаток: {balance}'**
   String repCashBookSubtitle(String income, String expense, String balance);
 
   /// No description provided for @repVatPeriodTitle.
@@ -20032,7 +20104,7 @@ abstract class AppLocalizations {
   /// No description provided for @repVatPeriodSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'НДС: {vat} ₸ • база: {base} ₸'**
+  /// **'НДС: {vat} • база: {base}'**
   String repVatPeriodSubtitle(String vat, String base);
 
   /// No description provided for @repArApTitle.
@@ -20056,7 +20128,7 @@ abstract class AppLocalizations {
   /// No description provided for @repCashCollectionSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'{count} операций • всего: {total} ₸'**
+  /// **'{count} операций • всего: {total}'**
   String repCashCollectionSubtitle(int count, String total);
 
   /// No description provided for @repProfitCogsTitle.
@@ -20074,7 +20146,7 @@ abstract class AppLocalizations {
   /// No description provided for @repProfitMarginSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Прибыль: {profit} ₸ • маржа {margin}% • {note}'**
+  /// **'Прибыль: {profit} • маржа {margin}% • {note}'**
   String repProfitMarginSubtitle(String profit, String margin, String note);
 
   /// No description provided for @repProfitCostRealCogs.
@@ -20098,7 +20170,7 @@ abstract class AppLocalizations {
   /// No description provided for @repWriteoffSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'{count} документов • всего: {total} ₸'**
+  /// **'{count} документов • всего: {total}'**
   String repWriteoffSubtitle(int count, String total);
 
   /// No description provided for @repOrderTypesTitle.
@@ -20596,8 +20668,8 @@ abstract class AppLocalizations {
   /// No description provided for @errorBigAmountBlocked.
   ///
   /// In ru, this message translates to:
-  /// **'Сумма продажи превышает 1 млн ₸. Включите разрешение на крупные суммы в настройках кассы.'**
-  String get errorBigAmountBlocked;
+  /// **'Сумма продажи выше потолка кассы ({limit}). Поднимите потолок или включите разрешение на крупные суммы в настройках кассы.'**
+  String errorBigAmountBlocked(String limit);
 
   /// No description provided for @errorMarkRequired.
   ///
@@ -23868,6 +23940,2808 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выдать аванс'**
   String get agentRefundPrepayment;
+
+  /// No description provided for @repTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отчеты'**
+  String get repTitle;
+
+  /// No description provided for @repTabAnalytics.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аналитика'**
+  String get repTabAnalytics;
+
+  /// No description provided for @repTabFinance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Финансы'**
+  String get repTabFinance;
+
+  /// No description provided for @repTabForecasts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогнозы'**
+  String get repTabForecasts;
+
+  /// No description provided for @repTabTaxKz.
+  ///
+  /// In ru, this message translates to:
+  /// **'Налоги/КЗ'**
+  String get repTabTaxKz;
+
+  /// No description provided for @repRangeDays7.
+  ///
+  /// In ru, this message translates to:
+  /// **'7 дней'**
+  String get repRangeDays7;
+
+  /// No description provided for @repRangeDays30.
+  ///
+  /// In ru, this message translates to:
+  /// **'30 дней'**
+  String get repRangeDays30;
+
+  /// No description provided for @repRangeCustom.
+  ///
+  /// In ru, this message translates to:
+  /// **'Произвольно'**
+  String get repRangeCustom;
+
+  /// No description provided for @repKpiChange.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменение'**
+  String get repKpiChange;
+
+  /// No description provided for @repSubtitleVsPrev.
+  ///
+  /// In ru, this message translates to:
+  /// **'vs пред. период'**
+  String get repSubtitleVsPrev;
+
+  /// No description provided for @repChartRevenueByDay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выручка по дням'**
+  String get repChartRevenueByDay;
+
+  /// No description provided for @repChartTop5Products.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ-5 товаров'**
+  String get repChartTop5Products;
+
+  /// No description provided for @repChartPaymentMethods.
+  ///
+  /// In ru, this message translates to:
+  /// **'Способы оплаты'**
+  String get repChartPaymentMethods;
+
+  /// No description provided for @settingsRestartRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменения применяются при следующем запуске кассы.'**
+  String get settingsRestartRequired;
+
+  /// No description provided for @hardwareRestartRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменения устройств применяются при следующем запуске кассы.'**
+  String get hardwareRestartRequired;
+
+  /// No description provided for @hardwareDeviceDisabled.
+  ///
+  /// In ru, this message translates to:
+  /// **'Устройство отключено.'**
+  String get hardwareDeviceDisabled;
+
+  /// No description provided for @hardwareCustomerDisplayGraphic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Графический экран покупателя (2-й монитор)'**
+  String get hardwareCustomerDisplayGraphic;
+
+  /// No description provided for @hardwareCustomerDisplayGraphicOff.
+  ///
+  /// In ru, this message translates to:
+  /// **'Графический экран покупателя отключён.'**
+  String get hardwareCustomerDisplayGraphicOff;
+
+  /// No description provided for @hardwarePaymentKinds.
+  ///
+  /// In ru, this message translates to:
+  /// **'Виды оплаты рабочего места'**
+  String get hardwarePaymentKinds;
+
+  /// No description provided for @hardwarePaymentKindsUnrestricted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ограничений нет: рабочее место принимает все виды оплаты.'**
+  String get hardwarePaymentKindsUnrestricted;
+
+  /// No description provided for @fiscalSettingsDirectOfdLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прямое подключение ОФД'**
+  String get fiscalSettingsDirectOfdLabel;
+
+  /// No description provided for @markupAuto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Авто-наценка'**
+  String get markupAuto;
+
+  /// No description provided for @markupSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить наценки'**
+  String get markupSave;
+
+  /// No description provided for @creditContractNumberLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер договора с бумажки'**
+  String get creditContractNumberLabel;
+
+  /// No description provided for @creditNoLiveContracts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Живых договоров рассрочки нет'**
+  String get creditNoLiveContracts;
+
+  /// No description provided for @supplierOrderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка поставщику'**
+  String get supplierOrderTitle;
+
+  /// No description provided for @supplierOrderAllStocked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все товары в достаточном количестве'**
+  String get supplierOrderAllStocked;
+
+  /// No description provided for @supplierOrderNotNeeded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дозаказ не требуется'**
+  String get supplierOrderNotNeeded;
+
+  /// No description provided for @hwScaleTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весы'**
+  String get hwScaleTitle;
+
+  /// No description provided for @hwReceiptPrinterTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер'**
+  String get hwReceiptPrinterTitle;
+
+  /// No description provided for @repRangeDays14.
+  ///
+  /// In ru, this message translates to:
+  /// **'14 дней'**
+  String get repRangeDays14;
+
+  /// No description provided for @repForecastSmaLowData.
+  ///
+  /// In ru, this message translates to:
+  /// **'SMA (мало данных)'**
+  String get repForecastSmaLowData;
+
+  /// No description provided for @repNoCategory.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без категории'**
+  String get repNoCategory;
+
+  /// No description provided for @repAllCustomers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все клиенты'**
+  String get repAllCustomers;
+
+  /// No description provided for @repAllInStock.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все товары в наличии'**
+  String get repAllInStock;
+
+  /// No description provided for @repAllCovered30.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все товары обеспечены на 30+ дней'**
+  String get repAllCovered30;
+
+  /// No description provided for @repColDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дней'**
+  String get repColDays;
+
+  /// No description provided for @repColDaysLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дней до конца'**
+  String get repColDaysLeft;
+
+  /// No description provided for @repColSharePct.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доля %'**
+  String get repColSharePct;
+
+  /// No description provided for @repColChangePct.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменение %'**
+  String get repColChangePct;
+
+  /// No description provided for @repColSalesCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кол-во продаж'**
+  String get repColSalesCount;
+
+  /// No description provided for @repReceiptCountLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Количество чеков'**
+  String get repReceiptCountLabel;
+
+  /// No description provided for @repStockCritical.
+  ///
+  /// In ru, this message translates to:
+  /// **'Критически низкий остаток! Требуется срочная поставка.'**
+  String get repStockCritical;
+
+  /// No description provided for @repColCumulativePct.
+  ///
+  /// In ru, this message translates to:
+  /// **'Накопит. %'**
+  String get repColCumulativePct;
+
+  /// No description provided for @repNotEnoughSalesData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно данных о продажах за выбранный период'**
+  String get repNotEnoughSalesData;
+
+  /// No description provided for @repNoForecastData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных для прогноза'**
+  String get repNoForecastData;
+
+  /// No description provided for @repNoDataLast90.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных за последние 90 дней'**
+  String get repNoDataLast90;
+
+  /// No description provided for @repNoCustomerData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет данных о клиентах'**
+  String get repNoCustomerData;
+
+  /// No description provided for @repNoLowStock.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет товаров с низким остатком'**
+  String get repNoLowStock;
+
+  /// No description provided for @repLowStock.
+  ///
+  /// In ru, this message translates to:
+  /// **'Низкий остаток'**
+  String get repLowStock;
+
+  /// No description provided for @repNewPrice.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая цена'**
+  String get repNewPrice;
+
+  /// No description provided for @repColEstimatedAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ориент. сумма'**
+  String get repColEstimatedAmount;
+
+  /// No description provided for @repColSeatings.
+  ///
+  /// In ru, this message translates to:
+  /// **'Посадок'**
+  String get repColSeatings;
+
+  /// No description provided for @repForecast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогноз'**
+  String get repForecast;
+
+  /// No description provided for @repRevenueForecast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогноз выручки'**
+  String get repRevenueForecast;
+
+  /// No description provided for @repRevenueForecastHw.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогноз выручки (Holt-Winters)'**
+  String get repRevenueForecastHw;
+
+  /// No description provided for @repStockoutForecast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогноз исчерпания остатков'**
+  String get repStockoutForecast;
+
+  /// No description provided for @repStockForecast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогноз остатков'**
+  String get repStockForecast;
+
+  /// No description provided for @repSalesWithoutCustomerHidden.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи без привязки к клиенту не отображаются'**
+  String get repSalesWithoutCustomerHidden;
+
+  /// No description provided for @repColSalesPerDay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажи/день'**
+  String get repColSalesPerDay;
+
+  /// No description provided for @repColSold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продано'**
+  String get repColSold;
+
+  /// No description provided for @repHourlyDistribution.
+  ///
+  /// In ru, this message translates to:
+  /// **'Распределение по часам'**
+  String get repHourlyDistribution;
+
+  /// No description provided for @repColRecommendedOrder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рек. заказ'**
+  String get repColRecommendedOrder;
+
+  /// No description provided for @repRecommendedPurchases.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рекомендуемые закупки'**
+  String get repRecommendedPurchases;
+
+  /// No description provided for @repColAvgSalesPerDay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ср. продажи/день'**
+  String get repColAvgSalesPerDay;
+
+  /// No description provided for @repColAvgCheckShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ср. чек'**
+  String get repColAvgCheckShort;
+
+  /// No description provided for @repAvgPrice.
+  ///
+  /// In ru, this message translates to:
+  /// **'Средняя цена'**
+  String get repAvgPrice;
+
+  /// No description provided for @repOldPrice.
+  ///
+  /// In ru, this message translates to:
+  /// **'Старая цена'**
+  String get repOldPrice;
+
+  /// No description provided for @repStockValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стоимость остатка'**
+  String get repStockValue;
+
+  /// No description provided for @repColTable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стол'**
+  String get repColTable;
+
+  /// No description provided for @repCurrentStock.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий остаток'**
+  String get repCurrentStock;
+
+  /// No description provided for @repTop10Customers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ-10 клиентов'**
+  String get repTop10Customers;
+
+  /// No description provided for @repTop10Products.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топ-10 товаров'**
+  String get repTop10Products;
+
+  /// No description provided for @repActual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Факт'**
+  String get repActual;
+
+  /// No description provided for @repColHour.
+  ///
+  /// In ru, this message translates to:
+  /// **'Час'**
+  String get repColHour;
+
+  /// No description provided for @repExport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспорт'**
+  String get repExport;
+
+  /// No description provided for @repCashierPerformance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эффективность кассиров'**
+  String get repCashierPerformance;
+
+  /// No description provided for @repWeightedAvgHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'взвешенное среднее (последние дни имеют больший вес)'**
+  String get repWeightedAvgHint;
+
+  /// No description provided for @repSalesCountByHour.
+  ///
+  /// In ru, this message translates to:
+  /// **'количество продаж по часам'**
+  String get repSalesCountByHour;
+
+  /// No description provided for @repNoUrgentItems.
+  ///
+  /// In ru, this message translates to:
+  /// **'нет срочных позиций'**
+  String get repNoUrgentItems;
+
+  /// No description provided for @repByRevenueTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'по выручке (нажмите для деталей)'**
+  String get repByRevenueTapHint;
+
+  /// No description provided for @repDistributionTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'распределение (нажмите на сектор)'**
+  String get repDistributionTapHint;
+
+  /// No description provided for @repRevenueDistributionTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'распределение выручки (нажмите на сектор)'**
+  String get repRevenueDistributionTapHint;
+
+  /// No description provided for @repAbcRare.
+  ///
+  /// In ru, this message translates to:
+  /// **'редкие'**
+  String get repAbcRare;
+
+  /// No description provided for @repAbcMedium.
+  ///
+  /// In ru, this message translates to:
+  /// **'средние'**
+  String get repAbcMedium;
+
+  /// No description provided for @repAbcFast.
+  ///
+  /// In ru, this message translates to:
+  /// **'ходовые'**
+  String get repAbcFast;
+
+  /// No description provided for @repAbcLegend.
+  ///
+  /// In ru, this message translates to:
+  /// **'ходовые (A), средние (B), редкие (C) — по вкладу в выручку'**
+  String get repAbcLegend;
+
+  /// No description provided for @repReturnsCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} возвратов'**
+  String repReturnsCount(int count);
+
+  /// No description provided for @repAbcGroupSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} тов · {pct}%'**
+  String repAbcGroupSummary(int count, String pct);
+
+  /// No description provided for @repCustomerTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'{name}\n{amount} ({count} чеков)'**
+  String repCustomerTooltip(String name, String amount, int count);
+
+  /// No description provided for @repDaysCountTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} дней (нажмите для деталей)'**
+  String repDaysCountTapHint(int count);
+
+  /// No description provided for @repCashiersCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} кассиров'**
+  String repCashiersCount(int count);
+
+  /// No description provided for @repLowStockCountHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} товаров (остаток < 10, нажмите для деталей)'**
+  String repLowStockCountHint(int count);
+
+  /// No description provided for @repOrdersShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} зак.'**
+  String repOrdersShort(int count);
+
+  /// No description provided for @repOrdersRevenueTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} зак.\n{amount}'**
+  String repOrdersRevenueTooltip(int count, String amount);
+
+  /// No description provided for @repPieces.
+  ///
+  /// In ru, this message translates to:
+  /// **'{qty} шт'**
+  String repPieces(String qty);
+
+  /// No description provided for @repPiecesDot.
+  ///
+  /// In ru, this message translates to:
+  /// **'{qty} шт.'**
+  String repPiecesDot(String qty);
+
+  /// No description provided for @repForecastSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'{actual} дней факт + {horizon} дней прогноз ({algorithm})'**
+  String repForecastSubtitle(int actual, int horizon, String algorithm);
+
+  /// No description provided for @repSalesCountLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} продаж'**
+  String repSalesCountLine(int count);
+
+  /// No description provided for @repReceiptsCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} чеков'**
+  String repReceiptsCount(int count);
+
+  /// No description provided for @repSupplierTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'{name}\n{count} поставок'**
+  String repSupplierTooltip(String name, int count);
+
+  /// No description provided for @repSeatingsLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} посадок'**
+  String repSeatingsLine(int count);
+
+  /// No description provided for @repDayOffset.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{n} день'**
+  String repDayOffset(int n);
+
+  /// No description provided for @repHoltWintersSeason.
+  ///
+  /// In ru, this message translates to:
+  /// **'Holt-Winters (сезон={season})'**
+  String repHoltWintersSeason(int season);
+
+  /// No description provided for @repInvestmentsLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложения: {amount}'**
+  String repInvestmentsLine(String amount);
+
+  /// No description provided for @repDividendsLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дивиденды: {amount}'**
+  String repDividendsLine(String amount);
+
+  /// No description provided for @repMarginLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Маржа: {pct}%'**
+  String repMarginLine(String pct);
+
+  /// No description provided for @repKpiLoadErrorWith.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка загрузки KPI: {error}'**
+  String repKpiLoadErrorWith(String error);
+
+  /// No description provided for @repErrorWith.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка: {error}'**
+  String repErrorWith(String error);
+
+  /// No description provided for @repProfitLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прибыль: {amount}'**
+  String repProfitLine(String amount);
+
+  /// No description provided for @repExpensesLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расходы: {amount}'**
+  String repExpensesLine(String amount);
+
+  /// No description provided for @repLeadTimeHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'срок поставки {lead} дн. + страховой запас {safety} дн.'**
+  String repLeadTimeHint(int lead, int safety);
+
+  /// No description provided for @markupHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наценка в % на категорию. При приходе товара розничная цена пересчитывается из закупочной: закуп × (1 + наценка%).'**
+  String get markupHint;
+
+  /// No description provided for @creditContractsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассрочки'**
+  String get creditContractsTitle;
+
+  /// No description provided for @creditContractsTitleFor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рассрочки — {agent}'**
+  String creditContractsTitleFor(String agent);
+
+  /// No description provided for @repExportedTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экспортировано: {path}'**
+  String repExportedTo(String path);
+
+  /// No description provided for @repExportFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка экспорта: {error}'**
+  String repExportFailed(String error);
+
+  /// No description provided for @hwSetupIncompleteDevices.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мастер настройки ещё не завершён — устройства сохранить некуда'**
+  String get hwSetupIncompleteDevices;
+
+  /// No description provided for @hwSetupIncompleteCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мастер настройки ещё не завершён — проверять пока нечего'**
+  String get hwSetupIncompleteCheck;
+
+  /// No description provided for @settingsSetupIncompleteSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мастер настройки ещё не завершён — сохранить некуда'**
+  String get settingsSetupIncompleteSave;
+
+  /// No description provided for @hwProfileCatalogUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каталог профилей устройств недоступен — настройки устройств сейчас нельзя изменить.'**
+  String get hwProfileCatalogUnavailable;
+
+  /// No description provided for @printerProfileCatalogUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каталог профилей устройств недоступен — настройки принтера сейчас нельзя изменить.'**
+  String get printerProfileCatalogUnavailable;
+
+  /// No description provided for @labelPrinterProfileCatalogUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каталог профилей устройств недоступен — настройки принтера этикеток сейчас нельзя изменить.'**
+  String get labelPrinterProfileCatalogUnavailable;
+
+  /// No description provided for @hwPaymentKindsUnsupported.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта сборка не умеет сохранять виды оплаты рабочего места.'**
+  String get hwPaymentKindsUnsupported;
+
+  /// No description provided for @hwPaymentKindsEnforcedByTill.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрет проверяет касса: терминал, которому вид оплаты не разрешён, получит отказ, даже если кнопка на его экране осталась.'**
+  String get hwPaymentKindsEnforcedByTill;
+
+  /// No description provided for @hwCustomerDisplayGraphicDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Красивый графический экран для клиента на втором мониторе: позиции чека, количество и итог в реальном времени.'**
+  String get hwCustomerDisplayGraphicDesc;
+
+  /// No description provided for @hwCustomerDisplayMonitor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Монитор для экрана покупателя'**
+  String get hwCustomerDisplayMonitor;
+
+  /// No description provided for @hwCustomerDisplayMonitorHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'POS остаётся на основном мониторе. Открывается автоматически при следующем запуске кассы.'**
+  String get hwCustomerDisplayMonitorHint;
+
+  /// No description provided for @hwNoProfilesForClass.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет доступных моделей для этого класса устройств.'**
+  String get hwNoProfilesForClass;
+
+  /// No description provided for @hwNoConnectionParams.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта модель не требует дополнительных параметров подключения.'**
+  String get hwNoConnectionParams;
+
+  /// No description provided for @hwMonitorWithSize.
+  ///
+  /// In ru, this message translates to:
+  /// **'Монитор {index} — {size}'**
+  String hwMonitorWithSize(int index, String size);
+
+  /// No description provided for @hwMonitorNumbered.
+  ///
+  /// In ru, this message translates to:
+  /// **'Монитор {index}'**
+  String hwMonitorNumbered(int index);
+
+  /// No description provided for @hwPaymentKindsError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Виды оплаты: {error}'**
+  String hwPaymentKindsError(String error);
+
+  /// No description provided for @hwPaymentKindsUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'В настройке этого рабочего места записаны виды, которых эта версия не знает: {list}. Ограничение по ним не действует. Выберите виды заново, чтобы починить запись — пока вы этого не сделали, она остаётся как есть.'**
+  String hwPaymentKindsUnknown(String list);
+
+  /// No description provided for @hwParamOptional.
+  ///
+  /// In ru, this message translates to:
+  /// **'{description} (необязательно)'**
+  String hwParamOptional(String description);
+
+  /// No description provided for @globalMillimetres.
+  ///
+  /// In ru, this message translates to:
+  /// **'{value} мм'**
+  String globalMillimetres(String value);
+
+  /// No description provided for @devProfilePrinterEscpos80mm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер ESC/POS 80 мм'**
+  String get devProfilePrinterEscpos80mm;
+
+  /// No description provided for @devProfilePrinterEscpos58mm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер ESC/POS 58 мм (компактный, без ножа)'**
+  String get devProfilePrinterEscpos58mm;
+
+  /// No description provided for @devProfilePrinterEscposUsb.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер ESC/POS, USB/спулер'**
+  String get devProfilePrinterEscposUsb;
+
+  /// No description provided for @devProfilePrinterEscposBluetooth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер ESC/POS, Bluetooth'**
+  String get devProfilePrinterEscposBluetooth;
+
+  /// No description provided for @devProfilePrinterEscposSerial.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чековый принтер ESC/POS, последовательный порт'**
+  String get devProfilePrinterEscposSerial;
+
+  /// No description provided for @devProfilePrinterLabelZpl104.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принтер этикеток ZPL 104 мм'**
+  String get devProfilePrinterLabelZpl104;
+
+  /// No description provided for @devProfilePrinterLabelEpl58.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принтер этикеток EPL 58 мм'**
+  String get devProfilePrinterLabelEpl58;
+
+  /// No description provided for @devProfileScannerUsbHid.
+  ///
+  /// In ru, this message translates to:
+  /// **'USB-сканер штрихкода (HID)'**
+  String get devProfileScannerUsbHid;
+
+  /// No description provided for @devProfileScannerBluetoothHid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Bluetooth-сканер штрихкода (HID)'**
+  String get devProfileScannerBluetoothHid;
+
+  /// No description provided for @devProfileScannerCamera.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер по камере устройства'**
+  String get devProfileScannerCamera;
+
+  /// No description provided for @devProfileScannerSerial.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сканер штрихкода, последовательный порт'**
+  String get devProfileScannerSerial;
+
+  /// No description provided for @devProfileScaleCasPd2.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весы CAS PD-II (последовательные)'**
+  String get devProfileScaleCasPd2;
+
+  /// No description provided for @devProfileScaleCasErPlus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весы CAS ER-Plus'**
+  String get devProfileScaleCasErPlus;
+
+  /// No description provided for @devProfileDrawerViaPrinter.
+  ///
+  /// In ru, this message translates to:
+  /// **'Денежный ящик через принтер (RJ11)'**
+  String get devProfileDrawerViaPrinter;
+
+  /// No description provided for @devProfileDrawerStandalone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автономный денежный ящик (RJ11)'**
+  String get devProfileDrawerStandalone;
+
+  /// No description provided for @devProfileDisplayVfd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дисплей покупателя VFD (последовательный)'**
+  String get devProfileDisplayVfd;
+
+  /// No description provided for @devProfileDisplayLcd2x20.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дисплей покупателя LCD 2x20'**
+  String get devProfileDisplayLcd2x20;
+
+  /// No description provided for @devProfileDisplayLed8.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дисплей покупателя LED (8 символов)'**
+  String get devProfileDisplayLed8;
+
+  /// No description provided for @devProfilePaymentKaspiPos.
+  ///
+  /// In ru, this message translates to:
+  /// **'Терминал Kaspi POS'**
+  String get devProfilePaymentKaspiPos;
+
+  /// No description provided for @devParamPrinterIpAddress.
+  ///
+  /// In ru, this message translates to:
+  /// **'IP-адрес сетевого принтера'**
+  String get devParamPrinterIpAddress;
+
+  /// No description provided for @devParamTcpPort9100.
+  ///
+  /// In ru, this message translates to:
+  /// **'TCP-порт, по умолчанию 9100'**
+  String get devParamTcpPort9100;
+
+  /// No description provided for @devParamPrinterDevicePath.
+  ///
+  /// In ru, this message translates to:
+  /// **'Путь к устройству или имя очереди печати'**
+  String get devParamPrinterDevicePath;
+
+  /// No description provided for @devParamPrinterMac.
+  ///
+  /// In ru, this message translates to:
+  /// **'MAC-адрес сопряжённого Bluetooth-принтера'**
+  String get devParamPrinterMac;
+
+  /// No description provided for @devParamPrinterComPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последовательный порт принтера, например COM4'**
+  String get devParamPrinterComPort;
+
+  /// No description provided for @devParamLabelPrinterIp.
+  ///
+  /// In ru, this message translates to:
+  /// **'IP-адрес принтера этикеток'**
+  String get devParamLabelPrinterIp;
+
+  /// No description provided for @devParamScannerMac.
+  ///
+  /// In ru, this message translates to:
+  /// **'MAC-адрес сопряжённого Bluetooth-сканера'**
+  String get devParamScannerMac;
+
+  /// No description provided for @devParamScannerComPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последовательный порт сканера, например COM5'**
+  String get devParamScannerComPort;
+
+  /// No description provided for @devParamScaleComPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последовательный порт весов, например COM3'**
+  String get devParamScaleComPort;
+
+  /// No description provided for @devParamDrawerComPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последовательный порт интерфейсной платы ящика'**
+  String get devParamDrawerComPort;
+
+  /// No description provided for @devParamDisplayComPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последовательный порт дисплея покупателя'**
+  String get devParamDisplayComPort;
+
+  /// No description provided for @devParamKaspiIp.
+  ///
+  /// In ru, this message translates to:
+  /// **'IP-адрес терминала Kaspi POS'**
+  String get devParamKaspiIp;
+
+  /// No description provided for @devParamKaspiPort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Порт терминала, обычно 8888'**
+  String get devParamKaspiPort;
+
+  /// No description provided for @devParamCameraId.
+  ///
+  /// In ru, this message translates to:
+  /// **'Какую камеру использовать'**
+  String get devParamCameraId;
+
+  /// No description provided for @rcpTill.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса'**
+  String get rcpTill;
+
+  /// No description provided for @rcpTillColon.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса:'**
+  String get rcpTillColon;
+
+  /// No description provided for @rcpReceiptNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек №'**
+  String get rcpReceiptNo;
+
+  /// No description provided for @rcpCashier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кассир:'**
+  String get rcpCashier;
+
+  /// No description provided for @rcpCustomer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиент:'**
+  String get rcpCustomer;
+
+  /// No description provided for @rcpDate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата:'**
+  String get rcpDate;
+
+  /// No description provided for @rcpBinIin.
+  ///
+  /// In ru, this message translates to:
+  /// **'БИН/ИИН:'**
+  String get rcpBinIin;
+
+  /// No description provided for @rcpThankYou.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спасибо за покупку!'**
+  String get rcpThankYou;
+
+  /// No description provided for @rcpSale.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПРОДАЖА'**
+  String get rcpSale;
+
+  /// No description provided for @rcpSubtotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подытог:'**
+  String get rcpSubtotal;
+
+  /// No description provided for @rcpDiscount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка:'**
+  String get rcpDiscount;
+
+  /// No description provided for @rcpServiceFee.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сервисный сбор:'**
+  String get rcpServiceFee;
+
+  /// No description provided for @rcpTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО:'**
+  String get rcpTotal;
+
+  /// No description provided for @rcpChange.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сдача:'**
+  String get rcpChange;
+
+  /// No description provided for @rcpCash.
+  ///
+  /// In ru, this message translates to:
+  /// **'НАЛИЧНЫМИ'**
+  String get rcpCash;
+
+  /// No description provided for @rcpCard.
+  ///
+  /// In ru, this message translates to:
+  /// **'КАРТА'**
+  String get rcpCard;
+
+  /// No description provided for @rcpQuantityShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'шт'**
+  String get rcpQuantityShort;
+
+  /// No description provided for @rcpRefund.
+  ///
+  /// In ru, this message translates to:
+  /// **'ВОЗВРАТ'**
+  String get rcpRefund;
+
+  /// No description provided for @rcpRefundNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат №'**
+  String get rcpRefundNo;
+
+  /// No description provided for @rcpSaleReceiptNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек продажи №'**
+  String get rcpSaleReceiptNo;
+
+  /// No description provided for @rcpDuplicate.
+  ///
+  /// In ru, this message translates to:
+  /// **'*** ДУБЛИКАТ ***'**
+  String get rcpDuplicate;
+
+  /// No description provided for @rcpTable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стол:'**
+  String get rcpTable;
+
+  /// No description provided for @rcpWaiter.
+  ///
+  /// In ru, this message translates to:
+  /// **'Официант:'**
+  String get rcpWaiter;
+
+  /// No description provided for @rcpGuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гостей:'**
+  String get rcpGuests;
+
+  /// No description provided for @rcpFiscalReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'ФИСКАЛЬНЫЙ ЧЕК'**
+  String get rcpFiscalReceipt;
+
+  /// No description provided for @rcpNonFiscalReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'НЕФИСКАЛЬНЫЙ ЧЕК'**
+  String get rcpNonFiscalReceipt;
+
+  /// No description provided for @rcpNotFiscalDocument.
+  ///
+  /// In ru, this message translates to:
+  /// **'НЕ ФИСКАЛЬНЫЙ ДОКУМЕНТ'**
+  String get rcpNotFiscalDocument;
+
+  /// No description provided for @rcpFiscalSign.
+  ///
+  /// In ru, this message translates to:
+  /// **'ФИСК. ПРИЗНАК:'**
+  String get rcpFiscalSign;
+
+  /// No description provided for @rcpFiscalFn.
+  ///
+  /// In ru, this message translates to:
+  /// **'ФН:'**
+  String get rcpFiscalFn;
+
+  /// No description provided for @rcpFiscalRnm.
+  ///
+  /// In ru, this message translates to:
+  /// **'РНМ:'**
+  String get rcpFiscalRnm;
+
+  /// No description provided for @rcpFiscalZnm.
+  ///
+  /// In ru, this message translates to:
+  /// **'ЗНМ:'**
+  String get rcpFiscalZnm;
+
+  /// No description provided for @rcpFiscalTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'ВРЕМЯ:'**
+  String get rcpFiscalTime;
+
+  /// No description provided for @rcpOfdName.
+  ///
+  /// In ru, this message translates to:
+  /// **'ОФД'**
+  String get rcpOfdName;
+
+  /// No description provided for @rcpOffline.
+  ///
+  /// In ru, this message translates to:
+  /// **'*** ОФФЛАЙН ***'**
+  String get rcpOffline;
+
+  /// No description provided for @rcpVerifyAt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Для проверки чека зайдите на'**
+  String get rcpVerifyAt;
+
+  /// No description provided for @rcpCustomerTaxId.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИИН покупателя:'**
+  String get rcpCustomerTaxId;
+
+  /// No description provided for @rcpTaxA.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПО НАЛОГУ А:'**
+  String get rcpTaxA;
+
+  /// No description provided for @rcpFiscalOperatorNotSet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фискальный оператор не настроен'**
+  String get rcpFiscalOperatorNotSet;
+
+  /// No description provided for @rcpFiscalModuleUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Модуль фискализации недоступен'**
+  String get rcpFiscalModuleUnavailable;
+
+  /// No description provided for @rcpDocumentNotIssued.
+  ///
+  /// In ru, this message translates to:
+  /// **'Документ не оформлен — обратитесь к кассиру'**
+  String get rcpDocumentNotIssued;
+
+  /// No description provided for @rcpXReport.
+  ///
+  /// In ru, this message translates to:
+  /// **'X-ОТЧЁТ'**
+  String get rcpXReport;
+
+  /// No description provided for @rcpZReport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Z-ОТЧЁТ'**
+  String get rcpZReport;
+
+  /// No description provided for @rcpInterim.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПРОМЕЖУТОЧНЫЙ (без гашения)'**
+  String get rcpInterim;
+
+  /// No description provided for @rcpShiftClose.
+  ///
+  /// In ru, this message translates to:
+  /// **'ЗАКРЫТИЕ СМЕНЫ'**
+  String get rcpShiftClose;
+
+  /// No description provided for @rcpShiftStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начало:'**
+  String get rcpShiftStart;
+
+  /// No description provided for @rcpShiftEnd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Окончание:'**
+  String get rcpShiftEnd;
+
+  /// No description provided for @rcpSales.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПРОДАЖИ'**
+  String get rcpSales;
+
+  /// No description provided for @rcpRefunds.
+  ///
+  /// In ru, this message translates to:
+  /// **'ВОЗВРАТЫ'**
+  String get rcpRefunds;
+
+  /// No description provided for @rcpCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Количество:'**
+  String get rcpCount;
+
+  /// No description provided for @rcpAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма:'**
+  String get rcpAmount;
+
+  /// No description provided for @rcpCashOps.
+  ///
+  /// In ru, this message translates to:
+  /// **'ДЕНЕЖНЫЕ ОПЕРАЦИИ'**
+  String get rcpCashOps;
+
+  /// No description provided for @rcpOpeningFloat.
+  ///
+  /// In ru, this message translates to:
+  /// **'На начало:'**
+  String get rcpOpeningFloat;
+
+  /// No description provided for @rcpSlipTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'КВИТАНЦИЯ'**
+  String get rcpSlipTitle;
+
+  /// No description provided for @rcpType.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тип:'**
+  String get rcpType;
+
+  /// No description provided for @rcpComment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Комментарий:'**
+  String get rcpComment;
+
+  /// No description provided for @rcpCashIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приход:'**
+  String get rcpCashIn;
+
+  /// No description provided for @rcpCashOut.
+  ///
+  /// In ru, this message translates to:
+  /// **'Расход:'**
+  String get rcpCashOut;
+
+  /// No description provided for @rcpTotalInDrawer.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИТОГО В КАССЕ:'**
+  String get rcpTotalInDrawer;
+
+  /// No description provided for @rcpCertificatesNotRevenue.
+  ///
+  /// In ru, this message translates to:
+  /// **'СЕРТИФИКАТЫ (НЕ ВЫРУЧКА)'**
+  String get rcpCertificatesNotRevenue;
+
+  /// No description provided for @rcpCertIssuedDebt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпущено (долг кассы):'**
+  String get rcpCertIssuedDebt;
+
+  /// No description provided for @rcpCertRedeemed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Погашено (товаром):'**
+  String get rcpCertRedeemed;
+
+  /// No description provided for @rcpGiftCertificate.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПОДАРОЧНЫЙ СЕРТИФИКАТ'**
+  String get rcpGiftCertificate;
+
+  /// No description provided for @rcpCertNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сертификат №'**
+  String get rcpCertNo;
+
+  /// No description provided for @rcpCertFaceValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номинал:'**
+  String get rcpCertFaceValue;
+
+  /// No description provided for @rcpCertValidUntil.
+  ///
+  /// In ru, this message translates to:
+  /// **'Действует до:'**
+  String get rcpCertValidUntil;
+
+  /// No description provided for @rcpCertNoExpiry.
+  ///
+  /// In ru, this message translates to:
+  /// **'без срока'**
+  String get rcpCertNoExpiry;
+
+  /// No description provided for @rcpCertPinSet.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПИН задан'**
+  String get rcpCertPinSet;
+
+  /// No description provided for @rcpCertIssuedByRefund.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпущен возвратом №'**
+  String get rcpCertIssuedByRefund;
+
+  /// No description provided for @rcpCertInsteadOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Взамен сертификата'**
+  String get rcpCertInsteadOf;
+
+  /// No description provided for @rcpVat.
+  ///
+  /// In ru, this message translates to:
+  /// **'НДС'**
+  String get rcpVat;
+
+  /// No description provided for @rcpSalesTax.
+  ///
+  /// In ru, this message translates to:
+  /// **'Налог с продаж'**
+  String get rcpSalesTax;
+
+  /// No description provided for @rcpTaxExempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не облагается'**
+  String get rcpTaxExempt;
+
+  /// No description provided for @rcpTaxExemptMark.
+  ///
+  /// In ru, this message translates to:
+  /// **'осв.'**
+  String get rcpTaxExemptMark;
+
+  /// No description provided for @taxSettingsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Налоги'**
+  String get taxSettingsTitle;
+
+  /// No description provided for @taxSettingsSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ставки, юрисдикции и категории товаров'**
+  String get taxSettingsSubtitle;
+
+  /// No description provided for @taxSettingsIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ставка не задаётся одним числом: она складывается из долей юрисдикций, в которых стоит касса, и зависит от категории товара и даты. Готовый набор можно взять пресетом и потом править.'**
+  String get taxSettingsIntro;
+
+  /// No description provided for @taxSettingsNotConfigured.
+  ///
+  /// In ru, this message translates to:
+  /// **'Налог не настроен: касса считает ноль.'**
+  String get taxSettingsNotConfigured;
+
+  /// No description provided for @taxSettingsPresetSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готовый набор'**
+  String get taxSettingsPresetSection;
+
+  /// No description provided for @taxSettingsCountry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Страна'**
+  String get taxSettingsCountry;
+
+  /// No description provided for @taxSettingsRegion.
+  ///
+  /// In ru, this message translates to:
+  /// **'Штат или область'**
+  String get taxSettingsRegion;
+
+  /// No description provided for @taxSettingsCity.
+  ///
+  /// In ru, this message translates to:
+  /// **'Город'**
+  String get taxSettingsCity;
+
+  /// No description provided for @taxSettingsPreset.
+  ///
+  /// In ru, this message translates to:
+  /// **'Набор'**
+  String get taxSettingsPreset;
+
+  /// No description provided for @taxSettingsApplyPreset.
+  ///
+  /// In ru, this message translates to:
+  /// **'Применить набор'**
+  String get taxSettingsApplyPreset;
+
+  /// No description provided for @taxSettingsPresetReplaces.
+  ///
+  /// In ru, this message translates to:
+  /// **'Применение заменит текущую настройку целиком. Сложить два набора нельзя: касса взяла бы двойной налог.'**
+  String get taxSettingsPresetReplaces;
+
+  /// No description provided for @taxSettingsPresetSource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Источник: {source}'**
+  String taxSettingsPresetSource(String source);
+
+  /// No description provided for @taxSettingsPresetValidFrom.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ставки действуют с {date}'**
+  String taxSettingsPresetValidFrom(String date);
+
+  /// No description provided for @taxSettingsPresetApplied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Набор применён'**
+  String get taxSettingsPresetApplied;
+
+  /// No description provided for @taxSettingsCurrentSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущая настройка'**
+  String get taxSettingsCurrentSection;
+
+  /// No description provided for @taxSettingsRateForStandard.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обычный товар: {rate}%'**
+  String taxSettingsRateForStandard(String rate);
+
+  /// No description provided for @taxSettingsJurisdictions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Юрисдикции'**
+  String get taxSettingsJurisdictions;
+
+  /// No description provided for @taxSettingsCategories.
+  ///
+  /// In ru, this message translates to:
+  /// **'Категории товаров'**
+  String get taxSettingsCategories;
+
+  /// No description provided for @taxSettingsTillLocation.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса стоит здесь'**
+  String get taxSettingsTillLocation;
+
+  /// No description provided for @taxSettingsTillLocationHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметок может быть несколько: город и спецрайоны. Вышестоящие добавляются сами.'**
+  String get taxSettingsTillLocationHint;
+
+  /// No description provided for @taxSettingsRules.
+  ///
+  /// In ru, this message translates to:
+  /// **'Правила'**
+  String get taxSettingsRules;
+
+  /// No description provided for @taxSettingsRuleTaxed.
+  ///
+  /// In ru, this message translates to:
+  /// **'облагается'**
+  String get taxSettingsRuleTaxed;
+
+  /// No description provided for @taxSettingsRuleZero.
+  ///
+  /// In ru, this message translates to:
+  /// **'нулевая ставка'**
+  String get taxSettingsRuleZero;
+
+  /// No description provided for @taxSettingsRuleExempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'освобождено'**
+  String get taxSettingsRuleExempt;
+
+  /// No description provided for @taxSettingsAllCategories.
+  ///
+  /// In ru, this message translates to:
+  /// **'все категории'**
+  String get taxSettingsAllCategories;
+
+  /// No description provided for @taxSettingsAddJurisdiction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить юрисдикцию'**
+  String get taxSettingsAddJurisdiction;
+
+  /// No description provided for @taxSettingsAddCategory.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить категорию'**
+  String get taxSettingsAddCategory;
+
+  /// No description provided for @taxSettingsAddRule.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить правило'**
+  String get taxSettingsAddRule;
+
+  /// No description provided for @taxSettingsName.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название'**
+  String get taxSettingsName;
+
+  /// No description provided for @taxSettingsCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код'**
+  String get taxSettingsCode;
+
+  /// No description provided for @taxSettingsRate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ставка, %'**
+  String get taxSettingsRate;
+
+  /// No description provided for @taxSettingsValidFrom.
+  ///
+  /// In ru, this message translates to:
+  /// **'Действует с'**
+  String get taxSettingsValidFrom;
+
+  /// No description provided for @taxSettingsParent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вышестоящая'**
+  String get taxSettingsParent;
+
+  /// No description provided for @taxSettingsNoParent.
+  ///
+  /// In ru, this message translates to:
+  /// **'нет (корень)'**
+  String get taxSettingsNoParent;
+
+  /// No description provided for @taxSettingsLevel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уровень'**
+  String get taxSettingsLevel;
+
+  /// No description provided for @taxSettingsLevelCountry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Страна'**
+  String get taxSettingsLevelCountry;
+
+  /// No description provided for @taxSettingsLevelState.
+  ///
+  /// In ru, this message translates to:
+  /// **'Штат'**
+  String get taxSettingsLevelState;
+
+  /// No description provided for @taxSettingsLevelCounty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Округ'**
+  String get taxSettingsLevelCounty;
+
+  /// No description provided for @taxSettingsLevelCity.
+  ///
+  /// In ru, this message translates to:
+  /// **'Город'**
+  String get taxSettingsLevelCity;
+
+  /// No description provided for @taxSettingsLevelDistrict.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спецрайон'**
+  String get taxSettingsLevelDistrict;
+
+  /// No description provided for @taxSettingsDelete.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить'**
+  String get taxSettingsDelete;
+
+  /// No description provided for @taxSettingsDeleteJurisdictionWarning.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вместе с ней уйдут её правила и вложенные юрисдикции.'**
+  String get taxSettingsDeleteJurisdictionWarning;
+
+  /// No description provided for @taxSettingsResponsibility.
+  ///
+  /// In ru, this message translates to:
+  /// **'Числа из наборов собраны из открытых источников и названы ссылкой. За правильность налога отвечает налогоплательщик, а не программа.'**
+  String get taxSettingsResponsibility;
+
+  /// No description provided for @taxSettingsNoPresetsForCountry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Для этой страны готовых наборов нет — настройте вручную.'**
+  String get taxSettingsNoPresetsForCountry;
+
+  /// No description provided for @taxSettingsAdd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get taxSettingsAdd;
+
+  /// No description provided for @taxSettingsCancel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отмена'**
+  String get taxSettingsCancel;
+
+  /// No description provided for @setupStoreAddressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'ул. Абая, 10, Алматы'**
+  String get setupStoreAddressHint;
+
+  /// No description provided for @setupStoreAddressHelper.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печатается на чеке. Без него покупатель не увидит, где сделана покупка.'**
+  String get setupStoreAddressHelper;
+
+  /// No description provided for @countryKz.
+  ///
+  /// In ru, this message translates to:
+  /// **'Казахстан'**
+  String get countryKz;
+
+  /// No description provided for @countryRu.
+  ///
+  /// In ru, this message translates to:
+  /// **'Россия'**
+  String get countryRu;
+
+  /// No description provided for @countryKg.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кыргызстан'**
+  String get countryKg;
+
+  /// No description provided for @countryUz.
+  ///
+  /// In ru, this message translates to:
+  /// **'Узбекистан'**
+  String get countryUz;
+
+  /// No description provided for @countryUs.
+  ///
+  /// In ru, this message translates to:
+  /// **'США'**
+  String get countryUs;
+
+  /// No description provided for @countryTm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Туркменистан'**
+  String get countryTm;
+
+  /// No description provided for @currencyKzt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Казахстанский тенге'**
+  String get currencyKzt;
+
+  /// No description provided for @currencyRub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Российский рубль'**
+  String get currencyRub;
+
+  /// No description provided for @currencyKgs.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кыргызский сом'**
+  String get currencyKgs;
+
+  /// No description provided for @currencyUzs.
+  ///
+  /// In ru, this message translates to:
+  /// **'Узбекский сум'**
+  String get currencyUzs;
+
+  /// No description provided for @currencyUsd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доллар США'**
+  String get currencyUsd;
+
+  /// No description provided for @currencyTmt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Туркменский манат'**
+  String get currencyTmt;
+
+  /// No description provided for @setupStepSalesTax.
+  ///
+  /// In ru, this message translates to:
+  /// **'Налог с продаж'**
+  String get setupStepSalesTax;
+
+  /// No description provided for @setupSalesTaxPayerTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Собираю налог с продаж'**
+  String get setupSalesTaxPayerTitle;
+
+  /// No description provided for @setupSalesTaxPayerSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ставки задаются по юрисдикциям в «Настройки → Налоги»'**
+  String get setupSalesTaxPayerSubtitle;
+
+  /// No description provided for @setupSalesTaxPayerDescription.
+  ///
+  /// In ru, this message translates to:
+  /// **'Налог добавляется сверх цены на ценнике и печатается на чеке отдельной строкой.'**
+  String get setupSalesTaxPayerDescription;
+
+  /// No description provided for @setupSalesTaxNonPayerTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без налога с продаж'**
+  String get setupSalesTaxNonPayerTitle;
+
+  /// No description provided for @setupSalesTaxNonPayerSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'К цене ничего не добавляется'**
+  String get setupSalesTaxNonPayerSubtitle;
+
+  /// No description provided for @setupSalesTaxNonPayerDescription.
+  ///
+  /// In ru, this message translates to:
+  /// **'К цене ничего не добавляется, и строки налога на чеке нет.'**
+  String get setupSalesTaxNonPayerDescription;
+
+  /// No description provided for @bootLoadingConfig.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка конфигурации...'**
+  String get bootLoadingConfig;
+
+  /// No description provided for @bootCheckingPosKey.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка ключа POS...'**
+  String get bootCheckingPosKey;
+
+  /// No description provided for @bootLoadingAgents.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка контрагентов...'**
+  String get bootLoadingAgents;
+
+  /// No description provided for @bootLoadingAccounts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка счетов...'**
+  String get bootLoadingAccounts;
+
+  /// No description provided for @bootInitialisingDatabase.
+  ///
+  /// In ru, this message translates to:
+  /// **'Инициализация базы данных...'**
+  String get bootInitialisingDatabase;
+
+  /// No description provided for @bootLoadingCashiers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка кассиров...'**
+  String get bootLoadingCashiers;
+
+  /// No description provided for @bootLoadingPosData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка данных POS...'**
+  String get bootLoadingPosData;
+
+  /// No description provided for @bootLoadingProducts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка товаров...'**
+  String get bootLoadingProducts;
+
+  /// No description provided for @bootCheckingReceiptNumbers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка нумерации чеков...'**
+  String get bootCheckingReceiptNumbers;
+
+  /// No description provided for @bootCheckingLicence.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка лицензии...'**
+  String get bootCheckingLicence;
+
+  /// No description provided for @bootCheckingReports.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка отчётов...'**
+  String get bootCheckingReports;
+
+  /// No description provided for @bootFinishingInitialisation.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершение инициализации...'**
+  String get bootFinishingInitialisation;
+
+  /// No description provided for @bootStartingBackgroundJobs.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запуск фоновых задач...'**
+  String get bootStartingBackgroundJobs;
+
+  /// No description provided for @bootReady.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get bootReady;
+
+  /// No description provided for @bootDataLoaded.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные загружены'**
+  String get bootDataLoaded;
+
+  /// No description provided for @bootTillNotResponding.
+  ///
+  /// In ru, this message translates to:
+  /// **'Касса не отвечает: {code}'**
+  String bootTillNotResponding(String code);
+
+  /// No description provided for @bootDownloadingBackup.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачивание бэкапа...'**
+  String get bootDownloadingBackup;
+
+  /// No description provided for @bootBackupDownloadFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось скачать бэкап'**
+  String get bootBackupDownloadFailed;
+
+  /// No description provided for @bootRestoringDatabase.
+  ///
+  /// In ru, this message translates to:
+  /// **'Восстановление базы данных...'**
+  String get bootRestoringDatabase;
+
+  /// No description provided for @bootDatabaseRestoreFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось восстановить базу данных'**
+  String get bootDatabaseRestoreFailed;
+
+  /// No description provided for @bootApplyingPosKey.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройка ключа кассы...'**
+  String get bootApplyingPosKey;
+
+  /// No description provided for @bootRestoreDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Восстановление завершено'**
+  String get bootRestoreDone;
+
+  /// No description provided for @bootCreatingBackup.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создание бэкапа...'**
+  String get bootCreatingBackup;
+
+  /// No description provided for @bootBackupCreateFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось создать бэкап'**
+  String get bootBackupCreateFailed;
+
+  /// No description provided for @bootBackupDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бэкап создан и загружен'**
+  String get bootBackupDone;
+
+  /// No description provided for @bootLoadingUsers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка пользователей...'**
+  String get bootLoadingUsers;
+
+  /// No description provided for @bootLoadingCategories.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка категорий...'**
+  String get bootLoadingCategories;
+
+  /// No description provided for @bootLoadingSettings.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка настроек...'**
+  String get bootLoadingSettings;
+
+  /// No description provided for @bootSyncDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Синхронизация завершена'**
+  String get bootSyncDone;
+
+  /// No description provided for @bootFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка'**
+  String get bootFailed;
+
+  /// No description provided for @countryDeu.
+  ///
+  /// In ru, this message translates to:
+  /// **'Германия'**
+  String get countryDeu;
+
+  /// No description provided for @currencyDeu.
+  ///
+  /// In ru, this message translates to:
+  /// **'Евро'**
+  String get currencyDeu;
+
+  /// No description provided for @countryFra.
+  ///
+  /// In ru, this message translates to:
+  /// **'Франция'**
+  String get countryFra;
+
+  /// No description provided for @currencyFra.
+  ///
+  /// In ru, this message translates to:
+  /// **'Евро'**
+  String get currencyFra;
+
+  /// No description provided for @countryEsp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Испания'**
+  String get countryEsp;
+
+  /// No description provided for @currencyEsp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Евро'**
+  String get currencyEsp;
+
+  /// No description provided for @countryIta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Италия'**
+  String get countryIta;
+
+  /// No description provided for @currencyIta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Евро'**
+  String get currencyIta;
+
+  /// No description provided for @countryGbr.
+  ///
+  /// In ru, this message translates to:
+  /// **'Великобритания'**
+  String get countryGbr;
+
+  /// No description provided for @currencyGbr.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фунт стерлингов'**
+  String get currencyGbr;
+
+  /// No description provided for @countryPol.
+  ///
+  /// In ru, this message translates to:
+  /// **'Польша'**
+  String get countryPol;
+
+  /// No description provided for @currencyPol.
+  ///
+  /// In ru, this message translates to:
+  /// **'Польский злотый'**
+  String get currencyPol;
+
+  /// No description provided for @countryTur.
+  ///
+  /// In ru, this message translates to:
+  /// **'Турция'**
+  String get countryTur;
+
+  /// No description provided for @currencyTur.
+  ///
+  /// In ru, this message translates to:
+  /// **'Турецкая лира'**
+  String get currencyTur;
+
+  /// No description provided for @countryChn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Китай'**
+  String get countryChn;
+
+  /// No description provided for @currencyChn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Китайский юань'**
+  String get currencyChn;
+
+  /// No description provided for @countryJpn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Япония'**
+  String get countryJpn;
+
+  /// No description provided for @currencyJpn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Японская иена'**
+  String get currencyJpn;
+
+  /// No description provided for @countryKor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Южная Корея'**
+  String get countryKor;
+
+  /// No description provided for @currencyKor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Южнокорейская вона'**
+  String get currencyKor;
+
+  /// No description provided for @countryAre.
+  ///
+  /// In ru, this message translates to:
+  /// **'ОАЭ'**
+  String get countryAre;
+
+  /// No description provided for @currencyAre.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дирхам ОАЭ'**
+  String get currencyAre;
+
+  /// No description provided for @countrySau.
+  ///
+  /// In ru, this message translates to:
+  /// **'Саудовская Аравия'**
+  String get countrySau;
+
+  /// No description provided for @currencySau.
+  ///
+  /// In ru, this message translates to:
+  /// **'Саудовский риял'**
+  String get currencySau;
+
+  /// No description provided for @countryInd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Индия'**
+  String get countryInd;
+
+  /// No description provided for @currencyInd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Индийская рупия'**
+  String get currencyInd;
+
+  /// No description provided for @countryCan.
+  ///
+  /// In ru, this message translates to:
+  /// **'Канада'**
+  String get countryCan;
+
+  /// No description provided for @currencyCan.
+  ///
+  /// In ru, this message translates to:
+  /// **'Канадский доллар'**
+  String get currencyCan;
+
+  /// No description provided for @countryAus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Австралия'**
+  String get countryAus;
+
+  /// No description provided for @currencyAus.
+  ///
+  /// In ru, this message translates to:
+  /// **'Австралийский доллар'**
+  String get currencyAus;
+
+  /// No description provided for @agentPaymentAccepted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оплата принята'**
+  String get agentPaymentAccepted;
+
+  /// No description provided for @catalogCategoryHasChildren.
+  ///
+  /// In ru, this message translates to:
+  /// **'Категория содержит подкатегории'**
+  String get catalogCategoryHasChildren;
+
+  /// No description provided for @creditOutstanding.
+  ///
+  /// In ru, this message translates to:
+  /// **'Осталось: {amount}'**
+  String creditOutstanding(String amount);
+
+  /// No description provided for @creditTakePayment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять платёж'**
+  String get creditTakePayment;
+
+  /// No description provided for @creditPrintContract.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать договора'**
+  String get creditPrintContract;
+
+  /// No description provided for @creditPaymentFor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Платёж по {number}'**
+  String creditPaymentFor(String number);
+
+  /// No description provided for @creditOutstandingOnContract.
+  ///
+  /// In ru, this message translates to:
+  /// **'Осталось по договору: {amount}'**
+  String creditOutstandingOnContract(String amount);
+
+  /// No description provided for @creditPayInFull.
+  ///
+  /// In ru, this message translates to:
+  /// **'Погасить целиком'**
+  String get creditPayInFull;
+
+  /// No description provided for @creditAccept.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принять'**
+  String get creditAccept;
+
+  /// No description provided for @displayProduct.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар'**
+  String get displayProduct;
+
+  /// No description provided for @markupSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наценки сохранены: {count} категорий с наценкой'**
+  String markupSaved(int count);
+
+  /// No description provided for @genericErrorWith.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка: {detail}'**
+  String genericErrorWith(String detail);
+
+  /// No description provided for @serviceAttachPhoto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото'**
+  String get serviceAttachPhoto;
+
+  /// No description provided for @serviceAttachVideo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Видео'**
+  String get serviceAttachVideo;
+
+  /// No description provided for @shiftCorrectionReceipt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек коррекции'**
+  String get shiftCorrectionReceipt;
+
+  /// No description provided for @supplierChoose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите поставщика'**
+  String get supplierChoose;
+
+  /// No description provided for @supplierProduct.
+  ///
+  /// In ru, this message translates to:
+  /// **'Товар'**
+  String get supplierProduct;
+
+  /// No description provided for @supplierStock.
+  ///
+  /// In ru, this message translates to:
+  /// **'Остаток'**
+  String get supplierStock;
+
+  /// No description provided for @supplierOrderQty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заказать'**
+  String get supplierOrderQty;
+
+  /// No description provided for @supplierCreateRequest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сформировать заявку'**
+  String get supplierCreateRequest;
+
+  /// No description provided for @supplierNeedQuantity.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите количество хотя бы по одному товару'**
+  String get supplierNeedQuantity;
+
+  /// No description provided for @unitMonthsShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} мес.'**
+  String unitMonthsShort(int count);
+
+  /// No description provided for @unitDaysShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} дн.'**
+  String unitDaysShort(int count);
+
+  /// No description provided for @displayWelcome.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добро пожаловать!'**
+  String get displayWelcome;
+
+  /// No description provided for @displayWelcomeSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мы рады видеть вас'**
+  String get displayWelcomeSubtitle;
+
+  /// No description provided for @displayPromoFree.
+  ///
+  /// In ru, this message translates to:
+  /// **'Акция · бесплатно'**
+  String get displayPromoFree;
+
+  /// No description provided for @displayDiscountAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скидка −{amount}'**
+  String displayDiscountAmount(String amount);
+
+  /// No description provided for @displayWindowTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Экран покупателя'**
+  String get displayWindowTitle;
+
+  /// No description provided for @shiftXReportPrinted.
+  ///
+  /// In ru, this message translates to:
+  /// **'X-отчёт распечатан'**
+  String get shiftXReportPrinted;
+
+  /// No description provided for @shiftXReportPrintedOffline.
+  ///
+  /// In ru, this message translates to:
+  /// **'X-отчёт распечатан (фискальный X в очереди, связи нет)'**
+  String get shiftXReportPrintedOffline;
+
+  /// No description provided for @shiftXReportFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось распечатать X-отчёт'**
+  String get shiftXReportFailed;
+
+  /// No description provided for @creditContractNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Договора {number} в базе кассы нет'**
+  String creditContractNotFound(String number);
+
+  /// No description provided for @creditOverdue.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПРОСРОЧЕНО: {amount} ({count} платежей)'**
+  String creditOverdue(String amount, int count);
+
+  /// No description provided for @creditNextPayment.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ближайший платёж {date}: {amount}'**
+  String creditNextPayment(String date, String amount);
+
+  /// No description provided for @creditNoTillAccount.
+  ///
+  /// In ru, this message translates to:
+  /// **'У кассы нет счёта — принять деньги некуда'**
+  String get creditNoTillAccount;
+
+  /// No description provided for @creditContractClosed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Договор {number} закрыт'**
+  String creditContractClosed(String number);
+
+  /// No description provided for @creditPartiallyPaid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принято {paid}, осталось {left}'**
+  String creditPartiallyPaid(String paid, String left);
+
+  /// No description provided for @creditPaymentAmount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма платежа'**
+  String get creditPaymentAmount;
+
+  /// No description provided for @serviceWarrantyAndQuality.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гарантия и качество'**
+  String get serviceWarrantyAndQuality;
+
+  /// No description provided for @serviceWarrantyDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гарантия: {days} дн.'**
+  String serviceWarrantyDays(int days);
+
+  /// No description provided for @serviceWarrantyNotSet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гарантия не установлена'**
+  String get serviceWarrantyNotSet;
+
+  /// No description provided for @serviceQualityRatingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оценка качества'**
+  String get serviceQualityRatingTitle;
+
+  /// No description provided for @serviceQualityRatingValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оценка: {rating}/5'**
+  String serviceQualityRatingValue(int rating);
+
+  /// No description provided for @serviceRepairMedia.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото/видео ремонта'**
+  String get serviceRepairMedia;
+
+  /// No description provided for @serviceNoRepairMedia.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет медиа ремонта'**
+  String get serviceNoRepairMedia;
+
+  /// No description provided for @supplierLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поставщик:'**
+  String get supplierLabel;
+
+  /// No description provided for @supplierLinesToOrder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Позиций к заказу: {count}'**
+  String supplierLinesToOrder(int count);
+
+  /// No description provided for @supplierRequestCreated.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка сформирована: {count} поз.'**
+  String supplierRequestCreated(int count);
+
+  /// No description provided for @modifierRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обязательно'**
+  String get modifierRequired;
+
+  /// No description provided for @modifierMax.
+  ///
+  /// In ru, this message translates to:
+  /// **'макс. {count}'**
+  String modifierMax(int count);
+
+  /// No description provided for @writeoffReasonUnspecified.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не указана'**
+  String get writeoffReasonUnspecified;
+
+  /// No description provided for @labelSampleProduct.
+  ///
+  /// In ru, this message translates to:
+  /// **'Образец товара'**
+  String get labelSampleProduct;
+
+  /// No description provided for @markupCategoryNumbered.
+  ///
+  /// In ru, this message translates to:
+  /// **'Категория #{id}'**
+  String markupCategoryNumbered(int id);
+
+  /// No description provided for @salePolicyForbids.
+  ///
+  /// In ru, this message translates to:
+  /// **'Действие запрещено настройками POS (Настройки → Политика продаж)'**
+  String get salePolicyForbids;
+
+  /// No description provided for @labelPrintFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка печати этикетки'**
+  String get labelPrintFailed;
+
+  /// No description provided for @labelPrintFromTillOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать этикеток — с кассы, не с терминала'**
+  String get labelPrintFromTillOnly;
+
+  /// No description provided for @orphanQrTillNotRegistered.
+  ///
+  /// In ru, this message translates to:
+  /// **'База кассы не зарегистрирована — неразобранные деньги по QR спросить не у кого'**
+  String get orphanQrTillNotRegistered;
+
+  /// No description provided for @stockLowStockReorder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дозаказ товаров с низким остатком'**
+  String get stockLowStockReorder;
+
+  /// No description provided for @serviceNoteNeedsApproval.
+  ///
+  /// In ru, this message translates to:
+  /// **'Требует согласования клиента'**
+  String get serviceNoteNeedsApproval;
+
+  /// No description provided for @deferredFromTill.
+  ///
+  /// In ru, this message translates to:
+  /// **'касса {id}'**
+  String deferredFromTill(String id);
+
+  /// No description provided for @dishSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ингредиентов: {count}, себестоимость: {cost}'**
+  String dishSummary(int count, String cost);
+
+  /// No description provided for @prepaymentIssueTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдача аванса покупателю ({name})'**
+  String prepaymentIssueTo(String name);
+
+  /// No description provided for @prepaymentFrom.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аванс покупателя ({name})'**
+  String prepaymentFrom(String name);
+
+  /// No description provided for @prepaymentRefundTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат аванса покупателю ({name})'**
+  String prepaymentRefundTo(String name);
+
+  /// No description provided for @setupPartOrganization.
+  ///
+  /// In ru, this message translates to:
+  /// **'организация'**
+  String get setupPartOrganization;
+
+  /// No description provided for @setupPartTill.
+  ///
+  /// In ru, this message translates to:
+  /// **'касса'**
+  String get setupPartTill;
+
+  /// No description provided for @setupPartFiscal.
+  ///
+  /// In ru, this message translates to:
+  /// **'фискализация'**
+  String get setupPartFiscal;
+
+  /// No description provided for @setupPartEquipment.
+  ///
+  /// In ru, this message translates to:
+  /// **'оборудование'**
+  String get setupPartEquipment;
+
+  /// No description provided for @setupPartTerminals.
+  ///
+  /// In ru, this message translates to:
+  /// **'платёжные терминалы'**
+  String get setupPartTerminals;
+
+  /// No description provided for @setupPartRules.
+  ///
+  /// In ru, this message translates to:
+  /// **'правила'**
+  String get setupPartRules;
+
+  /// No description provided for @setupPartUser.
+  ///
+  /// In ru, this message translates to:
+  /// **'пользователь'**
+  String get setupPartUser;
+
+  /// No description provided for @customerPaymentNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Погашение долга / оплата ({name})'**
+  String customerPaymentNote(String name);
+
+  /// No description provided for @chatMembersUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список участников не загрузился'**
+  String get chatMembersUnavailable;
+
+  /// No description provided for @chatMe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Я'**
+  String get chatMe;
+
+  /// No description provided for @setPolicyBigAmountLimit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Потолок суммы чека'**
+  String get setPolicyBigAmountLimit;
+
+  /// No description provided for @setPolicyBigAmountLimitDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выше этой суммы касса просит разрешения. Пусто — {fallback}.'**
+  String setPolicyBigAmountLimitDesc(String fallback);
+
+  /// No description provided for @cashRefusedNotPositive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма должна быть больше нуля'**
+  String get cashRefusedNotPositive;
+
+  /// No description provided for @cashRefusedAboveCeiling.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сумма выше потолка кассы ({limit}). Поднимите потолок в настройках или включите разрешение на крупные суммы.'**
+  String cashRefusedAboveCeiling(String limit);
+
+  /// No description provided for @errorProductHasNoPrice.
+  ///
+  /// In ru, this message translates to:
+  /// **'У товара «{name}» не заведена цена — продать его нельзя. Заведите цену в каталоге.'**
+  String errorProductHasNoPrice(String name);
+
+  /// No description provided for @sellingHoursTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Часы запрета продажи'**
+  String get sellingHoursTitle;
+
+  /// No description provided for @sellingHoursAdd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить окно'**
+  String get sellingHoursAdd;
+
+  /// No description provided for @sellingHoursCategory.
+  ///
+  /// In ru, this message translates to:
+  /// **'Категория'**
+  String get sellingHoursCategory;
+
+  /// No description provided for @sellingHoursFrom.
+  ///
+  /// In ru, this message translates to:
+  /// **'С (ЧЧ:ММ)'**
+  String get sellingHoursFrom;
+
+  /// No description provided for @sellingHoursTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'До (ЧЧ:ММ)'**
+  String get sellingHoursTo;
+
+  /// No description provided for @sellingHoursActive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрет действует'**
+  String get sellingHoursActive;
+
+  /// No description provided for @sellingHoursBanned.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продажа запрещена {window}'**
+  String sellingHoursBanned(String window);
+
+  /// No description provided for @sellingHoursOff.
+  ///
+  /// In ru, this message translates to:
+  /// **'Окно {window} выключено'**
+  String sellingHoursOff(String window);
+
+  /// No description provided for @sellingHoursBroken.
+  ///
+  /// In ru, this message translates to:
+  /// **'Часы «{window}» не разобраны — запрет не работает'**
+  String sellingHoursBroken(String window);
+
+  /// No description provided for @sellingHoursBadTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'Время записывается как ЧЧ:ММ, например 23:00'**
+  String get sellingHoursBadTime;
+
+  /// No description provided for @sellingHoursPreviewDay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Запрет внутри суток: {window}'**
+  String sellingHoursPreviewDay(String window);
+
+  /// No description provided for @sellingHoursPreviewNight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ночной запрет через полночь: {window}'**
+  String sellingHoursPreviewNight(String window);
+
+  /// No description provided for @sellingHoursExplainer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Часы задаёте вы: закон в каждой стране свой и меняется. Запрет на категорию действует и на все вложенные в неё.'**
+  String get sellingHoursExplainer;
+
+  /// No description provided for @sellingHoursNoCategories.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сначала заведите категории в каталоге — запрет ставится на категорию.'**
+  String get sellingHoursNoCategories;
+
+  /// No description provided for @sellingHoursCategoryGone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Категория #{id} удалена'**
+  String sellingHoursCategoryGone(int id);
+
+  /// No description provided for @errorSellingHoursBanned.
+  ///
+  /// In ru, this message translates to:
+  /// **'«{category}» сейчас продавать нельзя: запрет {window}.'**
+  String errorSellingHoursBanned(String category, String window);
+
+  /// No description provided for @errorSellingHoursBannedNoWindow.
+  ///
+  /// In ru, this message translates to:
+  /// **'«{category}» сейчас продавать нельзя.'**
+  String errorSellingHoursBannedNoWindow(String category);
+
+  /// No description provided for @generalSettingsStoreAddress.
+  ///
+  /// In ru, this message translates to:
+  /// **'Адрес торговой точки'**
+  String get generalSettingsStoreAddress;
+
+  /// No description provided for @generalSettingsStoreAddressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печатается на чеке. Поменяйте, если магазин переехал.'**
+  String get generalSettingsStoreAddressHint;
 }
 
 class _AppLocalizationsDelegate

@@ -1,0 +1,53 @@
+{
+  "id": "sa",
+  "title": "Саудовская Аравия",
+  "countryCode": "SA",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "SAR",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "15",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Standard rate",
+      "isDefault": true
+    },
+    {
+      "code": "zero",
+      "title": "Zero rate"
+    },
+    {
+      "code": "exempt",
+      "title": "Exempt"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "sa",
+      "name": "VAT",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "15"
+        },
+        {
+          "category": "zero",
+          "kind": "taxed",
+          "ratePercent": "0"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Saudi VAT: standard and zero rate; проверьте перед работой"
+}

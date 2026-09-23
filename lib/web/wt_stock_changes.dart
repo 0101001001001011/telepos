@@ -41,9 +41,8 @@ class WtStockChanges implements StockChanges {
   /// неотличима на вкладке от кассы, где остаток не двигали, и кассир
   /// доверял бы старой цифре.
   @override
-  Stream<int> watch() => _wire
-      .watch(TillOps.stockRevision, null)
-      .handleError((Object error) {
+  Stream<int> watch() =>
+      _wire.watch(TillOps.stockRevision, null).handleError((Object error) {
         if (error is WtProtocolError) {
           throw WireRefusal(error.code, error.detail);
         }

@@ -201,7 +201,8 @@ void main() {
     final rootKey = GlobalKey<NavigatorState>();
     final saleRoute = GoRoute(
       path: '/sale',
-      builder: (context, state) => const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
+      builder: (context, state) =>
+          const Scaffold(body: SaleScreen(shiftClose: ShiftCloseAtTill())),
     );
     final router = GoRouter(
       navigatorKey: rootKey,
@@ -220,7 +221,8 @@ void main() {
             routes: [
               GoRoute(
                 path: '/sale',
-                builder: (context, state) => const SaleScreen(shiftClose: ShiftCloseAtTill()),
+                builder: (context, state) =>
+                    const SaleScreen(shiftClose: ShiftCloseAtTill()),
               ),
             ],
           )

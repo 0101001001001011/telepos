@@ -23,9 +23,7 @@ const kWebBundleMarkers = <String>['index.html', 'main.dart.js'];
 /// в этом проекте дважды расходилось с «работает у нас».
 bool isWebBundle(String directory, {bool Function(String path)? fileExists}) {
   final exists = fileExists ?? _fileExistsOnDisk;
-  return kWebBundleMarkers.every(
-    (marker) => exists(_join(directory, marker)),
-  );
+  return kWebBundleMarkers.every((marker) => exists(_join(directory, marker)));
 }
 
 /// Откуда взялся путь к бандлу. В журнал уезжает именно это, а не только путь:

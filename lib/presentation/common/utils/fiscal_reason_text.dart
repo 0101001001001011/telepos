@@ -23,35 +23,35 @@ String fiscalReasonText(AppLocalizations l10n, String? stored) {
 /// `switch` исчерпывающий и без `default`: новый вид не соберётся без
 /// фразы, а фраза — без ключа во всех пяти ARB (сторож
 /// `test/architecture/fiscal_reason_dictionary_test.dart`).
-String fiscalReasonPhrase(AppLocalizations l10n, FiscalFailureKind kind) =>
-    switch (kind) {
-      FiscalFailureKind.network => l10n.fiscalReasonNetwork,
-      FiscalFailureKind.operatorUnavailable =>
-        l10n.fiscalReasonOperatorUnavailable,
-      FiscalFailureKind.tokenExpired => l10n.fiscalReasonTokenExpired,
-      FiscalFailureKind.requestNotBuilt => l10n.fiscalReasonRequestNotBuilt,
-      FiscalFailureKind.tlsRejected => l10n.fiscalReasonTlsRejected,
-      FiscalFailureKind.clientFault => l10n.fiscalReasonClientFault,
-      FiscalFailureKind.badCredentials => l10n.fiscalReasonBadCredentials,
-      FiscalFailureKind.cashboxNotFound => l10n.fiscalReasonCashboxNotFound,
-      FiscalFailureKind.cashboxBlocked => l10n.fiscalReasonCashboxBlocked,
-      FiscalFailureKind.offlineLimitExceeded =>
-        l10n.fiscalReasonOfflineLimitExceeded,
-      FiscalFailureKind.offlineNotSupported =>
-        l10n.fiscalReasonOfflineNotSupported,
-      FiscalFailureKind.duplicate => l10n.fiscalReasonDuplicate,
-      FiscalFailureKind.validation => l10n.fiscalReasonValidation,
-      FiscalFailureKind.notEnoughMoney => l10n.fiscalReasonNotEnoughMoney,
-      FiscalFailureKind.shiftError => l10n.fiscalReasonShiftError,
-      FiscalFailureKind.unsupported => l10n.fiscalReasonUnsupported,
-      FiscalFailureKind.notConfigured => l10n.fiscalReasonNotConfigured,
-      FiscalFailureKind.unknown => l10n.fiscalReasonUnknown,
-      FiscalFailureKind.offlineWindowExpired =>
-        l10n.fiscalReasonOfflineWindowExpired,
-      FiscalFailureKind.rowUnreadable => l10n.fiscalReasonRowUnreadable,
-      FiscalFailureKind.paymentTypeNotAccepted =>
-        l10n.fiscalReasonPaymentTypeNotAccepted,
-    };
+String fiscalReasonPhrase(
+  AppLocalizations l10n,
+  FiscalFailureKind kind,
+) => switch (kind) {
+  FiscalFailureKind.network => l10n.fiscalReasonNetwork,
+  FiscalFailureKind.operatorUnavailable => l10n.fiscalReasonOperatorUnavailable,
+  FiscalFailureKind.tokenExpired => l10n.fiscalReasonTokenExpired,
+  FiscalFailureKind.requestNotBuilt => l10n.fiscalReasonRequestNotBuilt,
+  FiscalFailureKind.tlsRejected => l10n.fiscalReasonTlsRejected,
+  FiscalFailureKind.clientFault => l10n.fiscalReasonClientFault,
+  FiscalFailureKind.badCredentials => l10n.fiscalReasonBadCredentials,
+  FiscalFailureKind.cashboxNotFound => l10n.fiscalReasonCashboxNotFound,
+  FiscalFailureKind.cashboxBlocked => l10n.fiscalReasonCashboxBlocked,
+  FiscalFailureKind.offlineLimitExceeded =>
+    l10n.fiscalReasonOfflineLimitExceeded,
+  FiscalFailureKind.offlineNotSupported => l10n.fiscalReasonOfflineNotSupported,
+  FiscalFailureKind.duplicate => l10n.fiscalReasonDuplicate,
+  FiscalFailureKind.validation => l10n.fiscalReasonValidation,
+  FiscalFailureKind.notEnoughMoney => l10n.fiscalReasonNotEnoughMoney,
+  FiscalFailureKind.shiftError => l10n.fiscalReasonShiftError,
+  FiscalFailureKind.unsupported => l10n.fiscalReasonUnsupported,
+  FiscalFailureKind.notConfigured => l10n.fiscalReasonNotConfigured,
+  FiscalFailureKind.unknown => l10n.fiscalReasonUnknown,
+  FiscalFailureKind.offlineWindowExpired =>
+    l10n.fiscalReasonOfflineWindowExpired,
+  FiscalFailureKind.rowUnreadable => l10n.fiscalReasonRowUnreadable,
+  FiscalFailureKind.paymentTypeNotAccepted =>
+    l10n.fiscalReasonPaymentTypeNotAccepted,
+};
 
 /// Ключ ARB под вид — тем же именем, что геттер словаря. Читает сторож.
 String fiscalReasonArbKey(FiscalFailureKind kind) =>

@@ -536,14 +536,11 @@ void main() {
       expect(word(FiscalState.notRequired), 'notRequired');
       expect(word(FiscalState.operatorAbsent), 'operatorAbsent');
       expect(word(FiscalState.fiscalModuleAbsent), 'fiscalModuleAbsent');
-      expect(
-        {
-          word(FiscalState.notRequired),
-          word(FiscalState.operatorAbsent),
-          word(FiscalState.fiscalModuleAbsent),
-        },
-        hasLength(3),
-      );
+      expect({
+        word(FiscalState.notRequired),
+        word(FiscalState.operatorAbsent),
+        word(FiscalState.fiscalModuleAbsent),
+      }, hasLength(3));
     });
 
     /// **Умолчание менять нельзя, и это выбор, а не недосмотр.** Заменить
@@ -887,10 +884,7 @@ void main() {
         // собирается отдельным путём, из базы, а исхода фискализации
         // `Sales` не хранит (колонка — задача 14). Здесь проверяется
         // именно то, что придёт в принтер.
-        expect(
-          printer.receipts.single.fiscalState,
-          FiscalState.operatorAbsent,
-        );
+        expect(printer.receipts.single.fiscalState, FiscalState.operatorAbsent);
       },
     );
 

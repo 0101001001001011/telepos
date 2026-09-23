@@ -227,9 +227,7 @@ class _CertificateIssueScreenState
         // модальный слой между кассиром и очередью.
         expiresAt: days == null || days <= 0
             ? null
-            : DateTime.now()
-                      .add(Duration(days: days))
-                      .millisecondsSinceEpoch ~/
+            : DateTime.now().add(Duration(days: days)).millisecondsSinceEpoch ~/
                   1000,
         receiptNo: receiptNo,
         userId: ref.read(currentUserIdProvider),

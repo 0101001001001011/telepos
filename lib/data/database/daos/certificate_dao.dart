@@ -110,10 +110,7 @@ class CertificateDao extends DatabaseAccessor<AppDatabase>
   /// гашение — это подарок, повторяемый бесконечно (упавшая после
   /// списания продажа) либо отданный даром товар (упавшее после продажи
   /// списание). Сторож — `certificate_atomicity_test.dart`.
-  Future<int> redeem({
-    required String number,
-    required Decimal amount,
-  }) async {
+  Future<int> redeem({required String number, required Decimal amount}) async {
     final millis = GiftCertificate.millisOf(amount);
     if (millis <= 0) return 0;
     return customUpdate(
@@ -182,11 +179,12 @@ class CertificateDao extends DatabaseAccessor<AppDatabase>
   }) async {
     final rows =
         await (select(giftCertificates)..where((c) {
-          final byReceipt = c.issuedReceiptNo.equals(receiptNo);
-          if (posId == null) return byReceipt;
-          return byReceipt &
-              (c.issuedPosId.equals(posId) | c.issuedPosId.isNull());
-        })).get();
+              final byReceipt = c.issuedReceiptNo.equals(receiptNo);
+              if (posId == null) return byReceipt;
+              return byReceipt &
+                  (c.issuedPosId.equals(posId) | c.issuedPosId.isNull());
+            }))
+            .get();
     return rows.map(toDomain).toList();
   }
 
@@ -328,7 +326,10 @@ class CertificateDao extends DatabaseAccessor<AppDatabase>
       variables: [
         Variable.withInt(from),
         Variable.withInt(to),
-        if (userId == null) const Variable<int>(null) else Variable.withInt(userId),
+        if (userId == null)
+          const Variable<int>(null)
+        else
+          Variable.withInt(userId),
       ],
       readsFrom: {giftCertificates},
     ).get();
@@ -340,9 +341,9 @@ class CertificateDao extends DatabaseAccessor<AppDatabase>
 
   /// Чем этот возврат уже связан с сертификатами.
   Future<List<CertificateRefundLinkRow>> linksByRefund(int refundLocalId) =>
-      (select(certificateRefundLinks)
-            ..where((l) => l.refundLocalId.equals(refundLocalId)))
-          .get();
+      (select(
+        certificateRefundLinks,
+      )..where((l) => l.refundLocalId.equals(refundLocalId))).get();
 
   /// Связь этого возврата с этой бумажкой — **первая линия** заслона от
   /// двойного выпуска (вторая — уникальный ключ таблицы).
@@ -367,8 +368,7 @@ class CertificateDao extends DatabaseAccessor<AppDatabase>
     number: row.number,
     nominal: GiftCertificate.amountOf(row.nominalMillis),
     balance: GiftCertificate.amountOf(row.balanceMillis),
-    status:
-        CertificateStatus.byCode(row.status) ?? CertificateStatus.cancelled,
+    status: CertificateStatus.byCode(row.status) ?? CertificateStatus.cancelled,
     issuedAt: row.issuedAt,
     pinHash: row.pinHash,
     expiresAt: row.expiresAt,

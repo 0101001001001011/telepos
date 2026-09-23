@@ -97,12 +97,14 @@ void main() {
     'a configured scannerTimeoutMs reaches the live keyboard-wedge decoder, '
     'not just the profile/binding it has nothing to do with',
     (tester) async {
-      await db.into(db.thisPosEntries).insertOnConflictUpdate(
-        const ThisPosEntriesCompanion(
-          rId: Value(true),
-          scannerTimeoutMs: Value(250),
-        ),
-      );
+      await db
+          .into(db.thisPosEntries)
+          .insertOnConflictUpdate(
+            const ThisPosEntriesCompanion(
+              rId: Value(true),
+              scannerTimeoutMs: Value(250),
+            ),
+          );
 
       final state = await pumpHost(tester);
 
@@ -122,9 +124,11 @@ void main() {
     'no scannerTimeoutMs configured — falls back to 80ms, the default this '
     'always had',
     (tester) async {
-      await db.into(db.thisPosEntries).insertOnConflictUpdate(
-        const ThisPosEntriesCompanion(rId: Value(true)),
-      );
+      await db
+          .into(db.thisPosEntries)
+          .insertOnConflictUpdate(
+            const ThisPosEntriesCompanion(rId: Value(true)),
+          );
 
       final state = await pumpHost(tester);
 

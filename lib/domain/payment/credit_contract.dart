@@ -282,10 +282,7 @@ class CreditStanding {
 /// Договор вместе с графиком — то, что отдаёт чтение и печать.
 @immutable
 class CreditContractView {
-  const CreditContractView({
-    required this.contract,
-    required this.schedule,
-  });
+  const CreditContractView({required this.contract, required this.schedule});
 
   final CreditContract contract;
   final List<CreditScheduleEntry> schedule;

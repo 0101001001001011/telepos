@@ -141,6 +141,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginShiftRequired => 'Open shift to login';
 
   @override
+  String get staffRoleOwner => 'Owner';
+
+  @override
+  String get staffRoleAdministrator => 'Administrator';
+
+  @override
+  String get staffRoleUser => 'User';
+
+  @override
+  String get staffRoleCashier => 'Cashier';
+
+  @override
+  String get staffRoleUnknown => 'Unknown';
+
+  @override
   String get loginCashier => 'Cashier';
 
   @override
@@ -567,6 +582,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cashTitle => 'Cash';
 
   @override
+  String get cashReasonCreditRepayment => 'Instalment repayment';
+
+  @override
+  String get cashReasonCustomerTopUp => 'Customer account top-up';
+
+  @override
+  String get accountBankCard => 'Bank (card)';
+
+  @override
+  String get accountCertificateLiability => 'Certificate liabilities';
+
+  @override
+  String get serviceConsumableFallback => 'Consumable';
+
+  @override
+  String get serviceAutoAddedByNorm => 'Added from the consumption norm';
+
+  @override
   String get cashInvestment => 'Cash in';
 
   @override
@@ -589,21 +622,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cashExpenseTypes => 'Expense type';
-
-  @override
-  String get cashSalary => 'Salary';
-
-  @override
-  String get cashRent => 'Rent';
-
-  @override
-  String get cashUtilities => 'Utilities';
-
-  @override
-  String get cashSupplies => 'Supplies';
-
-  @override
-  String get cashOther => 'Other';
 
   @override
   String get discountTitle => 'Discount';
@@ -966,7 +984,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginShiftClosed => 'Shift closed';
 
   @override
-  String get loginShiftUnknown => 'Shift: unknown';
+  String get loginShiftUnknown => 'Shift: no answer from the till';
 
   @override
   String get saleQuickProducts => 'Quick products';
@@ -2054,11 +2072,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allBreadcrumb => 'All';
 
   @override
-  String productPrice(String price) {
-    return '$price ₸';
-  }
-
-  @override
   String maxBonusPercent(int percent) {
     return 'Can use up to $percent% of receipt total';
   }
@@ -2707,7 +2720,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupVatPayerTitle => 'VAT Payer';
 
   @override
-  String setupVatPayerRate(int rate) {
+  String setupVatPayerRate(String rate) {
     return 'VAT rate: $rate%';
   }
 
@@ -3115,7 +3128,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupUserCreationDescription => 'Create users for POS operation';
 
   @override
-  String get setupAdminLabel => 'ADMINISTRATOR';
+  String get setupAdminLabel => 'Administrator';
 
   @override
   String get setupAdminSubtitle => 'POS owner';
@@ -3133,7 +3146,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupAdminPinDefault => 'Default: 0000';
 
   @override
-  String get setupSellerLabel => 'SELLER';
+  String get setupSellerLabel => 'Seller';
 
   @override
   String get setupSellerOptional => 'Optional';
@@ -3262,7 +3275,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupStartWork => 'Start Working';
 
   @override
-  String setupVatPayerSummary(int rate) {
+  String setupVatPayerSummary(String rate) {
     return 'VAT Payer ($rate%)';
   }
 
@@ -4935,6 +4948,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get countryTurkmenistan => 'Turkmenistan';
 
   @override
+  String get permNavServiceQueue => 'Order queue';
+
+  @override
+  String get permNavServiceIntake => 'Order intake';
+
+  @override
+  String get permSellWithDiscount => 'Sell with a discount';
+
+  @override
+  String get permCashInOut => 'Cash in / cash out';
+
+  @override
+  String get permRefundGoods => 'Refund goods';
+
+  @override
+  String get permRefundWithoutReceipt => 'Refund without a receipt';
+
+  @override
+  String get permGroupNavigation => 'Navigation';
+
+  @override
   String get permEditPrice => 'Edit price';
 
   @override
@@ -5436,7 +5470,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String shiftFixedAmount(String amount) {
-    return 'Amount to be recorded: $amount KZT';
+    return 'Amount to be recorded: $amount';
   }
 
   @override
@@ -5471,6 +5505,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shiftRefundsTotal => 'Refunds';
+
+  @override
+  String get cashOpeningCount => 'Opening count';
 
   @override
   String get shiftShortage => 'Shortage';
@@ -6523,9 +6560,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paymentDefaultLabel => 'Default';
-
-  @override
-  String get currencySymbol => '₸';
 
   @override
   String get serviceIntakeTitle => 'Service intake';
@@ -10152,7 +10186,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setCorrectionReasonHint => 'e.g. self-correction';
 
   @override
-  String get setCorrectionAmountLabel => 'Correction amount, KZT';
+  String setCorrectionAmountLabel(String currency) {
+    return 'Correction amount, $currency';
+  }
 
   @override
   String get setCorrectionPaymentLabel => 'Payment method';
@@ -10337,7 +10373,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String dishTotalYieldSummary(String cost, String yield) {
-    return 'Total: $cost ₸  |  Yield: $yield';
+    return 'Total: $cost  |  Yield: $yield';
   }
 
   @override
@@ -10697,7 +10733,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repColCount => 'Qty';
 
   @override
-  String get repColSumTenge => 'Amount, ₸';
+  String repColSumTenge(String currency) {
+    return 'Amount, $currency';
+  }
 
   @override
   String get repColRow => 'Line';
@@ -10788,7 +10826,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repF910Subtitle(String income, String rate, String tax) {
-    return 'Taxable income: $income ₸ • tax $rate%: $tax ₸';
+    return 'Taxable income: $income • tax $rate%: $tax';
   }
 
   @override
@@ -10805,7 +10843,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repF300Subtitle(String turnover, String vat) {
-    return 'Taxable turnover: $turnover ₸ • output VAT: $vat ₸';
+    return 'Taxable turnover: $turnover • output VAT: $vat';
   }
 
   @override
@@ -10821,7 +10859,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repCashBookSubtitle(String income, String expense, String balance) {
-    return 'Income: $income • Expense: $expense • Balance: $balance ₸';
+    return 'Income: $income • Expense: $expense • Balance: $balance';
   }
 
   @override
@@ -10829,7 +10867,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repVatPeriodSubtitle(String vat, String base) {
-    return 'VAT: $vat ₸ • base: $base ₸';
+    return 'VAT: $vat • base: $base';
   }
 
   @override
@@ -10845,7 +10883,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repCashCollectionSubtitle(int count, String total) {
-    return '$count operations • total: $total ₸';
+    return '$count operations • total: $total';
   }
 
   @override
@@ -10856,7 +10894,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repProfitMarginSubtitle(String profit, String margin, String note) {
-    return 'Profit: $profit ₸ • margin $margin% • $note';
+    return 'Profit: $profit • margin $margin% • $note';
   }
 
   @override
@@ -10871,7 +10909,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String repWriteoffSubtitle(int count, String total) {
-    return '$count documents • total: $total ₸';
+    return '$count documents • total: $total';
   }
 
   @override
@@ -11140,8 +11178,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get errorBigAmountBlocked =>
-      'Sale total exceeds 1,000,000 ₸. Enable the large-amount permission in POS settings.';
+  String errorBigAmountBlocked(String limit) {
+    return 'Sale total is above this till’s ceiling ($limit). Raise the ceiling or enable the large-amount permission in the till settings.';
+  }
 
   @override
   String errorMarkRequired(String name) {
@@ -13142,4 +13181,1610 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get agentRefundPrepayment => 'Pay the prepayment back';
+
+  @override
+  String get repTitle => 'Reports';
+
+  @override
+  String get repTabAnalytics => 'Analytics';
+
+  @override
+  String get repTabFinance => 'Finance';
+
+  @override
+  String get repTabForecasts => 'Forecasts';
+
+  @override
+  String get repTabTaxKz => 'Tax / KZ';
+
+  @override
+  String get repRangeDays7 => '7 days';
+
+  @override
+  String get repRangeDays30 => '30 days';
+
+  @override
+  String get repRangeCustom => 'Custom';
+
+  @override
+  String get repKpiChange => 'Change';
+
+  @override
+  String get repSubtitleVsPrev => 'vs previous period';
+
+  @override
+  String get repChartRevenueByDay => 'Revenue by day';
+
+  @override
+  String get repChartTop5Products => 'Top 5 products';
+
+  @override
+  String get repChartPaymentMethods => 'Payment methods';
+
+  @override
+  String get settingsRestartRequired =>
+      'Changes take effect the next time the till starts.';
+
+  @override
+  String get hardwareRestartRequired =>
+      'Device changes take effect the next time the till starts.';
+
+  @override
+  String get hardwareDeviceDisabled => 'The device is switched off.';
+
+  @override
+  String get hardwareCustomerDisplayGraphic =>
+      'Graphic customer display (second monitor)';
+
+  @override
+  String get hardwareCustomerDisplayGraphicOff =>
+      'The graphic customer display is switched off.';
+
+  @override
+  String get hardwarePaymentKinds => 'Payment kinds for this workstation';
+
+  @override
+  String get hardwarePaymentKindsUnrestricted =>
+      'No restrictions: this workstation accepts every payment kind.';
+
+  @override
+  String get fiscalSettingsDirectOfdLabel => 'Direct OFD connection';
+
+  @override
+  String get markupAuto => 'Automatic markup';
+
+  @override
+  String get markupSave => 'Save markups';
+
+  @override
+  String get creditContractNumberLabel => 'Contract number from the paper';
+
+  @override
+  String get creditNoLiveContracts => 'No active instalment contracts';
+
+  @override
+  String get supplierOrderTitle => 'Supplier order';
+
+  @override
+  String get supplierOrderAllStocked => 'Every product is sufficiently stocked';
+
+  @override
+  String get supplierOrderNotNeeded => 'No reorder needed';
+
+  @override
+  String get hwScaleTitle => 'Scales';
+
+  @override
+  String get hwReceiptPrinterTitle => 'Receipt printer';
+
+  @override
+  String get repRangeDays14 => '14 days';
+
+  @override
+  String get repForecastSmaLowData => 'SMA (little data)';
+
+  @override
+  String get repNoCategory => 'No category';
+
+  @override
+  String get repAllCustomers => 'All customers';
+
+  @override
+  String get repAllInStock => 'Every product is in stock';
+
+  @override
+  String get repAllCovered30 => 'Every product is covered for 30+ days';
+
+  @override
+  String get repColDays => 'Days';
+
+  @override
+  String get repColDaysLeft => 'Days left';
+
+  @override
+  String get repColSharePct => 'Share %';
+
+  @override
+  String get repColChangePct => 'Change %';
+
+  @override
+  String get repColSalesCount => 'Sales count';
+
+  @override
+  String get repReceiptCountLabel => 'Receipt count';
+
+  @override
+  String get repStockCritical =>
+      'Critically low stock. A delivery is needed now.';
+
+  @override
+  String get repColCumulativePct => 'Cumulative %';
+
+  @override
+  String get repNotEnoughSalesData =>
+      'Not enough sales data for the selected period';
+
+  @override
+  String get repNoForecastData => 'No data to forecast from';
+
+  @override
+  String get repNoDataLast90 => 'No data for the last 90 days';
+
+  @override
+  String get repNoCustomerData => 'No customer data';
+
+  @override
+  String get repNoLowStock => 'No products are running low';
+
+  @override
+  String get repLowStock => 'Low stock';
+
+  @override
+  String get repNewPrice => 'New price';
+
+  @override
+  String get repColEstimatedAmount => 'Est. amount';
+
+  @override
+  String get repColSeatings => 'Seatings';
+
+  @override
+  String get repForecast => 'Forecast';
+
+  @override
+  String get repRevenueForecast => 'Revenue forecast';
+
+  @override
+  String get repRevenueForecastHw => 'Revenue forecast (Holt-Winters)';
+
+  @override
+  String get repStockoutForecast => 'Stock-out forecast';
+
+  @override
+  String get repStockForecast => 'Stock forecast';
+
+  @override
+  String get repSalesWithoutCustomerHidden =>
+      'Sales with no customer attached are not shown';
+
+  @override
+  String get repColSalesPerDay => 'Sales/day';
+
+  @override
+  String get repColSold => 'Sold';
+
+  @override
+  String get repHourlyDistribution => 'Hourly distribution';
+
+  @override
+  String get repColRecommendedOrder => 'Rec. order';
+
+  @override
+  String get repRecommendedPurchases => 'Recommended purchases';
+
+  @override
+  String get repColAvgSalesPerDay => 'Avg sales/day';
+
+  @override
+  String get repColAvgCheckShort => 'Avg check';
+
+  @override
+  String get repAvgPrice => 'Average price';
+
+  @override
+  String get repOldPrice => 'Old price';
+
+  @override
+  String get repStockValue => 'Stock value';
+
+  @override
+  String get repColTable => 'Table';
+
+  @override
+  String get repCurrentStock => 'Current stock';
+
+  @override
+  String get repTop10Customers => 'Top 10 customers';
+
+  @override
+  String get repTop10Products => 'Top 10 products';
+
+  @override
+  String get repActual => 'Actual';
+
+  @override
+  String get repColHour => 'Hour';
+
+  @override
+  String get repExport => 'Export';
+
+  @override
+  String get repCashierPerformance => 'Cashier performance';
+
+  @override
+  String get repWeightedAvgHint =>
+      'weighted average (recent days count for more)';
+
+  @override
+  String get repSalesCountByHour => 'sales count by hour';
+
+  @override
+  String get repNoUrgentItems => 'nothing is urgent';
+
+  @override
+  String get repByRevenueTapHint => 'by revenue (tap for details)';
+
+  @override
+  String get repDistributionTapHint => 'distribution (tap a sector)';
+
+  @override
+  String get repRevenueDistributionTapHint =>
+      'revenue distribution (tap a sector)';
+
+  @override
+  String get repAbcRare => 'slow movers';
+
+  @override
+  String get repAbcMedium => 'medium movers';
+
+  @override
+  String get repAbcFast => 'fast movers';
+
+  @override
+  String get repAbcLegend =>
+      'fast (A), medium (B), slow (C) — by contribution to revenue';
+
+  @override
+  String repReturnsCount(int count) {
+    return '$count returns';
+  }
+
+  @override
+  String repAbcGroupSummary(int count, String pct) {
+    return '$count items · $pct%';
+  }
+
+  @override
+  String repCustomerTooltip(String name, String amount, int count) {
+    return '$name\n$amount ($count receipts)';
+  }
+
+  @override
+  String repDaysCountTapHint(int count) {
+    return '$count days (tap for details)';
+  }
+
+  @override
+  String repCashiersCount(int count) {
+    return '$count cashiers';
+  }
+
+  @override
+  String repLowStockCountHint(int count) {
+    return '$count products (stock < 10, tap for details)';
+  }
+
+  @override
+  String repOrdersShort(int count) {
+    return '$count ord.';
+  }
+
+  @override
+  String repOrdersRevenueTooltip(int count, String amount) {
+    return '$count ord.\n$amount';
+  }
+
+  @override
+  String repPieces(String qty) {
+    return '$qty pcs';
+  }
+
+  @override
+  String repPiecesDot(String qty) {
+    return '$qty pcs';
+  }
+
+  @override
+  String repForecastSubtitle(int actual, int horizon, String algorithm) {
+    return '$actual days actual + $horizon days forecast ($algorithm)';
+  }
+
+  @override
+  String repSalesCountLine(int count) {
+    return '$count sales';
+  }
+
+  @override
+  String repReceiptsCount(int count) {
+    return '$count receipts';
+  }
+
+  @override
+  String repSupplierTooltip(String name, int count) {
+    return '$name\n$count deliveries';
+  }
+
+  @override
+  String repSeatingsLine(int count) {
+    return '$count seatings';
+  }
+
+  @override
+  String repDayOffset(int n) {
+    return '+$n day';
+  }
+
+  @override
+  String repHoltWintersSeason(int season) {
+    return 'Holt-Winters (season=$season)';
+  }
+
+  @override
+  String repInvestmentsLine(String amount) {
+    return 'Investments: $amount';
+  }
+
+  @override
+  String repDividendsLine(String amount) {
+    return 'Dividends: $amount';
+  }
+
+  @override
+  String repMarginLine(String pct) {
+    return 'Margin: $pct%';
+  }
+
+  @override
+  String repKpiLoadErrorWith(String error) {
+    return 'Could not load KPIs: $error';
+  }
+
+  @override
+  String repErrorWith(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String repProfitLine(String amount) {
+    return 'Profit: $amount';
+  }
+
+  @override
+  String repExpensesLine(String amount) {
+    return 'Expenses: $amount';
+  }
+
+  @override
+  String repLeadTimeHint(int lead, int safety) {
+    return 'lead time $lead d + safety stock $safety d';
+  }
+
+  @override
+  String get markupHint =>
+      'Markup in % per category. When goods arrive, the retail price is recalculated from the purchase price: cost × (1 + markup%).';
+
+  @override
+  String get creditContractsTitle => 'Instalments';
+
+  @override
+  String creditContractsTitleFor(String agent) {
+    return 'Instalments — $agent';
+  }
+
+  @override
+  String repExportedTo(String path) {
+    return 'Exported to: $path';
+  }
+
+  @override
+  String repExportFailed(String error) {
+    return 'Export failed: $error';
+  }
+
+  @override
+  String get hwSetupIncompleteDevices =>
+      'Setup is not finished yet — there is nowhere to save the devices';
+
+  @override
+  String get hwSetupIncompleteCheck =>
+      'Setup is not finished yet — there is nothing to check';
+
+  @override
+  String get settingsSetupIncompleteSave =>
+      'Setup is not finished yet — there is nowhere to save';
+
+  @override
+  String get hwProfileCatalogUnavailable =>
+      'The device profile catalogue is unavailable — device settings cannot be changed right now.';
+
+  @override
+  String get printerProfileCatalogUnavailable =>
+      'The device profile catalogue is unavailable — printer settings cannot be changed right now.';
+
+  @override
+  String get labelPrinterProfileCatalogUnavailable =>
+      'The device profile catalogue is unavailable — label printer settings cannot be changed right now.';
+
+  @override
+  String get hwPaymentKindsUnsupported =>
+      'This build cannot save the workstation payment kinds.';
+
+  @override
+  String get hwPaymentKindsEnforcedByTill =>
+      'The till enforces the restriction: a terminal that is not allowed a payment kind will be refused, even if the button is still on its screen.';
+
+  @override
+  String get hwCustomerDisplayGraphicDesc =>
+      'A graphic customer-facing screen on the second monitor: receipt lines, quantities and the total, live.';
+
+  @override
+  String get hwCustomerDisplayMonitor => 'Monitor for the customer display';
+
+  @override
+  String get hwCustomerDisplayMonitorHint =>
+      'The POS stays on the main monitor. It opens automatically the next time the till starts.';
+
+  @override
+  String get hwNoProfilesForClass =>
+      'No models are available for this device class.';
+
+  @override
+  String get hwNoConnectionParams =>
+      'This model needs no extra connection parameters.';
+
+  @override
+  String hwMonitorWithSize(int index, String size) {
+    return 'Monitor $index — $size';
+  }
+
+  @override
+  String hwMonitorNumbered(int index) {
+    return 'Monitor $index';
+  }
+
+  @override
+  String hwPaymentKindsError(String error) {
+    return 'Payment kinds: $error';
+  }
+
+  @override
+  String hwPaymentKindsUnknown(String list) {
+    return 'This workstation is configured with kinds this version does not know: $list. They place no restriction. Pick the kinds again to repair the record — until you do, it stays as it is.';
+  }
+
+  @override
+  String hwParamOptional(String description) {
+    return '$description (optional)';
+  }
+
+  @override
+  String globalMillimetres(String value) {
+    return '$value mm';
+  }
+
+  @override
+  String get devProfilePrinterEscpos80mm => 'ESC/POS receipt printer, 80 mm';
+
+  @override
+  String get devProfilePrinterEscpos58mm =>
+      'ESC/POS receipt printer, 58 mm (compact, no cutter)';
+
+  @override
+  String get devProfilePrinterEscposUsb =>
+      'ESC/POS receipt printer, USB / spooler';
+
+  @override
+  String get devProfilePrinterEscposBluetooth =>
+      'ESC/POS receipt printer, Bluetooth';
+
+  @override
+  String get devProfilePrinterEscposSerial =>
+      'ESC/POS receipt printer, serial port';
+
+  @override
+  String get devProfilePrinterLabelZpl104 => 'ZPL label printer, 104 mm';
+
+  @override
+  String get devProfilePrinterLabelEpl58 => 'EPL label printer, 58 mm';
+
+  @override
+  String get devProfileScannerUsbHid => 'USB barcode scanner (HID)';
+
+  @override
+  String get devProfileScannerBluetoothHid => 'Bluetooth barcode scanner (HID)';
+
+  @override
+  String get devProfileScannerCamera => 'Scanner using the device camera';
+
+  @override
+  String get devProfileScannerSerial => 'Barcode scanner, serial port';
+
+  @override
+  String get devProfileScaleCasPd2 => 'CAS PD-II scale (serial)';
+
+  @override
+  String get devProfileScaleCasErPlus => 'CAS ER-Plus scale';
+
+  @override
+  String get devProfileDrawerViaPrinter =>
+      'Cash drawer via printer (RJ11 kick-out)';
+
+  @override
+  String get devProfileDrawerStandalone => 'Standalone cash drawer (RJ11)';
+
+  @override
+  String get devProfileDisplayVfd => 'VFD customer display (serial)';
+
+  @override
+  String get devProfileDisplayLcd2x20 => 'LCD customer display 2x20';
+
+  @override
+  String get devProfileDisplayLed8 => 'LED customer display (8 characters)';
+
+  @override
+  String get devProfilePaymentKaspiPos => 'Kaspi POS terminal';
+
+  @override
+  String get devParamPrinterIpAddress => 'Network printer IP address';
+
+  @override
+  String get devParamTcpPort9100 => 'TCP port, 9100 by default';
+
+  @override
+  String get devParamPrinterDevicePath => 'Device path or print queue name';
+
+  @override
+  String get devParamPrinterMac =>
+      'MAC address of the paired Bluetooth printer';
+
+  @override
+  String get devParamPrinterComPort =>
+      'Serial port the printer is on, e.g. COM4';
+
+  @override
+  String get devParamLabelPrinterIp => 'Label printer IP address';
+
+  @override
+  String get devParamScannerMac =>
+      'MAC address of the paired Bluetooth scanner';
+
+  @override
+  String get devParamScannerComPort =>
+      'Serial port the scanner is on, e.g. COM5';
+
+  @override
+  String get devParamScaleComPort => 'Serial port the scale is on, e.g. COM3';
+
+  @override
+  String get devParamDrawerComPort =>
+      'Serial port of the drawer interface board';
+
+  @override
+  String get devParamDisplayComPort => 'Serial port the customer display is on';
+
+  @override
+  String get devParamKaspiIp => 'Kaspi POS terminal IP address';
+
+  @override
+  String get devParamKaspiPort => 'Terminal port, usually 8888';
+
+  @override
+  String get devParamCameraId => 'Which camera to use';
+
+  @override
+  String get rcpTill => 'Till';
+
+  @override
+  String get rcpTillColon => 'Till:';
+
+  @override
+  String get rcpReceiptNo => 'Receipt no.';
+
+  @override
+  String get rcpCashier => 'Cashier:';
+
+  @override
+  String get rcpCustomer => 'Customer:';
+
+  @override
+  String get rcpDate => 'Date:';
+
+  @override
+  String get rcpBinIin => 'Business ID:';
+
+  @override
+  String get rcpThankYou => 'Thank you for your purchase!';
+
+  @override
+  String get rcpSale => 'SALE';
+
+  @override
+  String get rcpSubtotal => 'Subtotal:';
+
+  @override
+  String get rcpDiscount => 'Discount:';
+
+  @override
+  String get rcpServiceFee => 'Service charge:';
+
+  @override
+  String get rcpTotal => 'TOTAL:';
+
+  @override
+  String get rcpChange => 'Change:';
+
+  @override
+  String get rcpCash => 'CASH';
+
+  @override
+  String get rcpCard => 'CARD';
+
+  @override
+  String get rcpQuantityShort => 'pcs';
+
+  @override
+  String get rcpRefund => 'REFUND';
+
+  @override
+  String get rcpRefundNo => 'Refund no.';
+
+  @override
+  String get rcpSaleReceiptNo => 'Sale receipt no.';
+
+  @override
+  String get rcpDuplicate => '*** DUPLICATE ***';
+
+  @override
+  String get rcpTable => 'Table:';
+
+  @override
+  String get rcpWaiter => 'Waiter:';
+
+  @override
+  String get rcpGuests => 'Guests:';
+
+  @override
+  String get rcpFiscalReceipt => 'FISCAL RECEIPT';
+
+  @override
+  String get rcpNonFiscalReceipt => 'NON-FISCAL RECEIPT';
+
+  @override
+  String get rcpNotFiscalDocument => 'NOT A FISCAL DOCUMENT';
+
+  @override
+  String get rcpFiscalSign => 'FISCAL SIGN:';
+
+  @override
+  String get rcpFiscalFn => 'FM:';
+
+  @override
+  String get rcpFiscalRnm => 'RegNo:';
+
+  @override
+  String get rcpFiscalZnm => 'SerialNo:';
+
+  @override
+  String get rcpFiscalTime => 'TIME:';
+
+  @override
+  String get rcpOfdName => 'OFD';
+
+  @override
+  String get rcpOffline => '*** OFFLINE ***';
+
+  @override
+  String get rcpVerifyAt => 'To verify this receipt, visit';
+
+  @override
+  String get rcpCustomerTaxId => 'Customer tax ID:';
+
+  @override
+  String get rcpTaxA => 'TAX GROUP A:';
+
+  @override
+  String get rcpFiscalOperatorNotSet => 'No fiscal operator configured';
+
+  @override
+  String get rcpFiscalModuleUnavailable =>
+      'The fiscalisation module is unavailable';
+
+  @override
+  String get rcpDocumentNotIssued => 'No document was issued — ask the cashier';
+
+  @override
+  String get rcpXReport => 'X-REPORT';
+
+  @override
+  String get rcpZReport => 'Z-REPORT';
+
+  @override
+  String get rcpInterim => 'INTERIM (no reset)';
+
+  @override
+  String get rcpShiftClose => 'SHIFT CLOSE';
+
+  @override
+  String get rcpShiftStart => 'Opened:';
+
+  @override
+  String get rcpShiftEnd => 'Closed:';
+
+  @override
+  String get rcpSales => 'SALES';
+
+  @override
+  String get rcpRefunds => 'REFUNDS';
+
+  @override
+  String get rcpCount => 'Count:';
+
+  @override
+  String get rcpAmount => 'Amount:';
+
+  @override
+  String get rcpCashOps => 'CASH OPERATIONS';
+
+  @override
+  String get rcpOpeningFloat => 'Opening float:';
+
+  @override
+  String get rcpSlipTitle => 'RECEIPT';
+
+  @override
+  String get rcpType => 'Type:';
+
+  @override
+  String get rcpComment => 'Comment:';
+
+  @override
+  String get rcpCashIn => 'Cash in:';
+
+  @override
+  String get rcpCashOut => 'Cash out:';
+
+  @override
+  String get rcpTotalInDrawer => 'TOTAL IN DRAWER:';
+
+  @override
+  String get rcpCertificatesNotRevenue => 'CERTIFICATES (NOT REVENUE)';
+
+  @override
+  String get rcpCertIssuedDebt => 'Issued (till liability):';
+
+  @override
+  String get rcpCertRedeemed => 'Redeemed (in goods):';
+
+  @override
+  String get rcpGiftCertificate => 'GIFT CERTIFICATE';
+
+  @override
+  String get rcpCertNo => 'Certificate no.';
+
+  @override
+  String get rcpCertFaceValue => 'Face value:';
+
+  @override
+  String get rcpCertValidUntil => 'Valid until:';
+
+  @override
+  String get rcpCertNoExpiry => 'no expiry';
+
+  @override
+  String get rcpCertPinSet => 'PIN set';
+
+  @override
+  String get rcpCertIssuedByRefund => 'Issued by refund no.';
+
+  @override
+  String get rcpCertInsteadOf => 'In place of certificate';
+
+  @override
+  String get rcpVat => 'VAT';
+
+  @override
+  String get rcpSalesTax => 'Sales tax';
+
+  @override
+  String get rcpTaxExempt => 'Exempt';
+
+  @override
+  String get rcpTaxExemptMark => 'EX';
+
+  @override
+  String get taxSettingsTitle => 'Taxes';
+
+  @override
+  String get taxSettingsSubtitle =>
+      'Rates, jurisdictions and product categories';
+
+  @override
+  String get taxSettingsIntro =>
+      'A rate is not a single number: it adds up from the jurisdictions this till sits in, and depends on the product category and the date. You can start from a preset and edit it afterwards.';
+
+  @override
+  String get taxSettingsNotConfigured =>
+      'Tax is not configured: the till charges nothing.';
+
+  @override
+  String get taxSettingsPresetSection => 'Preset';
+
+  @override
+  String get taxSettingsCountry => 'Country';
+
+  @override
+  String get taxSettingsRegion => 'State or region';
+
+  @override
+  String get taxSettingsCity => 'City';
+
+  @override
+  String get taxSettingsPreset => 'Preset';
+
+  @override
+  String get taxSettingsApplyPreset => 'Apply preset';
+
+  @override
+  String get taxSettingsPresetReplaces =>
+      'Applying replaces the current setup entirely. Two presets cannot be combined: the till would charge tax twice.';
+
+  @override
+  String taxSettingsPresetSource(String source) {
+    return 'Source: $source';
+  }
+
+  @override
+  String taxSettingsPresetValidFrom(String date) {
+    return 'Rates effective from $date';
+  }
+
+  @override
+  String get taxSettingsPresetApplied => 'Preset applied';
+
+  @override
+  String get taxSettingsCurrentSection => 'Current setup';
+
+  @override
+  String taxSettingsRateForStandard(String rate) {
+    return 'Standard item: $rate%';
+  }
+
+  @override
+  String get taxSettingsJurisdictions => 'Jurisdictions';
+
+  @override
+  String get taxSettingsCategories => 'Product categories';
+
+  @override
+  String get taxSettingsTillLocation => 'This till is located here';
+
+  @override
+  String get taxSettingsTillLocationHint =>
+      'More than one may be ticked: the city and its special districts. Higher levels are added automatically.';
+
+  @override
+  String get taxSettingsRules => 'Rules';
+
+  @override
+  String get taxSettingsRuleTaxed => 'taxed';
+
+  @override
+  String get taxSettingsRuleZero => 'zero rated';
+
+  @override
+  String get taxSettingsRuleExempt => 'exempt';
+
+  @override
+  String get taxSettingsAllCategories => 'all categories';
+
+  @override
+  String get taxSettingsAddJurisdiction => 'Add jurisdiction';
+
+  @override
+  String get taxSettingsAddCategory => 'Add category';
+
+  @override
+  String get taxSettingsAddRule => 'Add rule';
+
+  @override
+  String get taxSettingsName => 'Name';
+
+  @override
+  String get taxSettingsCode => 'Code';
+
+  @override
+  String get taxSettingsRate => 'Rate, %';
+
+  @override
+  String get taxSettingsValidFrom => 'Effective from';
+
+  @override
+  String get taxSettingsParent => 'Parent';
+
+  @override
+  String get taxSettingsNoParent => 'none (root)';
+
+  @override
+  String get taxSettingsLevel => 'Level';
+
+  @override
+  String get taxSettingsLevelCountry => 'Country';
+
+  @override
+  String get taxSettingsLevelState => 'State';
+
+  @override
+  String get taxSettingsLevelCounty => 'County';
+
+  @override
+  String get taxSettingsLevelCity => 'City';
+
+  @override
+  String get taxSettingsLevelDistrict => 'Special district';
+
+  @override
+  String get taxSettingsDelete => 'Delete';
+
+  @override
+  String get taxSettingsDeleteJurisdictionWarning =>
+      'Its rules and nested jurisdictions go with it.';
+
+  @override
+  String get taxSettingsResponsibility =>
+      'Preset figures come from public sources, each cited. Responsibility for the tax charged lies with the taxpayer, not the software.';
+
+  @override
+  String get taxSettingsNoPresetsForCountry =>
+      'No presets ship for this country — set it up by hand.';
+
+  @override
+  String get taxSettingsAdd => 'Add';
+
+  @override
+  String get taxSettingsCancel => 'Cancel';
+
+  @override
+  String get setupStoreAddressHint => '1600 Blake Street, Denver, CO 80202';
+
+  @override
+  String get setupStoreAddressHelper =>
+      'Printed on the receipt. Without it the customer cannot see where the purchase was made.';
+
+  @override
+  String get countryKz => 'Kazakhstan';
+
+  @override
+  String get countryRu => 'Russia';
+
+  @override
+  String get countryKg => 'Kyrgyzstan';
+
+  @override
+  String get countryUz => 'Uzbekistan';
+
+  @override
+  String get countryUs => 'United States';
+
+  @override
+  String get countryTm => 'Turkmenistan';
+
+  @override
+  String get currencyKzt => 'Kazakhstani tenge';
+
+  @override
+  String get currencyRub => 'Russian ruble';
+
+  @override
+  String get currencyKgs => 'Kyrgyzstani som';
+
+  @override
+  String get currencyUzs => 'Uzbekistani sum';
+
+  @override
+  String get currencyUsd => 'US dollar';
+
+  @override
+  String get currencyTmt => 'Turkmenistani manat';
+
+  @override
+  String get setupStepSalesTax => 'Sales tax';
+
+  @override
+  String get setupSalesTaxPayerTitle => 'I collect sales tax';
+
+  @override
+  String get setupSalesTaxPayerSubtitle =>
+      'Rates are set per jurisdiction in Settings → Taxes';
+
+  @override
+  String get setupSalesTaxPayerDescription =>
+      'Sales tax is added on top of the shelf price and printed on the receipt as its own line.';
+
+  @override
+  String get setupSalesTaxNonPayerTitle => 'No sales tax';
+
+  @override
+  String get setupSalesTaxNonPayerSubtitle => 'Nothing is added to the price';
+
+  @override
+  String get setupSalesTaxNonPayerDescription =>
+      'Nothing is added to the price, and the receipt has no tax line.';
+
+  @override
+  String get bootLoadingConfig => 'Loading configuration…';
+
+  @override
+  String get bootCheckingPosKey => 'Checking the till key…';
+
+  @override
+  String get bootLoadingAgents => 'Loading counterparties…';
+
+  @override
+  String get bootLoadingAccounts => 'Loading accounts…';
+
+  @override
+  String get bootInitialisingDatabase => 'Preparing the database…';
+
+  @override
+  String get bootLoadingCashiers => 'Loading cashiers…';
+
+  @override
+  String get bootLoadingPosData => 'Loading till data…';
+
+  @override
+  String get bootLoadingProducts => 'Loading products…';
+
+  @override
+  String get bootCheckingReceiptNumbers => 'Checking receipt numbering…';
+
+  @override
+  String get bootCheckingLicence => 'Checking the licence…';
+
+  @override
+  String get bootCheckingReports => 'Checking reports…';
+
+  @override
+  String get bootFinishingInitialisation => 'Finishing up…';
+
+  @override
+  String get bootStartingBackgroundJobs => 'Starting background jobs…';
+
+  @override
+  String get bootReady => 'Ready';
+
+  @override
+  String get bootDataLoaded => 'Data loaded';
+
+  @override
+  String bootTillNotResponding(String code) {
+    return 'The till is not responding: $code';
+  }
+
+  @override
+  String get bootDownloadingBackup => 'Downloading the backup…';
+
+  @override
+  String get bootBackupDownloadFailed => 'Could not download the backup';
+
+  @override
+  String get bootRestoringDatabase => 'Restoring the database…';
+
+  @override
+  String get bootDatabaseRestoreFailed => 'Could not restore the database';
+
+  @override
+  String get bootApplyingPosKey => 'Applying the till key…';
+
+  @override
+  String get bootRestoreDone => 'Restore complete';
+
+  @override
+  String get bootCreatingBackup => 'Creating a backup…';
+
+  @override
+  String get bootBackupCreateFailed => 'Could not create the backup';
+
+  @override
+  String get bootBackupDone => 'Backup created and uploaded';
+
+  @override
+  String get bootLoadingUsers => 'Loading users…';
+
+  @override
+  String get bootLoadingCategories => 'Loading categories…';
+
+  @override
+  String get bootLoadingSettings => 'Loading settings…';
+
+  @override
+  String get bootSyncDone => 'Sync complete';
+
+  @override
+  String get bootFailed => 'Something went wrong';
+
+  @override
+  String get countryDeu => 'Germany';
+
+  @override
+  String get currencyDeu => 'Euro';
+
+  @override
+  String get countryFra => 'France';
+
+  @override
+  String get currencyFra => 'Euro';
+
+  @override
+  String get countryEsp => 'Spain';
+
+  @override
+  String get currencyEsp => 'Euro';
+
+  @override
+  String get countryIta => 'Italy';
+
+  @override
+  String get currencyIta => 'Euro';
+
+  @override
+  String get countryGbr => 'United Kingdom';
+
+  @override
+  String get currencyGbr => 'Pound sterling';
+
+  @override
+  String get countryPol => 'Poland';
+
+  @override
+  String get currencyPol => 'Polish zloty';
+
+  @override
+  String get countryTur => 'Türkiye';
+
+  @override
+  String get currencyTur => 'Turkish lira';
+
+  @override
+  String get countryChn => 'China';
+
+  @override
+  String get currencyChn => 'Chinese yuan';
+
+  @override
+  String get countryJpn => 'Japan';
+
+  @override
+  String get currencyJpn => 'Japanese yen';
+
+  @override
+  String get countryKor => 'South Korea';
+
+  @override
+  String get currencyKor => 'South Korean won';
+
+  @override
+  String get countryAre => 'United Arab Emirates';
+
+  @override
+  String get currencyAre => 'UAE dirham';
+
+  @override
+  String get countrySau => 'Saudi Arabia';
+
+  @override
+  String get currencySau => 'Saudi riyal';
+
+  @override
+  String get countryInd => 'India';
+
+  @override
+  String get currencyInd => 'Indian rupee';
+
+  @override
+  String get countryCan => 'Canada';
+
+  @override
+  String get currencyCan => 'Canadian dollar';
+
+  @override
+  String get countryAus => 'Australia';
+
+  @override
+  String get currencyAus => 'Australian dollar';
+
+  @override
+  String get agentPaymentAccepted => 'Payment accepted';
+
+  @override
+  String get catalogCategoryHasChildren => 'The category has sub-categories';
+
+  @override
+  String creditOutstanding(String amount) {
+    return 'Outstanding: $amount';
+  }
+
+  @override
+  String get creditTakePayment => 'Take a payment';
+
+  @override
+  String get creditPrintContract => 'Print the contract';
+
+  @override
+  String creditPaymentFor(String number) {
+    return 'Payment on $number';
+  }
+
+  @override
+  String creditOutstandingOnContract(String amount) {
+    return 'Outstanding on the contract: $amount';
+  }
+
+  @override
+  String get creditPayInFull => 'Pay in full';
+
+  @override
+  String get creditAccept => 'Accept';
+
+  @override
+  String get displayProduct => 'Product';
+
+  @override
+  String markupSaved(int count) {
+    return 'Mark-ups saved: $count categories with a mark-up';
+  }
+
+  @override
+  String genericErrorWith(String detail) {
+    return 'Something went wrong: $detail';
+  }
+
+  @override
+  String get serviceAttachPhoto => 'Photo';
+
+  @override
+  String get serviceAttachVideo => 'Video';
+
+  @override
+  String get shiftCorrectionReceipt => 'Correction receipt';
+
+  @override
+  String get supplierChoose => 'Choose a supplier';
+
+  @override
+  String get supplierProduct => 'Product';
+
+  @override
+  String get supplierStock => 'In stock';
+
+  @override
+  String get supplierOrderQty => 'Order';
+
+  @override
+  String get supplierCreateRequest => 'Create the request';
+
+  @override
+  String get supplierNeedQuantity =>
+      'Enter a quantity for at least one product';
+
+  @override
+  String unitMonthsShort(int count) {
+    return '$count mo.';
+  }
+
+  @override
+  String unitDaysShort(int count) {
+    return '$count d.';
+  }
+
+  @override
+  String get displayWelcome => 'Welcome!';
+
+  @override
+  String get displayWelcomeSubtitle => 'Glad to see you';
+
+  @override
+  String get displayPromoFree => 'Promo · free';
+
+  @override
+  String displayDiscountAmount(String amount) {
+    return 'Discount −$amount';
+  }
+
+  @override
+  String get displayWindowTitle => 'Customer display';
+
+  @override
+  String get shiftXReportPrinted => 'X-report printed';
+
+  @override
+  String get shiftXReportPrintedOffline =>
+      'X-report printed (the fiscal X is queued, no connection)';
+
+  @override
+  String get shiftXReportFailed => 'The X-report could not be printed';
+
+  @override
+  String creditContractNotFound(String number) {
+    return 'Contract $number is not in this till';
+  }
+
+  @override
+  String creditOverdue(String amount, int count) {
+    return 'OVERDUE: $amount ($count payments)';
+  }
+
+  @override
+  String creditNextPayment(String date, String amount) {
+    return 'Next payment $date: $amount';
+  }
+
+  @override
+  String get creditNoTillAccount =>
+      'The till has no account — there is nowhere to receive the money';
+
+  @override
+  String creditContractClosed(String number) {
+    return 'Contract $number is closed';
+  }
+
+  @override
+  String creditPartiallyPaid(String paid, String left) {
+    return 'Accepted $paid, $left left';
+  }
+
+  @override
+  String get creditPaymentAmount => 'Payment amount';
+
+  @override
+  String get serviceWarrantyAndQuality => 'Warranty and quality';
+
+  @override
+  String serviceWarrantyDays(int days) {
+    return 'Warranty: $days days';
+  }
+
+  @override
+  String get serviceWarrantyNotSet => 'No warranty set';
+
+  @override
+  String get serviceQualityRatingTitle => 'Quality rating';
+
+  @override
+  String serviceQualityRatingValue(int rating) {
+    return 'Rating: $rating/5';
+  }
+
+  @override
+  String get serviceRepairMedia => 'Repair photos and video';
+
+  @override
+  String get serviceNoRepairMedia => 'No repair media';
+
+  @override
+  String get supplierLabel => 'Supplier:';
+
+  @override
+  String supplierLinesToOrder(int count) {
+    return 'Lines to order: $count';
+  }
+
+  @override
+  String supplierRequestCreated(int count) {
+    return 'Request created: $count lines';
+  }
+
+  @override
+  String get modifierRequired => 'Required';
+
+  @override
+  String modifierMax(int count) {
+    return 'max $count';
+  }
+
+  @override
+  String get writeoffReasonUnspecified => 'Not specified';
+
+  @override
+  String get labelSampleProduct => 'Sample product';
+
+  @override
+  String markupCategoryNumbered(int id) {
+    return 'Category #$id';
+  }
+
+  @override
+  String get salePolicyForbids =>
+      'The till settings do not allow this (Settings → Sales policy)';
+
+  @override
+  String get labelPrintFailed => 'The label could not be printed';
+
+  @override
+  String get labelPrintFromTillOnly =>
+      'Labels print from the till, not from a terminal';
+
+  @override
+  String get orphanQrTillNotRegistered =>
+      'This till is not registered — there is nobody to ask about unmatched QR money';
+
+  @override
+  String get stockLowStockReorder => 'Re-order products that are running low';
+
+  @override
+  String get serviceNoteNeedsApproval => 'Needs the customer to approve';
+
+  @override
+  String deferredFromTill(String id) {
+    return 'till $id';
+  }
+
+  @override
+  String dishSummary(int count, String cost) {
+    return 'Ingredients: $count, cost: $cost';
+  }
+
+  @override
+  String prepaymentIssueTo(String name) {
+    return 'Advance paid out to $name';
+  }
+
+  @override
+  String prepaymentFrom(String name) {
+    return 'Advance from $name';
+  }
+
+  @override
+  String prepaymentRefundTo(String name) {
+    return 'Advance refunded to $name';
+  }
+
+  @override
+  String get setupPartOrganization => 'organisation';
+
+  @override
+  String get setupPartTill => 'till';
+
+  @override
+  String get setupPartFiscal => 'fiscalisation';
+
+  @override
+  String get setupPartEquipment => 'equipment';
+
+  @override
+  String get setupPartTerminals => 'payment terminals';
+
+  @override
+  String get setupPartRules => 'rules';
+
+  @override
+  String get setupPartUser => 'user';
+
+  @override
+  String customerPaymentNote(String name) {
+    return 'Debt settlement / payment ($name)';
+  }
+
+  @override
+  String get chatMembersUnavailable => 'The member list could not be loaded';
+
+  @override
+  String get chatMe => 'Me';
+
+  @override
+  String get setPolicyBigAmountLimit => 'Receipt ceiling';
+
+  @override
+  String setPolicyBigAmountLimitDesc(String fallback) {
+    return 'Above this amount the till asks for permission. Empty means $fallback.';
+  }
+
+  @override
+  String get cashRefusedNotPositive => 'The amount must be greater than zero';
+
+  @override
+  String cashRefusedAboveCeiling(String limit) {
+    return 'The amount is above this till’s ceiling ($limit). Raise the ceiling in the settings or enable the large-amount permission.';
+  }
+
+  @override
+  String errorProductHasNoPrice(String name) {
+    return 'The product “$name” has no price — it cannot be sold. Set a price in the catalogue.';
+  }
+
+  @override
+  String get sellingHoursTitle => 'Restricted selling hours';
+
+  @override
+  String get sellingHoursAdd => 'Add a window';
+
+  @override
+  String get sellingHoursCategory => 'Category';
+
+  @override
+  String get sellingHoursFrom => 'From (HH:MM)';
+
+  @override
+  String get sellingHoursTo => 'To (HH:MM)';
+
+  @override
+  String get sellingHoursActive => 'The ban is in force';
+
+  @override
+  String sellingHoursBanned(String window) {
+    return 'Selling is banned $window';
+  }
+
+  @override
+  String sellingHoursOff(String window) {
+    return 'The window $window is switched off';
+  }
+
+  @override
+  String sellingHoursBroken(String window) {
+    return 'The hours “$window” cannot be read — the ban does not work';
+  }
+
+  @override
+  String get sellingHoursBadTime =>
+      'Enter the time as HH:MM, for example 23:00';
+
+  @override
+  String sellingHoursPreviewDay(String window) {
+    return 'Ban inside one day: $window';
+  }
+
+  @override
+  String sellingHoursPreviewNight(String window) {
+    return 'Overnight ban across midnight: $window';
+  }
+
+  @override
+  String get sellingHoursExplainer =>
+      'You set the hours: the law differs by country and changes. A ban on a category also covers everything nested inside it.';
+
+  @override
+  String get sellingHoursNoCategories =>
+      'Create categories in the catalogue first — a ban is set on a category.';
+
+  @override
+  String sellingHoursCategoryGone(int id) {
+    return 'Category #$id is gone';
+  }
+
+  @override
+  String errorSellingHoursBanned(String category, String window) {
+    return '“$category” cannot be sold right now: banned $window.';
+  }
+
+  @override
+  String errorSellingHoursBannedNoWindow(String category) {
+    return '“$category” cannot be sold right now.';
+  }
+
+  @override
+  String get generalSettingsStoreAddress => 'Store address';
+
+  @override
+  String get generalSettingsStoreAddressHint =>
+      'Printed on the receipt. Change it if the shop has moved.';
 }

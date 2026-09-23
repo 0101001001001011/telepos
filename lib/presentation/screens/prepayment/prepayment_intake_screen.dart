@@ -254,9 +254,7 @@ class _PrepaymentIntakeScreenState extends State<PrepaymentIntakeScreen> {
     final customer = _customer;
     if (customer == null) return;
 
-    final amount = Decimal.tryParse(
-      _amount.text.trim().replaceAll(',', '.'),
-    );
+    final amount = Decimal.tryParse(_amount.text.trim().replaceAll(',', '.'));
     // Сумму проверяет и касса (`prepayment_amount_invalid`), и это не
     // дублирование: здесь проверка **избавляет от круга**, а запрет держит
     // касса. Убрать её здесь — лишний круг; убрать там — дыра.
@@ -305,7 +303,7 @@ class _PrepaymentIntakeScreenState extends State<PrepaymentIntakeScreen> {
             // основания — законный случай (докстринг
             // `CustomerPaymentUseCase.refundPrepayment`). Выдумать номер
             // здесь значило бы сослаться на чужой документ.
-            note: 'Выдача аванса покупателю (${customer.name})',
+            note: l10n.prepaymentIssueTo(customer.name),
           ),
         );
         balance = outcome.balance;
@@ -317,7 +315,7 @@ class _PrepaymentIntakeScreenState extends State<PrepaymentIntakeScreen> {
             customerId: customer.id,
             amount: amount,
             tenderKindId: _tenderKindId,
-            note: 'Аванс покупателя (${customer.name})',
+            note: l10n.prepaymentFrom(customer.name),
           ),
         );
         balance = outcome.balance;
@@ -453,7 +451,9 @@ class _PrepaymentIntakeScreenState extends State<PrepaymentIntakeScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              _payOut ? l10n.prepaymentRefundTender : l10n.customerPaymentTender,
+              _payOut
+                  ? l10n.prepaymentRefundTender
+                  : l10n.customerPaymentTender,
               style: AppTextStyles.body,
             ),
             const SizedBox(height: 6),

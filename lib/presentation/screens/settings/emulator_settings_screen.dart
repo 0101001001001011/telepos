@@ -198,9 +198,10 @@ class _EmulatorSettingsScreenState
       local[kind] = value != null && _looksLocal(value);
       running[kind] =
           value != null &&
-          value == (kind == BuiltinEmulatorKind.fiscalOperator
-              ? address?.baseUrl
-              : address?.bindingValue);
+          value ==
+              (kind == BuiltinEmulatorKind.fiscalOperator
+                  ? address?.baseUrl
+                  : address?.bindingValue);
       final refusal = await _host.refusalFor(kind);
       if (refusal != null) refusals[kind] = refusal;
     }

@@ -89,11 +89,16 @@ void main() {
     test('configured state skips setup', () {
       const state = InitialSetupState(currentStep: InitialSetupStep.complete);
       expect(state.currentStep, equals(InitialSetupStep.complete));
-      expect(state.currentStep, isNot(equals(InitialSetupStep.countrySelection)));
+      expect(
+        state.currentStep,
+        isNot(equals(InitialSetupStep.countrySelection)),
+      );
     });
 
     test('unconfigured state requires setup', () {
-      const state = InitialSetupState(currentStep: InitialSetupStep.countrySelection);
+      const state = InitialSetupState(
+        currentStep: InitialSetupStep.countrySelection,
+      );
       expect(state.currentStep, equals(InitialSetupStep.countrySelection));
       expect(state.isComplete, isFalse);
     });

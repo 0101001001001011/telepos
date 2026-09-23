@@ -8,6 +8,7 @@ import 'package:telepos/app/theme/input_mode.dart';
 import 'package:telepos/app/theme/wizard_metrics.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/boot_stage_label.dart';
 import 'package:telepos/presentation/common/adaptive/breakpoints.dart';
 import 'package:telepos/presentation/common/widgets/settings/settings_section.dart';
 import 'package:telepos/presentation/common/widgets/settings/settings_tile.dart';
@@ -82,11 +83,14 @@ class _RestoreOrNewScreenState extends ConsumerState<RestoreOrNewScreen> {
 
     final success = await _firstLaunch.restoreFromBackup(
       backup,
-      onProgress: (progress, message) {
+      onProgress: (progress, stage, [detail]) {
         if (!mounted) return;
+        final words = AppLocalizations.of(context);
         setState(() {
           _restoreProgress = progress;
-          _statusMessage = message;
+          _statusMessage = words == null
+              ? ''
+              : bootStageLabel(stage, words, detail: detail);
         });
       },
     );

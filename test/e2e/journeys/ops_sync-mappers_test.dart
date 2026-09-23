@@ -40,11 +40,32 @@ class _FakeEngine extends CouchDbSyncEngine {
   @override
   Future<bool> tryRestore() async => true;
 
+  /// Подтверждает **первые** `confirmRatio` документов пакета поимённо.
+  ///
+  /// Исход стал перечислением вместо числа (шаг 1 спеки): координатор теперь
+  /// отмечает очередь по документу, и «сколько-то из скольких-то» ему больше
+  /// ни о чём не говорит. Доля сохранена — ею эта проба и пользуется; важно
+  /// лишь, что теперь названо, КАКИЕ именно доехали.
   @override
-  Future<int> pushDocuments(List<Map<String, dynamic>> docs) async {
+  Future<CouchDbPushResult> pushDocuments(List<Map<String, dynamic>> docs) async {
     pushed.addAll(docs);
-    if (confirmRatio >= 1.0) return docs.length;
-    return (docs.length * confirmRatio).floor();
+    final take = confirmRatio >= 1.0
+        ? docs.length
+        : (docs.length * confirmRatio).floor();
+    return CouchDbPushResult(
+      confirmed: {
+        for (final d in docs.take(take))
+          if (d['_id'] is String) d['_id'] as String: '1-подделка',
+      },
+      rejected: [
+        for (final d in docs.skip(take))
+          CouchDbPushRejection(
+            id: d['_id'] as String? ?? '<без _id>',
+            error: 'conflict',
+            reason: 'подделка: доля подтверждения $confirmRatio',
+          ),
+      ],
+    );
   }
 
   @override
@@ -327,8 +348,18 @@ void main() {
   });
 
   test(
-    'partial confirmation leaves stock docs PENDING for idempotent retry',
+    'доехавший документ уходит из очереди, отклонённый остаётся',
     () async {
+      // **Эта проба утверждала обратное и была неверна.** Она требовала,
+      // чтобы при частичном подтверждении в очереди осталось ВСЁ — «не
+      // отмечать молча». Звучит осторожно, а работает наоборот: документ,
+      // уже лежащий на сервере, отправляется снова, сталкивается сам с
+      // собой (409), пакет не подтверждается никогда, и очередь растёт без
+      // предела. Это находка 4 спеки `2026-07-29-sync-correctness-design`,
+      // и прежнее утверждение её закрепляло.
+      //
+      // Новая правда: отметка **по документу**. Доехавший уходит из
+      // очереди независимо от судьбы соседа.
       await seedWriteoff();
       await seedWriteoff();
       expect(await db.writeoffDao.countUnsynced(), 2);
@@ -342,11 +373,36 @@ void main() {
 
       expect(
         await db.writeoffDao.countUnsynced(),
-        2,
-        reason: 'partial batch must not silently mark records synced',
+        1,
+        reason:
+            'один подтверждён — он обязан уйти из очереди; второй отклонён '
+            'и обязан в ней остаться. Оба в очереди означали бы вечный круг',
       );
     },
   );
+
+  test('следующий круг довозит оставшийся, и очередь пустеет', () async {
+    // Вторая половина того же утверждения: очередь должна не просто
+    // уменьшаться, а **доходить до нуля**. Без этой пробы правка,
+    // отмечающая всегда ровно половину, выглядела бы верной.
+    await seedWriteoff();
+    await seedWriteoff();
+
+    final prefs = await SharedPreferences.getInstance();
+    final engine = _FakeEngine(prefs)..confirmRatio = 0.5;
+    final coord = CouchDbSyncCoordinator(db: db, engine: engine);
+
+    await coord.syncNow();
+    expect(await db.writeoffDao.countUnsynced(), 1);
+
+    engine.confirmRatio = 1.0; // сервер снова принимает всё
+    await coord.syncNow();
+    expect(
+      await db.writeoffDao.countUnsynced(),
+      0,
+      reason: 'очередь обязана опустеть, а не застрять на остатке',
+    );
+  });
 
   test(
     'unconfigured engine -> syncNow is a safe no-op; stock rows untouched',

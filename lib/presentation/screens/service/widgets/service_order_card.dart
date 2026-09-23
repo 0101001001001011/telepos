@@ -5,6 +5,7 @@ import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/core/constants/enums/service_order_status.dart';
 import 'package:telepos/domain/entities/service/service_order_entity.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceOrderCard extends StatelessWidget {
   const ServiceOrderCard({
@@ -207,7 +208,7 @@ class ServiceOrderCard extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  l10n.currencySymbol,
+                                  tillCurrencySymbol(),
                                   style: context.styles.caption.copyWith(
                                     fontSize: 10,
                                   ),

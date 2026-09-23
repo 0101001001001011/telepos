@@ -16,6 +16,7 @@ import 'package:telepos/presentation/screens/service/dialogs/client_lookup_dialo
 import 'package:telepos/presentation/screens/service/dialogs/prepayment_dialog.dart';
 import 'package:telepos/presentation/screens/service/dialogs/service_type_dialog.dart';
 import 'package:telepos/presentation/screens/service/widgets/quick_services_grid.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceIntakeScreen extends ConsumerStatefulWidget {
   const ServiceIntakeScreen({super.key});
@@ -722,7 +723,7 @@ class _ServiceIntakeScreenState extends ConsumerState<ServiceIntakeScreen> {
                   leading: const Icon(Icons.build_outlined, size: 18),
                   title: Text(service.name),
                   subtitle: Text(
-                    '${service.price} ${l10n.currencySymbol}'
+                    '${service.price} ${tillCurrencySymbol()}'
                     '${service.estimatedMinutes != null ? ' / ${service.estimatedMinutes} ${l10n.serviceCatalogDuration}' : ''}',
                   ),
                   trailing: IconButton(
@@ -745,7 +746,7 @@ class _ServiceIntakeScreenState extends ConsumerState<ServiceIntakeScreen> {
                     ),
                   ),
                   Text(
-                    '${state.servicesTotal} ${l10n.currencySymbol}',
+                    '${state.servicesTotal} ${tillCurrencySymbol()}',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -798,7 +799,7 @@ class _ServiceIntakeScreenState extends ConsumerState<ServiceIntakeScreen> {
               leading: const Icon(Icons.payments_outlined, size: 20),
               title: Text(l10n.servicePrepayment),
               subtitle: state.prepaymentAmount != null
-                  ? Text('${state.prepaymentAmount} ${l10n.currencySymbol}')
+                  ? Text('${state.prepaymentAmount} ${tillCurrencySymbol()}')
                   : null,
               trailing: const Icon(Icons.chevron_right, size: 18),
               onTap: () async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/domain/entities/service/service_mark_entity.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceTimeline extends StatelessWidget {
   const ServiceTimeline({
@@ -176,7 +177,7 @@ class _TimelineItem extends StatelessWidget {
                         const Spacer(),
                         if (mark.cost != null)
                           Text(
-                            '${mark.cost} ${l10n.currencySymbol}',
+                            '${mark.cost} ${tillCurrencySymbol()}',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               decoration: mark.isRejected

@@ -73,16 +73,17 @@ class OrphanQrMoneyPanel extends ConsumerWidget {
 ///
 /// Теперь отсутствие базы — **ошибка с названной причиной**, и панель её
 /// показывает (см. [OrphanQrMoneyPanel.build]).
-final orphanQrMoneyProvider =
-    FutureProvider.autoDispose<List<PaymentIntent>>((ref) async {
-      if (!GetIt.I.isRegistered<AppDatabase>()) {
-        throw StateError(
-          'база кассы не зарегистрирована — неразобранные деньги по QR '
-          'спросить не у кого',
-        );
-      }
-      return GetIt.I<AppDatabase>().paymentIntentDao.orphanMoney();
-    });
+final orphanQrMoneyProvider = FutureProvider.autoDispose<List<PaymentIntent>>((
+  ref,
+) async {
+  if (!GetIt.I.isRegistered<AppDatabase>()) {
+    throw StateError(
+      'база кассы не зарегистрирована — неразобранные деньги по QR '
+      'спросить не у кого',
+    );
+  }
+  return GetIt.I<AppDatabase>().paymentIntentDao.orphanMoney();
+});
 
 /// «Спросить не удалось» — **не** «разбирать нечего».
 class _Unknown extends StatelessWidget {

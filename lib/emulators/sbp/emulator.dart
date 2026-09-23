@@ -169,8 +169,7 @@ class SbpIntent {
   /// одного `double` в денежном пути (задача 26).
   int refundedMillis = 0;
 
-  String get payload =>
-      'https://qr.emul.local/pay?id=$id&sum=$amount';
+  String get payload => 'https://qr.emul.local/pay?id=$id&sum=$amount';
 
   Map<String, Object?> toWire() => {
     'intentId': id,
@@ -251,8 +250,8 @@ class SbpEmulator {
         _log(
           'refuseConnect',
           'соединение отвергнуто: отказ «refuseConnect» — касса обязана '
-          'ответить транзиентным qr_network, а не объявить намерение '
-          'провалившимся',
+              'ответить транзиентным qr_network, а не объявить намерение '
+              'провалившимся',
         );
         await request.response.close().catchError((_) {});
         try {
@@ -291,7 +290,7 @@ class SbpEmulator {
         _log(
           'fault',
           'ответа не будет: отказ «silence» — касса обязана дождаться '
-          'своего тайм-аута и ответить qr_timeout',
+              'своего тайм-аута и ответить qr_timeout',
         );
         return; // соединение висит, ответа нет
       case 'kill':
@@ -309,8 +308,8 @@ class SbpEmulator {
         _log(
           'fault',
           'связь оборвана без единого заголовка: отказ «kill» — касса '
-          'обязана ответить транзиентным qr_network и НЕ хоронить '
-          'намерение',
+              'обязана ответить транзиентным qr_network и НЕ хоронить '
+              'намерение',
         );
         try {
           final socket = await request.response.detachSocket(
@@ -323,7 +322,7 @@ class SbpEmulator {
         _log(
           'fault',
           'тело не JSON: отказ «garbage» — касса обязана ответить '
-          'qr_malformed_reply, а не упасть исключением наружу',
+              'qr_malformed_reply, а не упасть исключением наружу',
         );
         await _write(request, 200, null, raw: '<<не json>>');
         return;
@@ -356,7 +355,7 @@ class SbpEmulator {
         _log(
           'fault',
           'возврат не поддержан: отказ «reverseUnsupported» — касса обязана '
-          'ответить ЗНАЧЕНИЕМ, а не исключением и не молчанием',
+              'ответить ЗНАЧЕНИЕМ, а не исключением и не молчанием',
         );
         await _write(request, 501, {
           'error': 'reverse_unsupported',
@@ -370,8 +369,9 @@ class SbpEmulator {
       await _create(request, body);
       return;
     }
-    final match = RegExp(r'^/sbp/v1/qr/([^/]+)(/cancel|/refund)?$')
-        .firstMatch(path);
+    final match = RegExp(
+      r'^/sbp/v1/qr/([^/]+)(/cancel|/refund)?$',
+    ).firstMatch(path);
     if (match != null) {
       final id = match.group(1)!;
       final tail = match.group(2);
@@ -423,7 +423,7 @@ class SbpEmulator {
       _log(
         'create',
         'ключ $key уже известен → отдано прежнее намерение ${existing.id} '
-        '(${existing.status}); второго намерения НЕ заведено',
+            '(${existing.status}); второго намерения НЕ заведено',
       );
       await _write(request, 200, {...existing.toWire(), 'existed': true});
       return;
@@ -443,7 +443,7 @@ class SbpEmulator {
     _log(
       'create',
       'намерение ${intent.id} на $amount заведено по ключу $key, '
-      'срок до ${intent.expiresAt.toIso8601String()}',
+          'срок до ${intent.expiresAt.toIso8601String()}',
     );
     await _write(request, 200, {...intent.toWire(), 'existed': false});
   }
@@ -458,7 +458,7 @@ class SbpEmulator {
       _log(
         'cancel',
         '${intent.id} отменить нельзя: уже оплачено — деньги у покупателя '
-        'списаны, и касса обязана это увидеть',
+            'списаны, и касса обязана это увидеть',
       );
       await _write(request, 200, intent.toWire());
       return;
@@ -493,7 +493,7 @@ class SbpEmulator {
         _log(
           'refund',
           '${intent.id}: ключ $key уже известен — прежний ответ, деньги '
-          'второй раз не возвращаются',
+              'второй раз не возвращаются',
         );
         await _write(request, 200, seen);
         return;
@@ -521,8 +521,8 @@ class SbpEmulator {
       _log(
         'refund',
         '${intent.id}: оплачено ${moneyOfMillis(paid)}, возвращено '
-        '${moneyOfMillis(intent.refundedMillis)}, просят ${body['amount']} — '
-        'больше оплаченного, отказ',
+            '${moneyOfMillis(intent.refundedMillis)}, просят ${body['amount']} — '
+            'больше оплаченного, отказ',
       );
       await _write(request, 409, {
         'error': 'over_refund',
@@ -536,7 +536,7 @@ class SbpEmulator {
     _log(
       'refund',
       '${intent.id} возвращено ${body['amount']} '
-      '(всего ${moneyOfMillis(intent.refundedMillis)} из ${moneyOfMillis(paid)})',
+          '(всего ${moneyOfMillis(intent.refundedMillis)} из ${moneyOfMillis(paid)})',
     );
     final wire = intent.toWire();
     if (key is String) refundsByKey[key] = wire;
@@ -566,8 +566,8 @@ class SbpEmulator {
     _log(
       'pay',
       '${intent.id} оплачено на ${intent.paidAmount}'
-      '${partial ? ' — ЧАСТИЧНО, просили ${intent.amount}' : ''}, '
-      'подтверждений ${intent.confirmations}',
+          '${partial ? ' — ЧАСТИЧНО, просили ${intent.amount}' : ''}, '
+          'подтверждений ${intent.confirmations}',
     );
   }
 
@@ -640,7 +640,7 @@ class SbpEmulator {
             _log(
               'pay',
               '${intent.id} будет оплачено через $afterMs мс — дольше, чем '
-              'касса согласна ждать',
+                  'касса согласна ждать',
             );
             final t = Timer(Duration(milliseconds: afterMs), () {
               for (var i = 0; i < times; i++) {

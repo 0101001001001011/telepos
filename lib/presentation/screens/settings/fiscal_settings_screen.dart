@@ -119,8 +119,7 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
               : SnackBarAction(
                   label: l10n.unfiscalizedTitle,
                   textColor: Colors.white,
-                  onPressed: () =>
-                      context.push(AppRoutes.unfiscalizedReceipts),
+                  onPressed: () => context.push(AppRoutes.unfiscalizedReceipts),
                 ),
         ),
       );
@@ -280,7 +279,23 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
     );
   }
 
+  /// Подпись оператора для человека.
+  ///
+  /// В самом `FiscalOperatorType` подпись лежит русской строкой — она там
+  /// осталась опознавательной, для журналов и для тех мест, где словаря нет.
+  /// На экране показывать её нельзя: касса на английском выводила
+  /// «Без фискализации».
+  String _operatorLabel(FiscalOperatorType type, AppLocalizations l10n) =>
+      switch (type) {
+        FiscalOperatorType.none => l10n.fiscalSettingsNoneLabel,
+        FiscalOperatorType.webkassa => l10n.fiscalSettingsWebkassaLabel,
+        FiscalOperatorType.directOfd => l10n.fiscalSettingsDirectOfdLabel,
+        // Имя собственное: не переводится ни на один язык.
+        FiscalOperatorType.kassa24 => type.label,
+      };
+
   Widget _buildOperatorSelector(FiscalOperatorType selected) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: FiscalOperatorType.values.map((type) {
         final isSelected = selected == type;
@@ -309,7 +324,7 @@ class _FiscalSettingsScreenState extends ConsumerState<FiscalSettingsScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    type.label,
+                    _operatorLabel(type, l10n),
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: isSelected

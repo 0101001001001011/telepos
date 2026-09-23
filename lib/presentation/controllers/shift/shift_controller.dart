@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:telepos/core/constants/enums/country_code.dart';
+import 'package:telepos/domain/startup/startup_state_repository.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,9 +9,11 @@ import 'package:get_it/get_it.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
+import 'package:telepos/domain/cash/cash_operation_kind.dart';
 import 'package:telepos/domain/fiscal/fiscal_models.dart';
 import 'package:telepos/domain/services/receipt_print_service.dart';
 import 'package:telepos/data/shift/local_shift_desk.dart';
+import 'package:telepos/domain/sale/deferred_claim_port.dart';
 import 'package:telepos/domain/services/shift_service.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
 import 'package:telepos/domain/usecases/shift/assemble_shift_receipt_use_case.dart';
@@ -18,7 +22,24 @@ import 'package:telepos/core/logging/app_talker.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/domain/shift/shift_status.dart';
 
-enum CashOperationType { investment, expense, dividend }
+/// Род кассовой операции глазами экрана смены.
+///
+/// Два последних рода — сведение журнала с пересчётом. Они показываются в
+/// списке операций наравне с прочими, но в суммы смены НЕ входят: сведение
+/// правит запись о деньгах, а не деньги. Сторона вынесена в РОД, а не в
+/// знак суммы: суммы всех операций положительны, и недостача, записанная
+/// положительным числом без рода, читалась бы как излишек.
+///
+/// Числа рода живут в `domain/cash/cash_operation_kind.dart`.
+enum CashOperationType {
+  investment,
+  expense,
+  dividend,
+  reconciliationOverage,
+  reconciliationShortage,
+  openingCountOverage,
+  openingCountShortage,
+}
 
 const kShiftMaxAge = Duration(hours: 24);
 
@@ -62,7 +83,39 @@ enum ZReportOutcome {
   failed,
 }
 
-const kBillDenominations = [200, 500, 1000, 2000, 5000, 10000, 20000];
+/// Банкноты для счётчика купюр — ПО СТРАНЕ кассы.
+///
+/// Здесь стояла константа `[200, 500, 1000, 2000, 5000, 10000, 20000]`,
+/// одинаковая для всех стран. На американской кассе кассир пересчитывал
+/// купюры, которых не существует, и не мог пересчитать доллар, пятёрку и
+/// двадцатку. Для Казахстана список совпадал со списком экрана оплаты —
+/// оттого расхождение и жило незаметно.
+///
+/// Источник один: [CountryCode.banknotes].
+/// Номиналы для счётчика купюр этой кассы.
+///
+/// Отказ даёт умолчание, а не пустой список: счётчик купюр — удобство, и
+/// экран смены не имеет права не открыться из-за него. Тот же довод, что у
+/// `denominationsProvider` на экране оплаты.
+final billDenominationsProvider = FutureProvider<List<int>>((ref) async {
+  try {
+    final setup = await GetIt.I<StartupStateRepository>().watch().first;
+    return billDenominationsOf(setup.countryCode);
+  } on Object catch (e) {
+    talker.warning('Shift: country unavailable, default bills: $e');
+    return billDenominationsOf(null);
+  }
+});
+
+List<int> billDenominationsOf(int? countryCode) {
+  final country =
+      (countryCode != null &&
+          countryCode >= 0 &&
+          countryCode < CountryCode.values.length)
+      ? CountryCode.values[countryCode]
+      : CountryCode.kzt;
+  return country.banknotes;
+}
 
 @immutable
 class CashOperationItem {
@@ -71,6 +124,7 @@ class CashOperationItem {
     required this.type,
     required this.amount,
     required this.note,
+    required this.reasonCode,
     required this.time,
   });
 
@@ -78,12 +132,24 @@ class CashOperationItem {
   final CashOperationType type;
   final Decimal amount;
   final String? note;
+
+  /// Основание операции числом (схема v58); `null` — не записано. До v58
+  /// основание жило внутри `note` русской прозой, и подпись под операцией
+  /// на английской кассе оставалась русской.
+  final int? reasonCode;
   final DateTime time;
 
   String localizedTypeLabel(AppLocalizations l10n) => switch (type) {
     CashOperationType.investment => l10n.cashInvestment,
     CashOperationType.expense => l10n.cashExpense,
     CashOperationType.dividend => l10n.cashWithdrawal,
+    CashOperationType.reconciliationOverage => l10n.shiftSurplus,
+    CashOperationType.reconciliationShortage => l10n.shiftShortage,
+    // Одна подпись на обе стороны: при открытии ожидания ещё нет, и слова
+    // «излишек»/«недостача» здесь были бы обвинением. Сторону показывает
+    // цвет строки.
+    CashOperationType.openingCountOverage ||
+    CashOperationType.openingCountShortage => l10n.cashOpeningCount,
   };
 }
 
@@ -154,17 +220,34 @@ class ShiftState {
   bool get hasCounted =>
       billCounts.values.any((c) => c > 0) || manualTotal > Decimal.zero;
 
-  Decimal get difference =>
-      hasCounted ? enteredTotal - systemTotal : Decimal.zero;
-
+  /// Сколько в ящике **обязано** лежать прямо сейчас.
+  ///
+  /// Внесения здесь со знаком плюс, и это правка 2026-09-22. Прежде их не
+  /// было вовсе, а `LocalShiftDesk._cashTotals` оправдывал пропуск словами
+  /// «в „должно быть“ они уже вошли выручкой». Неправда: внесение наличных
+  /// строки оплаты не создаёт (`CashInOutControllerImpl._createOperation`
+  /// пишет только строку операции и двигает остаток счёта), поэтому в
+  /// выручку оно не попадало ни на одном из двух путей. Внесли 100 $ — и на
+  /// закрытии касса объявляла излишек 100 $, которого не было.
   Decimal get expectedCash =>
       openingCash +
       cashSalesTotal -
-      cashRefundsTotal -
+      cashRefundsTotal +
+      investmentTotal -
       (expenseTotal + dividendTotal);
 
-  Decimal get reconciliation =>
+  /// Расхождение пересчёта с ожиданием — **одно число, а не два**.
+  ///
+  /// До 2026-09-22 их было два: `difference` считалось от `systemTotal`
+  /// (остатка счёта), `reconciliation` — от `expectedCash`. Экраны
+  /// показывали первое, стол смены записывал второе, и расходились они
+  /// ровно на подъёмные: кассир, пересчитавший ящик верно, видел «излишек
+  /// +200». Теперь это синонимы, и `systemTotal` остался тем, чем и был, —
+  /// независимой сверкой журнала, а не вторым мнением о расхождении.
+  Decimal get difference =>
       hasCounted ? enteredTotal - expectedCash : Decimal.zero;
+
+  Decimal get reconciliation => difference;
 
   final Decimal investmentTotal;
 
@@ -329,6 +412,14 @@ class ShiftNotifier extends Notifier<ShiftState> {
               expenseTotal += op.amount;
             case CashOperationType.dividend:
               dividendTotal += op.amount;
+            case CashOperationType.reconciliationOverage:
+            case CashOperationType.reconciliationShortage:
+            case CashOperationType.openingCountOverage:
+            case CashOperationType.openingCountShortage:
+              // Сведение денег не двигает — оно приводит журнал к тому, что
+              // человек пересчитал. Сложить его со слагаемыми значило бы
+              // посчитать пересчёт дважды.
+              break;
           }
         }
 
@@ -388,10 +479,19 @@ class ShiftNotifier extends Notifier<ShiftState> {
 
       return rows.map((row) {
         final typeIndex = row.read<int>('type');
+        // `default` здесь был дефектом ожидания: тип 3 попадал в дивиденды
+        // и ВЫЧИТАЛСЯ бы из «должно быть». Роды перечислены поимённо, а
+        // неизвестный впредь — сведение, то есть в суммы не входит.
         final type = switch (typeIndex) {
-          0 => CashOperationType.investment,
-          1 => CashOperationType.expense,
-          _ => CashOperationType.dividend,
+          kCashOpInvestment => CashOperationType.investment,
+          kCashOpExpense => CashOperationType.expense,
+          kCashOpDividend => CashOperationType.dividend,
+          kCashOpReconciliationShortage =>
+            CashOperationType.reconciliationShortage,
+          kCashOpOpeningCountOverage => CashOperationType.openingCountOverage,
+          kCashOpOpeningCountShortage =>
+            CashOperationType.openingCountShortage,
+          _ => CashOperationType.reconciliationOverage,
         };
 
         final amountDouble = row.read<double>('amount');
@@ -402,6 +502,7 @@ class ShiftNotifier extends Notifier<ShiftState> {
           type: type,
           amount: Decimal.parse(amountDouble.toStringAsFixed(3)),
           note: row.read<String?>('note'),
+          reasonCode: row.read<int?>('reason_code'),
           time: DateTime.fromMillisecondsSinceEpoch(docTime * 1000),
         );
       }).toList();
@@ -599,6 +700,11 @@ class ShiftNotifier extends Notifier<ShiftState> {
         db: _db,
         shifts: GetIt.I<ShiftService>(),
         logger: talker,
+        // Отзыв отложенных чеков при закрытии смены: без него соседняя касса
+        // продолжала бы показывать корзину, которой уже нет.
+        claim: GetIt.I.isRegistered<DeferredClaimPort>()
+            ? GetIt.I<DeferredClaimPort>()
+            : null,
       ).close(counted: state.hasCounted ? state.enteredTotal : null);
 
       ref.read(appStateProvider.notifier).setShift(ShiftStatus.closed);
@@ -623,9 +729,13 @@ class ShiftNotifier extends Notifier<ShiftState> {
 
     try {
       final assembleReceipt = GetIt.I<AssembleShiftReceiptUseCase>();
+      // Не считали — в отчёт идёт ОЖИДАНИЕ, а не остаток счёта. Стояло
+      // `state.systemTotal`, и на смене с подъёмными Z-отчёт занижал
+      // наличные ровно на сумму, с которой смену открыли. Тем же правилом
+      // живёт `LocalShiftDesk.close`.
       final cashInPos = state.hasCounted
           ? state.enteredTotal
-          : state.systemTotal;
+          : state.expectedCash;
       final receipt = await assembleReceipt.assemble(shift.id, cashInPos);
       if (receipt == null) {
         state = state.copyWith(
@@ -635,9 +745,29 @@ class ShiftNotifier extends Notifier<ShiftState> {
         return ZReportOutcome.failed;
       }
 
-      final cashExpense = state.expenseTotal + state.dividendTotal;
+      // Денежный блок Z-отчёта обязан СХОДИТЬСЯ: бланк печатает четыре
+      // строки — «На начало», «Приход», «Расход», «Итого в ящике» — и этим
+      // утверждает равенство `начало + приход − расход = итого`.
+      //
+      // До 2026-09-22 оно не держалось ни в одном месте. «Приход» брался
+      // `receipt.cashPaymentsSum` — это выручка наличными БЕЗ возвратов
+      // (запрос отбирает по `receipt_no`, а возврат ссылается на
+      // `refund_local_id`), внесения в него не входили вовсе, а возвраты
+      // не вычитались нигде. «На начало» приезжало от прошлой смены.
+      //
+      // Теперь все слагаемые — из одного состояния, и равенство держится
+      // по построению: `expectedCash` собран из них же.
+      final cashIncome = state.cashSalesTotal + state.investmentTotal;
+      final cashExpense =
+          state.cashRefundsTotal + state.expenseTotal + state.dividendTotal;
 
       final cashStart = await _resolveOpeningCash(receipt.openingCash);
+
+      // Расхождение печатается отдельной строкой и только когда оно есть:
+      // без неё пересчитанный ящик ломал бы равенство бланка молча —
+      // «итого» отличалось бы от суммы трёх строк, и прочитать почему
+      // было бы неоткуда.
+      final cashDiscrepancy = state.difference;
 
       final printService = GetIt.I<ReceiptPrintService>();
       // «Принято» больше не значит «бумага вышла»: Z-отчёт сдаётся в очередь
@@ -660,8 +790,9 @@ class ShiftNotifier extends Notifier<ShiftState> {
         refundTotal: state.refundsTotal,
         cashStart: cashStart,
         cashEnd: receipt.cashInPos,
-        cashIncome: receipt.cashPaymentsSum,
+        cashIncome: cashIncome,
         cashExpense: cashExpense,
+        cashDiscrepancy: cashDiscrepancy,
         // Оба числа — **из той же сборки отчёта**, что и выручка, а не
         // посчитанные здесь заново: второе мнение о том, сколько выпущено
         // сертификатов, разошлось бы с первым молча. Разбор источников — в
@@ -777,8 +908,16 @@ class ShiftNotifier extends Notifier<ShiftState> {
     }
   }
 
-  Future<Decimal> _resolveOpeningCash(Decimal receiptOpeningCash) async {
-    if (receiptOpeningCash != Decimal.zero) {
+  /// Подъёмные для Z-отчёта.
+  ///
+  /// Запасной путь оставлен только для смен, открытых ДО появления
+  /// столбца `shifts.opening_cash`: у них объявления нет и взять его
+  /// неоткуда, кроме закрытия предыдущей смены. Прежде сюда попадала любая
+  /// смена с нулём, в том числе честно открытая с пустым ящиком, — и в
+  /// отчёт печаталось чужое число. Отличает их `null`, см.
+  /// `ShiftReceipt.openingCash`.
+  Future<Decimal> _resolveOpeningCash(Decimal? receiptOpeningCash) async {
+    if (receiptOpeningCash != null) {
       return receiptOpeningCash;
     }
     try {

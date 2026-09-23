@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telepos/app/theme/app_colors.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 class ReportDateFilter extends StatelessWidget {
   const ReportDateFilter({
@@ -79,7 +80,13 @@ class ReportDateFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selected = _selectedIndex;
-    const labels = ['Сегодня', '7 дней', '30 дней', 'Произвольно'];
+    final l10n = AppLocalizations.of(context)!;
+    final labels = [
+      l10n.historyToday,
+      l10n.repRangeDays7,
+      l10n.repRangeDays30,
+      l10n.repRangeCustom,
+    ];
     const icons = [
       Icons.today,
       Icons.date_range,

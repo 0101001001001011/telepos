@@ -27,6 +27,8 @@ class ProductInfoAndPriceEditionUseCaseImpl
     int? measure,
     int? vatRate,
     bool vatRateSet = false,
+    int? taxCategoryId,
+    bool taxCategorySet = false,
     String? ntin,
     bool? isMarkable,
     String? brand,
@@ -40,6 +42,7 @@ class ProductInfoAndPriceEditionUseCaseImpl
           type != null ||
           measure != null ||
           vatRateSet ||
+          taxCategorySet ||
           ntin != null ||
           isMarkable != null ||
           brand != null ||
@@ -57,6 +60,12 @@ class ProductInfoAndPriceEditionUseCaseImpl
             type: type != null ? Value(type) : const Value.absent(),
             measure: measure != null ? Value(measure) : const Value.absent(),
             vatRate: vatRateSet ? Value(vatRate) : const Value.absent(),
+            // `taxCategorySet` отдельно от значения: `null` здесь —
+            // законный выбор «категория по умолчанию», и без флага его
+            // нельзя отличить от «поле не трогали».
+            taxCategoryId: taxCategorySet
+                ? Value(taxCategoryId)
+                : const Value.absent(),
             ntin: ntin != null ? Value(ntin) : const Value.absent(),
             isMarkable: isMarkable != null
                 ? Value(isMarkable)

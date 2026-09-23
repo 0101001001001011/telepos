@@ -41,6 +41,7 @@ import 'package:telepos/data/auth/local_auth_repository.dart';
 import 'package:telepos/data/database/app_database.dart' hide Terminal;
 import 'package:telepos/data/device/device_profile_catalog_builtin.dart';
 import 'package:telepos/data/shift/shift_age_rule.dart';
+import 'package:telepos/domain/cash/cash_operation_kind.dart';
 import 'package:telepos/data/terminal/device_binding_repository_local.dart';
 import 'package:telepos/data/terminal/terminal_repository_local.dart';
 import 'package:telepos/data/transport/till_wire.dart';
@@ -218,7 +219,11 @@ void main() {
     // расхождение, записанное с кассы и не записанное с планшета, не
     // ловится ни инвентаризацией, ни отчётом смены.
     final ops = await db.select(db.cashOperations).get();
-    final surplus = ops.where((o) => o.note == 'Излишек смены').toList();
+    // Род, а не примечание: примечание — свободный текст для человека,
+    // и опираться на его написание значило бы ломать пробу переводом.
+    final surplus = ops
+        .where((o) => o.type == kCashOpReconciliationOverage)
+        .toList();
     expect(surplus, hasLength(1));
     expect(surplus.single.amount, Decimal.parse('200.00'));
     expect(surplus.single.userId, 4);
@@ -283,15 +288,13 @@ void main() {
     await desk.close(counted: Decimal.parse('1300.00'));
     final ops = await db.select(db.cashOperations).get();
     expect(
-      ops.where(
-        (o) => o.note == 'Излишек смены' || o.note == 'Недостача смены',
-      ),
+      ops.where((o) => isReconciliation(o.type)),
       isEmpty,
       reason: 'касса записала расхождение там, где всё сошлось',
     );
   });
 
-  test('не считали — расхождения нет, и касса берёт свой итог', () async {
+  test('не считали — расхождения нет, и касса берёт ОЖИДАНИЕ', () async {
     final shiftId = await openShiftAt(
       secondsAgo(const Duration(hours: 2)),
       openingCash: Decimal.parse('1000.00'),
@@ -305,15 +308,27 @@ void main() {
 
     final closed = await db.shiftDao.findById(shiftId);
     expect(closed!.isOpened, isFalse);
+    // ── 1000, а не 7000. Это правка 2026-09-22 ──────────────────────────
+    //
+    // Стояло `7000.00` — остаток счёта кассы, который эта проба нарочно
+    // завела расходящимся с объявлением смены (счёт 7000, объявлено 1000).
+    // Закрытие брало остаток, а расхождение считается от `expectedCash`:
+    // два разных ответа на один вопрос. На смене с подъёмными они
+    // расходились ровно на подъёмные, и закрытие без пересчёта записывало
+    // в наличные смены чужое число — оно же уходило в Z-отчёт.
+    //
+    // Верно — ожидание: начало 1000 + выручки нет − возвратов нет.
     expect(
       closed.cashInPosOnShiftClose,
-      Decimal.parse('7000.00'),
-      reason: 'без пересчёта касса обязана взять свой системный итог',
+      Decimal.parse('1000.00'),
+      reason:
+          'без пересчёта касса обязана взять то самое «должно быть», с '
+          'которым сличает пересчёт, а не остаток счёта',
     );
 
     final ops = await db.select(db.cashOperations).get();
     expect(
-      ops.where((o) => o.note == 'Излишек смены' || o.note == 'Недостача смены'),
+      ops.where((o) => isReconciliation(o.type)),
       isEmpty,
       reason:
           'расхождение записано без пересчёта — касса утверждает «сошлось» '
@@ -334,9 +349,25 @@ void main() {
     // обязана быть записана. Прими касса ноль за «не считали», запись
     // пропала бы, а деньги — нет.
     final ops = await db.select(db.cashOperations).get();
-    final shortage = ops.where((o) => o.note == 'Недостача смены').toList();
+    final shortage = ops
+        .where((o) => o.type == kCashOpReconciliationShortage)
+        .toList();
     expect(shortage, hasLength(1));
-    expect(shortage.single.amount, Decimal.parse('-1000.00'));
+    // Сумма ПОЛОЖИТЕЛЬНА, сторону несёт род. Стояло `-1000.00` под родом
+    // «изъятие»: отчёт по изъятиям вычитал недостачу вместо того, чтобы
+    // её прибавить, а на экране смены она показывалась зелёным внесением.
+    expect(shortage.single.amount, Decimal.parse('1000.00'));
+    expect(shortage.single.type, kCashOpReconciliationShortage);
+
+    // И остаток счёта кассы сведён с пересчётом: строку журнала писали и
+    // раньше, а баланс не двигали — журнал и остаток расходились навсегда,
+    // и следующая смена стартовала с денег, которых в ящике нет.
+    final account = await db.accountDao.findById(11);
+    expect(
+      account!.value,
+      Decimal.zero,
+      reason: 'ящик пересчитан пустым — остаток счёта обязан это увидеть',
+    );
   });
 
   test('просроченная смена названа просроченной — тем же правилом', () async {

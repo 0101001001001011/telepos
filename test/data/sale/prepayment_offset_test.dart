@@ -104,8 +104,11 @@ void main() {
   /// Плюс на расчётном счёте — и есть аванс: ровно то, что оставляет
   /// `CustomerPaymentUseCase` с решением `investment`.
   Future<void> seedCustomerWithAdvance(String advance) async {
-    await seedAccount(agentMainAccountId, AccountType.agentMain,
-        value: advance);
+    await seedAccount(
+      agentMainAccountId,
+      AccountType.agentMain,
+      value: advance,
+    );
     await db
         .into(db.agents)
         .insert(
@@ -247,23 +250,19 @@ void main() {
     expect(
       offset.payeeAccountId,
       agentMainAccountId,
-      reason: 'зачёт уменьшает обязательство перед покупателем, а не '
+      reason:
+          'зачёт уменьшает обязательство перед покупателем, а не '
           'кладёт деньги в кассу',
     );
     expect(offset.customerLocalId, customerId);
     expect(offset.reference, 'АВ-1', reason: 'документ-основание назван');
 
-    final cash = rows.singleWhere(
-      (r) => r.kindId == SystemPaymentKindIds.cash,
-    );
+    final cash = rows.singleWhere((r) => r.kindId == SystemPaymentKindIds.cash);
     expect(cash.amount, d('400'));
     expect(cash.payeeAccountId, posAccountId);
 
     // I172 — и он проверяется отдельно от полей, а не вместо них.
-    expect(
-      rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount),
-      d('1000'),
-    );
+    expect(rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount), d('1000'));
     expect(rows.map((r) => r.seq).toList()..sort(), [0, 1]);
 
     // Живых денег зачёт не приносит: в ящике только те 400, что дал
@@ -403,7 +402,8 @@ void main() {
     expect(
       call.cash + call.card + call.mobile + call.bonus + call.offset,
       d('1000'),
-      reason: 'позиций на 1000, а конверт объяснил только '
+      reason:
+          'позиций на 1000, а конверт объяснил только '
           '${call.cash + call.card + call.mobile + call.bonus + call.offset} — '
           'оператор отвергнет чек кодом 9',
     );
@@ -416,11 +416,7 @@ void main() {
       d('400'),
       reason: 'оператор видит наличных ровно столько, сколько в ящике',
     );
-    expect(
-      call.offset,
-      d('600'),
-      reason: 'аванс — зачёт, а не оплата',
-    );
+    expect(call.offset, d('600'), reason: 'аванс — зачёт, а не оплата');
     expect(call.bonus, Decimal.zero);
   });
 
@@ -460,10 +456,7 @@ void main() {
     );
 
     final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
-    expect(
-      rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount),
-      d('1000'),
-    );
+    expect(rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount), d('1000'));
     expect(
       rows.singleWhere((r) => r.kindId == SystemPaymentKindIds.card).amount,
       d('400'),
@@ -511,12 +504,16 @@ void main() {
   test('аванс и бонус вместе не берут с покупателя дважды', () async {
     await enablePrepayment();
     await seedCustomerWithAdvance('1000');
-    await seedAccount(cashbackAccountId, AccountType.agentCashback,
-        value: '300');
-    await (db.update(db.agents)..where((a) => a.localId.equals(customerId)))
-        .write(const AgentsCompanion(
-      cashbackAccountId: Value(cashbackAccountId),
-    ));
+    await seedAccount(
+      cashbackAccountId,
+      AccountType.agentCashback,
+      value: '300',
+    );
+    await (db.update(
+      db.agents,
+    )..where((a) => a.localId.equals(customerId))).write(
+      const AgentsCompanion(cashbackAccountId: Value(cashbackAccountId)),
+    );
 
     final view = await receiptWith(quantity: 2); // 1000
 
@@ -537,13 +534,11 @@ void main() {
           .singleWhere((r) => r.kindId == SystemPaymentKindIds.prepayment)
           .amount,
       d('700'),
-      reason: 'потолок аванса — остаток ПОСЛЕ бонуса: зачесть авансом то, '
+      reason:
+          'потолок аванса — остаток ПОСЛЕ бонуса: зачесть авансом то, '
           'что уже покрыто бонусом, значит взять с покупателя дважды',
     );
-    expect(
-      rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount),
-      d('1000'),
-    );
+    expect(rows.fold<Decimal>(Decimal.zero, (s, r) => s + r.amount), d('1000'));
     expect(await balanceOf(agentMainAccountId), d('300'));
     expect(await balanceOf(posAccountId), Decimal.zero);
   });
@@ -566,7 +561,6 @@ void main() {
     );
   });
 }
-
 
 /// Соглядатай за конвертом: запоминает **числа**, отданные оператору.
 class _SpyFiscal implements FiscalService {
@@ -603,8 +597,7 @@ class _SpyFiscal implements FiscalService {
   }
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class _Envelope {

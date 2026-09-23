@@ -25,8 +25,7 @@ class PlatformInfo {
 
   /// Lowercase host identifier — `windows`, `linux`, `macos`, `android`,
   /// `ios`, or `web`.
-  static String get operatingSystem =>
-      kIsWeb ? 'web' : host.operatingSystem;
+  static String get operatingSystem => kIsWeb ? 'web' : host.operatingSystem;
 
   static String get operatingSystemVersion =>
       kIsWeb ? 'browser' : host.operatingSystemVersion;

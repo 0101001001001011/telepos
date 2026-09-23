@@ -45,10 +45,13 @@ class WtNetworkRepository implements NetworkRepository {
 
   @override
   Future<({bool success, String mode})> ethernetConfigureDhcp(String iface) =>
-      _wire.ask(
-        TillOps.networkEthernetConfigure,
-        (iface: iface, mode: 'dhcp', ipCidr: null, gateway: null, dns: null),
-      );
+      _wire.ask(TillOps.networkEthernetConfigure, (
+        iface: iface,
+        mode: 'dhcp',
+        ipCidr: null,
+        gateway: null,
+        dns: null,
+      ));
 
   @override
   Future<({bool success, String mode})> ethernetConfigureStatic(
@@ -56,10 +59,13 @@ class WtNetworkRepository implements NetworkRepository {
     required String ipCidr,
     String? gateway,
     String? dns,
-  }) => _wire.ask(
-    TillOps.networkEthernetConfigure,
-    (iface: iface, mode: 'static', ipCidr: ipCidr, gateway: gateway, dns: dns),
-  );
+  }) => _wire.ask(TillOps.networkEthernetConfigure, (
+    iface: iface,
+    mode: 'static',
+    ipCidr: ipCidr,
+    gateway: gateway,
+    dns: dns,
+  ));
 
   /// Граница спеки 2026-08-24: Bluetooth не переносится на провод — см.
   /// докстринг `NetworkRepository`.

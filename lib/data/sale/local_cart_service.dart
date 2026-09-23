@@ -2,6 +2,8 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
 
+import 'package:telepos/core/constants/enums/tax_treatment.dart';
+import 'package:telepos/domain/tax/tax_resolution.dart';
 import 'package:telepos/core/constants/permission_keys.dart';
 import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/data/database/app_database.dart';
@@ -11,6 +13,7 @@ import 'package:telepos/data/discount/local_discount_policy.dart';
 import 'package:telepos/data/shift/shift_age_rule.dart';
 import 'package:telepos/domain/discount/discount_policy.dart';
 import 'package:telepos/domain/sale/cart_service.dart';
+import 'package:telepos/domain/sale/deferred_claim_port.dart';
 import 'package:telepos/domain/sale/cart_view.dart';
 import 'package:telepos/domain/sale/product_search_result.dart';
 import 'package:telepos/domain/usecases/product/find_by_barcode_use_case.dart';
@@ -24,6 +27,8 @@ import 'package:telepos/domain/usecases/sale/deferred_sale_service.dart';
 import 'package:telepos/domain/usecases/sale/sale_initiation_use_case.dart';
 import 'package:telepos/domain/usecases/sale/sale_round_option_use_case.dart';
 import 'package:telepos/domain/wire/wire_refusal.dart';
+import 'package:telepos/data/catalog/local_selling_hours.dart';
+import 'package:telepos/domain/catalog/selling_hours.dart';
 
 /// Кассовая реализация [CartService] — задача 7, шаг 3 спеки.
 ///
@@ -100,7 +105,13 @@ class LocalCartService implements CartService {
     required FindByBarcodeUseCase findByBarcode,
     required catalog.SearchProductInfoUseCase searchProducts,
     DiscountPolicy? discountPolicy,
+    // Занятие отложенного чека соседней кассы. `null` — обмена на этой
+    // кассе нет, и подъём чужого чека отказывается: исключительность
+    // негарантируема, а продать корзину дважды хуже, чем не поднять.
+    // Свой отложенный чек поднимается без него, как и раньше.
+    DeferredClaimPort? claim,
   }) : _db = db,
+       _claim = claim,
        _logger = logger,
        _initiation = initiation,
        _deferred = deferred,
@@ -117,6 +128,7 @@ class LocalCartService implements CartService {
        _policy = discountPolicy ?? LocalDiscountPolicy(db);
 
   final AppDatabase _db;
+  final DeferredClaimPort? _claim;
   final DiscountPolicy _policy;
   final Talker _logger;
   final SaleInitiationUseCase _initiation;
@@ -437,6 +449,16 @@ class LocalCartService implements CartService {
       // каталог, иначе следующая же продажа его снова не найдёт.
       await _db.productInfoDao.restoreProduct(found.ucode);
     }
+    // Цена спрашивается ЗАНОВО, хотя `found.price` уже есть: поиск по
+    // штрихкоду отдаёт `?? Decimal.zero` и тем стирает разницу между
+    // «цена ноль» и «цены нет». Это путь СКАНЕРА, то есть самый частый:
+    // товар без цены уходил покупателю даром именно здесь.
+    final foundPrice = await _db.productPriceDao.findByUcode(found.ucode);
+    if (foundPrice?.sellingPrice == null &&
+        foundPrice?.wholesalePrice == null) {
+      throw WireRefusal(cartProductHasNoPriceCode, found.name ?? barcode);
+    }
+    await _refuseIfBanned(found.categoryId, found.name ?? barcode);
     await _addOrMerge(
       sale,
       ucode: found.ucode,
@@ -472,11 +494,17 @@ class LocalCartService implements CartService {
     }
     if (info.isDeleted) await _db.productInfoDao.restoreProduct(productId);
     final price = await _db.productPriceDao.findByUcode(productId);
+    // Цены НЕТ — не то же, что цена ноль. Прежде оба случая сводились в
+    // `?? Decimal.zero`, и товар без цены уходил покупателю даром.
+    if (price?.sellingPrice == null) {
+      throw WireRefusal(cartProductHasNoPriceCode, info.name ?? '$productId');
+    }
+    await _refuseIfBanned(info.categoryId, info.name ?? '$productId');
     await _addOrMerge(
       sale,
       ucode: productId,
-      sellingPrice: price?.sellingPrice ?? Decimal.zero,
-      wholesalePrice: price?.wholesalePrice,
+      sellingPrice: price!.sellingPrice!,
+      wholesalePrice: price.wholesalePrice,
       barcode: info.barcode,
       quantity: quantity,
       measure: info.measure,
@@ -755,6 +783,7 @@ class LocalCartService implements CartService {
     int receiptNo,
     CartCommandMeta meta, {
     required DiscountAuthority by,
+    int? deferredPosId,
   }) => _db.transaction(() async {
     _requireRight(by, PermissionKeys.opDeferSale, 'отложенную продажу');
     final posId = await _posId();
@@ -775,11 +804,19 @@ class LocalCartService implements CartService {
     final currentVersion = mine?.cartVersion ?? 0;
     if (currentVersion != meta.baseVersion) throw _stale(currentVersion, meta);
 
-    final target = await _db.saleDao.findByKey(receiptNo, posId);
+    // Чек соседней кассы ищется по ЕЁ номеру, а не по нашему. Номера
+    // выдаются сквозным `MAX(receipt_no)` по всей таблице, и чужие строки в
+    // ней лежат штатно — но пока чек соседа к нам не доехал, обе кассы
+    // могут выдать один номер. Поэтому пара `{receiptNo, posId}`, а не
+    // номер в одиночку.
+    final fromPosId = deferredPosId ?? posId;
+    final target = await _db.saleDao.findByKey(receiptNo, fromPosId);
     if (target == null) {
       throw WireRefusal(
         cartDeferredNotFoundCode,
-        'отложенного чека $receiptNo на этой кассе нет',
+        fromPosId == posId
+            ? 'отложенного чека $receiptNo на этой кассе нет'
+            : 'отложенного чека $receiptNo кассы $fromPosId здесь нет',
       );
     }
     if (target.state != _stateDeferred) {
@@ -820,6 +857,25 @@ class LocalCartService implements CartService {
       }
       await _db.saleProductDao.deleteBySale(mine.receiptNo, mine.posId);
       await _db.saleDao.deleteSale(mine.receiptNo, mine.posId);
+    }
+
+    // ── чек соседней кассы ───────────────────────────────────────────────
+    //
+    // Он не продолжается, а **переносится к нам**: поднять чужую строку
+    // значило бы оставить чек кассой-владельцем, и выручка ушла бы не туда.
+    // Деньги получает та касса, которая пробьёт (решение заказчика
+    // 2026-09-19), значит и чек обязан стать её чеком — со своим номером.
+    //
+    // Порядок шагов не переставим: сначала занять на сервере, потом
+    // трогать базу. Займёшь после — две кассы успеют поднять одну корзину
+    // и продать её дважды.
+    if (fromPosId != posId) {
+      return _raiseForeign(
+        terminalId: terminalId,
+        target: target,
+        meta: meta,
+        ownPosId: posId,
+      );
     }
 
     // Подъём — один ход и одно место: `undeferSale` условным обновлением
@@ -1608,6 +1664,29 @@ class LocalCartService implements CartService {
   /// образца, а не как из работающего продукта. Функция нужная (опт в
   /// объёме работы по решению заказчика), обоснование было неверным — тот
   /// же класс, что чинился кругом 3 у докстринга `DeferredCart`.
+
+  /// Отказать, если категория товара сейчас под запретом продажи.
+  ///
+  /// # Почему здесь, а не на экране
+  ///
+  /// Экранов продажи два — кассовый и браузерный, — и проверять запрет на
+  /// каждом значило бы завести две записи одного правила. Здесь же он
+  /// закрывает и путь сканера, и путь поиска, и провод.
+  ///
+  /// Механизм запрета в продукте БЫЛ (таблица `category_restrictions`, DAO,
+  /// договор `IsCategoryBlockedUseCase`) — и его не звал НИКТО. Проверка
+  /// была объявлена и не выполнялась ни разу, ни в одной стране.
+  Future<void> _refuseIfBanned(int? categoryId, String productName) async {
+    if (categoryId == null) return;
+    final bans = await LocalSellingHours(_db).bansForCategory(categoryId);
+    if (bans.isEmpty) return;
+    final ban = activeBan(bans, DateTime.now());
+    if (ban == null) return;
+    // Довод отказа — имя товара И окно: кассир обязан узнать, до какого
+    // часа ждать, иначе он будет пробовать снова каждую минуту.
+    throw WireRefusal(cartSellingHoursBannedCode, '$productName|${ban.label}');
+  }
+
   Future<void> _addOrMerge(
     Sale sale, {
     required int ucode,
@@ -1880,6 +1959,31 @@ class LocalCartService implements CartService {
 
     await _applyPromotions(bases, weightRound, discountRound);
 
+    // Налоговая настройка — один снимок на корзину.
+    //
+    // Один, а не по строке: правила, прочитанные в разные мгновения, могут
+    // разойтись между строками одного чека, и итог перестанет объясняться
+    // строками.
+    //
+    // Дата — сегодняшняя: корзина в работе пробивается сегодня. Чек,
+    // перепечатанный задним числом, считает сборка чека, и своей датой.
+    final taxConfig = await _db.taxSettingsDao.load();
+    final taxOn = DateTime.now();
+    final thisPos = await _db.thisPosDao.get();
+    // Вывод по товару, а не по строке: один товар может лежать в корзине
+    // двумя строками, и считать ему ставку дважды незачем.
+    final resolvedTax = <int, ResolvedTax>{};
+    if (taxConfig.isConfigured) {
+      for (final b in bases) {
+        if (resolvedTax.containsKey(b.ucode)) continue;
+        final info = await _db.productInfoDao.findByUcode(b.ucode);
+        resolvedTax[b.ucode] = taxConfig.resolve(
+          categoryId: info?.taxCategoryId,
+          on: taxOn,
+        );
+      }
+    }
+
     final lines = bases
         .map(
           (b) => CartLine(
@@ -1900,6 +2004,8 @@ class LocalCartService implements CartService {
                   ],
             barcode: b.barcode,
             mark: b.mark,
+            taxRatePercent: resolvedTax[b.ucode]?.totalRatePercent,
+            isTaxExempt: resolvedTax[b.ucode]?.isExempt ?? false,
           ),
         )
         .toList();
@@ -1912,6 +2018,9 @@ class LocalCartService implements CartService {
       wholesale: sale.isWholesale,
       receiptNo: sale.receiptNo,
       agentId: sale.customerLocalId,
+      // Уклад — в снимок: корзина ездит по проводу, и браузерный терминал
+      // обязан считать итог теми же правилами, не имея доступа к настройке.
+      taxTreatment: TaxTreatment.values[thisPos?.taxTreatment ?? 0],
     );
   }
 
@@ -2077,13 +2186,124 @@ class LocalCartService implements CartService {
 
   // ── отложенные ────────────────────────────────────────────────────────
 
+  /// Поднять отложенный чек соседней кассы — заняв его и перенеся к себе.
+  ///
+  /// # Почему перенос, а не продолжение
+  ///
+  /// `undeferSale` меняет `state` у существующей строки и оставляет её
+  /// чеком кассы-владельца. Для своего чека это верно, для чужого —
+  /// денежная ошибка: чек, пробитый у нас, попал бы в смену, ящик и
+  /// X/Z-отчёт соседа. Поэтому корзина переносится на **наш** номер, а
+  /// чужая строка удаляется: она своё отслужила.
+  ///
+  /// # Занятие — первым, и без связи подъёма нет
+  ///
+  /// Исключительность даёт только сервер (`DeferredClaimPort`). Нет порта
+  /// или нет связи — отказ: попросить покупателя вернуться к своей кассе
+  /// дешевле, чем продать корзину дважды.
+  Future<CartView> _raiseForeign({
+    required int terminalId,
+    required Sale target,
+    required CartCommandMeta meta,
+    required int ownPosId,
+  }) async {
+    final port = _claim;
+    if (port == null) {
+      throw const WireRefusal(
+        cartDeferredTakenCode,
+        'чек другой кассы поднять нечем: обмен не настроен',
+      );
+    }
+
+    final winner = await port.claim(
+      receiptNo: target.receiptNo,
+      posId: target.posId,
+      byPosId: ownPosId,
+    );
+    if (winner != null) {
+      throw WireRefusal(
+        cartDeferredTakenCode,
+        winner == 0
+            ? 'чек ${target.receiptNo} кассы ${target.posId} занять не вышло: '
+                  'нет связи с обменом'
+            : 'чек ${target.receiptNo} уже поднят кассой $winner',
+      );
+    }
+
+    final lines = await _db.saleProductDao.findBySale(
+      target.receiptNo,
+      target.posId,
+    );
+    final started = await _initiation.initiate(
+      terminalId: terminalId,
+      isWholesale: target.isWholesale,
+    );
+    final fresh = started.sale;
+    if (fresh == null) {
+      throw started.refusal ??
+          const WireRefusal(
+            'sale_not_started',
+            'чек не начат — причина не названа кассой',
+          );
+    }
+    final receiptNo = fresh.receiptNo;
+
+    for (final line in lines) {
+      await _db
+          .into(_db.saleProducts)
+          .insert(
+            SaleProductsCompanion.insert(
+              ucode: line.ucode,
+              quantity: line.quantity,
+              price: line.price,
+              priceBefore: line.priceBefore,
+              receiptNo: Value(receiptNo),
+              posId: Value(ownPosId),
+              barcode: Value(line.barcode),
+              categoryId: Value(line.categoryId),
+            ),
+          );
+    }
+
+    // Чужая строка больше не нужна: её документ занят нами, и соседняя
+    // касса уберёт её из своего пула следующим обменом.
+    await _db.saleProductDao.deleteBySale(target.receiptNo, target.posId);
+    await _db.saleDao.deleteSale(target.receiptNo, target.posId);
+
+    await (_db.update(_db.sales)..where(
+          (s) => s.receiptNo.equals(receiptNo) & s.posId.equals(ownPosId),
+        ))
+        .write(
+          SalesCompanion(
+            amount: Value(target.amount),
+            isWholesale: Value(target.isWholesale),
+            lastCommandKey: Value(meta.key),
+          ),
+        );
+
+    _logger.info(
+      'Cart: поднят чек ${target.receiptNo} кассы ${target.posId} '
+      'как $receiptNo terminal=$terminalId',
+    );
+    final taken = await _db.saleDao.findByKey(receiptNo, ownPosId);
+    return _viewOf(taken!);
+  }
+
   Future<List<DeferredCart>> _deferredCards() async {
     final posId = await _posId();
     final sales = await _db.saleDao.findByState(_stateDeferred);
 
     final cards = <DeferredCart>[];
     for (final sale in sales) {
-      if (sale.posId != posId) continue;
+      // Чеки соседних касс отсюда БОЛЬШЕ НЕ отсекаются — решение заказчика
+      // 2026-09-19. Покупатель отложил корзину на первой кассе, вернулся, а
+      // там очередь; он идёт ко второй, и она обязана эту корзину увидеть.
+      //
+      // Своё от чужого отличает `DeferredCart.posId`: он и так в карточке
+      // был, просто до этой правки всегда совпадал со своей кассой.
+      // Поднять чужой можно лишь заняв его на сервере — разбор в
+      // `CouchDbDocumentMapper.claimedByPosId`; без связи подъём чужого
+      // отказывается, чтобы корзина не продалась дважды.
       final rows = await _db.saleProductDao.findBySale(
         sale.receiptNo,
         sale.posId,
@@ -2103,6 +2323,7 @@ class LocalCartService implements CartService {
           userId: sale.userId,
           userName: user?.name,
           firstLineName: firstLineName,
+          foreign: sale.posId != posId,
         ),
       );
     }

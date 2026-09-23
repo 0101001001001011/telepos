@@ -18,13 +18,12 @@ abstract class CurrencyService {
 
   double? parseAmount(String text);
 
-  List<int> get denominations;
-
   String get symbol;
 
   String get code;
-
-  int get vatRate;
-
-  double calculateVatFromSum(double sum);
 }
+
+// Здесь были `vatRate`, `calculateVatFromSum` и `denominations`. Первые два
+// считали налог в `double` — прямо против правила проекта «деньги только
+// Decimal», — и не были спрошены ни разу. Номиналы купюр живут у страны
+// (`CountryCode.banknotes`), одним источником с 2026-09-22.

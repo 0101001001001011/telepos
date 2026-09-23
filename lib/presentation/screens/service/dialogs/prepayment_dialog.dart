@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class PrepaymentDialog extends StatefulWidget {
   const PrepaymentDialog({this.currentAmount, super.key});
@@ -53,7 +54,7 @@ class _PrepaymentDialogState extends State<PrepaymentDialog> {
           ],
           decoration: InputDecoration(
             labelText: l10n.servicePrepaymentAmount,
-            suffixText: l10n.currencySymbol,
+            suffixText: tillCurrencySymbol(),
             border: const OutlineInputBorder(),
           ),
         ),

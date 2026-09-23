@@ -163,7 +163,12 @@ Widget terminalHomeUnderTest({required _Session session}) {
   addTearDown(container.dispose);
 
   container.read(appStateProvider.notifier)
-    ..setUserInfo(id: 1, name: session.name, role: 0, permissions: session.permissions)
+    ..setUserInfo(
+      id: 1,
+      name: session.name,
+      role: 0,
+      permissions: session.permissions,
+    )
     ..setShift(session.shiftOpen ? ShiftStatus.open : ShiftStatus.closed);
 
   final router = GoRouter(
@@ -268,28 +273,29 @@ void main() {
   // права — обязана показаться и заработать, когда право есть. Тест,
   // который проверяет только «спрятано», зазеленел бы и на экране, который
   // не строит эту плитку вообще никогда.
-  testWidgets('право settings.hardware показывает плитку и она ведёт куда обещано', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      terminalHomeUnderTest(
-        session: sessionOf(
-          name: 'Айгуль',
-          shiftOpen: true,
-          permissions: {PermissionKeys.settingsHardware},
+  testWidgets(
+    'право settings.hardware показывает плитку и она ведёт куда обещано',
+    (tester) async {
+      await tester.pumpWidget(
+        terminalHomeUnderTest(
+          session: sessionOf(
+            name: 'Айгуль',
+            shiftOpen: true,
+            permissions: {PermissionKeys.settingsHardware},
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    final tile = find.text('Оборудование');
-    expect(tile, findsOneWidget);
+      final tile = find.text('Оборудование');
+      expect(tile, findsOneWidget);
 
-    await tester.tap(tile);
-    await tester.pumpAndSettle();
+      await tester.tap(tile);
+      await tester.pumpAndSettle();
 
-    expect(find.text('HARDWARE_SETTINGS_STUB'), findsOneWidget);
-  });
+      expect(find.text('HARDWARE_SETTINGS_STUB'), findsOneWidget);
+    },
+  );
 
   // Пункт 6 закрытия долга безопасности, правка «второй порядок»: тот же
   // приём, что уже проверен парой тестов выше для «Оборудование» —

@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/hardware/label_printer/label_printer_service.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 class LabelPreview extends StatelessWidget {
   const LabelPreview({
@@ -137,8 +138,13 @@ class _BarcodeGlyph extends StatelessWidget {
   }
 }
 
-LabelData sampleLabelData() => LabelData(
-  name: 'Образец товара',
+/// Образец для предпросмотра ценника.
+///
+/// Словарь — доводом: это `lib/presentation`, но функция верхнего уровня, и
+/// брать язык ей неоткуда. Пусть вызывающий, у которого контекст есть,
+/// назовёт его явно.
+LabelData sampleLabelData(AppLocalizations l10n) => LabelData(
+  name: l10n.labelSampleProduct,
   barcode: '4607001000001',
   price: Decimal.parse('1290.00'),
   sku: 'ART-001',

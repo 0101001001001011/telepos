@@ -111,7 +111,11 @@ void main() {
   }
 
   Future<void> seedCustomer({String advance = '0', String bonus = '0'}) async {
-    await seedAccount(agentMainAccountId, AccountType.agentMain, value: advance);
+    await seedAccount(
+      agentMainAccountId,
+      AccountType.agentMain,
+      value: advance,
+    );
     await seedAccount(bonusAccountId, AccountType.cashback, value: bonus);
     await db
         .into(db.agents)
@@ -258,8 +262,7 @@ void main() {
 
   tearDown(() async => db.close());
 
-  test('рассрочка + аванс: зачёт 300 УМЕНЬШАЕТ ТЕЛО договора до 700',
-      () async {
+  test('рассрочка + аванс: зачёт 300 УМЕНЬШАЕТ ТЕЛО договора до 700', () async {
     // Чек 1000, внесённый аванс 300, первого взноса нет.
     //
     // Зачёт аванса — `offset`: он уменьшает сумму к доплате. Рассрочка —
@@ -289,7 +292,9 @@ void main() {
     final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
     expect(rows.length, 2);
     expect(
-      rows.firstWhere((r) => r.kindId == SystemPaymentKindIds.prepayment).amount,
+      rows
+          .firstWhere((r) => r.kindId == SystemPaymentKindIds.prepayment)
+          .amount,
       d('300'),
     );
     expect(
@@ -313,169 +318,177 @@ void main() {
     expect(await balanceOf(posAccountId), Decimal.zero);
   });
 
-  test('рассрочка + сертификат: бумажка гасится на 400, тело договора 600',
-      () async {
-    await seedCustomer();
-    await issuer.issue(
-      by: fullDiscountAuthority,
-      number: 'C-1',
-      nominal: d('400'),
-    );
-    final view = await receiptWith();
+  test(
+    'рассрочка + сертификат: бумажка гасится на 400, тело договора 600',
+    () async {
+      await seedCustomer();
+      await issuer.issue(
+        by: fullDiscountAuthority,
+        number: 'C-1',
+        nominal: d('400'),
+      );
+      final view = await receiptWith();
 
-    final outcome = await payments.complete(
-      terminalId,
-      PaymentRequest(
-        type: PaymentType.installment,
-        customerId: customerId,
-        certificates: const [CertificateTender(number: 'C-1')],
-        installmentTermMonths: 6,
-        installmentScheme: InstallmentScheme.differentiated.code,
-      ),
-      mv(view, 9),
-    );
+      final outcome = await payments.complete(
+        terminalId,
+        PaymentRequest(
+          type: PaymentType.installment,
+          customerId: customerId,
+          certificates: const [CertificateTender(number: 'C-1')],
+          installmentTermMonths: 6,
+          installmentScheme: InstallmentScheme.differentiated.code,
+        ),
+        mv(view, 9),
+      );
 
-    expect(outcome.amount, d('1000'));
-    expect(outcome.debt, d('600'));
+      expect(outcome.amount, d('1000'));
+      expect(outcome.debt, d('600'));
 
-    final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
-    final certRow = rows.firstWhere(
-      (r) => r.kindId == SystemPaymentKindIds.certificate,
-    );
-    expect(certRow.amount, d('400'));
-    expect(certRow.reference, 'C-1');
-    expect(
-      rows
-          .firstWhere((r) => r.kindId == SystemPaymentKindIds.installment)
-          .amount,
-      d('600'),
-    );
+      final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
+      final certRow = rows.firstWhere(
+        (r) => r.kindId == SystemPaymentKindIds.certificate,
+      );
+      expect(certRow.amount, d('400'));
+      expect(certRow.reference, 'C-1');
+      expect(
+        rows
+            .firstWhere((r) => r.kindId == SystemPaymentKindIds.installment)
+            .amount,
+        d('600'),
+      );
 
-    // Три числа, а не одно: остаток самой бумажки, остаток счёта
-    // обязательства и тело договора. Проба, спросившая одно, не отличила
-    // бы «погашено один раз» от «погашено в одной таблице из двух».
-    expect((await db.certificateDao.byNumber('C-1'))!.balance, Decimal.zero);
-    expect(await liabilityBalance(), Decimal.zero);
+      // Три числа, а не одно: остаток самой бумажки, остаток счёта
+      // обязательства и тело договора. Проба, спросившая одно, не отличила
+      // бы «погашено один раз» от «погашено в одной таблице из двух».
+      expect((await db.certificateDao.byNumber('C-1'))!.balance, Decimal.zero);
+      expect(await liabilityBalance(), Decimal.zero);
 
-    final contract = await credit.byNumber('РС-1-${view.receiptNo}');
-    expect(contract!.contract.principal, d('600'));
-    expect(contract.schedule.length, 6);
-    expect(await balanceOf(agentMainAccountId), d('-600'));
-  });
+      final contract = await credit.byNumber('РС-1-${view.receiptNo}');
+      expect(contract!.contract.principal, d('600'));
+      expect(contract.schedule.length, 6);
+      expect(await balanceOf(agentMainAccountId), d('-600'));
+    },
+  );
 
-  test('рассрочка + QR: деньги провайдера 500 в банк, тело договора 500',
-      () async {
-    await seedCustomer();
-    final intent = await paidIntent('Q-1', '500');
-    final view = await receiptWith();
+  test(
+    'рассрочка + QR: деньги провайдера 500 в банк, тело договора 500',
+    () async {
+      await seedCustomer();
+      final intent = await paidIntent('Q-1', '500');
+      final view = await receiptWith();
 
-    final outcome = await payments.complete(
-      terminalId,
-      PaymentRequest(
-        type: PaymentType.installment,
-        customerId: customerId,
-        qrIntentKey: intent.intentKey,
-        accountId: bankAccountId,
-        installmentTermMonths: 12,
-        installmentScheme: InstallmentScheme.feeUpfront.code,
-      ),
-      mv(view, 9),
-    );
+      final outcome = await payments.complete(
+        terminalId,
+        PaymentRequest(
+          type: PaymentType.installment,
+          customerId: customerId,
+          qrIntentKey: intent.intentKey,
+          accountId: bankAccountId,
+          installmentTermMonths: 12,
+          installmentScheme: InstallmentScheme.feeUpfront.code,
+        ),
+        mv(view, 9),
+      );
 
-    expect(outcome.amount, d('1000'));
-    expect(outcome.paid, d('500'), reason: 'QR — живые деньги');
-    expect(outcome.debt, d('500'));
+      expect(outcome.amount, d('1000'));
+      expect(outcome.paid, d('500'), reason: 'QR — живые деньги');
+      expect(outcome.debt, d('500'));
 
-    final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
-    final qrRow = rows.firstWhere((r) => r.kindId == SystemPaymentKindIds.qr);
-    expect(qrRow.amount, d('500'));
-    expect(qrRow.payeeAccountId, bankAccountId);
-    expect(
-      rows
-          .firstWhere((r) => r.kindId == SystemPaymentKindIds.installment)
-          .amount,
-      d('500'),
-    );
+      final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
+      final qrRow = rows.firstWhere((r) => r.kindId == SystemPaymentKindIds.qr);
+      expect(qrRow.amount, d('500'));
+      expect(qrRow.payeeAccountId, bankAccountId);
+      expect(
+        rows
+            .firstWhere((r) => r.kindId == SystemPaymentKindIds.installment)
+            .amount,
+        d('500'),
+      );
 
-    expect(
-      await balanceOf(bankAccountId),
-      d('500'),
-      reason: 'деньги телефоном пришли в банк, а не в ящик',
-    );
-    expect(await balanceOf(posAccountId), Decimal.zero);
-    expect(await balanceOf(agentMainAccountId), d('-500'));
+      expect(
+        await balanceOf(bankAccountId),
+        d('500'),
+        reason: 'деньги телефоном пришли в банк, а не в ящик',
+      );
+      expect(await balanceOf(posAccountId), Decimal.zero);
+      expect(await balanceOf(agentMainAccountId), d('-500'));
 
-    final contract = await credit.byNumber('РС-1-${view.receiptNo}');
-    expect(contract!.contract.principal, d('500'));
-    expect(contract.contract.downPayment, Decimal.zero,
-        reason: 'первый взнос — это наличные и карта, QR туда не входит');
+      final contract = await credit.byNumber('РС-1-${view.receiptNo}');
+      expect(contract!.contract.principal, d('500'));
+      expect(
+        contract.contract.downPayment,
+        Decimal.zero,
+        reason: 'первый взнос — это наличные и карта, QR туда не входит',
+      );
 
-    // Намерение разобрано: деньги провайдера не могут уйти во второй чек.
-    expect((await db.paymentIntentDao.byId(intent.id))!.settledAt, isNotNull);
-  });
+      // Намерение разобрано: деньги провайдера не могут уйти во второй чек.
+      expect((await db.paymentIntentDao.byId(intent.id))!.settledAt, isNotNull);
+    },
+  );
 
-  test('все четверо разом: бонус, QR, сертификат, аванс — и остаток в договор',
-      () async {
-    // Чек 1000. Бонус 100, QR 200, сертификат 150, аванс 250 — и 300
-    // остаётся телом договора. Если бы хоть один потолок считался от
-    // `amount - bonus` вместо цепочки, тело вышло бы другим, а `paid`
-    // разошёлся бы с суммой строк.
-    await seedCustomer(advance: '250', bonus: '100');
-    await issuer.issue(
-      by: fullDiscountAuthority,
-      number: 'C-1',
-      nominal: d('150'),
-    );
-    final intent = await paidIntent('Q-1', '200');
-    final view = await receiptWith();
+  test(
+    'все четверо разом: бонус, QR, сертификат, аванс — и остаток в договор',
+    () async {
+      // Чек 1000. Бонус 100, QR 200, сертификат 150, аванс 250 — и 300
+      // остаётся телом договора. Если бы хоть один потолок считался от
+      // `amount - bonus` вместо цепочки, тело вышло бы другим, а `paid`
+      // разошёлся бы с суммой строк.
+      await seedCustomer(advance: '250', bonus: '100');
+      await issuer.issue(
+        by: fullDiscountAuthority,
+        number: 'C-1',
+        nominal: d('150'),
+      );
+      final intent = await paidIntent('Q-1', '200');
+      final view = await receiptWith();
 
-    final outcome = await payments.complete(
-      terminalId,
-      PaymentRequest(
-        type: PaymentType.installment,
-        customerId: customerId,
-        bonusUsed: d('100'),
-        qrIntentKey: intent.intentKey,
-        accountId: bankAccountId,
-        certificates: const [CertificateTender(number: 'C-1')],
-        prepaymentUsed: d('250'),
-        prepaymentReference: 'АВ-9',
-        installmentTermMonths: 3,
-        installmentScheme: InstallmentScheme.equalInstalments.code,
-      ),
-      mv(view, 9),
-    );
+      final outcome = await payments.complete(
+        terminalId,
+        PaymentRequest(
+          type: PaymentType.installment,
+          customerId: customerId,
+          bonusUsed: d('100'),
+          qrIntentKey: intent.intentKey,
+          accountId: bankAccountId,
+          certificates: const [CertificateTender(number: 'C-1')],
+          prepaymentUsed: d('250'),
+          prepaymentReference: 'АВ-9',
+          installmentTermMonths: 3,
+          installmentScheme: InstallmentScheme.equalInstalments.code,
+        ),
+        mv(view, 9),
+      );
 
-    expect(outcome.amount, d('1000'));
-    expect(outcome.paid, d('700'), reason: '100 + 200 + 150 + 250');
-    expect(outcome.debt, d('300'));
+      expect(outcome.amount, d('1000'));
+      expect(outcome.paid, d('700'), reason: '100 + 200 + 150 + 250');
+      expect(outcome.debt, d('300'));
 
-    final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
-    Decimal of(int kind) =>
-        rows.firstWhere((r) => r.kindId == kind).amount;
-    expect(of(SystemPaymentKindIds.bonus), d('100'));
-    expect(of(SystemPaymentKindIds.qr), d('200'));
-    expect(of(SystemPaymentKindIds.certificate), d('150'));
-    expect(of(SystemPaymentKindIds.prepayment), d('250'));
-    expect(of(SystemPaymentKindIds.installment), d('300'));
-    expect(
-      rows.fold(Decimal.zero, (Decimal s, r) => s + r.amount),
-      d('1000'),
-      reason: 'Σ строк оплаты == сумма чека',
-    );
+      final rows = await db.paymentDao.findBySale(view.receiptNo!, 1);
+      Decimal of(int kind) => rows.firstWhere((r) => r.kindId == kind).amount;
+      expect(of(SystemPaymentKindIds.bonus), d('100'));
+      expect(of(SystemPaymentKindIds.qr), d('200'));
+      expect(of(SystemPaymentKindIds.certificate), d('150'));
+      expect(of(SystemPaymentKindIds.prepayment), d('250'));
+      expect(of(SystemPaymentKindIds.installment), d('300'));
+      expect(
+        rows.fold(Decimal.zero, (Decimal s, r) => s + r.amount),
+        d('1000'),
+        reason: 'Σ строк оплаты == сумма чека',
+      );
 
-    final contract = await credit.byNumber('РС-1-${view.receiptNo}');
-    expect(contract!.contract.principal, d('300'));
-    expect(
-      contract.schedule.fold(Decimal.zero, (Decimal s, e) => s + e.totalDue),
-      d('300'),
-    );
+      final contract = await credit.byNumber('РС-1-${view.receiptNo}');
+      expect(contract!.contract.principal, d('300'));
+      expect(
+        contract.schedule.fold(Decimal.zero, (Decimal s, e) => s + e.totalDue),
+        d('300'),
+      );
 
-    // Счета-источники: бонусный обнулён, бумажка обнулена, аванс
-    // израсходован и поверх него лёг долг 300.
-    expect(await balanceOf(bonusAccountId), Decimal.zero);
-    expect((await db.certificateDao.byNumber('C-1'))!.balance, Decimal.zero);
-    expect(await balanceOf(agentMainAccountId), d('-300'));
-    expect(await balanceOf(bankAccountId), d('200'));
-  });
+      // Счета-источники: бонусный обнулён, бумажка обнулена, аванс
+      // израсходован и поверх него лёг долг 300.
+      expect(await balanceOf(bonusAccountId), Decimal.zero);
+      expect((await db.certificateDao.byNumber('C-1'))!.balance, Decimal.zero);
+      expect(await balanceOf(agentMainAccountId), d('-300'));
+      expect(await balanceOf(bankAccountId), d('200'));
+    },
+  );
 }

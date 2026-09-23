@@ -29,6 +29,8 @@ import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/app/app_state_controller.dart';
 import 'package:telepos/presentation/screens/settings/general_settings_screen.dart';
 import 'package:telepos/domain/shift/shift_status.dart';
+import '../../../support/till_currency.dart';
+import 'package:get_it/get_it.dart';
 
 /// Тот же приём, что уже стоит в `terminal_home_screen_test.dart`:
 /// `AppStateNotifier.build()` заводит таймеры (часы, опрос места), которые
@@ -122,12 +124,9 @@ Widget generalSettingsUnderTest({
   );
   addTearDown(container.dispose);
 
-  container.read(appStateProvider.notifier).setUserInfo(
-    id: 1,
-    name: 'Тест',
-    role: 1,
-    permissions: permissions,
-  );
+  container
+      .read(appStateProvider.notifier)
+      .setUserInfo(id: 1, name: 'Тест', role: 1, permissions: permissions);
 
   final router = GoRouter(
     initialLocation: AppRoutes.settings,
@@ -196,7 +195,10 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     prefs = await SharedPreferences.getInstance();
+    registerTillCurrency();
   });
+
+  tearDown(() async => GetIt.I.reset());
 
   testWidgets(
     'без settings.users плитки «Пользователи», «Вход и сеанс», «Активные '
@@ -250,29 +252,28 @@ void main() {
     },
   );
 
-  testWidgets(
-    'settings.terminalService показывает ровно эту плитку и ведёт на '
-    '/terminal-service-settings — самый острый маршрут пункта 1',
-    (tester) async {
-      await tester.pumpWidget(
-        generalSettingsUnderTest(
-          permissions: {PermissionKeys.settingsTerminalService},
-          prefs: prefs,
-        ),
-      );
-      await tester.pumpAndSettle();
+  testWidgets('settings.terminalService показывает ровно эту плитку и ведёт на '
+      '/terminal-service-settings — самый острый маршрут пункта 1', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      generalSettingsUnderTest(
+        permissions: {PermissionKeys.settingsTerminalService},
+        prefs: prefs,
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      final tile = find.text('Браузерные терминалы');
-      expect(tile, findsOneWidget);
-      // Соседняя, независимая плитка права остаётся скрытой — доказывает,
-      // что видимость идёт по конкретному ключу, а не по «хоть что-то есть».
-      expect(find.text('Пользователи'), findsNothing);
+    final tile = find.text('Браузерные терминалы');
+    expect(tile, findsOneWidget);
+    // Соседняя, независимая плитка права остаётся скрытой — доказывает,
+    // что видимость идёт по конкретному ключу, а не по «хоть что-то есть».
+    expect(find.text('Пользователи'), findsNothing);
 
-      await tester.tap(tile);
-      await tester.pumpAndSettle();
-      expect(find.text('TERMINAL_SERVICE_STUB'), findsOneWidget);
-    },
-  );
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(find.text('TERMINAL_SERVICE_STUB'), findsOneWidget);
+  });
 
   testWidgets(
     'без settings.users плитка «Привязка терминала» не строится — разбор '

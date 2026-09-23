@@ -7,12 +7,13 @@ import 'package:get_it/get_it.dart';
 import 'package:telepos/core/constants/enums/cash_in_out_type.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
-import 'package:telepos/domain/usecases/fiscal/vat_calculator.dart';
 import 'package:telepos/domain/usecases/service/add_service_mark_use_case.dart';
 import 'package:telepos/domain/usecases/service/create_service_order_use_case.dart';
 import 'package:telepos/domain/usecases/service/service_order_transition_use_case.dart';
 
 import '../support/harness.dart';
+import 'package:telepos/domain/fiscal/fiscal_settings.dart';
+import 'package:telepos/domain/tax/tax_amounts.dart';
 
 void main() {
   final h = E2eHarness();
@@ -158,17 +159,21 @@ void main() {
   });
 
   test('service receipt total has a Decimal-exact 16% НДС breakdown', () async {
-    final breakdown = VatCalculator.breakdown(d('1160'));
+    // Общей формулой продукта: `VatCalculator` был её ЧЕТВЁРТОЙ записью, с
+    // зашитыми под 16 % числами 4/29, и считал по ним даже тогда, когда чек
+    // объявлял другую ставку.
+    final rate = FiscalDefaults.vatRatePercent;
+    final vat = taxFromGross(d('1160'), rate);
     expect(
-      breakdown.vatAmount,
+      vat,
       d('160'),
       reason: 'НДС from 1160 gross must be exactly 160 (16/116)',
     );
     expect(
-      breakdown.netAmount,
+      d('1160') - vat,
       d('1000'),
       reason: 'нетто from 1160 gross must be exactly 1000',
     );
-    expect(breakdown.vatRatePercent, VatCalculator.standardRatePercent);
+    expect(rate, d('16'));
   });
 }

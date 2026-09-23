@@ -51,8 +51,14 @@ class LocalDiscountPolicy implements DiscountPolicy {
     );
   }
 
+  /// Имя роли для ПОДПИСИ ОТКАЗА в журнале — ключом, а не словом.
+  ///
+  /// Второй довод `WireRefusal` читает разработчик: на экран уезжает код, и
+  /// его переводит `ErrorLocalizer`. Ключ (`cashier`) в журнале однозначен,
+  /// а русское слово зависело бы от языка кассы — то есть один и тот же
+  /// отказ писался бы в журнал по-разному на разных кассах.
   static String _roleName(int index) =>
       index >= 0 && index < UserRole.values.length
-      ? UserRole.values[index].displayName
+      ? UserRole.values[index].name
       : 'роль #$index';
 }

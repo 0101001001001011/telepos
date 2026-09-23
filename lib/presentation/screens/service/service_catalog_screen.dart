@@ -10,6 +10,7 @@ import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/service/service_catalog_controller.dart';
 import 'package:telepos/presentation/screens/service/dialogs/service_consumables_dialog.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceCatalogScreen extends ConsumerWidget {
   const ServiceCatalogScreen({super.key});
@@ -308,7 +309,7 @@ class _ServiceItem extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '${item.price} ${l10n.currencySymbol}',
+                          '${item.price} ${tillCurrencySymbol()}',
                           style: context.styles.caption.copyWith(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,

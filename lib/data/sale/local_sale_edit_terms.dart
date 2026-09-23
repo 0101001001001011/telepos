@@ -29,11 +29,12 @@ class LocalSaleEditTerms implements SaleEditTermsReader {
   final Talker _logger;
 
   @override
-  Future<SaleEditTerms> read({required DiscountAuthority by}) async => SaleEditTerms(
-    policy: await _policy(),
-    cap: await _discountPolicy.capFor(by.roleIndex),
-    currencySymbol: _currency.symbol,
-  );
+  Future<SaleEditTerms> read({required DiscountAuthority by}) async =>
+      SaleEditTerms(
+        policy: await _policy(),
+        cap: await _discountPolicy.capFor(by.roleIndex),
+        currencySymbol: _currency.symbol,
+      );
 
   /// Умолчания те же, что стояли у каждого чтения в контроллере и на экране:
   /// правка цены разрешена (`canEditPrice` возвращала `true` и при ошибке

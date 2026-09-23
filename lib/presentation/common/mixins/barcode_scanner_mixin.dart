@@ -122,18 +122,15 @@ mixin BarcodeScannerMixin<T extends StatefulWidget> on State<T> {
       return;
     }
     _emulatedScanner = scanner;
-    _emulatedScans = scanner.barcodes.listen(
-      (code) {
-        // Тот же затвор, что у клавиатуры: скан, пришедший, пока поверх
-        // экрана открыт маршрут, в чек под ним не ложится.
-        if (!_acceptsScans()) return;
-        if (code.length >= _minBarcodeLength &&
-            code.length <= _maxBarcodeLength) {
-          onBarcodeScanned(code);
-        }
-      },
-      onError: (_) {},
-    );
+    _emulatedScans = scanner.barcodes.listen((code) {
+      // Тот же затвор, что у клавиатуры: скан, пришедший, пока поверх
+      // экрана открыт маршрут, в чек под ним не ложится.
+      if (!_acceptsScans()) return;
+      if (code.length >= _minBarcodeLength &&
+          code.length <= _maxBarcodeLength) {
+        onBarcodeScanned(code);
+      }
+    }, onError: (_) {});
   }
 
   EmulatedScannerSource? _emulatedScanner;

@@ -23,6 +23,7 @@ class WifiNetwork {
   bool get isSecured => security.trim().isNotEmpty;
 
   @override
-  String toString() => 'WifiNetwork(ssid: $ssid, signal: $signal%, '
+  String toString() =>
+      'WifiNetwork(ssid: $ssid, signal: $signal%, '
       'secured: $isSecured)';
 }

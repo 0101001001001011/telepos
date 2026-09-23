@@ -42,6 +42,7 @@ library;
 import 'dart:async';
 
 import 'package:decimal/decimal.dart';
+import 'package:telepos/core/constants/enums/country_code.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -1767,46 +1768,19 @@ final paymentAccountsProvider = FutureProvider<List<PaymentAccount>>((
   }
 });
 
+/// Банкноты страны кассы.
+///
+/// Раньше здесь стоял свой `switch` по коду страны — второй список тех же
+/// денег. Третий лежал константой у счётчика купюр в смене и от страны не
+/// зависел вовсе. Теперь источник один: [CountryCode.banknotes].
 List<Decimal> _getDenominationsForCountry(int? countryCode) {
-  switch (countryCode) {
-    case 1:
-      return [
-        50,
-        100,
-        200,
-        500,
-        1000,
-        2000,
-        5000,
-      ].map(Decimal.fromInt).toList();
-    case 2:
-      return [20, 50, 100, 200, 500, 1000, 5000].map(Decimal.fromInt).toList();
-    case 3:
-      return [
-        1000,
-        5000,
-        10000,
-        20000,
-        50000,
-        100000,
-        200000,
-      ].map(Decimal.fromInt).toList();
-    case 4:
-      return [1, 5, 10, 20, 50, 100].map(Decimal.fromInt).toList();
-    case 5:
-      return [1, 5, 10, 20, 50, 100, 500].map(Decimal.fromInt).toList();
-    case 0:
-    default:
-      return [
-        200,
-        500,
-        1000,
-        2000,
-        5000,
-        10000,
-        20000,
-      ].map(Decimal.fromInt).toList();
-  }
+  final country =
+      (countryCode != null &&
+          countryCode >= 0 &&
+          countryCode < CountryCode.values.length)
+      ? CountryCode.values[countryCode]
+      : CountryCode.kzt;
+  return country.banknotes.map(Decimal.fromInt).toList();
 }
 
 /// Раскладка номиналов — по стране кассы.

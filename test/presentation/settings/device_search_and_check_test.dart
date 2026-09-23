@@ -60,13 +60,12 @@ class _FakeTerminalRepository implements TerminalRepository {
       throw UnimplementedError();
 
   @override
-  Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+  Future<void> rename(int terminalId, String name) =>
+      throw UnimplementedError();
 
   @override
-  Future<void> setAllowedPaymentTypes(
-    int terminalId,
-    Set<PaymentType> types,
-  ) => throw UnimplementedError();
+  Future<void> setAllowedPaymentTypes(int terminalId, Set<PaymentType> types) =>
+      throw UnimplementedError();
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();
@@ -214,15 +213,14 @@ void main() {
         expect(
           field.controller!.text,
           '192.168.1.77',
-          reason: 'the chosen candidate must land in the field itself, not '
+          reason:
+              'the chosen candidate must land in the field itself, not '
               'only in the draft behind it',
         );
 
-        expect(
-          discovery.asked,
-          [DeviceClass.receiptPrinter],
-          reason: 'the search must be for this section\'s device class',
-        );
+        expect(discovery.asked, [
+          DeviceClass.receiptPrinter,
+        ], reason: 'the search must be for this section\'s device class');
 
         // Still not a binding until the operator saves — and then it is the
         // chosen value that is saved, not the first candidate found.
@@ -265,7 +263,8 @@ void main() {
         expect(
           find.text(l10n.deviceSearchEmpty),
           findsNothing,
-          reason: 'claiming every source was searched when one failed is the '
+          reason:
+              'claiming every source was searched when one failed is the '
               'exact defect failedSources exists to prevent',
         );
       },
@@ -395,7 +394,8 @@ void main() {
         expect(
           find.text(l10n.deviceCheckReasonNotConfigured),
           findsNothing,
-          reason: '"nothing is bound" and "nothing answered" send an operator '
+          reason:
+              '"nothing is bound" and "nothing answered" send an operator '
               'to two different places',
         );
       },

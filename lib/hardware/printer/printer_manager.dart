@@ -353,8 +353,9 @@ abstract class BufferedPrinterManager implements PrinterManager {
     final result = await _send(bytes, what);
     if (!result.success) {
       throw PrinterCommandException(
-        result.errorMessage ?? 'Команда «$what» не выполнена, причина не '
-            'названа',
+        result.errorMessage ??
+            'Команда «$what» не выполнена, причина не '
+                'названа',
       );
     }
   }

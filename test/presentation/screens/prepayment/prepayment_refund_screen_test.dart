@@ -92,10 +92,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  const allowed = {
-    PermissionKeys.navAgent,
-    PermissionKeys.opCreditRepay,
-  };
+  const allowed = {PermissionKeys.navAgent, PermissionKeys.opCreditRepay};
 
   testWidgets(
     'без права op.creditRepay кнопка на месте, но выдача не зовётся вовсе '
@@ -117,10 +114,7 @@ void main() {
             'выдача выпускает деньги из кассы; открытая кнопка права на это '
             'не даёт (I162)',
       );
-      expect(
-        find.byKey(const Key('prepayment_refund_error')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('prepayment_refund_error')), findsOneWidget);
     },
   );
 
@@ -136,10 +130,7 @@ void main() {
           'карточка знает сальдо на момент открытия, а между открытием и '
           'выдачей стоит второй кассир',
     );
-    expect(
-      find.byKey(const Key('prepayment_refund_balance')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('prepayment_refund_balance')), findsOneWidget);
   });
 
   testWidgets('с правом выдача зовётся, и сумма едет Decimal, а не double', (

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/app_semantic_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
@@ -68,7 +69,7 @@ class ReportChartCard extends StatelessWidget {
                   IconButton(
                     onPressed: onExport,
                     icon: const Icon(Icons.download_rounded, size: 20),
-                    tooltip: 'Экспорт',
+                    tooltip: AppLocalizations.of(context)!.repExport,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     visualDensity: VisualDensity.compact,
                   ),

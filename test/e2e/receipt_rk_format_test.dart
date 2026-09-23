@@ -47,7 +47,7 @@ void main() {
         address: 'г. Алматы, ул. Абая 10',
       ),
       isVatPayer: true,
-      vatRatePercent: 16,
+      vatRatePercent: Decimal.fromInt(16),
       vatAmount: Decimal.parse('110.34'),
       fiscal: fiscal,
     );

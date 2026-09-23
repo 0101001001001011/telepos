@@ -499,22 +499,24 @@ void main() {
 
   // Пункт 9 C (2026-09-15): панель узнавала «не настроено» только на первом
   // «Показать QR» — кассир набирал сумму ради отказа. Теперь — при открытии.
-  testWidgets('провайдер не настроен — панель знает это при открытии, без нажатия',
-      (tester) async {
-    await tester.runAsync(() => seed(configured: false));
-    await mount(tester);
+  testWidgets(
+    'провайдер не настроен — панель знает это при открытии, без нажатия',
+    (tester) async {
+      await tester.runAsync(() => seed(configured: false));
+      await mount(tester);
 
-    await settle(tester, until: () => read().qrRefusal != null);
+      await settle(tester, until: () => read().qrRefusal != null);
 
-    expect(read().qrRefusal, 'error.qr_not_configured');
-    expect(find.byKey(const Key('payment_qr_locked')), findsOneWidget);
-    expect(
-      find.byKey(const Key('payment_qr_start')),
-      findsNothing,
-      reason: 'кнопки, ведущей к отказу, на погашенной панели нет',
-    );
-    expect(emulator.byId, isEmpty);
-  });
+      expect(read().qrRefusal, 'error.qr_not_configured');
+      expect(find.byKey(const Key('payment_qr_locked')), findsOneWidget);
+      expect(
+        find.byKey(const Key('payment_qr_start')),
+        findsNothing,
+        reason: 'кнопки, ведущей к отказу, на погашенной панели нет',
+      );
+      expect(emulator.byId, isEmpty);
+    },
+  );
 
   testWidgets('провайдер не настроен — панель гаснет и называет причину', (
     tester,

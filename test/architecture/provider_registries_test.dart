@@ -306,8 +306,9 @@ void main() {
         values: FiscalOperatorType.values,
         zero: FiscalOperatorType.none,
         isRegistered: (v) => empty.isRegistered(v as FiscalOperatorType),
-        resolve: (v) =>
-            empty.resolve(FiscalSettings(operatorType: v as FiscalOperatorType)),
+        resolve: (v) => empty.resolve(
+          FiscalSettings(operatorType: v as FiscalOperatorType),
+        ),
       ), _Tally()),
       throwsA(isA<TestFailure>()),
       reason: 'пустой реестр обязан краснеть, а не проходить молча',
@@ -317,7 +318,10 @@ void main() {
   test('проверка краснеет на потерянной регистрации', () {
     // Ровно диверсия из плана: одна строка `..register(...)` убрана.
     final partial = FiscalProviderRegistry()
-      ..register(FiscalOperatorType.webkassa, (s) => const _StubFiscalProvider());
+      ..register(
+        FiscalOperatorType.webkassa,
+        (s) => const _StubFiscalProvider(),
+      );
     expect(
       () => _checkRegistry((
         className: 'FiscalProviderRegistry(без kassa24)',

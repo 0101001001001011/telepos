@@ -7,7 +7,6 @@ import 'package:telepos/l10n/app_localizations.dart';
 class NavDestination {
   const NavDestination({
     required this.route,
-    required this.label,
     required this.icon,
     this.selectedIcon,
     this.isPrimary = false,
@@ -15,8 +14,6 @@ class NavDestination {
   });
 
   final String route;
-
-  final String label;
 
   final IconData icon;
 
@@ -28,9 +25,18 @@ class NavDestination {
 
   IconData getIcon(bool selected) => selected ? (selectedIcon ?? icon) : icon;
 
+  /// Подпись пункта меню — только из словаря.
+  ///
+  /// Здесь лежало поле `label` с русским словом, и `getLabel` отдавал его,
+  /// когда словаря нет. Поле больше ничем не было: все двадцать четыре
+  /// маршрута разобраны switch'ем ниже, и запасное значение означало лишь
+  /// «показать по-русски молча». Ровно так экран покупателя год печатал
+  /// по-русски — там тоже никто не заметил, что словаря нет.
+  ///
+  /// Неизвестный маршрут отдаёт САМ маршрут: это видно глазом и чинится, а
+  /// русское слово в английском меню выглядело бы намеренным.
   String getLabel(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) return label;
+    final l10n = AppLocalizations.of(context)!;
 
     return switch (route) {
       '/sale' => l10n.navSale,
@@ -57,7 +63,7 @@ class NavDestination {
       '/wms-claims' => l10n.navWmsClaims,
       '/wms-marking' => l10n.navWmsMarking,
       '/wms-settings' => l10n.navWmsSettings,
-      _ => label,
+      _ => route,
     };
   }
 }
@@ -67,7 +73,6 @@ class NavDestinations {
 
   static const sale = NavDestination(
     route: '/sale',
-    label: 'Продажа',
     icon: TeleposIcons.sale,
     isPrimary: true,
     permissionKey: PermissionKeys.navSale,
@@ -75,7 +80,6 @@ class NavDestinations {
 
   static const refund = NavDestination(
     route: '/refund',
-    label: 'Возврат',
     icon: TeleposIcons.refund,
     isPrimary: true,
     permissionKey: PermissionKeys.navRefund,
@@ -83,7 +87,6 @@ class NavDestinations {
 
   static const shift = NavDestination(
     route: '/shift',
-    label: 'Смена',
     icon: TeleposIcons.shift,
     isPrimary: true,
     permissionKey: PermissionKeys.navShift,
@@ -91,7 +94,6 @@ class NavDestinations {
 
   static const history = NavDestination(
     route: '/history',
-    label: 'История',
     icon: TeleposIcons.history,
     isPrimary: true,
     permissionKey: PermissionKeys.navHistory,
@@ -99,7 +101,6 @@ class NavDestinations {
 
   static const tables = NavDestination(
     route: '/tables',
-    label: 'Столы',
     icon: TeleposIcons.tables,
     isPrimary: true,
     permissionKey: PermissionKeys.navTables,
@@ -107,7 +108,6 @@ class NavDestinations {
 
   static const orders = NavDestination(
     route: '/orders',
-    label: 'Заказы',
     icon: TeleposIcons.orders,
     isPrimary: true,
     permissionKey: PermissionKeys.navOrders,
@@ -115,7 +115,6 @@ class NavDestinations {
 
   static const serviceQueue = NavDestination(
     route: '/service-queue',
-    label: 'Очередь',
     icon: TeleposIcons.serviceQueue,
     isPrimary: true,
     permissionKey: PermissionKeys.navServiceQueue,
@@ -123,7 +122,6 @@ class NavDestinations {
 
   static const serviceIntake = NavDestination(
     route: '/service-intake',
-    label: 'Приём',
     icon: TeleposIcons.serviceIntake,
     isPrimary: true,
     permissionKey: PermissionKeys.navServiceIntake,
@@ -131,76 +129,65 @@ class NavDestinations {
 
   static const wmsDashboard = NavDestination(
     route: '/wms',
-    label: 'Склад WMS',
     icon: TeleposIcons.warehouse,
     isPrimary: true,
   );
 
   static const wmsWarehouses = NavDestination(
     route: '/wms-warehouses',
-    label: 'Склады',
     icon: TeleposIcons.warehouses,
     isPrimary: true,
   );
 
   static const wmsBatches = NavDestination(
     route: '/wms-batches',
-    label: 'Партии',
     icon: TeleposIcons.batches,
     isPrimary: true,
   );
 
   static const wmsSerials = NavDestination(
     route: '/wms-serials',
-    label: 'Серии',
     icon: TeleposIcons.serials,
     isPrimary: true,
   );
 
   static const wmsCellStock = NavDestination(
     route: '/wms-cell-stock',
-    label: 'Ячейки',
     icon: TeleposIcons.cellStock,
     isPrimary: true,
   );
 
   static const wmsClaims = NavDestination(
     route: '/wms-claims',
-    label: 'Рекламации',
     icon: TeleposIcons.claims,
     isPrimary: true,
   );
 
   static const wmsMarking = NavDestination(
     route: '/wms-marking',
-    label: 'Маркировка',
     icon: TeleposIcons.marking,
     isPrimary: true,
   );
 
   static const wmsSettings = NavDestination(
     route: '/wms-settings',
-    label: 'Настройки WMS',
     icon: TeleposIcons.wmsSettings,
   );
 
   static const agent = NavDestination(
     route: '/agent',
-    label: 'Контрагенты',
     icon: TeleposIcons.agent,
     permissionKey: PermissionKeys.navAgent,
   );
 
   static const supply = NavDestination(
     route: '/supply',
-    label: 'Приёмка',
     icon: TeleposIcons.supply,
     permissionKey: PermissionKeys.navSupply,
   );
 
   static const stockRegistry = NavDestination(
     route: '/stock-registry',
-    label: 'Склад',
     icon: TeleposIcons.warehouse,
     isPrimary: true,
     permissionKey: PermissionKeys.navSupply,
@@ -208,7 +195,6 @@ class NavDestinations {
 
   static const cashOperation = NavDestination(
     route: '/cash-operation',
-    label: 'Касса',
     icon: TeleposIcons.cashOperation,
     isPrimary: true,
     permissionKey: PermissionKeys.navCashOperation,
@@ -216,14 +202,12 @@ class NavDestinations {
 
   static const settings = NavDestination(
     route: '/settings',
-    label: 'Настройки',
     icon: TeleposIcons.settings,
     permissionKey: PermissionKeys.navSettings,
   );
 
   static const catalog = NavDestination(
     route: '/catalog',
-    label: 'Каталог',
     icon: TeleposIcons.catalog,
     isPrimary: true,
     permissionKey: PermissionKeys.navCatalog,
@@ -231,7 +215,6 @@ class NavDestinations {
 
   static const reports = NavDestination(
     route: '/reports',
-    label: 'Отчёты',
     icon: TeleposIcons.reports,
     isPrimary: true,
     permissionKey: PermissionKeys.navReports,
@@ -239,7 +222,6 @@ class NavDestinations {
 
   static const sync = NavDestination(
     route: '/sync',
-    label: 'Синхронизация',
     icon: TeleposIcons.sync,
     permissionKey: PermissionKeys.navSync,
   );

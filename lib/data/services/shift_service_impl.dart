@@ -9,6 +9,8 @@ import 'package:telepos/data/database/app_database.dart' hide FiscalQueueEntry;
 import 'package:telepos/data/fiscal/fiscal_replay_scheduler.dart';
 import 'package:telepos/data/fiscal/offline_queueing_provider.dart';
 import 'package:telepos/data/shift/shift_age_rule.dart';
+import 'package:telepos/domain/account/account_type.dart';
+import 'package:telepos/domain/cash/cash_operation_kind.dart';
 import 'package:telepos/domain/services/shift_service.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
 
@@ -73,6 +75,8 @@ class ShiftServiceImpl implements ShiftService {
           ),
         );
 
+    await _bringLedgerToDeclaredFloat(userId, float);
+
     _logger.info(
       'ShiftService: shift opened for user $userId, '
       'openingCash: $float',
@@ -85,6 +89,90 @@ class ShiftServiceImpl implements ShiftService {
     await settleOwedZReport();
 
     await _fiscalOpenShift();
+  }
+
+  /// Довести остаток счёта кассы до **объявленного при открытии** счёта
+  /// ящика.
+  ///
+  /// # Что было измерено 2026-09-22
+  ///
+  /// Объявление писалось в `shifts.opening_cash` и **больше никуда**. Счёт
+  /// кассы — тот самый, который экран смены показывает под подписью
+  /// «в ящике по журналу», — его не видел вовсе. На съёмке урока кассир
+  /// клал в ящик 200 $, а панель показывала 0.00, и расхождение при
+  /// закрытии считалось от этого нуля: пересчитав ящик верно, кассир увидел
+  /// бы «излишек +200».
+  ///
+  /// # Почему делается разностью, а не записью суммы
+  ///
+  /// Счёт кассы **сквозной**: закрытие смены его не обнуляет, и это
+  /// правильно — деньги из ящика на ночь никуда не деваются. Поэтому
+  /// объявление при открытии — не «положить подъёмные», а «вот столько
+  /// сейчас в ящике». В здоровой кассе разность нулевая: предыдущее
+  /// закрытие уже свело журнал с пересчётом. Ненулевая разность означает,
+  /// что деньги двигались, пока смена была закрыта, — и это обязано
+  /// остаться видимой строкой, а не раствориться в остатке.
+  ///
+  /// Поэтому род строки — сведение при открытии
+  /// ([kCashOpOpeningCountOverage] / [kCashOpOpeningCountShortage]), а не
+  /// внесение: иначе она попала бы в `investmentTotal` и легла бы в
+  /// ожидание ВТОРЫМ слагаемым поверх `openingCash`.
+  ///
+  /// И не «излишек смены»: при открытии ожидания ещё нет, сравнивать не с
+  /// чем, — разбор в докстрингах самих кодов.
+  Future<void> _bringLedgerToDeclaredFloat(int userId, Decimal float) async {
+    try {
+      final accountId = await _posAccountId();
+      if (accountId == null) {
+        _logger.warning(
+          'ShiftService: счёт кассы не найден, подъёмные $float остались '
+          'только в строке смены',
+        );
+        return;
+      }
+
+      final account = await _db.accountDao.findById(accountId);
+      final ledger = account?.value ?? Decimal.zero;
+      final drift = float - ledger;
+      if (drift == Decimal.zero) return;
+
+      final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      final isOverage = drift > Decimal.zero;
+      await _db.cashOperationDao.insert(
+        CashOperationsCompanion.insert(
+          amount: isOverage ? drift : -drift,
+          type: isOverage
+              ? kCashOpOpeningCountOverage
+              : kCashOpOpeningCountShortage,
+          accountId: Value(accountId),
+          userId: Value(userId),
+          // Примечания нет намеренно: повод уже сказан родом, а примечание
+          // — свободный текст, который негде перевести. В этом дереве в
+          // `cash_operations.note` уже лежит русская проза
+          // (`ExpenseType.displayName`), и на английской кассе она видна
+          // подписью под операцией. Свою строку туда добавлять незачем.
+          docTime: Value(now),
+          state: const Value(1),
+        ),
+      );
+      await _db.accountDao.updateBalance(accountId, float);
+
+      _logger.info(
+        'ShiftService: журнал кассы сведён с объявлением при открытии: '
+        '$ledger → $float',
+      );
+    } catch (e, st) {
+      _logger.error('ShiftService: не удалось свести журнал с подъёмными', e, st);
+    }
+  }
+
+  /// Счёт кассы — теми же двумя шагами, что у экрана смены и стола смены:
+  /// сначала привязка терминала, затем поиск по роду счёта.
+  Future<int?> _posAccountId() async {
+    final fromPos = (await _db.thisPosDao.get())?.accountId;
+    if (fromPos != null) return fromPos;
+    final byType = await _db.accountDao.findByType(AccountType.pos);
+    return byType.isEmpty ? null : byType.first.id;
   }
 
   /// Догасить **задержанный Z-отчёт** — при открытии смены и только тут.
@@ -181,7 +269,11 @@ class ShiftServiceImpl implements ShiftService {
     try {
       await _db.fiscalOwedReportDao.noteAttempt(id: id, reason: reason);
     } catch (e, st) {
-      _logger.warning('ShiftService: попытка по долгу Z не записана: $e', e, st);
+      _logger.warning(
+        'ShiftService: попытка по долгу Z не записана: $e',
+        e,
+        st,
+      );
     }
   }
 

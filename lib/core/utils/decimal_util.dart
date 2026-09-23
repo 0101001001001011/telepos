@@ -54,21 +54,11 @@ class DecimalUtil {
   static Decimal subtractPercent(Decimal amount, Decimal percent) =>
       amount - DecimalUtil.percent(amount, percent);
 
-  static Decimal vatFromSum(Decimal sum) {
-    final numerator = Decimal.fromInt(AppConstants.vatNumerator);
-    final denominator = Decimal.fromInt(AppConstants.vatDenominator);
-    return roundMoney((sum * numerator / denominator).toDecimal());
-  }
-
-  static Decimal addVat(Decimal sum) {
-    final rate = Decimal.fromInt(100 + AppConstants.vatRate);
-    return roundMoney((sum * rate / hundred).toDecimal());
-  }
-
-  static Decimal removeVat(Decimal sum) {
-    final rate = Decimal.fromInt(100 + AppConstants.vatRate);
-    return roundMoney((sum * hundred / rate).toDecimal());
-  }
+  // Здесь лежали `vatFromSum`, `addVat` и `removeVat` — три записи формулы
+  // налога поверх зашитых 4/29 и ставки 16 % из `AppConstants`. Их не звал
+  // никто, кроме собственных проб: те проходили и создавали впечатление,
+  // что арифметика налога проверена. Снято 2026-09-22; формула живёт в
+  // `lib/domain/tax/tax_amounts.dart`.
 
   static String formatMoney(
     Decimal value, {
@@ -139,9 +129,8 @@ extension DecimalExtension on Decimal {
 
   String get withCurrency => DecimalUtil.formatWithCurrency(this);
 
-  Decimal get vat => DecimalUtil.vatFromSum(this);
-
-  Decimal get withVat => DecimalUtil.addVat(this);
-
-  Decimal get withoutVat => DecimalUtil.removeVat(this);
+  // Здесь были `vat`, `withVat` и `withoutVat` — удобные обёртки над
+  // снятыми записями формулы налога. Удобство тем и опасно: `сумма.vat`
+  // читается как «налог этой суммы», а считался он по ставке, зашитой в
+  // `AppConstants`, независимо от настроек кассы.
 }

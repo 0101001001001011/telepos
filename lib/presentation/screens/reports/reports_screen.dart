@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepos/app/theme/app_colors.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/app/theme/app_semantic_colors.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
@@ -14,6 +15,8 @@ import 'package:telepos/presentation/screens/reports/tabs/sales_tab.dart';
 import 'package:telepos/presentation/screens/reports/tabs/restaurant_tab.dart';
 import 'package:telepos/presentation/screens/reports/tabs/suppliers_tab.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_date_filter.dart';
+import 'package:telepos/core/constants/enums/national_system.dart';
+import 'package:telepos/presentation/common/utils/till_country.dart';
 
 class ReportsScreen extends ConsumerStatefulWidget {
   const ReportsScreen({super.key});
@@ -29,30 +32,30 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       label: 'Dashboard',
       tab: ReportTab.dashboard,
     ),
-    _TabDef(icon: Icons.shopping_cart, label: 'Продажи', tab: ReportTab.sales),
-    _TabDef(icon: Icons.inventory, label: 'Товары', tab: ReportTab.products),
+    _TabDef(icon: Icons.shopping_cart, label: 'Sales', tab: ReportTab.sales),
+    _TabDef(icon: Icons.inventory, label: 'Products', tab: ReportTab.products),
     _TabDef(
       icon: Icons.account_balance,
-      label: 'Финансы',
+      label: 'Finance',
       tab: ReportTab.finance,
     ),
-    _TabDef(icon: Icons.people, label: 'Клиенты', tab: ReportTab.customers),
+    _TabDef(icon: Icons.people, label: 'Clients', tab: ReportTab.customers),
     _TabDef(
       icon: Icons.local_shipping,
-      label: 'Поставщики',
+      label: 'Suppliers',
       tab: ReportTab.suppliers,
     ),
     _TabDef(
       icon: Icons.trending_up,
-      label: 'Прогнозы',
+      label: 'Forecasts',
       tab: ReportTab.forecasts,
     ),
     _TabDef(
       icon: Icons.restaurant,
-      label: 'Ресторан',
+      label: 'Restaurant',
       tab: ReportTab.restaurant,
     ),
-    _TabDef(icon: Icons.receipt_long, label: 'Налоги/КЗ', tab: ReportTab.kz),
+    _TabDef(icon: Icons.receipt_long, label: 'Tax / KZ', tab: ReportTab.kz),
   ];
 
   @override
@@ -61,18 +64,28 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     final width = MediaQuery.of(context).size.width;
     final isDesktop = width > 900;
 
+    // Вкладка с формами 910 и 300 — казахстанская, и до 2026-09-22 она
+    // стояла у всех. Пока страна не прочитана, её не показываем: мелькнуть
+    // и исчезнуть хуже, чем появиться на кадр позже.
+    final systems =
+        ref.watch(tillCountryProvider).asData?.value.nationalSystems ??
+        const <NationalSystem>{};
+    final tabs = systems.contains(NationalSystem.taxForms)
+        ? _tabs
+        : _tabs.where((t) => t.tab != ReportTab.kz).toList();
+
     if (isDesktop) {
-      return _buildDesktopLayout(state);
+      return _buildDesktopLayout(state, tabs);
     }
-    return _buildMobileLayout(state);
+    return _buildMobileLayout(state, tabs);
   }
 
-  Widget _buildDesktopLayout(ReportsState state) {
+  Widget _buildDesktopLayout(ReportsState state, List<_TabDef> tabs) {
     return Scaffold(
       body: Row(
         children: [
           _DesktopSidebar(
-            tabs: _tabs,
+            tabs: tabs,
             activeTab: state.activeTab,
             onTabSelected: (tab) =>
                 ref.read(reportsProvider.notifier).setTab(tab),
@@ -92,7 +105,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   child: Row(
                     children: [
                       const SizedBox(width: 16),
-                      Text('Отчеты', style: AppTextStyles.h3),
+                      Text(
+                        AppLocalizations.of(context)!.repTitle,
+                        style: AppTextStyles.h3,
+                      ),
                       const Spacer(),
                       Expanded(
                         flex: 2,
@@ -106,7 +122,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                       const SizedBox(width: 8),
                       IconButton(
                         icon: const Icon(Icons.refresh),
-                        tooltip: 'Обновить',
+                        tooltip: AppLocalizations.of(context)!.historyRefresh,
                         onPressed: () =>
                             ref.read(reportRefreshProvider.notifier).bump(),
                       ),
@@ -129,16 +145,16 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     );
   }
 
-  Widget _buildMobileLayout(ReportsState state) {
+  Widget _buildMobileLayout(ReportsState state, List<_TabDef> tabs) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Отчеты'),
+        title: Text(AppLocalizations.of(context)!.repTitle),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Обновить',
+            tooltip: AppLocalizations.of(context)!.historyRefresh,
             onPressed: () => ref.read(reportRefreshProvider.notifier).bump(),
           ),
         ],
@@ -161,13 +177,13 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
-                children: _tabs.map((t) {
+                children: tabs.map((t) {
                   final isActive = state.activeTab == t.tab;
                   return Padding(
                     padding: const EdgeInsets.only(right: 4),
                     child: _MobileTabButton(
                       icon: t.icon,
-                      label: t.label,
+                      label: t.labelOf(context),
                       isActive: isActive,
                       onTap: () =>
                           ref.read(reportsProvider.notifier).setTab(t.tab),
@@ -218,8 +234,30 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 class _TabDef {
   const _TabDef({required this.icon, required this.label, required this.tab});
   final IconData icon;
+
+  /// Запасная подпись на случай, когда словаря в дереве нет: экраны отчётов
+  /// поднимаются и в пробах без `MaterialApp`.
   final String label;
+
   final ReportTab tab;
+
+  /// Подпись вкладки. Список вкладок `const`, поэтому подпись не может
+  /// лежать в нём готовой — она выбирается по виду отчёта здесь.
+  String labelOf(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) return label;
+    return switch (tab) {
+      ReportTab.dashboard => l10n.repTabAnalytics,
+      ReportTab.sales => l10n.syncSales,
+      ReportTab.products => l10n.syncProducts,
+      ReportTab.finance => l10n.repTabFinance,
+      ReportTab.customers => l10n.agentClients,
+      ReportTab.suppliers => l10n.agentSuppliers,
+      ReportTab.forecasts => l10n.repTabForecasts,
+      ReportTab.restaurant => l10n.restaurantModeRestaurant,
+      ReportTab.kz => l10n.repTabTaxKz,
+    };
+  }
 }
 
 class _DesktopSidebar extends StatelessWidget {
@@ -261,9 +299,9 @@ class _DesktopSidebar extends StatelessWidget {
                   size: 24,
                 ),
                 const SizedBox(width: 10),
-                const Text(
-                  'Аналитика',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.repTabAnalytics,
+                  style: const TextStyle(
                     color: AppColors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -281,7 +319,7 @@ class _DesktopSidebar extends StatelessWidget {
             final isActive = t.tab == activeTab;
             return _SidebarItem(
               icon: t.icon,
-              label: t.label,
+              label: t.labelOf(context),
               isActive: isActive,
               onTap: () => onTabSelected(t.tab),
             );
@@ -292,7 +330,7 @@ class _DesktopSidebar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'TelePOS v1.6.0',
+              'TelePOS',
               style: TextStyle(
                 fontSize: 11,
                 color: AppColors.white.withValues(alpha: 0.3),

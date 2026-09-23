@@ -51,7 +51,9 @@ String decodeLabelStream(List<int> bytes) {
   // Команды всех трёх языков — ASCII, и latin1 их читает без потерь.
   final raw = latin1.decode(bytes);
   if (raw.contains('^XA')) {
-    return raw.contains('^CI28') ? utf8.decode(bytes, allowMalformed: true) : raw;
+    return raw.contains('^CI28')
+        ? utf8.decode(bytes, allowMalformed: true)
+        : raw;
   }
   if (RegExp(r'^\s*SIZE\s', multiLine: true).hasMatch(raw)) {
     return RegExp(r'^\s*CODEPAGE\s+UTF-8\s*$', multiLine: true).hasMatch(raw)
@@ -106,7 +108,9 @@ List<LabelEvent> _parseZpl(String source) {
     } else if (cmd.startsWith('CF')) {
       out.add(LabelEvent('font', 'шрифт ${cmd.substring(2)}'));
     } else if (cmd.startsWith('CI')) {
-      out.add(LabelEvent('codepage', 'кодовая страница ^CI${cmd.substring(2)}'));
+      out.add(
+        LabelEvent('codepage', 'кодовая страница ^CI${cmd.substring(2)}'),
+      );
     } else if (cmd.startsWith('FD')) {
       final value = cmd.substring(2).replaceAll(RegExp(r'FS$'), '').trim();
       out.add(

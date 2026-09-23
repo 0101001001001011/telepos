@@ -133,9 +133,7 @@ class _LabelPrinterSettingsScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Мастер настройки ещё не завершён — сохранить некуда',
-            ),
+            content: Text(l10n.settingsSetupIncompleteSave),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -213,8 +211,7 @@ class _LabelPrinterSettingsScreenState
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
-                  'Каталог профилей устройств недоступен — настройки '
-                  'принтера этикеток сейчас нельзя изменить.',
+                  l10n.labelPrinterProfileCatalogUnavailable,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
@@ -248,7 +245,9 @@ class _LabelPrinterSettingsScreenState
                             SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Изменения применяются при следующем запуске кассы.',
+                                AppLocalizations.of(
+                                  context,
+                                )!.settingsRestartRequired,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Theme.of(

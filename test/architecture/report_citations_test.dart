@@ -17,18 +17,23 @@ import 'package:flutter_test/flutter_test.dart';
 /// путь обязан быть в `git ls-files`.
 void main() {
   test('каждая ссылка на отчёт задачи — отслеживаемый путь', () {
-    final tracked = (Process.runSync('git', ['ls-files'], stdoutEncoding: systemEncoding)
-                .stdout as String)
-        .split('\n')
-        .map((line) => line.trim())
-        .where((line) => line.isNotEmpty)
-        .toSet();
+    final tracked =
+        (Process.runSync('git', [
+                  'ls-files',
+                ], stdoutEncoding: systemEncoding).stdout
+                as String)
+            .split('\n')
+            .map((line) => line.trim())
+            .where((line) => line.isNotEmpty)
+            .toSet();
     expect(tracked, isNotEmpty, reason: 'предпосылка: git ответил');
 
     // Перенос строки внутри комментария склеивается: путь в докстринге
     // рвётся на `///` так же часто, как и не рвётся.
     final continuation = RegExp(r'\r?\n[ \t]*//+[ \t]*');
-    final citation = RegExp(r'([A-Za-z0-9_.\-]+/(?:[A-Za-z0-9_.\-]+/)*)?task-\d+-report\.md');
+    final citation = RegExp(
+      r'([A-Za-z0-9_.\-]+/(?:[A-Za-z0-9_.\-]+/)*)?task-\d+-report\.md',
+    );
 
     final dangling = <String>[];
     for (final root in ['lib', 'test']) {

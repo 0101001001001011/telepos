@@ -16,6 +16,7 @@ import 'package:telepos/presentation/screens/reports/widgets/report_chart_card.d
 import 'package:telepos/presentation/screens/reports/widgets/report_export_button.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_kpi_card.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_money_format.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class _RestaurantKpi {
   const _RestaurantKpi({
@@ -42,16 +43,16 @@ class _OrderTypeData {
   final Decimal totalRevenue;
   final Decimal avgCheck;
 
-  String get label {
+  String label(AppLocalizations l10n) {
     switch (orderType) {
       case 0:
-        return 'В зале';
+        return l10n.restaurantOrderDineIn;
       case 1:
-        return 'Навынос';
+        return l10n.restaurantOrderTakeout;
       case 2:
-        return 'Доставка';
+        return l10n.restaurantOrderDelivery;
       default:
-        return 'Другое';
+        return l10n.expenseTypeOther;
     }
   }
 }
@@ -370,7 +371,7 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
             value: ReportMoney.full(kpi.avgCheck),
             icon: Icons.analytics_outlined,
             color: AppColors.warning,
-            subtitle: '₸',
+            subtitle: tillCurrencySymbol(),
           ),
           ReportKpiCard(
             title: l10n.repKpiTips,
@@ -471,11 +472,17 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'restaurant_order_types',
-        ['Тип заказа', 'Кол-во', 'Выручка', 'Средний чек', 'Процент'],
+        [
+          l10n.restaurantOrderType,
+          l10n.tableHeaderQty,
+          l10n.repColRevenue,
+          l10n.repKpiAvgCheck,
+          l10n.discountPercent,
+        ],
         data
             .map(
               (d) => [
-                d.label,
+                d.label(l10n),
                 d.orderCount.toString(),
                 d.totalRevenue.toStringAsFixed(2),
                 d.avgCheck.toStringAsFixed(2),
@@ -533,7 +540,12 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                '${data[i].orderCount} зак.\n${ReportMoney.full(data[i].totalRevenue)} ₸',
+                                l10n.repOrdersRevenueTooltip(
+                                  data[i].orderCount,
+                                  ReportMoney.withCurrency(
+                                    data[i].totalRevenue,
+                                  ),
+                                ),
                                 style: const TextStyle(
                                   color: AppColors.white,
                                   fontSize: 10,
@@ -561,9 +573,9 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
                 for (var i = 0; i < data.length; i++) ...[
                   _LegendItem(
                     color: pieColors[i % pieColors.length],
-                    label: data[i].label,
-                    value: '${data[i].orderCount} зак.',
-                    subValue: '${ReportMoney.full(data[i].totalRevenue)} ₸',
+                    label: data[i].label(l10n),
+                    value: l10n.repOrdersShort(data[i].orderCount),
+                    subValue: ReportMoney.withCurrency(data[i].totalRevenue),
                     isHighlighted: i == _touchedPieIndex,
                   ),
                   if (i < data.length - 1) const SizedBox(height: 8),
@@ -628,13 +640,13 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
         context,
         'restaurant_table_turnover',
         [
-          'Стол',
-          'Зона',
-          'Вместимость',
-          'Посадок',
-          'Выручка',
-          'Ср. чек',
-          'Чаевые',
+          l10n.repColTable,
+          l10n.restaurantTableZone,
+          l10n.restaurantTableCapacity,
+          l10n.repColSeatings,
+          l10n.repColRevenue,
+          l10n.repColAvgCheckShort,
+          l10n.restTips,
         ],
         data
             .map(
@@ -661,8 +673,8 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
                 final table = displayData[group.x.toInt()];
                 return BarTooltipItem(
                   '${table.name}${table.zone.isNotEmpty ? ' (${table.zone})' : ''}\n'
-                  '${table.seatingCount} посадок\n'
-                  '${ReportMoney.full(table.totalRevenue)} ₸',
+                  '${l10n.repSeatingsLine(table.seatingCount)}\n'
+                  '${ReportMoney.withCurrency(table.totalRevenue)}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 11,
@@ -798,7 +810,13 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'restaurant_dish_popularity',
-        ['Блюдо', 'Кол-во продаж', 'Выручка', 'Себестоимость', 'Food Cost %'],
+        [
+          l10n.catalogTypeDish,
+          l10n.repColSalesCount,
+          l10n.repColRevenue,
+          l10n.dishTabCosting,
+          'Food Cost %',
+        ],
         data
             .map(
               (d) => [
@@ -822,8 +840,8 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
                 final dish = displayData[group.x.toInt()];
                 return BarTooltipItem(
                   '${dish.name}\n'
-                  '${dish.qtySold.toStringAsFixed(0)} шт.\n'
-                  '${ReportMoney.full(dish.revenue)} ₸',
+                  '${l10n.repPiecesDot(dish.qtySold.toStringAsFixed(0))}\n'
+                  '${ReportMoney.withCurrency(dish.revenue)}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 11,
@@ -941,7 +959,12 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'restaurant_food_cost',
-        ['Блюдо', 'Выручка', 'Себестоимость', 'Food Cost %'],
+        [
+          l10n.catalogTypeDish,
+          l10n.repColRevenue,
+          l10n.dishTabCosting,
+          'Food Cost %',
+        ],
         data
             .map(
               (d) => [
@@ -1057,7 +1080,13 @@ class _RestaurantTabState extends ConsumerState<RestaurantTab> {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'restaurant_tips',
-        ['Официант', 'Заказы', 'Выручка', 'Чаевые', 'Чаевые %'],
+        [
+          l10n.restaurantWaiter,
+          l10n.navOrders,
+          l10n.repColRevenue,
+          l10n.restTips,
+          l10n.repColTipsPct,
+        ],
         data
             .map(
               (d) => [

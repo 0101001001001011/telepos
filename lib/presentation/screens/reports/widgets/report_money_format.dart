@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ReportMoney {
   ReportMoney._();
@@ -29,4 +30,12 @@ class ReportMoney {
     final grouped = buffer.toString().split('').reversed.join();
     return negative ? '-$grouped' : grouped;
   }
+
+  /// Сумма со знаком валюты ЭТОЙ кассы.
+  ///
+  /// Заведено 2026-09-22: знак валюты был зашит в отчётах
+  /// тридцатью местами, и владелец американского магазина видел выручку в
+  /// тенге. Знак берётся у кассы одним местом ([tillCurrencySymbol]).
+  static String withCurrency(Decimal amount) =>
+      '${full(amount)} ${tillCurrencySymbol()}';
 }

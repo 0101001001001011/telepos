@@ -33,10 +33,7 @@ class RefusingFiscalProvider implements FiscalProvider {
 
   @override
   Future<FiscalAuthResult> authorize(FiscalSettings config) async =>
-      FiscalAuthResult.failure(
-        _reason,
-        code: FiscalErrorCode.notConfigured,
-      );
+      FiscalAuthResult.failure(_reason, code: FiscalErrorCode.notConfigured);
 
   @override
   String? validateConfig(FiscalSettings config) => _reason;

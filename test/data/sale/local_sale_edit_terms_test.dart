@@ -96,19 +96,22 @@ void main() {
     expect(terms.policy.sellInDiscount, isFalse);
   });
 
-  test('предел — у DiscountPolicy, для роли из полномочий, без правки', () async {
-    final terms = await reader().read(
-      by: const DiscountAuthority(roleIndex: 2, permissions: {}),
-    );
-    expect(
-      policy.askedFor,
-      2,
-      reason: 'предел обязан спрашиваться для роли того, кто просит',
-    );
-    expect(terms.cap.maxPercent, d('12.5'));
-    expect(terms.cap.approvalAbove, d('7'));
-    expect(terms.cap.source, 'предел роли «Кассир»');
-  });
+  test(
+    'предел — у DiscountPolicy, для роли из полномочий, без правки',
+    () async {
+      final terms = await reader().read(
+        by: const DiscountAuthority(roleIndex: 2, permissions: {}),
+      );
+      expect(
+        policy.askedFor,
+        2,
+        reason: 'предел обязан спрашиваться для роли того, кто просит',
+      );
+      expect(terms.cap.maxPercent, d('12.5'));
+      expect(terms.cap.approvalAbove, d('7'));
+      expect(terms.cap.source, 'предел роли «Кассир»');
+    },
+  );
 
   test('валюта — символ службы валют кассы', () async {
     final som = await reader(symbol: 'сом').read(by: DiscountAuthority.none);

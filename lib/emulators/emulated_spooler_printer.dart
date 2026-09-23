@@ -132,7 +132,9 @@ class EmulatedSpoolerPrinter extends BufferedPrinterManager {
       await target.writeAsBytes(data, mode: FileMode.append, flush: true);
       return PrintResult.ok(bytesSent: data.length);
     } catch (e) {
-      return PrintResult.error('Эмулятор спулера: запись в «$file» не удалась: $e');
+      return PrintResult.error(
+        'Эмулятор спулера: запись в «$file» не удалась: $e',
+      );
     }
   }
 }

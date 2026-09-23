@@ -217,21 +217,22 @@ Future<void> _addCashier(AppDatabase db) => db
       ),
     );
 
-Future<void> _configureTill(AppDatabase db) => db.thisPosDao.insertInitialConfig(
-  companyName: 'ТОО Ромашка',
-  iinbin: null,
-  cashBoxName: 'Касса-1',
-  countryCode: 0,
-  currencyCode: null,
-  currencySymbol: null,
-  currencyNameShort: null,
-  paperWidth: null,
-  printerHeader: null,
-  printerFooter: null,
-  accountId: null,
-  acquiringAccountId: null,
-  rsaPublicKey: null,
-);
+Future<void> _configureTill(AppDatabase db) =>
+    db.thisPosDao.insertInitialConfig(
+      companyName: 'ТОО Ромашка',
+      iinbin: null,
+      cashBoxName: 'Касса-1',
+      countryCode: 0,
+      currencyCode: null,
+      currencySymbol: null,
+      currencyNameShort: null,
+      paperWidth: null,
+      printerHeader: null,
+      printerFooter: null,
+      accountId: null,
+      acquiringAccountId: null,
+      rsaPublicKey: null,
+    );
 
 AppDatabase _register(StartupStateRepository Function(AppDatabase) build) {
   final db = AppDatabase.forTesting(NativeDatabase.memory());
@@ -275,7 +276,8 @@ void main() {
       expect(
         find.byType(UnreadableStep),
         findsOneWidget,
-        reason: 'первый ответ не удался — мастер обязан сказать это, а не '
+        reason:
+            'первый ответ не удался — мастер обязан сказать это, а не '
             'предложить настройку поверх работающего магазина',
       );
       final asked = till.watchCalls;
@@ -289,14 +291,16 @@ void main() {
       expect(
         find.byType(CountryStep),
         findsOneWidget,
-        reason: 'ради этого и менялся транспорт: касса заговорила первой, и '
+        reason:
+            'ради этого и менялся транспорт: касса заговорила первой, и '
             'экран вышел из тупика сам',
       );
       expect(find.byType(UnreadableStep), findsNothing);
       expect(
         till.watchCalls,
         asked,
-        reason: 'ни одного нового обращения к договору — иначе это опрос, а '
+        reason:
+            'ни одного нового обращения к договору — иначе это опрос, а '
             'не подписка',
       );
     },
@@ -342,41 +346,43 @@ void main() {
     },
   );
 
-  testWidgets('«Повторить» заводит подписку заново, а не перечитывает мёртвую', (
-    tester,
-  ) async {
-    // Единственная кнопка тупикового экрана обязана из него выводить. Если бы
-    // повтор только перечитывал текущее значение провайдера, он крутил бы
-    // индикатор над потоком, который уже закончился, — и кнопка выглядела бы
-    // работающей, ничего не меняя.
-    tester.view.physicalSize = const Size(1000, 1800);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+  testWidgets(
+    '«Повторить» заводит подписку заново, а не перечитывает мёртвую',
+    (tester) async {
+      // Единственная кнопка тупикового экрана обязана из него выводить. Если бы
+      // повтор только перечитывал текущее значение провайдера, он крутил бы
+      // индикатор над потоком, который уже закончился, — и кнопка выглядела бы
+      // работающей, ничего не меняя.
+      tester.view.physicalSize = const Size(1000, 1800);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
 
-    late _DeadUntilAskedAgain till;
-    final db = _register((db) {
-      till = _DeadUntilAskedAgain(LocalStartupStateRepository(db));
-      return till;
-    });
-    addTearDown(db.close);
+      late _DeadUntilAskedAgain till;
+      final db = _register((db) {
+        till = _DeadUntilAskedAgain(LocalStartupStateRepository(db));
+        return till;
+      });
+      addTearDown(db.close);
 
-    await tester.pumpWidget(_terminal(prefs));
-    await _settle(tester);
+      await tester.pumpWidget(_terminal(prefs));
+      await _settle(tester);
 
-    expect(find.byType(UnreadableStep), findsOneWidget);
-    expect(till.watchCalls, 1);
+      expect(find.byType(UnreadableStep), findsOneWidget);
+      expect(till.watchCalls, 1);
 
-    await tester.tap(find.text('Повторить'));
-    await _settle(tester);
+      await tester.tap(find.text('Повторить'));
+      await _settle(tester);
 
-    expect(
-      till.watchCalls,
-      2,
-      reason: 'повтор обязан завести НОВУЮ подписку: у оборвавшейся спрашивать '
-          'нечего',
-    );
-    expect(find.byType(CountryStep), findsOneWidget);
-  });
+      expect(
+        till.watchCalls,
+        2,
+        reason:
+            'повтор обязан завести НОВУЮ подписку: у оборвавшейся спрашивать '
+            'нечего',
+      );
+      expect(find.byType(CountryStep), findsOneWidget);
+    },
+  );
 
   test('ушёл последний слушатель — подписка снята', () async {
     // Вторая половина требования, и без неё первая — утечка. Провайдер здесь
@@ -442,7 +448,8 @@ void main() {
       expect(
         find.byType(UnreadableStep),
         findsOneWidget,
-        reason: 'поток закрылся после первого ответа — сказать второе нечем, '
+        reason:
+            'поток закрылся после первого ответа — сказать второе нечем, '
             'и экран остаётся тупиком до вопроса со своей стороны',
       );
       expect(till.watchCalls, 1);

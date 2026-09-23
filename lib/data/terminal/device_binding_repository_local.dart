@@ -65,7 +65,8 @@ class LocalDeviceBindingRepository implements DeviceBindingRepository {
     final result = <DeviceBinding>[];
     for (final row in rows) {
       final deviceClass = _classFromStored(row.deviceClass);
-      if (deviceClass == null) continue; // Written by a newer build; don't guess.
+      if (deviceClass == null)
+        continue; // Written by a newer build; don't guess.
       result.add(
         DeviceBinding(
           deviceClass: deviceClass,

@@ -142,19 +142,18 @@ void main() {
       expect(pathOf(router), AppRoutes.history);
     });
 
-    testWidgets(
-      'вошедший с правом на запрошенный маршрут — не задет',
-      (tester) async {
-        final router = await pumpDesktop(tester);
-        logIn(tester, permissions: const {PermissionKeys.navSale});
+    testWidgets('вошедший с правом на запрошенный маршрут — не задет', (
+      tester,
+    ) async {
+      final router = await pumpDesktop(tester);
+      logIn(tester, permissions: const {PermissionKeys.navSale});
 
-        router.go(AppRoutes.sale);
-        await tester.pumpAndSettle(const Duration(seconds: 5));
+      router.go(AppRoutes.sale);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
 
-        expect(find.byType(SaleScreen), findsOneWidget);
-        expect(pathOf(router), AppRoutes.sale);
-      },
-    );
+      expect(find.byType(SaleScreen), findsOneWidget);
+      expect(pathOf(router), AppRoutes.sale);
+    });
   });
 
   group('владелец обходит таблицу прав целиком', () {
@@ -179,21 +178,18 @@ void main() {
   });
 
   group('маршруты без ключа права', () {
-    testWidgets(
-      '/additional остаётся достижим при самом узком наборе прав — '
-      'routeToPermissionKey() его не покрывает, отказ был бы новым '
-      'запретом там, где раньше не было даже показа/скрытия',
-      (tester) async {
-        final router = await pumpDesktop(tester);
-        logIn(tester, permissions: const {PermissionKeys.navHistory});
+    testWidgets('/additional остаётся достижим при самом узком наборе прав — '
+        'routeToPermissionKey() его не покрывает, отказ был бы новым '
+        'запретом там, где раньше не было даже показа/скрытия', (tester) async {
+      final router = await pumpDesktop(tester);
+      logIn(tester, permissions: const {PermissionKeys.navHistory});
 
-        router.go(AppRoutes.additional);
-        await tester.pumpAndSettle(const Duration(seconds: 5));
+      router.go(AppRoutes.additional);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
 
-        expect(find.byType(AdditionalScreen), findsOneWidget);
-        expect(pathOf(router), AppRoutes.additional);
-      },
-    );
+      expect(find.byType(AdditionalScreen), findsOneWidget);
+      expect(pathOf(router), AppRoutes.additional);
+    });
   });
 
   group('публичные маршруты и вход не задеты', () {

@@ -223,6 +223,36 @@ void main() {
     expect(find.textContaining('Ошибка печати'), findsNothing);
   });
 
+  testWidgets('пустая подпись не даёт двоеточия в пустоту', (tester) async {
+    // Касса отказала ящиком чисто, без причины. Здесь слой данных слал
+    // дословный повтор заголовка ПО-РУССКИ, и на английской кассе выходило
+    // «Cash drawer did not open: денежный ящик не открылся». Поймано
+    // пробным проходом главы 7 (2026-09-22).
+    //
+    // Пустая подпись означает «сверх заголовка сказать нечего»: заголовок
+    // показывается один, и двоеточие в пустоту за ним не тянется.
+    await mount(
+      tester,
+      fiscal: SaleFiscalization.notRequired,
+      troubles: const [
+        CompletionTrouble(
+          kind: CompletionTroubleKind.drawer,
+          receiptNo: 1,
+          message: '',
+        ),
+      ],
+    );
+
+    await payCash(tester);
+
+    await expectSnack(tester, 'Денежный ящик не открылся');
+    expect(
+      find.textContaining('Денежный ящик не открылся:'),
+      findsNothing,
+      reason: 'двоеточие тянется за собой пустоту',
+    );
+  });
+
   /// Задача 5: три «документа нет» — три разных сигнала кассиру.
   ///
   /// Проба стоит парой: одна требует красной полосы, другая требует её

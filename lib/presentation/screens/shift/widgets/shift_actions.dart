@@ -9,6 +9,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/shift/shift_controller.dart';
+import 'package:telepos/domain/services/currency_service.dart';
 import 'package:telepos/domain/services/shift_service.dart';
 import 'package:telepos/presentation/screens/settings/fiscal_correction_screen.dart';
 
@@ -95,6 +96,7 @@ class ShiftActions extends ConsumerWidget {
     }
     _lastXTapAt = now;
 
+    final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
     final outcome = await notifier.runXReport();
     if (outcome.skipped) return;
@@ -106,14 +108,14 @@ class ShiftActions extends ConsumerWidget {
       if (fiscal != null &&
           fiscal.success &&
           (fiscal.queued || fiscal.offlineMode)) {
-        msg = 'X-отчёт распечатан (фискальный X в очереди, offline)';
+        msg = l10n.shiftXReportPrintedOffline;
         color = AppColors.warning;
       } else {
-        msg = 'X-отчёт распечатан';
+        msg = l10n.shiftXReportPrinted;
         color = null;
       }
     } else {
-      msg = 'Не удалось распечатать X-отчёт';
+      msg = l10n.shiftXReportFailed;
       color = Colors.red;
     }
     messenger.showSnackBar(
@@ -145,7 +147,7 @@ class ShiftActions extends ConsumerWidget {
               key: const ValueKey('shift-xreport-button'),
               onPressed: () => _runXReport(context, notifier),
               icon: const Icon(Icons.summarize_outlined),
-              label: const Text('X-отчёт'),
+              label: Text(l10n.shiftXReport),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
@@ -156,7 +158,7 @@ class ShiftActions extends ConsumerWidget {
               key: const ValueKey('shift-correction-button'),
               onPressed: () => showFiscalCorrectionScreen(context),
               icon: const Icon(Icons.receipt_long_outlined),
-              label: const Text('Чек коррекции'),
+              label: Text(l10n.shiftCorrectionReceipt),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
@@ -227,7 +229,7 @@ class ShiftActions extends ConsumerWidget {
             key: const ValueKey('shift-xreport-button-compact'),
             onPressed: () => _runXReport(context, notifier),
             icon: const Icon(Icons.summarize_outlined, size: 20),
-            label: const Text('X-отчёт'),
+            label: Text(l10n.shiftXReport),
           ),
           const SizedBox(width: 12),
 
@@ -269,6 +271,10 @@ class ShiftActions extends ConsumerWidget {
 
   void _showOpenDialog(BuildContext context, ShiftNotifier notifier) {
     final controller = TextEditingController(text: '0');
+    // Валюта кассы, а не тенге: здесь кассир вводит ДЕНЬГИ, и подпись у поля
+    // — заявление о том, какие. До 2026-09-22 тут стояло зашитое «KZT» на
+    // любой кассе любой страны.
+    final currency = GetIt.I<CurrencyService>().code;
 
     showDialog<void>(
       context: context,
@@ -283,15 +289,22 @@ class ShiftActions extends ConsumerWidget {
               Text(dl10n.shiftEnterInitialAmount, style: AppTextStyles.body),
               const SizedBox(height: 16),
               TextField(
+                // Ключ не украшение: окно открытия смены живёт поверх
+                // экрана, у которого свои поля ввода (вкладка «Total»), и
+                // `find.byType(TextField).first` попадает в них, а не сюда.
+                // Съёмка главы 7 сняла так дубль, где сумма открытия не
+                // ввелась: касса показала «Expected in register 3.50»
+                // вместо 203.50, прямо против дорожки.
+                key: const ValueKey('shift-opening-cash'),
                 controller: controller,
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
                 autofocus: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
                   hintText: '0.00',
-                  suffixText: 'KZT',
+                  suffixText: currency,
                 ),
               ),
             ],
@@ -433,8 +446,12 @@ class ShiftActions extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 dl10n.shiftFixedAmount(
-                  (state.hasCounted ? state.enteredTotal : state.systemTotal)
-                      .toStringAsFixed(2),
+                  // То же правило, каким живёт `LocalShiftDesk.close`:
+                  // не считали — записывается ожидание. Стоял
+                  // `systemTotal`, и окно называло сумму, отличную от
+                  // той, что уходила в смену и в Z-отчёт.
+                  '${(state.hasCounted ? state.enteredTotal : state.expectedCash).toStringAsFixed(2)} '
+                  '${GetIt.I<CurrencyService>().symbol}',
                 ),
                 style: AppTextStyles.body.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,

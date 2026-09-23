@@ -75,60 +75,47 @@ void main() {
     await GetIt.I.reset();
   });
 
-  test(
-    'один отказ подписки, закрывшейся сразу следом, — ровно одна запись '
-    'AsyncError, не две',
-    () async {
-      GetIt.I.registerSingleton<StartupStateRepository>(
-        _FailsOnceThenCloses(),
-      );
+  test('один отказ подписки, закрывшейся сразу следом, — ровно одна запись '
+      'AsyncError, не две', () async {
+    GetIt.I.registerSingleton<StartupStateRepository>(_FailsOnceThenCloses());
 
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
 
-      final errors = <Object>[];
-      container.listen<AsyncValue<SetupState>>(startupStateProvider, (
-        _,
-        next,
-      ) {
-        if (next.hasError) errors.add(next.error!);
-      });
+    final errors = <Object>[];
+    container.listen<AsyncValue<SetupState>>(startupStateProvider, (_, next) {
+      if (next.hasError) errors.add(next.error!);
+    });
 
-      // Даёт стриму провайдера домотать оба события (ошибку и `done`) —
-      // оба уже поставлены в очередь синхронно при регистрации, но каждое
-      // проходит свой микротаск через `StreamController`/`AsyncNotifier`.
-      await Future<void>.delayed(Duration.zero);
-      await Future<void>.delayed(Duration.zero);
-      await Future<void>.delayed(Duration.zero);
+    // Даёт стриму провайдера домотать оба события (ошибку и `done`) —
+    // оба уже поставлены в очередь синхронно при регистрации, но каждое
+    // проходит свой микротаск через `StreamController`/`AsyncNotifier`.
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
 
-      expect(
-        errors.length,
-        1,
-        reason:
-            'единственный настоящий отказ провода не имеет права стать '
-            'двумя записями AsyncError — ровно так `_probeOf` в '
-            '`InitialSetupNotifier` дважды пишет ERROR на одну причину. '
-            'Увидено: $errors',
-      );
-    },
-  );
+    expect(
+      errors.length,
+      1,
+      reason:
+          'единственный настоящий отказ провода не имеет права стать '
+          'двумя записями AsyncError — ровно так `_probeOf` в '
+          '`InitialSetupNotifier` дважды пишет ERROR на одну причину. '
+          'Увидено: $errors',
+    );
+  });
 
   test(
     'поток, закрывшийся не сказав вовсе ничего, — синтетическая ошибка '
     'сохраняется (контрольный случай, правка её не имеет права снять)',
     () async {
-      GetIt.I.registerSingleton<StartupStateRepository>(
-        _ClosesWithoutAWord(),
-      );
+      GetIt.I.registerSingleton<StartupStateRepository>(_ClosesWithoutAWord());
 
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
       final errors = <Object>[];
-      container.listen<AsyncValue<SetupState>>(startupStateProvider, (
-        _,
-        next,
-      ) {
+      container.listen<AsyncValue<SetupState>>(startupStateProvider, (_, next) {
         if (next.hasError) errors.add(next.error!);
       });
 
@@ -145,35 +132,27 @@ void main() {
     },
   );
 
-  test(
-    'поток, отдавший значение и на этом закрывшийся, — отказа нет вовсе '
-    '(контрольный случай)',
-    () async {
-      GetIt.I.registerSingleton<StartupStateRepository>(
-        _AnswersOnceThenCloses(),
-      );
+  test('поток, отдавший значение и на этом закрывшийся, — отказа нет вовсе '
+      '(контрольный случай)', () async {
+    GetIt.I.registerSingleton<StartupStateRepository>(_AnswersOnceThenCloses());
 
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
 
-      final events = <AsyncValue<SetupState>>[];
-      container.listen<AsyncValue<SetupState>>(startupStateProvider, (
-        _,
-        next,
-      ) {
-        events.add(next);
-      });
+    final events = <AsyncValue<SetupState>>[];
+    container.listen<AsyncValue<SetupState>>(startupStateProvider, (_, next) {
+      events.add(next);
+    });
 
-      await Future<void>.delayed(Duration.zero);
-      await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
 
-      expect(
-        events.any((e) => e.hasError),
-        isFalse,
-        reason:
-            'закрытие ПОСЛЕ настоящего значения — не отказ: значение уже '
-            'сказано, дальше «новостей больше не будет», а не «неизвестно»',
-      );
-    },
-  );
+    expect(
+      events.any((e) => e.hasError),
+      isFalse,
+      reason:
+          'закрытие ПОСЛЕ настоящего значения — не отказ: значение уже '
+          'сказано, дальше «новостей больше не будет», а не «неизвестно»',
+    );
+  });
 }

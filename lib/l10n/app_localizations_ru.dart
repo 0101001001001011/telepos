@@ -141,6 +141,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginShiftRequired => 'Откройте смену для входа';
 
   @override
+  String get staffRoleOwner => 'Владелец';
+
+  @override
+  String get staffRoleAdministrator => 'Администратор';
+
+  @override
+  String get staffRoleUser => 'Пользователь';
+
+  @override
+  String get staffRoleCashier => 'Кассир';
+
+  @override
+  String get staffRoleUnknown => 'Неизвестно';
+
+  @override
   String get loginCashier => 'Кассир';
 
   @override
@@ -568,6 +583,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cashTitle => 'Касса';
 
   @override
+  String get cashReasonCreditRepayment => 'Погашение рассрочки';
+
+  @override
+  String get cashReasonCustomerTopUp => 'Пополнение счёта покупателя';
+
+  @override
+  String get accountBankCard => 'Банк (карта)';
+
+  @override
+  String get accountCertificateLiability => 'Обязательства по сертификатам';
+
+  @override
+  String get serviceConsumableFallback => 'Расходник';
+
+  @override
+  String get serviceAutoAddedByNorm => 'Добавлено по норме расхода';
+
+  @override
   String get cashInvestment => 'Внесение';
 
   @override
@@ -590,21 +623,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get cashExpenseTypes => 'Тип расхода';
-
-  @override
-  String get cashSalary => 'Зарплата';
-
-  @override
-  String get cashRent => 'Аренда';
-
-  @override
-  String get cashUtilities => 'Коммунальные';
-
-  @override
-  String get cashSupplies => 'Закупки';
-
-  @override
-  String get cashOther => 'Прочее';
 
   @override
   String get discountTitle => 'Скидка';
@@ -967,7 +985,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginShiftClosed => 'Смена закрыта';
 
   @override
-  String get loginShiftUnknown => 'Смена: неизвестно';
+  String get loginShiftUnknown => 'Смена: касса не ответила';
 
   @override
   String get saleQuickProducts => 'Быстрые товары';
@@ -2055,11 +2073,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get allBreadcrumb => 'Все';
 
   @override
-  String productPrice(String price) {
-    return '$price ₸';
-  }
-
-  @override
   String maxBonusPercent(int percent) {
     return 'Можно списать до $percent% от суммы чека';
   }
@@ -2712,7 +2725,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupVatPayerTitle => 'Плательщик НДС';
 
   @override
-  String setupVatPayerRate(int rate) {
+  String setupVatPayerRate(String rate) {
     return 'Ставка НДС: $rate%';
   }
 
@@ -3125,7 +3138,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Создайте пользователей для работы с кассой';
 
   @override
-  String get setupAdminLabel => 'АДМИНИСТРАТОР';
+  String get setupAdminLabel => 'Администратор';
 
   @override
   String get setupAdminSubtitle => 'Владелец кассы';
@@ -3143,7 +3156,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupAdminPinDefault => 'По умолчанию: 0000';
 
   @override
-  String get setupSellerLabel => 'ПРОДАВЕЦ';
+  String get setupSellerLabel => 'Продавец';
 
   @override
   String get setupSellerOptional => 'Опционально';
@@ -3272,7 +3285,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupStartWork => 'Начать работу';
 
   @override
-  String setupVatPayerSummary(int rate) {
+  String setupVatPayerSummary(String rate) {
     return 'Плательщик НДС ($rate%)';
   }
 
@@ -4953,6 +4966,27 @@ class AppLocalizationsRu extends AppLocalizations {
   String get countryTurkmenistan => 'Туркменистан';
 
   @override
+  String get permNavServiceQueue => 'Очередь заказов';
+
+  @override
+  String get permNavServiceIntake => 'Приём заказов';
+
+  @override
+  String get permSellWithDiscount => 'Продажа со скидкой';
+
+  @override
+  String get permCashInOut => 'Внесение / изъятие';
+
+  @override
+  String get permRefundGoods => 'Возврат товара';
+
+  @override
+  String get permRefundWithoutReceipt => 'Возврат без чека';
+
+  @override
+  String get permGroupNavigation => 'Навигация';
+
+  @override
   String get permEditPrice => 'Редактирование цены';
 
   @override
@@ -5453,7 +5487,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String shiftFixedAmount(String amount) {
-    return 'Будет зафиксирована сумма: $amount KZT';
+    return 'Будет зафиксирована сумма: $amount';
   }
 
   @override
@@ -5488,6 +5522,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftRefundsTotal => 'Возвраты';
+
+  @override
+  String get cashOpeningCount => 'Пересчёт при открытии';
 
   @override
   String get shiftShortage => 'Недостача';
@@ -6540,9 +6577,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paymentDefaultLabel => 'По умолчанию';
-
-  @override
-  String get currencySymbol => '₸';
 
   @override
   String get serviceIntakeTitle => 'Приём заказа';
@@ -10186,7 +10220,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setCorrectionReasonHint => 'напр. самостоятельная корректировка';
 
   @override
-  String get setCorrectionAmountLabel => 'Сумма коррекции, KZT';
+  String setCorrectionAmountLabel(String currency) {
+    return 'Сумма коррекции, $currency';
+  }
 
   @override
   String get setCorrectionPaymentLabel => 'Способ оплаты';
@@ -10373,7 +10409,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String dishTotalYieldSummary(String cost, String yield) {
-    return 'Итого: $cost ₸  |  Выход: $yield';
+    return 'Итого: $cost  |  Выход: $yield';
   }
 
   @override
@@ -10733,7 +10769,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get repColCount => 'Кол-во';
 
   @override
-  String get repColSumTenge => 'Сумма, ₸';
+  String repColSumTenge(String currency) {
+    return 'Сумма, $currency';
+  }
 
   @override
   String get repColRow => 'Строка';
@@ -10824,7 +10862,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repF910Subtitle(String income, String rate, String tax) {
-    return 'Облагаемый доход: $income ₸ • налог $rate%: $tax ₸';
+    return 'Облагаемый доход: $income • налог $rate%: $tax';
   }
 
   @override
@@ -10841,7 +10879,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repF300Subtitle(String turnover, String vat) {
-    return 'Облагаемый оборот: $turnover ₸ • начисленный НДС: $vat ₸';
+    return 'Облагаемый оборот: $turnover • начисленный НДС: $vat';
   }
 
   @override
@@ -10857,7 +10895,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repCashBookSubtitle(String income, String expense, String balance) {
-    return 'Приход: $income • Расход: $expense • Остаток: $balance ₸';
+    return 'Приход: $income • Расход: $expense • Остаток: $balance';
   }
 
   @override
@@ -10865,7 +10903,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repVatPeriodSubtitle(String vat, String base) {
-    return 'НДС: $vat ₸ • база: $base ₸';
+    return 'НДС: $vat • база: $base';
   }
 
   @override
@@ -10881,7 +10919,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repCashCollectionSubtitle(int count, String total) {
-    return '$count операций • всего: $total ₸';
+    return '$count операций • всего: $total';
   }
 
   @override
@@ -10892,7 +10930,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repProfitMarginSubtitle(String profit, String margin, String note) {
-    return 'Прибыль: $profit ₸ • маржа $margin% • $note';
+    return 'Прибыль: $profit • маржа $margin% • $note';
   }
 
   @override
@@ -10907,7 +10945,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String repWriteoffSubtitle(int count, String total) {
-    return '$count документов • всего: $total ₸';
+    return '$count документов • всего: $total';
   }
 
   @override
@@ -11175,8 +11213,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get errorBigAmountBlocked =>
-      'Сумма продажи превышает 1 млн ₸. Включите разрешение на крупные суммы в настройках кассы.';
+  String errorBigAmountBlocked(String limit) {
+    return 'Сумма продажи выше потолка кассы ($limit). Поднимите потолок или включите разрешение на крупные суммы в настройках кассы.';
+  }
 
   @override
   String errorMarkRequired(String name) {
@@ -13163,4 +13202,1611 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get agentRefundPrepayment => 'Выдать аванс';
+
+  @override
+  String get repTitle => 'Отчеты';
+
+  @override
+  String get repTabAnalytics => 'Аналитика';
+
+  @override
+  String get repTabFinance => 'Финансы';
+
+  @override
+  String get repTabForecasts => 'Прогнозы';
+
+  @override
+  String get repTabTaxKz => 'Налоги/КЗ';
+
+  @override
+  String get repRangeDays7 => '7 дней';
+
+  @override
+  String get repRangeDays30 => '30 дней';
+
+  @override
+  String get repRangeCustom => 'Произвольно';
+
+  @override
+  String get repKpiChange => 'Изменение';
+
+  @override
+  String get repSubtitleVsPrev => 'vs пред. период';
+
+  @override
+  String get repChartRevenueByDay => 'Выручка по дням';
+
+  @override
+  String get repChartTop5Products => 'Топ-5 товаров';
+
+  @override
+  String get repChartPaymentMethods => 'Способы оплаты';
+
+  @override
+  String get settingsRestartRequired =>
+      'Изменения применяются при следующем запуске кассы.';
+
+  @override
+  String get hardwareRestartRequired =>
+      'Изменения устройств применяются при следующем запуске кассы.';
+
+  @override
+  String get hardwareDeviceDisabled => 'Устройство отключено.';
+
+  @override
+  String get hardwareCustomerDisplayGraphic =>
+      'Графический экран покупателя (2-й монитор)';
+
+  @override
+  String get hardwareCustomerDisplayGraphicOff =>
+      'Графический экран покупателя отключён.';
+
+  @override
+  String get hardwarePaymentKinds => 'Виды оплаты рабочего места';
+
+  @override
+  String get hardwarePaymentKindsUnrestricted =>
+      'Ограничений нет: рабочее место принимает все виды оплаты.';
+
+  @override
+  String get fiscalSettingsDirectOfdLabel => 'Прямое подключение ОФД';
+
+  @override
+  String get markupAuto => 'Авто-наценка';
+
+  @override
+  String get markupSave => 'Сохранить наценки';
+
+  @override
+  String get creditContractNumberLabel => 'Номер договора с бумажки';
+
+  @override
+  String get creditNoLiveContracts => 'Живых договоров рассрочки нет';
+
+  @override
+  String get supplierOrderTitle => 'Заявка поставщику';
+
+  @override
+  String get supplierOrderAllStocked => 'Все товары в достаточном количестве';
+
+  @override
+  String get supplierOrderNotNeeded => 'Дозаказ не требуется';
+
+  @override
+  String get hwScaleTitle => 'Весы';
+
+  @override
+  String get hwReceiptPrinterTitle => 'Чековый принтер';
+
+  @override
+  String get repRangeDays14 => '14 дней';
+
+  @override
+  String get repForecastSmaLowData => 'SMA (мало данных)';
+
+  @override
+  String get repNoCategory => 'Без категории';
+
+  @override
+  String get repAllCustomers => 'Все клиенты';
+
+  @override
+  String get repAllInStock => 'Все товары в наличии';
+
+  @override
+  String get repAllCovered30 => 'Все товары обеспечены на 30+ дней';
+
+  @override
+  String get repColDays => 'Дней';
+
+  @override
+  String get repColDaysLeft => 'Дней до конца';
+
+  @override
+  String get repColSharePct => 'Доля %';
+
+  @override
+  String get repColChangePct => 'Изменение %';
+
+  @override
+  String get repColSalesCount => 'Кол-во продаж';
+
+  @override
+  String get repReceiptCountLabel => 'Количество чеков';
+
+  @override
+  String get repStockCritical =>
+      'Критически низкий остаток! Требуется срочная поставка.';
+
+  @override
+  String get repColCumulativePct => 'Накопит. %';
+
+  @override
+  String get repNotEnoughSalesData =>
+      'Недостаточно данных о продажах за выбранный период';
+
+  @override
+  String get repNoForecastData => 'Нет данных для прогноза';
+
+  @override
+  String get repNoDataLast90 => 'Нет данных за последние 90 дней';
+
+  @override
+  String get repNoCustomerData => 'Нет данных о клиентах';
+
+  @override
+  String get repNoLowStock => 'Нет товаров с низким остатком';
+
+  @override
+  String get repLowStock => 'Низкий остаток';
+
+  @override
+  String get repNewPrice => 'Новая цена';
+
+  @override
+  String get repColEstimatedAmount => 'Ориент. сумма';
+
+  @override
+  String get repColSeatings => 'Посадок';
+
+  @override
+  String get repForecast => 'Прогноз';
+
+  @override
+  String get repRevenueForecast => 'Прогноз выручки';
+
+  @override
+  String get repRevenueForecastHw => 'Прогноз выручки (Holt-Winters)';
+
+  @override
+  String get repStockoutForecast => 'Прогноз исчерпания остатков';
+
+  @override
+  String get repStockForecast => 'Прогноз остатков';
+
+  @override
+  String get repSalesWithoutCustomerHidden =>
+      'Продажи без привязки к клиенту не отображаются';
+
+  @override
+  String get repColSalesPerDay => 'Продажи/день';
+
+  @override
+  String get repColSold => 'Продано';
+
+  @override
+  String get repHourlyDistribution => 'Распределение по часам';
+
+  @override
+  String get repColRecommendedOrder => 'Рек. заказ';
+
+  @override
+  String get repRecommendedPurchases => 'Рекомендуемые закупки';
+
+  @override
+  String get repColAvgSalesPerDay => 'Ср. продажи/день';
+
+  @override
+  String get repColAvgCheckShort => 'Ср. чек';
+
+  @override
+  String get repAvgPrice => 'Средняя цена';
+
+  @override
+  String get repOldPrice => 'Старая цена';
+
+  @override
+  String get repStockValue => 'Стоимость остатка';
+
+  @override
+  String get repColTable => 'Стол';
+
+  @override
+  String get repCurrentStock => 'Текущий остаток';
+
+  @override
+  String get repTop10Customers => 'Топ-10 клиентов';
+
+  @override
+  String get repTop10Products => 'Топ-10 товаров';
+
+  @override
+  String get repActual => 'Факт';
+
+  @override
+  String get repColHour => 'Час';
+
+  @override
+  String get repExport => 'Экспорт';
+
+  @override
+  String get repCashierPerformance => 'Эффективность кассиров';
+
+  @override
+  String get repWeightedAvgHint =>
+      'взвешенное среднее (последние дни имеют больший вес)';
+
+  @override
+  String get repSalesCountByHour => 'количество продаж по часам';
+
+  @override
+  String get repNoUrgentItems => 'нет срочных позиций';
+
+  @override
+  String get repByRevenueTapHint => 'по выручке (нажмите для деталей)';
+
+  @override
+  String get repDistributionTapHint => 'распределение (нажмите на сектор)';
+
+  @override
+  String get repRevenueDistributionTapHint =>
+      'распределение выручки (нажмите на сектор)';
+
+  @override
+  String get repAbcRare => 'редкие';
+
+  @override
+  String get repAbcMedium => 'средние';
+
+  @override
+  String get repAbcFast => 'ходовые';
+
+  @override
+  String get repAbcLegend =>
+      'ходовые (A), средние (B), редкие (C) — по вкладу в выручку';
+
+  @override
+  String repReturnsCount(int count) {
+    return '$count возвратов';
+  }
+
+  @override
+  String repAbcGroupSummary(int count, String pct) {
+    return '$count тов · $pct%';
+  }
+
+  @override
+  String repCustomerTooltip(String name, String amount, int count) {
+    return '$name\n$amount ($count чеков)';
+  }
+
+  @override
+  String repDaysCountTapHint(int count) {
+    return '$count дней (нажмите для деталей)';
+  }
+
+  @override
+  String repCashiersCount(int count) {
+    return '$count кассиров';
+  }
+
+  @override
+  String repLowStockCountHint(int count) {
+    return '$count товаров (остаток < 10, нажмите для деталей)';
+  }
+
+  @override
+  String repOrdersShort(int count) {
+    return '$count зак.';
+  }
+
+  @override
+  String repOrdersRevenueTooltip(int count, String amount) {
+    return '$count зак.\n$amount';
+  }
+
+  @override
+  String repPieces(String qty) {
+    return '$qty шт';
+  }
+
+  @override
+  String repPiecesDot(String qty) {
+    return '$qty шт.';
+  }
+
+  @override
+  String repForecastSubtitle(int actual, int horizon, String algorithm) {
+    return '$actual дней факт + $horizon дней прогноз ($algorithm)';
+  }
+
+  @override
+  String repSalesCountLine(int count) {
+    return '$count продаж';
+  }
+
+  @override
+  String repReceiptsCount(int count) {
+    return '$count чеков';
+  }
+
+  @override
+  String repSupplierTooltip(String name, int count) {
+    return '$name\n$count поставок';
+  }
+
+  @override
+  String repSeatingsLine(int count) {
+    return '$count посадок';
+  }
+
+  @override
+  String repDayOffset(int n) {
+    return '+$n день';
+  }
+
+  @override
+  String repHoltWintersSeason(int season) {
+    return 'Holt-Winters (сезон=$season)';
+  }
+
+  @override
+  String repInvestmentsLine(String amount) {
+    return 'Вложения: $amount';
+  }
+
+  @override
+  String repDividendsLine(String amount) {
+    return 'Дивиденды: $amount';
+  }
+
+  @override
+  String repMarginLine(String pct) {
+    return 'Маржа: $pct%';
+  }
+
+  @override
+  String repKpiLoadErrorWith(String error) {
+    return 'Ошибка загрузки KPI: $error';
+  }
+
+  @override
+  String repErrorWith(String error) {
+    return 'Ошибка: $error';
+  }
+
+  @override
+  String repProfitLine(String amount) {
+    return 'Прибыль: $amount';
+  }
+
+  @override
+  String repExpensesLine(String amount) {
+    return 'Расходы: $amount';
+  }
+
+  @override
+  String repLeadTimeHint(int lead, int safety) {
+    return 'срок поставки $lead дн. + страховой запас $safety дн.';
+  }
+
+  @override
+  String get markupHint =>
+      'Наценка в % на категорию. При приходе товара розничная цена пересчитывается из закупочной: закуп × (1 + наценка%).';
+
+  @override
+  String get creditContractsTitle => 'Рассрочки';
+
+  @override
+  String creditContractsTitleFor(String agent) {
+    return 'Рассрочки — $agent';
+  }
+
+  @override
+  String repExportedTo(String path) {
+    return 'Экспортировано: $path';
+  }
+
+  @override
+  String repExportFailed(String error) {
+    return 'Ошибка экспорта: $error';
+  }
+
+  @override
+  String get hwSetupIncompleteDevices =>
+      'Мастер настройки ещё не завершён — устройства сохранить некуда';
+
+  @override
+  String get hwSetupIncompleteCheck =>
+      'Мастер настройки ещё не завершён — проверять пока нечего';
+
+  @override
+  String get settingsSetupIncompleteSave =>
+      'Мастер настройки ещё не завершён — сохранить некуда';
+
+  @override
+  String get hwProfileCatalogUnavailable =>
+      'Каталог профилей устройств недоступен — настройки устройств сейчас нельзя изменить.';
+
+  @override
+  String get printerProfileCatalogUnavailable =>
+      'Каталог профилей устройств недоступен — настройки принтера сейчас нельзя изменить.';
+
+  @override
+  String get labelPrinterProfileCatalogUnavailable =>
+      'Каталог профилей устройств недоступен — настройки принтера этикеток сейчас нельзя изменить.';
+
+  @override
+  String get hwPaymentKindsUnsupported =>
+      'Эта сборка не умеет сохранять виды оплаты рабочего места.';
+
+  @override
+  String get hwPaymentKindsEnforcedByTill =>
+      'Запрет проверяет касса: терминал, которому вид оплаты не разрешён, получит отказ, даже если кнопка на его экране осталась.';
+
+  @override
+  String get hwCustomerDisplayGraphicDesc =>
+      'Красивый графический экран для клиента на втором мониторе: позиции чека, количество и итог в реальном времени.';
+
+  @override
+  String get hwCustomerDisplayMonitor => 'Монитор для экрана покупателя';
+
+  @override
+  String get hwCustomerDisplayMonitorHint =>
+      'POS остаётся на основном мониторе. Открывается автоматически при следующем запуске кассы.';
+
+  @override
+  String get hwNoProfilesForClass =>
+      'Нет доступных моделей для этого класса устройств.';
+
+  @override
+  String get hwNoConnectionParams =>
+      'Эта модель не требует дополнительных параметров подключения.';
+
+  @override
+  String hwMonitorWithSize(int index, String size) {
+    return 'Монитор $index — $size';
+  }
+
+  @override
+  String hwMonitorNumbered(int index) {
+    return 'Монитор $index';
+  }
+
+  @override
+  String hwPaymentKindsError(String error) {
+    return 'Виды оплаты: $error';
+  }
+
+  @override
+  String hwPaymentKindsUnknown(String list) {
+    return 'В настройке этого рабочего места записаны виды, которых эта версия не знает: $list. Ограничение по ним не действует. Выберите виды заново, чтобы починить запись — пока вы этого не сделали, она остаётся как есть.';
+  }
+
+  @override
+  String hwParamOptional(String description) {
+    return '$description (необязательно)';
+  }
+
+  @override
+  String globalMillimetres(String value) {
+    return '$value мм';
+  }
+
+  @override
+  String get devProfilePrinterEscpos80mm => 'Чековый принтер ESC/POS 80 мм';
+
+  @override
+  String get devProfilePrinterEscpos58mm =>
+      'Чековый принтер ESC/POS 58 мм (компактный, без ножа)';
+
+  @override
+  String get devProfilePrinterEscposUsb =>
+      'Чековый принтер ESC/POS, USB/спулер';
+
+  @override
+  String get devProfilePrinterEscposBluetooth =>
+      'Чековый принтер ESC/POS, Bluetooth';
+
+  @override
+  String get devProfilePrinterEscposSerial =>
+      'Чековый принтер ESC/POS, последовательный порт';
+
+  @override
+  String get devProfilePrinterLabelZpl104 => 'Принтер этикеток ZPL 104 мм';
+
+  @override
+  String get devProfilePrinterLabelEpl58 => 'Принтер этикеток EPL 58 мм';
+
+  @override
+  String get devProfileScannerUsbHid => 'USB-сканер штрихкода (HID)';
+
+  @override
+  String get devProfileScannerBluetoothHid =>
+      'Bluetooth-сканер штрихкода (HID)';
+
+  @override
+  String get devProfileScannerCamera => 'Сканер по камере устройства';
+
+  @override
+  String get devProfileScannerSerial =>
+      'Сканер штрихкода, последовательный порт';
+
+  @override
+  String get devProfileScaleCasPd2 => 'Весы CAS PD-II (последовательные)';
+
+  @override
+  String get devProfileScaleCasErPlus => 'Весы CAS ER-Plus';
+
+  @override
+  String get devProfileDrawerViaPrinter => 'Денежный ящик через принтер (RJ11)';
+
+  @override
+  String get devProfileDrawerStandalone => 'Автономный денежный ящик (RJ11)';
+
+  @override
+  String get devProfileDisplayVfd =>
+      'Дисплей покупателя VFD (последовательный)';
+
+  @override
+  String get devProfileDisplayLcd2x20 => 'Дисплей покупателя LCD 2x20';
+
+  @override
+  String get devProfileDisplayLed8 => 'Дисплей покупателя LED (8 символов)';
+
+  @override
+  String get devProfilePaymentKaspiPos => 'Терминал Kaspi POS';
+
+  @override
+  String get devParamPrinterIpAddress => 'IP-адрес сетевого принтера';
+
+  @override
+  String get devParamTcpPort9100 => 'TCP-порт, по умолчанию 9100';
+
+  @override
+  String get devParamPrinterDevicePath =>
+      'Путь к устройству или имя очереди печати';
+
+  @override
+  String get devParamPrinterMac => 'MAC-адрес сопряжённого Bluetooth-принтера';
+
+  @override
+  String get devParamPrinterComPort =>
+      'Последовательный порт принтера, например COM4';
+
+  @override
+  String get devParamLabelPrinterIp => 'IP-адрес принтера этикеток';
+
+  @override
+  String get devParamScannerMac => 'MAC-адрес сопряжённого Bluetooth-сканера';
+
+  @override
+  String get devParamScannerComPort =>
+      'Последовательный порт сканера, например COM5';
+
+  @override
+  String get devParamScaleComPort =>
+      'Последовательный порт весов, например COM3';
+
+  @override
+  String get devParamDrawerComPort =>
+      'Последовательный порт интерфейсной платы ящика';
+
+  @override
+  String get devParamDisplayComPort =>
+      'Последовательный порт дисплея покупателя';
+
+  @override
+  String get devParamKaspiIp => 'IP-адрес терминала Kaspi POS';
+
+  @override
+  String get devParamKaspiPort => 'Порт терминала, обычно 8888';
+
+  @override
+  String get devParamCameraId => 'Какую камеру использовать';
+
+  @override
+  String get rcpTill => 'Касса';
+
+  @override
+  String get rcpTillColon => 'Касса:';
+
+  @override
+  String get rcpReceiptNo => 'Чек №';
+
+  @override
+  String get rcpCashier => 'Кассир:';
+
+  @override
+  String get rcpCustomer => 'Клиент:';
+
+  @override
+  String get rcpDate => 'Дата:';
+
+  @override
+  String get rcpBinIin => 'БИН/ИИН:';
+
+  @override
+  String get rcpThankYou => 'Спасибо за покупку!';
+
+  @override
+  String get rcpSale => 'ПРОДАЖА';
+
+  @override
+  String get rcpSubtotal => 'Подытог:';
+
+  @override
+  String get rcpDiscount => 'Скидка:';
+
+  @override
+  String get rcpServiceFee => 'Сервисный сбор:';
+
+  @override
+  String get rcpTotal => 'ИТОГО:';
+
+  @override
+  String get rcpChange => 'Сдача:';
+
+  @override
+  String get rcpCash => 'НАЛИЧНЫМИ';
+
+  @override
+  String get rcpCard => 'КАРТА';
+
+  @override
+  String get rcpQuantityShort => 'шт';
+
+  @override
+  String get rcpRefund => 'ВОЗВРАТ';
+
+  @override
+  String get rcpRefundNo => 'Возврат №';
+
+  @override
+  String get rcpSaleReceiptNo => 'Чек продажи №';
+
+  @override
+  String get rcpDuplicate => '*** ДУБЛИКАТ ***';
+
+  @override
+  String get rcpTable => 'Стол:';
+
+  @override
+  String get rcpWaiter => 'Официант:';
+
+  @override
+  String get rcpGuests => 'Гостей:';
+
+  @override
+  String get rcpFiscalReceipt => 'ФИСКАЛЬНЫЙ ЧЕК';
+
+  @override
+  String get rcpNonFiscalReceipt => 'НЕФИСКАЛЬНЫЙ ЧЕК';
+
+  @override
+  String get rcpNotFiscalDocument => 'НЕ ФИСКАЛЬНЫЙ ДОКУМЕНТ';
+
+  @override
+  String get rcpFiscalSign => 'ФИСК. ПРИЗНАК:';
+
+  @override
+  String get rcpFiscalFn => 'ФН:';
+
+  @override
+  String get rcpFiscalRnm => 'РНМ:';
+
+  @override
+  String get rcpFiscalZnm => 'ЗНМ:';
+
+  @override
+  String get rcpFiscalTime => 'ВРЕМЯ:';
+
+  @override
+  String get rcpOfdName => 'ОФД';
+
+  @override
+  String get rcpOffline => '*** ОФФЛАЙН ***';
+
+  @override
+  String get rcpVerifyAt => 'Для проверки чека зайдите на';
+
+  @override
+  String get rcpCustomerTaxId => 'ИИН покупателя:';
+
+  @override
+  String get rcpTaxA => 'ПО НАЛОГУ А:';
+
+  @override
+  String get rcpFiscalOperatorNotSet => 'Фискальный оператор не настроен';
+
+  @override
+  String get rcpFiscalModuleUnavailable => 'Модуль фискализации недоступен';
+
+  @override
+  String get rcpDocumentNotIssued =>
+      'Документ не оформлен — обратитесь к кассиру';
+
+  @override
+  String get rcpXReport => 'X-ОТЧЁТ';
+
+  @override
+  String get rcpZReport => 'Z-ОТЧЁТ';
+
+  @override
+  String get rcpInterim => 'ПРОМЕЖУТОЧНЫЙ (без гашения)';
+
+  @override
+  String get rcpShiftClose => 'ЗАКРЫТИЕ СМЕНЫ';
+
+  @override
+  String get rcpShiftStart => 'Начало:';
+
+  @override
+  String get rcpShiftEnd => 'Окончание:';
+
+  @override
+  String get rcpSales => 'ПРОДАЖИ';
+
+  @override
+  String get rcpRefunds => 'ВОЗВРАТЫ';
+
+  @override
+  String get rcpCount => 'Количество:';
+
+  @override
+  String get rcpAmount => 'Сумма:';
+
+  @override
+  String get rcpCashOps => 'ДЕНЕЖНЫЕ ОПЕРАЦИИ';
+
+  @override
+  String get rcpOpeningFloat => 'На начало:';
+
+  @override
+  String get rcpSlipTitle => 'КВИТАНЦИЯ';
+
+  @override
+  String get rcpType => 'Тип:';
+
+  @override
+  String get rcpComment => 'Комментарий:';
+
+  @override
+  String get rcpCashIn => 'Приход:';
+
+  @override
+  String get rcpCashOut => 'Расход:';
+
+  @override
+  String get rcpTotalInDrawer => 'ИТОГО В КАССЕ:';
+
+  @override
+  String get rcpCertificatesNotRevenue => 'СЕРТИФИКАТЫ (НЕ ВЫРУЧКА)';
+
+  @override
+  String get rcpCertIssuedDebt => 'Выпущено (долг кассы):';
+
+  @override
+  String get rcpCertRedeemed => 'Погашено (товаром):';
+
+  @override
+  String get rcpGiftCertificate => 'ПОДАРОЧНЫЙ СЕРТИФИКАТ';
+
+  @override
+  String get rcpCertNo => 'Сертификат №';
+
+  @override
+  String get rcpCertFaceValue => 'Номинал:';
+
+  @override
+  String get rcpCertValidUntil => 'Действует до:';
+
+  @override
+  String get rcpCertNoExpiry => 'без срока';
+
+  @override
+  String get rcpCertPinSet => 'ПИН задан';
+
+  @override
+  String get rcpCertIssuedByRefund => 'Выпущен возвратом №';
+
+  @override
+  String get rcpCertInsteadOf => 'Взамен сертификата';
+
+  @override
+  String get rcpVat => 'НДС';
+
+  @override
+  String get rcpSalesTax => 'Налог с продаж';
+
+  @override
+  String get rcpTaxExempt => 'Не облагается';
+
+  @override
+  String get rcpTaxExemptMark => 'осв.';
+
+  @override
+  String get taxSettingsTitle => 'Налоги';
+
+  @override
+  String get taxSettingsSubtitle => 'Ставки, юрисдикции и категории товаров';
+
+  @override
+  String get taxSettingsIntro =>
+      'Ставка не задаётся одним числом: она складывается из долей юрисдикций, в которых стоит касса, и зависит от категории товара и даты. Готовый набор можно взять пресетом и потом править.';
+
+  @override
+  String get taxSettingsNotConfigured =>
+      'Налог не настроен: касса считает ноль.';
+
+  @override
+  String get taxSettingsPresetSection => 'Готовый набор';
+
+  @override
+  String get taxSettingsCountry => 'Страна';
+
+  @override
+  String get taxSettingsRegion => 'Штат или область';
+
+  @override
+  String get taxSettingsCity => 'Город';
+
+  @override
+  String get taxSettingsPreset => 'Набор';
+
+  @override
+  String get taxSettingsApplyPreset => 'Применить набор';
+
+  @override
+  String get taxSettingsPresetReplaces =>
+      'Применение заменит текущую настройку целиком. Сложить два набора нельзя: касса взяла бы двойной налог.';
+
+  @override
+  String taxSettingsPresetSource(String source) {
+    return 'Источник: $source';
+  }
+
+  @override
+  String taxSettingsPresetValidFrom(String date) {
+    return 'Ставки действуют с $date';
+  }
+
+  @override
+  String get taxSettingsPresetApplied => 'Набор применён';
+
+  @override
+  String get taxSettingsCurrentSection => 'Текущая настройка';
+
+  @override
+  String taxSettingsRateForStandard(String rate) {
+    return 'Обычный товар: $rate%';
+  }
+
+  @override
+  String get taxSettingsJurisdictions => 'Юрисдикции';
+
+  @override
+  String get taxSettingsCategories => 'Категории товаров';
+
+  @override
+  String get taxSettingsTillLocation => 'Касса стоит здесь';
+
+  @override
+  String get taxSettingsTillLocationHint =>
+      'Отметок может быть несколько: город и спецрайоны. Вышестоящие добавляются сами.';
+
+  @override
+  String get taxSettingsRules => 'Правила';
+
+  @override
+  String get taxSettingsRuleTaxed => 'облагается';
+
+  @override
+  String get taxSettingsRuleZero => 'нулевая ставка';
+
+  @override
+  String get taxSettingsRuleExempt => 'освобождено';
+
+  @override
+  String get taxSettingsAllCategories => 'все категории';
+
+  @override
+  String get taxSettingsAddJurisdiction => 'Добавить юрисдикцию';
+
+  @override
+  String get taxSettingsAddCategory => 'Добавить категорию';
+
+  @override
+  String get taxSettingsAddRule => 'Добавить правило';
+
+  @override
+  String get taxSettingsName => 'Название';
+
+  @override
+  String get taxSettingsCode => 'Код';
+
+  @override
+  String get taxSettingsRate => 'Ставка, %';
+
+  @override
+  String get taxSettingsValidFrom => 'Действует с';
+
+  @override
+  String get taxSettingsParent => 'Вышестоящая';
+
+  @override
+  String get taxSettingsNoParent => 'нет (корень)';
+
+  @override
+  String get taxSettingsLevel => 'Уровень';
+
+  @override
+  String get taxSettingsLevelCountry => 'Страна';
+
+  @override
+  String get taxSettingsLevelState => 'Штат';
+
+  @override
+  String get taxSettingsLevelCounty => 'Округ';
+
+  @override
+  String get taxSettingsLevelCity => 'Город';
+
+  @override
+  String get taxSettingsLevelDistrict => 'Спецрайон';
+
+  @override
+  String get taxSettingsDelete => 'Удалить';
+
+  @override
+  String get taxSettingsDeleteJurisdictionWarning =>
+      'Вместе с ней уйдут её правила и вложенные юрисдикции.';
+
+  @override
+  String get taxSettingsResponsibility =>
+      'Числа из наборов собраны из открытых источников и названы ссылкой. За правильность налога отвечает налогоплательщик, а не программа.';
+
+  @override
+  String get taxSettingsNoPresetsForCountry =>
+      'Для этой страны готовых наборов нет — настройте вручную.';
+
+  @override
+  String get taxSettingsAdd => 'Добавить';
+
+  @override
+  String get taxSettingsCancel => 'Отмена';
+
+  @override
+  String get setupStoreAddressHint => 'ул. Абая, 10, Алматы';
+
+  @override
+  String get setupStoreAddressHelper =>
+      'Печатается на чеке. Без него покупатель не увидит, где сделана покупка.';
+
+  @override
+  String get countryKz => 'Казахстан';
+
+  @override
+  String get countryRu => 'Россия';
+
+  @override
+  String get countryKg => 'Кыргызстан';
+
+  @override
+  String get countryUz => 'Узбекистан';
+
+  @override
+  String get countryUs => 'США';
+
+  @override
+  String get countryTm => 'Туркменистан';
+
+  @override
+  String get currencyKzt => 'Казахстанский тенге';
+
+  @override
+  String get currencyRub => 'Российский рубль';
+
+  @override
+  String get currencyKgs => 'Кыргызский сом';
+
+  @override
+  String get currencyUzs => 'Узбекский сум';
+
+  @override
+  String get currencyUsd => 'Доллар США';
+
+  @override
+  String get currencyTmt => 'Туркменский манат';
+
+  @override
+  String get setupStepSalesTax => 'Налог с продаж';
+
+  @override
+  String get setupSalesTaxPayerTitle => 'Собираю налог с продаж';
+
+  @override
+  String get setupSalesTaxPayerSubtitle =>
+      'Ставки задаются по юрисдикциям в «Настройки → Налоги»';
+
+  @override
+  String get setupSalesTaxPayerDescription =>
+      'Налог добавляется сверх цены на ценнике и печатается на чеке отдельной строкой.';
+
+  @override
+  String get setupSalesTaxNonPayerTitle => 'Без налога с продаж';
+
+  @override
+  String get setupSalesTaxNonPayerSubtitle => 'К цене ничего не добавляется';
+
+  @override
+  String get setupSalesTaxNonPayerDescription =>
+      'К цене ничего не добавляется, и строки налога на чеке нет.';
+
+  @override
+  String get bootLoadingConfig => 'Загрузка конфигурации...';
+
+  @override
+  String get bootCheckingPosKey => 'Проверка ключа POS...';
+
+  @override
+  String get bootLoadingAgents => 'Загрузка контрагентов...';
+
+  @override
+  String get bootLoadingAccounts => 'Загрузка счетов...';
+
+  @override
+  String get bootInitialisingDatabase => 'Инициализация базы данных...';
+
+  @override
+  String get bootLoadingCashiers => 'Загрузка кассиров...';
+
+  @override
+  String get bootLoadingPosData => 'Загрузка данных POS...';
+
+  @override
+  String get bootLoadingProducts => 'Загрузка товаров...';
+
+  @override
+  String get bootCheckingReceiptNumbers => 'Проверка нумерации чеков...';
+
+  @override
+  String get bootCheckingLicence => 'Проверка лицензии...';
+
+  @override
+  String get bootCheckingReports => 'Проверка отчётов...';
+
+  @override
+  String get bootFinishingInitialisation => 'Завершение инициализации...';
+
+  @override
+  String get bootStartingBackgroundJobs => 'Запуск фоновых задач...';
+
+  @override
+  String get bootReady => 'Готово';
+
+  @override
+  String get bootDataLoaded => 'Данные загружены';
+
+  @override
+  String bootTillNotResponding(String code) {
+    return 'Касса не отвечает: $code';
+  }
+
+  @override
+  String get bootDownloadingBackup => 'Скачивание бэкапа...';
+
+  @override
+  String get bootBackupDownloadFailed => 'Не удалось скачать бэкап';
+
+  @override
+  String get bootRestoringDatabase => 'Восстановление базы данных...';
+
+  @override
+  String get bootDatabaseRestoreFailed => 'Не удалось восстановить базу данных';
+
+  @override
+  String get bootApplyingPosKey => 'Настройка ключа кассы...';
+
+  @override
+  String get bootRestoreDone => 'Восстановление завершено';
+
+  @override
+  String get bootCreatingBackup => 'Создание бэкапа...';
+
+  @override
+  String get bootBackupCreateFailed => 'Не удалось создать бэкап';
+
+  @override
+  String get bootBackupDone => 'Бэкап создан и загружен';
+
+  @override
+  String get bootLoadingUsers => 'Загрузка пользователей...';
+
+  @override
+  String get bootLoadingCategories => 'Загрузка категорий...';
+
+  @override
+  String get bootLoadingSettings => 'Загрузка настроек...';
+
+  @override
+  String get bootSyncDone => 'Синхронизация завершена';
+
+  @override
+  String get bootFailed => 'Ошибка';
+
+  @override
+  String get countryDeu => 'Германия';
+
+  @override
+  String get currencyDeu => 'Евро';
+
+  @override
+  String get countryFra => 'Франция';
+
+  @override
+  String get currencyFra => 'Евро';
+
+  @override
+  String get countryEsp => 'Испания';
+
+  @override
+  String get currencyEsp => 'Евро';
+
+  @override
+  String get countryIta => 'Италия';
+
+  @override
+  String get currencyIta => 'Евро';
+
+  @override
+  String get countryGbr => 'Великобритания';
+
+  @override
+  String get currencyGbr => 'Фунт стерлингов';
+
+  @override
+  String get countryPol => 'Польша';
+
+  @override
+  String get currencyPol => 'Польский злотый';
+
+  @override
+  String get countryTur => 'Турция';
+
+  @override
+  String get currencyTur => 'Турецкая лира';
+
+  @override
+  String get countryChn => 'Китай';
+
+  @override
+  String get currencyChn => 'Китайский юань';
+
+  @override
+  String get countryJpn => 'Япония';
+
+  @override
+  String get currencyJpn => 'Японская иена';
+
+  @override
+  String get countryKor => 'Южная Корея';
+
+  @override
+  String get currencyKor => 'Южнокорейская вона';
+
+  @override
+  String get countryAre => 'ОАЭ';
+
+  @override
+  String get currencyAre => 'Дирхам ОАЭ';
+
+  @override
+  String get countrySau => 'Саудовская Аравия';
+
+  @override
+  String get currencySau => 'Саудовский риял';
+
+  @override
+  String get countryInd => 'Индия';
+
+  @override
+  String get currencyInd => 'Индийская рупия';
+
+  @override
+  String get countryCan => 'Канада';
+
+  @override
+  String get currencyCan => 'Канадский доллар';
+
+  @override
+  String get countryAus => 'Австралия';
+
+  @override
+  String get currencyAus => 'Австралийский доллар';
+
+  @override
+  String get agentPaymentAccepted => 'Оплата принята';
+
+  @override
+  String get catalogCategoryHasChildren => 'Категория содержит подкатегории';
+
+  @override
+  String creditOutstanding(String amount) {
+    return 'Осталось: $amount';
+  }
+
+  @override
+  String get creditTakePayment => 'Принять платёж';
+
+  @override
+  String get creditPrintContract => 'Печать договора';
+
+  @override
+  String creditPaymentFor(String number) {
+    return 'Платёж по $number';
+  }
+
+  @override
+  String creditOutstandingOnContract(String amount) {
+    return 'Осталось по договору: $amount';
+  }
+
+  @override
+  String get creditPayInFull => 'Погасить целиком';
+
+  @override
+  String get creditAccept => 'Принять';
+
+  @override
+  String get displayProduct => 'Товар';
+
+  @override
+  String markupSaved(int count) {
+    return 'Наценки сохранены: $count категорий с наценкой';
+  }
+
+  @override
+  String genericErrorWith(String detail) {
+    return 'Ошибка: $detail';
+  }
+
+  @override
+  String get serviceAttachPhoto => 'Фото';
+
+  @override
+  String get serviceAttachVideo => 'Видео';
+
+  @override
+  String get shiftCorrectionReceipt => 'Чек коррекции';
+
+  @override
+  String get supplierChoose => 'Выберите поставщика';
+
+  @override
+  String get supplierProduct => 'Товар';
+
+  @override
+  String get supplierStock => 'Остаток';
+
+  @override
+  String get supplierOrderQty => 'Заказать';
+
+  @override
+  String get supplierCreateRequest => 'Сформировать заявку';
+
+  @override
+  String get supplierNeedQuantity =>
+      'Укажите количество хотя бы по одному товару';
+
+  @override
+  String unitMonthsShort(int count) {
+    return '$count мес.';
+  }
+
+  @override
+  String unitDaysShort(int count) {
+    return '$count дн.';
+  }
+
+  @override
+  String get displayWelcome => 'Добро пожаловать!';
+
+  @override
+  String get displayWelcomeSubtitle => 'Мы рады видеть вас';
+
+  @override
+  String get displayPromoFree => 'Акция · бесплатно';
+
+  @override
+  String displayDiscountAmount(String amount) {
+    return 'Скидка −$amount';
+  }
+
+  @override
+  String get displayWindowTitle => 'Экран покупателя';
+
+  @override
+  String get shiftXReportPrinted => 'X-отчёт распечатан';
+
+  @override
+  String get shiftXReportPrintedOffline =>
+      'X-отчёт распечатан (фискальный X в очереди, связи нет)';
+
+  @override
+  String get shiftXReportFailed => 'Не удалось распечатать X-отчёт';
+
+  @override
+  String creditContractNotFound(String number) {
+    return 'Договора $number в базе кассы нет';
+  }
+
+  @override
+  String creditOverdue(String amount, int count) {
+    return 'ПРОСРОЧЕНО: $amount ($count платежей)';
+  }
+
+  @override
+  String creditNextPayment(String date, String amount) {
+    return 'Ближайший платёж $date: $amount';
+  }
+
+  @override
+  String get creditNoTillAccount => 'У кассы нет счёта — принять деньги некуда';
+
+  @override
+  String creditContractClosed(String number) {
+    return 'Договор $number закрыт';
+  }
+
+  @override
+  String creditPartiallyPaid(String paid, String left) {
+    return 'Принято $paid, осталось $left';
+  }
+
+  @override
+  String get creditPaymentAmount => 'Сумма платежа';
+
+  @override
+  String get serviceWarrantyAndQuality => 'Гарантия и качество';
+
+  @override
+  String serviceWarrantyDays(int days) {
+    return 'Гарантия: $days дн.';
+  }
+
+  @override
+  String get serviceWarrantyNotSet => 'Гарантия не установлена';
+
+  @override
+  String get serviceQualityRatingTitle => 'Оценка качества';
+
+  @override
+  String serviceQualityRatingValue(int rating) {
+    return 'Оценка: $rating/5';
+  }
+
+  @override
+  String get serviceRepairMedia => 'Фото/видео ремонта';
+
+  @override
+  String get serviceNoRepairMedia => 'Нет медиа ремонта';
+
+  @override
+  String get supplierLabel => 'Поставщик:';
+
+  @override
+  String supplierLinesToOrder(int count) {
+    return 'Позиций к заказу: $count';
+  }
+
+  @override
+  String supplierRequestCreated(int count) {
+    return 'Заявка сформирована: $count поз.';
+  }
+
+  @override
+  String get modifierRequired => 'Обязательно';
+
+  @override
+  String modifierMax(int count) {
+    return 'макс. $count';
+  }
+
+  @override
+  String get writeoffReasonUnspecified => 'Не указана';
+
+  @override
+  String get labelSampleProduct => 'Образец товара';
+
+  @override
+  String markupCategoryNumbered(int id) {
+    return 'Категория #$id';
+  }
+
+  @override
+  String get salePolicyForbids =>
+      'Действие запрещено настройками POS (Настройки → Политика продаж)';
+
+  @override
+  String get labelPrintFailed => 'Ошибка печати этикетки';
+
+  @override
+  String get labelPrintFromTillOnly =>
+      'Печать этикеток — с кассы, не с терминала';
+
+  @override
+  String get orphanQrTillNotRegistered =>
+      'База кассы не зарегистрирована — неразобранные деньги по QR спросить не у кого';
+
+  @override
+  String get stockLowStockReorder => 'Дозаказ товаров с низким остатком';
+
+  @override
+  String get serviceNoteNeedsApproval => 'Требует согласования клиента';
+
+  @override
+  String deferredFromTill(String id) {
+    return 'касса $id';
+  }
+
+  @override
+  String dishSummary(int count, String cost) {
+    return 'Ингредиентов: $count, себестоимость: $cost';
+  }
+
+  @override
+  String prepaymentIssueTo(String name) {
+    return 'Выдача аванса покупателю ($name)';
+  }
+
+  @override
+  String prepaymentFrom(String name) {
+    return 'Аванс покупателя ($name)';
+  }
+
+  @override
+  String prepaymentRefundTo(String name) {
+    return 'Возврат аванса покупателю ($name)';
+  }
+
+  @override
+  String get setupPartOrganization => 'организация';
+
+  @override
+  String get setupPartTill => 'касса';
+
+  @override
+  String get setupPartFiscal => 'фискализация';
+
+  @override
+  String get setupPartEquipment => 'оборудование';
+
+  @override
+  String get setupPartTerminals => 'платёжные терминалы';
+
+  @override
+  String get setupPartRules => 'правила';
+
+  @override
+  String get setupPartUser => 'пользователь';
+
+  @override
+  String customerPaymentNote(String name) {
+    return 'Погашение долга / оплата ($name)';
+  }
+
+  @override
+  String get chatMembersUnavailable => 'Список участников не загрузился';
+
+  @override
+  String get chatMe => 'Я';
+
+  @override
+  String get setPolicyBigAmountLimit => 'Потолок суммы чека';
+
+  @override
+  String setPolicyBigAmountLimitDesc(String fallback) {
+    return 'Выше этой суммы касса просит разрешения. Пусто — $fallback.';
+  }
+
+  @override
+  String get cashRefusedNotPositive => 'Сумма должна быть больше нуля';
+
+  @override
+  String cashRefusedAboveCeiling(String limit) {
+    return 'Сумма выше потолка кассы ($limit). Поднимите потолок в настройках или включите разрешение на крупные суммы.';
+  }
+
+  @override
+  String errorProductHasNoPrice(String name) {
+    return 'У товара «$name» не заведена цена — продать его нельзя. Заведите цену в каталоге.';
+  }
+
+  @override
+  String get sellingHoursTitle => 'Часы запрета продажи';
+
+  @override
+  String get sellingHoursAdd => 'Добавить окно';
+
+  @override
+  String get sellingHoursCategory => 'Категория';
+
+  @override
+  String get sellingHoursFrom => 'С (ЧЧ:ММ)';
+
+  @override
+  String get sellingHoursTo => 'До (ЧЧ:ММ)';
+
+  @override
+  String get sellingHoursActive => 'Запрет действует';
+
+  @override
+  String sellingHoursBanned(String window) {
+    return 'Продажа запрещена $window';
+  }
+
+  @override
+  String sellingHoursOff(String window) {
+    return 'Окно $window выключено';
+  }
+
+  @override
+  String sellingHoursBroken(String window) {
+    return 'Часы «$window» не разобраны — запрет не работает';
+  }
+
+  @override
+  String get sellingHoursBadTime =>
+      'Время записывается как ЧЧ:ММ, например 23:00';
+
+  @override
+  String sellingHoursPreviewDay(String window) {
+    return 'Запрет внутри суток: $window';
+  }
+
+  @override
+  String sellingHoursPreviewNight(String window) {
+    return 'Ночной запрет через полночь: $window';
+  }
+
+  @override
+  String get sellingHoursExplainer =>
+      'Часы задаёте вы: закон в каждой стране свой и меняется. Запрет на категорию действует и на все вложенные в неё.';
+
+  @override
+  String get sellingHoursNoCategories =>
+      'Сначала заведите категории в каталоге — запрет ставится на категорию.';
+
+  @override
+  String sellingHoursCategoryGone(int id) {
+    return 'Категория #$id удалена';
+  }
+
+  @override
+  String errorSellingHoursBanned(String category, String window) {
+    return '«$category» сейчас продавать нельзя: запрет $window.';
+  }
+
+  @override
+  String errorSellingHoursBannedNoWindow(String category) {
+    return '«$category» сейчас продавать нельзя.';
+  }
+
+  @override
+  String get generalSettingsStoreAddress => 'Адрес торговой точки';
+
+  @override
+  String get generalSettingsStoreAddressHint =>
+      'Печатается на чеке. Поменяйте, если магазин переехал.';
 }

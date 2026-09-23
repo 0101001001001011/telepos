@@ -108,6 +108,12 @@ class AssembleShiftReceiptUseCaseImpl implements AssembleShiftReceiptUseCase {
       saleAmount: saleAmount,
       debtAmount: debtAmount,
       cashInPos: cashInPos,
+      // Подъёмные смены. Их здесь НЕ БЫЛО вовсе до 2026-09-22: поле
+      // конструктора существовало, звавший его не заполнял, и
+      // `ShiftReceipt.openingCash` всегда приезжал нулём. Экран смены
+      // прикрывал дыру `_resolveOpeningCash` — подставлял остаток ПРОШЛОЙ
+      // смены, — и в строке «На начало» Z-отчёта печаталось чужое число.
+      openingCash: shift.openingCash,
       cashPaymentsSum: cashPaymentsSum,
       paymentSums: paymentSums,
       certificatesIssued: certificatesIssued,

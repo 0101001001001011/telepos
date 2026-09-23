@@ -120,8 +120,14 @@ void main() {
       expect(cashier.maxPercent, Decimal.fromInt(20));
       expect(
         cashier.source,
-        contains('Кассир'),
-        reason: 'кассир обязан узнать из отказа, чей это предел',
+        contains('cashier'),
+        reason:
+            'отказ обязан назвать, ЧЕЙ это предел. Ключ, а не слово '
+            '«Кассир»: строка уходит вторым доводом `WireRefusal` (его '
+            'читает журнал, на экран едет код) и в столбец аудита '
+            '`DiscountAudits.capSource`. Запись аудита не имеет права '
+            'зависеть от языка кассы — иначе одно и то же событие на двух '
+            'кассах записалось бы разными словами',
       );
 
       final owner = await policy.capFor(UserRole.owner.index);

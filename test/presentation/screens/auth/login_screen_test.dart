@@ -428,7 +428,8 @@ void main() {
         expect(
           find.byKey(const ValueKey('enrol-code-field')),
           findsOneWidget,
-          reason: 'красный без правки: `_EnrolmentGate` не существовал, '
+          reason:
+              'красный без правки: `_EnrolmentGate` не существовал, '
               'экран показал бы обычный выбор кассира',
         );
         expect(find.byType(PinKeypad), findsNothing);
@@ -456,7 +457,8 @@ void main() {
         expect(
           find.text(AppLocalizations.of(context)!.errorAuthUnknown),
           findsNothing,
-          reason: 'старое устройство без секрета не имеет права смешиваться '
+          reason:
+              'старое устройство без секрета не имеет права смешиваться '
               'с общим «касса не смогла ответить»',
         );
       },
@@ -486,7 +488,8 @@ void main() {
         expect(
           button().onPressed,
           isNotNull,
-          reason: 'красный без правки: поле было не связано ни с чем, кнопка '
+          reason:
+              'красный без правки: поле было не связано ни с чем, кнопка '
               'не реагировала на ввод',
         );
       },
@@ -507,151 +510,138 @@ void main() {
   // `RenderParagraph.didExceedMaxLines`, тот же приём, что в
   // `test/theme/app_text_styles_test.dart` (там — цвет из отрисованного
   // дерева, не из объявления стиля; здесь — то же самое для переноса строк).
-  group(
-    'LoginScreen — причина гейта не обрезается (найдено живой проверкой '
-    '2026-08-24)',
-    () {
-      late SharedPreferences prefs;
+  group('LoginScreen — причина гейта не обрезается (найдено живой проверкой '
+      '2026-08-24)', () {
+    late SharedPreferences prefs;
 
-      setUp(() async {
-        GetIt.instance.registerSingleton<HostCapabilities>(
-          HostCapabilities.browser,
-        );
-        SharedPreferences.setMockInitialValues({});
-        prefs = await SharedPreferences.getInstance();
-      });
+    setUp(() async {
+      GetIt.instance.registerSingleton<HostCapabilities>(
+        HostCapabilities.browser,
+      );
+      SharedPreferences.setMockInitialValues({});
+      prefs = await SharedPreferences.getInstance();
+    });
 
-      tearDown(() => GetIt.instance.reset());
+    tearDown(() => GetIt.instance.reset());
 
-      Future<BuildContext> pumpFixedAtSize(
-        WidgetTester tester,
-        LoginState state,
-        Size size,
-        Locale locale,
-      ) async {
-        tester.view.physicalSize = size;
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.reset);
+    Future<BuildContext> pumpFixedAtSize(
+      WidgetTester tester,
+      LoginState state,
+      Size size,
+      Locale locale,
+    ) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
 
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              loginControllerProvider.overrideWith(
-                () => _FixedLoginNotifier(state),
-              ),
-              sharedPreferencesProvider.overrideWithValue(prefs),
-            ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.light,
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              // Все пять языков кассы (l10n.yaml,
-              // preferred-supported-locales), не только ru/en: длина строки —
-              // это то самое, из-за чего резало, и самая длинная не обязана
-              // быть на языке разработки.
-              supportedLocales: const [
-                Locale('ru'),
-                Locale('en'),
-                Locale('kk'),
-                Locale('ky'),
-                Locale('uz'),
-              ],
-              locale: locale,
-              home: const LoginScreen(),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            loginControllerProvider.overrideWith(
+              () => _FixedLoginNotifier(state),
             ),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            // Все пять языков кассы (l10n.yaml,
+            // preferred-supported-locales), не только ru/en: длина строки —
+            // это то самое, из-за чего резало, и самая длинная не обязана
+            // быть на языке разработки.
+            supportedLocales: const [
+              Locale('ru'),
+              Locale('en'),
+              Locale('kk'),
+              Locale('ky'),
+              Locale('uz'),
+            ],
+            locale: locale,
+            home: const LoginScreen(),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        return tester.element(find.byType(LoginScreen));
-      }
+      return tester.element(find.byType(LoginScreen));
+    }
 
-      // 800×1024 — тот же «планшет», что в `TestBreakpoints.tablet`
-      // (`test/golden/golden_test_helpers.dart`); 1280×800 — тот же
-      // «широкий экран кассы» (`TestBreakpoints.desktop`), тем же приёмом
-      // проверки на двух ширинах, которым в проекте уже сняты эталоны
-      // (`wt_unavailable_look_test.dart`, `wizard_look_test.dart`).
-      for (final width in const {
-        'узкий (планшет, 800)': Size(800, 1024),
-        'широкий (касса, 1280)': Size(1280, 800),
-      }.entries) {
-        for (final locale in const [
-          Locale('ru'),
-          Locale('en'),
-          Locale('kk'),
-          Locale('ky'),
-          Locale('uz'),
-        ]) {
-          testWidgets(
-            'старое устройство без секрета — причина целиком, '
-            '${width.key}, ${locale.languageCode}',
-            (tester) async {
-              final context = await pumpFixedAtSize(
-                tester,
-                const LoginState(
-                  needsEnrolmentCode: true,
-                  error: 'error.terminal_secret_invalid',
-                ),
-                width.value,
-                locale,
-              );
-
-              final text = AppLocalizations.of(
-                context,
-              )!.errorTerminalSecretInvalid;
-              final paragraph = tester.renderObject<RenderParagraph>(
-                find.text(text),
-              );
-
-              expect(
-                paragraph.didExceedMaxLines,
-                isFalse,
-                reason:
-                    'красный без errorMaxLines: строка «$text» '
-                    '(${locale.languageCode}) обрезается многоточием, '
-                    'инструкция в её хвосте не попадает на экран',
-              );
-            },
+    // 800×1024 — тот же «планшет», что в `TestBreakpoints.tablet`
+    // (`test/golden/golden_test_helpers.dart`); 1280×800 — тот же
+    // «широкий экран кассы» (`TestBreakpoints.desktop`), тем же приёмом
+    // проверки на двух ширинах, которым в проекте уже сняты эталоны
+    // (`wt_unavailable_look_test.dart`, `wizard_look_test.dart`).
+    for (final width in const {
+      'узкий (планшет, 800)': Size(800, 1024),
+      'широкий (касса, 1280)': Size(1280, 800),
+    }.entries) {
+      for (final locale in const [
+        Locale('ru'),
+        Locale('en'),
+        Locale('kk'),
+        Locale('ky'),
+        Locale('uz'),
+      ]) {
+        testWidgets('старое устройство без секрета — причина целиком, '
+            '${width.key}, ${locale.languageCode}', (tester) async {
+          final context = await pumpFixedAtSize(
+            tester,
+            const LoginState(
+              needsEnrolmentCode: true,
+              error: 'error.terminal_secret_invalid',
+            ),
+            width.value,
+            locale,
           );
 
-          testWidgets(
-            'неверный код привязки — причина целиком, '
-            '${width.key}, ${locale.languageCode}',
-            (tester) async {
-              final context = await pumpFixedAtSize(
-                tester,
-                const LoginState(
-                  needsEnrolmentCode: true,
-                  error: 'error.pairing_code_invalid',
-                ),
-                width.value,
-                locale,
-              );
-
-              final text = AppLocalizations.of(
-                context,
-              )!.errorPairingCodeInvalid;
-              final paragraph = tester.renderObject<RenderParagraph>(
-                find.text(text),
-              );
-
-              expect(
-                paragraph.didExceedMaxLines,
-                isFalse,
-                reason:
-                    'красный без errorMaxLines: строка «$text» '
-                    '(${locale.languageCode}) обрезается многоточием, '
-                    'инструкция в её хвосте не попадает на экран',
-              );
-            },
+          final text = AppLocalizations.of(context)!.errorTerminalSecretInvalid;
+          final paragraph = tester.renderObject<RenderParagraph>(
+            find.text(text),
           );
-        }
+
+          expect(
+            paragraph.didExceedMaxLines,
+            isFalse,
+            reason:
+                'красный без errorMaxLines: строка «$text» '
+                '(${locale.languageCode}) обрезается многоточием, '
+                'инструкция в её хвосте не попадает на экран',
+          );
+        });
+
+        testWidgets('неверный код привязки — причина целиком, '
+            '${width.key}, ${locale.languageCode}', (tester) async {
+          final context = await pumpFixedAtSize(
+            tester,
+            const LoginState(
+              needsEnrolmentCode: true,
+              error: 'error.pairing_code_invalid',
+            ),
+            width.value,
+            locale,
+          );
+
+          final text = AppLocalizations.of(context)!.errorPairingCodeInvalid;
+          final paragraph = tester.renderObject<RenderParagraph>(
+            find.text(text),
+          );
+
+          expect(
+            paragraph.didExceedMaxLines,
+            isFalse,
+            reason:
+                'красный без errorMaxLines: строка «$text» '
+                '(${locale.languageCode}) обрезается многоточием, '
+                'инструкция в её хвосте не попадает на экран',
+          );
+        });
       }
-    },
-  );
+    }
+  });
 }

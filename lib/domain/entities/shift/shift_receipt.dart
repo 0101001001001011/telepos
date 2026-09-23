@@ -11,13 +11,12 @@ class ShiftReceipt {
     required this.cashInPos,
     required this.cashPaymentsSum,
     required this.paymentSums,
-    Decimal? openingCash,
+    this.openingCash,
     Decimal? certificatesIssued,
     Decimal? certificatesRedeemed,
     this.posName,
     this.companyName,
-  }) : openingCash = openingCash ?? Decimal.zero,
-       certificatesIssued = certificatesIssued ?? Decimal.zero,
+  }) : certificatesIssued = certificatesIssued ?? Decimal.zero,
        certificatesRedeemed = certificatesRedeemed ?? Decimal.zero;
 
   final int shiftId;
@@ -34,7 +33,15 @@ class ShiftReceipt {
 
   final Decimal cashInPos;
 
-  final Decimal openingCash;
+  /// Подъёмные смены; `null` — **не объявляли**, а не ноль.
+  ///
+  /// Разница не педантизм: ноль — законный результат объявления (ящик
+  /// пуст), и подменять им «не знаем» значило бы разрешить запасному пути
+  /// `ShiftNotifier._resolveOpeningCash` подставить в Z-отчёт остаток
+  /// ПРОШЛОЙ смены там, где касса честно начала с пустого ящика. `null`
+  /// приезжает только от смен, открытых до появления столбца
+  /// `shifts.opening_cash`.
+  final Decimal? openingCash;
 
   final Decimal cashPaymentsSum;
 

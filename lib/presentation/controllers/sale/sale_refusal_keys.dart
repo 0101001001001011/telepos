@@ -53,6 +53,15 @@ const Map<String, SaleRefusalKey> saleRefusalErrorKeys = {
   cartDeferredTakenCode: (key: 'error.deferred_taken', withMessage: false),
   cartNotEmptyCode: (key: 'error.cart_not_empty', withMessage: false),
   cartProductNotFoundCode: (key: 'error.product_not_found', withMessage: true),
+  // Довод — имя товара: без него кассир не поймёт, какой из чека.
+  cartProductHasNoPriceCode: (
+    key: 'error.product_has_no_price',
+    withMessage: true,
+  ),
+  cartSellingHoursBannedCode: (
+    key: 'error.selling_hours_banned',
+    withMessage: true,
+  ),
   cartDeferredNotFoundCode: (
     key: 'error.deferred_not_found',
     withMessage: false,
@@ -268,11 +277,20 @@ const Map<String, SaleRefusalKey> saleRefusalErrorKeys = {
   // и проверка 5 того же сторожа («в карте нет лишнего») покраснела бы
   // по делу.
   'credit_term_invalid': (key: 'error.credit_term_invalid', withMessage: false),
-  'credit_principal_invalid': (key: 'error.credit_principal_invalid', withMessage: false),
+  'credit_principal_invalid': (
+    key: 'error.credit_principal_invalid',
+    withMessage: false,
+  ),
   'credit_fee_invalid': (key: 'error.credit_fee_invalid', withMessage: false),
-  'credit_scheme_unknown': (key: 'error.credit_scheme_unknown', withMessage: false),
+  'credit_scheme_unknown': (
+    key: 'error.credit_scheme_unknown',
+    withMessage: false,
+  ),
   'credit_overdue': (key: 'error.credit_overdue', withMessage: false),
-  'credit_contract_duplicate': (key: 'error.credit_contract_duplicate', withMessage: false),
+  'credit_contract_duplicate': (
+    key: 'error.credit_contract_duplicate',
+    withMessage: false,
+  ),
   'loyalty_customer_unknown': (
     key: 'error.loyalty_customer_unknown',
     withMessage: false,
@@ -365,14 +383,8 @@ const Map<String, SaleRefusalKey> saleRefusalErrorKeys = {
   // к кому идти.
   'no_drivers': (key: 'error.no_drivers', withMessage: false),
   'no_network_module': (key: 'error.no_network_module', withMessage: false),
-  'no_session_registry': (
-    key: 'error.no_session_registry',
-    withMessage: false,
-  ),
-  'no_backup_transport': (
-    key: 'error.no_backup_transport',
-    withMessage: false,
-  ),
+  'no_session_registry': (key: 'error.no_session_registry', withMessage: false),
+  'no_backup_transport': (key: 'error.no_backup_transport', withMessage: false),
   'backup_not_found': (key: 'error.backup_not_found', withMessage: false),
   'certificates_unavailable': (
     key: 'error.certificates_unavailable',
@@ -533,10 +545,7 @@ const Map<String, SaleRefusalKey> saleRefusalErrorKeys = {
   // Фраза говорит словами, а не «повторите»: повтор не поможет, лечится
   // это заведением того же вида в справочнике (или возвратом на той
   // кассе, где он заведён).
-  'refund_kind_unknown': (
-    key: 'error.refund_kind_unknown',
-    withMessage: false,
-  ),
+  'refund_kind_unknown': (key: 'error.refund_kind_unknown', withMessage: false),
 
   // Сертификаты при возврате — решения заказчика 2026-09-16. Оба кода
   // лечатся действием кассира, а не повтором, и потому говорят словами:
@@ -614,7 +623,8 @@ const Map<String, SaleRefusalKey> saleRefusalErrorKeys = {
     key: 'error.insufficient_stock',
     withMessage: true,
   ),
-  checkoutBigAmountCode: (key: 'error.big_amount_blocked', withMessage: false),
+  // Сообщение отказа — сам потолок кассы: экран называет его человеку.
+  checkoutBigAmountCode: (key: 'error.big_amount_blocked', withMessage: true),
 };
 
 /// Отказ кассы → ключ для `ErrorLocalizer`.

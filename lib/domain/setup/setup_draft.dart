@@ -1,4 +1,3 @@
-
 /// Everything the first-launch wizard collects, as plain data.
 ///
 /// These used to live inside the wizard's controller, next to the code that
@@ -13,7 +12,6 @@
 library;
 
 import 'package:meta/meta.dart';
-
 
 @immutable
 class OrganizationInfo {
@@ -476,6 +474,7 @@ class SetupDraft {
     required this.employees,
     required this.firstUser,
     this.secondUser,
+    this.acquiringAccountName,
   });
 
   /// `CountryCode.index`. Held as an int so this file needs no import of the
@@ -484,6 +483,16 @@ class SetupDraft {
 
   /// `OperatingMode.index`.
   final int operatingModeIndex;
+
+  /// Как назвать счёт эквайринга (карточный). Пусто — мастер не сказал.
+  ///
+  /// Имя счёта — ДАННЫЕ: человек правит его на экране счетов, и оно
+  /// остаётся тем, чем он его назвал. Потому слово приходит из мастера,
+  /// который знает язык интерфейса, а не выбирается при показе.
+  ///
+  /// Мастер писал сюда зашитое русское «Банк (карта)» — на любой кассе,
+  /// включая американскую, и оно показывалось в отчётах как есть.
+  final String? acquiringAccountName;
 
   final OrganizationInfo organization;
   final PosConfigInfo posConfig;

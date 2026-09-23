@@ -268,6 +268,7 @@ void main() {
         'sale.loadDeferred': SaleOps.loadDeferred.encode((
           receiptNo: 9,
           meta: meta,
+          deferredPosId: null,
         )),
         'sale.setAgent': SaleOps.setAgent.encode((agentId: 3, meta: meta)),
         'sale.setWholesale': SaleOps.setWholesale.encode((
@@ -338,7 +339,7 @@ void main() {
       // чек, который у рабочего места УЖЕ есть, а поднимаемый — отдельный
       // довод. Положи их одним именем — метка затёрла бы номер, и команда
       // подняла бы не тот чек (или получила бы `cart_wrong_receipt`).
-      final body = SaleOps.loadDeferred.encode((receiptNo: 9, meta: meta));
+      final body = SaleOps.loadDeferred.encode((receiptNo: 9, meta: meta, deferredPosId: null));
 
       expect(body['deferredReceiptNo'], 9);
       expect(body['receiptNo'], 17, reason: 'метка осталась своей');

@@ -71,10 +71,17 @@ void main() {
   tearDown(() => GetIt.I.reset());
 
   /// Выдача поиска устоялась: дебаунс 300 мс и ответ кассы.
-  Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 450));
+  Future<void> settle() =>
+      Future<void>.delayed(const Duration(milliseconds: 450));
 
-  Future<ProviderContainer> searched(_Seam seam, List<void Function()> call) async {
-    final after = Provider<void Function()>((ref) => () => seam(ref));
+  Future<ProviderContainer> searched(
+    _Seam seam,
+    List<void Function()> call,
+  ) async {
+    final after = Provider<void Function()>(
+      (ref) =>
+          () => seam(ref),
+    );
     final container = ProviderContainer();
     addTearDown(container.dispose);
     container.listen(saleControllerProvider, (_, __) {}, fireImmediately: true);
@@ -167,7 +174,8 @@ void main() {
 
   test('без запроса на экране продажа кассу не спрашивает', () async {
     final after = Provider<void Function()>(
-      (ref) => () => web.refreshAfterSaleCompleted(ref),
+      (ref) =>
+          () => web.refreshAfterSaleCompleted(ref),
     );
     final container = ProviderContainer();
     addTearDown(container.dispose);

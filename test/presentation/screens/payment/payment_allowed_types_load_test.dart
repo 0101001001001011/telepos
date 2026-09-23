@@ -121,11 +121,9 @@ void main() {
 
     final state = container.read(paymentControllerProvider);
     expect(terminals.listCalls, greaterThan(0), reason: 'кассу не спросили');
-    expect(
-      state.allowedPaymentTypes,
-      {PaymentType.card},
-      reason: 'взят набор рабочего места #7, а не первого попавшегося',
-    );
+    expect(state.allowedPaymentTypes, {
+      PaymentType.card,
+    }, reason: 'взят набор рабочего места #7, а не первого попавшегося');
     expect(state.offers(PaymentType.cash), isFalse);
     expect(state.offers(PaymentType.card), isTrue);
   });
@@ -145,30 +143,31 @@ void main() {
     // дожидаясь ответа кассы: окно «показываем всё» между входом и ответом
     // и есть тот дефект, ради которого задача делалась.
     notifier.initialize(Decimal.fromInt(500));
-    expect(
-      container.read(paymentControllerProvider).allowedPaymentTypes,
-      {PaymentType.card},
-      reason: 'между вторым входом и ответом кассы запрет не пропадает',
-    );
+    expect(container.read(paymentControllerProvider).allowedPaymentTypes, {
+      PaymentType.card,
+    }, reason: 'между вторым входом и ответом кассы запрет не пропадает');
   });
 
-  test('касса не ответила — экран показывает все виды, а не ни одного', () async {
-    final container = boot(failList: true);
-    final notifier = container.read(paymentControllerProvider.notifier);
+  test(
+    'касса не ответила — экран показывает все виды, а не ни одного',
+    () async {
+      final container = boot(failList: true);
+      final notifier = container.read(paymentControllerProvider.notifier);
 
-    notifier.initialize(Decimal.fromInt(1000));
-    await Future<void>.delayed(Duration.zero);
+      notifier.initialize(Decimal.fromInt(1000));
+      await Future<void>.delayed(Duration.zero);
 
-    final state = container.read(paymentControllerProvider);
-    expect(
-      state.allowedPaymentTypes,
-      isEmpty,
-      reason: 'пустое означает «все» — экран не запрещает больше кассы',
-    );
-    for (final type in PaymentType.values) {
-      expect(state.offers(type), isTrue);
-    }
-  });
+      final state = container.read(paymentControllerProvider);
+      expect(
+        state.allowedPaymentTypes,
+        isEmpty,
+        reason: 'пустое означает «все» — экран не запрещает больше кассы',
+      );
+      for (final type in PaymentType.values) {
+        expect(state.offers(type), isTrue);
+      }
+    },
+  );
 
   test('своего рабочего места в списке нет — тоже все виды', () async {
     final container = boot(rows: const [other]);

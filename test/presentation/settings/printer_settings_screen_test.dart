@@ -6,12 +6,14 @@ import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/data/database/app_database.dart' hide Terminal;
 import 'package:telepos/data/device/device_profile_catalog_builtin.dart';
 import 'package:telepos/data/terminal/device_binding_repository_local.dart';
+import 'package:telepos/domain/device/device_class.dart';
 import 'package:telepos/domain/device/device_profile_catalog.dart';
 import 'package:telepos/domain/sale/payment_service.dart';
 import 'package:telepos/domain/terminal/device_binding_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/device_profile_label.dart';
 import 'package:telepos/presentation/screens/settings/printer_settings_screen.dart';
 
 /// Minimal fake — only `self()` is exercised by this screen; every other
@@ -49,13 +51,12 @@ class _FakeTerminalRepository implements TerminalRepository {
       throw UnimplementedError();
 
   @override
-  Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+  Future<void> rename(int terminalId, String name) =>
+      throw UnimplementedError();
 
   @override
-  Future<void> setAllowedPaymentTypes(
-    int terminalId,
-    Set<PaymentType> types,
-  ) => throw UnimplementedError();
+  Future<void> setAllowedPaymentTypes(int terminalId, Set<PaymentType> types) =>
+      throw UnimplementedError();
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();
@@ -76,7 +77,9 @@ void main() {
     repo = LocalDeviceBindingRepository(db, BuiltinDeviceProfileCatalog());
 
     await GetIt.I.reset();
-    GetIt.I.registerSingleton<DeviceProfileCatalog>(BuiltinDeviceProfileCatalog());
+    GetIt.I.registerSingleton<DeviceProfileCatalog>(
+      BuiltinDeviceProfileCatalog(),
+    );
     GetIt.I.registerSingleton<DeviceBindingRepository>(repo);
     GetIt.I.registerSingleton<TerminalRepository>(
       _FakeTerminalRepository(terminalId),
@@ -88,13 +91,33 @@ void main() {
     await db.close();
   });
 
+  /// Язык закреплён, а не взят у машины.
+  ///
+  /// Без `locale` экран говорит на языке системы, и проба зависит от того,
+  /// на чьей машине её запустили. Ровно на этом она и сломалась: надпись
+  /// профиля переехала в словарь, а проба держала русскую строку жёстко.
+  const locale = Locale('en');
+
   Widget host() {
     return MaterialApp(
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: const PrinterSettingsScreen(),
     );
   }
+
+  /// Надпись берётся из того же источника, что и у экрана.
+  ///
+  /// Повторить её здесь строкой значило бы проверять не экран, а совпадение
+  /// двух копий одного слова: переименуют профиль — проба покраснеет, хотя
+  /// экран цел, а переведут неверно — останется зелёной.
+  String profileTitle(String id) => deviceProfileTitle(
+    BuiltinDeviceProfileCatalog()
+        .forClass(DeviceClass.receiptPrinter)
+        .firstWhere((p) => p.id == id),
+    lookupAppLocalizations(locale),
+  );
 
   /// The printer section starts disabled (no prior binding) — the profile
   /// picker and its fields only render once the section's `Switch` is on.
@@ -111,7 +134,7 @@ void main() {
       await tester.pumpAndSettle();
       await enablePrinterSection(tester);
 
-      await tester.tap(find.text('Чековый принтер ESC/POS 80 мм'));
+      await tester.tap(find.text(profileTitle('printer.escpos.80mm')));
       await tester.pumpAndSettle();
 
       await tester.enterText(
@@ -141,7 +164,7 @@ void main() {
       await tester.pumpAndSettle();
       await enablePrinterSection(tester);
 
-      await tester.tap(find.text('Чековый принтер ESC/POS 80 мм'));
+      await tester.tap(find.text(profileTitle('printer.escpos.80mm')));
       await tester.pumpAndSettle();
       // ipAddress left blank on purpose.
 
@@ -161,7 +184,8 @@ void main() {
       expect(
         text,
         contains('ipAddress'),
-        reason: 'the operator must be told which parameter is missing, not '
+        reason:
+            'the operator must be told which parameter is missing, not '
             'just that saving failed',
       );
     },
@@ -175,7 +199,7 @@ void main() {
       await tester.pumpAndSettle();
       await enablePrinterSection(tester);
 
-      await tester.tap(find.text('Чековый принтер ESC/POS 80 мм'));
+      await tester.tap(find.text(profileTitle('printer.escpos.80mm')));
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const Key('param_printer.escpos.80mm_ipAddress')),
@@ -185,9 +209,7 @@ void main() {
       await tester.tap(find.byIcon(TeleposIcons.save));
       await tester.pumpAndSettle();
 
-      await tester.tap(
-        find.text('ESC/POS Receipt Printer 58mm (compact, no cutter)'),
-      );
+      await tester.tap(find.text(profileTitle('printer.escpos.58mm-compact')));
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const Key('param_printer.escpos.58mm-compact_ipAddress')),

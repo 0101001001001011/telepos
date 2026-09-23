@@ -62,7 +62,10 @@ void main() {
   // the editor's «искать»/«проверить устройство» buttons take their labels
   // from `AppLocalizations`, so a host without the delegates renders nothing
   // at all rather than rendering unlocalised text.
-  Widget host(DeviceBindingDraft draft, {List<DeviceProfile> profiles = allProfiles}) {
+  Widget host(
+    DeviceBindingDraft draft, {
+    List<DeviceProfile> profiles = allProfiles,
+  }) {
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -79,27 +82,26 @@ void main() {
     );
   }
 
-  testWidgets(
-    "choosing profile A renders profile A's field, not profile B's",
-    (tester) async {
-      final draft = DeviceBindingDraft(deviceClass: DeviceClass.scale)
-        ..enabled = true;
-      await tester.pumpWidget(host(draft));
-      await tester.pumpAndSettle();
+  testWidgets("choosing profile A renders profile A's field, not profile B's", (
+    tester,
+  ) async {
+    final draft = DeviceBindingDraft(deviceClass: DeviceClass.scale)
+      ..enabled = true;
+    await tester.pumpWidget(host(draft));
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Весы модель А'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Весы модель А'));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('param_test.profile.a_comPort')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('param_test.profile.b_ipAddress')),
-        findsNothing,
-      );
-    },
-  );
+    expect(
+      find.byKey(const Key('param_test.profile.a_comPort')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('param_test.profile.b_ipAddress')),
+      findsNothing,
+    );
+  });
 
   testWidgets(
     'switching from profile A to profile B changes the rendered fields',

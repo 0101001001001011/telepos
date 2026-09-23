@@ -17,6 +17,7 @@ import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/utils/session_lost_handler.dart';
 import 'package:telepos/presentation/screens/label/label_preview.dart';
 import 'package:telepos/presentation/screens/label/label_template_codec.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class PriceTagProduct {
   const PriceTagProduct({
@@ -151,7 +152,7 @@ class _PrintPriceTagDialogState extends State<PrintPriceTagDialog> {
     );
 
     final fields = LabelTemplateCodec.decode(template.fieldsJson);
-    String currency = '₸';
+    String currency = tillCurrencySymbol();
     try {
       currency = GetIt.I<CurrencyService>().symbol;
     } catch (_) {}

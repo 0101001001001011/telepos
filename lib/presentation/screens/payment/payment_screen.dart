@@ -344,8 +344,21 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         final title = titles[trouble.kind];
         messenger.showSnackBar(
           SnackBar(
+            // Заголовок — словарный, подпись — причина сверх него: «бумаги
+            // нет», «порт занят». Выбрасывать её нельзя, она и говорит
+            // кассиру, что делать.
+            //
+            // Пустая подпись означает «сверх заголовка сказать нечего»:
+            // касса отказала ящиком чисто, без причины. Прежде там стоял
+            // дословный повтор заголовка ПО-РУССКИ, и на английской кассе
+            // выходило «Cash drawer did not open: денежный ящик не
+            // открылся» — поймано пробным проходом главы 7.
             content: Text(
-              title == null ? trouble.message : '$title: ${trouble.message}',
+              title == null
+                  ? trouble.message
+                  : (trouble.message.isEmpty
+                        ? title
+                        : '$title: ${trouble.message}'),
             ),
             backgroundColor: AppColors.warning,
           ),

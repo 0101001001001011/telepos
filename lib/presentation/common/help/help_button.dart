@@ -18,11 +18,14 @@ class HelpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    // Словарь обязателен: `l10n?.… ?? 'Справка'` означал тихий русский
+    // текст в сборке без делегатов. Ровно так экран покупателя год
+    // печатал по-русски, и вскрылось это только правкой на нём.
+    final l10n = AppLocalizations.of(context)!;
 
     return IconButton(
       icon: Icon(Icons.help_outline, color: color, size: iconSize),
-      tooltip: l10n?.helpTitle ?? 'Справка',
+      tooltip: l10n.helpTitle,
       onPressed: () => HelpDialog.show(context, screenId),
     );
   }

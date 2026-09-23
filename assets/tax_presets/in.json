@@ -1,0 +1,71 @@
+{
+  "id": "in",
+  "title": "Индия",
+  "countryCode": "IN",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "₹",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "18",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "GST 18%",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "GST 12%"
+    },
+    {
+      "code": "reduced2",
+      "title": "GST 5%"
+    },
+    {
+      "code": "luxury",
+      "title": "GST 28%"
+    },
+    {
+      "code": "exempt",
+      "title": "Exempt"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "in",
+      "name": "GST",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "18"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "12"
+        },
+        {
+          "category": "reduced2",
+          "kind": "taxed",
+          "ratePercent": "5"
+        },
+        {
+          "category": "luxury",
+          "kind": "taxed",
+          "ratePercent": "28"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "GST slabs; проверьте перед работой"
+}

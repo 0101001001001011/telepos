@@ -1,0 +1,29 @@
+{
+  "id": "kz",
+  "title": "Казахстан",
+  "countryCode": "KZ",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": true,
+  "currencySymbol": "₸",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "16",
+  "categories": [
+    { "code": "standard", "title": "Общая ставка", "isDefault": true },
+    { "code": "exempt", "title": "Освобождённые обороты" }
+  ],
+  "jurisdictions": [
+    {
+      "code": "kz",
+      "name": "НДС",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        { "category": null, "kind": "taxed", "ratePercent": "16" },
+        { "category": "exempt", "kind": "exempt", "ratePercent": "0" }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Налоговый кодекс РК; ставка НДС, действующая с 2026-01-01"
+}

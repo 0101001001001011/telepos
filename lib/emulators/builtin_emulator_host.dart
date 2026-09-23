@@ -59,7 +59,6 @@ class BuiltinEmulatorAddress {
   /// `null` у последовательного прибора: ссылки у файла-порта нет.
   String? get baseUrl => path != null ? null : 'http://$host:$port';
 
-
   @override
   String toString() => path ?? '$host:$port (пульт $controlPort)';
 }
@@ -281,7 +280,8 @@ class BuiltinEmulatorHost {
       ..stable = stable;
   }
 
-  String? get scaleWeight => _running[BuiltinEmulatorKind.scale]?.serial?.weight;
+  String? get scaleWeight =>
+      _running[BuiltinEmulatorKind.scale]?.serial?.weight;
 
   Future<BuiltinEmulatorAddress> _startSerial(
     BuiltinEmulatorKind kind, {

@@ -141,9 +141,7 @@ class _PrinterSettingsScreenState extends ConsumerState<PrinterSettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Мастер настройки ещё не завершён — сохранить некуда',
-            ),
+            content: Text(l10n.settingsSetupIncompleteSave),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -245,7 +243,9 @@ class _PrinterSettingsScreenState extends ConsumerState<PrinterSettingsScreen> {
                             SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Изменения применяются при следующем запуске кассы.',
+                                AppLocalizations.of(
+                                  context,
+                                )!.settingsRestartRequired,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Theme.of(
@@ -266,8 +266,7 @@ class _PrinterSettingsScreenState extends ConsumerState<PrinterSettingsScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
                           child: Text(
-                            'Каталог профилей устройств недоступен — настройки '
-                            'принтера сейчас нельзя изменить.',
+                            l10n.printerProfileCatalogUnavailable,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.error,
                             ),

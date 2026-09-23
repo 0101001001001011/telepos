@@ -151,6 +151,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final rowsAsync = ref.watch(_reorderProvider);
     final suppliersAsync = ref.watch(_suppliersProvider);
 
@@ -158,7 +159,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
-        title: const Text('Заявка поставщику'),
+        title: Text(AppLocalizations.of(context)!.supplierOrderTitle),
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context)!.reorderRulesTitle,
@@ -169,7 +170,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
       ),
       body: rowsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Ошибка: $e')),
+        error: (e, _) => Center(child: Text(l10n.genericErrorWith('$e'))),
         data: (rows) {
           if (rows.isEmpty) {
             return Center(
@@ -183,12 +184,12 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Все товары в достаточном количестве',
+                    AppLocalizations.of(context)!.supplierOrderAllStocked,
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Дозаказ не требуется',
+                    AppLocalizations.of(context)!.supplierOrderNotNeeded,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -209,9 +210,9 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
                       color: AppColors.primary,
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'Поставщик:',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    Text(
+                      l10n.supplierLabel,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -219,7 +220,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
                         data: (suppliers) => DropdownButton<int>(
                           isExpanded: true,
                           value: _supplierId,
-                          hint: const Text('Выберите поставщика'),
+                          hint: Text(l10n.supplierChoose),
                           items: suppliers
                               .map(
                                 (s) => DropdownMenuItem(
@@ -255,13 +256,19 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
                         vertical: 12,
                       ),
                       color: selectedSurfaceOf(context),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Expanded(flex: 5, child: Text('Товар', style: _th)),
-                          Expanded(flex: 2, child: Text('Остаток', style: _th)),
+                          Expanded(
+                            flex: 5,
+                            child: Text(l10n.supplierProduct, style: _th),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(l10n.supplierStock, style: _th),
+                          ),
                           Expanded(
                             flex: 3,
-                            child: Text('Заказать', style: _th),
+                            child: Text(l10n.supplierOrderQty, style: _th),
                           ),
                         ],
                       ),
@@ -394,7 +401,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'Позиций к заказу: ${rows.length}',
+                      l10n.supplierLinesToOrder(rows.length),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -403,7 +410,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
                     FilledButton.icon(
                       onPressed: () => _formOrder(rows),
                       icon: const Icon(Icons.send),
-                      label: const Text('Сформировать заявку'),
+                      label: Text(l10n.supplierCreateRequest),
                     ),
                   ],
                 ),
@@ -416,6 +423,7 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
   }
 
   void _formOrder(List<_OrderRow> rows) {
+    final l10n = AppLocalizations.of(context)!;
     final lines = <List<String>>[];
     for (final r in rows) {
       final qty = Decimal.tryParse(_ctrl(r).text) ?? Decimal.zero;
@@ -424,24 +432,22 @@ class _SupplierOrderScreenState extends ConsumerState<SupplierOrderScreen> {
       }
     }
     if (lines.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Укажите количество хотя бы по одному товару'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.supplierNeedQuantity)));
       return;
     }
     try {
       ReportExportButton.exportCsv(context, 'supplier_order', [
-        'Товар',
-        'Остаток',
-        'Заказать',
+        l10n.supplierProduct,
+        l10n.supplierStock,
+        l10n.supplierOrderQty,
       ], lines);
     } catch (_) {}
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Заявка сформирована: ${lines.length} поз.'
+          '${l10n.supplierRequestCreated(lines.length)}'
           '${_supplierName != null && _supplierName!.isNotEmpty ? ' · $_supplierName' : ''}',
         ),
         backgroundColor: AppColors.success,

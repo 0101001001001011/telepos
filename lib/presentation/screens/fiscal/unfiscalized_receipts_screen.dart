@@ -169,48 +169,48 @@ class UnfiscalizedReceiptsScreen extends ConsumerWidget {
     AsyncValue<List<FiscalQueueEntry>> entriesAsync,
   ) {
     return entriesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
-        data: (entries) {
-          if (entries.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.receipt_long_outlined,
-                    size: 64,
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('$e')),
+      data: (entries) {
+        if (entries.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.receipt_long_outlined,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.unfiscalizedEmpty,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.unfiscalizedEmptyHint,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.unfiscalizedEmpty,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.unfiscalizedEmptyHint,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-          return ListView.separated(
-            padding: const EdgeInsets.all(12),
-            itemCount: entries.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, i) => _UnfiscalizedTile(
-              entry: entries[i],
-              onRetry: () => _retry(context, ref, entries[i]),
-              onWriteOff: () => _writeOff(context, ref, entries[i]),
+                ),
+              ],
             ),
           );
-        },
-      );
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.all(12),
+          itemCount: entries.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 8),
+          itemBuilder: (context, i) => _UnfiscalizedTile(
+            entry: entries[i],
+            onRetry: () => _retry(context, ref, entries[i]),
+            onWriteOff: () => _writeOff(context, ref, entries[i]),
+          ),
+        );
+      },
+    );
   }
 }
 

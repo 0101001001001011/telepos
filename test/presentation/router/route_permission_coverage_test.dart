@@ -200,10 +200,12 @@ String? _settingsKeyGuessFor(String route) {
 
   final topicWords = last.sublist(0, last.length - 1);
   if (topicWords.isEmpty) return null;
-  final topic = topicWords.first + topicWords.skip(1).map((w) {
-    if (w.isEmpty) return w;
-    return w[0].toUpperCase() + w.substring(1);
-  }).join();
+  final topic =
+      topicWords.first +
+      topicWords.skip(1).map((w) {
+        if (w.isEmpty) return w;
+        return w[0].toUpperCase() + w.substring(1);
+      }).join();
   return 'settings.$topic';
 }
 
@@ -217,413 +219,396 @@ void main() {
         allRoutes = _allGoRoutePaths(createRouter().configuration.routes);
       });
 
-      test(
-        'счёт таблицы маршрутов и её покрытия ключами права не расходится '
-        'с фактом (порог — точное число, а не диапазон)',
-        () {
-          // Точное число, а не `greaterThan(...)` — тем же протоколом, каким
-          // в docs/internal/testing-notes.md, раздел «Порог», держится порог всего
-          // набора: число не должно уменьшаться незамеченным, а расти —
-          // обязано объясняться поимённо (какой маршрут добавлен, с каким
-          // решением), а не средним. Диапазон здесь однажды уже соврал:
-          // `greaterThan(60)` стоял, пока факт (74, затем 75 маршрутов; 32,
-          // затем 33 покрытых) ушёл на полтора десятка вперёд — тест
-          // оставался зелёным ровно потому, что охранял только собственное
-          // существование, а не число. Проверено обратным ходом при этой
-          // правке: с фиктивным лишним маршрутом в `_buildRoutes()` без
-          // записи в `_routePermissions`/`publicRoutes`/
-          // `_intentionallyOpenRoutes` эта проверка красит первой — раньше,
-          // чем тест «каждый маршрут — решение» ниже успевает пожаловаться
-          // на конкретное имя.
-          //
-          // 75 маршрутов зарегистрировано в _buildRoutes() на 2026-08-27
-          // (grep -c 'path: AppRoutes\.' lib/app/router/app_router.dart), 33
-          // из них имеют ключ права через routeToPermissionKey() (измерено
-          // тем же обходом, что и allRoutes выше, с фильтром по
-          // `!= null`) — было 74/32 до задачи 2 работы «знакомство
-          // терминала с кассой» (2026-08-23, `/terminal-pairing`, ключ
-          // `settingsUsers`), см. докстринг файла.
-          // 75 → 76: задача 11 плана «полнота продажи» (2026-09-07)
-          // завела `/unfiscalized-receipts` — один экран нефискализованных
-          // чеков, единственный вход в него из экрана фискальных настроек.
-          // 76 → 77: задача 12 того же плана завела `/discount-limits` —
-          // экран пределов ручной скидки, единственный вход в него пунктом
-          // «Пределы скидки» в общих настройках. Экран входит **той же
-          // работой**, что и таблица `DiscountLimits`: таблица без экрана
-          // стала бы четвёртой колонкой без читателя вслед за тремя
-          // `usersAllowedTo*` в `ThisPosEntries`.
-          // 77 → 78: задача 24 того же плана завела `/credit-contracts` —
-          // договоры рассрочки покупателя, единственный вход в них кнопкой
-          // «Рассрочки» в карточке контрагента. Экран входит **той же
-          // работой**, что и таблицы `CreditContracts`/
-          // `CreditScheduleEntries`: без него договор писался бы продажей
-          // и читался бы ниоткуда — пятая колонка без читателя вслед за
-          // тремя `usersAllowedTo*` и `sellInDebt`.
-          //
-          // Маршрут, а не `MaterialPageRoute` из диалога: право
-          // `op.creditRepay` проверяет `redirect` по этой самой карте, и
-          // экран, вытолкнутый мимо таблицы, прошёл бы мимо проверки
-          // целиком.
-          //
-          // 78 → 79: пункт 8 C плана «продажи: что осталось» (2026-09-15)
-          // завёл `/qr-provider-settings` — настройку провайдера QR и
-          // выключатель вида оплаты 6, единственный вход пунктом «Оплата по
-          // QR» в общих настройках. До экрана строку `qr_provider_configs`
-          // писала только дверь стенда.
-          //
-          // 79 → 80: первый пункт плана встроенных эмуляторов (2026-09-19)
-          // завёл `/emulator-settings` — выключатель встроенного эмулятора
-          // принтера и показ его адреса. Экран настраивает сокеты ЭТОЙ
-          // машины, поэтому живёт только в десктопной таблице, как и
-          // `/terminal-service-settings`.
-          //
-          // 80 → 81: пункт плана диагностики (2026-09-19) завёл
-          // `/diagnostics` — контейнер вкладок «Принтер» и «Фискализация».
-          // Сами вкладки были написаны раньше и до этого дня не были
-          // достижимы ни одним переходом: экраны без маршрута.
-          //
-          // 81 → 82: дыра 1 ревизии 2026-09-19 завела `/certificate-issue`
-          // — выпуск подарочного сертификата и повтор печати его слипа.
-          // Вход один: плитка «Выпуск подарочного сертификата» на экране
-          // «Дополнительно». До этого маршрута право `op.issueCertificate`
-          // охраняло операцию, которой кассир не мог вызвать ничем:
-          // `ProductType` не упоминался в `lib/presentation/` ни разу.
-          //
-          // 82 → 83: дыра 2 той же ревизии завела `/prepayment-refund` —
-          // выдачу аванса деньгами. Вход один: кнопка «Выдать аванс» в
-          // карточке контрагента, соседняя с приёмом. Юзкейс
-          // (`CustomerPaymentUseCase.refundPrepayment`) был заведён
-          // 2026-09-19 целиком и до этого маршрута не звался ни одним
-          // экраном: деньги, внесённые вперёд, вернуть было нечем.
-          expect(
-            allRoutes.length,
-            83,
-            reason:
-                'Число маршрутов в _buildRoutes() изменилось. Если добавлен '
-                'новый маршрут — обнови это число и докстринг файла '
-                'поимённо (какой маршрут, зачем); если маршрут удалён — то '
-                'же самое, а не молчаливое уменьшение порога.',
-          );
+      test('счёт таблицы маршрутов и её покрытия ключами права не расходится '
+          'с фактом (порог — точное число, а не диапазон)', () {
+        // Точное число, а не `greaterThan(...)` — тем же протоколом, каким
+        // в docs/internal/testing-notes.md, раздел «Порог», держится порог всего
+        // набора: число не должно уменьшаться незамеченным, а расти —
+        // обязано объясняться поимённо (какой маршрут добавлен, с каким
+        // решением), а не средним. Диапазон здесь однажды уже соврал:
+        // `greaterThan(60)` стоял, пока факт (74, затем 75 маршрутов; 32,
+        // затем 33 покрытых) ушёл на полтора десятка вперёд — тест
+        // оставался зелёным ровно потому, что охранял только собственное
+        // существование, а не число. Проверено обратным ходом при этой
+        // правке: с фиктивным лишним маршрутом в `_buildRoutes()` без
+        // записи в `_routePermissions`/`publicRoutes`/
+        // `_intentionallyOpenRoutes` эта проверка красит первой — раньше,
+        // чем тест «каждый маршрут — решение» ниже успевает пожаловаться
+        // на конкретное имя.
+        //
+        // 75 маршрутов зарегистрировано в _buildRoutes() на 2026-08-27
+        // (grep -c 'path: AppRoutes\.' lib/app/router/app_router.dart), 33
+        // из них имеют ключ права через routeToPermissionKey() (измерено
+        // тем же обходом, что и allRoutes выше, с фильтром по
+        // `!= null`) — было 74/32 до задачи 2 работы «знакомство
+        // терминала с кассой» (2026-08-23, `/terminal-pairing`, ключ
+        // `settingsUsers`), см. докстринг файла.
+        // 75 → 76: задача 11 плана «полнота продажи» (2026-09-07)
+        // завела `/unfiscalized-receipts` — один экран нефискализованных
+        // чеков, единственный вход в него из экрана фискальных настроек.
+        // 76 → 77: задача 12 того же плана завела `/discount-limits` —
+        // экран пределов ручной скидки, единственный вход в него пунктом
+        // «Пределы скидки» в общих настройках. Экран входит **той же
+        // работой**, что и таблица `DiscountLimits`: таблица без экрана
+        // стала бы четвёртой колонкой без читателя вслед за тремя
+        // `usersAllowedTo*` в `ThisPosEntries`.
+        // 77 → 78: задача 24 того же плана завела `/credit-contracts` —
+        // договоры рассрочки покупателя, единственный вход в них кнопкой
+        // «Рассрочки» в карточке контрагента. Экран входит **той же
+        // работой**, что и таблицы `CreditContracts`/
+        // `CreditScheduleEntries`: без него договор писался бы продажей
+        // и читался бы ниоткуда — пятая колонка без читателя вслед за
+        // тремя `usersAllowedTo*` и `sellInDebt`.
+        //
+        // Маршрут, а не `MaterialPageRoute` из диалога: право
+        // `op.creditRepay` проверяет `redirect` по этой самой карте, и
+        // экран, вытолкнутый мимо таблицы, прошёл бы мимо проверки
+        // целиком.
+        //
+        // 78 → 79: пункт 8 C плана «продажи: что осталось» (2026-09-15)
+        // завёл `/qr-provider-settings` — настройку провайдера QR и
+        // выключатель вида оплаты 6, единственный вход пунктом «Оплата по
+        // QR» в общих настройках. До экрана строку `qr_provider_configs`
+        // писала только дверь стенда.
+        //
+        // 79 → 80: первый пункт плана встроенных эмуляторов (2026-09-19)
+        // завёл `/emulator-settings` — выключатель встроенного эмулятора
+        // принтера и показ его адреса. Экран настраивает сокеты ЭТОЙ
+        // машины, поэтому живёт только в десктопной таблице, как и
+        // `/terminal-service-settings`.
+        //
+        // 80 → 81: пункт плана диагностики (2026-09-19) завёл
+        // `/diagnostics` — контейнер вкладок «Принтер» и «Фискализация».
+        // Сами вкладки были написаны раньше и до этого дня не были
+        // достижимы ни одним переходом: экраны без маршрута.
+        //
+        // 81 → 82: дыра 1 ревизии 2026-09-19 завела `/certificate-issue`
+        // — выпуск подарочного сертификата и повтор печати его слипа.
+        // Вход один: плитка «Выпуск подарочного сертификата» на экране
+        // «Дополнительно». До этого маршрута право `op.issueCertificate`
+        // охраняло операцию, которой кассир не мог вызвать ничем:
+        // `ProductType` не упоминался в `lib/presentation/` ни разу.
+        //
+        // 82 → 83: дыра 2 той же ревизии завела `/prepayment-refund` —
+        // выдачу аванса деньгами. Вход один: кнопка «Выдать аванс» в
+        // карточке контрагента, соседняя с приёмом. Юзкейс
+        // (`CustomerPaymentUseCase.refundPrepayment`) был заведён
+        // 2026-09-19 целиком и до этого маршрута не звался ни одним
+        // экраном: деньги, внесённые вперёд, вернуть было нечем.
+        // 83 → 84: `/tax-settings` — настройка ставок, юрисдикций и
+        // категорий (схема v55). До него три налоговые таблицы не имели
+        // ни одного читателя в интерфейсе: настроить налог было нечем,
+        // кроме правки кода. Ключ взят существующий — [settingsFiscal].
+        // 84 → 85: `/selling-hours` — часы, в которые категорию продавать
+        // нельзя. Таблица `category_restrictions`, её DAO и договор
+        // `IsCategoryBlockedUseCase` жили в продукте с самого начала и не
+        // звались НИОТКУДА: заполнить запрет было нечем (экрана не было), а
+        // проверка на пути продажи не выполнялась ни разу, ни в одной
+        // стране. Ключ взят существующий — [settingsFiscal]: часы продажи
+        // та же ответственность перед проверяющим, что и налог.
+        expect(
+          allRoutes.length,
+          85,
+          reason:
+              'Число маршрутов в _buildRoutes() изменилось. Если добавлен '
+              'новый маршрут — обнови это число и докстринг файла '
+              'поимённо (какой маршрут, зачем); если маршрут удалён — то '
+              'же самое, а не молчаливое уменьшение порога.',
+        );
 
-          final coveredCount = allRoutes
-              .where((r) => PermissionKeys.routeToPermissionKey(r) != null)
-              .length;
-          // 33 → 34: задача 19 плана «полнота продажи» (2026-09-07) связала
-          // `/promotions` с `op.editPrice`. Маршрут не добавлялся — он был
-          // в таблице всё это время, без единого перехода из `lib/` и без
-          // ключа права; число маршрутов поэтому не изменилось.
-          //
-          // 34 → 35: задача 11 того же плана добавила
-          // `/unfiscalized-receipts` с ключом `settings.fiscal`. Ключ
-          // существующий, а не новый `op.fiscalRetry`, как называл план:
-          // новый ключ требует шага миграции, иначе тихо не достаётся ни
-          // одному существующему пользователю (докстринг `allPermissions`,
-          // «Правило на будущее»), а миграции эта задача не делает.
-          //
-          // 35 → 36: задача 12 добавила `/discount-limits` с ключом
-          // `op.editPrice`. Ключ существующий и тот же, что у `/promotions`,
-          // по тому же доводу: и акция, и предел скидки решают, сколько
-          // маржи разрешено отдать. Кассиру `op.editPrice` не достаётся — и
-          // это здесь существенно: назначающий предел самому себе
-          // обессмыслил бы предел в первый же день.
-          // 36 → 37: задача 24 связала `/credit-contracts` с **новым**
-          // ключом `op.creditRepay`. Новый ключ здесь законен ровно
-          // потому, что задача делает и шаг миграции (v45,
-          // `_grantNewPermissionKeys`) — без него ключ молча стал бы
-          // отказом для каждого существующего не-владельца, и это тот
-          // самый довод, по которому задача 11 переиспользовала
-          // `settings.fiscal` вместо нового ключа.
-          // 37 → 38: пункт 8 C (2026-09-15) связал `/qr-provider-settings` с
-          // существующим `settings.accounts` — провайдер решает, куда уходят
-          // деньги покупателя, периметр счетов кассы; нового ключа нет по
-          // тому же доводу, что у `/unfiscalized-receipts`.
-          // 38 → 40: решение заказчика 2026-09-18 связало
-          // `/receipt-templates` с существующим `settings.printer` —
-          // **двумя маршрутами сразу**, потому что `routeToPermissionKey`
-          // сопоставляет по префиксу и `/receipt-templates/edit` получает
-          // ключ той же записью. До этого дня оба значились в
-          // [_routesWithoutPermissionKey] («нет ключа права ни для одной
-          // роли»): шаблон правился только с кассы, и защищать было нечего.
-          // С этого дня экран достижим с браузерного терминала, где право
-          // маршрута проверяет `redirect` таблицы, — без ключа он открылся
-          // бы любому вошедшему. Нового ключа нет по тому же доводу, что у
-          // `/unfiscalized-receipts`: `settings.printer` задаёт ширину
-          // ленты, без которой шаблон не имеет смысла.
-          //
-          // `/terminal-shift` (смена браузерного терминала, того же дня) в
-          // этот счёт **не входит и не должен**: он объявлен только
-          // браузерной таблицей, а [allRoutes] обходит `createRouter()` —
-          // десктопную. Ключ `nav.shift` у него есть, и проверяет его
-          // `redirect` браузерной таблицы.
-          // 40 → 41: `/emulator-settings` связан с существующим
-          // `settings.hardware` — тем же ключом, что и оборудование.
-          // Эмулятор ничего не подменяет: он открывает сокет, на который
-          // касса попадёт только через привязку прибора, а привязку правит
-          // держатель ровно этого ключа. Нового ключа нет по тому же доводу,
-          // что у `/unfiscalized-receipts`: он потребовал бы миграции и до
-          // неё молча стал бы отказом для каждого не-владельца.
-          // 41 → 42: `/diagnostics` связан с тем же `settings.hardware`:
-          // экран показывает внутренности настройки оборудования, а не
-          // операцию кассира.
-          // 42 → 43: `/certificate-issue` связан с `op.issueCertificate` —
-          // **своим** ключом, а не заимствованным: он написан ровно под эту
-          // операцию (докстринг `PermissionKeys.opIssueCertificate`
-          // разбирает, почему `nav.sale` мало) и до дыры 1 жил только на
-          // проводе. Умолчаний роли у него нет намеренно — решение «этому
-          // кассиру можно печатать обязательства магазина» принимает
-          // владелец.
-          // 43 → 44: `/prepayment-refund` связан с `op.creditRepay` — тем
-          // же ключом, каким касса закрывает приём аванса на проводе
-          // (`pay.prepaymentIntake`). Приём и выдача — одна работа двумя
-          // сторонами: тот же счёт, то же движение, та же настройка
-          // фискализации. Два ключа утверждали бы, что бывает кассир,
-          // которому можно взять чужие деньги на счёт, но нельзя их
-          // отдать, — ловушка, а не осторожность.
-          expect(
-            coveredCount,
-            44,
-            reason:
-                'Число маршрутов, покрытых routeToPermissionKey(), '
-                'изменилось. Обнови это число и докстринг файла поимённо — '
-                'какой маршрут получил или потерял ключ права и почему.',
-          );
-        },
-      );
+        final coveredCount = allRoutes
+            .where((r) => PermissionKeys.routeToPermissionKey(r) != null)
+            .length;
+        // 33 → 34: задача 19 плана «полнота продажи» (2026-09-07) связала
+        // `/promotions` с `op.editPrice`. Маршрут не добавлялся — он был
+        // в таблице всё это время, без единого перехода из `lib/` и без
+        // ключа права; число маршрутов поэтому не изменилось.
+        //
+        // 34 → 35: задача 11 того же плана добавила
+        // `/unfiscalized-receipts` с ключом `settings.fiscal`. Ключ
+        // существующий, а не новый `op.fiscalRetry`, как называл план:
+        // новый ключ требует шага миграции, иначе тихо не достаётся ни
+        // одному существующему пользователю (докстринг `allPermissions`,
+        // «Правило на будущее»), а миграции эта задача не делает.
+        //
+        // 35 → 36: задача 12 добавила `/discount-limits` с ключом
+        // `op.editPrice`. Ключ существующий и тот же, что у `/promotions`,
+        // по тому же доводу: и акция, и предел скидки решают, сколько
+        // маржи разрешено отдать. Кассиру `op.editPrice` не достаётся — и
+        // это здесь существенно: назначающий предел самому себе
+        // обессмыслил бы предел в первый же день.
+        // 36 → 37: задача 24 связала `/credit-contracts` с **новым**
+        // ключом `op.creditRepay`. Новый ключ здесь законен ровно
+        // потому, что задача делает и шаг миграции (v45,
+        // `_grantNewPermissionKeys`) — без него ключ молча стал бы
+        // отказом для каждого существующего не-владельца, и это тот
+        // самый довод, по которому задача 11 переиспользовала
+        // `settings.fiscal` вместо нового ключа.
+        // 37 → 38: пункт 8 C (2026-09-15) связал `/qr-provider-settings` с
+        // существующим `settings.accounts` — провайдер решает, куда уходят
+        // деньги покупателя, периметр счетов кассы; нового ключа нет по
+        // тому же доводу, что у `/unfiscalized-receipts`.
+        // 38 → 40: решение заказчика 2026-09-18 связало
+        // `/receipt-templates` с существующим `settings.printer` —
+        // **двумя маршрутами сразу**, потому что `routeToPermissionKey`
+        // сопоставляет по префиксу и `/receipt-templates/edit` получает
+        // ключ той же записью. До этого дня оба значились в
+        // [_routesWithoutPermissionKey] («нет ключа права ни для одной
+        // роли»): шаблон правился только с кассы, и защищать было нечего.
+        // С этого дня экран достижим с браузерного терминала, где право
+        // маршрута проверяет `redirect` таблицы, — без ключа он открылся
+        // бы любому вошедшему. Нового ключа нет по тому же доводу, что у
+        // `/unfiscalized-receipts`: `settings.printer` задаёт ширину
+        // ленты, без которой шаблон не имеет смысла.
+        //
+        // `/terminal-shift` (смена браузерного терминала, того же дня) в
+        // этот счёт **не входит и не должен**: он объявлен только
+        // браузерной таблицей, а [allRoutes] обходит `createRouter()` —
+        // десктопную. Ключ `nav.shift` у него есть, и проверяет его
+        // `redirect` браузерной таблицы.
+        // 40 → 41: `/emulator-settings` связан с существующим
+        // `settings.hardware` — тем же ключом, что и оборудование.
+        // Эмулятор ничего не подменяет: он открывает сокет, на который
+        // касса попадёт только через привязку прибора, а привязку правит
+        // держатель ровно этого ключа. Нового ключа нет по тому же доводу,
+        // что у `/unfiscalized-receipts`: он потребовал бы миграции и до
+        // неё молча стал бы отказом для каждого не-владельца.
+        // 41 → 42: `/diagnostics` связан с тем же `settings.hardware`:
+        // экран показывает внутренности настройки оборудования, а не
+        // операцию кассира.
+        // 42 → 43: `/certificate-issue` связан с `op.issueCertificate` —
+        // **своим** ключом, а не заимствованным: он написан ровно под эту
+        // операцию (докстринг `PermissionKeys.opIssueCertificate`
+        // разбирает, почему `nav.sale` мало) и до дыры 1 жил только на
+        // проводе. Умолчаний роли у него нет намеренно — решение «этому
+        // кассиру можно печатать обязательства магазина» принимает
+        // владелец.
+        // 43 → 44: `/prepayment-refund` связан с `op.creditRepay` — тем
+        // же ключом, каким касса закрывает приём аванса на проводе
+        // (`pay.prepaymentIntake`). Приём и выдача — одна работа двумя
+        // сторонами: тот же счёт, то же движение, та же настройка
+        // фискализации. Два ключа утверждали бы, что бывает кассир,
+        // которому можно взять чужие деньги на счёт, но нельзя их
+        // отдать, — ловушка, а не осторожность.
+        //
+        // 44 → 45: `/tax-settings` связан с существующим ключом
+        // [settingsFiscal]. Ставки и фискализация — две стороны одного
+        // разговора с налоговой, и держатель одного ключа неизбежно
+        // держит второй. Свой ключ пришлось бы раздавать миграцией, и до
+        // неё он молча стал бы отказом тем, кто настройку уже вёл.
+        // 45 → 46: `/selling-hours` связан с тем же [settingsFiscal].
+        // Часы продажи — правило, за которое отвечают перед проверяющим,
+        // как и налог; заводить под него отдельный ключ значило бы раздать
+        // его миграцией, а до неё он молча стал бы отказом тем, кто
+        // настройку уже ведёт.
+        expect(
+          coveredCount,
+          46,
+          reason:
+              'Число маршрутов, покрытых routeToPermissionKey(), '
+              'изменилось. Обнови это число и докстринг файла поимённо — '
+              'какой маршрут получил или потерял ключ права и почему.',
+        );
+      });
 
-      test(
-        'каждый маршрут — либо с ключом права, либо публичный, либо явно '
-        'назван намеренно открытым',
-        () {
-          final undecided = <String>[];
-          for (final route in allRoutes) {
-            final hasKey = PermissionKeys.routeToPermissionKey(route) != null;
-            final isPublic = AppRoutes.publicRoutes.contains(route);
-            final isIntentionallyOpen = _intentionallyOpenRoutes.containsKey(
-              route,
-            );
-            if (!hasKey && !isPublic && !isIntentionallyOpen) {
-              undecided.add(route);
-            }
+      test('каждый маршрут — либо с ключом права, либо публичный, либо явно '
+          'назван намеренно открытым', () {
+        final undecided = <String>[];
+        for (final route in allRoutes) {
+          final hasKey = PermissionKeys.routeToPermissionKey(route) != null;
+          final isPublic = AppRoutes.publicRoutes.contains(route);
+          final isIntentionallyOpen = _intentionallyOpenRoutes.containsKey(
+            route,
+          );
+          if (!hasKey && !isPublic && !isIntentionallyOpen) {
+            undecided.add(route);
           }
+        }
 
-          expect(
-            undecided,
-            isEmpty,
-            reason:
-                'Маршрут добавлен в _buildRoutes(), но не получил решения: '
-                'ни ключа права в PermissionKeys.routeToPermissionKey(), ни '
-                'записи в AppRoutes.publicRoutes, ни записи в '
-                '_intentionallyOpenRoutes этого файла. Реши явно (свяжи с '
-                'ключом или назови намеренно открытым с обоснованием), '
-                'прежде чем маршрут останется молча незащищённым: '
-                '$undecided',
-          );
-        },
-      );
+        expect(
+          undecided,
+          isEmpty,
+          reason:
+              'Маршрут добавлен в _buildRoutes(), но не получил решения: '
+              'ни ключа права в PermissionKeys.routeToPermissionKey(), ни '
+              'записи в AppRoutes.publicRoutes, ни записи в '
+              '_intentionallyOpenRoutes этого файла. Реши явно (свяжи с '
+              'ключом или назови намеренно открытым с обоснованием), '
+              'прежде чем маршрут останется молча незащищённым: '
+              '$undecided',
+        );
+      });
 
-      test(
-        'обоснование «нет ключа права ни для одной роли» не врёт: '
-        'у маршрута действительно нет ключа с совпадающим именем в словаре '
-        '(блокер 2 финальной волны закрытия долга безопасности, '
-        '2026-08-22)',
-        () {
-          // Сторож выше требовал только *решения* (ключ/публичный/
-          // намеренно открытый), но не проверял, что обоснование
-          // «намеренно открытого» решения правдиво. `/telegram-setup` был
-          // пойман именно так: значился «нет ключа права ни для одной
-          // роли», хотя `settings.telegram` уже существовал и был связан с
-          // соседним `/telegram-settings` — тот же периметр, тот же ключ
-          // должен был подойти. Эта проверка обходит все записи с этим
-          // обоснованием и требует, чтобы производное имя ключа
-          // (`_settingsKeyGuessFor`, схема именования восьми уже связанных
-          // `settings.*`-маршрутов) не встречалось в словаре
-          // `PermissionKeys.allPermissions`.
-          final lyingClaims = <String>[];
-          for (final entry in _intentionallyOpenRoutes.entries) {
-            if (entry.value != 'нет ключа права ни для одной роли') continue;
-            final guess = _settingsKeyGuessFor(entry.key);
-            if (guess == null) continue;
-            if (PermissionKeys.allPermissions.contains(guess)) {
-              lyingClaims.add('${entry.key} -> $guess уже существует');
-            }
+      test('обоснование «нет ключа права ни для одной роли» не врёт: '
+          'у маршрута действительно нет ключа с совпадающим именем в словаре '
+          '(блокер 2 финальной волны закрытия долга безопасности, '
+          '2026-08-22)', () {
+        // Сторож выше требовал только *решения* (ключ/публичный/
+        // намеренно открытый), но не проверял, что обоснование
+        // «намеренно открытого» решения правдиво. `/telegram-setup` был
+        // пойман именно так: значился «нет ключа права ни для одной
+        // роли», хотя `settings.telegram` уже существовал и был связан с
+        // соседним `/telegram-settings` — тот же периметр, тот же ключ
+        // должен был подойти. Эта проверка обходит все записи с этим
+        // обоснованием и требует, чтобы производное имя ключа
+        // (`_settingsKeyGuessFor`, схема именования восьми уже связанных
+        // `settings.*`-маршрутов) не встречалось в словаре
+        // `PermissionKeys.allPermissions`.
+        final lyingClaims = <String>[];
+        for (final entry in _intentionallyOpenRoutes.entries) {
+          if (entry.value != 'нет ключа права ни для одной роли') continue;
+          final guess = _settingsKeyGuessFor(entry.key);
+          if (guess == null) continue;
+          if (PermissionKeys.allPermissions.contains(guess)) {
+            lyingClaims.add('${entry.key} -> $guess уже существует');
           }
+        }
 
+        expect(
+          lyingClaims,
+          isEmpty,
+          reason:
+              'Обоснование «нет ключа права ни для одной роли» неверно '
+              'для этих маршрутов — ключ с производным именем уже есть в '
+              'словаре, маршрут обязан быть связан с ним, а не оставлен '
+              'открытым: $lyingClaims',
+        );
+      });
+
+      test('_intentionallyOpenRoutes не содержит устаревших записей '
+          '(страховка от гниения списка в другую сторону)', () {
+        final stale = _intentionallyOpenRoutes.keys
+            .where((route) => !allRoutes.contains(route))
+            .toList();
+
+        expect(
+          stale,
+          isEmpty,
+          reason:
+              'Эти маршруты исключены из проверки, но больше не '
+              'существуют в _buildRoutes() — запись устарела, удали её: '
+              '$stale',
+        );
+      });
+
+      test('ни один маршрут не значится и публичным, и намеренно открытым '
+          'одновременно', () {
+        final overlap = AppRoutes.publicRoutes.toSet().intersection(
+          _intentionallyOpenRoutes.keys.toSet(),
+        );
+
+        expect(overlap, isEmpty);
+      });
+
+      test('восемь settings.*-маршрутов, связанных этой правкой, больше не '
+          'значатся в _intentionallyOpenRoutes', () {
+        const nowKeyed = [
+          AppRoutes.printerSettings,
+          AppRoutes.fiscalSettings,
+          AppRoutes.hardwareSettings,
+          AppRoutes.restaurantSettings,
+          AppRoutes.transportSettings,
+          AppRoutes.telegramSettings,
+          AppRoutes.accountsSettings,
+          AppRoutes.userManagement,
+        ];
+
+        for (final route in nowKeyed) {
           expect(
-            lyingClaims,
-            isEmpty,
+            PermissionKeys.routeToPermissionKey(route),
+            isNotNull,
+            reason: '$route обязан быть связан с ключом права этой правкой',
+          );
+          expect(_intentionallyOpenRoutes, isNot(contains(route)));
+        }
+      });
+
+      test('три маршрута без ключа и без ownerOnlyScaffold (правка «второй '
+          'порядок», пункт 1) — связаны с собственными ключами, а не '
+          'оставлены открытыми', () {
+        const nowKeyed = {
+          AppRoutes.terminalServiceSettings:
+              PermissionKeys.settingsTerminalService,
+          AppRoutes.logJournal: PermissionKeys.settingsLogJournal,
+          AppRoutes.applianceSettings: PermissionKeys.settingsAppliance,
+        };
+
+        for (final entry in nowKeyed.entries) {
+          expect(
+            PermissionKeys.routeToPermissionKey(entry.key),
+            entry.value,
             reason:
-                'Обоснование «нет ключа права ни для одной роли» неверно '
-                'для этих маршрутов — ключ с производным именем уже есть в '
-                'словаре, маршрут обязан быть связан с ним, а не оставлен '
-                'открытым: $lyingClaims',
+                '${entry.key} обязан требовать ${entry.value} — до этой '
+                'правки маршрут был достижим любому вошедшему с любой '
+                'ролью прямым переходом по адресу',
           );
-        },
-      );
+          expect(_intentionallyOpenRoutes, isNot(contains(entry.key)));
+        }
+      });
 
-      test(
-        '_intentionallyOpenRoutes не содержит устаревших записей '
-        '(страховка от гниения списка в другую сторону)',
-        () {
-          final stale = _intentionallyOpenRoutes.keys
-              .where((route) => !allRoutes.contains(route))
-              .toList();
+      test('/terminal-service-settings — самый острый из трёх: открывает и '
+          'закрывает порт кассы для браузерных терминалов', () {
+        expect(
+          PermissionKeys.routeToPermissionKey(
+            AppRoutes.terminalServiceSettings,
+          ),
+          PermissionKeys.settingsTerminalService,
+        );
+      });
 
-          expect(
-            stale,
-            isEmpty,
-            reason:
-                'Эти маршруты исключены из проверки, но больше не '
-                'существуют в _buildRoutes() — запись устарела, удали её: '
-                '$stale',
-          );
-        },
-      );
+      test('/user-management — самый острый маршрут — связан с settings.users, '
+          'а не оставлен открытым', () {
+        expect(
+          PermissionKeys.routeToPermissionKey(AppRoutes.userManagement),
+          PermissionKeys.settingsUsers,
+          reason:
+              'settings.users — право раздавать права; администратор его '
+              'не получает по умолчанию (roleDefaults) именно потому, что '
+              'это путь самоповышения. Маршрут обязан требовать тот же '
+              'ключ, иначе прямой переход по адресу обходил бы это '
+              'решение целиком.',
+        );
+      });
 
-      test(
-        'ни один маршрут не значится и публичным, и намеренно открытым '
-        'одновременно',
-        () {
-          final overlap = AppRoutes.publicRoutes.toSet().intersection(
-            _intentionallyOpenRoutes.keys.toSet(),
-          );
+      test('параметрические маршруты наследуют ключ родителя по префиксу', () {
+        expect(
+          PermissionKeys.routeToPermissionKey(AppRoutes.tableDetail),
+          PermissionKeys.navTables,
+        );
+        expect(
+          PermissionKeys.routeToPermissionKey(AppRoutes.orderDetail),
+          PermissionKeys.navOrders,
+        );
+        expect(
+          PermissionKeys.routeToPermissionKey(AppRoutes.serviceDetail),
+          PermissionKeys.navServiceQueue,
+        );
+      });
 
-          expect(overlap, isEmpty);
-        },
-      );
+      test('префикс сопоставляется по границе "/", а не по голому startsWith — '
+          '/orders не начинает совпадать с чем-то посторонним', () {
+        // Голый startsWith('/orders') совпал бы и с этими строками —
+        // ни одна не является настоящим дочерним маршрутом /orders
+        // (нет разделителя '/' сразу после совпавшего префикса).
+        expect(PermissionKeys.routeToPermissionKey('/orders-archive'), isNull);
+        expect(PermissionKeys.routeToPermissionKey('/ordersx'), isNull);
 
-      test(
-        'восемь settings.*-маршрутов, связанных этой правкой, больше не '
-        'значатся в _intentionallyOpenRoutes',
-        () {
-          const nowKeyed = [
-            AppRoutes.printerSettings,
-            AppRoutes.fiscalSettings,
-            AppRoutes.hardwareSettings,
-            AppRoutes.restaurantSettings,
-            AppRoutes.transportSettings,
-            AppRoutes.telegramSettings,
-            AppRoutes.accountsSettings,
-            AppRoutes.userManagement,
-          ];
+        // Тот же брифом названный случай для соседей по словарю прав —
+        // /settings не должен захватывать /settings-anything, а
+        // /tables — /tablesuffix.
+        expect(
+          PermissionKeys.routeToPermissionKey('/settings-anything'),
+          isNull,
+        );
+        expect(PermissionKeys.routeToPermissionKey('/tablesuffix'), isNull);
 
-          for (final route in nowKeyed) {
-            expect(
-              PermissionKeys.routeToPermissionKey(route),
-              isNotNull,
-              reason: '$route обязан быть связан с ключом права этой правкой',
-            );
-            expect(_intentionallyOpenRoutes, isNot(contains(route)));
-          }
-        },
-      );
-
-      test(
-        'три маршрута без ключа и без ownerOnlyScaffold (правка «второй '
-        'порядок», пункт 1) — связаны с собственными ключами, а не '
-        'оставлены открытыми',
-        () {
-          const nowKeyed = {
-            AppRoutes.terminalServiceSettings:
-                PermissionKeys.settingsTerminalService,
-            AppRoutes.logJournal: PermissionKeys.settingsLogJournal,
-            AppRoutes.applianceSettings: PermissionKeys.settingsAppliance,
-          };
-
-          for (final entry in nowKeyed.entries) {
-            expect(
-              PermissionKeys.routeToPermissionKey(entry.key),
-              entry.value,
-              reason:
-                  '${entry.key} обязан требовать ${entry.value} — до этой '
-                  'правки маршрут был достижим любому вошедшему с любой '
-                  'ролью прямым переходом по адресу',
-            );
-            expect(_intentionallyOpenRoutes, isNot(contains(entry.key)));
-          }
-        },
-      );
-
-      test(
-        '/terminal-service-settings — самый острый из трёх: открывает и '
-        'закрывает порт кассы для браузерных терминалов',
-        () {
-          expect(
-            PermissionKeys.routeToPermissionKey(
-              AppRoutes.terminalServiceSettings,
-            ),
-            PermissionKeys.settingsTerminalService,
-          );
-        },
-      );
-
-      test(
-        '/user-management — самый острый маршрут — связан с settings.users, '
-        'а не оставлен открытым',
-        () {
-          expect(
-            PermissionKeys.routeToPermissionKey(AppRoutes.userManagement),
-            PermissionKeys.settingsUsers,
-            reason:
-                'settings.users — право раздавать права; администратор его '
-                'не получает по умолчанию (roleDefaults) именно потому, что '
-                'это путь самоповышения. Маршрут обязан требовать тот же '
-                'ключ, иначе прямой переход по адресу обходил бы это '
-                'решение целиком.',
-          );
-        },
-      );
-
-      test(
-        'параметрические маршруты наследуют ключ родителя по префиксу',
-        () {
-          expect(
-            PermissionKeys.routeToPermissionKey(AppRoutes.tableDetail),
-            PermissionKeys.navTables,
-          );
-          expect(
-            PermissionKeys.routeToPermissionKey(AppRoutes.orderDetail),
-            PermissionKeys.navOrders,
-          );
-          expect(
-            PermissionKeys.routeToPermissionKey(AppRoutes.serviceDetail),
-            PermissionKeys.navServiceQueue,
-          );
-        },
-      );
-
-      test(
-        'префикс сопоставляется по границе "/", а не по голому startsWith — '
-        '/orders не начинает совпадать с чем-то посторонним',
-        () {
-          // Голый startsWith('/orders') совпал бы и с этими строками —
-          // ни одна не является настоящим дочерним маршрутом /orders
-          // (нет разделителя '/' сразу после совпавшего префикса).
-          expect(
-            PermissionKeys.routeToPermissionKey('/orders-archive'),
-            isNull,
-          );
-          expect(PermissionKeys.routeToPermissionKey('/ordersx'), isNull);
-
-          // Тот же брифом названный случай для соседей по словарю прав —
-          // /settings не должен захватывать /settings-anything, а
-          // /tables — /tablesuffix.
-          expect(
-            PermissionKeys.routeToPermissionKey('/settings-anything'),
-            isNull,
-          );
-          expect(
-            PermissionKeys.routeToPermissionKey('/tablesuffix'),
-            isNull,
-          );
-
-          // А настоящий дочерний маршрут (граница '/' есть) — совпадает,
-          // тем же ключом, что и родитель.
-          expect(
-            PermissionKeys.routeToPermissionKey('/orders/42'),
-            PermissionKeys.navOrders,
-          );
-        },
-      );
+        // А настоящий дочерний маршрут (граница '/' есть) — совпадает,
+        // тем же ключом, что и родитель.
+        expect(
+          PermissionKeys.routeToPermissionKey('/orders/42'),
+          PermissionKeys.navOrders,
+        );
+      });
     },
   );
 }

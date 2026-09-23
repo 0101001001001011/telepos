@@ -65,38 +65,46 @@ void main() {
       // отвечала `true`, касса без фискального узла пошла бы дальше и
       // получила отказ вместо названного состояния сборки.
       expect(await fiscal.isEnabled(), isFalse);
-      expect((await fiscal.currentSettings()).operatorType,
-          FiscalOperatorType.none);
+      expect(
+        (await fiscal.currentSettings()).operatorType,
+        FiscalOperatorType.none,
+      );
     });
 
     test('ни один член не возвращает успеха', () async {
       final zero = Decimal.zero;
 
-      expect((await fiscal.fiscalizeSale(
-        saleReceiptNo: 1,
-        salePosId: 1,
-        amount: zero,
-        cashAmount: zero,
-        cardAmount: zero,
-        mobileAmount: Decimal.zero,
-        bonusAmount: zero,
-        offsetAmount: Decimal.zero,
-        offsetLayout: OffsetFiscalLayout.discount,
-        excludeCertificatePositions: false,
-      )).success, isFalse);
-      expect((await fiscal.fiscalizeRefund(
-        refundLocalId: 1,
-        originalSaleReceiptNo: 1,
-        amount: zero,
-        cashAmount: zero,
-        cardAmount: Decimal.zero,
-        mobileAmount: Decimal.zero,
-        bonusAmount: zero,
-        creditAmount: zero,
-        offsetAmount: Decimal.zero,
-        offsetLayout: OffsetFiscalLayout.discount,
-        excludeCertificatePositions: false,
-      )).success, isFalse);
+      expect(
+        (await fiscal.fiscalizeSale(
+          saleReceiptNo: 1,
+          salePosId: 1,
+          amount: zero,
+          cashAmount: zero,
+          cardAmount: zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
+        )).success,
+        isFalse,
+      );
+      expect(
+        (await fiscal.fiscalizeRefund(
+          refundLocalId: 1,
+          originalSaleReceiptNo: 1,
+          amount: zero,
+          cashAmount: zero,
+          cardAmount: Decimal.zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: zero,
+          creditAmount: zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
+        )).success,
+        isFalse,
+      );
       expect((await fiscal.fiscalizePurchase(_saleRequest())).success, isFalse);
       expect(
         (await fiscal.fiscalizePurchaseReturn(_refundRequest())).success,
@@ -107,10 +115,7 @@ void main() {
       expect((await fiscal.openShift()).success, isFalse);
       expect((await fiscal.closeShift()).result.success, isFalse);
       expect((await fiscal.xReport()).result.success, isFalse);
-      expect(
-        (await fiscal.correction(_correctionRequest())).success,
-        isFalse,
-      );
+      expect((await fiscal.correction(_correctionRequest())).success, isFalse);
 
       final status = await fiscal.status();
       expect(status.configured, isFalse);
@@ -122,18 +127,21 @@ void main() {
       // уедет сам», а за этой заглушкой никакой очереди нет — её даёт
       // `OfflineQueueingProvider`, оборачивающий **настоящих**
       // исполнителей. Заглушка подставляется вместо всей цепочки.
-      expect((await fiscal.fiscalizeSale(
-        saleReceiptNo: 1,
-        salePosId: 1,
-        amount: Decimal.zero,
-        cashAmount: Decimal.zero,
-        cardAmount: Decimal.zero,
-        mobileAmount: Decimal.zero,
-        bonusAmount: Decimal.zero,
-        offsetAmount: Decimal.zero,
-        offsetLayout: OffsetFiscalLayout.discount,
-        excludeCertificatePositions: false,
-      )).queued, isFalse);
+      expect(
+        (await fiscal.fiscalizeSale(
+          saleReceiptNo: 1,
+          salePosId: 1,
+          amount: Decimal.zero,
+          cashAmount: Decimal.zero,
+          cardAmount: Decimal.zero,
+          mobileAmount: Decimal.zero,
+          bonusAmount: Decimal.zero,
+          offsetAmount: Decimal.zero,
+          offsetLayout: OffsetFiscalLayout.discount,
+          excludeCertificatePositions: false,
+        )).queued,
+        isFalse,
+      );
       expect((await fiscal.openShift()).queued, isFalse);
     });
   });

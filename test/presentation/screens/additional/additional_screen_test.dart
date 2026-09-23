@@ -23,13 +23,13 @@ void main() {
   Widget createTestWidget() {
     return ProviderScope(
       child: MaterialApp(
-   // Тема приложения, а не умолчание Material: экран берёт цвета
-   // ролями (`context.semantic`, `colorScheme`), и под голым
-   // `MaterialApp` расширение `AppSemanticColors` не
-   // зарегистрировано — обращение к нему падает. Это и есть та
-   // причина, по которой такой тест проверял не тот продукт,
-   // что уезжает заказчику.
-   theme: AppTheme.light,
+        // Тема приложения, а не умолчание Material: экран берёт цвета
+        // ролями (`context.semantic`, `colorScheme`), и под голым
+        // `MaterialApp` расширение `AppSemanticColors` не
+        // зарегистрировано — обращение к нему падает. Это и есть та
+        // причина, по которой такой тест проверял не тот продукт,
+        // что уезжает заказчику.
+        theme: AppTheme.light,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

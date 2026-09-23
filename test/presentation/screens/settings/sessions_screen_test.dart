@@ -60,14 +60,15 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('пустой реестр показывает "никто не вошёл", не список из ничего', (
-    tester,
-  ) async {
-    await pumpScreen(tester);
+  testWidgets(
+    'пустой реестр показывает "никто не вошёл", не список из ничего',
+    (tester) async {
+      await pumpScreen(tester);
 
-    expect(find.byKey(const ValueKey('sessions-empty')), findsOneWidget);
-    expect(find.byKey(const ValueKey('sessions-list')), findsNothing);
-  });
+      expect(find.byKey(const ValueKey('sessions-empty')), findsOneWidget);
+      expect(find.byKey(const ValueKey('sessions-list')), findsNothing);
+    },
+  );
 
   testWidgets('живой сеанс из настоящего SessionRegistry виден на экране', (
     tester,
@@ -130,46 +131,43 @@ void main() {
     },
   );
 
-  testWidgets(
-    'отзыв доходит до подписки токена того же сеанса — путь, которым '
-    'отозванная вкладка уходит на вход сама',
-    (tester) async {
-      final session = registry.mint(
-        userId: 7,
-        name: 'Айгуль',
-        role: 'cashier',
-        permissions: const {},
-        operatingMode: 0,
-        pointMode: 'cashier',
-        shiftOpen: false,
-        terminalId: 5,
-      );
+  testWidgets('отзыв доходит до подписки токена того же сеанса — путь, которым '
+      'отозванная вкладка уходит на вход сама', (tester) async {
+    final session = registry.mint(
+      userId: 7,
+      name: 'Айгуль',
+      role: 'cashier',
+      permissions: const {},
+      operatingMode: 0,
+      pointMode: 'cashier',
+      shiftOpen: false,
+      terminalId: 5,
+    );
 
-      final seen = <int?>[];
-      final sub = registry.watch(session.token).listen(
-        (s) => seen.add(s?.userId),
-      );
-      addTearDown(() => sub.cancel());
+    final seen = <int?>[];
+    final sub = registry
+        .watch(session.token)
+        .listen((s) => seen.add(s?.userId));
+    addTearDown(() => sub.cancel());
 
-      await pumpScreen(tester);
-      await tester.pump();
-      expect(seen, [7]);
+    await pumpScreen(tester);
+    await tester.pump();
+    expect(seen, [7]);
 
-      await tester.tap(find.byKey(const ValueKey('sessions-revoke-5')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Завершить').last);
-      await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('sessions-revoke-5')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Завершить').last);
+    await tester.pumpAndSettle();
 
-      expect(
-        seen,
-        [7, null],
-        reason:
-            'ровно то событие, на которое реагирует LoginNotifier '
-            '(login_controller.dart, _onSession): вкладка уходит на вход '
-            'без единого нажатия',
-      );
-    },
-  );
+    expect(
+      seen,
+      [7, null],
+      reason:
+          'ровно то событие, на которое реагирует LoginNotifier '
+          '(login_controller.dart, _onSession): вкладка уходит на вход '
+          'без единого нажатия',
+    );
+  });
 
   testWidgets('отмена в диалоге ничего не гасит', (tester) async {
     final session = registry.mint(

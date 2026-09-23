@@ -96,51 +96,48 @@ void main() {
     GetIt.instance.reset();
   });
 
-  test(
-    'finishSetup: SqliteException с хэшем PIN в параметрах — хэш не '
-    'попадает в state.error',
-    () async {
-      final container = ProviderContainer(
-        overrides: [
-          initialSetupControllerProvider.overrideWith(() {
-            return TestableInitialSetupNotifier(
-              InitialSetupStep.operatingModeSelection,
-            );
-          }),
-        ],
-      );
-      addTearDown(container.dispose);
+  test('finishSetup: SqliteException с хэшем PIN в параметрах — хэш не '
+      'попадает в state.error', () async {
+    final container = ProviderContainer(
+      overrides: [
+        initialSetupControllerProvider.overrideWith(() {
+          return TestableInitialSetupNotifier(
+            InitialSetupStep.operatingModeSelection,
+          );
+        }),
+      ],
+    );
+    addTearDown(container.dispose);
 
-      final notifier = container.read(initialSetupControllerProvider.notifier);
-      notifier
-        ..selectCountry(CountryCode.kzt)
-        ..updateOrganization(companyName: 'ЖШС «Тест»', taxId: '123456789012')
-        ..updatePosConfig(cashBoxName: 'Касса 1')
-        ..updateFirstUser(name: 'Админ', pin: '0000');
+    final notifier = container.read(initialSetupControllerProvider.notifier);
+    notifier
+      ..selectCountry(CountryCode.kzt)
+      ..updateOrganization(companyName: 'ЖШС «Тест»', taxId: '123456789012')
+      ..updatePosConfig(cashBoxName: 'Касса 1')
+      ..updateFirstUser(name: 'Админ', pin: '0000');
 
-      await notifier.finishSetup();
+    await notifier.finishSetup();
 
-      final state = container.read(initialSetupControllerProvider);
+    final state = container.read(initialSetupControllerProvider);
 
-      expect(state.hasError, isTrue);
-      expect(
-        state.error,
-        isNot(contains('pbkdf2')),
-        reason: 'хэш PIN не должен покидать кассу ни в каком виде',
-      );
-      expect(
-        state.error,
-        isNot(contains(testPbkdf2PinHash)),
-        reason: 'хэш PIN не должен покидать кассу ни в каком виде',
-      );
-      // Осмысленная часть по-прежнему видна — это не «ошибка исчезла»,
-      // а «ошибка без параметров».
-      expect(
-        state.error,
-        contains('UNIQUE constraint failed: users.password_enc'),
-      );
-    },
-  );
+    expect(state.hasError, isTrue);
+    expect(
+      state.error,
+      isNot(contains('pbkdf2')),
+      reason: 'хэш PIN не должен покидать кассу ни в каком виде',
+    );
+    expect(
+      state.error,
+      isNot(contains(testPbkdf2PinHash)),
+      reason: 'хэш PIN не должен покидать кассу ни в каком виде',
+    );
+    // Осмысленная часть по-прежнему видна — это не «ошибка исчезла»,
+    // а «ошибка без параметров».
+    expect(
+      state.error,
+      contains('UNIQUE constraint failed: users.password_enc'),
+    );
+  });
 
   test(
     '_checkInitialState: касса не отвечает — хэш PIN, которым мог бы '

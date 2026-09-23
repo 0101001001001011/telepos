@@ -137,10 +137,9 @@ void main() {
         reason: 'в сборке установщика нет списка обязательных файлов бандла',
       );
 
-      final fromScript = RegExp("'([^']+)'")
-          .allMatches(declared!.group(1)!)
-          .map((m) => m.group(1)!)
-          .toList();
+      final fromScript = RegExp(
+        "'([^']+)'",
+      ).allMatches(declared!.group(1)!).map((m) => m.group(1)!).toList();
 
       expect(
         fromScript,

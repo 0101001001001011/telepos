@@ -4,8 +4,10 @@ import 'package:telepos/core/platform/local_file.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:telepos/app/theme/app_colors.dart';
+import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/catalog/catalog_controller.dart';
@@ -23,6 +25,7 @@ class ProductFormResult {
     this.description,
     this.imagePath,
     this.vatRate,
+    this.taxCategoryId,
     this.ntin,
     this.isMarkable = false,
     this.brand,
@@ -41,6 +44,14 @@ class ProductFormResult {
   final String? imagePath;
 
   final int? vatRate;
+
+  /// Налоговая категория: по ней выводится ставка позиции в чеке.
+  ///
+  /// Отдельно от [vatRate] намеренно. [vatRate] — целое число для ЭСФ,
+  /// один вход, одна страна. Категория — то, из чего движок выводит
+  /// ставку по юрисдикции и дате: в Денвере еда для дома облагается
+  /// городом и освобождена штатом, и целым числом это не выражается.
+  final int? taxCategoryId;
 
   final String? ntin;
 
@@ -86,6 +97,12 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
   late int _selectedType;
   late int _selectedMeasure;
   int? _selectedVatRate;
+  int? _selectedTaxCategoryId;
+
+  /// Заведённые налоговые категории. Пусто — налоги не настроены, и поле
+  /// не показывается вовсе: выбор из ничего это вопрос без ответа.
+  List<TaxCategory> _taxCategories = const [];
+
   bool _isMarkable = false;
   String? _imagePath;
 
@@ -119,6 +136,14 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _selectedType = item?.type ?? 0;
     _selectedMeasure = item?.measure ?? 0;
     _selectedVatRate = item?.vatRate;
+    _selectedTaxCategoryId = item?.taxCategoryId;
+    // `addPostFrameCallback`, не `initState`: правило дерева — чтение базы
+    // из `initState` роняет диалоги на `InheritedWidget`.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final categories = await GetIt.I<AppDatabase>().taxSettingsDao
+          .allCategories();
+      if (mounted) setState(() => _taxCategories = categories);
+    });
     _isMarkable = item?.isMarkable ?? false;
     _imagePath = item?.imagePath;
   }
@@ -430,6 +455,52 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                 ),
                 const SizedBox(height: AppTheme.spacing),
 
+                // Категория показывается, только когда налоги заведены:
+                // выбор из пустого списка — вопрос без ответа, а для кассы
+                // с одной ставкой на страну категория ничего не решает.
+                //
+                // Соседство со ставкой ЭСФ выше не дублирование: то целое
+                // число для фискального оператора, одна страна и один
+                // вход. Здесь — то, из чего движок выводит ставку по
+                // юрисдикции и дате.
+                if (_taxCategories.isNotEmpty) ...[
+                  DropdownButtonFormField<int?>(
+                    key: const ValueKey('product-tax-category'),
+                    // Название категории задаёт пользователь, и длину его
+                    // никто не ограничивает. Без `isExpanded` «Food for home
+                    // consumption» разрывает карточку на 96 пикселей.
+                    isExpanded: true,
+                    initialValue:
+                        _taxCategories.any(
+                          (c) => c.id == _selectedTaxCategoryId,
+                        )
+                        ? _selectedTaxCategoryId
+                        : null,
+                    decoration: InputDecoration(
+                      labelText: l10n.taxSettingsCategories,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.sell_outlined),
+                    ),
+                    items: [
+                      DropdownMenuItem(
+                        value: null,
+                        child: Text(l10n.prodVatNone),
+                      ),
+                      for (final category in _taxCategories)
+                        DropdownMenuItem(
+                          value: category.id,
+                          child: Text(
+                            category.title,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                    onChanged: (v) =>
+                        setState(() => _selectedTaxCategoryId = v),
+                  ),
+                  const SizedBox(height: AppTheme.spacing),
+                ],
+
                 TextFormField(
                   controller: _ntinController,
                   decoration: InputDecoration(
@@ -579,6 +650,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
       description: descriptionText.isNotEmpty ? descriptionText : null,
       imagePath: _imagePath,
       vatRate: _selectedVatRate,
+      taxCategoryId: _selectedTaxCategoryId,
       ntin: ntinText.isNotEmpty ? ntinText : null,
       isMarkable: _isMarkable,
       brand: brandText.isNotEmpty ? brandText : null,

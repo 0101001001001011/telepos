@@ -151,7 +151,13 @@ typedef CartMarkRequest = ({String lineId, String mark, CartCommandMeta meta});
 /// номер того, что у рабочего места уже есть. Это не одно и то же, и
 /// перепутать их значит получить отказ `cart_wrong_receipt` (ловушка
 /// названа в докстринге `CartService.loadDeferred`).
-typedef CartLoadDeferredRequest = ({int receiptNo, CartCommandMeta meta});
+typedef CartLoadDeferredRequest = ({
+  int receiptNo,
+  CartCommandMeta meta,
+  // Касса, на которой чек отложен. `null` — своя. Чужой чек переносится к
+  // нам со своим номером: деньги достаются той кассе, которая пробьёт.
+  int? deferredPosId,
+});
 
 /// Назначить или снять агента продажи.
 typedef CartAgentRequest = ({int? agentId, CartCommandMeta meta});
@@ -646,6 +652,10 @@ Map<String, Object?> _encodeLoadDeferred(CartLoadDeferredRequest request) => {
   // [CartLoadDeferredRequest]). Ключ поэтому свой, а не `receiptNo`:
   // положи его тем же именем, и метка команды затёрла бы его на месте.
   'deferredReceiptNo': request.receiptNo,
+  // Кладётся всегда, в том числе `null`: «своя касса» — ответ, а не
+  // пропущенное поле. Пропусти его, и касса-приёмщик не отличила бы
+  // «чек мой» от «про кассу не сказали».
+  'deferredPosId': request.deferredPosId,
   ...cartCommandMetaToWireJson(request.meta),
 };
 

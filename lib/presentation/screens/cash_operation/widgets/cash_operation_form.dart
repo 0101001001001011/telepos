@@ -5,6 +5,7 @@ import 'package:telepos/app/theme/app_semantic_colors.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_in_out_controller.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/cash_operation_label.dart';
 
 class ExpenseTypeItem {
   const ExpenseTypeItem({
@@ -27,9 +28,18 @@ class ExpenseTypeItem {
 
   bool get requiresNote => staticType == ExpenseType.other;
 
+  /// Имя здесь пустое, и это не забывчивость: у рода из перечисления
+  /// подпись выбирается ПРИ ОТРИСОВКЕ (`localizedName`), иначе она не
+  /// переживёт смену языка. Стоял `type.displayName` — русское слово из
+  /// домена; на отрисовке его перекрывал `localizedName`, так что в списке
+  /// оно не показывалось, зато уезжало в историю: тот же `displayName`
+  /// склеивался с комментарием и писался в `cash_operations.note`.
+  ///
+  /// Поле `name` несёт только имя СВОЕГО рода из справочника — его завёл
+  /// человек, и переводить его некому.
   factory ExpenseTypeItem.fromStatic(ExpenseType type) => ExpenseTypeItem(
     id: type.index,
-    name: type.displayName,
+    name: '',
     isCustom: false,
     staticType: type,
   );
@@ -313,32 +323,6 @@ class _OperationTypeCard extends StatelessWidget {
   }
 }
 
-/// Локализованное имя [ExpenseType]. Раньше жило в домене как
-/// `ExpenseType.localizedName(AppLocalizations)` в
-/// `domain/usecases/cash_operation/cash_in_out_controller.dart` — единственный
-/// метод, ради которого домен тянул `package:telepos/l10n/`, а тот, в свою
-/// очередь, `package:flutter/...` (см. `lib/l10n/app_localizations.dart`).
-/// У метода был ровно один вызывающий — этот файл — так что расширение
-/// переехало сюда, на сторону презентации, которой локализация и
-/// принадлежит.
-extension ExpenseTypeLocalization on ExpenseType {
-  String localizedName(AppLocalizations l10n) {
-    switch (this) {
-      case ExpenseType.other:
-        return l10n.expenseTypeOther;
-      case ExpenseType.smallPurchases:
-        return l10n.expenseTypeSmallPurchases;
-      case ExpenseType.salary:
-        return l10n.expenseTypeSalary;
-      case ExpenseType.utilities:
-        return l10n.expenseTypeUtilities;
-      case ExpenseType.collection:
-        return l10n.expenseTypeCollection;
-      case ExpenseType.custom:
-        return l10n.expenseTypeCustom;
-    }
-  }
-}
 
 class _ExpenseTypeItemChip extends StatelessWidget {
   const _ExpenseTypeItemChip({

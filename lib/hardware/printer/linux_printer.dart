@@ -85,7 +85,9 @@ class _SerialPortDevice implements PrinterCharDevice {
   int write(Uint8List data) {
     final written = _port.write(data);
     if (written < 0) {
-      throw Exception(SerialPort.lastError?.message ?? 'Write returned $written');
+      throw Exception(
+        SerialPort.lastError?.message ?? 'Write returned $written',
+      );
     }
     return written;
   }
@@ -124,8 +126,7 @@ class LinuxPrinterManager extends BufferedPrinterManager {
        _nodeLister = nodeLister,
        _nodeExists = nodeExists ?? _isUsableNode,
        maxOpenAttempts = maxOpenAttempts ?? defaultMaxOpenAttempts,
-       reopenDelay =
-           reopenDelay ?? const Duration(milliseconds: reopenDelayMs),
+       reopenDelay = reopenDelay ?? const Duration(milliseconds: reopenDelayMs),
        retryBudget = retryBudget ?? const Duration(milliseconds: retryBudgetMs);
 
   static const String defaultDevicePath = '/dev/usb/lp0';

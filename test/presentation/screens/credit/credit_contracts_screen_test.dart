@@ -180,10 +180,11 @@ void main() {
 
     final row = (await db.creditDao.rowByNumber('РС-1-1'))!;
     expect(CreditDao.toDomain(row)!.status, CreditContractStatus.closed);
-    expect(
-      (await db.creditDao.scheduleRows(row.id)).map((e) => e.paidMillis),
-      [300000, 300000, 300000],
-    );
+    expect((await db.creditDao.scheduleRows(row.id)).map((e) => e.paidMillis), [
+      300000,
+      300000,
+      300000,
+    ]);
 
     // Закрытый договор исчез из списка живых.
     expect(find.byKey(const Key('credit_contracts_empty')), findsOneWidget);

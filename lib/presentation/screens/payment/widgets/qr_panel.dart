@@ -95,8 +95,8 @@ class _QrPanelState extends ConsumerState<QrPanel> {
 
     final tender = state.qr;
     final refusal = state.qrRefusal;
-    final blocked = tender == null && refusal != null &&
-            _blockingRefusals.contains(refusal)
+    final blocked =
+        tender == null && refusal != null && _blockingRefusals.contains(refusal)
         ? ErrorLocalizer.localize(context, refusal)
         : null;
 
@@ -282,7 +282,9 @@ class _QrPanelState extends ConsumerState<QrPanel> {
           const SizedBox(height: AppTheme.spacingSmall),
           OutlinedButton(
             key: const Key('payment_qr_cancel'),
-            onPressed: state.qrBusy ? null : () => unawaited(notifier.cancelQr()),
+            onPressed: state.qrBusy
+                ? null
+                : () => unawaited(notifier.cancelQr()),
             child: Text(l10n.paymentQrCancel),
           ),
         ];
@@ -353,7 +355,9 @@ class _QrPanelState extends ConsumerState<QrPanel> {
               tender.refusalCode != null)
             Text(
               ErrorLocalizer.localize(context, 'error.${tender.refusalCode}'),
-              style: caption.copyWith(color: Theme.of(context).colorScheme.error),
+              style: caption.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
           const SizedBox(height: AppTheme.spacingSmall),
           OutlinedButton(

@@ -54,8 +54,7 @@ class QrPaymentSetupScreen extends ConsumerStatefulWidget {
       _QrPaymentSetupScreenState();
 }
 
-class _QrPaymentSetupScreenState
-    extends ConsumerState<QrPaymentSetupScreen> {
+class _QrPaymentSetupScreenState extends ConsumerState<QrPaymentSetupScreen> {
   final _url = TextEditingController();
   final _code = TextEditingController();
   final _key = TextEditingController();
@@ -209,9 +208,7 @@ class _QrPaymentSetupScreenState
                     onChanged: state.saving
                         ? null
                         : (value) => ref
-                              .read(
-                                qrPaymentSetupControllerProvider.notifier,
-                              )
+                              .read(qrPaymentSetupControllerProvider.notifier)
                               .setKindActive(value),
                     title: Text(l10n.qrSettingsKindTitle),
                     subtitle: Text(l10n.qrSettingsKindSubtitle),

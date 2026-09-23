@@ -985,8 +985,7 @@ class RefundUseCaseImpl implements RefundUseCase {
 
         case RefundRoute.bonus:
           returnedByBonusAccount[accountId] =
-              (returnedByBonusAccount[accountId] ?? Decimal.zero) +
-              part.amount;
+              (returnedByBonusAccount[accountId] ?? Decimal.zero) + part.amount;
 
         case RefundRoute.drawer:
         case RefundRoute.card:
@@ -1178,7 +1177,9 @@ class RefundUseCaseImpl implements RefundUseCase {
     if (!settings.fiscalizeCertificateSale) {
       var certificateLines = Decimal.zero;
       var allLines = Decimal.zero;
-      for (final rp in await _db.refundDao.findProductsByRefund(refundLocalId)) {
+      for (final rp in await _db.refundDao.findProductsByRefund(
+        refundLocalId,
+      )) {
         final line = rp.quantity * rp.price;
         allLines += line;
         final product = await _db.productInfoDao.findByUcode(rp.ucode);

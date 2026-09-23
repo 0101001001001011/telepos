@@ -274,9 +274,7 @@ void main() {
   });
 
   group('InitialSetupScreen - User Creation', () {
-    testWidgets('шаг сотрудников — секции, а не карточки', (
-      tester,
-    ) async {
+    testWidgets('шаг сотрудников — секции, а не карточки', (tester) async {
       await tester.pumpWidget(
         createTestWidget(
           initialState: InitialSetupState(

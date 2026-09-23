@@ -217,7 +217,11 @@ class SerialEmulator {
       final bytes = await file.read(256);
       if (bytes.isEmpty) return;
       if (role == 'display') {
-        _log('display', 'принято ${bytes.length} байт', rendered: renderDisplay(bytes));
+        _log(
+          'display',
+          'принято ${bytes.length} байт',
+          rendered: renderDisplay(bytes),
+        );
         return;
       }
       for (final b in bytes) {

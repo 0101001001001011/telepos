@@ -1,0 +1,71 @@
+{
+  "id": "pl",
+  "title": "Польша",
+  "countryCode": "PL",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "zł",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "23",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Stawka podstawowa",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "Stawka obniżona 8%"
+    },
+    {
+      "code": "reduced2",
+      "title": "Stawka obniżona 5%"
+    },
+    {
+      "code": "zero",
+      "title": "Stawka 0%"
+    },
+    {
+      "code": "exempt",
+      "title": "Zwolnione"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "pl",
+      "name": "VAT",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "23"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "8"
+        },
+        {
+          "category": "reduced2",
+          "kind": "taxed",
+          "ratePercent": "5"
+        },
+        {
+          "category": "zero",
+          "kind": "taxed",
+          "ratePercent": "0"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "VAT: stawka podstawowa i obniżone; проверьте перед работой"
+}

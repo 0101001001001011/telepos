@@ -1,0 +1,53 @@
+{
+  "id": "jp",
+  "title": "Япония",
+  "countryCode": "JP",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "¥",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "10",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "標準税率",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "軽減税率"
+    },
+    {
+      "code": "exempt",
+      "title": "非課税"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "jp",
+      "name": "消費税",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "8"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "消費税: 標準税率と軽減税率; проверьте перед работой"
+}

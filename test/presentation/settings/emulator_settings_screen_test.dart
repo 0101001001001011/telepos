@@ -75,13 +75,12 @@ class _FakeTerminalRepository implements TerminalRepository {
       throw UnimplementedError();
 
   @override
-  Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+  Future<void> rename(int terminalId, String name) =>
+      throw UnimplementedError();
 
   @override
-  Future<void> setAllowedPaymentTypes(
-    int terminalId,
-    Set<PaymentType> types,
-  ) => throw UnimplementedError();
+  Future<void> setAllowedPaymentTypes(int terminalId, Set<PaymentType> types) =>
+      throw UnimplementedError();
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();
@@ -175,7 +174,10 @@ void main() {
     tester,
   ) async {
     await mount(tester);
-    expect(find.byKey(const ValueKey('emulator-receiptPrinter-address')), findsNothing);
+    expect(
+      find.byKey(const ValueKey('emulator-receiptPrinter-address')),
+      findsNothing,
+    );
 
     await tapAndLetIoFinish(
       tester,
@@ -219,9 +221,16 @@ void main() {
       const ValueKey('emulator-receiptPrinter-enable'),
     );
 
-    expect(await receiptBinding(tester), isNull, reason: 'до действия привязки нет');
+    expect(
+      await receiptBinding(tester),
+      isNull,
+      reason: 'до действия привязки нет',
+    );
 
-    await tapAndLetIoFinish(tester, const ValueKey('emulator-receiptPrinter-bind'));
+    await tapAndLetIoFinish(
+      tester,
+      const ValueKey('emulator-receiptPrinter-bind'),
+    );
 
     final address = host.addressOf(BuiltinEmulatorKind.receiptPrinter)!;
     final binding = await receiptBinding(tester);
@@ -236,51 +245,55 @@ void main() {
     );
   });
 
-  testWidgets('выключение гасит сокет, но привязку не чистит — и говорит об этом', (
-    tester,
-  ) async {
-    await mount(tester);
-    await tapAndLetIoFinish(
-      tester,
-      const ValueKey('emulator-receiptPrinter-enable'),
-    );
-    await tapAndLetIoFinish(tester, const ValueKey('emulator-receiptPrinter-bind'));
-    final address = host.addressOf(BuiltinEmulatorKind.receiptPrinter)!;
-
-    await tapAndLetIoFinish(
-      tester,
-      const ValueKey('emulator-receiptPrinter-enable'),
-    );
-
-    expect(host.isRunning(BuiltinEmulatorKind.receiptPrinter), isFalse);
-    await tester.runAsync(() async {
-      await expectLater(
-        Socket.connect(
-          address.host!,
-          address.port!,
-          timeout: const Duration(seconds: 2),
-        ),
-        throwsA(isA<SocketException>()),
-        reason: 'касса обязана увидеть отказ, а не тишину',
+  testWidgets(
+    'выключение гасит сокет, но привязку не чистит — и говорит об этом',
+    (tester) async {
+      await mount(tester);
+      await tapAndLetIoFinish(
+        tester,
+        const ValueKey('emulator-receiptPrinter-enable'),
       );
-    });
+      await tapAndLetIoFinish(
+        tester,
+        const ValueKey('emulator-receiptPrinter-bind'),
+      );
+      final address = host.addressOf(BuiltinEmulatorKind.receiptPrinter)!;
 
-    final binding = await receiptBinding(tester);
-    expect(
-      binding?.parameters['port'],
-      '${address.port}',
-      reason:
-          'молчаливая правка чужой настройки завела бы второй источник правды '
-          'о том, куда касса ходит',
-    );
-    expect(
-      find.byKey(const ValueKey('emulator-receiptPrinter-stale')),
-      findsOneWidget,
-      reason:
-          'касса смотрит на погашенный порт — это обязано быть сказано, а не '
-          'оставлено загадкой на утро',
-    );
-  });
+      await tapAndLetIoFinish(
+        tester,
+        const ValueKey('emulator-receiptPrinter-enable'),
+      );
+
+      expect(host.isRunning(BuiltinEmulatorKind.receiptPrinter), isFalse);
+      await tester.runAsync(() async {
+        await expectLater(
+          Socket.connect(
+            address.host!,
+            address.port!,
+            timeout: const Duration(seconds: 2),
+          ),
+          throwsA(isA<SocketException>()),
+          reason: 'касса обязана увидеть отказ, а не тишину',
+        );
+      });
+
+      final binding = await receiptBinding(tester);
+      expect(
+        binding?.parameters['port'],
+        '${address.port}',
+        reason:
+            'молчаливая правка чужой настройки завела бы второй источник правды '
+            'о том, куда касса ходит',
+      );
+      expect(
+        find.byKey(const ValueKey('emulator-receiptPrinter-stale')),
+        findsOneWidget,
+        reason:
+            'касса смотрит на погашенный порт — это обязано быть сказано, а не '
+            'оставлено загадкой на утро',
+      );
+    },
+  );
 
   // ─────────────────────────── фискальный оператор ──────────────────────────
   //
@@ -379,7 +392,12 @@ void main() {
           'настройки вовсе, и вписанный адрес не подхватится',
     );
     expect(
-      [written.login, written.password, written.apiKey, written.cashboxUniqueNumber],
+      [
+        written.login,
+        written.password,
+        written.apiKey,
+        written.cashboxUniqueNumber,
+      ],
       [
         BuiltinEmulatorHost.fiscalLogin,
         BuiltinEmulatorHost.fiscalPassword,
@@ -407,40 +425,41 @@ void main() {
     );
   });
 
-  testWidgets('выключение ОФД не чистит фискальные настройки — и говорит об этом', (
-    tester,
-  ) async {
-    useFiscalHost(FiscalSettings(testMode: true));
-    await mount(tester);
-    await tapAndLetIoFinish(
-      tester,
-      const ValueKey('emulator-fiscalOperator-enable'),
-    );
-    await tapAndLetIoFinish(
-      tester,
-      const ValueKey('emulator-fiscalOperator-bind'),
-    );
-    final address = host.addressOf(BuiltinEmulatorKind.fiscalOperator)!;
+  testWidgets(
+    'выключение ОФД не чистит фискальные настройки — и говорит об этом',
+    (tester) async {
+      useFiscalHost(FiscalSettings(testMode: true));
+      await mount(tester);
+      await tapAndLetIoFinish(
+        tester,
+        const ValueKey('emulator-fiscalOperator-enable'),
+      );
+      await tapAndLetIoFinish(
+        tester,
+        const ValueKey('emulator-fiscalOperator-bind'),
+      );
+      final address = host.addressOf(BuiltinEmulatorKind.fiscalOperator)!;
 
-    await tapAndLetIoFinish(
-      tester,
-      const ValueKey('emulator-fiscalOperator-enable'),
-    );
+      await tapAndLetIoFinish(
+        tester,
+        const ValueKey('emulator-fiscalOperator-enable'),
+      );
 
-    expect(host.isRunning(BuiltinEmulatorKind.fiscalOperator), isFalse);
-    expect(
-      FiscalSettingsStore(prefs).load().baseUrl,
-      address.baseUrl,
-      reason:
-          'молчаливая правка чужой настройки завела бы второй источник правды '
-          'о том, куда касса ходит',
-    );
-    expect(
-      find.byKey(const ValueKey('emulator-fiscalOperator-stale')),
-      findsOneWidget,
-      reason:
-          'касса осталась смотреть на погашенный сервер: фискализация откажет, '
-          'и это обязано быть сказано, а не оставлено загадкой',
-    );
-  });
+      expect(host.isRunning(BuiltinEmulatorKind.fiscalOperator), isFalse);
+      expect(
+        FiscalSettingsStore(prefs).load().baseUrl,
+        address.baseUrl,
+        reason:
+            'молчаливая правка чужой настройки завела бы второй источник правды '
+            'о том, куда касса ходит',
+      );
+      expect(
+        find.byKey(const ValueKey('emulator-fiscalOperator-stale')),
+        findsOneWidget,
+        reason:
+            'касса осталась смотреть на погашенный сервер: фискализация откажет, '
+            'и это обязано быть сказано, а не оставлено загадкой',
+      );
+    },
+  );
 }

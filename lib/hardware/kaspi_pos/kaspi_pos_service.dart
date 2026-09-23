@@ -207,9 +207,11 @@ class KaspiPosService {
         approved: parsed?.success ?? false,
         approvalCode: parsed?.approvalCode,
         transactionId: parsed?.transactionId,
-        refusal: failure ?? (parsed?.success == false
-            ? (parsed?.errorMessage ?? 'терминал отказал без причины')
-            : null),
+        refusal:
+            failure ??
+            (parsed?.success == false
+                ? (parsed?.errorMessage ?? 'терминал отказал без причины')
+                : null),
       ),
     );
   }
@@ -299,10 +301,11 @@ class KaspiPosService {
       }
       final amountStr = amountKopeiki.toString().padLeft(12, '0');
       final payload = '4$amountStr$transactionId|$refundKey';
-      final response = await _sendAndReceive(
-        [0x02, ...utf8.encode(payload), 0x03],
-        timeout: const Duration(seconds: 60),
-      );
+      final response = await _sendAndReceive([
+        0x02,
+        ...utf8.encode(payload),
+        0x03,
+      ], timeout: const Duration(seconds: 60));
       return _parsePurchaseResponse(response);
     } on TimeoutException {
       return KaspiPaymentResult.failure('Таймаут ожидания ответа от терминала');

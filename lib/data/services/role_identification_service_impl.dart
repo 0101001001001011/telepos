@@ -48,7 +48,9 @@ class RoleIdentificationServiceImpl implements RoleIdentificationService {
           await _upgradeStoredPin(attr.userId, result.upgradedStorage!);
         }
       case PinCheckOutcome.wrong:
-        _logger.info('RoleIdentification: PIN mismatch for user ${attr.userId}');
+        _logger.info(
+          'RoleIdentification: PIN mismatch for user ${attr.userId}',
+        );
         return IdentificationResult.notIdentified;
       case PinCheckOutcome.noPinSet:
         // This is a supervisor proving an override with a scanned or typed
@@ -103,7 +105,9 @@ class RoleIdentificationServiceImpl implements RoleIdentificationService {
         userId,
         UsersCompanion(passwordEnc: Value(storage)),
       );
-      _logger.info('RoleIdentification: PIN of user $userId upgraded to PBKDF2');
+      _logger.info(
+        'RoleIdentification: PIN of user $userId upgraded to PBKDF2',
+      );
     } catch (e, st) {
       // safeErrorText, не сам объект — тот же риск и тот же приём, что у
       // `AuthServiceImpl._upgradeStoredPin` и `LocalAuthRepository.login`

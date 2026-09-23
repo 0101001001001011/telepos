@@ -7,6 +7,7 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/domain/refund/recent_receipts.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/common/widgets/keyboards/num_pad.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ReceiptInputResult {
   const ReceiptInputResult({required this.receiptNo, required this.posId});
@@ -209,7 +210,7 @@ class _ReceiptInputDialogState extends State<ReceiptInputDialog> {
                             title: Text('№ ${s.receiptNo}'),
                             subtitle: Text(_fmtTime(s.time)),
                             trailing: Text(
-                              '${s.amount} ₸',
+                              '${s.amount} ${tillCurrencySymbol()}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                               ),

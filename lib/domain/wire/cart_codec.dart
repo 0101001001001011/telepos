@@ -27,6 +27,7 @@ library;
 import 'package:decimal/decimal.dart';
 import 'package:telepos/domain/sale/cart_view.dart';
 import 'package:telepos/domain/sale/product_search_result.dart';
+import 'package:telepos/core/constants/enums/tax_treatment.dart';
 import 'package:telepos/domain/wire/wire_money.dart';
 
 Map<String, Object?> cartViewToWireJson(CartView view) => {
@@ -36,9 +37,15 @@ Map<String, Object?> cartViewToWireJson(CartView view) => {
   'wholesale': view.wholesale,
   'receiptNo': view.receiptNo,
   'agentId': view.agentId,
+  // Уклад едет по проводу, а не выводится на той стороне из страны:
+  // последнее слово о нём за настройкой кассы, а терминал её не видит.
+  // Без него браузерный терминал посчитал бы итог без налога сверху и
+  // показал покупателю сумму меньше той, что возьмёт касса.
+  'taxTreatment': view.taxTreatment.index,
   'lines': view.lines.map(_lineToWireJson).toList(),
   'subtotal': wireMoney(view.subtotal),
   'totalDiscount': wireMoney(view.totalDiscount),
+  'taxOnTop': wireMoney(view.taxOnTop),
   'total': wireMoney(view.total),
 };
 
@@ -49,6 +56,9 @@ CartView cartViewFromWireJson(Map<String, Object?> json) => CartView(
   wholesale: json['wholesale']! as bool,
   receiptNo: json['receiptNo'] as int?,
   agentId: json['agentId'] as int?,
+  // Умолчание — «налог включён в цену»: так считали все кассы до этой
+  // правки, и кадр от старой стороны обязан читаться так же.
+  taxTreatment: TaxTreatment.values[(json['taxTreatment'] as int?) ?? 0],
   lines: (json['lines']! as List)
       .map((e) => _lineFromWireJson(e! as Map<String, Object?>))
       .toList(),
@@ -82,6 +92,15 @@ Map<String, Object?> _lineToWireJson(CartLine line) => {
   ],
   'barcode': line.barcode,
   'mark': line.mark,
+  // Ключ ОТСУТСТВУЕТ, когда ставки нет, а не едет с `null`.
+  //
+  // Так требует сторож денег на проводе: значение денежного ключа обязано
+  // начинаться с `wireMoney(`, иначе условная форма однажды провезёт
+  // `double`. Отсутствие ключа и читается как «налог не настроен» — тот же
+  // смысл, что у `null`, только выразимый.
+  if (line.taxRatePercent != null)
+    'taxRatePercent': wireMoney(line.taxRatePercent!),
+  'isTaxExempt': line.isTaxExempt,
   'subtotal': wireMoney(line.subtotal),
   'total': wireMoney(line.total),
 };
@@ -180,6 +199,9 @@ Map<String, Object?> deferredCartToWireJson(DeferredCart cart) => {
   'userId': cart.userId,
   'userName': cart.userName,
   'firstLineName': cart.firstLineName,
+  // Чужая корзина помечается кассой, а не планшетом: своего номера
+  // кассы планшет не знает.
+  'foreign': cart.foreign,
 };
 
 DeferredCart deferredCartFromWireJson(Map<String, Object?> json) =>
@@ -191,6 +213,7 @@ DeferredCart deferredCartFromWireJson(Map<String, Object?> json) =>
       userId: json['userId']! as int,
       userName: json['userName'] as String?,
       firstLineName: json['firstLineName'] as String?,
+      foreign: json['foreign'] as bool? ?? false,
     );
 
 /// Строка выдачи поиска — задача 9, под `sale.search`.

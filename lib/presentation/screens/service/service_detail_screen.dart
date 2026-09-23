@@ -225,6 +225,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     ServiceDetailState state,
     ServiceDetailNotifier notifier,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final order = state.order!;
     final rating = order.qualityRating ?? 0;
     return Card(
@@ -233,25 +234,28 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.verified_user_outlined,
                   size: 20,
                   color: AppColors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
-                  'Гарантия и качество',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  l10n.serviceWarrantyAndQuality,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(
               order.warrantyDays != null
-                  ? 'Гарантия: ${order.warrantyDays} дн.'
-                  : 'Гарантия не установлена',
+                  ? l10n.serviceWarrantyDays(order.warrantyDays!)
+                  : l10n.serviceWarrantyNotSet,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -262,7 +266,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
               children: [30, 90, 180, 365].map((d) {
                 final selected = order.warrantyDays == d;
                 return ChoiceChip(
-                  label: Text('$d дн.'),
+                  label: Text(l10n.unitDaysShort(d)),
                   selected: selected,
                   onSelected: state.order!.isActive
                       ? (_) => notifier.setWarranty(d)
@@ -272,9 +276,9 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
             ),
             if (state.capabilities.qualityCheck) ...[
               const Divider(height: 24),
-              const Text(
-                'Оценка качества',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              Text(
+                l10n.serviceQualityRatingTitle,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               Row(
@@ -292,7 +296,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
               ),
               if (order.qualityRating != null)
                 Text(
-                  'Оценка: ${order.qualityRating}/5',
+                  l10n.serviceQualityRatingValue(order.qualityRating!),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -308,6 +312,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     ServiceDetailState state,
     ServiceDetailNotifier notifier,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final media = state.repairMedia;
     return Card(
       child: Padding(
@@ -323,21 +328,24 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                   color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
-                const Text(
-                  'Фото/видео ремонта',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                Text(
+                  l10n.serviceRepairMedia,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
                 const Spacer(),
                 if (state.order!.isActive) ...[
                   TextButton.icon(
                     onPressed: () => notifier.captureRepairMedia(video: false),
                     icon: const Icon(Icons.add_a_photo, size: 18),
-                    label: const Text('Фото'),
+                    label: Text(l10n.serviceAttachPhoto),
                   ),
                   TextButton.icon(
                     onPressed: () => notifier.captureRepairMedia(video: true),
                     icon: const Icon(Icons.videocam, size: 18),
-                    label: const Text('Видео'),
+                    label: Text(l10n.serviceAttachVideo),
                   ),
                 ],
               ],
@@ -345,7 +353,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
             const SizedBox(height: 8),
             if (media.isEmpty)
               Text(
-                'Нет медиа ремонта',
+                l10n.serviceNoRepairMedia,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 13,

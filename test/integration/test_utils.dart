@@ -414,6 +414,9 @@ void setupTestDependencies() {
     return const ThisPosEntry(
       rId: true,
       accountId: 1,
+      // 0 — «налог включён в цену»: так печатали чеки до v54, и касса,
+      // которую не перенастраивали, обязана печатать так же.
+      taxTreatment: 0,
       discountsRoundType: 0,
       weightProductRoundType: 0,
       limitToKztStores: false,

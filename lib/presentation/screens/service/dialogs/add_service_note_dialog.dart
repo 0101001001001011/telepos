@@ -6,6 +6,7 @@ import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/app/theme/telepos_icons.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class ServiceNoteResult {
   const ServiceNoteResult({
@@ -203,7 +204,7 @@ class _AddServiceNoteDialogState extends State<AddServiceNoteDialog> {
                             style: const TextStyle(fontSize: 13),
                           ),
                           subtitle: Text(
-                            '${item.price} ${l10n.currencySymbol} / ${_measureLabel(item.measure, l10n)}',
+                            '${item.price} ${tillCurrencySymbol()} / ${_measureLabel(item.measure, l10n)}',
                             style: TextStyle(
                               fontSize: 12,
                               color: Theme.of(
@@ -288,7 +289,7 @@ class _AddServiceNoteDialogState extends State<AddServiceNoteDialog> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '$_totalCost ${l10n.currencySymbol}',
+                            '$_totalCost ${tillCurrencySymbol()}',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -304,9 +305,9 @@ class _AddServiceNoteDialogState extends State<AddServiceNoteDialog> {
               ],
 
               SwitchListTile(
-                title: const Text(
-                  'Требует согласования клиента',
-                  style: TextStyle(fontSize: 13),
+                title: Text(
+                  l10n.serviceNoteNeedsApproval,
+                  style: const TextStyle(fontSize: 13),
                 ),
                 value: _requiresApproval,
                 onChanged: (v) => setState(() => _requiresApproval = v),
@@ -384,7 +385,7 @@ class _AddServiceNoteDialogState extends State<AddServiceNoteDialog> {
                   ),
                 ),
                 Text(
-                  '$typeLabel • ${item.price} ${l10n.currencySymbol} / ${_measureLabel(item.measure, l10n)}',
+                  '$typeLabel • ${item.price} ${tillCurrencySymbol()} / ${_measureLabel(item.measure, l10n)}',
                   style: TextStyle(
                     fontSize: 11,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,

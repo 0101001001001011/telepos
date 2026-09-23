@@ -201,11 +201,7 @@ void main() {
     await tester.pumpWidget(host());
     await tester.pumpAndSettle();
 
-    expect(
-      find.textContaining('400'),
-      findsWidgets,
-      reason: 'сколько пришло',
-    );
+    expect(find.textContaining('400'), findsWidgets, reason: 'сколько пришло');
     expect(
       find.textContaining('1000'),
       findsWidgets,

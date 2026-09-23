@@ -821,11 +821,10 @@ void main() {
         await attemptLogin(firstContainer, enrolmentCode: 'код-от-оператора');
 
         expect(terminals.registerCallCount, 1);
-        expect(
-          secretStore.read(),
-          (terminalId: 99, secret: FakeTerminalRepository.fakeSecret),
-          reason: 'секрет обязан быть сохранён сразу после выдачи',
-        );
+        expect(secretStore.read(), (
+          terminalId: 99,
+          secret: FakeTerminalRepository.fakeSecret,
+        ), reason: 'секрет обязан быть сохранён сразу после выдачи');
 
         // F5: новый `ProviderContainer` — новый `LoginNotifier`,
         // `_browserTerminalId` умер вместе со старым (ровно то, что и делает
@@ -1613,56 +1612,53 @@ void main() {
     );
   });
 
-  test(
-    'кассир, заведённый при открытом экране, снимает «нет кассиров» — '
-    'найдено живой проверкой в браузере 2026-08-27',
-    () async {
-      final auth = FakeAuthRepository();
-      // Пустая касса: экран открыт раньше, чем кассиры заведены. Ровно
-      // порядок, который предписывает стенд (`test/manual/wt_stand.dart`):
-      // открыть браузер ДО `stand/seed-cashiers`, иначе живая подписка не
-      // проверена вовсе.
-      auth.pushUsers(const []);
-      GetIt.instance.registerSingleton<AuthRepository>(auth);
+  test('кассир, заведённый при открытом экране, снимает «нет кассиров» — '
+      'найдено живой проверкой в браузере 2026-08-27', () async {
+    final auth = FakeAuthRepository();
+    // Пустая касса: экран открыт раньше, чем кассиры заведены. Ровно
+    // порядок, который предписывает стенд (`test/manual/wt_stand.dart`):
+    // открыть браузер ДО `stand/seed-cashiers`, иначе живая подписка не
+    // проверена вовсе.
+    auth.pushUsers(const []);
+    GetIt.instance.registerSingleton<AuthRepository>(auth);
 
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
 
-      final notifier = container.read(loginControllerProvider.notifier);
-      notifier.initialize();
-      await Future<void>.delayed(Duration.zero);
-      auth.pushUsers(const []);
-      await Future<void>.delayed(Duration.zero);
+    final notifier = container.read(loginControllerProvider.notifier);
+    notifier.initialize();
+    await Future<void>.delayed(Duration.zero);
+    auth.pushUsers(const []);
+    await Future<void>.delayed(Duration.zero);
 
-      expect(
-        container.read(loginControllerProvider).error,
-        'error.no_users',
-        reason: 'на пустой кассе причина обязана быть названа',
-      );
+    expect(
+      container.read(loginControllerProvider).error,
+      'error.no_users',
+      reason: 'на пустой кассе причина обязана быть названа',
+    );
 
-      // Касса заводит кассира, пока экран открыт. Страницу никто не
-      // перезагружает — это и есть проверяемое событие.
-      auth.pushUsers(const [
-        AuthUser(id: 7, name: 'Айгуль', role: 'Кассир', hasPin: true),
-      ]);
-      await Future<void>.delayed(Duration.zero);
+    // Касса заводит кассира, пока экран открыт. Страницу никто не
+    // перезагружает — это и есть проверяемое событие.
+    auth.pushUsers(const [
+      AuthUser(id: 7, name: 'Айгуль', role: 'Кассир', hasPin: true),
+    ]);
+    await Future<void>.delayed(Duration.zero);
 
-      final state = container.read(loginControllerProvider);
-      expect(state.users, hasLength(1), reason: 'кассир доехал до состояния');
-      expect(
-        state.error,
-        isNull,
-        reason:
-            'сообщение «нет кассиров» обязано исчезнуть вместе с причиной. '
-            'Красный до правки: контроллер снимал его через '
-            '`copyWith(error: null)`, а `copyWith` (login_controller.dart) '
-            'считает `null` за «не трогать» — `error ?? this.error`, — и '
-            'старая строка переживала приход кассиров. В браузере это '
-            'выглядело так: слева два кассира и один выбран, справа красным '
-            '«No registered users».',
-      );
-    },
-  );
+    final state = container.read(loginControllerProvider);
+    expect(state.users, hasLength(1), reason: 'кассир доехал до состояния');
+    expect(
+      state.error,
+      isNull,
+      reason:
+          'сообщение «нет кассиров» обязано исчезнуть вместе с причиной. '
+          'Красный до правки: контроллер снимал его через '
+          '`copyWith(error: null)`, а `copyWith` (login_controller.dart) '
+          'считает `null` за «не трогать» — `error ?? this.error`, — и '
+          'старая строка переживала приход кассиров. В браузере это '
+          'выглядело так: слева два кассира и один выбран, справа красным '
+          '«No registered users».',
+    );
+  });
 
   test(
     'обрыв подписки на кассиров не выносит текст исключения в браузер (И68)',

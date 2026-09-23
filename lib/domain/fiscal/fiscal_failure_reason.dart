@@ -107,8 +107,9 @@ class FiscalFailureReason {
 
   static final RegExp _shape = RegExp(r'^fiscal\(([a-zA-Z]+)(?:#(\d+))?\)$');
 
-  String encode() =>
-      rawCode == null ? 'fiscal(${kind.name})' : 'fiscal(${kind.name}#$rawCode)';
+  String encode() => rawCode == null
+      ? 'fiscal(${kind.name})'
+      : 'fiscal(${kind.name}#$rawCode)';
 
   /// Обратное [encode]; `null` — строка не этого вида (записана до перевода
   /// или пуста) либо вид не известен этой сборке.

@@ -73,12 +73,31 @@ class SaleReceiptComposer {
       (provenance[d.saleProductId] ??= <SaleDiscount>[]).add(d);
     }
 
+    // Налоговая настройка — один снимок на чек.
+    //
+    // Один, а не по позиции: правила, прочитанные в разные мгновения, могут
+    // разойтись между строками одного чека, и разбивка внизу перестанет
+    // объяснять суммы вверху.
+    //
+    // Дата — дата чека, а не сегодня: перепечатанный задним числом
+    // документ обязан считаться по ставке своего дня.
+    final taxConfig = await _db.taxSettingsDao.load();
+    final receiptDate = DateTime.now();
+
     final products = <ReceiptProductLine>[];
     for (final line in lines) {
       final info = await _db.productInfoDao.findByUcode(line.ucode);
       final discount = line.priceBefore > line.price
           ? (line.priceBefore - line.price) * line.quantity
           : Decimal.zero;
+
+      // Ставка позиции выводится, а не берётся у товара: в Денвере еда для
+      // дома облагается городом и освобождена штатом, и одно число этого
+      // не выражает.
+      final resolved = taxConfig.isConfigured
+          ? taxConfig.resolve(categoryId: info?.taxCategoryId, on: receiptDate)
+          : null;
+
       products.add(
         ReceiptProductLine(
           name: info?.name ?? 'Товар ${line.ucode}',
@@ -88,9 +107,30 @@ class SaleReceiptComposer {
           discountAmount: discount,
           originalPrice: discount > Decimal.zero ? line.priceBefore : null,
           discountLabel: _discountLabel(provenance[line.id]),
+          taxRatePercent: resolved?.totalRatePercent,
+          isTaxExempt: resolved?.isExempt ?? false,
+          // Доли — у строки: состав ставки у молока и у кофе в Денвере
+          // разный, и одна разбивка на чек соврала бы про одну из них.
+          taxShares: [
+            if (resolved != null)
+              for (final share in resolved.shares)
+                TaxJurisdiction(
+                  name: share.name,
+                  ratePercent: share.ratePercent,
+                ),
+          ],
         ),
       );
     }
+
+    // Ставка чека и её разбивка — из одного вывода, для категории по
+    // умолчанию. Из одного намеренно: чек отказывается собираться, если
+    // разбивка не складывается в объявленную ставку, и взять эти два числа
+    // из разных мест значило бы однажды получить именно такой отказ у
+    // кассира.
+    final defaultTax = taxConfig.isConfigured
+        ? taxConfig.resolve(on: receiptDate)
+        : null;
 
     // Вид оплаты — по **счёту получателя**, а не по названному терминалом
     // виду: `PaymentRequest.type` это заявка, а строки `Payments` —
@@ -164,9 +204,25 @@ class SaleReceiptComposer {
       seller: requisites.seller,
       fiscal: requisites.fiscal,
       isVatPayer: requisites.isVatPayer,
-      vatAmount: requisites.vatFromGross(sale.amount),
-      vatRatePercent: requisites.vatRatePercent,
+      // По строкам, а не от суммы чека: так считает фискальный документ,
+      // и бумага обязана совпадать с ним, а не расходиться на копейку.
+      vatAmount: requisites.vatFromLines(products.map((p) => p.total)),
+      // Настроенные налоги главнее фискальных настроек, но не заменяют их
+      // молча: касса, где налоги не заведены, печатает ровно то же, что и
+      // до этой правки.
+      vatRatePercent: defaultTax?.totalRatePercent ?? requisites.vatRatePercent,
+      taxJurisdictions: [
+        if (defaultTax != null)
+          for (final share in defaultTax.shares)
+            TaxJurisdiction(name: share.name, ratePercent: share.ratePercent),
+      ],
       currencySymbol: requisites.currencySymbol,
+      // Три свойства, которые чек до этой правки брал умолчанием и потому
+      // всегда печатал по-казахстански: налог в цене, знак валюты после
+      // суммы, фискальный блок как обязательный.
+      taxTreatment: requisites.taxTreatment,
+      currencyBeforeAmount: requisites.currencyBeforeAmount,
+      hasFiscalisation: requisites.hasFiscalisation,
       fiscalState: fiscalState,
     );
   }

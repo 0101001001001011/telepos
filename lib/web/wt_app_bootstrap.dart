@@ -1,3 +1,4 @@
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
 import 'package:telepos/domain/wire/till_ops.dart';
 import 'package:telepos/web/wt_channel.dart';
@@ -19,13 +20,13 @@ class WtAppBootstrap implements AppBootstrap {
   Future<AppInitStatus> start({required BootProgress onProgress}) async {
     try {
       final status = await _wire.ask(TillOps.startupBoot, null);
-      onProgress(1.0, 'Готово');
+      onProgress(1.0, BootStage.ready);
       return status;
     } on WtProtocolError catch (error) {
       // Отказ приходит значением (И144). Заставка обязана сказать оператору,
       // что кассы нет, а не остаться белым прямоугольником: за 2026-08-04 на
       // этом же месте найдено три дефекта, и каждый белил экран целиком.
-      onProgress(1.0, 'Касса не отвечает: ${error.code}');
+      onProgress(1.0, BootStage.tillNotResponding, '${error.code}');
       return AppInitStatus.databaseFailure;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker/talker.dart';
 import 'package:telepos/app/config/background_task_manager.dart';
@@ -5,6 +6,7 @@ import 'package:telepos/app/config/initialization_task.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/services/currency_service.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class DatabaseInitializationException implements Exception {
   const DatabaseInitializationException(this.message, [this.cause]);
@@ -42,7 +44,7 @@ class AppDomainDelegate implements AppBootstrap {
     _logger.info('AppDomainDelegate: starting domain initialization');
 
     try {
-      onProgress(0.1, 'Проверка ключа POS...');
+      onProgress(0.1, BootStage.checkingPosKey);
       final hasKey = await _checkPosKey();
       if (!hasKey) {
         _status = AppInitStatus.noKey;
@@ -50,26 +52,26 @@ class AppDomainDelegate implements AppBootstrap {
         return _status!;
       }
 
-      onProgress(0.25, 'Загрузка конфигурации...');
+      onProgress(0.25, BootStage.loadingConfig);
       await _setCurrency();
 
-      onProgress(0.4, 'Инициализация базы данных...');
+      onProgress(0.4, BootStage.initialisingDatabase);
       await _initializeDatabase();
 
-      onProgress(0.6, 'Загрузка данных POS...');
+      onProgress(0.6, BootStage.loadingPosData);
       final initResult = await _runInitializationTask(onProgress);
       if (initResult != AppInitStatus.success) {
         _status = initResult;
         return _status!;
       }
 
-      onProgress(0.85, 'Проверка лицензии...');
+      onProgress(0.85, BootStage.checkingLicence);
       await _checkLicense();
 
-      onProgress(0.95, 'Запуск фоновых задач...');
+      onProgress(0.95, BootStage.startingBackgroundJobs);
       await _backgroundTasks.startAll();
 
-      onProgress(1.0, 'Готово');
+      onProgress(1.0, BootStage.ready);
       _status = AppInitStatus.success;
       _logger.info('AppDomainDelegate: initialization completed successfully');
 
@@ -105,6 +107,15 @@ class AppDomainDelegate implements AppBootstrap {
         final currencyService = GetIt.I<CurrencyService>();
         await currencyService.load();
         _currency = currencyService.code;
+        // Как бумага пишет дату и числа - условия страны кассы. Ставятся
+        // здесь же, где страна и читается: второй раз её никто не спросит,
+        // а чек до 2026-09-22 писал дату в порядке СНГ в любой стране.
+        final country = currencyService.country;
+        TillConventions.current = TillConventions(
+          dateFormat: country.dateFormat,
+          decimalSeparator: country.decimalSeparator,
+          thousandSeparator: country.thousandSeparator,
+        );
         _logger.info(
           'Currency loaded: ${currencyService.code} (${currencyService.symbol}), '
           'country: ${currencyService.country.countryName}',
@@ -172,13 +183,11 @@ class AppDomainDelegate implements AppBootstrap {
     }
   }
 
-  Future<AppInitStatus> _runInitializationTask(
-    void Function(double progress, String message) onProgress,
-  ) async {
+  Future<AppInitStatus> _runInitializationTask(BootProgress onProgress) async {
     return _initializationTask.run(
-      onProgress: (taskProgress, message) {
+      onProgress: (taskProgress, stage, [detail]) {
         final mappedProgress = 0.4 + (taskProgress * 0.4);
-        onProgress(mappedProgress, message);
+        onProgress(mappedProgress, stage, detail);
       },
     );
   }

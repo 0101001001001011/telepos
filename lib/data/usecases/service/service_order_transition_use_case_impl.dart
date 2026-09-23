@@ -11,10 +11,10 @@ import 'package:telepos/domain/entities/warranty/warranty_record_entity.dart';
 import 'package:telepos/domain/repositories/warranty_repository.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_in_out_controller.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
-import 'package:telepos/domain/usecases/fiscal/vat_calculator.dart';
 import 'package:telepos/domain/usecases/fiscal/webkassa_service.dart';
 import 'package:telepos/domain/usecases/service/link_service_to_sale_use_case.dart';
 import 'package:telepos/domain/usecases/service/service_order_transition_use_case.dart';
+import 'package:telepos/domain/fiscal/fiscal_settings.dart';
 
 class ServiceOrderTransitionUseCaseImpl
     implements ServiceOrderTransitionUseCase {
@@ -314,7 +314,7 @@ class ServiceOrderTransitionUseCaseImpl
       } else {
         _logger.warning(
           'Service cancel $orderNumber: prepayment $amount not reversed: '
-          '${result.errorMessage}',
+          '${result.refusal?.name ?? result.errorDetail}',
         );
       }
     } catch (e) {
@@ -433,7 +433,7 @@ class ServiceOrderTransitionUseCaseImpl
         _buildLine(
           name: 'Услуги по заказ-наряду ${row.orderNumber}',
           gross: collected,
-          vatRatePercent: VatCalculator.standardRatePercent,
+          vatRatePercent: FiscalDefaults.vatRatePercent.toBigInt().toInt(),
         ),
       ];
     }
@@ -483,7 +483,9 @@ class ServiceOrderTransitionUseCaseImpl
       final rate = product?.vatRate;
       if (rate != null) return rate;
     }
-    return VatCalculator.standardRatePercent;
+    // Умолчание — из фискальных настроек, одно на продукт. Здесь
+    // стояла четвёртая копия того же числа (`VatCalculator`).
+    return FiscalDefaults.vatRatePercent.toBigInt().toInt();
   }
 
   _ServiceFiscalLine _buildLine({

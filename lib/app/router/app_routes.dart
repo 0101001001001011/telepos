@@ -71,6 +71,14 @@ abstract class AppRoutes {
   static const receiptTemplates = '/receipt-templates';
   static const receiptTemplateEdit = '/receipt-templates/edit';
   static const fiscalSettings = '/fiscal-settings';
+  static const taxSettings = '/tax-settings';
+
+  /// Часы, в которые категорию продавать нельзя.
+  ///
+  /// Механизм запрета был в продукте с самого начала и не имел ни
+  /// экрана, ни вызова: заполнить его было нечем, а проверка не
+  /// выполнялась ни разу (измерено 2026-09-22).
+  static const sellingHours = '/selling-hours';
 
   /// Настройка оплаты по QR: провайдер (адрес, код, ключ, ожидание) и
   /// выключатель вида оплаты 6 — пункт 8 C (2026-09-15).

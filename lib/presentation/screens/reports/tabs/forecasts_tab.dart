@@ -12,11 +12,13 @@ import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/core/utils/forecast_util.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/report_dao.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/reports/report_models.dart';
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_chart_card.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_export_button.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_money_format.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class _StockDepletion {
   const _StockDepletion({
@@ -165,6 +167,7 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     ref.listen(reportRefreshProvider, (_, __) {
       ref.invalidate(_revenueHistoryProvider);
       ref.invalidate(_stockDepletionExtendedProvider);
@@ -182,8 +185,8 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
         children: [
           revenueAsync.when(
             data: (data) => _buildRevenueForecast(data),
-            loading: () => _buildChartLoading('Прогноз выручки'),
-            error: (e, _) => _buildChartError('Прогноз выручки', e),
+            loading: () => _buildChartLoading(l10n.repRevenueForecast),
+            error: (e, _) => _buildChartError(l10n.repRevenueForecast, e),
           ),
 
           const SizedBox(height: 20),
@@ -198,8 +201,8 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
                       _buildRecommendedPurchases(data),
                     ],
                   ),
-            loading: () => _buildChartLoading('Прогноз остатков'),
-            error: (e, _) => _buildChartError('Прогноз остатков', e),
+            loading: () => _buildChartLoading(l10n.repStockForecast),
+            error: (e, _) => _buildChartError(l10n.repStockForecast, e),
           ),
         ],
       ),
@@ -207,6 +210,7 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: 300,
       child: Center(
@@ -216,14 +220,11 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
             Icon(Icons.trending_up, size: 64, color: AppColors.textDisabled),
             const SizedBox(height: 16),
             Text(
-              'Нет данных для прогноза',
+              l10n.repNoForecastData,
               style: AppTextStyles.h3.copyWith(color: AppColors.textDisabled),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Недостаточно данных о продажах за выбранный период',
-              style: context.styles.caption,
-            ),
+            Text(l10n.repNotEnoughSalesData, style: context.styles.caption),
           ],
         ),
       ),
@@ -231,13 +232,14 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
   }
 
   Widget _buildRevenueForecast(List<RevenueByDay> data) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Прогноз выручки (Holt-Winters)',
-        subtitle: 'Нет данных за последние 90 дней',
+        title: l10n.repRevenueForecastHw,
+        subtitle: l10n.repNoDataLast90,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -293,13 +295,16 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
     final totalPoints = displayRevenues.length + _forecastHorizon;
 
     final algorithmLabel = revenueValues.length >= seasonLength * 2
-        ? 'Holt-Winters (сезон=$seasonLength)'
-        : 'SMA (мало данных)';
+        ? l10n.repHoltWintersSeason(seasonLength)
+        : l10n.repForecastSmaLowData;
 
     return ReportChartCard(
-      title: 'Прогноз выручки',
-      subtitle:
-          '${displayRevenues.length} дней факт + $_forecastHorizon дней прогноз ($algorithmLabel)',
+      title: l10n.repRevenueForecast,
+      subtitle: l10n.repForecastSubtitle(
+        displayRevenues.length,
+        _forecastHorizon,
+        algorithmLabel,
+      ),
       height: 320,
       onExport: () {
         final rows = <List<dynamic>>[];
@@ -308,20 +313,20 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
           rows.add([
             '${d.day.toString().padLeft(2, '0')}.${d.month.toString().padLeft(2, '0')}.${d.year}',
             displayRevenues[i].toStringAsFixed(2),
-            'Факт',
+            l10n.repActual,
           ]);
         }
         for (var i = 0; i < forecastValues.length; i++) {
           rows.add([
-            '+${i + 1} день',
+            l10n.repDayOffset(i + 1),
             forecastValues[i].toStringAsFixed(2),
-            'Прогноз',
+            l10n.repForecast,
           ]);
         }
         ReportExportButton.exportCsv(context, 'forecast_revenue', [
-          'Дата',
-          'Выручка',
-          'Тип',
+          l10n.globalDate,
+          l10n.repColRevenue,
+          l10n.setupSummaryFiscalType,
         ], rows);
       },
       child: Column(
@@ -331,11 +336,11 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                _buildHorizonChip(7, '7 дней'),
+                _buildHorizonChip(7, l10n.repRangeDays7),
                 const SizedBox(width: 6),
-                _buildHorizonChip(14, '14 дней'),
+                _buildHorizonChip(14, l10n.repRangeDays14),
                 const SizedBox(width: 6),
-                _buildHorizonChip(30, '30 дней'),
+                _buildHorizonChip(30, l10n.repRangeDays30),
               ],
             ),
           ),
@@ -426,9 +431,11 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
                         if (spot.barIndex == 2 || spot.barIndex == 3) {
                           return null;
                         }
-                        final prefix = isForecast ? 'Прогноз' : 'Факт';
+                        final prefix = isForecast
+                            ? l10n.repForecast
+                            : l10n.repActual;
                         return LineTooltipItem(
-                          '$prefix\n${ReportMoney.compact(spot.y)} ₸',
+                          '$prefix\n${ReportMoney.compact(spot.y)} ${tillCurrencySymbol()}',
                           TextStyle(
                             color: AppColors.white,
                             fontSize: 12,
@@ -558,6 +565,7 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
   }
 
   Widget _buildDepletionTable(List<_StockDepletion> data) {
+    final l10n = AppLocalizations.of(context)!;
     final sorted = List<_StockDepletion>.from(data);
     sorted.sort((a, b) {
       int cmp;
@@ -575,13 +583,18 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
     });
 
     return ReportChartCard(
-      title: 'Прогноз исчерпания остатков',
-      subtitle: 'взвешенное среднее (последние дни имеют больший вес)',
+      title: l10n.repStockoutForecast,
+      subtitle: l10n.repWeightedAvgHint,
       height: math.min(56.0 + sorted.length * 56.0, 440),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'forecast_stock_depletion',
-        ['Товар', 'Остаток', 'Ср. продажи/день', 'Дней до конца'],
+        [
+          l10n.inventoryProduct,
+          l10n.catalogQuantity,
+          l10n.repColAvgSalesPerDay,
+          l10n.repColDaysLeft,
+        ],
         sorted
             .map(
               (d) => [
@@ -607,22 +620,22 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
             sortAscending: _sortAscending,
             columns: [
               DataColumn(
-                label: const Text('Товар'),
+                label: Text(l10n.inventoryProduct),
                 onSort: (_, asc) => _onSort(_SortColumn.name, asc),
               ),
               DataColumn(
-                label: const Text('Остаток'),
+                label: Text(l10n.catalogQuantity),
                 numeric: true,
                 onSort: (_, asc) => _onSort(_SortColumn.stock, asc),
               ),
               DataColumn(
-                label: const Text('Продажи/день'),
+                label: Text(l10n.repColSalesPerDay),
                 numeric: true,
                 onSort: (_, asc) => _onSort(_SortColumn.avgSales, asc),
               ),
-              const DataColumn(label: Text('7 дней')),
+              DataColumn(label: Text(l10n.repRangeDays7)),
               DataColumn(
-                label: const Text('Дней до конца'),
+                label: Text(l10n.repColDaysLeft),
                 numeric: true,
                 onSort: (_, asc) => _onSort(_SortColumn.daysLeft, asc),
               ),
@@ -733,6 +746,7 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
   }
 
   Widget _buildRecommendedPurchases(List<_StockDepletion> data) {
+    final l10n = AppLocalizations.of(context)!;
     const leadTimeDays = 7;
     const safetyStockDays = 3;
     const totalCoverDays = leadTimeDays + safetyStockDays;
@@ -743,12 +757,12 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
 
     if (urgent.isEmpty) {
       return ReportChartCard(
-        title: 'Рекомендуемые закупки',
-        subtitle: 'нет срочных позиций',
+        title: l10n.repRecommendedPurchases,
+        subtitle: l10n.repNoUrgentItems,
         height: 80,
         child: Center(
           child: Text(
-            'Все товары обеспечены на 30+ дней',
+            l10n.repAllCovered30,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -758,14 +772,19 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
     }
 
     return ReportChartCard(
-      title: 'Рекомендуемые закупки',
-      subtitle:
-          'срок поставки $leadTimeDays дн. + страховой запас $safetyStockDays дн.',
+      title: l10n.repRecommendedPurchases,
+      subtitle: l10n.repLeadTimeHint(leadTimeDays, safetyStockDays),
       height: math.min(56.0 + urgent.length * 48.0, 440),
       onExport: () => ReportExportButton.exportCsv(
         context,
         'forecast_recommended_purchases',
-        ['Товар', 'Поставщик', 'Дней до конца', 'Рек. заказ', 'Ориент. сумма'],
+        [
+          l10n.inventoryProduct,
+          l10n.agentTypeSupplier,
+          l10n.repColDaysLeft,
+          l10n.repColRecommendedOrder,
+          l10n.repColEstimatedAmount,
+        ],
         urgent.map((d) {
           final recommendedQty = d.weightedAvgDailySales * totalCoverDays;
           final price = d.lastPurchasePrice;
@@ -789,12 +808,18 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
             headingRowHeight: 40,
             dataRowMinHeight: 40,
             dataRowMaxHeight: 48,
-            columns: const [
-              DataColumn(label: Text('Товар')),
-              DataColumn(label: Text('Поставщик')),
-              DataColumn(label: Text('Дней'), numeric: true),
-              DataColumn(label: Text('Рек. заказ'), numeric: true),
-              DataColumn(label: Text('Ориент. сумма'), numeric: true),
+            columns: [
+              DataColumn(label: Text(l10n.inventoryProduct)),
+              DataColumn(label: Text(l10n.agentTypeSupplier)),
+              DataColumn(label: Text(l10n.repColDays), numeric: true),
+              DataColumn(
+                label: Text(l10n.repColRecommendedOrder),
+                numeric: true,
+              ),
+              DataColumn(
+                label: Text(l10n.repColEstimatedAmount),
+                numeric: true,
+              ),
             ],
             rows: urgent.map((item) {
               final recommendedQty =
@@ -879,7 +904,7 @@ class _ForecastsTabState extends ConsumerState<ForecastsTab> {
       title: title,
       child: Center(
         child: Text(
-          'Ошибка: $error',
+          AppLocalizations.of(context)!.repErrorWith('$error'),
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 13,

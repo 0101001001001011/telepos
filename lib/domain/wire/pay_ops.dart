@@ -1065,8 +1065,7 @@ Map<String, Object?> _encodePrepaymentRefund(PrepaymentRefundRequest ask) => {
   'tenderKindId': ask.tenderKindId,
   // Оба поля ниже кладутся только когда названы: «не называли» и «пустое»
   // различаются, и второе честнее — тот же довод, что у примечания приёма.
-  if (ask.intakeOperationId != null)
-    'intakeOperationId': ask.intakeOperationId,
+  if (ask.intakeOperationId != null) 'intakeOperationId': ask.intakeOperationId,
   if (ask.note != null) 'note': ask.note,
 };
 
@@ -1177,9 +1176,7 @@ Map<String, Object?> _encodeQrStart(QrStartAsk ask) => {
   ...cartCommandMetaToWireJson(ask.meta),
 };
 
-Map<String, Object?> _encodeQrKey(String intentKey) => {
-  'intentKey': intentKey,
-};
+Map<String, Object?> _encodeQrKey(String intentKey) => {'intentKey': intentKey};
 
 /// Ключ намерения из тела. Не-строка — пустая строка, и касса ответит
 /// названным `qr_intent_unknown`, а не `TypeError` именем типа (I144).

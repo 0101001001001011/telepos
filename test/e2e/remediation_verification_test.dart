@@ -67,7 +67,7 @@ void main() {
         );
         final opts = await db.receiptTemplateDao.getSelectedOptions();
         expect(opts.header.text, 'ТОО МойНова');
-        expect(opts.footer.text, 'Спасибо! Ждём снова');
+        expect(opts.footer!.text, 'Спасибо! Ждём снова');
         final stored = (await db.receiptTemplateDao.getSelected())!.optionsJson;
         expect(
           stored,

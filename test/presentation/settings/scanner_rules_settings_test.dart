@@ -76,7 +76,8 @@ class _FakeTerminalRepository implements TerminalRepository {
       throw UnimplementedError();
 
   @override
-  Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+  Future<void> rename(int terminalId, String name) =>
+      throw UnimplementedError();
 
   @override
   Future<void> setAllowedPaymentTypes(
@@ -172,7 +173,8 @@ void main() {
     expect(
       saved.scannerTimeoutMs,
       120,
-      reason: 'scannerTimeoutMs had a column, a migration and a reader — this '
+      reason:
+          'scannerTimeoutMs had a column, a migration and a reader — this '
           'is the writer that was missing',
     );
 
@@ -274,7 +276,8 @@ void main() {
       expect(
         saved.effectiveScannerTimeoutMs,
         ScannerRules.defaultScannerTimeoutMs,
-        reason: 'unset must fall back to the same default the live decoder '
+        reason:
+            'unset must fall back to the same default the live decoder '
             'uses, not to zero',
       );
     },

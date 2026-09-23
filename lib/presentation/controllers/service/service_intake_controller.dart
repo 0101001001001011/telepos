@@ -1,5 +1,8 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show Locale;
+import 'package:telepos/core/locale/till_language.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decimal/decimal.dart';
 import 'package:get_it/get_it.dart';
@@ -185,6 +188,15 @@ class ServiceIntakeState {
 }
 
 class ServiceIntakeNotifier extends Notifier<ServiceIntakeState> {
+  /// Словарь на языке кассы.
+  ///
+  /// Контроллеру `BuildContext` недоступен, а строки отсюда уезжают в
+  /// заказ-наряд — то есть в историю, где перевести их будет негде. Язык
+  /// берётся у того же держателя, которым живёт печать: `locale_provider`
+  /// присваивает ему язык интерфейса при сборке и при каждой смене.
+  AppLocalizations get _l10n =>
+      lookupAppLocalizations(Locale(TillLanguage.current.languageCode));
+
   Talker get _logger => GetIt.I<Talker>();
   CreateServiceOrderUseCase get _createUseCase =>
       GetIt.I<CreateServiceOrderUseCase>();
@@ -366,12 +378,18 @@ class ServiceIntakeNotifier extends Notifier<ServiceIntakeState> {
           await db.serviceMarkDao.insert(
             ServiceMarksCompanion(
               serviceOrderId: Value(orderId),
-              description: Value('${info?.name ?? 'Расходник'} x${c.quantity}'),
+              // Слова — из словаря: строка уезжает в заказ-наряд, то есть
+              // в историю, и переводить её потом будет негде. Запасное
+              // «Расходник» было русским литералом на любой кассе.
+              description: Value(
+                '${info?.name ?? _l10n.serviceConsumableFallback}'
+                ' x${c.quantity}',
+              ),
               markType: const Value(5),
               userId: Value(userId),
               cost: Value(totalCost),
               createdAt: Value(now),
-              note: const Value('Автодобавлено из нормы расхода'),
+              note: Value(_l10n.serviceAutoAddedByNorm),
               productUcode: Value(c.consumableUcode),
             ),
           );

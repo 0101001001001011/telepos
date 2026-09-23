@@ -50,7 +50,10 @@ void main() {
     SystemPaymentKinds.byId(kindId).copyWith(isActive: true),
   );
 
-  Future<void> seedCustomer({String advance = '0', bool withAccount = true}) async {
+  Future<void> seedCustomer({
+    String advance = '0',
+    bool withAccount = true,
+  }) async {
     if (withAccount) {
       await db
           .into(db.accounts)

@@ -37,6 +37,7 @@ import 'package:telepos/presentation/screens/fiscal/unfiscalized_receipts_screen
 import 'package:telepos/presentation/screens/settings/esf_outbox_screen.dart';
 import 'package:telepos/presentation/screens/settings/esf_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/fiscal_settings_screen.dart';
+import 'package:telepos/presentation/screens/settings/tax_settings_screen.dart';
 import 'package:telepos/presentation/screens/settings/qr_payment_setup_screen.dart';
 import 'package:telepos/presentation/screens/settings/esutd_screen.dart';
 import 'package:telepos/presentation/screens/settings/esutd_settings_screen.dart';
@@ -93,6 +94,7 @@ import 'package:telepos/presentation/screens/wms/marking_codes_screen.dart';
 import 'package:telepos/presentation/screens/settings/wms_settings_screen.dart';
 
 import 'app_routes.dart';
+import 'package:telepos/presentation/screens/settings/selling_hours_screen.dart';
 
 final _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
 
@@ -151,10 +153,9 @@ List<RouteBase> _buildRoutes() {
       routes: [
         GoRoute(
           path: AppRoutes.sale,
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(
-                child: SaleScreen(shiftClose: ShiftCloseHere(_openShift)),
-              ),
+          pageBuilder: (context, state) => const NoTransitionPage(
+            child: SaleScreen(shiftClose: ShiftCloseHere(_openShift)),
+          ),
         ),
         GoRoute(
           path: AppRoutes.refund,
@@ -319,6 +320,16 @@ List<RouteBase> _buildRoutes() {
           path: AppRoutes.fiscalSettings,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: FiscalSettingsScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.taxSettings,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: TaxSettingsScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.sellingHours,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: SellingHoursScreen()),
         ),
         GoRoute(
           path: AppRoutes.qrProviderSettings,

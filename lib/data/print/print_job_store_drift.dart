@@ -157,7 +157,10 @@ class DriftPrintJobStore implements PrintJobStore {
   }
 
   @override
-  Future<List<PrintJob>> jobs({int? terminalId, bool activeOnly = false}) async {
+  Future<List<PrintJob>> jobs({
+    int? terminalId,
+    bool activeOnly = false,
+  }) async {
     final rows = await _jobsQuery(terminalId).get();
     return _mapped(rows, activeOnly: activeOnly);
   }
@@ -180,10 +183,9 @@ class DriftPrintJobStore implements PrintJobStore {
     }
     // Имя состояния, а не индекс, — здесь тоже: это тот же столбец и то же
     // правило.
-    final interrupted =
-        await (_db.select(_db.printJobs)
-              ..where((j) => j.state.equals(PrintJobState.printing.name)))
-            .get();
+    final interrupted = await (_db.select(
+      _db.printJobs,
+    )..where((j) => j.state.equals(PrintJobState.printing.name))).get();
 
     final recovered = <PrintJob>[];
     for (final row in interrupted) {

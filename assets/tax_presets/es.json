@@ -1,0 +1,62 @@
+{
+  "id": "es",
+  "title": "Испания",
+  "countryCode": "ES",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "€",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "21",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Tipo general",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "Tipo reducido"
+    },
+    {
+      "code": "super",
+      "title": "Tipo superreducido"
+    },
+    {
+      "code": "exempt",
+      "title": "Exento"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "es",
+      "name": "IVA",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "21"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "super",
+          "kind": "taxed",
+          "ratePercent": "4"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "IVA: tipo general, reducido y superreducido; проверьте перед работой"
+}

@@ -398,19 +398,12 @@ class _DesktopLoginLayout extends ConsumerWidget {
       decoration: BoxDecoration(
         color: shiftColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusSmall),
-        border: Border.all(
-          color: shiftColor,
-          width: 1,
-        ),
+        border: Border.all(color: shiftColor, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            shiftIcon,
-            size: 16,
-            color: shiftColor,
-          ),
+          Icon(shiftIcon, size: 16, color: shiftColor),
           const SizedBox(width: 8),
           Text(
             shiftLabel,
@@ -609,19 +602,12 @@ class _MobileLoginLayout extends ConsumerWidget {
       decoration: BoxDecoration(
         color: shiftColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusSmall),
-        border: Border.all(
-          color: shiftColor,
-          width: 1,
-        ),
+        border: Border.all(color: shiftColor, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            shiftIcon,
-            size: 16,
-            color: shiftColor,
-          ),
+          Icon(shiftIcon, size: 16, color: shiftColor),
           const SizedBox(width: 8),
           Text(
             shiftLabel,

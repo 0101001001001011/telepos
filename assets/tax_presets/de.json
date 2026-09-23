@@ -1,0 +1,53 @@
+{
+  "id": "de",
+  "title": "Германия",
+  "countryCode": "DE",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "€",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "19",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Regelsatz",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "Ermäßigter Satz"
+    },
+    {
+      "code": "exempt",
+      "title": "Steuerbefreit"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "de",
+      "name": "USt",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "19"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "7"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Umsatzsteuer: Regelsatz und ermäßigter Satz; проверьте по UStG перед работой"
+}

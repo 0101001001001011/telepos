@@ -17,6 +17,8 @@ import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/core/security/pin_credential.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/permission_label.dart';
+import 'package:telepos/presentation/common/utils/role_label.dart';
 import 'package:telepos/presentation/common/widgets/keyboards/num_pad.dart';
 
 final _usersProvider = FutureProvider<List<User>>((ref) async {
@@ -311,7 +313,7 @@ class _RoleBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusSmall),
       ),
       child: Text(
-        role.displayName,
+        role.label(AppLocalizations.of(context)!),
         style: context.styles.caption.copyWith(
           color: color,
           fontWeight: FontWeight.w600,
@@ -716,7 +718,7 @@ class _UserEditDialogState extends State<_UserEditDialog>
                 children: [
                   Expanded(
                     child: Text(
-                      PermissionKeys.groupLabel(groupKey),
+                      permissionGroupLabel(groupKey, AppLocalizations.of(context)!),
                       style: AppTextStyles.h3.copyWith(fontSize: 15),
                     ),
                   ),
@@ -748,7 +750,7 @@ class _UserEditDialogState extends State<_UserEditDialog>
               return SwitchListTile(
                 dense: true,
                 title: Text(
-                  PermissionKeys.label(key),
+                  permissionLabel(key, AppLocalizations.of(context)!),
                   style: AppTextStyles.body,
                 ),
                 value: isOwner ? true : (_permissions[key] ?? true),

@@ -32,12 +32,28 @@ class CustomerDisplayLine {
       );
 }
 
+/// Что видит покупатель: строки чека, деньги, **валюта этих денег** и язык.
+///
+/// # Почему валюта и язык едут ЗДЕСЬ, а не берутся на месте
+///
+/// Окно покупателя — отдельный движок (`desktop_multi_window`). У него нет
+/// ни базы кассы, ни настроек: `sharedPreferencesProvider` там не подменён и
+/// бросает, `GetIt` пуст. Всё, что окно знает о мире, оно получает проводом.
+///
+/// До 2026-09-22 валюты в этом проводе не было, и экран, который читает
+/// ПОКУПАТЕЛЬ, печатал `₸` пятью зашитыми местами — на любой кассе любой
+/// страны. Язык был той же природы: словарей у окна не было вовсе.
+///
+/// Валюта едет вместе с деньгами намеренно: сумма и её знак — одно значение,
+/// разнесённое по двум путям оно однажды разойдётся.
 class CustomerDisplayData {
   CustomerDisplayData({
     this.lines = const [],
     Decimal? subtotal,
     Decimal? totalDiscount,
     Decimal? total,
+    this.currencySymbol = '',
+    this.languageCode = '',
   }) : subtotal = subtotal ?? Decimal.zero,
        totalDiscount = totalDiscount ?? Decimal.zero,
        total = total ?? Decimal.zero;
@@ -47,13 +63,27 @@ class CustomerDisplayData {
   final Decimal totalDiscount;
   final Decimal total;
 
+  /// Знак валюты кассы. Пусто — значит касса его не назвала; тогда окно
+  /// покажет **голое число**. Это честнее выдуманного знака: неверная валюта
+  /// на экране покупателя — заявление о цене, а не оплошность вёрстки.
+  final String currencySymbol;
+
+  /// Язык кассы, кодом (`ru`, `en`, …). Пусто — язык системы.
+  final String languageCode;
+
   bool get isEmpty => lines.isEmpty;
+
+  /// Сумма со знаком валюты — одним местом на всё окно.
+  String money(Decimal amount) =>
+      currencySymbol.isEmpty ? '$amount' : '$amount $currencySymbol';
 
   Map<String, dynamic> toJson() => {
     'lines': lines.map((l) => l.toJson()).toList(),
     'subtotal': subtotal.toString(),
     'totalDiscount': totalDiscount.toString(),
     'total': total.toString(),
+    'currencySymbol': currencySymbol,
+    'languageCode': languageCode,
   };
 
   factory CustomerDisplayData.fromJson(
@@ -68,6 +98,8 @@ class CustomerDisplayData {
     subtotal: Decimal.tryParse('${j['subtotal']}') ?? Decimal.zero,
     totalDiscount: Decimal.tryParse('${j['totalDiscount']}') ?? Decimal.zero,
     total: Decimal.tryParse('${j['total']}') ?? Decimal.zero,
+    currencySymbol: j['currencySymbol'] as String? ?? '',
+    languageCode: j['languageCode'] as String? ?? '',
   );
 }
 

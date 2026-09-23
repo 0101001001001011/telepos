@@ -127,8 +127,9 @@ void main() {
     tester,
   ) async {
     suppressOverflowErrors();
-    final ru = (await AppLocalizations.delegate.load(const Locale('ru')))
-        .errorShiftNotOpen;
+    final ru = (await AppLocalizations.delegate.load(
+      const Locale('ru'),
+    )).errorShiftNotOpen;
 
     final stand = await pumpPayment(tester, 'kk');
     final kk = ErrorLocalizer.localize(stand.ctx, 'error.shift_not_open');
@@ -159,8 +160,9 @@ void main() {
     // показа и открывает диалог. На экране оплаты часового нет, и до круга
     // правки 3 кассир читал здесь «error.shift_over_age» буквально.
     suppressOverflowErrors();
-    final ru = (await AppLocalizations.delegate.load(const Locale('ru')))
-        .shiftOverAgeMessage;
+    final ru = (await AppLocalizations.delegate.load(
+      const Locale('ru'),
+    )).shiftOverAgeMessage;
 
     final stand = await pumpPayment(tester, 'kk');
     final kk = ErrorLocalizer.localize(stand.ctx, 'error.shift_over_age');

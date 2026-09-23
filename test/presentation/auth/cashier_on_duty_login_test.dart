@@ -17,7 +17,7 @@ import 'package:telepos/domain/host/host_capabilities.dart';
 import 'package:telepos/domain/terminal/terminal_identity.dart';
 import 'package:telepos/presentation/controllers/auth/login_controller.dart';
 
-import 'support/fakes.dart';
+import 'support/fakes.dart';
 import 'package:telepos/domain/shift/shift_status.dart';
 
 AuthSession _session(int userId) => AuthSession(

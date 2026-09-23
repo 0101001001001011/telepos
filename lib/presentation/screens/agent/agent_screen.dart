@@ -10,6 +10,7 @@ import 'package:telepos/presentation/screens/agent/widgets/add_customer_dialog.d
 import 'package:telepos/presentation/screens/agent/widgets/agent_details_dialog.dart';
 import 'package:telepos/presentation/screens/agent/widgets/agent_search_bar.dart';
 import 'package:telepos/presentation/screens/agent/widgets/agent_table.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class AgentScreen extends ConsumerWidget {
   const AgentScreen({super.key});
@@ -436,9 +437,7 @@ class _AgentCard extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    final d = date.day.toString().padLeft(2, '0');
-    final m = date.month.toString().padLeft(2, '0');
-    return '$d.$m.${date.year}';
+    return TillConventions.current.formatDate(date);
   }
 
   void _onTap(BuildContext context) {

@@ -297,10 +297,7 @@ class QrPaymentCoordinator {
   /// `abandonedAt` ставится **всегда** — и когда отмена удалась, и когда
   /// оказалось оплачено. Это отметка про нас («мы перестали ждать»), а не
   /// про провайдера.
-  Future<PaymentIntent> abandon(
-    int intentId, {
-    required QrGiveUp why,
-  }) async {
+  Future<PaymentIntent> abandon(int intentId, {required QrGiveUp why}) async {
     final current = await _reload(intentId);
     if (current == null) {
       throw StateError('намерение $intentId исчезло');
@@ -417,12 +414,8 @@ class QrPaymentCoordinator {
   ///
   /// `false` — «эти деньги уже в чеке»; вызывающий обязан **не** строить
   /// вторую строку `Payments`.
-  Future<bool> settle(int intentId, int receiptNo) =>
-      _db.paymentIntentDao.markSettled(
-        id: intentId,
-        receiptNo: receiptNo,
-        at: _now(),
-      );
+  Future<bool> settle(int intentId, int receiptNo) => _db.paymentIntentDao
+      .markSettled(id: intentId, receiptNo: receiptNo, at: _now());
 
   Future<PaymentIntent?> _reload(int id) => _db.paymentIntentDao.byId(id);
 

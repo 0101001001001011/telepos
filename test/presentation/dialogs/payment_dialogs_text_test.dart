@@ -52,7 +52,9 @@ Future<BuildContext> _app(WidgetTester tester) async {
 
 List<String> _shown(WidgetTester tester) => [
   for (final w in tester.widgetList<Text>(find.byType(Text))) w.data ?? '',
-  for (final w in tester.widgetList<InputDecorator>(find.byType(InputDecorator)))
+  for (final w in tester.widgetList<InputDecorator>(
+    find.byType(InputDecorator),
+  ))
     w.decoration.labelText ?? '',
 ];
 
@@ -66,9 +68,9 @@ void main() {
 
     final schemeLabels = {for (final s in InstallmentScheme.values) s.label};
     expect(
-      _shown(tester)
-          .where((t) => !schemeLabels.contains(t))
-          .where(_cyrillic.hasMatch),
+      _shown(
+        tester,
+      ).where((t) => !schemeLabels.contains(t)).where(_cyrillic.hasMatch),
       isEmpty,
     );
   });
@@ -88,9 +90,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      _shown(tester)
-          .where((t) => t != 'Покупатель')
-          .where(_cyrillic.hasMatch),
+      _shown(tester).where((t) => t != 'Покупатель').where(_cyrillic.hasMatch),
       isEmpty,
     );
 
@@ -98,9 +98,7 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
     expect(
-      _shown(tester)
-          .where((t) => t != 'Покупатель')
-          .where(_cyrillic.hasMatch),
+      _shown(tester).where((t) => t != 'Покупатель').where(_cyrillic.hasMatch),
       isEmpty,
     );
   });

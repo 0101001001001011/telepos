@@ -373,10 +373,10 @@ class FinanceTab extends ConsumerWidget {
           ]);
         }
         ReportExportButton.exportCsv(context, 'finance_cash_flow', [
-          'Дата',
-          'Вложения',
-          'Расходы',
-          'Дивиденды',
+          l10n.globalDate,
+          l10n.repCashFlowInvestments,
+          l10n.repCashFlowExpenses,
+          l10n.repCashFlowDividends,
         ], rows);
       },
       child: Column(
@@ -425,9 +425,9 @@ class FinanceTab extends ConsumerWidget {
                       );
                       return BarTooltipItem(
                         '${d.day}.${d.month.toString().padLeft(2, '0')}\n'
-                        'Вложения: ${ReportMoney.full(investment)} ₸\n'
-                        'Расходы: ${ReportMoney.full(expense)} ₸\n'
-                        'Дивиденды: ${ReportMoney.full(dividend)} ₸',
+                        '${l10n.repInvestmentsLine(ReportMoney.withCurrency(investment))}\n'
+                        '${l10n.repExpensesLine(ReportMoney.withCurrency(expense))}\n'
+                        '${l10n.repDividendsLine(ReportMoney.withCurrency(dividend))}',
                         const TextStyle(
                           color: AppColors.white,
                           fontSize: 11,
@@ -584,7 +584,7 @@ class FinanceTab extends ConsumerWidget {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'finance_refunds',
-        ['Дата', 'Количество', 'Сумма'],
+        [l10n.globalDate, l10n.globalQuantity, l10n.globalAmount],
         [
           for (var i = 0; i < data.length; i++)
             [
@@ -668,8 +668,8 @@ class FinanceTab extends ConsumerWidget {
                   final cnt = idx < data.length ? data[idx].count : 0;
                   return LineTooltipItem(
                     '${d.day}.${d.month.toString().padLeft(2, '0')}\n'
-                    '${ReportMoney.full(DecimalUtil.fromDouble(spot.y))} ₸\n'
-                    '$cnt возвратов',
+                    '${ReportMoney.withCurrency(DecimalUtil.fromDouble(spot.y))}\n'
+                    '${l10n.repReturnsCount(cnt)}',
                     const TextStyle(
                       color: AppColors.white,
                       fontSize: 12,
@@ -748,7 +748,13 @@ class FinanceTab extends ConsumerWidget {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'finance_top_profitable',
-        ['Товар', 'Выручка', 'Себестоимость', 'Прибыль', 'Маржа %'],
+        [
+          l10n.inventoryProduct,
+          l10n.repColRevenue,
+          l10n.dishTabCosting,
+          l10n.dishProfitLabel,
+          l10n.repColMarginPct,
+        ],
         displayData
             .map(
               (d) => [
@@ -772,8 +778,8 @@ class FinanceTab extends ConsumerWidget {
                 final product = displayData[group.x.toInt()];
                 return BarTooltipItem(
                   '${product.name}\n'
-                  'Прибыль: ${ReportMoney.full(product.profit)} ₸\n'
-                  'Маржа: ${product.marginPct.toStringAsFixed(1)}%',
+                  '${l10n.repProfitLine(ReportMoney.withCurrency(product.profit))}\n'
+                  '${l10n.repMarginLine(product.marginPct.toStringAsFixed(1))}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 11,
@@ -895,7 +901,13 @@ class FinanceTab extends ConsumerWidget {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'finance_product_profit',
-        ['Товар', 'Выручка', 'Себестоимость', 'Прибыль', 'Маржа %'],
+        [
+          l10n.inventoryProduct,
+          l10n.repColRevenue,
+          l10n.dishTabCosting,
+          l10n.dishProfitLabel,
+          l10n.repColMarginPct,
+        ],
         data
             .map(
               (d) => [

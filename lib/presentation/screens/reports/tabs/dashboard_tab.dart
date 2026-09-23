@@ -11,12 +11,14 @@ import 'package:telepos/app/theme/app_theme.dart';
 import 'package:telepos/core/utils/decimal_util.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/daos/report_dao.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/reports/report_models.dart';
 import 'package:telepos/presentation/controllers/reports/reports_controller.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_chart_card.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_export_button.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_kpi_card.dart';
 import 'package:telepos/presentation/screens/reports/widgets/report_money_format.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 ReportDao get _reportDao {
   final db = GetIt.I<AppDatabase>();
@@ -138,6 +140,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final reportState = ref.watch(reportsProvider);
     final range = reportState.dateRange;
 
@@ -168,8 +171,8 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
 
           revenueAsync.when(
             data: (data) => _buildRevenueChart(data),
-            loading: () => _buildChartLoading('Выручка по дням'),
-            error: (e, _) => _buildChartError('Выручка по дням', e),
+            loading: () => _buildChartLoading(l10n.repChartRevenueByDay),
+            error: (e, _) => _buildChartError(l10n.repChartRevenueByDay, e),
           ),
 
           const SizedBox(height: 20),
@@ -180,8 +183,9 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
               final children = [
                 productsAsync.when(
                   data: (data) => _buildTopProductsChart(context, data),
-                  loading: () => _buildChartLoading('Топ-5 товаров'),
-                  error: (e, _) => _buildChartError('Топ-5 товаров', e),
+                  loading: () => _buildChartLoading(l10n.repChartTop5Products),
+                  error: (e, _) =>
+                      _buildChartError(l10n.repChartTop5Products, e),
                 ),
 
                 if (isWide) const SizedBox(width: 16),
@@ -189,8 +193,10 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
 
                 paymentsAsync.when(
                   data: (data) => _buildPaymentMethodsChart(data),
-                  loading: () => _buildChartLoading('Способы оплаты'),
-                  error: (e, _) => _buildChartError('Способы оплаты', e),
+                  loading: () =>
+                      _buildChartLoading(l10n.repChartPaymentMethods),
+                  error: (e, _) =>
+                      _buildChartError(l10n.repChartPaymentMethods, e),
                 ),
               ];
 
@@ -213,6 +219,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
   }
 
   Widget _buildKpiRow(DashboardKpis kpi) {
+    final l10n = AppLocalizations.of(context)!;
     final hasTrend = kpi.yesterdayRevenue > Decimal.zero;
     final trend = hasTrend ? kpi.changePercent : null;
     return LayoutBuilder(
@@ -220,29 +227,29 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
         final isNarrow = constraints.maxWidth < 600;
         final cards = [
           ReportKpiCard(
-            title: 'Выручка',
+            title: l10n.repColRevenue,
             value: ReportMoney.full(kpi.todayRevenue),
             icon: Icons.monetization_on_outlined,
             color: AppColors.primary,
             trend: trend,
-            subtitle: 'за период',
+            subtitle: l10n.repSubtitleForPeriod,
           ),
           ReportKpiCard(
-            title: 'Продажи',
+            title: l10n.syncSales,
             value: '${kpi.todaySalesCount}',
             icon: Icons.receipt_long_outlined,
             color: AppColors.info,
-            subtitle: 'чеков',
+            subtitle: l10n.repSubtitleReceipts,
           ),
           ReportKpiCard(
-            title: 'Средний чек',
+            title: l10n.repKpiAvgCheck,
             value: ReportMoney.full(kpi.avgCheck),
             icon: Icons.analytics_outlined,
             color: AppColors.warning,
-            subtitle: '₸',
+            subtitle: tillCurrencySymbol(),
           ),
           ReportKpiCard(
-            title: 'Изменение',
+            title: l10n.repKpiChange,
             value: trend != null
                 ? '${trend >= 0 ? '+' : ''}${trend.toStringAsFixed(1)}%'
                 : 'N/A',
@@ -250,7 +257,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
             color: (trend ?? 0) >= 0
                 ? AppColors.success
                 : Theme.of(context).colorScheme.error,
-            subtitle: 'vs пред. период',
+            subtitle: l10n.repSubtitleVsPrev,
           ),
         ];
 
@@ -300,20 +307,21 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
       height: 100,
       alignment: Alignment.center,
       child: Text(
-        'Ошибка загрузки KPI: $error',
+        AppLocalizations.of(context)!.repKpiLoadErrorWith('$error'),
         style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }
 
   Widget _buildRevenueChart(List<RevenueByDay> data) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Выручка по дням',
-        subtitle: 'Нет данных за выбранный период',
+        title: l10n.repChartRevenueByDay,
+        subtitle: l10n.repNoDataForPeriod,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -333,13 +341,13 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
     }
 
     return ReportChartCard(
-      title: 'Выручка по дням',
-      subtitle: '${data.length} дней',
+      title: l10n.repChartRevenueByDay,
+      subtitle: l10n.repDaysCount(data.length),
       height: 280,
       onExport: () => ReportExportButton.exportCsv(
         context,
         'dashboard_revenue_by_day',
-        ['Дата', 'Выручка'],
+        [l10n.globalDate, l10n.repColRevenue],
         [
           for (var i = 0; i < data.length; i++)
             [
@@ -420,7 +428,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                   final idx = spot.x.toInt();
                   final d = idx < dates.length ? dates[idx] : DateTime.now();
                   return LineTooltipItem(
-                    '${d.day}.${d.month.toString().padLeft(2, '0')}\n${ReportMoney.compact(spot.y)} ₸',
+                    '${d.day}.${d.month.toString().padLeft(2, '0')}\n${ReportMoney.compact(spot.y)} ${tillCurrencySymbol()}',
                     const TextStyle(
                       color: AppColors.white,
                       fontSize: 12,
@@ -471,13 +479,14 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
     BuildContext context,
     List<ProductRanking> data,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Топ-5 товаров',
-        subtitle: 'Нет данных',
+        title: l10n.repChartTop5Products,
+        subtitle: l10n.serviceNoOrders,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -498,13 +507,13 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
     ];
 
     return ReportChartCard(
-      title: 'Топ-5 товаров',
-      subtitle: 'по выручке (нажмите для деталей)',
+      title: l10n.repChartTop5Products,
+      subtitle: l10n.repByRevenueTapHint,
       height: 220,
       onExport: () => ReportExportButton.exportCsv(
         context,
         'dashboard_top_products',
-        ['Товар', 'Выручка'],
+        [l10n.inventoryProduct, l10n.repColRevenue],
         data.map((d) => [d.name, d.revenue.toStringAsFixed(2)]).toList(),
       ),
       child: BarChart(
@@ -517,7 +526,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final product = data[group.x.toInt()];
                 return BarTooltipItem(
-                  '${product.name}\n${ReportMoney.full(product.revenue)} ₸',
+                  '${product.name}\n${ReportMoney.withCurrency(product.revenue)}',
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 12,
@@ -619,6 +628,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
   }
 
   void _showProductDetailDialog(BuildContext context, ProductRanking product) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -631,15 +641,15 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DetailRow(
-              label: 'Выручка',
-              value: '${ReportMoney.full(product.revenue)} ₸',
+              label: l10n.repColRevenue,
+              value: ReportMoney.withCurrency(product.revenue),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Закрыть'),
+            child: Text(l10n.globalClose),
           ),
         ],
       ),
@@ -647,13 +657,14 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
   }
 
   Widget _buildPaymentMethodsChart(List<PaymentMethodBreakdown> data) {
+    final l10n = AppLocalizations.of(context)!;
     if (data.isEmpty) {
       return ReportChartCard(
-        title: 'Способы оплаты',
-        subtitle: 'Нет данных',
+        title: l10n.repChartPaymentMethods,
+        subtitle: l10n.serviceNoOrders,
         child: Center(
           child: Text(
-            'Нет данных',
+            l10n.serviceNoOrders,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -675,13 +686,17 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
     ];
 
     return ReportChartCard(
-      title: 'Способы оплаты',
-      subtitle: 'распределение (нажмите на сектор)',
+      title: l10n.repChartPaymentMethods,
+      subtitle: l10n.repDistributionTapHint,
       height: 220,
       onExport: () => ReportExportButton.exportCsv(
         context,
         'dashboard_payment_methods',
-        ['Способ оплаты', 'Сумма', 'Процент'],
+        [
+          l10n.setCorrectionPaymentLabel,
+          l10n.globalAmount,
+          l10n.discountPercent,
+        ],
         data
             .map(
               (d) => [
@@ -741,7 +756,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                '${ReportMoney.full(data[i].total)} ₸',
+                                ReportMoney.withCurrency(data[i].total),
                                 style: const TextStyle(
                                   color: AppColors.white,
                                   fontSize: 10,
@@ -794,7 +809,7 @@ class _DashboardTabState extends ConsumerState<DashboardTab> {
       title: title,
       child: Center(
         child: Text(
-          'Ошибка: $error',
+          AppLocalizations.of(context)!.repErrorWith('$error'),
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,
             fontSize: 13,
@@ -913,7 +928,7 @@ class _LegendItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  '$value ₸',
+                  '$value ${tillCurrencySymbol()}',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

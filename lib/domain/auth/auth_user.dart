@@ -25,12 +25,17 @@ class AuthUser {
 
   final String name;
 
-  /// Имя роли для показа, а не индекс: индекс — дело кассы.
+  /// Устойчивый ключ роли (`owner`, `administrator`, `user`, `cashier`),
+  /// а не индекс и не готовое слово: индекс — дело кассы, а слово зависит
+  /// от языка того, кто смотрит, и выбирается на слое показа
+  /// (`userRoleLabelOfKey`). Русское слово, ездившее здесь раньше,
+  /// доезжало до экрана входа на любом языке.
   final String role;
 
   /// Заведён ли PIN. Кассир без PIN входит без клавиатуры.
   final bool hasPin;
 
   @override
-  String toString() => 'AuthUser(id: $id, name: $name, role: $role, hasPin: $hasPin)';
+  String toString() =>
+      'AuthUser(id: $id, name: $name, role: $role, hasPin: $hasPin)';
 }

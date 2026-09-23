@@ -10,6 +10,7 @@ import 'package:telepos/presentation/screens/history/widgets/history_details_dia
 import 'package:telepos/presentation/screens/history/widgets/history_filters.dart';
 import 'package:telepos/presentation/screens/history/widgets/history_pagination.dart';
 import 'package:telepos/presentation/screens/history/widgets/history_table.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
@@ -498,11 +499,7 @@ class _HistoryCard extends ConsumerWidget {
   }
 
   String _formatDateTime(DateTime time) {
-    final d = time.day.toString().padLeft(2, '0');
-    final m = time.month.toString().padLeft(2, '0');
-    final h = time.hour.toString().padLeft(2, '0');
-    final min = time.minute.toString().padLeft(2, '0');
-    return '$d.$m.${time.year} $h:$min';
+    return TillConventions.current.formatDateTime(time);
   }
 
   String _getPaymentTypeLabel(BuildContext context, HistoryPaymentType type) {

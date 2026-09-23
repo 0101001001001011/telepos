@@ -1,0 +1,62 @@
+{
+  "id": "tr",
+  "title": "Турция",
+  "countryCode": "TR",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "₺",
+  "currencyBeforeAmount": false,
+  "expectedStandardRatePercent": "20",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "Genel oran",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "İndirimli oran"
+    },
+    {
+      "code": "super",
+      "title": "En düşük oran"
+    },
+    {
+      "code": "exempt",
+      "title": "İstisna"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "tr",
+      "name": "KDV",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "20"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "super",
+          "kind": "taxed",
+          "ratePercent": "1"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "KDV: genel ve indirimli oranlar; проверьте перед работой"
+}

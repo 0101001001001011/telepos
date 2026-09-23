@@ -11,6 +11,7 @@ import 'package:telepos/core/constants/enums/user_role.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/database/tables/discount_tables.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/role_label.dart';
 
 /// Экран пределов ручной скидки — задача 12 плана «Полнота продажи».
 ///
@@ -158,7 +159,7 @@ class _DiscountLimitsScreenState extends ConsumerState<DiscountLimitsScreen> {
   String _roleTitle(AppLocalizations l10n, int role) =>
       role == DiscountLimitRoles.anyRole
       ? l10n.discountLimitsDefaultRow
-      : UserRole.fromIndex(role).displayName;
+      : UserRole.fromIndex(role).label(l10n);
 
   @override
   Widget build(BuildContext context) {

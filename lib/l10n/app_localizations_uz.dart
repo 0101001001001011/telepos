@@ -141,6 +141,21 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginShiftRequired => 'Kirish uchun smenani oching';
 
   @override
+  String get staffRoleOwner => 'Egasi';
+
+  @override
+  String get staffRoleAdministrator => 'Administrator';
+
+  @override
+  String get staffRoleUser => 'Foydalanuvchi';
+
+  @override
+  String get staffRoleCashier => 'Kassir';
+
+  @override
+  String get staffRoleUnknown => 'Nomaʼlum';
+
+  @override
   String get loginCashier => 'Kassir';
 
   @override
@@ -567,6 +582,25 @@ class AppLocalizationsUz extends AppLocalizations {
   String get cashTitle => 'Kassa';
 
   @override
+  String get cashReasonCreditRepayment => 'Boʻlib toʻlashni yopish';
+
+  @override
+  String get cashReasonCustomerTopUp => 'Xaridor hisobini toʻldirish';
+
+  @override
+  String get accountBankCard => 'Bank (karta)';
+
+  @override
+  String get accountCertificateLiability =>
+      'Sertifikatlar boʻyicha majburiyatlar';
+
+  @override
+  String get serviceConsumableFallback => 'Sarf materiali';
+
+  @override
+  String get serviceAutoAddedByNorm => 'Sarf meʼyori boʻyicha qoʻshildi';
+
+  @override
   String get cashInvestment => 'Kirim';
 
   @override
@@ -589,21 +623,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get cashExpenseTypes => 'Chiqim turi';
-
-  @override
-  String get cashSalary => 'Ish haqi';
-
-  @override
-  String get cashRent => 'Ijara';
-
-  @override
-  String get cashUtilities => 'Kommunal';
-
-  @override
-  String get cashSupplies => 'Xaridlar';
-
-  @override
-  String get cashOther => 'Boshqa';
 
   @override
   String get discountTitle => 'Chegirma';
@@ -966,7 +985,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginShiftClosed => 'Smena yopiq';
 
   @override
-  String get loginShiftUnknown => 'Smena: noma\'lum';
+  String get loginShiftUnknown => 'Smena: kassa javob bermadi';
 
   @override
   String get saleQuickProducts => 'Tez mahsulotlar';
@@ -2057,11 +2076,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get allBreadcrumb => 'Hammasi';
 
   @override
-  String productPrice(String price) {
-    return '$price so\'m';
-  }
-
-  @override
   String maxBonusPercent(int percent) {
     return 'Chek summasining $percent% gacha ishlatish mumkin';
   }
@@ -2715,7 +2729,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupVatPayerTitle => 'QQS to\'lovchi';
 
   @override
-  String setupVatPayerRate(int rate) {
+  String setupVatPayerRate(String rate) {
     return 'QQS stavkasi: $rate%';
   }
 
@@ -3132,7 +3146,7 @@ class AppLocalizationsUz extends AppLocalizations {
       'Kassa bilan ishlash uchun foydalanuvchilar yarating';
 
   @override
-  String get setupAdminLabel => 'ADMINISTRATOR';
+  String get setupAdminLabel => 'Administrator';
 
   @override
   String get setupAdminSubtitle => 'Kassa egasi';
@@ -3150,7 +3164,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupAdminPinDefault => 'Standart: 0000';
 
   @override
-  String get setupSellerLabel => 'SOTUVCHI';
+  String get setupSellerLabel => 'Sotuvchi';
 
   @override
   String get setupSellerOptional => 'Ixtiyoriy';
@@ -3280,7 +3294,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupStartWork => 'Ishni boshlash';
 
   @override
-  String setupVatPayerSummary(int rate) {
+  String setupVatPayerSummary(String rate) {
     return 'QQS to\'lovchi ($rate%)';
   }
 
@@ -4968,6 +4982,27 @@ class AppLocalizationsUz extends AppLocalizations {
   String get countryTurkmenistan => 'Turkmaniston';
 
   @override
+  String get permNavServiceQueue => 'Buyurtmalar navbati';
+
+  @override
+  String get permNavServiceIntake => 'Buyurtma qabul qilish';
+
+  @override
+  String get permSellWithDiscount => 'Chegirma bilan sotish';
+
+  @override
+  String get permCashInOut => 'Kirim / chiqim';
+
+  @override
+  String get permRefundGoods => 'Tovarni qaytarish';
+
+  @override
+  String get permRefundWithoutReceipt => 'Cheksiz qaytarish';
+
+  @override
+  String get permGroupNavigation => 'Navigatsiya';
+
+  @override
   String get permEditPrice => 'Narxni tahrirlash';
 
   @override
@@ -5472,7 +5507,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String shiftFixedAmount(String amount) {
-    return 'Qayd etiladigan summa: $amount KZT';
+    return 'Qayd etiladigan summa: $amount';
   }
 
   @override
@@ -5507,6 +5542,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get shiftRefundsTotal => 'Qaytarishlar';
+
+  @override
+  String get cashOpeningCount => 'Ochilishdagi qayta sanash';
 
   @override
   String get shiftShortage => 'Kamomad';
@@ -6565,9 +6603,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get paymentDefaultLabel => 'Standart';
-
-  @override
-  String get currencySymbol => '₸';
 
   @override
   String get serviceIntakeTitle => 'Buyurtma qabul qilish';
@@ -10225,7 +10260,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setCorrectionReasonHint => 'mas. mustaqil tuzatish';
 
   @override
-  String get setCorrectionAmountLabel => 'Tuzatish summasi, KZT';
+  String setCorrectionAmountLabel(String currency) {
+    return 'Tuzatish summasi, $currency';
+  }
 
   @override
   String get setCorrectionPaymentLabel => 'To\'lov usuli';
@@ -10412,7 +10449,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String dishTotalYieldSummary(String cost, String yield) {
-    return 'Jami: $cost ₸  |  Chiqim: $yield';
+    return 'Jami: $cost  |  Chiqim: $yield';
   }
 
   @override
@@ -10774,7 +10811,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get repColCount => 'Soni';
 
   @override
-  String get repColSumTenge => 'Summa, ₸';
+  String repColSumTenge(String currency) {
+    return 'Summa, $currency';
+  }
 
   @override
   String get repColRow => 'Qator';
@@ -10865,7 +10904,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repF910Subtitle(String income, String rate, String tax) {
-    return 'Soliqqa tortiladigan daromad: $income ₸ • soliq $rate%: $tax ₸';
+    return 'Soliqqa tortiladigan daromad: $income • soliq $rate%: $tax';
   }
 
   @override
@@ -10882,7 +10921,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repF300Subtitle(String turnover, String vat) {
-    return 'Soliqqa tortiladigan aylanma: $turnover ₸ • hisoblangan QQS: $vat ₸';
+    return 'Soliqqa tortiladigan aylanma: $turnover • hisoblangan QQS: $vat';
   }
 
   @override
@@ -10898,7 +10937,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repCashBookSubtitle(String income, String expense, String balance) {
-    return 'Kirim: $income • Chiqim: $expense • Qoldiq: $balance ₸';
+    return 'Kirim: $income • Chiqim: $expense • Qoldiq: $balance';
   }
 
   @override
@@ -10906,7 +10945,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repVatPeriodSubtitle(String vat, String base) {
-    return 'QQS: $vat ₸ • baza: $base ₸';
+    return 'QQS: $vat • baza: $base';
   }
 
   @override
@@ -10922,7 +10961,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repCashCollectionSubtitle(int count, String total) {
-    return '$count operatsiya • jami: $total ₸';
+    return '$count operatsiya • jami: $total';
   }
 
   @override
@@ -10933,7 +10972,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repProfitMarginSubtitle(String profit, String margin, String note) {
-    return 'Foyda: $profit ₸ • marja $margin% • $note';
+    return 'Foyda: $profit • marja $margin% • $note';
   }
 
   @override
@@ -10948,7 +10987,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String repWriteoffSubtitle(int count, String total) {
-    return '$count hujjat • jami: $total ₸';
+    return '$count hujjat • jami: $total';
   }
 
   @override
@@ -11222,8 +11261,9 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get errorBigAmountBlocked =>
-      'Sotuv summasi 1 mln ₸ dan oshadi. Kassa sozlamalarida katta summalarga ruxsatni yoqing.';
+  String errorBigAmountBlocked(String limit) {
+    return 'Sotuv summasi kassa chegarasidan yuqori ($limit). Chegarani koʻtaring yoki kassa sozlamalarida katta summalarga ruxsatni yoqing.';
+  }
 
   @override
   String errorMarkRequired(String name) {
@@ -12222,15 +12262,15 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String qrPaidPartial(String paid, String amount) {
-    return 'Оплачено частично: $paid из $amount';
+    return 'Qisman to\'landi: $amount dan $paid';
   }
 
   @override
-  String get qrOrphanTitle => 'Деньги без чека';
+  String get qrOrphanTitle => 'Cheksiz pul';
 
   @override
   String get qrOrphanHint =>
-      'Покупатель заплатил по QR, а чек этими деньгами не закрыт.';
+      'Xaridor QR orqali to\'ladi, lekin chek bu pul bilan yopilmagan.';
 
   @override
   String qrOrphanLine(String amount, String provider, String key) {
@@ -12239,7 +12279,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get qrOrphanAfterGiveUp =>
-      'Подтверждение пришло после того, как касса перестала ждать';
+      'Tasdiqlash kassa kutishni to\'xtatgandan keyin keldi';
 
   @override
   String get errorQrIntentUnknown =>
@@ -13214,4 +13254,1610 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get agentRefundPrepayment => 'Avansni qaytarish';
+
+  @override
+  String get repTitle => 'Hisobotlar';
+
+  @override
+  String get repTabAnalytics => 'Tahlil';
+
+  @override
+  String get repTabFinance => 'Moliya';
+
+  @override
+  String get repTabForecasts => 'Prognozlar';
+
+  @override
+  String get repTabTaxKz => 'Soliqlar/QZ';
+
+  @override
+  String get repRangeDays7 => '7 kun';
+
+  @override
+  String get repRangeDays30 => '30 kun';
+
+  @override
+  String get repRangeCustom => 'Ixtiyoriy';
+
+  @override
+  String get repKpiChange => 'Oʻzgarish';
+
+  @override
+  String get repSubtitleVsPrev => 'oldingi davrga nisbatan';
+
+  @override
+  String get repChartRevenueByDay => 'Kunlar boʻyicha tushum';
+
+  @override
+  String get repChartTop5Products => 'Eng yaxshi 5 mahsulot';
+
+  @override
+  String get repChartPaymentMethods => 'Toʻlov usullari';
+
+  @override
+  String get settingsRestartRequired =>
+      'Oʻzgarishlar kassa keyingi ishga tushganda qoʻllanadi.';
+
+  @override
+  String get hardwareRestartRequired =>
+      'Qurilma oʻzgarishlari kassa keyingi ishga tushganda qoʻllanadi.';
+
+  @override
+  String get hardwareDeviceDisabled => 'Qurilma oʻchirilgan.';
+
+  @override
+  String get hardwareCustomerDisplayGraphic =>
+      'Xaridorning grafik ekrani (2-monitor)';
+
+  @override
+  String get hardwareCustomerDisplayGraphicOff =>
+      'Xaridorning grafik ekrani oʻchirilgan.';
+
+  @override
+  String get hardwarePaymentKinds => 'Ish oʻrnining toʻlov turlari';
+
+  @override
+  String get hardwarePaymentKindsUnrestricted =>
+      'Cheklov yoʻq: ish oʻrni barcha toʻlov turlarini qabul qiladi.';
+
+  @override
+  String get fiscalSettingsDirectOfdLabel => 'OFDga toʻgʻridan-toʻgʻri ulanish';
+
+  @override
+  String get markupAuto => 'Avto ustama';
+
+  @override
+  String get markupSave => 'Ustamalarni saqlash';
+
+  @override
+  String get creditContractNumberLabel => 'Qogʻozdagi shartnoma raqami';
+
+  @override
+  String get creditNoLiveContracts => 'Faol boʻlib toʻlash shartnomalari yoʻq';
+
+  @override
+  String get supplierOrderTitle => 'Yetkazib beruvchiga buyurtma';
+
+  @override
+  String get supplierOrderAllStocked => 'Barcha mahsulot yetarli miqdorda';
+
+  @override
+  String get supplierOrderNotNeeded => 'Qoʻshimcha buyurtma talab etilmaydi';
+
+  @override
+  String get hwScaleTitle => 'Tarozi';
+
+  @override
+  String get hwReceiptPrinterTitle => 'Chek printeri';
+
+  @override
+  String get repRangeDays14 => '14 kun';
+
+  @override
+  String get repForecastSmaLowData => 'SMA (maʼlumot kam)';
+
+  @override
+  String get repNoCategory => 'Turkumsiz';
+
+  @override
+  String get repAllCustomers => 'Barcha mijozlar';
+
+  @override
+  String get repAllInStock => 'Barcha mahsulot omborda';
+
+  @override
+  String get repAllCovered30 => 'Barcha mahsulot 30+ kunga yetadi';
+
+  @override
+  String get repColDays => 'Kun';
+
+  @override
+  String get repColDaysLeft => 'Qolgan kun';
+
+  @override
+  String get repColSharePct => 'Ulush %';
+
+  @override
+  String get repColChangePct => 'Oʻzgarish %';
+
+  @override
+  String get repColSalesCount => 'Sotuv soni';
+
+  @override
+  String get repReceiptCountLabel => 'Chek soni';
+
+  @override
+  String get repStockCritical =>
+      'Qoldiq juda kam! Shoshilinch yetkazish kerak.';
+
+  @override
+  String get repColCumulativePct => 'Jamlan. %';
+
+  @override
+  String get repNotEnoughSalesData =>
+      'Tanlangan davrda sotuv maʼlumoti yetarli emas';
+
+  @override
+  String get repNoForecastData => 'Prognoz uchun maʼlumot yoʻq';
+
+  @override
+  String get repNoDataLast90 => 'Soʻnggi 90 kunda maʼlumot yoʻq';
+
+  @override
+  String get repNoCustomerData => 'Mijozlar haqida maʼlumot yoʻq';
+
+  @override
+  String get repNoLowStock => 'Qoldigʻi kam mahsulot yoʻq';
+
+  @override
+  String get repLowStock => 'Qoldiq kam';
+
+  @override
+  String get repNewPrice => 'Yangi narx';
+
+  @override
+  String get repColEstimatedAmount => 'Taxm. summa';
+
+  @override
+  String get repColSeatings => 'Oʻtirgʻizish';
+
+  @override
+  String get repForecast => 'Prognoz';
+
+  @override
+  String get repRevenueForecast => 'Tushum prognozi';
+
+  @override
+  String get repRevenueForecastHw => 'Tushum prognozi (Holt-Winters)';
+
+  @override
+  String get repStockoutForecast => 'Qoldiq tugash prognozi';
+
+  @override
+  String get repStockForecast => 'Qoldiq prognozi';
+
+  @override
+  String get repSalesWithoutCustomerHidden =>
+      'Mijozga bogʻlanmagan sotuvlar koʻrsatilmaydi';
+
+  @override
+  String get repColSalesPerDay => 'Sotuv/kun';
+
+  @override
+  String get repColSold => 'Sotildi';
+
+  @override
+  String get repHourlyDistribution => 'Soatlar boʻyicha taqsimot';
+
+  @override
+  String get repColRecommendedOrder => 'Tavsiya buyurtma';
+
+  @override
+  String get repRecommendedPurchases => 'Tavsiya etilgan xaridlar';
+
+  @override
+  String get repColAvgSalesPerDay => 'Oʻrt. sotuv/kun';
+
+  @override
+  String get repColAvgCheckShort => 'Oʻrt. chek';
+
+  @override
+  String get repAvgPrice => 'Oʻrtacha narx';
+
+  @override
+  String get repOldPrice => 'Eski narx';
+
+  @override
+  String get repStockValue => 'Qoldiq qiymati';
+
+  @override
+  String get repColTable => 'Stol';
+
+  @override
+  String get repCurrentStock => 'Joriy qoldiq';
+
+  @override
+  String get repTop10Customers => 'Eng yaxshi 10 mijoz';
+
+  @override
+  String get repTop10Products => 'Eng yaxshi 10 mahsulot';
+
+  @override
+  String get repActual => 'Amalda';
+
+  @override
+  String get repColHour => 'Soat';
+
+  @override
+  String get repExport => 'Eksport';
+
+  @override
+  String get repCashierPerformance => 'Kassirlar samaradorligi';
+
+  @override
+  String get repWeightedAvgHint => 'vaznli oʻrtacha (soʻnggi kunlar ogʻirroq)';
+
+  @override
+  String get repSalesCountByHour => 'soat boʻyicha sotuv soni';
+
+  @override
+  String get repNoUrgentItems => 'shoshilinch pozitsiya yoʻq';
+
+  @override
+  String get repByRevenueTapHint => 'tushum boʻyicha (tafsilot uchun bosing)';
+
+  @override
+  String get repDistributionTapHint => 'taqsimot (sektorni bosing)';
+
+  @override
+  String get repRevenueDistributionTapHint =>
+      'tushum taqsimoti (sektorni bosing)';
+
+  @override
+  String get repAbcRare => 'kam harakatli';
+
+  @override
+  String get repAbcMedium => 'oʻrtacha harakatli';
+
+  @override
+  String get repAbcFast => 'tez harakatli';
+
+  @override
+  String get repAbcLegend =>
+      'tez (A), oʻrtacha (B), kam (C) — tushumga qoʻshgan hissasi boʻyicha';
+
+  @override
+  String repReturnsCount(int count) {
+    return '$count qaytarish';
+  }
+
+  @override
+  String repAbcGroupSummary(int count, String pct) {
+    return '$count mahsulot · $pct%';
+  }
+
+  @override
+  String repCustomerTooltip(String name, String amount, int count) {
+    return '$name\n$amount ($count chek)';
+  }
+
+  @override
+  String repDaysCountTapHint(int count) {
+    return '$count kun (tafsilot uchun bosing)';
+  }
+
+  @override
+  String repCashiersCount(int count) {
+    return '$count kassir';
+  }
+
+  @override
+  String repLowStockCountHint(int count) {
+    return '$count mahsulot (qoldiq < 10, bosing)';
+  }
+
+  @override
+  String repOrdersShort(int count) {
+    return '$count buyur.';
+  }
+
+  @override
+  String repOrdersRevenueTooltip(int count, String amount) {
+    return '$count buyur.\n$amount';
+  }
+
+  @override
+  String repPieces(String qty) {
+    return '$qty dona';
+  }
+
+  @override
+  String repPiecesDot(String qty) {
+    return '$qty dona';
+  }
+
+  @override
+  String repForecastSubtitle(int actual, int horizon, String algorithm) {
+    return '$actual kun amalda + $horizon kun prognoz ($algorithm)';
+  }
+
+  @override
+  String repSalesCountLine(int count) {
+    return '$count sotuv';
+  }
+
+  @override
+  String repReceiptsCount(int count) {
+    return '$count chek';
+  }
+
+  @override
+  String repSupplierTooltip(String name, int count) {
+    return '$name\n$count yetkazish';
+  }
+
+  @override
+  String repSeatingsLine(int count) {
+    return '$count oʻtirgʻizish';
+  }
+
+  @override
+  String repDayOffset(int n) {
+    return '+$n kun';
+  }
+
+  @override
+  String repHoltWintersSeason(int season) {
+    return 'Holt-Winters (mavsum=$season)';
+  }
+
+  @override
+  String repInvestmentsLine(String amount) {
+    return 'Investitsiyalar: $amount';
+  }
+
+  @override
+  String repDividendsLine(String amount) {
+    return 'Dividendlar: $amount';
+  }
+
+  @override
+  String repMarginLine(String pct) {
+    return 'Marja: $pct%';
+  }
+
+  @override
+  String repKpiLoadErrorWith(String error) {
+    return 'KPI yuklanmadi: $error';
+  }
+
+  @override
+  String repErrorWith(String error) {
+    return 'Xato: $error';
+  }
+
+  @override
+  String repProfitLine(String amount) {
+    return 'Foyda: $amount';
+  }
+
+  @override
+  String repExpensesLine(String amount) {
+    return 'Xarajatlar: $amount';
+  }
+
+  @override
+  String repLeadTimeHint(int lead, int safety) {
+    return 'yetkazish muddati $lead k. + zaxira $safety k.';
+  }
+
+  @override
+  String get markupHint =>
+      'Turkum boʻyicha ustama, %. Tovar kelganda chakana narx xarid narxidan qayta hisoblanadi: xarid × (1 + ustama%).';
+
+  @override
+  String get creditContractsTitle => 'Boʻlib toʻlash';
+
+  @override
+  String creditContractsTitleFor(String agent) {
+    return 'Boʻlib toʻlash — $agent';
+  }
+
+  @override
+  String repExportedTo(String path) {
+    return 'Eksport qilindi: $path';
+  }
+
+  @override
+  String repExportFailed(String error) {
+    return 'Eksport xatosi: $error';
+  }
+
+  @override
+  String get hwSetupIncompleteDevices =>
+      'Sozlash ustasi tugamagan — qurilmalarni saqlaydigan joy yoʻq';
+
+  @override
+  String get hwSetupIncompleteCheck =>
+      'Sozlash ustasi tugamagan — tekshiradigan narsa yoʻq';
+
+  @override
+  String get settingsSetupIncompleteSave =>
+      'Sozlash ustasi tugamagan — saqlaydigan joy yoʻq';
+
+  @override
+  String get hwProfileCatalogUnavailable =>
+      'Qurilma profillari katalogi mavjud emas — qurilma sozlamalarini hozir oʻzgartirib boʻlmaydi.';
+
+  @override
+  String get printerProfileCatalogUnavailable =>
+      'Qurilma profillari katalogi mavjud emas — printer sozlamalarini hozir oʻzgartirib boʻlmaydi.';
+
+  @override
+  String get labelPrinterProfileCatalogUnavailable =>
+      'Qurilma profillari katalogi mavjud emas — yorliq printeri sozlamalarini hozir oʻzgartirib boʻlmaydi.';
+
+  @override
+  String get hwPaymentKindsUnsupported =>
+      'Bu yigʻma ish oʻrnining toʻlov turlarini saqlay olmaydi.';
+
+  @override
+  String get hwPaymentKindsEnforcedByTill =>
+      'Taqiqni kassa tekshiradi: toʻlov turiga ruxsati yoʻq terminal rad javobini oladi, ekranidagi tugma qolsa ham.';
+
+  @override
+  String get hwCustomerDisplayGraphicDesc =>
+      'Ikkinchi monitorda xaridor uchun grafik ekran: chek satrlari, miqdori va yakuni — real vaqtda.';
+
+  @override
+  String get hwCustomerDisplayMonitor => 'Xaridor ekrani uchun monitor';
+
+  @override
+  String get hwCustomerDisplayMonitorHint =>
+      'POS asosiy monitorda qoladi. Kassa keyingi ishga tushganda avtomatik ochiladi.';
+
+  @override
+  String get hwNoProfilesForClass =>
+      'Bu qurilma sinfi uchun mavjud model yoʻq.';
+
+  @override
+  String get hwNoConnectionParams =>
+      'Bu model qoʻshimcha ulanish parametrlarini talab qilmaydi.';
+
+  @override
+  String hwMonitorWithSize(int index, String size) {
+    return 'Monitor $index — $size';
+  }
+
+  @override
+  String hwMonitorNumbered(int index) {
+    return 'Monitor $index';
+  }
+
+  @override
+  String hwPaymentKindsError(String error) {
+    return 'Toʻlov turlari: $error';
+  }
+
+  @override
+  String hwPaymentKindsUnknown(String list) {
+    return 'Bu ish oʻrni sozlamasida bu versiya bilmaydigan turlar yozilgan: $list. Ular boʻyicha cheklov yoʻq. Yozuvni tuzatish uchun turlarni qayta tanlang — shungacha u shundayligicha qoladi.';
+  }
+
+  @override
+  String hwParamOptional(String description) {
+    return '$description (majburiy emas)';
+  }
+
+  @override
+  String globalMillimetres(String value) {
+    return '$value mm';
+  }
+
+  @override
+  String get devProfilePrinterEscpos80mm => 'ESC/POS chek printeri, 80 mm';
+
+  @override
+  String get devProfilePrinterEscpos58mm =>
+      'ESC/POS chek printeri, 58 mm (ixcham, pichoqsiz)';
+
+  @override
+  String get devProfilePrinterEscposUsb => 'ESC/POS chek printeri, USB/spuler';
+
+  @override
+  String get devProfilePrinterEscposBluetooth =>
+      'ESC/POS chek printeri, Bluetooth';
+
+  @override
+  String get devProfilePrinterEscposSerial =>
+      'ESC/POS chek printeri, ketma-ket port';
+
+  @override
+  String get devProfilePrinterLabelZpl104 => 'ZPL yorliq printeri, 104 mm';
+
+  @override
+  String get devProfilePrinterLabelEpl58 => 'EPL yorliq printeri, 58 mm';
+
+  @override
+  String get devProfileScannerUsbHid => 'USB shtrixkod skaneri (HID)';
+
+  @override
+  String get devProfileScannerBluetoothHid =>
+      'Bluetooth shtrixkod skaneri (HID)';
+
+  @override
+  String get devProfileScannerCamera => 'Qurilma kamerasi orqali skaner';
+
+  @override
+  String get devProfileScannerSerial => 'Shtrixkod skaneri, ketma-ket port';
+
+  @override
+  String get devProfileScaleCasPd2 => 'CAS PD-II tarozisi (ketma-ket)';
+
+  @override
+  String get devProfileScaleCasErPlus => 'CAS ER-Plus tarozisi';
+
+  @override
+  String get devProfileDrawerViaPrinter => 'Printer orqali pul qutisi (RJ11)';
+
+  @override
+  String get devProfileDrawerStandalone => 'Avtonom pul qutisi (RJ11)';
+
+  @override
+  String get devProfileDisplayVfd => 'VFD xaridor displeyi (ketma-ket)';
+
+  @override
+  String get devProfileDisplayLcd2x20 => 'LCD xaridor displeyi 2x20';
+
+  @override
+  String get devProfileDisplayLed8 => 'LED xaridor displeyi (8 belgi)';
+
+  @override
+  String get devProfilePaymentKaspiPos => 'Kaspi POS terminali';
+
+  @override
+  String get devParamPrinterIpAddress => 'Tarmoq printeri IP-manzili';
+
+  @override
+  String get devParamTcpPort9100 => 'TCP-port, sukut boʻyicha 9100';
+
+  @override
+  String get devParamPrinterDevicePath =>
+      'Qurilma yoʻli yoki chop etish navbati nomi';
+
+  @override
+  String get devParamPrinterMac =>
+      'Juftlangan Bluetooth printerining MAC-manzili';
+
+  @override
+  String get devParamPrinterComPort =>
+      'Printerning ketma-ket porti, masalan COM4';
+
+  @override
+  String get devParamLabelPrinterIp => 'Yorliq printeri IP-manzili';
+
+  @override
+  String get devParamScannerMac =>
+      'Juftlangan Bluetooth skanerining MAC-manzili';
+
+  @override
+  String get devParamScannerComPort =>
+      'Skanerning ketma-ket porti, masalan COM5';
+
+  @override
+  String get devParamScaleComPort => 'Tarozining ketma-ket porti, masalan COM3';
+
+  @override
+  String get devParamDrawerComPort =>
+      'Quti interfeys platasining ketma-ket porti';
+
+  @override
+  String get devParamDisplayComPort => 'Xaridor displeyining ketma-ket porti';
+
+  @override
+  String get devParamKaspiIp => 'Kaspi POS terminali IP-manzili';
+
+  @override
+  String get devParamKaspiPort => 'Terminal porti, odatda 8888';
+
+  @override
+  String get devParamCameraId => 'Qaysi kameradan foydalanish';
+
+  @override
+  String get rcpTill => 'Kassa';
+
+  @override
+  String get rcpTillColon => 'Kassa:';
+
+  @override
+  String get rcpReceiptNo => 'Chek №';
+
+  @override
+  String get rcpCashier => 'Kassir:';
+
+  @override
+  String get rcpCustomer => 'Mijoz:';
+
+  @override
+  String get rcpDate => 'Sana:';
+
+  @override
+  String get rcpBinIin => 'STIR:';
+
+  @override
+  String get rcpThankYou => 'Xaridingiz uchun rahmat!';
+
+  @override
+  String get rcpSale => 'SOTUV';
+
+  @override
+  String get rcpSubtotal => 'Oraliq jami:';
+
+  @override
+  String get rcpDiscount => 'Chegirma:';
+
+  @override
+  String get rcpServiceFee => 'Xizmat haqi:';
+
+  @override
+  String get rcpTotal => 'JAMI:';
+
+  @override
+  String get rcpChange => 'Qaytim:';
+
+  @override
+  String get rcpCash => 'NAQD';
+
+  @override
+  String get rcpCard => 'KARTA';
+
+  @override
+  String get rcpQuantityShort => 'dona';
+
+  @override
+  String get rcpRefund => 'QAYTARISH';
+
+  @override
+  String get rcpRefundNo => 'Qaytarish №';
+
+  @override
+  String get rcpSaleReceiptNo => 'Sotuv cheki №';
+
+  @override
+  String get rcpDuplicate => '*** NUSXA ***';
+
+  @override
+  String get rcpTable => 'Stol:';
+
+  @override
+  String get rcpWaiter => 'Ofitsiant:';
+
+  @override
+  String get rcpGuests => 'Mehmonlar:';
+
+  @override
+  String get rcpFiscalReceipt => 'FISKAL CHEK';
+
+  @override
+  String get rcpNonFiscalReceipt => 'FISKAL BOʻLMAGAN CHEK';
+
+  @override
+  String get rcpNotFiscalDocument => 'FISKAL HUJJAT EMAS';
+
+  @override
+  String get rcpFiscalSign => 'FISKAL BELGI:';
+
+  @override
+  String get rcpFiscalFn => 'FM:';
+
+  @override
+  String get rcpFiscalRnm => 'RRN:';
+
+  @override
+  String get rcpFiscalZnm => 'SRN:';
+
+  @override
+  String get rcpFiscalTime => 'VAQT:';
+
+  @override
+  String get rcpOfdName => 'OFD';
+
+  @override
+  String get rcpOffline => '*** OFLAYN ***';
+
+  @override
+  String get rcpVerifyAt => 'Chekni tekshirish uchun kiring';
+
+  @override
+  String get rcpCustomerTaxId => 'Xaridor STIRi:';
+
+  @override
+  String get rcpTaxA => 'A SOLIG‘I BOʻYICHA:';
+
+  @override
+  String get rcpFiscalOperatorNotSet => 'Fiskal operator sozlanmagan';
+
+  @override
+  String get rcpFiscalModuleUnavailable =>
+      'Fiskallashtirish moduli mavjud emas';
+
+  @override
+  String get rcpDocumentNotIssued =>
+      'Hujjat rasmiylashtirilmadi — kassirga murojaat qiling';
+
+  @override
+  String get rcpXReport => 'X-HISOBOT';
+
+  @override
+  String get rcpZReport => 'Z-HISOBOT';
+
+  @override
+  String get rcpInterim => 'ORALIQ (oʻchirishsiz)';
+
+  @override
+  String get rcpShiftClose => 'SMENANI YOPISH';
+
+  @override
+  String get rcpShiftStart => 'Boshlanishi:';
+
+  @override
+  String get rcpShiftEnd => 'Tugashi:';
+
+  @override
+  String get rcpSales => 'SOTUVLAR';
+
+  @override
+  String get rcpRefunds => 'QAYTARISHLAR';
+
+  @override
+  String get rcpCount => 'Soni:';
+
+  @override
+  String get rcpAmount => 'Summasi:';
+
+  @override
+  String get rcpCashOps => 'PUL OPERATSIYALARI';
+
+  @override
+  String get rcpOpeningFloat => 'Boshiga:';
+
+  @override
+  String get rcpSlipTitle => 'KVITANSIYA';
+
+  @override
+  String get rcpType => 'Turi:';
+
+  @override
+  String get rcpComment => 'Izoh:';
+
+  @override
+  String get rcpCashIn => 'Kirimlar:';
+
+  @override
+  String get rcpCashOut => 'Chiqimlar:';
+
+  @override
+  String get rcpTotalInDrawer => 'KASSADA JAMI:';
+
+  @override
+  String get rcpCertificatesNotRevenue => 'SERTIFIKATLAR (TUSHUM EMAS)';
+
+  @override
+  String get rcpCertIssuedDebt => 'Chiqarildi (kassa qarzi):';
+
+  @override
+  String get rcpCertRedeemed => 'Toʻlandi (mahsulot bilan):';
+
+  @override
+  String get rcpGiftCertificate => 'SOVGʻA SERTIFIKATI';
+
+  @override
+  String get rcpCertNo => 'Sertifikat №';
+
+  @override
+  String get rcpCertFaceValue => 'Nominali:';
+
+  @override
+  String get rcpCertValidUntil => 'Amal qiladi:';
+
+  @override
+  String get rcpCertNoExpiry => 'muddatsiz';
+
+  @override
+  String get rcpCertPinSet => 'PIN oʻrnatilgan';
+
+  @override
+  String get rcpCertIssuedByRefund => 'Qaytarish bilan chiqarildi №';
+
+  @override
+  String get rcpCertInsteadOf => 'Sertifikat oʻrniga';
+
+  @override
+  String get rcpVat => 'QQS';
+
+  @override
+  String get rcpSalesTax => 'Savdo soligʻi';
+
+  @override
+  String get rcpTaxExempt => 'Soliq solinmaydi';
+
+  @override
+  String get rcpTaxExemptMark => 'ozod';
+
+  @override
+  String get taxSettingsTitle => 'Soliqlar';
+
+  @override
+  String get taxSettingsSubtitle =>
+      'Stavkalar, yurisdiksiyalar va tovar toifalari';
+
+  @override
+  String get taxSettingsIntro =>
+      'Stavka bitta son bilan berilmaydi: u kassa joylashgan yurisdiksiyalar ulushlaridan yig‘iladi va tovar toifasi hamda sanaga bog‘liq. Tayyor to‘plamni olib, keyin tahrirlash mumkin.';
+
+  @override
+  String get taxSettingsNotConfigured =>
+      'Soliq sozlanmagan: kassa nol hisoblaydi.';
+
+  @override
+  String get taxSettingsPresetSection => 'Tayyor to‘plam';
+
+  @override
+  String get taxSettingsCountry => 'Davlat';
+
+  @override
+  String get taxSettingsRegion => 'Shtat yoki viloyat';
+
+  @override
+  String get taxSettingsCity => 'Shahar';
+
+  @override
+  String get taxSettingsPreset => 'To‘plam';
+
+  @override
+  String get taxSettingsApplyPreset => 'To‘plamni qo‘llash';
+
+  @override
+  String get taxSettingsPresetReplaces =>
+      'Qo‘llash joriy sozlamani butunlay almashtiradi. Ikki to‘plamni qo‘shib bo‘lmaydi: kassa soliqni ikki marta olgan bo‘lardi.';
+
+  @override
+  String taxSettingsPresetSource(String source) {
+    return 'Manba: $source';
+  }
+
+  @override
+  String taxSettingsPresetValidFrom(String date) {
+    return 'Stavkalar $date dan amal qiladi';
+  }
+
+  @override
+  String get taxSettingsPresetApplied => 'To‘plam qo‘llandi';
+
+  @override
+  String get taxSettingsCurrentSection => 'Joriy sozlama';
+
+  @override
+  String taxSettingsRateForStandard(String rate) {
+    return 'Oddiy tovar: $rate%';
+  }
+
+  @override
+  String get taxSettingsJurisdictions => 'Yurisdiksiyalar';
+
+  @override
+  String get taxSettingsCategories => 'Tovar toifalari';
+
+  @override
+  String get taxSettingsTillLocation => 'Kassa shu yerda turadi';
+
+  @override
+  String get taxSettingsTillLocationHint =>
+      'Belgi bir nechta bo‘lishi mumkin: shahar va maxsus tumanlar. Yuqoridagilari o‘zi qo‘shiladi.';
+
+  @override
+  String get taxSettingsRules => 'Qoidalar';
+
+  @override
+  String get taxSettingsRuleTaxed => 'soliq olinadi';
+
+  @override
+  String get taxSettingsRuleZero => 'nol stavka';
+
+  @override
+  String get taxSettingsRuleExempt => 'ozod qilingan';
+
+  @override
+  String get taxSettingsAllCategories => 'barcha toifalar';
+
+  @override
+  String get taxSettingsAddJurisdiction => 'Yurisdiksiya qo‘shish';
+
+  @override
+  String get taxSettingsAddCategory => 'Toifa qo‘shish';
+
+  @override
+  String get taxSettingsAddRule => 'Qoida qo‘shish';
+
+  @override
+  String get taxSettingsName => 'Nomi';
+
+  @override
+  String get taxSettingsCode => 'Kodi';
+
+  @override
+  String get taxSettingsRate => 'Stavka, %';
+
+  @override
+  String get taxSettingsValidFrom => 'Amal qilish boshlanishi';
+
+  @override
+  String get taxSettingsParent => 'Yuqori';
+
+  @override
+  String get taxSettingsNoParent => 'yo‘q (ildiz)';
+
+  @override
+  String get taxSettingsLevel => 'Daraja';
+
+  @override
+  String get taxSettingsLevelCountry => 'Davlat';
+
+  @override
+  String get taxSettingsLevelState => 'Shtat';
+
+  @override
+  String get taxSettingsLevelCounty => 'Okrug';
+
+  @override
+  String get taxSettingsLevelCity => 'Shahar';
+
+  @override
+  String get taxSettingsLevelDistrict => 'Maxsus tuman';
+
+  @override
+  String get taxSettingsDelete => 'O‘chirish';
+
+  @override
+  String get taxSettingsDeleteJurisdictionWarning =>
+      'U bilan birga uning qoidalari va ichki yurisdiksiyalari o‘chadi.';
+
+  @override
+  String get taxSettingsResponsibility =>
+      'To‘plamlardagi raqamlar ochiq manbalardan olingan va havola bilan ko‘rsatilgan. Soliqning to‘g‘riligi uchun dastur emas, soliq to‘lovchi javob beradi.';
+
+  @override
+  String get taxSettingsNoPresetsForCountry =>
+      'Bu davlat uchun tayyor to‘plam yo‘q — qo‘lda sozlang.';
+
+  @override
+  String get taxSettingsAdd => 'Qo‘shish';
+
+  @override
+  String get taxSettingsCancel => 'Bekor qilish';
+
+  @override
+  String get setupStoreAddressHint => 'Amir Temur koʻchasi, 10, Toshkent';
+
+  @override
+  String get setupStoreAddressHelper =>
+      'Chekka bosiladi. Usiz xaridor xarid qayerda qilinganini ko‘rmaydi.';
+
+  @override
+  String get countryKz => 'Qozogʻiston';
+
+  @override
+  String get countryRu => 'Rossiya';
+
+  @override
+  String get countryKg => 'Qirgʻiziston';
+
+  @override
+  String get countryUz => 'Oʻzbekiston';
+
+  @override
+  String get countryUs => 'AQSH';
+
+  @override
+  String get countryTm => 'Turkmaniston';
+
+  @override
+  String get currencyKzt => 'Qozogʻiston tengesi';
+
+  @override
+  String get currencyRub => 'Rossiya rubli';
+
+  @override
+  String get currencyKgs => 'Qirgʻiziston somi';
+
+  @override
+  String get currencyUzs => 'Oʻzbekiston soʻmi';
+
+  @override
+  String get currencyUsd => 'AQSH dollari';
+
+  @override
+  String get currencyTmt => 'Turkmaniston manati';
+
+  @override
+  String get setupStepSalesTax => 'Savdo soligʻi';
+
+  @override
+  String get setupSalesTaxPayerTitle => 'Savdo soligʻini yigʻaman';
+
+  @override
+  String get setupSalesTaxPayerSubtitle =>
+      'Stavkalar «Sozlamalar → Soliqlar» boʻlimida yurisdiksiya boʻyicha beriladi';
+
+  @override
+  String get setupSalesTaxPayerDescription =>
+      'Soliq narx ustiga qoʻshiladi va chekda alohida satrda bosiladi.';
+
+  @override
+  String get setupSalesTaxNonPayerTitle => 'Savdo soligʻisiz';
+
+  @override
+  String get setupSalesTaxNonPayerSubtitle => 'Narxga hech narsa qoʻshilmaydi';
+
+  @override
+  String get setupSalesTaxNonPayerDescription =>
+      'Narxga hech narsa qoʻshilmaydi, chekda soliq satri yoʻq.';
+
+  @override
+  String get bootLoadingConfig => 'Konfiguratsiyani yuklash…';
+
+  @override
+  String get bootCheckingPosKey => 'Kassa kalitini tekshirish…';
+
+  @override
+  String get bootLoadingAgents => 'Kontragentlarni yuklash…';
+
+  @override
+  String get bootLoadingAccounts => 'Hisoblarni yuklash…';
+
+  @override
+  String get bootInitialisingDatabase => 'Maʼlumotlar bazasini tayyorlash…';
+
+  @override
+  String get bootLoadingCashiers => 'Kassirlarni yuklash…';
+
+  @override
+  String get bootLoadingPosData => 'Kassa maʼlumotlarini yuklash…';
+
+  @override
+  String get bootLoadingProducts => 'Tovarlarni yuklash…';
+
+  @override
+  String get bootCheckingReceiptNumbers => 'Chek raqamlashni tekshirish…';
+
+  @override
+  String get bootCheckingLicence => 'Litsenziyani tekshirish…';
+
+  @override
+  String get bootCheckingReports => 'Hisobotlarni tekshirish…';
+
+  @override
+  String get bootFinishingInitialisation => 'Yakunlash…';
+
+  @override
+  String get bootStartingBackgroundJobs => 'Fon vazifalarini ishga tushirish…';
+
+  @override
+  String get bootReady => 'Tayyor';
+
+  @override
+  String get bootDataLoaded => 'Maʼlumotlar yuklandi';
+
+  @override
+  String bootTillNotResponding(String code) {
+    return 'Kassa javob bermayapti: $code';
+  }
+
+  @override
+  String get bootDownloadingBackup => 'Zaxira nusxani yuklash…';
+
+  @override
+  String get bootBackupDownloadFailed => 'Zaxira nusxani yuklab boʻlmadi';
+
+  @override
+  String get bootRestoringDatabase => 'Maʼlumotlar bazasini tiklash…';
+
+  @override
+  String get bootDatabaseRestoreFailed =>
+      'Maʼlumotlar bazasini tiklab boʻlmadi';
+
+  @override
+  String get bootApplyingPosKey => 'Kassa kalitini sozlash…';
+
+  @override
+  String get bootRestoreDone => 'Tiklash yakunlandi';
+
+  @override
+  String get bootCreatingBackup => 'Zaxira nusxa yaratish…';
+
+  @override
+  String get bootBackupCreateFailed => 'Zaxira nusxa yaratib boʻlmadi';
+
+  @override
+  String get bootBackupDone => 'Zaxira nusxa yaratildi va yuklandi';
+
+  @override
+  String get bootLoadingUsers => 'Foydalanuvchilarni yuklash…';
+
+  @override
+  String get bootLoadingCategories => 'Toifalarni yuklash…';
+
+  @override
+  String get bootLoadingSettings => 'Sozlamalarni yuklash…';
+
+  @override
+  String get bootSyncDone => 'Sinxronlash yakunlandi';
+
+  @override
+  String get bootFailed => 'Xatolik';
+
+  @override
+  String get countryDeu => 'Germaniya';
+
+  @override
+  String get currencyDeu => 'Yevro';
+
+  @override
+  String get countryFra => 'Fransiya';
+
+  @override
+  String get currencyFra => 'Yevro';
+
+  @override
+  String get countryEsp => 'Ispaniya';
+
+  @override
+  String get currencyEsp => 'Yevro';
+
+  @override
+  String get countryIta => 'Italiya';
+
+  @override
+  String get currencyIta => 'Yevro';
+
+  @override
+  String get countryGbr => 'Buyuk Britaniya';
+
+  @override
+  String get currencyGbr => 'Funt sterling';
+
+  @override
+  String get countryPol => 'Polsha';
+
+  @override
+  String get currencyPol => 'Polsha zlotiysi';
+
+  @override
+  String get countryTur => 'Turkiya';
+
+  @override
+  String get currencyTur => 'Turk lirasi';
+
+  @override
+  String get countryChn => 'Xitoy';
+
+  @override
+  String get currencyChn => 'Xitoy yuani';
+
+  @override
+  String get countryJpn => 'Yaponiya';
+
+  @override
+  String get currencyJpn => 'Yaponiya iyenasi';
+
+  @override
+  String get countryKor => 'Janubiy Koreya';
+
+  @override
+  String get currencyKor => 'Koreya vonasi';
+
+  @override
+  String get countryAre => 'BAA';
+
+  @override
+  String get currencyAre => 'BAA dirhami';
+
+  @override
+  String get countrySau => 'Saudiya Arabistoni';
+
+  @override
+  String get currencySau => 'Saudiya riyoli';
+
+  @override
+  String get countryInd => 'Hindiston';
+
+  @override
+  String get currencyInd => 'Hindiston rupiyasi';
+
+  @override
+  String get countryCan => 'Kanada';
+
+  @override
+  String get currencyCan => 'Kanada dollari';
+
+  @override
+  String get countryAus => 'Avstraliya';
+
+  @override
+  String get currencyAus => 'Avstraliya dollari';
+
+  @override
+  String get agentPaymentAccepted => 'Toʻlov qabul qilindi';
+
+  @override
+  String get catalogCategoryHasChildren => 'Toifada ichki toifalar bor';
+
+  @override
+  String creditOutstanding(String amount) {
+    return 'Qoldi: $amount';
+  }
+
+  @override
+  String get creditTakePayment => 'Toʻlovni qabul qilish';
+
+  @override
+  String get creditPrintContract => 'Shartnomani chop etish';
+
+  @override
+  String creditPaymentFor(String number) {
+    return '$number boʻyicha toʻlov';
+  }
+
+  @override
+  String creditOutstandingOnContract(String amount) {
+    return 'Shartnoma boʻyicha qoldi: $amount';
+  }
+
+  @override
+  String get creditPayInFull => 'Toʻliq toʻlash';
+
+  @override
+  String get creditAccept => 'Qabul qilish';
+
+  @override
+  String get displayProduct => 'Tovar';
+
+  @override
+  String markupSaved(int count) {
+    return 'Ustamalar saqlandi: $count toifa';
+  }
+
+  @override
+  String genericErrorWith(String detail) {
+    return 'Xatolik: $detail';
+  }
+
+  @override
+  String get serviceAttachPhoto => 'Foto';
+
+  @override
+  String get serviceAttachVideo => 'Video';
+
+  @override
+  String get shiftCorrectionReceipt => 'Tuzatish cheki';
+
+  @override
+  String get supplierChoose => 'Yetkazib beruvchini tanlang';
+
+  @override
+  String get supplierProduct => 'Tovar';
+
+  @override
+  String get supplierStock => 'Qoldiq';
+
+  @override
+  String get supplierOrderQty => 'Buyurtma';
+
+  @override
+  String get supplierCreateRequest => 'Soʻrov yaratish';
+
+  @override
+  String get supplierNeedQuantity => 'Kamida bitta tovarga miqdor kiriting';
+
+  @override
+  String unitMonthsShort(int count) {
+    return '$count oy';
+  }
+
+  @override
+  String unitDaysShort(int count) {
+    return '$count kun';
+  }
+
+  @override
+  String get displayWelcome => 'Xush kelibsiz!';
+
+  @override
+  String get displayWelcomeSubtitle => 'Sizni koʻrganimizdan xursandmiz';
+
+  @override
+  String get displayPromoFree => 'Aksiya · bepul';
+
+  @override
+  String displayDiscountAmount(String amount) {
+    return 'Chegirma −$amount';
+  }
+
+  @override
+  String get displayWindowTitle => 'Xaridor ekrani';
+
+  @override
+  String get shiftXReportPrinted => 'X-hisobot chop etildi';
+
+  @override
+  String get shiftXReportPrintedOffline =>
+      'X-hisobot chop etildi (fiskal X navbatda, aloqa yoʻq)';
+
+  @override
+  String get shiftXReportFailed => 'X-hisobotni chop etib boʻlmadi';
+
+  @override
+  String creditContractNotFound(String number) {
+    return '$number shartnomasi kassada yoʻq';
+  }
+
+  @override
+  String creditOverdue(String amount, int count) {
+    return 'MUDDATI OʻTGAN: $amount ($count toʻlov)';
+  }
+
+  @override
+  String creditNextPayment(String date, String amount) {
+    return 'Keyingi toʻlov $date: $amount';
+  }
+
+  @override
+  String get creditNoTillAccount =>
+      'Kassaning hisobi yoʻq — pulni qabul qiladigan joy yoʻq';
+
+  @override
+  String creditContractClosed(String number) {
+    return '$number shartnomasi yopildi';
+  }
+
+  @override
+  String creditPartiallyPaid(String paid, String left) {
+    return '$paid qabul qilindi, $left qoldi';
+  }
+
+  @override
+  String get creditPaymentAmount => 'Toʻlov summasi';
+
+  @override
+  String get serviceWarrantyAndQuality => 'Kafolat va sifat';
+
+  @override
+  String serviceWarrantyDays(int days) {
+    return 'Kafolat: $days kun';
+  }
+
+  @override
+  String get serviceWarrantyNotSet => 'Kafolat belgilanmagan';
+
+  @override
+  String get serviceQualityRatingTitle => 'Sifat bahosi';
+
+  @override
+  String serviceQualityRatingValue(int rating) {
+    return 'Bahosi: $rating/5';
+  }
+
+  @override
+  String get serviceRepairMedia => 'Taʼmir foto/videosi';
+
+  @override
+  String get serviceNoRepairMedia => 'Taʼmir mediasi yoʻq';
+
+  @override
+  String get supplierLabel => 'Yetkazib beruvchi:';
+
+  @override
+  String supplierLinesToOrder(int count) {
+    return 'Buyurtmaga pozitsiya: $count';
+  }
+
+  @override
+  String supplierRequestCreated(int count) {
+    return 'Soʻrov yaratildi: $count ta';
+  }
+
+  @override
+  String get modifierRequired => 'Majburiy';
+
+  @override
+  String modifierMax(int count) {
+    return 'maks. $count';
+  }
+
+  @override
+  String get writeoffReasonUnspecified => 'Koʻrsatilmagan';
+
+  @override
+  String get labelSampleProduct => 'Tovar namunasi';
+
+  @override
+  String markupCategoryNumbered(int id) {
+    return 'Toifa #$id';
+  }
+
+  @override
+  String get salePolicyForbids =>
+      'Amalga kassa sozlamalari ruxsat bermaydi (Sozlamalar → Sotuv siyosati)';
+
+  @override
+  String get labelPrintFailed => 'Yorliqni chop etishda xatolik';
+
+  @override
+  String get labelPrintFromTillOnly =>
+      'Yorliq kassadan chop etiladi, terminaldan emas';
+
+  @override
+  String get orphanQrTillNotRegistered =>
+      'Kassa royxatdan otmagan — QR boyicha aniqlanmagan pulni sorash mumkin emas';
+
+  @override
+  String get stockLowStockReorder =>
+      'Qoldigi kam tovarlarga qoshimcha buyurtma';
+
+  @override
+  String get serviceNoteNeedsApproval => 'Mijozning roziligi kerak';
+
+  @override
+  String deferredFromTill(String id) {
+    return 'kassa $id';
+  }
+
+  @override
+  String dishSummary(int count, String cost) {
+    return 'Ingredient: $count, tannarxi: $cost';
+  }
+
+  @override
+  String prepaymentIssueTo(String name) {
+    return 'Xaridorga avans berish ($name)';
+  }
+
+  @override
+  String prepaymentFrom(String name) {
+    return 'Xaridor avansi ($name)';
+  }
+
+  @override
+  String prepaymentRefundTo(String name) {
+    return 'Xaridorga avansni qaytarish ($name)';
+  }
+
+  @override
+  String get setupPartOrganization => 'tashkilot';
+
+  @override
+  String get setupPartTill => 'kassa';
+
+  @override
+  String get setupPartFiscal => 'fiskallashtirish';
+
+  @override
+  String get setupPartEquipment => 'jihoz';
+
+  @override
+  String get setupPartTerminals => 'tolov terminallari';
+
+  @override
+  String get setupPartRules => 'qoidalar';
+
+  @override
+  String get setupPartUser => 'foydalanuvchi';
+
+  @override
+  String customerPaymentNote(String name) {
+    return 'Qarzni yopish / tolov ($name)';
+  }
+
+  @override
+  String get chatMembersUnavailable => 'Ishtirokchilar roʻyxati yuklanmadi';
+
+  @override
+  String get chatMe => 'Men';
+
+  @override
+  String get setPolicyBigAmountLimit => 'Chek summasi chegarasi';
+
+  @override
+  String setPolicyBigAmountLimitDesc(String fallback) {
+    return 'Shu summadan yuqori kassa ruxsat soʻraydi. Boʻsh — $fallback.';
+  }
+
+  @override
+  String get cashRefusedNotPositive => 'Summa noldan katta boʻlishi kerak';
+
+  @override
+  String cashRefusedAboveCeiling(String limit) {
+    return 'Summa kassa chegarasidan yuqori ($limit). Sozlamalarda chegarani koʻtaring yoki katta summalarga ruxsatni yoqing.';
+  }
+
+  @override
+  String errorProductHasNoPrice(String name) {
+    return '«$name» tovarining narxi yoʻq — sotib boʻlmaydi. Katalogda narx belgilang.';
+  }
+
+  @override
+  String get sellingHoursTitle => 'Sotuvga taqiq soatlari';
+
+  @override
+  String get sellingHoursAdd => 'Oyna qoʻshish';
+
+  @override
+  String get sellingHoursCategory => 'Toifa';
+
+  @override
+  String get sellingHoursFrom => 'Dan (SS:DD)';
+
+  @override
+  String get sellingHoursTo => 'Gacha (SS:DD)';
+
+  @override
+  String get sellingHoursActive => 'Taqiq kuchda';
+
+  @override
+  String sellingHoursBanned(String window) {
+    return 'Sotish taqiqlangan $window';
+  }
+
+  @override
+  String sellingHoursOff(String window) {
+    return '$window oynasi oʻchirilgan';
+  }
+
+  @override
+  String sellingHoursBroken(String window) {
+    return '«$window» soatlari oʻqilmadi — taqiq ishlamaydi';
+  }
+
+  @override
+  String get sellingHoursBadTime => 'Vaqt SS:DD koʻrinishida, masalan 23:00';
+
+  @override
+  String sellingHoursPreviewDay(String window) {
+    return 'Bir kun ichida: $window';
+  }
+
+  @override
+  String sellingHoursPreviewNight(String window) {
+    return 'Tungi taqiq, yarim tundan oʻtib: $window';
+  }
+
+  @override
+  String get sellingHoursExplainer =>
+      'Soatlarni oʻzingiz belgilaysiz: qonun har mamlakatda boshqa. Toifaga taqiq uning ichidagilarga ham taalluqli.';
+
+  @override
+  String get sellingHoursNoCategories =>
+      'Avval katalogda toifa yarating — taqiq toifaga qoʻyiladi.';
+
+  @override
+  String sellingHoursCategoryGone(int id) {
+    return '#$id toifasi oʻchirilgan';
+  }
+
+  @override
+  String errorSellingHoursBanned(String category, String window) {
+    return '«$category» hozir sotib boʻlmaydi: taqiq $window.';
+  }
+
+  @override
+  String errorSellingHoursBannedNoWindow(String category) {
+    return '«$category» hozir sotib boʻlmaydi.';
+  }
+
+  @override
+  String get generalSettingsStoreAddress => 'Savdo nuqtasi manzili';
+
+  @override
+  String get generalSettingsStoreAddressHint =>
+      'Chekda chop etiladi. Doʻkon koʻchsa, oʻzgartiring.';
 }

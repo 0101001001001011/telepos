@@ -154,9 +154,12 @@ abstract final class SecurityOutcome {
 
 /// Пишет строки в [SecurityEventDao], не роняя вызывающую операцию.
 class SecurityJournal {
-  SecurityJournal(this._dao, {Talker? logger, String Function()? newCorrelationId})
-    : _logger = logger,
-      _newCorrelationId = newCorrelationId ?? _randomCorrelationId;
+  SecurityJournal(
+    this._dao, {
+    Talker? logger,
+    String Function()? newCorrelationId,
+  }) : _logger = logger,
+       _newCorrelationId = newCorrelationId ?? _randomCorrelationId;
 
   final SecurityEventDao _dao;
   final Talker? _logger;
@@ -301,6 +304,7 @@ void Function(
 buildWireDeniedJournalHandler({
   required SecurityJournal journal,
   required int? Function(int sessionKey) resolveTerminal,
+
   /// Окно склейки повторных отказов одной сессии — см. докстринг функции,
   /// «БЛОКЕР 3». 5 секунд — на порядок больше, чем нужно, чтобы кассир,
   /// дважды подряд щёлкнувший кнопку без прав, не породил вторую строку по
@@ -374,14 +378,16 @@ buildWireDeniedJournalHandler({
 /// `wire.denied`.
 void Function(CertificateLock lock) certificateLockJournalHandler(
   SecurityJournal journal,
-) => (lock) => unawaited(
-  journal.record(
-    eventType: SecurityEventType.certificateRateLimited,
-    outcome: '$certificateRateLimitedCode(${(lock.axes.toList()..sort()).join(',')})',
-    terminalId: lock.terminalId ?? 0,
-    userId: lock.userId,
-  ),
-);
+) =>
+    (lock) => unawaited(
+      journal.record(
+        eventType: SecurityEventType.certificateRateLimited,
+        outcome:
+            '$certificateRateLimitedCode(${(lock.axes.toList()..sort()).join(',')})',
+        terminalId: lock.terminalId ?? 0,
+        userId: lock.userId,
+      ),
+    );
 
 /// Проверка целостности журнала на подъёме кассы — пункт 6 брифа закрытия
 /// долга безопасности (2026-08-22).

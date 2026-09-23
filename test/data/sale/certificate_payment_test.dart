@@ -242,7 +242,8 @@ void main() {
       expect(
         (await cert('C-1')).balance,
         d('500'),
-        reason: 'либо оба, либо ни одного: иначе это подарок, повторяемый '
+        reason:
+            'либо оба, либо ни одного: иначе это подарок, повторяемый '
             'бесконечно',
       );
       expect((await cert('C-1')).status, CertificateStatus.active);
@@ -416,11 +417,7 @@ void main() {
           mv(view, 9),
         ),
         throwsA(
-          isA<WireRefusal>().having(
-            (r) => r.code,
-            'code',
-            payInsufficientCode,
-          ),
+          isA<WireRefusal>().having((r) => r.code, 'code', payInsufficientCode),
         ),
       );
       expect(
@@ -701,11 +698,7 @@ void main() {
 
       expect(
         refusal,
-        isA<WireRefusal>().having(
-          (r) => r.code,
-          'code',
-          certificateRaceCode,
-        ),
+        isA<WireRefusal>().having((r) => r.code, 'code', certificateRaceCode),
         reason: 'проигравший обязан получить названный отказ, а не пройти',
       );
       // **Главное утверждение случая — не отказ, а откат.** Товар не
@@ -749,11 +742,7 @@ void main() {
           mv(view, 9),
         ),
         throwsA(
-          isA<WireRefusal>().having(
-            (r) => r.code,
-            'code',
-            payKindInactiveCode,
-          ),
+          isA<WireRefusal>().having((r) => r.code, 'code', payKindInactiveCode),
         ),
       );
       expect((await cert('C-1')).balance, d('500'));

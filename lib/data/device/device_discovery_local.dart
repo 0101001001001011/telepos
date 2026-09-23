@@ -132,9 +132,11 @@ class DeviceDiscoveryLocal implements DeviceDiscovery {
        _sysd = sysd ?? SysdClient(),
        _availableSerialPorts =
            availableSerialPorts ?? (() => SerialPort.availablePorts),
-       _scanUsbDevicePaths = scanUsbDevicePaths ?? LinuxPrinterScanner.scanDevices,
+       _scanUsbDevicePaths =
+           scanUsbDevicePaths ?? LinuxPrinterScanner.scanDevices,
        _bondedBluetoothDevices =
-           bondedBluetoothDevices ?? bt.BluetoothPrinterScanner.getBondedDevices,
+           bondedBluetoothDevices ??
+           bt.BluetoothPrinterScanner.getBondedDevices,
        _deviceSubnet = deviceSubnet ?? WifiPrinterScanner.getDeviceSubnet,
        _scanNetwork =
            scanNetwork ?? ((subnet) => WifiPrinterScanner.scan(subnet: subnet));
@@ -208,14 +210,20 @@ class DeviceDiscoveryLocal implements DeviceDiscovery {
     final usbFuture = applicableSources.contains(DeviceDiscoverySource.usb)
         ? _usbDevicePathCandidates(knownPorts: ports.toSet())
         : Future.value((candidates: const <DeviceCandidate>[], failed: false));
-    final bluetoothFuture = applicableSources.contains(DeviceDiscoverySource.bluetooth)
+    final bluetoothFuture =
+        applicableSources.contains(DeviceDiscoverySource.bluetooth)
         ? _bluetoothCandidates()
         : Future.value((candidates: const <DeviceCandidate>[], failed: false));
-    final networkFuture = applicableSources.contains(DeviceDiscoverySource.network)
+    final networkFuture =
+        applicableSources.contains(DeviceDiscoverySource.network)
         ? _networkCandidates(includePort: wantsPort)
         : Future.value((candidates: const <DeviceCandidate>[], failed: false));
 
-    final results = await Future.wait([usbFuture, bluetoothFuture, networkFuture]);
+    final results = await Future.wait([
+      usbFuture,
+      bluetoothFuture,
+      networkFuture,
+    ]);
     const sourceTags = [
       DeviceDiscoverySource.usb,
       DeviceDiscoverySource.bluetooth,
@@ -227,7 +235,10 @@ class DeviceDiscoveryLocal implements DeviceDiscovery {
       if (results[i].failed) failedSources.add(sourceTags[i]);
     }
 
-    return DeviceDiscoveryResult(candidates: candidates, failedSources: failedSources);
+    return DeviceDiscoveryResult(
+      candidates: candidates,
+      failedSources: failedSources,
+    );
   }
 
   /// The raw-USB-node half of `LinuxPrinterScanner.scanDevices()` only —

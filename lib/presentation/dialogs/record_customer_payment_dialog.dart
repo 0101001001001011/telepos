@@ -75,7 +75,7 @@ class _RecordCustomerPaymentDialogState
           agentId: widget.agentId,
           amount: amount,
           tenderKindId: _tenderKindId,
-          note: 'Погашение долга / оплата (${widget.agentName})',
+          note: l10n.customerPaymentNote(widget.agentName),
         );
 
     if (!mounted) return;

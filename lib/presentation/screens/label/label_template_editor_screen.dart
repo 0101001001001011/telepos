@@ -237,7 +237,7 @@ class _LabelTemplateEditorScreenState extends State<LabelTemplateEditorScreen> {
             fields: _fields,
             widthMm: _widthMm,
             heightMm: _heightMm,
-            data: sampleLabelData(),
+            data: sampleLabelData(AppLocalizations.of(context)!),
           ),
         ],
       ),

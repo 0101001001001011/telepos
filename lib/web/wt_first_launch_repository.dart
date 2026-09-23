@@ -1,4 +1,5 @@
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/wire/till_ops.dart';
 import 'package:telepos/web/wt_channel.dart';
@@ -51,9 +52,9 @@ class WtFirstLaunchRepository implements FirstLaunchRepository {
 
   @override
   Future<bool> restoreFromBackup(
-    FoundBackup backup,
-    {BootProgress? onProgress}
-  ) => _drive(_wire.run(TillOps.setupRestore, backup), onProgress);
+    FoundBackup backup, {
+    BootProgress? onProgress,
+  }) => _drive(_wire.run(TillOps.setupRestore, backup), onProgress);
 
   @override
   Future<bool> loadGlobalData({BootProgress? onProgress}) =>
@@ -84,13 +85,22 @@ class WtFirstLaunchRepository implements FirstLaunchRepository {
           finished = true;
           result = step.done ?? false;
         } else {
-          onProgress?.call(step.value ?? 0, step.text ?? '');
+          // По проводу приехал КОД этапа; неизвестный код — не повод
+          // молчать: полоса всё равно двигается, а слово подставит тот,
+          // кто знает язык.
+          onProgress?.call(
+            step.value ?? 0,
+            BootStage.values.firstWhere(
+              (s) => s.name == step.text,
+              orElse: () => BootStage.loadingConfig,
+            ),
+          );
         }
       }
     } on WtProtocolError catch (error) {
       // Причина обязана дойти до полосы: остановившаяся молча полоса
       // неотличима от зависшей кассы.
-      onProgress?.call(0, 'Ошибка: ${error.code}');
+      onProgress?.call(0, BootStage.tillNotResponding, error.code);
       return false;
     }
     // Поток кончился, не сказав «готово», — работа оборвана, а не сделана.

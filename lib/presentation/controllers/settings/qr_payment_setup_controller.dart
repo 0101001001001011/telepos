@@ -35,12 +35,7 @@ import 'package:telepos/domain/wire/wire_refusal.dart';
 import 'package:telepos/presentation/controllers/sale/sale_refusal_keys.dart';
 
 /// Беды формы — словами экрана, а не текстом исключения.
-enum QrSettingsProblem {
-  invalidUrl,
-  codeRequired,
-  invalidPatience,
-  saveFailed,
-}
+enum QrSettingsProblem { invalidUrl, codeRequired, invalidPatience, saveFailed }
 
 class QrPaymentSetupState {
   const QrPaymentSetupState({

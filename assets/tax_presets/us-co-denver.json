@@ -1,0 +1,61 @@
+{
+  "id": "us-co-denver",
+  "title": "Denver, Colorado",
+  "countryCode": "US",
+  "region": "CO",
+  "city": "Denver",
+  "taxTreatment": "exclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "$",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "9.15",
+  "categories": [
+    { "code": "standard", "title": "Standard", "isDefault": true },
+    { "code": "food-home", "title": "Food for home consumption" }
+  ],
+  "jurisdictions": [
+    {
+      "code": "us-co",
+      "name": "CO State",
+      "level": 1,
+      "parent": null,
+      "tillLocation": false,
+      "rules": [
+        { "category": null, "kind": "taxed", "ratePercent": "2.90" },
+        { "category": "food-home", "kind": "exempt", "ratePercent": "0" }
+      ]
+    },
+    {
+      "code": "us-co-denver",
+      "name": "Denver",
+      "level": 3,
+      "parent": "us-co",
+      "tillLocation": true,
+      "rules": [
+        { "category": null, "kind": "taxed", "ratePercent": "5.15" }
+      ]
+    },
+    {
+      "code": "us-co-rtd",
+      "name": "RTD",
+      "level": 4,
+      "parent": "us-co",
+      "tillLocation": true,
+      "rules": [
+        { "category": null, "kind": "taxed", "ratePercent": "1.00" }
+      ]
+    },
+    {
+      "code": "us-co-scfd",
+      "name": "SCFD",
+      "level": 4,
+      "parent": "us-co",
+      "tillLocation": true,
+      "rules": [
+        { "category": null, "kind": "taxed", "ratePercent": "0.10" }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "Denver Tax Guide Topic No. 70 (2026); Colorado DR 1002"
+}

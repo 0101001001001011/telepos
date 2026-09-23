@@ -99,6 +99,7 @@ import 'package:telepos/data/setup/setup_repository_local.dart';
 import 'package:telepos/data/terminal/device_binding_repository_local.dart';
 import 'package:telepos/data/terminal/terminal_repository_local.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/screens/settings/terminal_pairing_screen.dart';
@@ -501,13 +502,13 @@ class _ProbeBootstrap implements AppBootstrap {
 
   @override
   Future<AppInitStatus> start({required BootProgress onProgress}) async {
-    onProgress(0.5, 'Проверка базы данных...');
+    onProgress(0.5, BootStage.initialisingDatabase);
     try {
       await _db.customSelect('SELECT 1 AS test').getSingle();
     } catch (_) {
       return AppInitStatus.databaseFailure;
     }
-    onProgress(1.0, 'Готово');
+    onProgress(1.0, BootStage.ready);
     return AppInitStatus.success;
   }
 }

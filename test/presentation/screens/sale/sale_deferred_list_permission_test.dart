@@ -68,29 +68,30 @@ void main() {
 
   const reasonKey = Key('sale_deferred_list_denied_reason');
 
-  testWidgets('без права кнопка на месте, но пул не открывает и называет причину', (
-    tester,
-  ) async {
-    final opened = await pump(tester, permissions: {PermissionKeys.navSale});
+  testWidgets(
+    'без права кнопка на месте, но пул не открывает и называет причину',
+    (tester) async {
+      final opened = await pump(tester, permissions: {PermissionKeys.navSale});
 
-    expect(
-      find.text('Отложенные'),
-      findsOneWidget,
-      reason: 'кнопка не прячется: пропавшая сдвинула бы соседей под палец',
-    );
+      expect(
+        find.text('Отложенные'),
+        findsOneWidget,
+        reason: 'кнопка не прячется: пропавшая сдвинула бы соседей под палец',
+      );
 
-    await tester.tap(find.text('Отложенные'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Отложенные'));
+      await tester.pumpAndSettle();
 
-    expect(
-      opened(),
-      0,
-      reason:
-          'пул закрыт правом op.deferSale на кассе; открывать диалог, чтобы '
-          'в нём же отказать, — узнавать о закрытой двери, уже войдя в неё',
-    );
-    expect(find.byKey(reasonKey), findsOneWidget, reason: 'причина названа');
-  });
+      expect(
+        opened(),
+        0,
+        reason:
+            'пул закрыт правом op.deferSale на кассе; открывать диалог, чтобы '
+            'в нём же отказать, — узнавать о закрытой двери, уже войдя в неё',
+      );
+      expect(find.byKey(reasonKey), findsOneWidget, reason: 'причина названа');
+    },
+  );
 
   testWidgets('с правом кнопка открывает пул и молчит', (tester) async {
     final opened = await pump(

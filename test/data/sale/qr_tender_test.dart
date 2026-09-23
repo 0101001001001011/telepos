@@ -255,11 +255,7 @@ void main() {
           mv(view, 9),
         ),
         throwsA(
-          isA<WireRefusal>().having(
-            (r) => r.code,
-            'code',
-            payKindInactiveCode,
-          ),
+          isA<WireRefusal>().having((r) => r.code, 'code', payKindInactiveCode),
         ),
       );
 
@@ -269,55 +265,57 @@ void main() {
   });
 
   group('сумму читает касса, а не заявка', () {
-    test('строка оплаты равна подтверждённому, а не названному в кадре',
-        () async {
-      await enableQr();
-      await paidIntent('q-1', '1000');
-      final view = await receiptWith();
+    test(
+      'строка оплаты равна подтверждённому, а не названному в кадре',
+      () async {
+        await enableQr();
+        await paidIntent('q-1', '1000');
+        final view = await receiptWith();
 
-      final outcome = await payments.complete(
-        7,
-        PaymentRequest(
-          type: PaymentType.cash,
-          // Заявка врёт: она называет 100 наличными и рассчитывает, что
-          // касса дополнит QR-ом. Касса читает намерение у себя.
-          cashReceived: d('100'),
-          qrIntentKey: 'q-1',
-        ),
-        mv(view, 9),
-      );
+        final outcome = await payments.complete(
+          7,
+          PaymentRequest(
+            type: PaymentType.cash,
+            // Заявка врёт: она называет 100 наличными и рассчитывает, что
+            // касса дополнит QR-ом. Касса читает намерение у себя.
+            cashReceived: d('100'),
+            qrIntentKey: 'q-1',
+          ),
+          mv(view, 9),
+        );
 
-      expect(outcome.amount, d('1000'));
-      expect(outcome.paid, d('1000'));
-      expect(outcome.debt, Decimal.zero);
+        expect(outcome.amount, d('1000'));
+        expect(outcome.paid, d('1000'));
+        expect(outcome.debt, Decimal.zero);
 
-      final rows = await db.select(db.payments).get();
-      expect(rows.length, 1, reason: 'весь чек закрыт одной строкой QR');
-      final qr = rows.single;
-      expect(qr.kindId, SystemPaymentKindIds.qr);
-      expect(qr.amount, d('1000'));
-      expect(
-        qr.payeeAccountId,
-        bankAccountId,
-        reason:
-            'деньги пришли на счёт в банке, а не в ящик: счёт кассы завысил '
-            'бы наличные смены на сумму, которой в ящике нет',
-      );
-      expect(
-        qr.reference,
-        'q-1',
-        reason: 'документ-основание — ключ намерения (колонка задачи 14)',
-      );
-      expect(
-        qr.providerCode,
-        'sbp_test',
-        reason:
-            'без кода провайдера подтверждение, пришедшее снаружи, не с чем '
-            'сверить',
-      );
-      expect(qr.terminalTransactionId, 'PRV-q-1');
-      expect(qr.seq, 0, reason: 'seq считается от нуля на каждой попытке');
-    });
+        final rows = await db.select(db.payments).get();
+        expect(rows.length, 1, reason: 'весь чек закрыт одной строкой QR');
+        final qr = rows.single;
+        expect(qr.kindId, SystemPaymentKindIds.qr);
+        expect(qr.amount, d('1000'));
+        expect(
+          qr.payeeAccountId,
+          bankAccountId,
+          reason:
+              'деньги пришли на счёт в банке, а не в ящик: счёт кассы завысил '
+              'бы наличные смены на сумму, которой в ящике нет',
+        );
+        expect(
+          qr.reference,
+          'q-1',
+          reason: 'документ-основание — ключ намерения (колонка задачи 14)',
+        );
+        expect(
+          qr.providerCode,
+          'sbp_test',
+          reason:
+              'без кода провайдера подтверждение, пришедшее снаружи, не с чем '
+              'сверить',
+        );
+        expect(qr.terminalTransactionId, 'PRV-q-1');
+        expect(qr.seq, 0, reason: 'seq считается от нуля на каждой попытке');
+      },
+    );
 
     test('оплачено частично — остаток добирается наличными', () async {
       await enableQr();
@@ -343,11 +341,10 @@ void main() {
         SystemPaymentKindIds.qr,
       ]);
       expect(rows.map((r) => r.amount), [d('600'), d('400')]);
-      expect(
-        rows.map((r) => r.seq),
-        [0, 1],
-        reason: 'нумерация от нуля не сломана новым видом',
-      );
+      expect(rows.map((r) => r.seq), [
+        0,
+        1,
+      ], reason: 'нумерация от нуля не сломана новым видом');
     });
 
     test('намерение больше чека — строка не превышает суммы чека', () async {
@@ -383,77 +380,79 @@ void main() {
     /// сложением строк. Ровно на этом сочетании `payment_unbalanced`
     /// перестаёт быть недостижимым: без `− qr` в разности строки дают
     /// 1400 на чеке в 1000.
-    test('часть телефоном, остаток в долг — Σ строк равна сумме чека',
-        () async {
-      await enableQr();
-      await seedDebtor();
-      await allowDebtSales();
-      await paidIntent('q-debt', '400');
-      final view = await receiptWith();
+    test(
+      'часть телефоном, остаток в долг — Σ строк равна сумме чека',
+      () async {
+        await enableQr();
+        await seedDebtor();
+        await allowDebtSales();
+        await paidIntent('q-debt', '400');
+        final view = await receiptWith();
 
-      final outcome = await payments.complete(
-        7,
-        PaymentRequest(
-          type: PaymentType.debt,
-          customerId: customerId,
-          qrIntentKey: 'q-debt',
-        ),
-        mv(view, 9),
-      );
+        final outcome = await payments.complete(
+          7,
+          PaymentRequest(
+            type: PaymentType.debt,
+            customerId: customerId,
+            qrIntentKey: 'q-debt',
+          ),
+          mv(view, 9),
+        );
 
-      // `SaleOutcome.paid` — **живые деньги**, а не сумма строк: строка
-      // долга это обязательство, и класть её в «оплачено» значило бы
-      // сказать кассиру, что чек закрыт деньгами. Строк при этом две, и
-      // их сумма равна чеку — два разных утверждения об одном чеке, и
-      // проверяются оба.
-      expect(outcome.paid, d('400'), reason: 'телефоном пришло 400');
-      expect(outcome.debt, d('600'), reason: 'остальное — обязательство');
+        // `SaleOutcome.paid` — **живые деньги**, а не сумма строк: строка
+        // долга это обязательство, и класть её в «оплачено» значило бы
+        // сказать кассиру, что чек закрыт деньгами. Строк при этом две, и
+        // их сумма равна чеку — два разных утверждения об одном чеке, и
+        // проверяются оба.
+        expect(outcome.paid, d('400'), reason: 'телефоном пришло 400');
+        expect(outcome.debt, d('600'), reason: 'остальное — обязательство');
 
-      final rows = await db.select(db.payments).get()
-        ..sort((a, b) => a.seq.compareTo(b.seq));
-      expect(rows.length, 2);
-      expect(rows.map((r) => r.kindId), [
-        SystemPaymentKindIds.qr,
-        SystemPaymentKindIds.debt,
-      ]);
-      expect(rows.map((r) => r.amount), [d('400'), d('600')]);
+        final rows = await db.select(db.payments).get()
+          ..sort((a, b) => a.seq.compareTo(b.seq));
+        expect(rows.length, 2);
+        expect(rows.map((r) => r.kindId), [
+          SystemPaymentKindIds.qr,
+          SystemPaymentKindIds.debt,
+        ]);
+        expect(rows.map((r) => r.amount), [d('400'), d('600')]);
 
-      // **Ни одной наличной строки — и это утверждение, а не совпадение.**
-      //
-      // Замер соседа по авансу: на наличном чеке до сторожа равенства
-      // дело **не доходит** — диверсия падает раньше, на
-      // `payment_insufficient` («наличных меньше суммы к оплате»), и
-      // проба, написанная на наличном чеке, мерит соседний сторож, а не
-      // этот. У меня то же самое измерено на диверсии `toPay`.
-      //
-      // Значит проба на `payment_unbalanced` **обязана быть
-      // безналичной**, и обязанность эта закрепляется здесь: без этой
-      // строки чья-нибудь правка добавит сюда наличных, проба останется
-      // зелёной, а сторож перестанет проверяться — и узнать об этом
-      // будет неоткуда.
-      expect(
-        rows.where((r) => r.kindId == SystemPaymentKindIds.cash),
-        isEmpty,
-        reason:
-            'проба на сторож равенства обязана быть безналичной: с наличной '
-            'строкой первым отвечает payment_insufficient, и диверсия мерит '
-            'не тот сторож',
-      );
-      expect(
-        rows.fold(Decimal.zero, (s, r) => s + r.amount),
-        d('1000'),
-        reason: 'Σ строк оплаты == сумма чека (I172)',
-      );
+        // **Ни одной наличной строки — и это утверждение, а не совпадение.**
+        //
+        // Замер соседа по авансу: на наличном чеке до сторожа равенства
+        // дело **не доходит** — диверсия падает раньше, на
+        // `payment_insufficient` («наличных меньше суммы к оплате»), и
+        // проба, написанная на наличном чеке, мерит соседний сторож, а не
+        // этот. У меня то же самое измерено на диверсии `toPay`.
+        //
+        // Значит проба на `payment_unbalanced` **обязана быть
+        // безналичной**, и обязанность эта закрепляется здесь: без этой
+        // строки чья-нибудь правка добавит сюда наличных, проба останется
+        // зелёной, а сторож перестанет проверяться — и узнать об этом
+        // будет неоткуда.
+        expect(
+          rows.where((r) => r.kindId == SystemPaymentKindIds.cash),
+          isEmpty,
+          reason:
+              'проба на сторож равенства обязана быть безналичной: с наличной '
+              'строкой первым отвечает payment_insufficient, и диверсия мерит '
+              'не тот сторож',
+        );
+        expect(
+          rows.fold(Decimal.zero, (s, r) => s + r.amount),
+          d('1000'),
+          reason: 'Σ строк оплаты == сумма чека (I172)',
+        );
 
-      final debtor = await db.accountDao.findById(agentMainAccountId);
-      expect(
-        debtor!.value,
-        d('-600'),
-        reason:
-            'покупателю записаны 600, а не 1000: четыреста он уже заплатил '
-            'телефоном, и записать их в долг значило бы взять с него дважды',
-      );
-    });
+        final debtor = await db.accountDao.findById(agentMainAccountId);
+        expect(
+          debtor!.value,
+          d('-600'),
+          reason:
+              'покупателю записаны 600, а не 1000: четыреста он уже заплатил '
+              'телефоном, и записать их в долг значило бы взять с него дважды',
+        );
+      },
+    );
   });
 
   group('деньги намерения ложатся в чек ровно один раз', () {
@@ -476,58 +475,59 @@ void main() {
         isFalse,
         reason: 'деньги в чеке — на экране разбора им больше не место',
       );
-      expect(
-        await db.paymentIntentDao.orphanMoney(),
-        isEmpty,
-      );
+      expect(await db.paymentIntentDao.orphanMoney(), isEmpty);
     });
 
-    test('второй чек на то же намерение отвергается названной причиной',
-        () async {
-      await enableQr();
-      await paidIntent(
-        'q-used',
-        '1000',
-        settledAt: DateTime.now(),
-        settledReceiptNo: 42,
-      );
-      final view = await receiptWith();
+    test(
+      'второй чек на то же намерение отвергается названной причиной',
+      () async {
+        await enableQr();
+        await paidIntent(
+          'q-used',
+          '1000',
+          settledAt: DateTime.now(),
+          settledReceiptNo: 42,
+        );
+        final view = await receiptWith();
 
-      await expectLater(
-        payments.complete(
-          7,
-          PaymentRequest(type: PaymentType.cash, qrIntentKey: 'q-used'),
-          mv(view, 9),
-        ),
-        throwsA(
-          isA<WireRefusal>()
-              .having((r) => r.code, 'code', payQrAlreadySettledCode)
-              .having((r) => r.message, 'message', contains('42')),
-        ),
-      );
-    });
+        await expectLater(
+          payments.complete(
+            7,
+            PaymentRequest(type: PaymentType.cash, qrIntentKey: 'q-used'),
+            mv(view, 9),
+          ),
+          throwsA(
+            isA<WireRefusal>()
+                .having((r) => r.code, 'code', payQrAlreadySettledCode)
+                .having((r) => r.message, 'message', contains('42')),
+          ),
+        );
+      },
+    );
   });
 
   group('намерение, которое нельзя брать в чек', () {
-    test('ключа нет в базе — qr_intent_unknown, а не подстановка нуля',
-        () async {
-      await enableQr();
-      final view = await receiptWith();
-      await expectLater(
-        payments.complete(
-          7,
-          PaymentRequest(type: PaymentType.cash, qrIntentKey: 'q-нет'),
-          mv(view, 9),
-        ),
-        throwsA(
-          isA<WireRefusal>().having(
-            (r) => r.code,
-            'code',
-            payQrIntentUnknownCode,
+    test(
+      'ключа нет в базе — qr_intent_unknown, а не подстановка нуля',
+      () async {
+        await enableQr();
+        final view = await receiptWith();
+        await expectLater(
+          payments.complete(
+            7,
+            PaymentRequest(type: PaymentType.cash, qrIntentKey: 'q-нет'),
+            mv(view, 9),
           ),
-        ),
-      );
-    });
+          throwsA(
+            isA<WireRefusal>().having(
+              (r) => r.code,
+              'code',
+              payQrIntentUnknownCode,
+            ),
+          ),
+        );
+      },
+    );
 
     test('намерение не оплачено — qr_intent_not_paid', () async {
       await enableQr();
@@ -582,8 +582,7 @@ void main() {
     /// вся; здесь она закрыта.
     ///
     /// Числа диверсий записаны в `docs/internal/testing-notes.md`.
-    test('исправный код равенства не нарушает ни на одном сочетании',
-        () async {
+    test('исправный код равенства не нарушает ни на одном сочетании', () async {
       await enableQr();
       for (final (paid, cash) in const [
         ('1000', '0'),

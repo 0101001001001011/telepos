@@ -24,6 +24,7 @@ import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/domain/wire/session_lost.dart';
 import 'package:telepos/domain/wire/wire_refusal.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/device_profile_label.dart';
 import 'package:telepos/presentation/common/adaptive/breakpoints.dart';
 import 'package:telepos/presentation/common/utils/session_lost_handler.dart';
 import 'package:telepos/app/theme/app_typography.dart';
@@ -177,19 +178,26 @@ class _HardwareSettingsScreenState
   }
 
   Future<void> _loadMonitors() async {
-    final labels = <String>[];
+    // Размеры собираются до обращения к словарю: `AppLocalizations.of` —
+    // поиск по дереву, а `_loadMonitors` заводится из `initState`. Собрать
+    // числа, дождаться ответа системы, и только потом — подписи.
+    final sizes = <String>[];
     try {
       final displays = await screenRetriever.getAllDisplays();
-      for (var i = 0; i < displays.length; i++) {
-        final d = displays[i];
-        final size = '${d.size.width.round()}×${d.size.height.round()}';
-        labels.add('Монитор ${i + 1} — $size');
+      for (final d in displays) {
+        sizes.add('${d.size.width.round()}×${d.size.height.round()}');
       }
     } catch (_) {}
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
+    final labels = <String>[
+      for (var i = 0; i < sizes.length; i++)
+        l10n.hwMonitorWithSize(i + 1, sizes[i]),
+    ];
     if (labels.isEmpty) {
-      labels.addAll(['Монитор 1', 'Монитор 2']);
+      labels.addAll([l10n.hwMonitorNumbered(1), l10n.hwMonitorNumbered(2)]);
     }
-    if (mounted) setState(() => _monitors = labels);
+    setState(() => _monitors = labels);
   }
 
   Future<void> _loadSettings() async {
@@ -269,9 +277,7 @@ class _HardwareSettingsScreenState
     final errors = <String>[];
 
     if (terminalId == null || bindingRepo == null) {
-      errors.add(
-        'Мастер настройки ещё не завершён — устройства сохранить некуда',
-      );
+      errors.add(l10n.hwSetupIncompleteDevices);
     } else {
       for (final draft in [
         _scannerDraft,
@@ -331,7 +337,7 @@ class _HardwareSettingsScreenState
         handleSessionLost(context, error);
         return;
       } on WireRefusal catch (e) {
-        errors.add('Виды оплаты: ${e.message}');
+        errors.add(l10n.hwPaymentKindsError(e.message));
       }
     }
 
@@ -401,14 +407,15 @@ class _HardwareSettingsScreenState
   }
 
   String _classLabel(DeviceClass deviceClass) {
+    final l10n = AppLocalizations.of(context)!;
     return switch (deviceClass) {
-      DeviceClass.scanner => 'Сканер',
-      DeviceClass.scale => 'Весы',
-      DeviceClass.customerDisplay => 'Дисплей покупателя',
-      DeviceClass.cashDrawer => 'Денежный ящик',
-      DeviceClass.paymentTerminal => 'Платёжный терминал',
-      DeviceClass.receiptPrinter => 'Чековый принтер',
-      DeviceClass.labelPrinter => 'Принтер этикеток',
+      DeviceClass.scanner => l10n.setupSectionScanner,
+      DeviceClass.scale => l10n.hwScaleTitle,
+      DeviceClass.customerDisplay => l10n.hwDisplayTitle,
+      DeviceClass.cashDrawer => l10n.hwDrawerTitle,
+      DeviceClass.paymentTerminal => l10n.setupSectionTerminal,
+      DeviceClass.receiptPrinter => l10n.hwReceiptPrinterTitle,
+      DeviceClass.labelPrinter => l10n.labelPrinterSettingsTitle,
     };
   }
 
@@ -444,8 +451,7 @@ class _HardwareSettingsScreenState
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
-                  'Каталог профилей устройств недоступен — настройки '
-                  'устройств сейчас нельзя изменить.',
+                  l10n.hwProfileCatalogUnavailable,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
@@ -473,7 +479,7 @@ class _HardwareSettingsScreenState
                       _ScannerRulesSection(draft: _scannerRulesDraft),
                       const SizedBox(height: 20),
                       DeviceBindingEditor(
-                        title: 'Весы',
+                        title: l10n.hwScaleTitle,
                         icon: Icons.scale,
                         profiles: catalog.forClass(DeviceClass.scale),
                         draft: _scaleDraft,
@@ -540,9 +546,10 @@ class _HardwareSettingsScreenState
   /// Подпись под галочками говорит вслух то, ради чего задача и делалась:
   /// запрет держит касса, а не этот экран.
   Widget _buildPaymentTypesSection() {
+    final l10n = AppLocalizations.of(context)!;
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
     return _SettingsSectionCard(
-      title: 'Виды оплаты рабочего места',
+      title: l10n.hardwarePaymentKinds,
       // `Icons.payment` — тот же материальный набор, которым в этом файле
       // уже помечена секция платёжного терминала: своего глифа для оплаты
       // в `TeleposIcons` нет (волны 1–2 рисовались под другие места), а
@@ -571,12 +578,11 @@ class _HardwareSettingsScreenState
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
-              'В настройке этого рабочего места записаны виды, которых эта '
-              'версия не знает: '
-              '${_paymentTypesUnknown.map((t) => _paymentTypeLabel(t).toLowerCase()).join(', ')}. '
-              'Ограничение по ним не действует. Выберите виды заново, чтобы '
-              'починить запись — пока вы этого не сделали, она остаётся как '
-              'есть.',
+              l10n.hwPaymentKindsUnknown(
+                _paymentTypesUnknown
+                    .map((t) => _paymentTypeLabel(t).toLowerCase())
+                    .join(', '),
+              ),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.error,
                 fontSize: 12,
@@ -587,7 +593,7 @@ class _HardwareSettingsScreenState
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
-              'Эта сборка не умеет сохранять виды оплаты рабочего места.',
+              l10n.hwPaymentKindsUnsupported,
               style: TextStyle(color: muted, fontSize: 13),
             ),
           )
@@ -595,7 +601,7 @@ class _HardwareSettingsScreenState
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
-              'Ограничений нет: рабочее место принимает все виды оплаты.',
+              l10n.hardwarePaymentKindsUnrestricted,
               style: TextStyle(color: muted, fontSize: 13),
             ),
           )
@@ -631,9 +637,7 @@ class _HardwareSettingsScreenState
             ),
           const SizedBox(height: 4),
           Text(
-            'Запрет проверяет касса: терминал, которому вид оплаты не '
-            'разрешён, получит отказ, даже если кнопка на его экране '
-            'осталась.',
+            l10n.hwPaymentKindsEnforcedByTill,
             style: TextStyle(color: muted, fontSize: 12),
           ),
         ],
@@ -641,17 +645,20 @@ class _HardwareSettingsScreenState
     );
   }
 
-  String _paymentTypeLabel(PaymentType type) => switch (type) {
-    PaymentType.cash => 'Наличные',
-    PaymentType.card => 'Карта',
-    PaymentType.mixed => 'Смешанная',
-    PaymentType.debt => 'В долг',
-    PaymentType.installment => 'Рассрочка',
-  };
+  String _paymentTypeLabel(PaymentType type) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (type) {
+      PaymentType.cash => l10n.paymentCash,
+      PaymentType.card => l10n.paymentCard,
+      PaymentType.mixed => l10n.paymentMixed,
+      PaymentType.debt => l10n.paymentDebt,
+      PaymentType.installment => l10n.paymentInstallment,
+    };
+  }
 
   Widget _buildCustomerScreenSection(AppLocalizations l10n) {
     return _SettingsSectionCard(
-      title: 'Графический экран покупателя (2-й монитор)',
+      title: l10n.hardwareCustomerDisplayGraphic,
       icon: Icons.desktop_windows,
       trailing: Switch(
         value: _customerScreenEnabled,
@@ -660,8 +667,7 @@ class _HardwareSettingsScreenState
       children: [
         if (_customerScreenEnabled) ...[
           Text(
-            'Красивый графический экран для клиента на втором мониторе: '
-            'позиции чека, количество и итог в реальном времени.',
+            l10n.hwCustomerDisplayGraphicDesc,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -669,7 +675,7 @@ class _HardwareSettingsScreenState
           ),
           const SizedBox(height: 12),
           Text(
-            'Монитор для экрана покупателя',
+            l10n.hwCustomerDisplayMonitor,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -694,8 +700,7 @@ class _HardwareSettingsScreenState
           ),
           const SizedBox(height: 8),
           Text(
-            'POS остаётся на основном мониторе. Открывается автоматически '
-            'при следующем запуске кассы.',
+            l10n.hwCustomerDisplayMonitorHint,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 12,
@@ -705,7 +710,7 @@ class _HardwareSettingsScreenState
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Text(
-              'Графический экран покупателя отключён.',
+              l10n.hardwareCustomerDisplayGraphicOff,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 13,
@@ -738,7 +743,7 @@ class _RestartNotice extends StatelessWidget {
           SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Изменения устройств применяются при следующем запуске кассы.',
+              AppLocalizations.of(context)!.hardwareRestartRequired,
               style: TextStyle(
                 fontSize: 12,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -948,7 +953,7 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 4),
                 child: Text(
-                  'Устройство отключено.',
+                  AppLocalizations.of(context)!.hardwareDeviceDisabled,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 13,
@@ -962,7 +967,7 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
   Widget _buildProfilePicker(DeviceProfile? profile) {
     if (widget.profiles.isEmpty) {
       return Text(
-        'Нет доступных моделей для этого класса устройств.',
+        AppLocalizations.of(context)!.hwNoProfilesForClass,
         style: TextStyle(
           color: Theme.of(context).colorScheme.error,
           fontSize: 13,
@@ -975,7 +980,10 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
       children: widget.profiles.map((p) {
         final selected = p.id == profile?.id;
         return ChoiceChip(
-          label: Text(p.title, style: const TextStyle(fontSize: 13)),
+          label: Text(
+            deviceProfileTitle(p, AppLocalizations.of(context)!),
+            style: const TextStyle(fontSize: 13),
+          ),
           selected: selected,
           onSelected: (_) => _selectProfile(p.id),
         );
@@ -989,7 +997,7 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
         Padding(
           padding: EdgeInsets.only(bottom: 8),
           child: Text(
-            'Эта модель не требует дополнительных параметров подключения.',
+            AppLocalizations.of(context)!.hwNoConnectionParams,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 12,
@@ -1017,8 +1025,10 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
                 ),
                 decoration: InputDecoration(
                   labelText: param.isRequired
-                      ? '${param.description} *'
-                      : '${param.description} (необязательно)',
+                      ? '${deviceParamDescription(profile, param, l10n)} *'
+                      : l10n.hwParamOptional(
+                          deviceParamDescription(profile, param, l10n),
+                        ),
                   border: const OutlineInputBorder(),
                   isDense: true,
                 ),
@@ -1156,7 +1166,9 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
                   key: Key('option_${profile.id}_${option.key}_$value'),
                   label: Text(
                     value,
-                    style: const TextStyle(fontFamily: AppTypography.familyMono),
+                    style: const TextStyle(
+                      fontFamily: AppTypography.familyMono,
+                    ),
                   ),
                   selected: selected,
                   onSelected: (_) {
@@ -1293,11 +1305,7 @@ class _DeviceBindingEditorState extends State<DeviceBindingEditor> {
     final terminalId = widget.terminalId;
     if (terminalId == null) {
       messenger.showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Мастер настройки ещё не завершён — проверять пока нечего',
-          ),
-        ),
+        SnackBar(content: Text(l10n.hwSetupIncompleteCheck)),
       );
       return;
     }
@@ -1420,7 +1428,9 @@ class _DiscoveryResultsDialog extends StatelessWidget {
                       subtitle: Text(
                         '${sourceLabel(l10n, candidate.source)} · '
                         '${candidate.parameters[paramKey]}',
-                        style: const TextStyle(fontFamily: AppTypography.familyMono),
+                        style: const TextStyle(
+                          fontFamily: AppTypography.familyMono,
+                        ),
                       ),
                       onTap: () => Navigator.of(context).pop(candidate),
                     );
@@ -1506,38 +1516,38 @@ class _ScannerRulesSection extends StatelessWidget {
       title: l10n.scannerRulesTitle,
       icon: Icons.rule,
       children: [
-              Text(
-                l10n.scannerRulesSubtitle,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(height: 12),
-              _field(
-                fieldKey: 'scanner_rule_min_length',
-                controller: draft.minLength,
-                label: l10n.scannerRulesMinLength,
-                hint: l10n.scannerRulesDefaultHint(
-                  '${ScannerRules.defaultBarcodeMinLength}',
-                ),
-              ),
-              _field(
-                fieldKey: 'scanner_rule_max_length',
-                controller: draft.maxLength,
-                label: l10n.scannerRulesMaxLength,
-                hint: l10n.scannerRulesDefaultHint(
-                  '${ScannerRules.defaultBarcodeMaxLength}',
-                ),
-              ),
-              _field(
-                fieldKey: 'scanner_rule_timeout_ms',
-                controller: draft.timeoutMs,
-                label: l10n.scannerRulesTimeoutMs,
-                hint: l10n.scannerRulesDefaultHint(
-                  '${ScannerRules.defaultScannerTimeoutMs}',
-                ),
-              ),
+        Text(
+          l10n.scannerRulesSubtitle,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: 13,
+          ),
+        ),
+        const SizedBox(height: 12),
+        _field(
+          fieldKey: 'scanner_rule_min_length',
+          controller: draft.minLength,
+          label: l10n.scannerRulesMinLength,
+          hint: l10n.scannerRulesDefaultHint(
+            '${ScannerRules.defaultBarcodeMinLength}',
+          ),
+        ),
+        _field(
+          fieldKey: 'scanner_rule_max_length',
+          controller: draft.maxLength,
+          label: l10n.scannerRulesMaxLength,
+          hint: l10n.scannerRulesDefaultHint(
+            '${ScannerRules.defaultBarcodeMaxLength}',
+          ),
+        ),
+        _field(
+          fieldKey: 'scanner_rule_timeout_ms',
+          controller: draft.timeoutMs,
+          label: l10n.scannerRulesTimeoutMs,
+          hint: l10n.scannerRulesDefaultHint(
+            '${ScannerRules.defaultScannerTimeoutMs}',
+          ),
+        ),
       ],
     );
   }

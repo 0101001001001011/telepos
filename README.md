@@ -7,7 +7,7 @@
 **Telegram Point of Sale** — an offline-first point of sale that keeps working
 when the internet does not.
 
-[![Tests](https://img.shields.io/badge/tests-3585%20passing-2ECC71.svg)](#development)
+[![Tests](https://img.shields.io/badge/tests-5979%20passing-2ECC71.svg)](#development)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-1ABC9C.svg)](LICENSE)
 [![Flutter](https://img.shields.io/badge/Flutter-3.47-blue.svg)](https://flutter.dev)
 [![Status](https://img.shields.io/badge/status-alpha-E67E22.svg)](#project-status)

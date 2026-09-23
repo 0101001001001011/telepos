@@ -53,6 +53,11 @@
   "loginBlocked": "User blocked",
   "loginSessionExpired": "Session expired",
   "loginShiftRequired": "Open shift to login",
+  "staffRoleOwner": "Owner",
+  "staffRoleAdministrator": "Administrator",
+  "staffRoleUser": "User",
+  "staffRoleCashier": "Cashier",
+  "staffRoleUnknown": "Unknown",
   "loginCashier": "Cashier",
   "loginAdmin": "Administrator",
   "loginManager": "Manager",
@@ -186,6 +191,12 @@
   "agentSaveSuccess": "Agent saved",
   "agentDeleteConfirm": "Delete agent?",
   "cashTitle": "Cash",
+  "cashReasonCreditRepayment": "Instalment repayment",
+  "cashReasonCustomerTopUp": "Customer account top-up",
+  "accountBankCard": "Bank (card)",
+  "accountCertificateLiability": "Certificate liabilities",
+  "serviceConsumableFallback": "Consumable",
+  "serviceAutoAddedByNorm": "Added from the consumption norm",
   "cashInvestment": "Cash in",
   "cashExpense": "Cash out",
   "cashBalance": "Cash balance",
@@ -194,11 +205,6 @@
   "cashReasonPlaceholder": "Enter reason",
   "cashSuccess": "Operation complete",
   "cashExpenseTypes": "Expense type",
-  "cashSalary": "Salary",
-  "cashRent": "Rent",
-  "cashUtilities": "Utilities",
-  "cashSupplies": "Supplies",
-  "cashOther": "Other",
   "discountTitle": "Discount",
   "discountPercent": "Percent",
   "discountFixed": "Fixed",
@@ -315,7 +321,7 @@
   "loginWithoutPin": "Login without PIN",
   "loginShiftOpen": "Shift open",
   "loginShiftClosed": "Shift closed",
-  "loginShiftUnknown": "Shift: unknown",
+  "loginShiftUnknown": "Shift: no answer from the till",
   "saleQuickProducts": "Quick products",
   "saleIncrease": "Increase",
   "saleDecrease": "Decrease",
@@ -661,7 +667,6 @@
   "selectPackage": "Select package",
   "packageQty": "{qty} pcs",
   "allBreadcrumb": "All",
-  "productPrice": "{price} ₸",
   "maxBonusPercent": "Can use up to {percent}% of receipt total",
   "insufficientBonuses": "Insufficient bonuses",
   "enterValidPhone": "Enter a valid phone number",
@@ -986,7 +991,7 @@
   "@setupVatPayerRate": {
     "placeholders": {
       "rate": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -1120,13 +1125,13 @@
   "setupFiscalDisablesRounding": "Rounding is automatically disabled when fiscalization is enabled",
   "setupUserCreationTitle": "Create Users",
   "setupUserCreationDescription": "Create users for POS operation",
-  "setupAdminLabel": "ADMINISTRATOR",
+  "setupAdminLabel": "Administrator",
   "setupAdminSubtitle": "POS owner",
   "setupUserNameLabel": "Name",
   "setupUserPinLabel": "PIN",
   "setupUserPinConfirmLabel": "Confirmation",
   "setupAdminPinDefault": "Default: 0000",
-  "setupSellerLabel": "SELLER",
+  "setupSellerLabel": "Seller",
   "setupSellerOptional": "Optional",
   "setupSellerPinDefault": "Default: 1111",
   "setupAdminPinMismatch": "Administrator PINs do not match",
@@ -1173,7 +1178,7 @@
   "@setupVatPayerSummary": {
     "placeholders": {
       "rate": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -2022,6 +2027,13 @@
   "countryUzbekistan": "Uzbekistan",
   "countryUSA": "USA",
   "countryTurkmenistan": "Turkmenistan",
+  "permNavServiceQueue": "Order queue",
+  "permNavServiceIntake": "Order intake",
+  "permSellWithDiscount": "Sell with a discount",
+  "permCashInOut": "Cash in / cash out",
+  "permRefundGoods": "Refund goods",
+  "permRefundWithoutReceipt": "Refund without a receipt",
+  "permGroupNavigation": "Navigation",
   "permEditPrice": "Edit price",
   "permSellInDebt": "Sell on credit",
   "permDiscounts": "Discounts",
@@ -2300,7 +2312,7 @@
     }
   },
   "shiftConfirmCloseQuestion": "Are you sure you want to close the shift?",
-  "shiftFixedAmount": "Amount to be recorded: {amount} KZT",
+  "shiftFixedAmount": "Amount to be recorded: {amount}",
   "@shiftFixedAmount": {
     "placeholders": {
       "amount": {
@@ -2319,6 +2331,7 @@
   "shiftCashSales": "Cash",
   "shiftCardSales": "Card",
   "shiftRefundsTotal": "Refunds",
+  "cashOpeningCount": "Opening count",
   "shiftShortage": "Shortage",
   "shiftSurplus": "Surplus",
   "shiftBalances": "Balanced",
@@ -3046,7 +3059,6 @@
     }
   },
   "paymentDefaultLabel": "Default",
-  "currencySymbol": "₸",
   "serviceIntakeTitle": "Service intake",
   "serviceIntakeClient": "Client",
   "serviceIntakeDevice": "Device / Item",
@@ -4543,7 +4555,7 @@
   "setCorrectionIntro": "A correction receipt fixes a previously punched or unpunched amount. Specify the reason and amount. If the operator does not support correction, this will be shown honestly.",
   "setCorrectionReasonLabel": "Correction reason",
   "setCorrectionReasonHint": "e.g. self-correction",
-  "setCorrectionAmountLabel": "Correction amount, KZT",
+  "setCorrectionAmountLabel": "Correction amount, {currency}",
   "setCorrectionPaymentLabel": "Payment method",
   "setCorrectionCash": "Cash",
   "setCorrectionCard": "Card",
@@ -4600,7 +4612,7 @@
   "dishSeasonWinter": "Winter (+15%) (x1.15)",
   "dishSeasonSummer": "Summer (-5%) (x0.95)",
   "dishEffectiveColdLoss": "Effective prep loss: {value}%",
-  "dishTotalYieldSummary": "Total: {cost} ₸  |  Yield: {yield}",
+  "dishTotalYieldSummary": "Total: {cost}  |  Yield: {yield}",
   "dishGostNorms": "GOST norms",
   "dishGostNormsTitle": "GOST loss norms",
   "dishSearchProductHint": "Search product...",
@@ -4708,7 +4720,7 @@
   "repKpiLoadError": "KPI load error",
   "repColIndicator": "Indicator",
   "repColCount": "Qty",
-  "repColSumTenge": "Amount, ₸",
+  "repColSumTenge": "Amount, {currency}",
   "repColRow": "Line",
   "repColTurnoverExclVat": "Turnover (excl. VAT)",
   "repColVat": "VAT",
@@ -4738,29 +4750,29 @@
   "repColDocuments": "Documents",
   "repColCostShort": "Cost",
   "repF910Title": "Form 910 — Income (simplified)",
-  "repF910Subtitle": "Taxable income: {income} ₸ • tax {rate}%: {tax} ₸",
+  "repF910Subtitle": "Taxable income: {income} • tax {rate}%: {tax}",
   "repF910RowSalesIncome": "Sales income",
   "repF910RowRefunds": "Refunds (minus)",
   "repF910RowTaxableIncome": "Taxable income",
   "repF300Title": "Form 300 — VAT (declaration)",
-  "repF300Subtitle": "Taxable turnover: {turnover} ₸ • output VAT: {vat} ₸",
+  "repF300Subtitle": "Taxable turnover: {turnover} • output VAT: {vat}",
   "repF300TaxableTurnoverRate": "Taxable turnover {rate}%",
   "repF300ZeroRatedTurnover": "Exempt / 0% turnover",
   "repCashBookTitle": "Cash book (KO-4)",
-  "repCashBookSubtitle": "Income: {income} • Expense: {expense} • Balance: {balance} ₸",
+  "repCashBookSubtitle": "Income: {income} • Expense: {expense} • Balance: {balance}",
   "repVatPeriodTitle": "VAT for the period",
-  "repVatPeriodSubtitle": "VAT: {vat} ₸ • base: {base} ₸",
+  "repVatPeriodSubtitle": "VAT: {vat} • base: {base}",
   "repArApTitle": "Receivables / Payables",
   "repArApSubtitle": "Receivables: {receivable} • Payables: {payable} • Balance: {saldo}",
   "repCashCollectionTitle": "Cash collection",
-  "repCashCollectionSubtitle": "{count} operations • total: {total} ₸",
+  "repCashCollectionSubtitle": "{count} operations • total: {total}",
   "repProfitCogsTitle": "Profit / Margin (COGS)",
   "repProfitMarginTitle": "Profit / Margin",
-  "repProfitMarginSubtitle": "Profit: {profit} ₸ • margin {margin}% • {note}",
+  "repProfitMarginSubtitle": "Profit: {profit} • margin {margin}% • {note}",
   "repProfitCostRealCogs": "cost: real COGS",
   "repProfitCostWholesale": "cost: wholesale price (no CalculateCogsUseCase)",
   "repWriteoffTitle": "Write-offs",
-  "repWriteoffSubtitle": "{count} documents • total: {total} ₸",
+  "repWriteoffSubtitle": "{count} documents • total: {total}",
   "repOrderTypesTitle": "Order types",
   "repOrderTypesSubtitle": "distribution by service type",
   "repTableTurnoverTitle": "Table turnover",
@@ -4843,7 +4855,7 @@
   "errorDeniedPolicy": "Forbidden by till settings: {detail}",
   "errorDeniedLimit": "Discount above the allowed one: {detail}",
   "errorApprovalRequired": "Supervisor approval required: {detail}",
-  "errorBigAmountBlocked": "Sale total exceeds 1,000,000 ₸. Enable the large-amount permission in POS settings.",
+  "errorBigAmountBlocked": "Sale total is above this till’s ceiling ({limit}). Raise the ceiling or enable the large-amount permission in the till settings.",
   "errorMarkRequired": "Marking code required: {name}",
   "errorOrderNotFound": "Order not found",
   "errorSerialNotFound": "Serial number not found",
@@ -5490,9 +5502,21 @@
   "diagnosticsPrinterQueueMissing": "No print queue is configured for this workstation",
   "diagnosticsPrinterNothingSent": "The till has not sent anything to the printer yet",
   "diagnosticsAskFailed": "The till did not answer this question: {reason}",
-  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "@diagnosticsAskFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsAttempts": "attempts {count}",
-  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "@diagnosticsAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "diagnosticsJobQueued": "waiting in queue",
   "diagnosticsJobPrinting": "printing",
   "diagnosticsJobPrinted": "printed",
@@ -5505,11 +5529,29 @@
   "diagnosticsFiscalQueued": "In the queue",
   "diagnosticsFiscalQueuedEmpty": "The queue is empty — everything sent was accepted",
   "diagnosticsFiscalSign": "Fiscal sign {value}",
-  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalSign": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalOperatorDoc": "operator document {value}",
-  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalOperatorDoc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalReceiptNo": "receipt {value}",
-  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalReceiptNo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalOffline": "issued offline",
   "diagnosticsEmulatorBanner": "The printer binding points at this very computer — an emulator is behind the port, not paper",
   "diagnosticsTabDrawer": "Cash drawer",
@@ -5641,5 +5683,758 @@
   "prepaymentRefundAmountInvalid": "The amount must be greater than zero",
   "prepaymentRefundNotPermitted": "This cashier may not pay prepayments back",
   "prepaymentRefundFiscalFailed": "The money is paid out, but no fiscal prepayment-refund receipt was issued.",
-  "agentRefundPrepayment": "Pay the prepayment back"
+  "agentRefundPrepayment": "Pay the prepayment back",
+  "repTitle": "Reports",
+  "repTabAnalytics": "Analytics",
+  "repTabFinance": "Finance",
+  "repTabForecasts": "Forecasts",
+  "repTabTaxKz": "Tax / KZ",
+  "repRangeDays7": "7 days",
+  "repRangeDays30": "30 days",
+  "repRangeCustom": "Custom",
+  "repKpiChange": "Change",
+  "repSubtitleVsPrev": "vs previous period",
+  "repChartRevenueByDay": "Revenue by day",
+  "repChartTop5Products": "Top 5 products",
+  "repChartPaymentMethods": "Payment methods",
+  "settingsRestartRequired": "Changes take effect the next time the till starts.",
+  "hardwareRestartRequired": "Device changes take effect the next time the till starts.",
+  "hardwareDeviceDisabled": "The device is switched off.",
+  "hardwareCustomerDisplayGraphic": "Graphic customer display (second monitor)",
+  "hardwareCustomerDisplayGraphicOff": "The graphic customer display is switched off.",
+  "hardwarePaymentKinds": "Payment kinds for this workstation",
+  "hardwarePaymentKindsUnrestricted": "No restrictions: this workstation accepts every payment kind.",
+  "fiscalSettingsDirectOfdLabel": "Direct OFD connection",
+  "markupAuto": "Automatic markup",
+  "markupSave": "Save markups",
+  "creditContractNumberLabel": "Contract number from the paper",
+  "creditNoLiveContracts": "No active instalment contracts",
+  "supplierOrderTitle": "Supplier order",
+  "supplierOrderAllStocked": "Every product is sufficiently stocked",
+  "supplierOrderNotNeeded": "No reorder needed",
+  "hwScaleTitle": "Scales",
+  "hwReceiptPrinterTitle": "Receipt printer",
+  "repRangeDays14": "14 days",
+  "repForecastSmaLowData": "SMA (little data)",
+  "repNoCategory": "No category",
+  "repAllCustomers": "All customers",
+  "repAllInStock": "Every product is in stock",
+  "repAllCovered30": "Every product is covered for 30+ days",
+  "repColDays": "Days",
+  "repColDaysLeft": "Days left",
+  "repColSharePct": "Share %",
+  "repColChangePct": "Change %",
+  "repColSalesCount": "Sales count",
+  "repReceiptCountLabel": "Receipt count",
+  "repStockCritical": "Critically low stock. A delivery is needed now.",
+  "repColCumulativePct": "Cumulative %",
+  "repNotEnoughSalesData": "Not enough sales data for the selected period",
+  "repNoForecastData": "No data to forecast from",
+  "repNoDataLast90": "No data for the last 90 days",
+  "repNoCustomerData": "No customer data",
+  "repNoLowStock": "No products are running low",
+  "repLowStock": "Low stock",
+  "repNewPrice": "New price",
+  "repColEstimatedAmount": "Est. amount",
+  "repColSeatings": "Seatings",
+  "repForecast": "Forecast",
+  "repRevenueForecast": "Revenue forecast",
+  "repRevenueForecastHw": "Revenue forecast (Holt-Winters)",
+  "repStockoutForecast": "Stock-out forecast",
+  "repStockForecast": "Stock forecast",
+  "repSalesWithoutCustomerHidden": "Sales with no customer attached are not shown",
+  "repColSalesPerDay": "Sales/day",
+  "repColSold": "Sold",
+  "repHourlyDistribution": "Hourly distribution",
+  "repColRecommendedOrder": "Rec. order",
+  "repRecommendedPurchases": "Recommended purchases",
+  "repColAvgSalesPerDay": "Avg sales/day",
+  "repColAvgCheckShort": "Avg check",
+  "repAvgPrice": "Average price",
+  "repOldPrice": "Old price",
+  "repStockValue": "Stock value",
+  "repColTable": "Table",
+  "repCurrentStock": "Current stock",
+  "repTop10Customers": "Top 10 customers",
+  "repTop10Products": "Top 10 products",
+  "repActual": "Actual",
+  "repColHour": "Hour",
+  "repExport": "Export",
+  "repCashierPerformance": "Cashier performance",
+  "repWeightedAvgHint": "weighted average (recent days count for more)",
+  "repSalesCountByHour": "sales count by hour",
+  "repNoUrgentItems": "nothing is urgent",
+  "repByRevenueTapHint": "by revenue (tap for details)",
+  "repDistributionTapHint": "distribution (tap a sector)",
+  "repRevenueDistributionTapHint": "revenue distribution (tap a sector)",
+  "repAbcRare": "slow movers",
+  "repAbcMedium": "medium movers",
+  "repAbcFast": "fast movers",
+  "repAbcLegend": "fast (A), medium (B), slow (C) — by contribution to revenue",
+  "repReturnsCount": "{count} returns",
+  "@repReturnsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repAbcGroupSummary": "{count} items · {pct}%",
+  "@repAbcGroupSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "repCustomerTooltip": "{name}\n{amount} ({count} receipts)",
+  "@repCustomerTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repDaysCountTapHint": "{count} days (tap for details)",
+  "@repDaysCountTapHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repCashiersCount": "{count} cashiers",
+  "@repCashiersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repLowStockCountHint": "{count} products (stock < 10, tap for details)",
+  "@repLowStockCountHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repOrdersShort": "{count} ord.",
+  "@repOrdersShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repOrdersRevenueTooltip": "{count} ord.\n{amount}",
+  "@repOrdersRevenueTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repPieces": "{qty} pcs",
+  "@repPieces": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "repPiecesDot": "{qty} pcs",
+  "@repPiecesDot": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "repForecastSubtitle": "{actual} days actual + {horizon} days forecast ({algorithm})",
+  "@repForecastSubtitle": {
+    "placeholders": {
+      "actual": {
+        "type": "int"
+      },
+      "horizon": {
+        "type": "int"
+      },
+      "algorithm": {
+        "type": "String"
+      }
+    }
+  },
+  "repSalesCountLine": "{count} sales",
+  "@repSalesCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repReceiptsCount": "{count} receipts",
+  "@repReceiptsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repSupplierTooltip": "{name}\n{count} deliveries",
+  "@repSupplierTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repSeatingsLine": "{count} seatings",
+  "@repSeatingsLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repDayOffset": "+{n} day",
+  "@repDayOffset": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "repHoltWintersSeason": "Holt-Winters (season={season})",
+  "@repHoltWintersSeason": {
+    "placeholders": {
+      "season": {
+        "type": "int"
+      }
+    }
+  },
+  "repInvestmentsLine": "Investments: {amount}",
+  "@repInvestmentsLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repDividendsLine": "Dividends: {amount}",
+  "@repDividendsLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repMarginLine": "Margin: {pct}%",
+  "@repMarginLine": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "repKpiLoadErrorWith": "Could not load KPIs: {error}",
+  "@repKpiLoadErrorWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "repErrorWith": "Error: {error}",
+  "@repErrorWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "repProfitLine": "Profit: {amount}",
+  "@repProfitLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repExpensesLine": "Expenses: {amount}",
+  "@repExpensesLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repLeadTimeHint": "lead time {lead} d + safety stock {safety} d",
+  "@repLeadTimeHint": {
+    "placeholders": {
+      "lead": {
+        "type": "int"
+      },
+      "safety": {
+        "type": "int"
+      }
+    }
+  },
+  "markupHint": "Markup in % per category. When goods arrive, the retail price is recalculated from the purchase price: cost × (1 + markup%).",
+  "creditContractsTitle": "Instalments",
+  "creditContractsTitleFor": "Instalments — {agent}",
+  "@creditContractsTitleFor": {
+    "placeholders": {
+      "agent": {
+        "type": "String"
+      }
+    }
+  },
+  "repExportedTo": "Exported to: {path}",
+  "@repExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "repExportFailed": "Export failed: {error}",
+  "@repExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hwSetupIncompleteDevices": "Setup is not finished yet — there is nowhere to save the devices",
+  "hwSetupIncompleteCheck": "Setup is not finished yet — there is nothing to check",
+  "settingsSetupIncompleteSave": "Setup is not finished yet — there is nowhere to save",
+  "hwProfileCatalogUnavailable": "The device profile catalogue is unavailable — device settings cannot be changed right now.",
+  "printerProfileCatalogUnavailable": "The device profile catalogue is unavailable — printer settings cannot be changed right now.",
+  "labelPrinterProfileCatalogUnavailable": "The device profile catalogue is unavailable — label printer settings cannot be changed right now.",
+  "hwPaymentKindsUnsupported": "This build cannot save the workstation payment kinds.",
+  "hwPaymentKindsEnforcedByTill": "The till enforces the restriction: a terminal that is not allowed a payment kind will be refused, even if the button is still on its screen.",
+  "hwCustomerDisplayGraphicDesc": "A graphic customer-facing screen on the second monitor: receipt lines, quantities and the total, live.",
+  "hwCustomerDisplayMonitor": "Monitor for the customer display",
+  "hwCustomerDisplayMonitorHint": "The POS stays on the main monitor. It opens automatically the next time the till starts.",
+  "hwNoProfilesForClass": "No models are available for this device class.",
+  "hwNoConnectionParams": "This model needs no extra connection parameters.",
+  "hwMonitorWithSize": "Monitor {index} — {size}",
+  "@hwMonitorWithSize": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "hwMonitorNumbered": "Monitor {index}",
+  "@hwMonitorNumbered": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "hwPaymentKindsError": "Payment kinds: {error}",
+  "@hwPaymentKindsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hwPaymentKindsUnknown": "This workstation is configured with kinds this version does not know: {list}. They place no restriction. Pick the kinds again to repair the record — until you do, it stays as it is.",
+  "@hwPaymentKindsUnknown": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "hwParamOptional": "{description} (optional)",
+  "@hwParamOptional": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "globalMillimetres": "{value} mm",
+  "@globalMillimetres": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "devProfilePrinterEscpos80mm": "ESC/POS receipt printer, 80 mm",
+  "devProfilePrinterEscpos58mm": "ESC/POS receipt printer, 58 mm (compact, no cutter)",
+  "devProfilePrinterEscposUsb": "ESC/POS receipt printer, USB / spooler",
+  "devProfilePrinterEscposBluetooth": "ESC/POS receipt printer, Bluetooth",
+  "devProfilePrinterEscposSerial": "ESC/POS receipt printer, serial port",
+  "devProfilePrinterLabelZpl104": "ZPL label printer, 104 mm",
+  "devProfilePrinterLabelEpl58": "EPL label printer, 58 mm",
+  "devProfileScannerUsbHid": "USB barcode scanner (HID)",
+  "devProfileScannerBluetoothHid": "Bluetooth barcode scanner (HID)",
+  "devProfileScannerCamera": "Scanner using the device camera",
+  "devProfileScannerSerial": "Barcode scanner, serial port",
+  "devProfileScaleCasPd2": "CAS PD-II scale (serial)",
+  "devProfileScaleCasErPlus": "CAS ER-Plus scale",
+  "devProfileDrawerViaPrinter": "Cash drawer via printer (RJ11 kick-out)",
+  "devProfileDrawerStandalone": "Standalone cash drawer (RJ11)",
+  "devProfileDisplayVfd": "VFD customer display (serial)",
+  "devProfileDisplayLcd2x20": "LCD customer display 2x20",
+  "devProfileDisplayLed8": "LED customer display (8 characters)",
+  "devProfilePaymentKaspiPos": "Kaspi POS terminal",
+  "devParamPrinterIpAddress": "Network printer IP address",
+  "devParamTcpPort9100": "TCP port, 9100 by default",
+  "devParamPrinterDevicePath": "Device path or print queue name",
+  "devParamPrinterMac": "MAC address of the paired Bluetooth printer",
+  "devParamPrinterComPort": "Serial port the printer is on, e.g. COM4",
+  "devParamLabelPrinterIp": "Label printer IP address",
+  "devParamScannerMac": "MAC address of the paired Bluetooth scanner",
+  "devParamScannerComPort": "Serial port the scanner is on, e.g. COM5",
+  "devParamScaleComPort": "Serial port the scale is on, e.g. COM3",
+  "devParamDrawerComPort": "Serial port of the drawer interface board",
+  "devParamDisplayComPort": "Serial port the customer display is on",
+  "devParamKaspiIp": "Kaspi POS terminal IP address",
+  "devParamKaspiPort": "Terminal port, usually 8888",
+  "devParamCameraId": "Which camera to use",
+  "rcpTill": "Till",
+  "rcpTillColon": "Till:",
+  "rcpReceiptNo": "Receipt no.",
+  "rcpCashier": "Cashier:",
+  "rcpCustomer": "Customer:",
+  "rcpDate": "Date:",
+  "rcpBinIin": "Business ID:",
+  "rcpThankYou": "Thank you for your purchase!",
+  "rcpSale": "SALE",
+  "rcpSubtotal": "Subtotal:",
+  "rcpDiscount": "Discount:",
+  "rcpServiceFee": "Service charge:",
+  "rcpTotal": "TOTAL:",
+  "rcpChange": "Change:",
+  "rcpCash": "CASH",
+  "rcpCard": "CARD",
+  "rcpQuantityShort": "pcs",
+  "rcpRefund": "REFUND",
+  "rcpRefundNo": "Refund no.",
+  "rcpSaleReceiptNo": "Sale receipt no.",
+  "rcpDuplicate": "*** DUPLICATE ***",
+  "rcpTable": "Table:",
+  "rcpWaiter": "Waiter:",
+  "rcpGuests": "Guests:",
+  "rcpFiscalReceipt": "FISCAL RECEIPT",
+  "rcpNonFiscalReceipt": "NON-FISCAL RECEIPT",
+  "rcpNotFiscalDocument": "NOT A FISCAL DOCUMENT",
+  "rcpFiscalSign": "FISCAL SIGN:",
+  "rcpFiscalFn": "FM:",
+  "rcpFiscalRnm": "RegNo:",
+  "rcpFiscalZnm": "SerialNo:",
+  "rcpFiscalTime": "TIME:",
+  "rcpOfdName": "OFD",
+  "rcpOffline": "*** OFFLINE ***",
+  "rcpVerifyAt": "To verify this receipt, visit",
+  "rcpCustomerTaxId": "Customer tax ID:",
+  "rcpTaxA": "TAX GROUP A:",
+  "rcpFiscalOperatorNotSet": "No fiscal operator configured",
+  "rcpFiscalModuleUnavailable": "The fiscalisation module is unavailable",
+  "rcpDocumentNotIssued": "No document was issued — ask the cashier",
+  "rcpXReport": "X-REPORT",
+  "rcpZReport": "Z-REPORT",
+  "rcpInterim": "INTERIM (no reset)",
+  "rcpShiftClose": "SHIFT CLOSE",
+  "rcpShiftStart": "Opened:",
+  "rcpShiftEnd": "Closed:",
+  "rcpSales": "SALES",
+  "rcpRefunds": "REFUNDS",
+  "rcpCount": "Count:",
+  "rcpAmount": "Amount:",
+  "rcpCashOps": "CASH OPERATIONS",
+  "rcpOpeningFloat": "Opening float:",
+  "rcpSlipTitle": "RECEIPT",
+  "rcpType": "Type:",
+  "rcpComment": "Comment:",
+  "rcpCashIn": "Cash in:",
+  "rcpCashOut": "Cash out:",
+  "rcpTotalInDrawer": "TOTAL IN DRAWER:",
+  "rcpCertificatesNotRevenue": "CERTIFICATES (NOT REVENUE)",
+  "rcpCertIssuedDebt": "Issued (till liability):",
+  "rcpCertRedeemed": "Redeemed (in goods):",
+  "rcpGiftCertificate": "GIFT CERTIFICATE",
+  "rcpCertNo": "Certificate no.",
+  "rcpCertFaceValue": "Face value:",
+  "rcpCertValidUntil": "Valid until:",
+  "rcpCertNoExpiry": "no expiry",
+  "rcpCertPinSet": "PIN set",
+  "rcpCertIssuedByRefund": "Issued by refund no.",
+  "rcpCertInsteadOf": "In place of certificate",
+  "rcpVat": "VAT",
+  "rcpSalesTax": "Sales tax",
+  "rcpTaxExempt": "Exempt",
+  "rcpTaxExemptMark": "EX",
+  "taxSettingsTitle": "Taxes",
+  "taxSettingsSubtitle": "Rates, jurisdictions and product categories",
+  "taxSettingsIntro": "A rate is not a single number: it adds up from the jurisdictions this till sits in, and depends on the product category and the date. You can start from a preset and edit it afterwards.",
+  "taxSettingsNotConfigured": "Tax is not configured: the till charges nothing.",
+  "taxSettingsPresetSection": "Preset",
+  "taxSettingsCountry": "Country",
+  "taxSettingsRegion": "State or region",
+  "taxSettingsCity": "City",
+  "taxSettingsPreset": "Preset",
+  "taxSettingsApplyPreset": "Apply preset",
+  "taxSettingsPresetReplaces": "Applying replaces the current setup entirely. Two presets cannot be combined: the till would charge tax twice.",
+  "taxSettingsPresetSource": "Source: {source}",
+  "@taxSettingsPresetSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSettingsPresetValidFrom": "Rates effective from {date}",
+  "@taxSettingsPresetValidFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSettingsPresetApplied": "Preset applied",
+  "taxSettingsCurrentSection": "Current setup",
+  "taxSettingsRateForStandard": "Standard item: {rate}%",
+  "@taxSettingsRateForStandard": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "taxSettingsJurisdictions": "Jurisdictions",
+  "taxSettingsCategories": "Product categories",
+  "taxSettingsTillLocation": "This till is located here",
+  "taxSettingsTillLocationHint": "More than one may be ticked: the city and its special districts. Higher levels are added automatically.",
+  "taxSettingsRules": "Rules",
+  "taxSettingsRuleTaxed": "taxed",
+  "taxSettingsRuleZero": "zero rated",
+  "taxSettingsRuleExempt": "exempt",
+  "taxSettingsAllCategories": "all categories",
+  "taxSettingsAddJurisdiction": "Add jurisdiction",
+  "taxSettingsAddCategory": "Add category",
+  "taxSettingsAddRule": "Add rule",
+  "taxSettingsName": "Name",
+  "taxSettingsCode": "Code",
+  "taxSettingsRate": "Rate, %",
+  "taxSettingsValidFrom": "Effective from",
+  "taxSettingsParent": "Parent",
+  "taxSettingsNoParent": "none (root)",
+  "taxSettingsLevel": "Level",
+  "taxSettingsLevelCountry": "Country",
+  "taxSettingsLevelState": "State",
+  "taxSettingsLevelCounty": "County",
+  "taxSettingsLevelCity": "City",
+  "taxSettingsLevelDistrict": "Special district",
+  "taxSettingsDelete": "Delete",
+  "taxSettingsDeleteJurisdictionWarning": "Its rules and nested jurisdictions go with it.",
+  "taxSettingsResponsibility": "Preset figures come from public sources, each cited. Responsibility for the tax charged lies with the taxpayer, not the software.",
+  "taxSettingsNoPresetsForCountry": "No presets ship for this country — set it up by hand.",
+  "taxSettingsAdd": "Add",
+  "taxSettingsCancel": "Cancel",
+  "setupStoreAddressHint": "1600 Blake Street, Denver, CO 80202",
+  "setupStoreAddressHelper": "Printed on the receipt. Without it the customer cannot see where the purchase was made.",
+  "countryKz": "Kazakhstan",
+  "countryRu": "Russia",
+  "countryKg": "Kyrgyzstan",
+  "countryUz": "Uzbekistan",
+  "countryUs": "United States",
+  "countryTm": "Turkmenistan",
+  "currencyKzt": "Kazakhstani tenge",
+  "currencyRub": "Russian ruble",
+  "currencyKgs": "Kyrgyzstani som",
+  "currencyUzs": "Uzbekistani sum",
+  "currencyUsd": "US dollar",
+  "currencyTmt": "Turkmenistani manat",
+  "setupStepSalesTax": "Sales tax",
+  "setupSalesTaxPayerTitle": "I collect sales tax",
+  "setupSalesTaxPayerSubtitle": "Rates are set per jurisdiction in Settings → Taxes",
+  "setupSalesTaxPayerDescription": "Sales tax is added on top of the shelf price and printed on the receipt as its own line.",
+  "setupSalesTaxNonPayerTitle": "No sales tax",
+  "setupSalesTaxNonPayerSubtitle": "Nothing is added to the price",
+  "setupSalesTaxNonPayerDescription": "Nothing is added to the price, and the receipt has no tax line.",
+  "bootLoadingConfig": "Loading configuration…",
+  "bootCheckingPosKey": "Checking the till key…",
+  "bootLoadingAgents": "Loading counterparties…",
+  "bootLoadingAccounts": "Loading accounts…",
+  "bootInitialisingDatabase": "Preparing the database…",
+  "bootLoadingCashiers": "Loading cashiers…",
+  "bootLoadingPosData": "Loading till data…",
+  "bootLoadingProducts": "Loading products…",
+  "bootCheckingReceiptNumbers": "Checking receipt numbering…",
+  "bootCheckingLicence": "Checking the licence…",
+  "bootCheckingReports": "Checking reports…",
+  "bootFinishingInitialisation": "Finishing up…",
+  "bootStartingBackgroundJobs": "Starting background jobs…",
+  "bootReady": "Ready",
+  "bootDataLoaded": "Data loaded",
+  "bootTillNotResponding": "The till is not responding: {code}",
+  "bootDownloadingBackup": "Downloading the backup…",
+  "bootBackupDownloadFailed": "Could not download the backup",
+  "bootRestoringDatabase": "Restoring the database…",
+  "bootDatabaseRestoreFailed": "Could not restore the database",
+  "bootApplyingPosKey": "Applying the till key…",
+  "bootRestoreDone": "Restore complete",
+  "bootCreatingBackup": "Creating a backup…",
+  "bootBackupCreateFailed": "Could not create the backup",
+  "bootBackupDone": "Backup created and uploaded",
+  "bootLoadingUsers": "Loading users…",
+  "bootLoadingCategories": "Loading categories…",
+  "bootLoadingSettings": "Loading settings…",
+  "bootSyncDone": "Sync complete",
+  "bootFailed": "Something went wrong",
+  "countryDeu": "Germany",
+  "currencyDeu": "Euro",
+  "countryFra": "France",
+  "currencyFra": "Euro",
+  "countryEsp": "Spain",
+  "currencyEsp": "Euro",
+  "countryIta": "Italy",
+  "currencyIta": "Euro",
+  "countryGbr": "United Kingdom",
+  "currencyGbr": "Pound sterling",
+  "countryPol": "Poland",
+  "currencyPol": "Polish zloty",
+  "countryTur": "Türkiye",
+  "currencyTur": "Turkish lira",
+  "countryChn": "China",
+  "currencyChn": "Chinese yuan",
+  "countryJpn": "Japan",
+  "currencyJpn": "Japanese yen",
+  "countryKor": "South Korea",
+  "currencyKor": "South Korean won",
+  "countryAre": "United Arab Emirates",
+  "currencyAre": "UAE dirham",
+  "countrySau": "Saudi Arabia",
+  "currencySau": "Saudi riyal",
+  "countryInd": "India",
+  "currencyInd": "Indian rupee",
+  "countryCan": "Canada",
+  "currencyCan": "Canadian dollar",
+  "countryAus": "Australia",
+  "currencyAus": "Australian dollar",
+  "agentPaymentAccepted": "Payment accepted",
+  "catalogCategoryHasChildren": "The category has sub-categories",
+  "creditOutstanding": "Outstanding: {amount}",
+  "creditTakePayment": "Take a payment",
+  "creditPrintContract": "Print the contract",
+  "creditPaymentFor": "Payment on {number}",
+  "creditOutstandingOnContract": "Outstanding on the contract: {amount}",
+  "creditPayInFull": "Pay in full",
+  "creditAccept": "Accept",
+  "displayProduct": "Product",
+  "markupSaved": "Mark-ups saved: {count} categories with a mark-up",
+  "genericErrorWith": "Something went wrong: {detail}",
+  "serviceAttachPhoto": "Photo",
+  "serviceAttachVideo": "Video",
+  "shiftCorrectionReceipt": "Correction receipt",
+  "supplierChoose": "Choose a supplier",
+  "supplierProduct": "Product",
+  "supplierStock": "In stock",
+  "supplierOrderQty": "Order",
+  "supplierCreateRequest": "Create the request",
+  "supplierNeedQuantity": "Enter a quantity for at least one product",
+  "unitMonthsShort": "{count} mo.",
+  "unitDaysShort": "{count} d.",
+  "displayWelcome": "Welcome!",
+  "displayWelcomeSubtitle": "Glad to see you",
+  "displayPromoFree": "Promo · free",
+  "displayDiscountAmount": "Discount −{amount}",
+  "displayWindowTitle": "Customer display",
+  "shiftXReportPrinted": "X-report printed",
+  "shiftXReportPrintedOffline": "X-report printed (the fiscal X is queued, no connection)",
+  "shiftXReportFailed": "The X-report could not be printed",
+  "creditContractNotFound": "Contract {number} is not in this till",
+  "creditOverdue": "OVERDUE: {amount} ({count} payments)",
+  "creditNextPayment": "Next payment {date}: {amount}",
+  "creditNoTillAccount": "The till has no account — there is nowhere to receive the money",
+  "creditContractClosed": "Contract {number} is closed",
+  "creditPartiallyPaid": "Accepted {paid}, {left} left",
+  "creditPaymentAmount": "Payment amount",
+  "serviceWarrantyAndQuality": "Warranty and quality",
+  "serviceWarrantyDays": "Warranty: {days} days",
+  "serviceWarrantyNotSet": "No warranty set",
+  "serviceQualityRatingTitle": "Quality rating",
+  "serviceQualityRatingValue": "Rating: {rating}/5",
+  "serviceRepairMedia": "Repair photos and video",
+  "serviceNoRepairMedia": "No repair media",
+  "supplierLabel": "Supplier:",
+  "supplierLinesToOrder": "Lines to order: {count}",
+  "supplierRequestCreated": "Request created: {count} lines",
+  "modifierRequired": "Required",
+  "modifierMax": "max {count}",
+  "writeoffReasonUnspecified": "Not specified",
+  "labelSampleProduct": "Sample product",
+  "markupCategoryNumbered": "Category #{id}",
+  "salePolicyForbids": "The till settings do not allow this (Settings → Sales policy)",
+  "labelPrintFailed": "The label could not be printed",
+  "labelPrintFromTillOnly": "Labels print from the till, not from a terminal",
+  "orphanQrTillNotRegistered": "This till is not registered — there is nobody to ask about unmatched QR money",
+  "stockLowStockReorder": "Re-order products that are running low",
+  "serviceNoteNeedsApproval": "Needs the customer to approve",
+  "deferredFromTill": "till {id}",
+  "dishSummary": "Ingredients: {count}, cost: {cost}",
+  "prepaymentIssueTo": "Advance paid out to {name}",
+  "prepaymentFrom": "Advance from {name}",
+  "prepaymentRefundTo": "Advance refunded to {name}",
+  "setupPartOrganization": "organisation",
+  "setupPartTill": "till",
+  "setupPartFiscal": "fiscalisation",
+  "setupPartEquipment": "equipment",
+  "setupPartTerminals": "payment terminals",
+  "setupPartRules": "rules",
+  "setupPartUser": "user",
+  "customerPaymentNote": "Debt settlement / payment ({name})",
+  "chatMembersUnavailable": "The member list could not be loaded",
+  "chatMe": "Me",
+  "setPolicyBigAmountLimit": "Receipt ceiling",
+  "setPolicyBigAmountLimitDesc": "Above this amount the till asks for permission. Empty means {fallback}.",
+  "cashRefusedNotPositive": "The amount must be greater than zero",
+  "cashRefusedAboveCeiling": "The amount is above this till’s ceiling ({limit}). Raise the ceiling in the settings or enable the large-amount permission.",
+  "errorProductHasNoPrice": "The product “{name}” has no price — it cannot be sold. Set a price in the catalogue.",
+  "sellingHoursTitle": "Restricted selling hours",
+  "sellingHoursAdd": "Add a window",
+  "sellingHoursCategory": "Category",
+  "sellingHoursFrom": "From (HH:MM)",
+  "sellingHoursTo": "To (HH:MM)",
+  "sellingHoursActive": "The ban is in force",
+  "sellingHoursBanned": "Selling is banned {window}",
+  "sellingHoursOff": "The window {window} is switched off",
+  "sellingHoursBroken": "The hours “{window}” cannot be read — the ban does not work",
+  "sellingHoursBadTime": "Enter the time as HH:MM, for example 23:00",
+  "sellingHoursPreviewDay": "Ban inside one day: {window}",
+  "sellingHoursPreviewNight": "Overnight ban across midnight: {window}",
+  "sellingHoursExplainer": "You set the hours: the law differs by country and changes. A ban on a category also covers everything nested inside it.",
+  "sellingHoursNoCategories": "Create categories in the catalogue first — a ban is set on a category.",
+  "sellingHoursCategoryGone": "Category #{id} is gone",
+  "errorSellingHoursBanned": "“{category}” cannot be sold right now: banned {window}.",
+  "errorSellingHoursBannedNoWindow": "“{category}” cannot be sold right now.",
+  "generalSettingsStoreAddress": "Store address",
+  "generalSettingsStoreAddressHint": "Printed on the receipt. Change it if the shop has moved."
 }

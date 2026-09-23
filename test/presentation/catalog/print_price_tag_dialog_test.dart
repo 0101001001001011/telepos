@@ -15,6 +15,7 @@ import 'package:telepos/domain/terminal/terminal.dart';
 import 'package:telepos/domain/terminal/terminal_repository.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/screens/catalog/dialogs/print_price_tag_dialog.dart';
+import '../../support/till_currency.dart';
 
 /// Minimal fake — only `self()` is exercised by this dialog; every other
 /// member throws if ever called, so an accidental new dependency fails
@@ -51,13 +52,12 @@ class _FakeTerminalRepository implements TerminalRepository {
       throw UnimplementedError();
 
   @override
-  Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+  Future<void> rename(int terminalId, String name) =>
+      throw UnimplementedError();
 
   @override
-  Future<void> setAllowedPaymentTypes(
-    int terminalId,
-    Set<PaymentType> types,
-  ) => throw UnimplementedError();
+  Future<void> setAllowedPaymentTypes(int terminalId, Set<PaymentType> types) =>
+      throw UnimplementedError();
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();
@@ -83,12 +83,15 @@ void main() {
     repo = LocalDeviceBindingRepository(db, BuiltinDeviceProfileCatalog());
 
     await GetIt.I.reset();
-    GetIt.I.registerSingleton<DeviceProfileCatalog>(BuiltinDeviceProfileCatalog());
+    GetIt.I.registerSingleton<DeviceProfileCatalog>(
+      BuiltinDeviceProfileCatalog(),
+    );
     GetIt.I.registerSingleton<DeviceBindingRepository>(repo);
     GetIt.I.registerSingleton<TerminalRepository>(
       _FakeTerminalRepository(terminalId),
     );
     GetIt.I.registerSingleton<AppDatabase>(db);
+    registerTillCurrency(db: db);
   });
 
   tearDown(() async {
@@ -104,7 +107,8 @@ void main() {
       home: Scaffold(
         body: Builder(
           builder: (context) => ElevatedButton(
-            onPressed: () => PrintPriceTagDialog.show(context, products: products),
+            onPressed: () =>
+                PrintPriceTagDialog.show(context, products: products),
             child: const Text('open'),
           ),
         ),

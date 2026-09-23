@@ -1,0 +1,62 @@
+{
+  "id": "cn",
+  "title": "Китай",
+  "countryCode": "CN",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "¥",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "13",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "标准税率",
+      "isDefault": true
+    },
+    {
+      "code": "reduced",
+      "title": "低税率"
+    },
+    {
+      "code": "service",
+      "title": "服务业税率"
+    },
+    {
+      "code": "exempt",
+      "title": "免税"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "cn",
+      "name": "增值税",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "13"
+        },
+        {
+          "category": "reduced",
+          "kind": "taxed",
+          "ratePercent": "9"
+        },
+        {
+          "category": "service",
+          "kind": "taxed",
+          "ratePercent": "6"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "增值税 (VAT): 标准税率和低税率; проверьте перед работой"
+}

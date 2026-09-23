@@ -56,6 +56,11 @@
   "loginBlocked": "Колдонуучу бөгөттөлгөн",
   "loginSessionExpired": "Сессия мөөнөтү бүттү",
   "loginShiftRequired": "Кирүү үчүн сменаны ачыңыз",
+  "staffRoleOwner": "Ээси",
+  "staffRoleAdministrator": "Администратор",
+  "staffRoleUser": "Колдонуучу",
+  "staffRoleCashier": "Кассир",
+  "staffRoleUnknown": "Белгисиз",
   "loginCashier": "Кассир",
   "loginAdmin": "Администратор",
   "loginManager": "Менеджер",
@@ -257,6 +262,12 @@
   "agentSaveSuccess": "Контрагент сакталды",
   "agentDeleteConfirm": "Контрагентти жок кылуу керекпи?",
   "cashTitle": "Касса",
+  "cashReasonCreditRepayment": "Бөлүп төлөөнү жабуу",
+  "cashReasonCustomerTopUp": "Сатып алуучунун эсебин толтуруу",
+  "accountBankCard": "Банк (карта)",
+  "accountCertificateLiability": "Сертификаттар боюнча милдеттенмелер",
+  "serviceConsumableFallback": "Чыгым материалы",
+  "serviceAutoAddedByNorm": "Чыгым ченеми боюнча кошулду",
   "cashInvestment": "Салым",
   "cashExpense": "Чыгым",
   "cashBalance": "Касса балансы",
@@ -265,11 +276,6 @@
   "cashReasonPlaceholder": "Себебин көрсөтүңүз",
   "cashSuccess": "Операция аткарылды",
   "cashExpenseTypes": "Чыгым түрү",
-  "cashSalary": "Эмгек акы",
-  "cashRent": "Аренда",
-  "cashUtilities": "Коммуналдык",
-  "cashSupplies": "Сатып алуулар",
-  "cashOther": "Башка",
   "discountTitle": "Арзандатуу",
   "discountPercent": "Пайыз",
   "discountFixed": "Белгиленген",
@@ -446,7 +452,7 @@
   "loginWithoutPin": "PIN-сиз кирүү",
   "loginShiftOpen": "Смена ачык",
   "loginShiftClosed": "Смена жабык",
-  "loginShiftUnknown": "Смена: белгисиз",
+  "loginShiftUnknown": "Смена: касса жооп берген жок",
   "saleQuickProducts": "Тез товарлар",
   "saleIncrease": "Көбөйтүү",
   "saleDecrease": "Азайтуу",
@@ -973,14 +979,6 @@
     }
   },
   "allBreadcrumb": "Баары",
-  "productPrice": "{price} ₸",
-  "@productPrice": {
-    "placeholders": {
-      "price": {
-        "type": "String"
-      }
-    }
-  },
   "maxBonusPercent": "Чек суммасынын {percent}%-на чейин эсептен чыгарса болот",
   "@maxBonusPercent": {
     "placeholders": {
@@ -1347,7 +1345,7 @@
   "@setupVatPayerRate": {
     "placeholders": {
       "rate": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -1481,13 +1479,13 @@
   "setupFiscalDisablesRounding": "Фискализация иштетилгенде тегеректөө автоматтык түрдө өчүрүлөт",
   "setupUserCreationTitle": "Колдонуучуларды түзүү",
   "setupUserCreationDescription": "Касса менен иштөө үчүн колдонуучуларды түзүңүз",
-  "setupAdminLabel": "АДМИНИСТРАТОР",
+  "setupAdminLabel": "Администратор",
   "setupAdminSubtitle": "Касса ээси",
   "setupUserNameLabel": "Аты",
   "setupUserPinLabel": "PIN",
   "setupUserPinConfirmLabel": "Ырастоо",
   "setupAdminPinDefault": "Демейки боюнча: 0000",
-  "setupSellerLabel": "САТУУЧУ",
+  "setupSellerLabel": "Сатуучу",
   "setupSellerOptional": "Кошумча",
   "setupSellerPinDefault": "Демейки боюнча: 1111",
   "setupAdminPinMismatch": "Администратордун PIN-коддору дал келбейт",
@@ -1534,7 +1532,7 @@
   "@setupVatPayerSummary": {
     "placeholders": {
       "rate": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -2383,6 +2381,13 @@
   "countryUzbekistan": "Өзбекстан",
   "countryUSA": "АКШ",
   "countryTurkmenistan": "Түркмөнстан",
+  "permNavServiceQueue": "Заказдар кезеги",
+  "permNavServiceIntake": "Заказ кабыл алуу",
+  "permSellWithDiscount": "Арзандатуу менен сатуу",
+  "permCashInOut": "Киргизүү / алуу",
+  "permRefundGoods": "Товарды кайтаруу",
+  "permRefundWithoutReceipt": "Чексиз кайтаруу",
+  "permGroupNavigation": "Навигация",
   "permEditPrice": "Бааны түзөтүү",
   "permSellInDebt": "Карызга сатуу",
   "permDiscounts": "Арзандатуулар",
@@ -2661,7 +2666,7 @@
     }
   },
   "shiftConfirmCloseQuestion": "Сменаны жабууга ишенесизби?",
-  "shiftFixedAmount": "Катталуучу сумма: {amount} KZT",
+  "shiftFixedAmount": "Катталуучу сумма: {amount}",
   "@shiftFixedAmount": {
     "placeholders": {
       "amount": {
@@ -2680,6 +2685,7 @@
   "shiftCashSales": "Накталай",
   "shiftCardSales": "Карта",
   "shiftRefundsTotal": "Кайтаруулар",
+  "cashOpeningCount": "Ачууда кайра саноо",
   "shiftShortage": "Жетишсиздик",
   "shiftSurplus": "Ашыкча",
   "shiftBalances": "Дал келет",
@@ -3384,7 +3390,6 @@
     }
   },
   "paymentDefaultLabel": "Демейки",
-  "currencySymbol": "₸",
   "serviceIntakeTitle": "Тапшырма кабыл алуу",
   "serviceIntakeClient": "Кардар",
   "serviceIntakeDevice": "Түзмөк / Буюм",
@@ -4835,7 +4840,7 @@
   "setCorrectionIntro": "Оңдоо чеги мурда катталган же катталбаган сумманы оңдойт. Себебин жана сумманы көрсөтүңүз. Эгер оператор оңдоону колдобосо — бул чынчылдык менен көрсөтүлөт.",
   "setCorrectionReasonLabel": "Оңдоо себеби",
   "setCorrectionReasonHint": "мис. өз алдынча оңдоо",
-  "setCorrectionAmountLabel": "Оңдоо суммасы, KZT",
+  "setCorrectionAmountLabel": "Оңдоо суммасы, {currency}",
   "setCorrectionPaymentLabel": "Төлөө ыкмасы",
   "setCorrectionCash": "Накталай",
   "setCorrectionCard": "Карта",
@@ -4892,7 +4897,7 @@
   "dishSeasonWinter": "Кыш (+15%) (x1.15)",
   "dishSeasonSummer": "Жай (-5%) (x0.95)",
   "dishEffectiveColdLoss": "Натыйжалуу иштетүү жоготуусу: {value}%",
-  "dishTotalYieldSummary": "Жыйынтык: {cost} ₸  |  Чыгымы: {yield}",
+  "dishTotalYieldSummary": "Жыйынтык: {cost}  |  Чыгымы: {yield}",
   "dishGostNorms": "МАМСТ нормалары",
   "dishGostNormsTitle": "МАМСТ жоготуу нормалары",
   "dishSearchProductHint": "Продуктту издөө...",
@@ -5000,7 +5005,7 @@
   "repKpiLoadError": "KPI жүктөө катасы",
   "repColIndicator": "Көрсөткүч",
   "repColCount": "Саны",
-  "repColSumTenge": "Сумма, ₸",
+  "repColSumTenge": "Сумма, {currency}",
   "repColRow": "Сап",
   "repColTurnoverExclVat": "Жүгүртүм (КНСсиз)",
   "repColVat": "КНС",
@@ -5030,29 +5035,29 @@
   "repColDocuments": "Документтер",
   "repColCostShort": "Өздүк",
   "repF910Title": "ф.910 — Киреше (жеңилдетилген)",
-  "repF910Subtitle": "Салык салынуучу киреше: {income} ₸ • салык {rate}%: {tax} ₸",
+  "repF910Subtitle": "Салык салынуучу киреше: {income} • салык {rate}%: {tax}",
   "repF910RowSalesIncome": "Сатуудан киреше",
   "repF910RowRefunds": "Кайтарымдар (минус)",
   "repF910RowTaxableIncome": "Салык салынуучу киреше",
   "repF300Title": "ф.300 — КНС (декларация)",
-  "repF300Subtitle": "Салык салынуучу жүгүртүм: {turnover} ₸ • эсептелген КНС: {vat} ₸",
+  "repF300Subtitle": "Салык салынуучу жүгүртүм: {turnover} • эсептелген КНС: {vat}",
   "repF300TaxableTurnoverRate": "Салык салынуучу жүгүртүм {rate}%",
   "repF300ZeroRatedTurnover": "Салык салынбаган / 0% жүгүртүм",
   "repCashBookTitle": "Касса китеби (КО-4)",
-  "repCashBookSubtitle": "Киреше: {income} • Чыгым: {expense} • Калдык: {balance} ₸",
+  "repCashBookSubtitle": "Киреше: {income} • Чыгым: {expense} • Калдык: {balance}",
   "repVatPeriodTitle": "Мезгилдеги КНС",
-  "repVatPeriodSubtitle": "КНС: {vat} ₸ • база: {base} ₸",
+  "repVatPeriodSubtitle": "КНС: {vat} • база: {base}",
   "repArApTitle": "Дебитордук / Кредитордук",
   "repArApSubtitle": "Дебитордук: {receivable} • Кредитордук: {payable} • Сальдо: {saldo}",
   "repCashCollectionTitle": "Инкассация",
-  "repCashCollectionSubtitle": "{count} операция • баары: {total} ₸",
+  "repCashCollectionSubtitle": "{count} операция • баары: {total}",
   "repProfitCogsTitle": "Пайда / Маржа (COGS)",
   "repProfitMarginTitle": "Пайда / Маржа",
-  "repProfitMarginSubtitle": "Пайда: {profit} ₸ • маржа {margin}% • {note}",
+  "repProfitMarginSubtitle": "Пайда: {profit} • маржа {margin}% • {note}",
   "repProfitCostRealCogs": "өздүк наркы: чыныгы COGS",
   "repProfitCostWholesale": "өздүк наркы: дүң баа (CalculateCogsUseCase жок)",
   "repWriteoffTitle": "Эсептен чыгаруу",
-  "repWriteoffSubtitle": "{count} документ • баары: {total} ₸",
+  "repWriteoffSubtitle": "{count} документ • баары: {total}",
   "repOrderTypesTitle": "Заказ түрлөрү",
   "repOrderTypesSubtitle": "тейлөө түрү боюнча бөлүштүрүү",
   "repTableTurnoverTitle": "Үстөлдөрдүн жүгүртүмү",
@@ -5135,7 +5140,7 @@
   "errorDeniedPolicy": "Касса жөндөөлөрү менен тыюу салынган: {detail}",
   "errorDeniedLimit": "Арзандатуу уруксат берилгенден ашык: {detail}",
   "errorApprovalRequired": "Улуу кызматкердин ырастоосу керек: {detail}",
-  "errorBigAmountBlocked": "Сатуу суммасы 1 млн ₸ ашат. Касса жөндөөлөрүндө чоң суммаларга уруксат бериңиз.",
+  "errorBigAmountBlocked": "Сатуу суммасы касса чегинен жогору ({limit}). Чекти көтөрүңүз же касса жөндөөлөрүндө чоң суммаларга уруксат бериңиз.",
   "errorMarkRequired": "Маркировка коду керек: {name}",
   "errorOrderNotFound": "Заказ табылган жок",
   "errorSerialNotFound": "Сериялык номер табылган жок",
@@ -5471,7 +5476,7 @@
   "unfiscalizedUnknownUser": "белгисиз колдонуучу",
   "unfiscalizedAtShiftClose": "Смена фискалдашпаган чектер менен жабылды: {count}. Номерлер: {numbers}",
   "documentsOnTheWayAtShiftClose": "Смена документтери операторго али жеткен жок: {count} (чектер {numbers}). Жабуу аларды жөнөтүүнү күтөт; байланыш кайтпаса, Z-отчёт жөнөтүлбөйт — антпесе оператордун отчёту касса менен дал келбейт.",
-  "qrPaidPartial": "Оплачено частично: {paid} из {amount}",
+  "qrPaidPartial": "Жарым-жартылай төлөндү: {amount} ичинен {paid}",
   "@qrPaidPartial": {
     "placeholders": {
       "paid": {
@@ -5482,8 +5487,8 @@
       }
     }
   },
-  "qrOrphanTitle": "Деньги без чека",
-  "qrOrphanHint": "Покупатель заплатил по QR, а чек этими деньгами не закрыт.",
+  "qrOrphanTitle": "Чексиз акча",
+  "qrOrphanHint": "Сатып алуучу QR аркылуу төлөдү, бирок чек бул акча менен жабылган жок.",
   "qrOrphanLine": "{amount} · {provider} · {key}",
   "@qrOrphanLine": {
     "placeholders": {
@@ -5498,7 +5503,7 @@
       }
     }
   },
-  "qrOrphanAfterGiveUp": "Подтверждение пришло после того, как касса перестала ждать",
+  "qrOrphanAfterGiveUp": "Ырастоо касса күтүүнү токтоткондон кийин келди",
   "errorQrIntentUnknown": "Касса бул QR төлөмүн билбейт. Чекти жаңыртып, кайталаңыз.",
   "errorQrIntentNotPaid": "QR төлөмүн банк дагы деле ырастай элек. Ырастоону күтүңүз же башка ыкманы тандаңыз.",
   "errorQrIntentAlreadySettled": "Бул акча башка чекти жаап койгон: {message}",
@@ -5717,9 +5722,21 @@
   "diagnosticsPrinterQueueMissing": "Бул жумуш ордунда басып чыгаруу кезеги бапталган эмес",
   "diagnosticsPrinterNothingSent": "Касса принтерге азырынча эч нерсе жөнөткөн жок",
   "diagnosticsAskFailed": "Касса бул суроого жооп берген жок: {reason}",
-  "@diagnosticsAskFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "@diagnosticsAskFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsAttempts": "аракет {count}",
-  "@diagnosticsAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "@diagnosticsAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "diagnosticsJobQueued": "кезекте турат",
   "diagnosticsJobPrinting": "басылып жатат",
   "diagnosticsJobPrinted": "басылды",
@@ -5732,11 +5749,29 @@
   "diagnosticsFiscalQueued": "Кезекте",
   "diagnosticsFiscalQueuedEmpty": "Кезек бош — жөнөтүлгөндүн баарын оператор кабыл алды",
   "diagnosticsFiscalSign": "Фискалдык белги {value}",
-  "@diagnosticsFiscalSign": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalSign": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalOperatorDoc": "оператор документи {value}",
-  "@diagnosticsFiscalOperatorDoc": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalOperatorDoc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalReceiptNo": "чек {value}",
-  "@diagnosticsFiscalReceiptNo": {"placeholders": {"value": {"type": "String"}}},
+  "@diagnosticsFiscalReceiptNo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "diagnosticsFiscalOffline": "өз алдынча берилген",
   "diagnosticsEmulatorBanner": "Принтер байланышы ушул эле компьютерге карайт — порттун артында кагаз эмес, эмулятор",
   "diagnosticsTabDrawer": "Акча кутусу",
@@ -5868,5 +5903,737 @@
   "prepaymentRefundAmountInvalid": "Сумма нөлдөн чоң болушу керек",
   "prepaymentRefundNotPermitted": "Бул кассирге авансты кайтарууга уруксат жок",
   "prepaymentRefundFiscalFailed": "Акча берилди, бирок аванс кайтарымынын фискалдык чеги жазылган жок.",
-  "agentRefundPrepayment": "Авансты кайтаруу"
+  "agentRefundPrepayment": "Авансты кайтаруу",
+  "repTitle": "Отчёттор",
+  "repTabAnalytics": "Аналитика",
+  "repTabFinance": "Каржы",
+  "repTabForecasts": "Болжолдор",
+  "repTabTaxKz": "Салыктар/КЗ",
+  "repRangeDays7": "7 күн",
+  "repRangeDays30": "30 күн",
+  "repRangeCustom": "Ыктыярдуу",
+  "repKpiChange": "Өзгөрүү",
+  "repSubtitleVsPrev": "мурунку мезгил м-н",
+  "repChartRevenueByDay": "Күн боюнча түшүм",
+  "repChartTop5Products": "Мыкты 5 товар",
+  "repChartPaymentMethods": "Төлөм ыкмалары",
+  "settingsRestartRequired": "Өзгөрүүлөр касса кийинки жолу иштегенде колдонулат.",
+  "hardwareRestartRequired": "Түзмөк өзгөрүүлөрү касса кийинки жолу иштегенде колдонулат.",
+  "hardwareDeviceDisabled": "Түзмөк өчүрүлгөн.",
+  "hardwareCustomerDisplayGraphic": "Сатып алуучунун графикалык экраны (2-монитор)",
+  "hardwareCustomerDisplayGraphicOff": "Сатып алуучунун графикалык экраны өчүрүлгөн.",
+  "hardwarePaymentKinds": "Жумуш ордунун төлөм түрлөрү",
+  "hardwarePaymentKindsUnrestricted": "Чектөө жок: жумуш орду бардык төлөм түрлөрүн кабыл алат.",
+  "fiscalSettingsDirectOfdLabel": "ОФД-га түз туташуу",
+  "markupAuto": "Авто үстөк",
+  "markupSave": "Үстөктөрдү сактоо",
+  "creditContractNumberLabel": "Кагаздагы келишим номери",
+  "creditNoLiveContracts": "Активдүү бөлүп төлөө келишимдери жок",
+  "supplierOrderTitle": "Жеткирүүчүгө өтүнмө",
+  "supplierOrderAllStocked": "Бардык товар жетиштүү өлчөмдө",
+  "supplierOrderNotNeeded": "Кошумча буйрутма талап кылынбайт",
+  "hwScaleTitle": "Таразы",
+  "hwReceiptPrinterTitle": "Чек принтери",
+  "repRangeDays14": "14 күн",
+  "repForecastSmaLowData": "SMA (маалымат аз)",
+  "repNoCategory": "Категориясыз",
+  "repAllCustomers": "Бардык кардарлар",
+  "repAllInStock": "Бардык товар кампада",
+  "repAllCovered30": "Бардык товар 30+ күнгө жетет",
+  "repColDays": "Күн",
+  "repColDaysLeft": "Калган күн",
+  "repColSharePct": "Үлүш %",
+  "repColChangePct": "Өзгөрүү %",
+  "repColSalesCount": "Сатуу саны",
+  "repReceiptCountLabel": "Чек саны",
+  "repStockCritical": "Калдык өтө аз! Шашылыш жеткирүү керек.",
+  "repColCumulativePct": "Жыйнал. %",
+  "repNotEnoughSalesData": "Тандалган мезгилде сатуу маалыматы жетишсиз",
+  "repNoForecastData": "Болжол үчүн маалымат жок",
+  "repNoDataLast90": "Акыркы 90 күндө маалымат жок",
+  "repNoCustomerData": "Кардарлар жөнүндө маалымат жок",
+  "repNoLowStock": "Калдыгы аз товар жок",
+  "repLowStock": "Калдык аз",
+  "repNewPrice": "Жаңы баа",
+  "repColEstimatedAmount": "Болжол. сумма",
+  "repColSeatings": "Отургузуу",
+  "repForecast": "Болжол",
+  "repRevenueForecast": "Түшүм болжолу",
+  "repRevenueForecastHw": "Түшүм болжолу (Holt-Winters)",
+  "repStockoutForecast": "Калдыктын түгөнүү болжолу",
+  "repStockForecast": "Калдык болжолу",
+  "repSalesWithoutCustomerHidden": "Кардарга байланбаган сатуулар көрсөтүлбөйт",
+  "repColSalesPerDay": "Сатуу/күн",
+  "repColSold": "Сатылды",
+  "repHourlyDistribution": "Саат боюнча бөлүштүрүү",
+  "repColRecommendedOrder": "Сунуш. буйрутма",
+  "repRecommendedPurchases": "Сунушталган сатып алуу",
+  "repColAvgSalesPerDay": "Орт. сатуу/күн",
+  "repColAvgCheckShort": "Орт. чек",
+  "repAvgPrice": "Орточо баа",
+  "repOldPrice": "Эски баа",
+  "repStockValue": "Калдык наркы",
+  "repColTable": "Стол",
+  "repCurrentStock": "Учурдагы калдык",
+  "repTop10Customers": "Мыкты 10 кардар",
+  "repTop10Products": "Мыкты 10 товар",
+  "repActual": "Иш жүзүндө",
+  "repColHour": "Саат",
+  "repExport": "Экспорт",
+  "repCashierPerformance": "Кассирлердин натыйжалуулугу",
+  "repWeightedAvgHint": "салмактанган орточо (акыркы күндөр оорураак)",
+  "repSalesCountByHour": "саат боюнча сатуу саны",
+  "repNoUrgentItems": "шашылыш позиция жок",
+  "repByRevenueTapHint": "түшүм боюнча (чоо-жайы үчүн басыңыз)",
+  "repDistributionTapHint": "бөлүштүрүү (секторду басыңыз)",
+  "repRevenueDistributionTapHint": "түшүмдүн бөлүштүрүлүшү (секторду басыңыз)",
+  "repAbcRare": "сейрек",
+  "repAbcMedium": "орточо",
+  "repAbcFast": "өтүмдүү",
+  "repAbcLegend": "өтүмдүү (A), орточо (B), сейрек (C) — түшүмгө кошкон салымы боюнча",
+  "repReturnsCount": "{count} кайтаруу",
+  "@repReturnsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repAbcGroupSummary": "{count} товар · {pct}%",
+  "@repAbcGroupSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "repCustomerTooltip": "{name}\n{amount} ({count} чек)",
+  "@repCustomerTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repDaysCountTapHint": "{count} күн (чоо-жайы үчүн басыңыз)",
+  "@repDaysCountTapHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repCashiersCount": "{count} кассир",
+  "@repCashiersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repLowStockCountHint": "{count} товар (калдык < 10, басыңыз)",
+  "@repLowStockCountHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repOrdersShort": "{count} буйр.",
+  "@repOrdersShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repOrdersRevenueTooltip": "{count} буйр.\n{amount}",
+  "@repOrdersRevenueTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repPieces": "{qty} даана",
+  "@repPieces": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "repPiecesDot": "{qty} даана",
+  "@repPiecesDot": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "repForecastSubtitle": "{actual} күн иш жүзүндө + {horizon} күн болжол ({algorithm})",
+  "@repForecastSubtitle": {
+    "placeholders": {
+      "actual": {
+        "type": "int"
+      },
+      "horizon": {
+        "type": "int"
+      },
+      "algorithm": {
+        "type": "String"
+      }
+    }
+  },
+  "repSalesCountLine": "{count} сатуу",
+  "@repSalesCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repReceiptsCount": "{count} чек",
+  "@repReceiptsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repSupplierTooltip": "{name}\n{count} жеткирүү",
+  "@repSupplierTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repSeatingsLine": "{count} отургузуу",
+  "@repSeatingsLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repDayOffset": "+{n} күн",
+  "@repDayOffset": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "repHoltWintersSeason": "Holt-Winters (сезон={season})",
+  "@repHoltWintersSeason": {
+    "placeholders": {
+      "season": {
+        "type": "int"
+      }
+    }
+  },
+  "repInvestmentsLine": "Салымдар: {amount}",
+  "@repInvestmentsLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repDividendsLine": "Дивиденддер: {amount}",
+  "@repDividendsLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repMarginLine": "Маржа: {pct}%",
+  "@repMarginLine": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "repKpiLoadErrorWith": "KPI жүктөлбөдү: {error}",
+  "@repKpiLoadErrorWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "repErrorWith": "Ката: {error}",
+  "@repErrorWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "repProfitLine": "Пайда: {amount}",
+  "@repProfitLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repExpensesLine": "Чыгымдар: {amount}",
+  "@repExpensesLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repLeadTimeHint": "жеткирүү мөөнөтү {lead} к. + камсыздык кор {safety} к.",
+  "@repLeadTimeHint": {
+    "placeholders": {
+      "lead": {
+        "type": "int"
+      },
+      "safety": {
+        "type": "int"
+      }
+    }
+  },
+  "markupHint": "Категория боюнча үстөк, %. Товар келгенде чекене баа сатып алуу баасынан кайра эсептелет: сатып алуу × (1 + үстөк%).",
+  "creditContractsTitle": "Бөлүп төлөө",
+  "creditContractsTitleFor": "Бөлүп төлөө — {agent}",
+  "@creditContractsTitleFor": {
+    "placeholders": {
+      "agent": {
+        "type": "String"
+      }
+    }
+  },
+  "repExportedTo": "Экспорттолду: {path}",
+  "@repExportedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "repExportFailed": "Экспорт катасы: {error}",
+  "@repExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hwSetupIncompleteDevices": "Жөндөө устасы бүтө элек — түзмөктөрдү сактаганга жер жок",
+  "hwSetupIncompleteCheck": "Жөндөө устасы бүтө элек — текшере турган эч нерсе жок",
+  "settingsSetupIncompleteSave": "Жөндөө устасы бүтө элек — сактаганга жер жок",
+  "hwProfileCatalogUnavailable": "Түзмөк профилдеринин каталогу жеткиликсиз — түзмөк жөндөөлөрүн азыр өзгөртүүгө болбойт.",
+  "printerProfileCatalogUnavailable": "Түзмөк профилдеринин каталогу жеткиликсиз — принтер жөндөөлөрүн азыр өзгөртүүгө болбойт.",
+  "labelPrinterProfileCatalogUnavailable": "Түзмөк профилдеринин каталогу жеткиликсиз — энбелги принтеринин жөндөөлөрүн азыр өзгөртүүгө болбойт.",
+  "hwPaymentKindsUnsupported": "Бул чогултма жумуш ордунун төлөм түрлөрүн сактай албайт.",
+  "hwPaymentKindsEnforcedByTill": "Тыюуну касса текшерет: төлөм түрүнө уруксаты жок терминал баш тартуу алат, экранындагы баскыч калса да.",
+  "hwCustomerDisplayGraphicDesc": "Экинчи мониторго сатып алуучу үчүн графикалык экран: чек саптары, саны жана жыйынтыгы — реалдуу убакытта.",
+  "hwCustomerDisplayMonitor": "Сатып алуучунун экраны үчүн монитор",
+  "hwCustomerDisplayMonitorHint": "POS негизги мониторго калат. Касса кийинки жолу иштегенде автоматтык түрдө ачылат.",
+  "hwNoProfilesForClass": "Бул түзмөк классы үчүн жеткиликтүү модель жок.",
+  "hwNoConnectionParams": "Бул модель кошумча туташуу параметрлерин талап кылбайт.",
+  "hwMonitorWithSize": "Монитор {index} — {size}",
+  "@hwMonitorWithSize": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "hwMonitorNumbered": "Монитор {index}",
+  "@hwMonitorNumbered": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "hwPaymentKindsError": "Төлөм түрлөрү: {error}",
+  "@hwPaymentKindsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "hwPaymentKindsUnknown": "Бул жумуш ордунун жөндөөсүндө бул версия билбеген түрлөр жазылган: {list}. Алар боюнча чектөө жок. Жазууну оңдоо үчүн түрлөрдү кайра тандаңыз — ага чейин ал ошол бойдон калат.",
+  "@hwPaymentKindsUnknown": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "hwParamOptional": "{description} (милдеттүү эмес)",
+  "@hwParamOptional": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "globalMillimetres": "{value} мм",
+  "@globalMillimetres": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "devProfilePrinterEscpos80mm": "ESC/POS чек принтери, 80 мм",
+  "devProfilePrinterEscpos58mm": "ESC/POS чек принтери, 58 мм (ыкчам, бычаксыз)",
+  "devProfilePrinterEscposUsb": "ESC/POS чек принтери, USB/спулер",
+  "devProfilePrinterEscposBluetooth": "ESC/POS чек принтери, Bluetooth",
+  "devProfilePrinterEscposSerial": "ESC/POS чек принтери, ырааттуу порт",
+  "devProfilePrinterLabelZpl104": "ZPL энбелги принтери, 104 мм",
+  "devProfilePrinterLabelEpl58": "EPL энбелги принтери, 58 мм",
+  "devProfileScannerUsbHid": "USB штрихкод сканери (HID)",
+  "devProfileScannerBluetoothHid": "Bluetooth штрихкод сканери (HID)",
+  "devProfileScannerCamera": "Түзмөк камерасы аркылуу сканер",
+  "devProfileScannerSerial": "Штрихкод сканери, ырааттуу порт",
+  "devProfileScaleCasPd2": "CAS PD-II таразысы (ырааттуу)",
+  "devProfileScaleCasErPlus": "CAS ER-Plus таразысы",
+  "devProfileDrawerViaPrinter": "Принтер аркылуу акча кутусу (RJ11)",
+  "devProfileDrawerStandalone": "Автономдуу акча кутусу (RJ11)",
+  "devProfileDisplayVfd": "VFD сатып алуучу дисплейи (ырааттуу)",
+  "devProfileDisplayLcd2x20": "LCD сатып алуучу дисплейи 2x20",
+  "devProfileDisplayLed8": "LED сатып алуучу дисплейи (8 белги)",
+  "devProfilePaymentKaspiPos": "Kaspi POS терминалы",
+  "devParamPrinterIpAddress": "Тармактык принтердин IP-дареги",
+  "devParamTcpPort9100": "TCP-порт, демейки 9100",
+  "devParamPrinterDevicePath": "Түзмөк жолу же басып чыгаруу кезегинин аты",
+  "devParamPrinterMac": "Жупташтырылган Bluetooth принтеринин MAC-дареги",
+  "devParamPrinterComPort": "Принтердин ырааттуу порту, мисалы COM4",
+  "devParamLabelPrinterIp": "Энбелги принтеринин IP-дареги",
+  "devParamScannerMac": "Жупташтырылган Bluetooth сканеринин MAC-дареги",
+  "devParamScannerComPort": "Сканердин ырааттуу порту, мисалы COM5",
+  "devParamScaleComPort": "Таразынын ырааттуу порту, мисалы COM3",
+  "devParamDrawerComPort": "Кутунун интерфейс тактасынын ырааттуу порту",
+  "devParamDisplayComPort": "Сатып алуучу дисплейинин ырааттуу порту",
+  "devParamKaspiIp": "Kaspi POS терминалынын IP-дареги",
+  "devParamKaspiPort": "Терминал порту, адатта 8888",
+  "devParamCameraId": "Кайсы камераны колдонуу керек",
+  "rcpTill": "Касса",
+  "rcpTillColon": "Касса:",
+  "rcpReceiptNo": "Чек №",
+  "rcpCashier": "Кассир:",
+  "rcpCustomer": "Кардар:",
+  "rcpDate": "Күнү:",
+  "rcpBinIin": "БИН/ЖИН:",
+  "rcpThankYou": "Сатып алганыңыз үчүн рахмат!",
+  "rcpSale": "САТУУ",
+  "rcpSubtotal": "Аралык жыйынтык:",
+  "rcpDiscount": "Арзандатуу:",
+  "rcpServiceFee": "Кызмат акысы:",
+  "rcpTotal": "ЖЫЙЫНТЫГЫ:",
+  "rcpChange": "Кайтарым:",
+  "rcpCash": "КОЛМО-КОЛ",
+  "rcpCard": "КАРТА",
+  "rcpQuantityShort": "даана",
+  "rcpRefund": "КАЙТАРУУ",
+  "rcpRefundNo": "Кайтаруу №",
+  "rcpSaleReceiptNo": "Сатуу чеги №",
+  "rcpDuplicate": "*** КӨЧҮРМӨ ***",
+  "rcpTable": "Стол:",
+  "rcpWaiter": "Официант:",
+  "rcpGuests": "Конактар:",
+  "rcpFiscalReceipt": "ФИСКАЛДЫК ЧЕК",
+  "rcpNonFiscalReceipt": "ФИСКАЛДЫК ЭМЕС ЧЕК",
+  "rcpNotFiscalDocument": "ФИСКАЛДЫК ДОКУМЕНТ ЭМЕС",
+  "rcpFiscalSign": "ФИСК. БЕЛГИ:",
+  "rcpFiscalFn": "ФЖ:",
+  "rcpFiscalRnm": "ТНН:",
+  "rcpFiscalZnm": "ЗНН:",
+  "rcpFiscalTime": "УБАКЫТ:",
+  "rcpOfdName": "ФДО",
+  "rcpOffline": "*** ОФФЛАЙН ***",
+  "rcpVerifyAt": "Чекти текшерүү үчүн кириңиз",
+  "rcpCustomerTaxId": "Сатып алуучунун ЖИН:",
+  "rcpTaxA": "А САЛЫГЫ БОЮНЧА:",
+  "rcpFiscalOperatorNotSet": "Фискалдык оператор жөндөлбөгөн",
+  "rcpFiscalModuleUnavailable": "Фискалдаштыруу модулу жеткиликсиз",
+  "rcpDocumentNotIssued": "Документ таризделген жок — кассирге кайрылыңыз",
+  "rcpXReport": "X-ОТЧЁТ",
+  "rcpZReport": "Z-ОТЧЁТ",
+  "rcpInterim": "АРАЛЫК (өчүрүүсүз)",
+  "rcpShiftClose": "СМЕНАНЫ ЖАБУУ",
+  "rcpShiftStart": "Башталышы:",
+  "rcpShiftEnd": "Аякталышы:",
+  "rcpSales": "САТУУЛАР",
+  "rcpRefunds": "КАЙТАРУУЛАР",
+  "rcpCount": "Саны:",
+  "rcpAmount": "Суммасы:",
+  "rcpCashOps": "АКЧА ОПЕРАЦИЯЛАРЫ",
+  "rcpOpeningFloat": "Башына:",
+  "rcpSlipTitle": "КВИТАНЦИЯ",
+  "rcpType": "Түрү:",
+  "rcpComment": "Комментарий:",
+  "rcpCashIn": "Кирим:",
+  "rcpCashOut": "Чыгым:",
+  "rcpTotalInDrawer": "КАССАДА ЖЫЙЫНТЫГЫ:",
+  "rcpCertificatesNotRevenue": "СЕРТИФИКАТТАР (ТҮШҮМ ЭМЕС)",
+  "rcpCertIssuedDebt": "Чыгарылды (касса карызы):",
+  "rcpCertRedeemed": "Төлөндү (товар менен):",
+  "rcpGiftCertificate": "БЕЛЕК СЕРТИФИКАТЫ",
+  "rcpCertNo": "Сертификат №",
+  "rcpCertFaceValue": "Номиналы:",
+  "rcpCertValidUntil": "Жарактуу:",
+  "rcpCertNoExpiry": "мөөнөтсүз",
+  "rcpCertPinSet": "ПИН коюлган",
+  "rcpCertIssuedByRefund": "Кайтаруу менен чыгарылды №",
+  "rcpCertInsteadOf": "Сертификаттын ордуна",
+  "rcpVat": "КНС",
+  "rcpSalesTax": "Сатуудан салык",
+  "rcpTaxExempt": "Салык салынбайт",
+  "rcpTaxExemptMark": "бош",
+  "taxSettingsTitle": "Салыктар",
+  "taxSettingsSubtitle": "Чендер, юрисдикциялар жана товар категориялары",
+  "taxSettingsIntro": "Чен бир сан менен берилбейт: ал касса турган юрисдикциялардын үлүштөрүнөн курулат жана товардын категориясы менен күнгө көз каранды. Даяр топтомду алып, кийин оңдоого болот.",
+  "taxSettingsNotConfigured": "Салык жөндөлгөн эмес: касса нөл эсептейт.",
+  "taxSettingsPresetSection": "Даяр топтом",
+  "taxSettingsCountry": "Өлкө",
+  "taxSettingsRegion": "Штат же облус",
+  "taxSettingsCity": "Шаар",
+  "taxSettingsPreset": "Топтом",
+  "taxSettingsApplyPreset": "Топтомду колдонуу",
+  "taxSettingsPresetReplaces": "Колдонуу учурдагы жөндөөнү толук алмаштырат. Эки топтомду кошууга болбойт: касса салыкты эки эсе алмак.",
+  "taxSettingsPresetSource": "Булак: {source}",
+  "taxSettingsPresetValidFrom": "Чендер {date} тартып колдонулат",
+  "taxSettingsPresetApplied": "Топтом колдонулду",
+  "taxSettingsCurrentSection": "Учурдагы жөндөө",
+  "taxSettingsRateForStandard": "Кадимки товар: {rate}%",
+  "taxSettingsJurisdictions": "Юрисдикциялар",
+  "taxSettingsCategories": "Товар категориялары",
+  "taxSettingsTillLocation": "Касса ушул жерде турат",
+  "taxSettingsTillLocationHint": "Белги бирден көп болушу мүмкүн: шаар жана атайын райондор. Жогоркулары өзү кошулат.",
+  "taxSettingsRules": "Эрежелер",
+  "taxSettingsRuleTaxed": "салыкталат",
+  "taxSettingsRuleZero": "нөлдүк чен",
+  "taxSettingsRuleExempt": "бошотулган",
+  "taxSettingsAllCategories": "бардык категориялар",
+  "taxSettingsAddJurisdiction": "Юрисдикция кошуу",
+  "taxSettingsAddCategory": "Категория кошуу",
+  "taxSettingsAddRule": "Эреже кошуу",
+  "taxSettingsName": "Аталышы",
+  "taxSettingsCode": "Коду",
+  "taxSettingsRate": "Чен, %",
+  "taxSettingsValidFrom": "Тартып колдонулат",
+  "taxSettingsParent": "Жогорку",
+  "taxSettingsNoParent": "жок (тамыр)",
+  "taxSettingsLevel": "Деңгээл",
+  "taxSettingsLevelCountry": "Өлкө",
+  "taxSettingsLevelState": "Штат",
+  "taxSettingsLevelCounty": "Округ",
+  "taxSettingsLevelCity": "Шаар",
+  "taxSettingsLevelDistrict": "Атайын район",
+  "taxSettingsDelete": "Өчүрүү",
+  "taxSettingsDeleteJurisdictionWarning": "Аны менен кошо эрежелери жана ички юрисдикциялары өчөт.",
+  "taxSettingsResponsibility": "Топтомдордогу сандар ачык булактардан алынган жана шилтеме менен аталган. Салыктын туурасына программа эмес, салык төлөөчү жооп берет.",
+  "taxSettingsNoPresetsForCountry": "Бул өлкө үчүн даяр топтом жок — колмо-кол жөндөңүз.",
+  "taxSettingsAdd": "Кошуу",
+  "taxSettingsCancel": "Жокко чыгаруу",
+  "setupStoreAddressHint": "Абай к., 10, Бишкек",
+  "setupStoreAddressHelper": "Чекке басылат. Ансыз сатып алуучу сатып алуу кайда жасалганын көрбөйт.",
+  "countryKz": "Казакстан",
+  "countryRu": "Орусия",
+  "countryKg": "Кыргызстан",
+  "countryUz": "Өзбекстан",
+  "countryUs": "АКШ",
+  "countryTm": "Түркмөнстан",
+  "currencyKzt": "Казак теңгеси",
+  "currencyRub": "Орус рубли",
+  "currencyKgs": "Кыргыз сому",
+  "currencyUzs": "Өзбек сому",
+  "currencyUsd": "АКШ доллары",
+  "currencyTmt": "Түркмөн манаты",
+  "setupStepSalesTax": "Сатуудан салык",
+  "setupSalesTaxPayerTitle": "Сатуудан салык чогултам",
+  "setupSalesTaxPayerSubtitle": "Чендер «Жөндөөлөр → Салыктар» бөлүмүндө юрисдикция боюнча коюлат",
+  "setupSalesTaxPayerDescription": "Салык баанын үстүнө кошулат жана чекте өзүнчө сапта басылат.",
+  "setupSalesTaxNonPayerTitle": "Сатуудан салыксыз",
+  "setupSalesTaxNonPayerSubtitle": "Баага эч нерсе кошулбайт",
+  "setupSalesTaxNonPayerDescription": "Баага эч нерсе кошулбайт, чекте салык сабы жок.",
+  "bootLoadingConfig": "Конфигурацияны жүктөө…",
+  "bootCheckingPosKey": "Касса ачкычын текшерүү…",
+  "bootLoadingAgents": "Контрагенттерди жүктөө…",
+  "bootLoadingAccounts": "Эсептерди жүктөө…",
+  "bootInitialisingDatabase": "Маалымат базасын даярдоо…",
+  "bootLoadingCashiers": "Кассирлерди жүктөө…",
+  "bootLoadingPosData": "Касса маалыматын жүктөө…",
+  "bootLoadingProducts": "Товарларды жүктөө…",
+  "bootCheckingReceiptNumbers": "Чек номерлөөсүн текшерүү…",
+  "bootCheckingLicence": "Лицензияны текшерүү…",
+  "bootCheckingReports": "Отчётторду текшерүү…",
+  "bootFinishingInitialisation": "Аяктоо…",
+  "bootStartingBackgroundJobs": "Фондук тапшырмаларды баштоо…",
+  "bootReady": "Даяр",
+  "bootDataLoaded": "Маалымат жүктөлдү",
+  "bootTillNotResponding": "Касса жооп бербейт: {code}",
+  "bootDownloadingBackup": "Камдык көчүрмөнү жүктөө…",
+  "bootBackupDownloadFailed": "Камдык көчүрмөнү жүктөө мүмкүн болбоду",
+  "bootRestoringDatabase": "Маалымат базасын калыбына келтирүү…",
+  "bootDatabaseRestoreFailed": "Маалымат базасын калыбына келтирүү мүмкүн болбоду",
+  "bootApplyingPosKey": "Касса ачкычын жөндөө…",
+  "bootRestoreDone": "Калыбына келтирүү аяктады",
+  "bootCreatingBackup": "Камдык көчүрмө түзүү…",
+  "bootBackupCreateFailed": "Камдык көчүрмө түзүү мүмкүн болбоду",
+  "bootBackupDone": "Камдык көчүрмө түзүлүп жүктөлдү",
+  "bootLoadingUsers": "Колдонуучуларды жүктөө…",
+  "bootLoadingCategories": "Категорияларды жүктөө…",
+  "bootLoadingSettings": "Жөндөөлөрдү жүктөө…",
+  "bootSyncDone": "Синхрондоо аяктады",
+  "bootFailed": "Ката",
+  "countryDeu": "Германия",
+  "currencyDeu": "Евро",
+  "countryFra": "Франция",
+  "currencyFra": "Евро",
+  "countryEsp": "Испания",
+  "currencyEsp": "Евро",
+  "countryIta": "Италия",
+  "currencyIta": "Евро",
+  "countryGbr": "Улуу Британия",
+  "currencyGbr": "Фунт стерлинг",
+  "countryPol": "Польша",
+  "currencyPol": "Поляк злотыйы",
+  "countryTur": "Түркия",
+  "currencyTur": "Түрк лирасы",
+  "countryChn": "Кытай",
+  "currencyChn": "Кытай юаны",
+  "countryJpn": "Япония",
+  "currencyJpn": "Жапон иенасы",
+  "countryKor": "Түштүк Корея",
+  "currencyKor": "Корей вонасы",
+  "countryAre": "БАЭ",
+  "currencyAre": "БАЭ дирхамы",
+  "countrySau": "Сауд Арабиясы",
+  "currencySau": "Сауд риялы",
+  "countryInd": "Индия",
+  "currencyInd": "Инди рупиясы",
+  "countryCan": "Канада",
+  "currencyCan": "Канада доллары",
+  "countryAus": "Австралия",
+  "currencyAus": "Австралия доллары",
+  "agentPaymentAccepted": "Төлөм кабыл алынды",
+  "catalogCategoryHasChildren": "Категорияда ички категориялар бар",
+  "creditOutstanding": "Калды: {amount}",
+  "creditTakePayment": "Төлөмдү кабыл алуу",
+  "creditPrintContract": "Келишимди басып чыгаруу",
+  "creditPaymentFor": "{number} боюнча төлөм",
+  "creditOutstandingOnContract": "Келишим боюнча калды: {amount}",
+  "creditPayInFull": "Толук төлөө",
+  "creditAccept": "Кабыл алуу",
+  "displayProduct": "Товар",
+  "markupSaved": "Үстөктөр сакталды: {count} категория",
+  "genericErrorWith": "Ката: {detail}",
+  "serviceAttachPhoto": "Фото",
+  "serviceAttachVideo": "Видео",
+  "shiftCorrectionReceipt": "Оңдоо чеги",
+  "supplierChoose": "Жеткирүүчүнү тандаңыз",
+  "supplierProduct": "Товар",
+  "supplierStock": "Калдык",
+  "supplierOrderQty": "Заказ",
+  "supplierCreateRequest": "Өтүнмө түзүү",
+  "supplierNeedQuantity": "Жок дегенде бир товарга саны керек",
+  "unitMonthsShort": "{count} ай",
+  "unitDaysShort": "{count} күн",
+  "displayWelcome": "Кош келиңиз!",
+  "displayWelcomeSubtitle": "Сизди көргөнүбүзгө кубанычтуубуз",
+  "displayPromoFree": "Акция · акысыз",
+  "displayDiscountAmount": "Арзандатуу −{amount}",
+  "displayWindowTitle": "Сатып алуучунун экраны",
+  "shiftXReportPrinted": "X-отчёт басылды",
+  "shiftXReportPrintedOffline": "X-отчёт басылды (фискалдык X кезекте, байланыш жок)",
+  "shiftXReportFailed": "X-отчётту басып чыгаруу мүмкүн болгон жок",
+  "creditContractNotFound": "{number} келишими кассада жок",
+  "creditOverdue": "МӨӨНӨТҮ ӨТКӨН: {amount} ({count} төлөм)",
+  "creditNextPayment": "Кийинки төлөм {date}: {amount}",
+  "creditNoTillAccount": "Кассанын эсеби жок — акчаны кабыл алар жер жок",
+  "creditContractClosed": "{number} келишими жабылды",
+  "creditPartiallyPaid": "{paid} кабыл алынды, {left} калды",
+  "creditPaymentAmount": "Төлөм суммасы",
+  "serviceWarrantyAndQuality": "Кепилдик жана сапат",
+  "serviceWarrantyDays": "Кепилдик: {days} күн",
+  "serviceWarrantyNotSet": "Кепилдик коюлган эмес",
+  "serviceQualityRatingTitle": "Сапат баасы",
+  "serviceQualityRatingValue": "Баасы: {rating}/5",
+  "serviceRepairMedia": "Оңдоо фото/видеосу",
+  "serviceNoRepairMedia": "Оңдоо медиасы жок",
+  "supplierLabel": "Жеткирүүчү:",
+  "supplierLinesToOrder": "Заказга позиция: {count}",
+  "supplierRequestCreated": "Өтүнмө түзүлдү: {count} поз.",
+  "modifierRequired": "Милдеттүү",
+  "modifierMax": "макс. {count}",
+  "writeoffReasonUnspecified": "Көрсөтүлгөн эмес",
+  "labelSampleProduct": "Товар үлгүсү",
+  "markupCategoryNumbered": "Категория #{id}",
+  "salePolicyForbids": "Аракетке кассанын жөндөөлөрү уруксат бербейт (Жөндөөлөр → Сатуу саясаты)",
+  "labelPrintFailed": "Этикетканы басып чыгаруу катасы",
+  "labelPrintFromTillOnly": "Этикетка кассадан басылат, терминалдан эмес",
+  "orphanQrTillNotRegistered": "Касса катталган эмес — QR боюнча аныкталбаган акчаны сурар жер жок",
+  "stockLowStockReorder": "Калдыгы аз товарларга кошумча заказ",
+  "serviceNoteNeedsApproval": "Кардардын макулдугу керек",
+  "deferredFromTill": "касса {id}",
+  "dishSummary": "Ингредиент: {count}, өздүк наркы: {cost}",
+  "prepaymentIssueTo": "Сатып алуучуга аванс берүү ({name})",
+  "prepaymentFrom": "Сатып алуучунун авансы ({name})",
+  "prepaymentRefundTo": "Сатып алуучуга авансты кайтаруу ({name})",
+  "setupPartOrganization": "уюм",
+  "setupPartTill": "касса",
+  "setupPartFiscal": "фискализация",
+  "setupPartEquipment": "жабдуу",
+  "setupPartTerminals": "төлөм терминалдары",
+  "setupPartRules": "эрежелер",
+  "setupPartUser": "колдонуучу",
+  "customerPaymentNote": "Карызды жабуу / төлөм ({name})",
+  "chatMembersUnavailable": "Катышуучулар тизмеси жүктөлгөн жок",
+  "chatMe": "Мен",
+  "setPolicyBigAmountLimit": "Чек суммасынын чеги",
+  "setPolicyBigAmountLimitDesc": "Бул суммадан жогору касса уруксат сурайт. Бош — {fallback}.",
+  "cashRefusedNotPositive": "Сумма нөлдөн чоң болушу керек",
+  "cashRefusedAboveCeiling": "Сумма касса чегинен жогору ({limit}). Жөндөөлөрдө чекти көтөрүңүз же чоң суммаларга уруксат бериңиз.",
+  "errorProductHasNoPrice": "«{name}» товарынын баасы жок — сатууга болбойт. Каталогдо баа коюңуз.",
+  "sellingHoursTitle": "Сатууга тыюу саат",
+  "sellingHoursAdd": "Терезе кошуу",
+  "sellingHoursCategory": "Категория",
+  "sellingHoursFrom": "Башы (СС:ММ)",
+  "sellingHoursTo": "Аягы (СС:ММ)",
+  "sellingHoursActive": "Тыюу күчүндө",
+  "sellingHoursBanned": "Сатуу тыюу салынган {window}",
+  "sellingHoursOff": "{window} терезеси өчүрүлгөн",
+  "sellingHoursBroken": "«{window}» сааттары окулган жок — тыюу иштебейт",
+  "sellingHoursBadTime": "Убакыт СС:ММ түрүндө, мисалы 23:00",
+  "sellingHoursPreviewDay": "Бир сутка ичинде: {window}",
+  "sellingHoursPreviewNight": "Түнкү тыюу, түн ортосу аркылуу: {window}",
+  "sellingHoursExplainer": "Сааттарды өзүңүз коёсуз: мыйзам ар өлкөдө башка. Категорияга тыюу анын ичиндегилерге да тиет.",
+  "sellingHoursNoCategories": "Адегенде каталогдо категория түзүңүз — тыюу категорияга коюлат.",
+  "sellingHoursCategoryGone": "#{id} категориясы өчүрүлгөн",
+  "errorSellingHoursBanned": "«{category}» азыр сатууга болбойт: тыюу {window}.",
+  "errorSellingHoursBannedNoWindow": "«{category}» азыр сатууга болбойт.",
+  "generalSettingsStoreAddress": "Соода түйнүнүн дареги",
+  "generalSettingsStoreAddressHint": "Чекте басылат. Дүкөн көчсө, өзгөртүңүз."
 }

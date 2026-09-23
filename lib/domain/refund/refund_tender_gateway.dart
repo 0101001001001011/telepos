@@ -60,5 +60,6 @@ class TenderReturn {
   bool get ok => code == null;
 
   @override
-  String toString() => ok ? 'TenderReturn.done($transactionId)' : 'TenderReturn($code)';
+  String toString() =>
+      ok ? 'TenderReturn.done($transactionId)' : 'TenderReturn($code)';
 }

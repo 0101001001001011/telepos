@@ -172,8 +172,7 @@ class LocalRefundReceiptPrinter implements RefundReceiptPrinter {
         final isCash = kind == null
             ? account == null || _cashAccountTypes.contains(account.type)
             : kind.id == SystemPaymentKindIds.cash;
-        final name =
-            kind?.name ?? account?.name ?? (isCash ? 'Cash' : 'Card');
+        final name = kind?.name ?? account?.name ?? (isCash ? 'Cash' : 'Card');
         lines.add(
           ReceiptPaymentLine(name: name, amount: amount, isCash: isCash),
         );

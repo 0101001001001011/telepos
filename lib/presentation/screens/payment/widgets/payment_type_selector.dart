@@ -102,8 +102,7 @@ class PaymentTypeSelector extends ConsumerWidget {
     );
 
     final offered = {
-      for (final type in _types)
-        type: paymentTypeOfferable(allowed, type),
+      for (final type in _types) type: paymentTypeOfferable(allowed, type),
     };
     final denied = _types.where((type) => !offered[type]!).toList();
 

@@ -2,6 +2,7 @@ import 'package:telepos/core/platform/local_file.dart';
 
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 
@@ -21,7 +22,7 @@ class ReportExportButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.download, size: 18),
-      tooltip: 'Экспорт CSV',
+      tooltip: AppLocalizations.of(context)!.catalogExportCsv,
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       onPressed: () => exportCsv(context, fileName, headers, rows),
     );
@@ -49,7 +50,9 @@ class ReportExportButton extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Экспортировано: $filePath'),
+            content: Text(
+              AppLocalizations.of(context)!.repExportedTo(filePath),
+            ),
             backgroundColor: AppColors.success,
             duration: const Duration(seconds: 5),
           ),
@@ -59,7 +62,7 @@ class ReportExportButton extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ошибка экспорта: $e'),
+            content: Text(AppLocalizations.of(context)!.repExportFailed('$e')),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

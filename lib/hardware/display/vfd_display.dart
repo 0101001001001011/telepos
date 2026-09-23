@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/widgets.dart' show Locale;
+import 'package:telepos/core/locale/till_language.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
@@ -59,6 +62,15 @@ class VfdDisplayManager extends BaseDisplayManager {
     await showWelcome();
   }
 
+  /// Словарь на языке кассы.
+  ///
+  /// Дисплей покупателя — **не экран кассира**: его читает покупатель, и
+  /// `BuildContext` сюда не доходит. Здесь стояли русские литералы «Цена:»,
+  /// «ИТОГО:», «Сдача:», «Добро пожаловать!» — на любой кассе, в том числе
+  /// американской, и видел их покупатель, а не сотрудник.
+  AppLocalizations get _l10n =>
+      lookupAppLocalizations(Locale(TillLanguage.current.languageCode));
+
   @override
   Future<void> clear() async {
     await _write(VfdCommands.clear);
@@ -69,7 +81,7 @@ class VfdDisplayManager extends BaseDisplayManager {
     final priceStr = formatAmount(price);
 
     await _setCursor(0, 0);
-    await _writeText(fitLine('Цена:'));
+    await _writeText(fitLine('${_l10n.receiptLabelPrice}:'));
 
     await _setCursor(1, 0);
     await _writeText(priceStr);
@@ -80,7 +92,7 @@ class VfdDisplayManager extends BaseDisplayManager {
     final totalStr = formatAmount(total);
 
     await _setCursor(0, 0);
-    await _writeText(fitLine('ИТОГО:'));
+    await _writeText(fitLine(_l10n.receiptLabelTotal));
 
     await _setCursor(1, 0);
     await _writeText(totalStr);
@@ -105,7 +117,7 @@ class VfdDisplayManager extends BaseDisplayManager {
     await clear();
 
     await _setCursor(0, 0);
-    await _writeText(centerText('Добро пожаловать!'));
+    await _writeText(centerText(_l10n.displayWelcome));
 
     await _setCursor(1, 0);
     await _writeText(centerText('* * * * *'));
@@ -116,7 +128,7 @@ class VfdDisplayManager extends BaseDisplayManager {
     final changeStr = formatAmount(change);
 
     await _setCursor(0, 0);
-    await _writeText(fitLine('Сдача:'));
+    await _writeText(fitLine(_l10n.receiptLabelChange));
 
     await _setCursor(1, 0);
     await _writeText(changeStr);
@@ -162,8 +174,7 @@ class VfdDisplayManager extends BaseDisplayManager {
   /// `0x410..0x44F` в `0x80 + (c - 0x410)`, то есть строчные «р»…«я»
   /// ложились на `0xB0..0xBF` — участок псевдографики CP866. Покупатель
   /// видел на табло рамки вместо букв, и никакая проба на это не смотрела.
-  List<int> _encodeText(String text) =>
-      encodePaper(text, PaperCharset.cp866);
+  List<int> _encodeText(String text) => encodePaper(text, PaperCharset.cp866);
 
   Future<void> _write(List<int> data) async {
     if (!_connected || _file == null) return;

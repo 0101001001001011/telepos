@@ -313,14 +313,22 @@ DeviceBinding? _inferCashDrawerBinding(
       // Falls through to the Terminals source below — genuinely no port
       // data in the blob, not an ambiguous value.
     } else {
-      return _tryBuild(catalog, DeviceClass.cashDrawer, 'drawer.rj11.via-printer');
+      return _tryBuild(
+        catalog,
+        DeviceClass.cashDrawer,
+        'drawer.rj11.via-printer',
+      );
     }
   }
 
   final viaPrinter = legacy.terminalDrawerViaPrinter;
   if (viaPrinter == null) return null;
   if (viaPrinter) {
-    return _tryBuild(catalog, DeviceClass.cashDrawer, 'drawer.rj11.via-printer');
+    return _tryBuild(
+      catalog,
+      DeviceClass.cashDrawer,
+      'drawer.rj11.via-printer',
+    );
   }
   // `false` means standalone, but `Terminals` carries no drawer COM port
   // column of its own — nothing to supply the profile's required `comPort`.
@@ -488,9 +496,7 @@ DeviceBinding? _inferScaleBinding(
 
   final profile = _narrowToUniqueProfile(catalog.forClass(DeviceClass.scale), [
     (p) => p.protocol == DeviceProtocol.casScale,
-    baudRate == null
-        ? null
-        : (p) => p.capabilities.defaultBaudRate == baudRate,
+    baudRate == null ? null : (p) => p.capabilities.defaultBaudRate == baudRate,
   ]);
   // Both CAS profiles share a baud rate — see doc comment above. This is
   // expected to be null every time until the catalogue can distinguish them.
@@ -604,17 +610,15 @@ String? resolveReceiptPrinterProfileId(
   String? connectionKind,
   int? paperWidthMm,
 }) {
-  final profile = _narrowToUniqueProfile(
-    catalog.forClass(DeviceClass.receiptPrinter),
-    [
-      connectionKind == null
-          ? null
-          : _transportPredicateForPrinterConnectionKind(connectionKind),
-      paperWidthMm == null
-          ? null
-          : (p) => p.capabilities.paperWidthsMm.contains(paperWidthMm),
-    ],
-  );
+  final profile =
+      _narrowToUniqueProfile(catalog.forClass(DeviceClass.receiptPrinter), [
+        connectionKind == null
+            ? null
+            : _transportPredicateForPrinterConnectionKind(connectionKind),
+        paperWidthMm == null
+            ? null
+            : (p) => p.capabilities.paperWidthsMm.contains(paperWidthMm),
+      ]);
   return profile?.id;
 }
 
@@ -668,7 +672,8 @@ DeviceBinding? _inferReceiptPrinterBinding(
   if (profileId == null) return null;
 
   final address =
-      (blob?['receiptPrinterAddress'] as String?) ?? legacy.terminalPrinterAddress;
+      (blob?['receiptPrinterAddress'] as String?) ??
+      legacy.terminalPrinterAddress;
   final port = (blob?['receiptPrinterPort'] as num?)?.toInt();
 
   return _buildReceiptPrinterBinding(

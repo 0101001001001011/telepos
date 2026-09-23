@@ -132,7 +132,9 @@ class FakeAuthRepository implements AuthRepository {
   /// его ещё нет, — значит звать `pushUsers` можно и до `watchUsers`.
   void pushUsers(List<AuthUser> next) {
     users = next;
-    (usersController ??= StreamController<List<AuthUser>>.broadcast()).add(next);
+    (usersController ??= StreamController<List<AuthUser>>.broadcast()).add(
+      next,
+    );
   }
 
   /// Уронить подписку на кассиров — обрыв провода с точки зрения экрана.
@@ -140,8 +142,9 @@ class FakeAuthRepository implements AuthRepository {
   /// Отдельно от [pushUsers], потому что это другое событие: не «список
   /// изменился», а «подписки больше нет». Экран обязан различать их.
   void failUsers(Object error) {
-    (usersController ??= StreamController<List<AuthUser>>.broadcast())
-        .addError(error);
+    (usersController ??= StreamController<List<AuthUser>>.broadcast()).addError(
+      error,
+    );
   }
 
   @override

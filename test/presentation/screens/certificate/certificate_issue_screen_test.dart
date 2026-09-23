@@ -167,10 +167,7 @@ void main() {
   ) async {
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
     // Дробный номинал намеренно: `5000.005` в двойной точности не
     // представим точно, и подмена типа была бы видна третьим знаком.
@@ -205,10 +202,7 @@ void main() {
     // дереве, где кассир выпустить ничего не может.
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
     await fillIssue(tester);
 
@@ -233,10 +227,7 @@ void main() {
   ) async {
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
     await fillIssue(tester, nominal: '1200,50');
 
@@ -249,10 +240,7 @@ void main() {
   testWidgets('нулевой номинал до кассы не доходит', (tester) async {
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
     await fillIssue(tester, nominal: '0');
 
@@ -272,10 +260,7 @@ void main() {
     );
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
     await fillIssue(tester);
 
@@ -323,10 +308,7 @@ void main() {
     GetIt.I.unregister<CertificateSlipReprinter>();
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
 
     await tester.enterText(
@@ -353,10 +335,7 @@ void main() {
     );
     await pump(
       tester,
-      permissions: {
-        PermissionKeys.navSale,
-        PermissionKeys.opIssueCertificate,
-      },
+      permissions: {PermissionKeys.navSale, PermissionKeys.opIssueCertificate},
     );
 
     await tester.enterText(

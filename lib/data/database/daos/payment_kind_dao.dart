@@ -43,8 +43,9 @@ class PaymentKindDao extends DatabaseAccessor<AppDatabase>
   /// настройку оператора** — вернул бы бонусу «карту», а выключенному
   /// сертификату включённость. Тот же довод, что у
   /// `_ensureDefaultDiscountLimit`.
-  Future<void> seed(PaymentKind kind) =>
-      into(paymentKinds).insert(companionOf(kind), mode: InsertMode.insertOrIgnore);
+  Future<void> seed(PaymentKind kind) => into(
+    paymentKinds,
+  ).insert(companionOf(kind), mode: InsertMode.insertOrIgnore);
 
   static PaymentKindsCompanion companionOf(PaymentKind kind) =>
       PaymentKindsCompanion.insert(

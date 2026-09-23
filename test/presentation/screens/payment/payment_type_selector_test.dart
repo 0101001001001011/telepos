@@ -40,9 +40,7 @@ class _RecordingPaymentNotifier extends MockPaymentNotifier {
 void main() {
   Widget harness(_RecordingPaymentNotifier notifier) {
     return ProviderScope(
-      overrides: [
-        paymentControllerProvider.overrideWith(() => notifier),
-      ],
+      overrides: [paymentControllerProvider.overrideWith(() => notifier)],
       child: MaterialApp(
         theme: AppTheme.light,
         localizationsDelegates: const [
@@ -119,10 +117,7 @@ void main() {
       await tester.pumpWidget(harness(notifier));
       await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('payment_type_locked_cash')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('payment_type_locked_cash')), findsOneWidget);
       expect(
         find.byKey(const Key('payment_type_locked_mixed')),
         findsOneWidget,
@@ -215,10 +210,7 @@ void main() {
       await tester.pumpWidget(harness(notifier));
       await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('payment_type_locked_card')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('payment_type_locked_card')), findsOneWidget);
       expect(find.byKey(const Key('payment_type_locked_cash')), findsNothing);
 
       await tester.tap(find.byKey(const Key('payment_type_button_cash')));

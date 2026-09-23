@@ -272,7 +272,10 @@ class _QueuedCard extends StatelessWidget {
                 // с тем, что ждёт оператор, и приглаженный вид врёт там, где
                 // его читают.
                 document.payloadJson,
-                style: const TextStyle(fontFamily: AppTypography.familyMono, fontSize: 12),
+                style: const TextStyle(
+                  fontFamily: AppTypography.familyMono,
+                  fontSize: 12,
+                ),
               ),
             ),
           ),

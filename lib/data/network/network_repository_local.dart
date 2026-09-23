@@ -46,7 +46,8 @@ class NetworkRepositoryLocal implements NetworkRepository {
     final nets = await _sysd.wifiScan();
     return nets
         .map(
-          (n) => WifiNetwork(ssid: n.ssid, signal: n.signal, security: n.security),
+          (n) =>
+              WifiNetwork(ssid: n.ssid, signal: n.signal, security: n.security),
         )
         .toList();
   }

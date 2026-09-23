@@ -3,6 +3,7 @@ import 'package:telepos/core/errors/safe_error_text.dart';
 import 'package:telepos/core/logging/setup_logger.dart';
 import 'package:telepos/l10n/app_localizations.dart';
 import 'package:telepos/presentation/controllers/sale/sale_refusal_keys.dart';
+import 'package:telepos/domain/sale/big_amount_limit.dart';
 
 class ErrorLocalizer {
   ErrorLocalizer._();
@@ -120,10 +121,14 @@ class ErrorLocalizer {
             ? '${l10n.errorUnknownGeneric}: $arg'
             : l10n.errorUnknownGeneric,
       'error.validation' => l10n.errorFillRequired,
+      // Довод — КОДЫ разделов мастера, а не их русские имена: до
+      // 2026-09-22 иностранец читал здесь «организация, касса,
+      // фискализация» буквами, на английском мастере.
       'error.setup_incomplete' =>
         (arg != null && arg.isNotEmpty)
-            ? '${l10n.errorFillRequired}: $arg'
+            ? '${l10n.errorFillRequired}: ${_setupParts(l10n, arg)}'
             : l10n.errorFillRequired,
+      'error.sale_policy_forbids' => l10n.salePolicyForbids,
       // Отказ кассы на возврате (задача 20). С 2026-09-15 довод — не текст
       // кассы, а `refusal(<код>): …` от `namedRefusalText`: код из словаря
       // показывается своей фразой в `_localizeRefusal` раньше этой строки,
@@ -146,7 +151,29 @@ class ErrorLocalizer {
       'error.denied_policy' => l10n.errorDeniedPolicy(arg ?? ''),
       'error.denied_limit' => l10n.errorDeniedLimit(arg ?? ''),
       'error.approval_required' => l10n.errorApprovalRequired(arg ?? ''),
-      'error.big_amount_blocked' => l10n.errorBigAmountBlocked,
+      // Потолок — НАСТРОЙКА кассы (схема v57) и приезжает доводом отказа.
+      // До этого фраза называла зашитый «1 млн ₸» на кассе любой страны.
+      // Потолок приезжает доводом отказа — вместе со знаком валюты, потому
+      // что собирает его касса (`LocalSaleCheckoutService`), у которой есть
+      // и число, и валюта. Экран их не добывает: браузерному терминалу
+      // добывать неоткуда.
+      'error.product_has_no_price' => l10n.errorProductHasNoPrice(arg ?? ''),
+      // Довод — «имя товара|окно», собранный кассой: у экрана ни часов, ни
+      // дерева категорий нет, а у браузерной вкладки нет и базы.
+      'error.selling_hours_banned' => () {
+        final parts = (arg ?? '').split('|');
+        final category = parts.isNotEmpty ? parts.first : '';
+        final window = parts.length > 1 ? parts[1] : '';
+        // Окно могло не приехать — например, от кассы прежней сборки. Тогда
+        // говорится фраза БЕЗ окна, а не «запрет .» с дырой на его месте:
+        // обрывок читается как поломка продукта, а не как отказ.
+        return window.isEmpty
+            ? l10n.errorSellingHoursBannedNoWindow(category)
+            : l10n.errorSellingHoursBanned(category, window);
+      }(),
+      'error.big_amount_blocked' => l10n.errorBigAmountBlocked(
+        arg == null || arg.isEmpty ? '$kDefaultBigAmountLimit' : arg,
+      ),
       // ── оплата и возврат: закрыто при слиянии (2026-09-07) ────────────
       //
       // Девятнадцать кодов отказа оплаты и возврата не имели ни строки в
@@ -505,4 +532,26 @@ class ErrorLocalizer {
       _ => null,
     };
   }
+
+  /// Разделы мастера словами: коды, пришедшие доводом, — в перечень.
+  ///
+  /// Незнакомый код печатается как есть: молча его проглотить значило бы
+  /// сказать «заполните: » и не назвать что.
+  static String _setupParts(AppLocalizations l10n, String codes) => codes
+      .split(',')
+      .map((c) => c.trim())
+      .where((c) => c.isNotEmpty)
+      .map(
+        (c) => switch (c) {
+          'org' => l10n.setupPartOrganization,
+          'pos' => l10n.setupPartTill,
+          'fiscal' => l10n.setupPartFiscal,
+          'equipment' => l10n.setupPartEquipment,
+          'terminals' => l10n.setupPartTerminals,
+          'rules' => l10n.setupPartRules,
+          'user' => l10n.setupPartUser,
+          _ => c,
+        },
+      )
+      .join(', ');
 }

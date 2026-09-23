@@ -59,13 +59,12 @@ class _FakeTerminalRepository implements TerminalRepository {
       throw UnimplementedError();
 
   @override
-  Future<void> rename(int terminalId, String name) => throw UnimplementedError();
+  Future<void> rename(int terminalId, String name) =>
+      throw UnimplementedError();
 
   @override
-  Future<void> setAllowedPaymentTypes(
-    int terminalId,
-    Set<PaymentType> types,
-  ) => throw UnimplementedError();
+  Future<void> setAllowedPaymentTypes(int terminalId, Set<PaymentType> types) =>
+      throw UnimplementedError();
 
   @override
   Future<void> delete(int terminalId) => throw UnimplementedError();
@@ -123,7 +122,14 @@ void main() {
     terminalId: terminalId,
     posId: posId,
     // Настоящее начало чека ESC/POS — байты, а не заглушка из одного нуля.
-    payloadBytes: Uint8List.fromList(const [0x1b, 0x40, 0x0a, 0x1d, 0x56, 0x00]),
+    payloadBytes: Uint8List.fromList(const [
+      0x1b,
+      0x40,
+      0x0a,
+      0x1d,
+      0x56,
+      0x00,
+    ]),
     createdAt: createdAt,
     expiresAt: expiresAt,
   );
@@ -236,12 +242,12 @@ void main() {
     final expiredAt = nowUtc.subtract(const Duration(minutes: 10));
     await store.put(
       job(
-        id: 'sale-1004',
-        createdAt: base.add(const Duration(minutes: 3)),
-        expiresAt: expiredAt,
-      ).failWith('Принтер не отвечает').expireAt(
-        expiredAt.add(const Duration(seconds: 1)),
-      ),
+            id: 'sale-1004',
+            createdAt: base.add(const Duration(minutes: 3)),
+            expiresAt: expiredAt,
+          )
+          .failWith('Принтер не отвечает')
+          .expireAt(expiredAt.add(const Duration(seconds: 1))),
     );
     await store.put(
       job(
@@ -269,94 +275,93 @@ void main() {
     );
   }
 
-  testWidgets(
-    'застрявшее задание видно с причиной, и причина у неудачного и у '
-    'истёкшего разная — «нет бумаги» и «принтер не отвечает» ведут в разные '
-    'места',
-    (tester) async {
-      await seedSixJobsPlusForeign();
+  testWidgets('застрявшее задание видно с причиной, и причина у неудачного и у '
+      'истёкшего разная — «нет бумаги» и «принтер не отвечает» ведут в разные '
+      'места', (tester) async {
+    await seedSixJobsPlusForeign();
 
-      await tester.pumpWidget(host());
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(host());
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('print_queue_list')),
-        findsOneWidget,
-        reason: 'очередь с шестью заданиями обязана быть списком',
-      );
+    expect(
+      find.byKey(const Key('print_queue_list')),
+      findsOneWidget,
+      reason: 'очередь с шестью заданиями обязана быть списком',
+    );
 
-      // Неудачное: своё состояние и своя причина.
-      expect(
-        inJob('sale-1003', find.text('Не напечаталось, будет повторено')),
-        findsOneWidget,
-      );
-      expect(
-        inJob('sale-1003', find.text('Причина: Нет бумаги')),
-        findsOneWidget,
-        reason: 'без причины оператору некуда идти — это и есть весь смысл '
-            'экрана',
-      );
+    // Неудачное: своё состояние и своя причина.
+    expect(
+      inJob('sale-1003', find.text('Не напечаталось, будет повторено')),
+      findsOneWidget,
+    );
+    expect(
+      inJob('sale-1003', find.text('Причина: Нет бумаги')),
+      findsOneWidget,
+      reason:
+          'без причины оператору некуда идти — это и есть весь смысл '
+          'экрана',
+    );
 
-      // Истёкшее: другое состояние (оно само повторяться не будет) и другая
-      // причина. Слить их в одно «не напечаталось» значило бы отправить
-      // человека не туда.
-      expect(
-        inJob('sale-1004', find.text('Срок вышел, само повторяться не будет')),
-        findsOneWidget,
-      );
-      expect(
-        inJob('sale-1004', find.text('Причина: Принтер не отвечает')),
-        findsOneWidget,
-        reason: 'причина обязана пережить истечение срока',
-      );
+    // Истёкшее: другое состояние (оно само повторяться не будет) и другая
+    // причина. Слить их в одно «не напечаталось» значило бы отправить
+    // человека не туда.
+    expect(
+      inJob('sale-1004', find.text('Срок вышел, само повторяться не будет')),
+      findsOneWidget,
+    );
+    expect(
+      inJob('sale-1004', find.text('Причина: Принтер не отвечает')),
+      findsOneWidget,
+      reason: 'причина обязана пережить истечение срока',
+    );
 
-      // Остальные четыре состояния названы каждое по-своему.
-      expect(inJob('sale-1001', find.text('Ждёт печати')), findsOneWidget);
-      expect(inJob('sale-1002', find.text('Печатается')), findsOneWidget);
-      expect(
-        inJob('sale-1005', find.text('Отменено оператором')),
-        findsOneWidget,
-      );
-      expect(inJob('sale-1006', find.text('Напечатано')), findsOneWidget);
+    // Остальные четыре состояния названы каждое по-своему.
+    expect(inJob('sale-1001', find.text('Ждёт печати')), findsOneWidget);
+    expect(inJob('sale-1002', find.text('Печатается')), findsOneWidget);
+    expect(
+      inJob('sale-1005', find.text('Отменено оператором')),
+      findsOneWidget,
+    );
+    expect(inJob('sale-1006', find.text('Напечатано')), findsOneWidget);
 
-      // Национальные символы доходят до экрана через SQLite неизменными.
-      expect(
-        inJob('sale-1005', find.text('Причина: Қағаз жоқ — Дүкен №2')),
-        findsOneWidget,
-      );
+    // Национальные символы доходят до экрана через SQLite неизменными.
+    expect(
+      inJob('sale-1005', find.text('Причина: Қағаз жоқ — Дүкен №2')),
+      findsOneWidget,
+    );
 
-      // Задание чужой кассы в этот список не попадает — и его текста на экране
-      // нет вовсе.
-      expect(find.byKey(const Key('print_job_sale-2001')), findsNothing);
-      expect(find.textContaining('Ысык-Көл'), findsNothing);
+    // Задание чужой кассы в этот список не попадает — и его текста на экране
+    // нет вовсе.
+    expect(find.byKey(const Key('print_job_sale-2001')), findsNothing);
+    expect(find.textContaining('Ысык-Көл'), findsNothing);
 
-      // Пустая и нечитаемая очередь — это не то, что здесь показано.
-      expect(find.byKey(const Key('print_queue_empty')), findsNothing);
-      expect(find.byKey(const Key('print_queue_unreadable')), findsNothing);
+    // Пустая и нечитаемая очередь — это не то, что здесь показано.
+    expect(find.byKey(const Key('print_queue_empty')), findsNothing);
+    expect(find.byKey(const Key('print_queue_unreadable')), findsNothing);
 
-      // Порядок — порядок создания: чек печатается в том порядке, в каком его
-      // выбили, и виден в том же.
-      final ys = <double>[
-        for (final id in const [
-          'sale-1001',
-          'sale-1002',
-          'sale-1003',
-          'sale-1004',
-          'sale-1005',
-          'sale-1006',
-        ])
-          tester.getTopLeft(find.byKey(Key('print_job_$id'))).dy,
-      ];
-      expect(
-        ys,
-        orderedEquals(List<double>.from(ys)..sort()),
-        reason: 'порядок заданий на экране обязан совпадать с порядком их '
-            'создания',
-      );
+    // Порядок — порядок создания: чек печатается в том порядке, в каком его
+    // выбили, и виден в том же.
+    final ys = <double>[
+      for (final id in const [
+        'sale-1001',
+        'sale-1002',
+        'sale-1003',
+        'sale-1004',
+        'sale-1005',
+        'sale-1006',
+      ])
+        tester.getTopLeft(find.byKey(Key('print_job_$id'))).dy,
+    ];
+    expect(
+      ys,
+      orderedEquals(List<double>.from(ys)..sort()),
+      reason:
+          'порядок заданий на экране обязан совпадать с порядком их '
+          'создания',
+    );
 
-      await closeScreen(tester);
-    },
-  );
+    await closeScreen(tester);
+  });
 
   testWidgets(
     'состояния и причина берутся из ресурсов, а не вшиты по-русски: тот же '
@@ -372,13 +377,17 @@ void main() {
         findsOneWidget,
       );
       expect(
-        inJob('sale-1004', find.text('Deadline passed, will not retry by itself')),
+        inJob(
+          'sale-1004',
+          find.text('Deadline passed, will not retry by itself'),
+        ),
         findsOneWidget,
       );
       expect(
         inJob('sale-1003', find.text('Reason: Нет бумаги')),
         findsOneWidget,
-        reason: 'обёртка «Причина» локализуется, сама причина приходит от '
+        reason:
+            'обёртка «Причина» локализуется, сама причина приходит от '
             'драйвера и показывается как есть — см. отчёт задачи 7',
       );
       expect(
@@ -410,7 +419,8 @@ void main() {
       expect(
         find.byKey(const Key('print_queue_extend_dialog')),
         findsOneWidget,
-        reason: 'повтор — это решение о том, на сколько ещё чек имеет смысл, '
+        reason:
+            'повтор — это решение о том, на сколько ещё чек имеет смысл, '
             'и его принимает оператор',
       );
 
@@ -432,21 +442,24 @@ void main() {
       expect(
         transport.sent,
         isEmpty,
-        reason: 'второй чек — это второй уход байтов в принтер, и его быть не '
+        reason:
+            'второй чек — это второй уход байтов в принтер, и его быть не '
             'должно',
       );
       final after = await store.jobById('sale-3001');
       expect(
         after!.state,
         PrintJobState.printed,
-        reason: 'повтор не имеет права вернуть подтверждённое задание в '
+        reason:
+            'повтор не имеет права вернуть подтверждённое задание в '
             'очередь',
       );
 
       expect(
         find.byKey(const Key('print_queue_action_result')),
         findsOneWidget,
-        reason: 'отказ обязан быть ответом на экране, а не молчанием после '
+        reason:
+            'отказ обязан быть ответом на экране, а не молчанием после '
             'нажатой кнопки',
       );
       expect(
@@ -463,13 +476,15 @@ void main() {
     'сроком и заново начатым счётчиком попыток — и очередь его печатает',
     (tester) async {
       final expiredAt = nowUtc.subtract(const Duration(minutes: 10));
-      final expired = job(
-        id: 'sale-3002',
-        createdAt: nowUtc.subtract(const Duration(minutes: 40)),
-        expiresAt: expiredAt,
-      ).beginAttempt().failWith('Принтер не отвечает').expireAt(
-        expiredAt.add(const Duration(seconds: 1)),
-      );
+      final expired =
+          job(
+                id: 'sale-3002',
+                createdAt: nowUtc.subtract(const Duration(minutes: 40)),
+                expiresAt: expiredAt,
+              )
+              .beginAttempt()
+              .failWith('Принтер не отвечает')
+              .expireAt(expiredAt.add(const Duration(seconds: 1)));
       await store.put(expired);
       expect(expired.attempts, 1);
 
@@ -497,7 +512,8 @@ void main() {
       expect(
         after.state,
         PrintJobState.printed,
-        reason: 'продлённое задание очередь берёт в работу сама — иначе повтор '
+        reason:
+            'продлённое задание очередь берёт в работу сама — иначе повтор '
             'из интерфейса означал бы только «срок сдвинут», а не «чек будет»',
       );
       // **Счётчик считается после печати, а не до, и число здесь не круглое
@@ -509,7 +525,8 @@ void main() {
       expect(
         after.attempts,
         1,
-        reason: 'ручной повтор — новая возможность: счётчик начинается заново, '
+        reason:
+            'ручной повтор — новая возможность: счётчик начинается заново, '
             'поэтому после единственной новой попытки он равен единице, а не '
             'двум',
       );
@@ -608,13 +625,15 @@ void main() {
       expect(
         find.byKey(const Key('print_queue_empty')),
         findsNothing,
-        reason: 'нечитаемая очередь и пустая очередь ведут оператора в разные '
+        reason:
+            'нечитаемая очередь и пустая очередь ведут оператора в разные '
             'места и обязаны выглядеть по-разному',
       );
       expect(
         find.byKey(const Key('print_job_sale-5001')),
         findsNothing,
-        reason: 'радиус поражения назван честно: одна строка уносит весь '
+        reason:
+            'радиус поражения назван честно: одна строка уносит весь '
             'список, и экран не делает вид, что показал его',
       );
       expect(find.textContaining('teleported'), findsOneWidget);

@@ -78,7 +78,9 @@ DeviceCandidate deviceCandidateFromWireJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, Object?> deviceDiscoveryResultToJson(DeviceDiscoveryResult result) => {
+Map<String, Object?> deviceDiscoveryResultToJson(
+  DeviceDiscoveryResult result,
+) => {
   'candidates': result.candidates.map(deviceCandidateToJson).toList(),
   // Fix round 1's whole reason for existing (see device_discovery.dart's doc
   // comment on DeviceDiscoveryResult): "no devices attached" and "could not

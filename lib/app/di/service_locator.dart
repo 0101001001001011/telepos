@@ -80,9 +80,10 @@ import 'package:telepos/domain/repositories/sale_repository.dart';
 import 'package:telepos/domain/repositories/shift_repository.dart';
 import 'package:telepos/domain/repositories/supply_repository.dart';
 import 'package:telepos/app/config/app_domain_delegate.dart';
-import 'package:telepos/app/config/async_config.dart';
 import 'package:telepos/app/config/build_config.dart';
 import 'package:telepos/data/sync/couchdb_sync_coordinator.dart';
+import 'package:telepos/data/sync/couchdb_deferred_claim.dart';
+import 'package:telepos/domain/sale/deferred_claim_port.dart';
 import 'package:telepos/data/sync/couchdb_sync_engine.dart';
 import 'package:telepos/app/config/local_properties.dart';
 import 'package:telepos/data/database/app_database.dart';
@@ -102,12 +103,8 @@ import 'package:telepos/data/usecases/shift/custom_bank_payments_sum_use_case_im
 import 'package:telepos/data/usecases/refund/refund_initiation_use_case_impl.dart';
 import 'package:telepos/data/refund/local_refund_tender_gateway.dart';
 import 'package:telepos/data/usecases/refund/refund_use_case_impl.dart';
-import 'package:telepos/data/usecases/sale/cancel_product_use_case_impl.dart';
-import 'package:telepos/data/usecases/sale/sale_component_use_case_impl.dart';
 import 'package:telepos/data/usecases/sale/sale_history_service_impl.dart';
-import 'package:telepos/data/usecases/sale/sale_debt_amount_use_case_impl.dart';
 import 'package:telepos/data/usecases/sale/sale_use_case_impl.dart';
-import 'package:telepos/data/usecases/sale/sale_validation_service_impl.dart';
 import 'package:telepos/data/usecases/sale/can_sale_be_refunded_use_case_impl.dart';
 import 'package:telepos/data/refund/local_recent_receipts.dart';
 import 'package:telepos/data/refund/local_refund_receipt_printer.dart';
@@ -127,24 +124,16 @@ import 'package:telepos/data/sale/local_quick_product_catalog.dart';
 import 'package:telepos/data/sale/local_sale_checkout_service.dart';
 import 'package:telepos/data/sale/local_sale_edit_terms.dart';
 import 'package:telepos/data/usecases/sale/deferred_sale_service_impl.dart';
-import 'package:telepos/data/usecases/sale/find_sale_use_case_impl.dart';
 import 'package:telepos/data/usecases/sale/last_sale_receipt_no_use_case_impl.dart';
 import 'package:telepos/data/usecases/sale/sale_initiation_use_case_impl.dart';
 import 'package:telepos/data/usecases/sale/sale_product_creation_use_case_impl.dart';
-import 'package:telepos/data/usecases/sale/persist_sale_products_use_case_impl.dart';
-import 'package:telepos/data/usecases/sale/sale_receipt_product_service_impl.dart';
 import 'package:telepos/data/usecases/sale/sale_round_option_use_case_impl.dart';
-import 'package:telepos/data/usecases/sale/universal_product_use_case_impl.dart';
 import 'package:telepos/domain/services/auth_service.dart';
 import 'package:telepos/domain/services/role_identification_service.dart';
 import 'package:telepos/domain/services/shift_service.dart';
 import 'package:telepos/domain/usecases/shift/assemble_shift_receipt_use_case.dart';
-import 'package:telepos/domain/usecases/sale/cancel_product_use_case.dart';
-import 'package:telepos/domain/usecases/sale/sale_component_use_case.dart';
 import 'package:telepos/domain/usecases/sale/sale_history_service.dart';
-import 'package:telepos/domain/usecases/sale/sale_debt_amount_use_case.dart';
 import 'package:telepos/domain/usecases/sale/sale_use_case.dart';
-import 'package:telepos/domain/usecases/sale/sale_validation_service.dart';
 import 'package:telepos/domain/usecases/sale/can_sale_be_refunded_use_case.dart';
 import 'package:telepos/domain/refund/recent_receipts.dart';
 import 'package:telepos/domain/refund/refund_receipt_printer.dart';
@@ -158,58 +147,26 @@ import 'package:telepos/domain/sale/quick_product_catalog.dart';
 import 'package:telepos/domain/sale/sale_checkout_service.dart';
 import 'package:telepos/domain/sale/sale_edit_terms.dart';
 import 'package:telepos/domain/usecases/sale/deferred_sale_service.dart';
-import 'package:telepos/domain/usecases/sale/find_sale_use_case.dart';
 import 'package:telepos/domain/usecases/sale/last_sale_receipt_no_use_case.dart';
 import 'package:telepos/domain/usecases/sale/sale_initiation_use_case.dart';
 import 'package:telepos/domain/usecases/sale/sale_product_creation_use_case.dart';
-import 'package:telepos/domain/usecases/sale/persist_sale_products_use_case.dart';
-import 'package:telepos/domain/usecases/sale/sale_receipt_product_service.dart';
 import 'package:telepos/domain/usecases/sale/sale_round_option_use_case.dart';
-import 'package:telepos/domain/usecases/sale/universal_product_use_case.dart';
 import 'package:telepos/domain/usecases/shift/custom_bank_payments_sum_use_case.dart';
 import 'package:telepos/domain/usecases/refund/refund_initiation_use_case.dart';
 import 'package:telepos/domain/usecases/refund/refund_use_case.dart';
-import 'package:telepos/domain/usecases/refund/refund_receipt_product_service.dart';
 import 'package:telepos/domain/usecases/refund/refund_product_service.dart';
-import 'package:telepos/domain/usecases/refund/find_refund_use_case.dart';
-import 'package:telepos/domain/usecases/refund/refund_validation_service.dart';
 import 'package:telepos/domain/usecases/payment/payment_controller.dart';
-import 'package:telepos/domain/usecases/payment/cash_account_use_case.dart';
-import 'package:telepos/domain/usecases/payment/debt_use_case.dart';
-import 'package:telepos/domain/usecases/payment/purchase_with_cash_use_case.dart';
-import 'package:telepos/domain/usecases/payment/account_visible_to_pos_use_case.dart';
-import 'package:telepos/domain/usecases/payment/payment_sequences.dart';
-import 'package:telepos/domain/usecases/payment/denomination_service.dart';
 import 'package:telepos/domain/usecases/payment/customer_payment_use_case.dart';
-import 'package:telepos/domain/usecases/product/find_by_alias_use_case.dart';
 import 'package:telepos/domain/usecases/product/find_by_barcode_use_case.dart';
-import 'package:telepos/domain/usecases/product/find_product_by_code_use_case.dart';
 import 'package:telepos/domain/usecases/product/search_product_info_use_case.dart';
-import 'package:telepos/domain/usecases/product/find_product_by_mark_use_case.dart';
 import 'package:telepos/domain/usecases/product/create_product_info_use_case.dart';
 import 'package:telepos/domain/usecases/product/create_product_price_use_case.dart';
-import 'package:telepos/domain/usecases/product/create_product_info_and_price_use_case.dart';
 import 'package:telepos/domain/usecases/product/product_info_and_price_edition_use_case.dart';
 import 'package:telepos/domain/usecases/product/restore_product_info_use_case.dart';
 import 'package:telepos/domain/usecases/product/mark_up_use_case.dart';
-import 'package:telepos/domain/usecases/product/is_category_blocked_use_case.dart';
-import 'package:telepos/domain/usecases/product/is_product_info_blocked_use_case.dart';
-import 'package:telepos/domain/usecases/product/reserved_barcode_use_case.dart';
-import 'package:telepos/domain/usecases/agent/create_agent_use_case.dart';
-import 'package:telepos/domain/usecases/agent/persist_agent_use_case.dart';
-import 'package:telepos/domain/usecases/agent/edit_agent_use_case.dart';
-import 'package:telepos/domain/usecases/agent/restore_agent_use_case.dart';
-import 'package:telepos/domain/usecases/agent/agent_validation_service.dart';
-import 'package:telepos/domain/usecases/agent/search_agent_use_case.dart';
-import 'package:telepos/domain/usecases/agent/find_agent_by_phone_use_case.dart';
-import 'package:telepos/domain/usecases/agent/agent_last_id_use_case.dart';
-import 'package:telepos/domain/usecases/agent/agent_balance_service.dart';
 import 'package:telepos/domain/usecases/agent/bonus_service.dart';
-import 'package:telepos/domain/usecases/agent/loyalty_sms_service.dart';
 import 'package:telepos/domain/usecases/supply/create_supply_use_case.dart';
-import 'package:telepos/domain/usecases/supply/supply_product_use_case.dart';
 import 'package:telepos/domain/usecases/supply/save_supply_use_case.dart';
-import 'package:telepos/domain/usecases/supply/get_supplies_history_use_case.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_in_out_controller.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_operation_receipt_service.dart';
 import 'package:telepos/domain/usecases/fiscal/webkassa_service.dart';
@@ -256,35 +213,16 @@ import 'package:telepos/data/usecases/fiscal/store_fiscal_settings_source.dart';
 import 'package:telepos/domain/services/receipt_print_service.dart';
 import 'package:telepos/core/services/update/updater_service.dart';
 import 'package:telepos/data/services/receipt_print_service_impl.dart';
-import 'package:telepos/data/usecases/product/find_by_alias_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/find_by_barcode_use_case_impl.dart';
-import 'package:telepos/data/usecases/product/find_product_by_code_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/search_product_info_use_case_impl.dart';
-import 'package:telepos/data/usecases/product/find_product_by_mark_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/create_product_info_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/create_product_price_use_case_impl.dart';
-import 'package:telepos/data/usecases/product/create_product_info_and_price_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/product_info_and_price_edition_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/restore_product_info_use_case_impl.dart';
 import 'package:telepos/data/usecases/product/mark_up_use_case_impl.dart';
-import 'package:telepos/data/usecases/product/is_category_blocked_use_case_impl.dart';
-import 'package:telepos/data/usecases/product/is_product_info_blocked_use_case_impl.dart';
-import 'package:telepos/data/usecases/product/reserved_barcode_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/create_agent_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/persist_agent_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/edit_agent_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/restore_agent_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/agent_validation_service_impl.dart';
-import 'package:telepos/data/usecases/agent/search_agent_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/find_agent_by_phone_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/agent_last_id_use_case_impl.dart';
-import 'package:telepos/data/usecases/agent/agent_balance_service_impl.dart';
 import 'package:telepos/data/usecases/agent/bonus_service_impl.dart';
-import 'package:telepos/data/usecases/agent/loyalty_sms_service_impl.dart';
 import 'package:telepos/data/usecases/supply/create_supply_use_case_impl.dart';
-import 'package:telepos/data/usecases/supply/supply_product_use_case_impl.dart';
 import 'package:telepos/data/usecases/supply/save_supply_use_case_impl.dart';
-import 'package:telepos/data/usecases/supply/get_supplies_history_use_case_impl.dart';
 import 'package:telepos/data/usecases/cash_operation/cash_in_out_controller_impl.dart';
 import 'package:telepos/data/usecases/writeoff/create_writeoff_use_case_impl.dart';
 import 'package:telepos/data/usecases/cogs/calculate_cogs_use_case_impl.dart';
@@ -333,17 +271,8 @@ import 'package:telepos/domain/usecases/service/link_service_to_sale_use_case.da
 import 'package:telepos/domain/usecases/service/find_service_orders_use_case.dart';
 import 'package:telepos/domain/usecases/service/service_order_receipt_use_case.dart';
 import 'package:telepos/domain/usecases/service/manage_service_types_use_case.dart';
-import 'package:telepos/data/usecases/payment/payment_sequences_impl.dart';
-import 'package:telepos/data/usecases/payment/denomination_service_impl.dart';
 import 'package:telepos/data/usecases/payment/customer_payment_use_case_impl.dart';
 import 'package:telepos/data/usecases/payment/payment_controller_impl.dart';
-import 'package:telepos/data/usecases/payment/cash_account_use_case_impl.dart';
-import 'package:telepos/data/usecases/payment/debt_use_case_impl.dart';
-import 'package:telepos/data/usecases/payment/purchase_with_cash_use_case_impl.dart';
-import 'package:telepos/data/usecases/payment/account_visible_to_pos_use_case_impl.dart';
-import 'package:telepos/data/usecases/refund/find_refund_use_case_impl.dart';
-import 'package:telepos/data/usecases/refund/refund_validation_service_impl.dart';
-import 'package:telepos/data/usecases/refund/refund_receipt_product_service_impl.dart';
 import 'package:telepos/data/usecases/refund/refund_product_service_impl.dart';
 import 'package:telepos/domain/repositories/warehouse_repository.dart';
 import 'package:telepos/domain/repositories/warehouse_zone_repository.dart';
@@ -377,6 +306,10 @@ import 'package:telepos/data/usecases/wms/claim_use_case_impl.dart';
 import 'package:telepos/data/usecases/wms/wms_config_use_case_impl.dart';
 import 'package:telepos/domain/usecases/stock_rule/stock_rule_use_case.dart';
 import 'package:telepos/data/usecases/stock_rule/stock_rule_use_case_impl.dart';
+import 'package:telepos/data/catalog/local_selling_hours.dart';
+import 'package:telepos/domain/catalog/selling_hours_repository.dart';
+import 'package:telepos/data/tax/preset_country_rate_hint.dart';
+import 'package:telepos/domain/tax/country_rate_hint.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -384,8 +317,6 @@ Future<void> configureDependencies({required Talker logger}) async {
   getIt.registerSingleton<Talker>(logger);
 
   getIt.registerSingleton<BuildConfig>(BuildConfig.fromEnvironment());
-
-  getIt.registerSingleton<AsyncConfig>(AsyncConfig.fromEnvironment());
 
   final localProperties = await LocalProperties.create();
   getIt.registerSingleton<LocalProperties>(localProperties);
@@ -398,6 +329,11 @@ Future<void> configureDependencies({required Talker logger}) async {
     () => CouchDbSyncEngine(prefs: localProperties.prefs),
   );
 
+  // Занятие и отзыв отложенных чеков соседних касс. Один объект на обоих
+  // читателей: корзина (подъём) и стойка смены (очистка при закрытии).
+  getIt.registerLazySingleton<DeferredClaimPort>(
+    () => CouchDbDeferredClaim(getIt<CouchDbSyncCoordinator>()),
+  );
   getIt.registerLazySingleton<CouchDbSyncCoordinator>(
     () => CouchDbSyncCoordinator(
       db: getIt<AppDatabase>(),
@@ -740,48 +676,8 @@ Future<void> configureDependencies({required Talker logger}) async {
     ),
   );
 
-  getIt.registerLazySingleton<UniversalProductUseCase>(
-    () => UniversalProductUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<PersistSaleProductsUseCase>(
-    () => PersistSaleProductsUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
   getIt.registerLazySingleton<SaleUseCase>(
     () => SaleUseCaseImpl(db: getIt<AppDatabase>(), logger: getIt<Talker>()),
-  );
-
-  getIt.registerLazySingleton<CancelProductUseCase>(
-    () => CancelProductUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<SaleComponentUseCase>(
-    () => SaleComponentUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<SaleReceiptProductService>(
-    () => SaleReceiptProductServiceImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<FindSaleUseCase>(
-    () =>
-        FindSaleUseCaseImpl(db: getIt<AppDatabase>(), logger: getIt<Talker>()),
   );
 
   getIt.registerLazySingleton<DeferredSaleService>(
@@ -813,19 +709,21 @@ Future<void> configureDependencies({required Talker logger}) async {
     ),
   );
 
-  getIt.registerLazySingleton<SaleDebtAmountUseCase>(
-    () => SaleDebtAmountUseCaseImpl(),
-  );
-
   getIt.registerLazySingleton<SaleRoundOptionUseCase>(
     () => SaleRoundOptionUseCaseImpl(),
   );
 
-  getIt.registerLazySingleton<SaleValidationService>(
-    () => SaleValidationServiceImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
+  // Часы запрета продажи. Экран настройки спрашивает их отсюда; сама
+  // проверка живёт внутри корзины и строит хранилище сама — иначе договор
+  // пришлось бы протаскивать доводом через весь путь продажи.
+  // Подсказка ставки для мастера. Договор в домене: каталог наборов живёт
+  // в слое данных, и мастеру о нём знать нельзя.
+  getIt.registerLazySingleton<CountryRateHint>(
+    () => const PresetCountryRateHint(),
+  );
+
+  getIt.registerLazySingleton<SellingHoursRepository>(
+    () => LocalSellingHours(getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<SaleInitiationUseCase>(
@@ -861,6 +759,13 @@ Future<void> configureDependencies({required Talker logger}) async {
       findByBarcode: getIt<FindByBarcodeUseCase>(),
       searchProducts: getIt<SearchProductInfoUseCase>(),
       discountPolicy: getIt<DiscountPolicy>(),
+      // Занятие отложенного чека соседней кассы. Обмена может не быть —
+      // тогда `null`, и подъём ЧУЖОГО чека отказывается: исключительность
+      // негарантируема, а продать корзину дважды хуже, чем не поднять.
+      // Свой отложенный чек при этом поднимается как прежде.
+      claim: getIt.isRegistered<DeferredClaimPort>()
+          ? getIt<DeferredClaimPort>()
+          : null,
     ),
   );
   getIt.registerLazySingleton<CartService>(() => getIt<LocalCartService>());
@@ -1122,29 +1027,8 @@ Future<void> configureDependencies({required Talker logger}) async {
     ),
   );
 
-  getIt.registerLazySingleton<RefundReceiptProductService>(
-    () => RefundReceiptProductServiceImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
   getIt.registerLazySingleton<RefundProductService>(
     () => RefundProductServiceImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<FindRefundUseCase>(
-    () => FindRefundUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<RefundValidationService>(
-    () => RefundValidationServiceImpl(
       db: getIt<AppDatabase>(),
       logger: getIt<Talker>(),
     ),
@@ -1192,47 +1076,11 @@ Future<void> configureDependencies({required Talker logger}) async {
     () => PaymentControllerImpl(logger: getIt<Talker>()),
   );
 
-  getIt.registerLazySingleton<CashAccountUseCase>(
-    () => CashAccountUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<DebtUseCase>(() => DebtUseCaseImpl());
-
-  getIt.registerLazySingleton<PurchaseWithCashUseCase>(
-    () => PurchaseWithCashUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<AccountVisibleToPosUseCase>(
-    () => AccountVisibleToPosUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<PaymentSequences>(() => PaymentSequencesImpl());
-
-  getIt.registerLazySingleton<DenominationService>(
-    () => DenominationServiceImpl(),
-  );
-
   getIt.registerLazySingleton<CustomerPaymentUseCase>(
     () => CustomerPaymentUseCaseImpl(
       db: getIt<AppDatabase>(),
       logger: getIt<Talker>(),
       fiscal: getIt<FiscalService>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<FindByAliasUseCase>(
-    () => FindByAliasUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
     ),
   );
 
@@ -1243,24 +1091,8 @@ Future<void> configureDependencies({required Talker logger}) async {
     ),
   );
 
-  getIt.registerLazySingleton<FindProductByCodeUseCase>(
-    () => FindProductByCodeUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      findByAliasUseCase: getIt<FindByAliasUseCase>(),
-      findByBarcodeUseCase: getIt<FindByBarcodeUseCase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
   getIt.registerLazySingleton<SearchProductInfoUseCase>(
     () => SearchProductInfoUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<FindProductByMarkUseCase>(
-    () => FindProductByMarkUseCaseImpl(
       db: getIt<AppDatabase>(),
       logger: getIt<Talker>(),
     ),
@@ -1276,15 +1108,6 @@ Future<void> configureDependencies({required Talker logger}) async {
   getIt.registerLazySingleton<CreateProductPriceUseCase>(
     () => CreateProductPriceUseCaseImpl(
       db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<CreateProductInfoAndPriceUseCase>(
-    () => CreateProductInfoAndPriceUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      createProductInfoUseCase: getIt<CreateProductInfoUseCase>(),
-      createProductPriceUseCase: getIt<CreateProductPriceUseCase>(),
       logger: getIt<Talker>(),
     ),
   );
@@ -1307,101 +1130,14 @@ Future<void> configureDependencies({required Talker logger}) async {
     () => MarkUpUseCaseImpl(db: getIt<AppDatabase>(), logger: getIt<Talker>()),
   );
 
-  getIt.registerLazySingleton<IsCategoryBlockedUseCase>(
-    () => IsCategoryBlockedUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<IsProductInfoBlockedUseCase>(
-    () => IsProductInfoBlockedUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      isCategoryBlockedUseCase: getIt<IsCategoryBlockedUseCase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<ReservedBarcodeUseCase>(
-    () => ReservedBarcodeUseCaseImpl(),
-  );
-
-  getIt.registerLazySingleton<CreateAgentUseCase>(
-    () => CreateAgentUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<PersistAgentUseCase>(
-    () => PersistAgentUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<EditAgentUseCase>(
-    () =>
-        EditAgentUseCaseImpl(db: getIt<AppDatabase>(), logger: getIt<Talker>()),
-  );
-
-  getIt.registerLazySingleton<RestoreAgentUseCase>(
-    () => RestoreAgentUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<AgentValidationService>(
-    () => AgentValidationServiceImpl(),
-  );
-
-  getIt.registerLazySingleton<SearchAgentUseCase>(
-    () => SearchAgentUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<FindAgentByPhoneUseCase>(
-    () => FindAgentByPhoneUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<AgentLastIdUseCase>(
-    () => AgentLastIdUseCaseImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<AgentBalanceService>(
-    () => AgentBalanceServiceImpl(
-      db: getIt<AppDatabase>(),
-      logger: getIt<Talker>(),
-    ),
-  );
-
   getIt.registerLazySingleton<BonusService>(() => BonusServiceImpl());
-
-  getIt.registerLazySingleton<LoyaltySmsService>(() => LoyaltySmsServiceImpl());
 
   getIt.registerLazySingleton<CreateSupplyUseCase>(
     () => CreateSupplyUseCaseImpl(getIt<AppDatabase>()),
   );
 
-  getIt.registerLazySingleton<SupplyProductUseCase>(
-    () => SupplyProductUseCaseImpl(getIt<AppDatabase>()),
-  );
-
   getIt.registerLazySingleton<SaveSupplyUseCase>(
     () => SaveSupplyUseCaseImpl(getIt<AppDatabase>()),
-  );
-
-  getIt.registerLazySingleton<GetSuppliesHistoryUseCase>(
-    () => GetSuppliesHistoryUseCaseImpl(getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<CashInOutController>(

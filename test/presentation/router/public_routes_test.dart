@@ -80,20 +80,17 @@ const _mustStayPrivate = <String>[
 ];
 
 void main() {
-  test(
-    'publicRoutes — ровно пять записей, каждая с обоснованием выше',
-    () {
-      expect(
-        AppRoutes.publicRoutes.toSet(),
-        _justifications.keys.toSet(),
-        reason:
-            'Новый маршрут в publicRoutes без записи в _justifications (и '
-            'наоборот) красит именно этот тест — состав списка обязан быть '
-            'решением, а не тихим пробелом: одна строка здесь гасит вход '
-            'целиком, не только право.',
-      );
-    },
-  );
+  test('publicRoutes — ровно пять записей, каждая с обоснованием выше', () {
+    expect(
+      AppRoutes.publicRoutes.toSet(),
+      _justifications.keys.toSet(),
+      reason:
+          'Новый маршрут в publicRoutes без записи в _justifications (и '
+          'наоборот) красит именно этот тест — состав списка обязан быть '
+          'решением, а не тихим пробелом: одна строка здесь гасит вход '
+          'целиком, не только право.',
+    );
+  });
 
   test('каждое обоснование непустое', () {
     for (final entry in _justifications.entries) {
@@ -105,31 +102,25 @@ void main() {
     }
   });
 
-  test(
-    'ни один маршрут, читающий данные или совершающий операцию кассы, не '
-    'попал в publicRoutes',
-    () {
-      final leaked = _mustStayPrivate
-          .where(AppRoutes.publicRoutes.contains)
-          .toList();
-      expect(
-        leaked,
-        isEmpty,
-        reason:
-            'Эти маршруты обязаны требовать вход — попадание любого из них '
-            'сюда означает, что данные кассы стали достижимы без сеанса '
-            'вовсе, а не только без права: $leaked',
-      );
-    },
-  );
+  test('ни один маршрут, читающий данные или совершающий операцию кассы, не '
+      'попал в publicRoutes', () {
+    final leaked = _mustStayPrivate
+        .where(AppRoutes.publicRoutes.contains)
+        .toList();
+    expect(
+      leaked,
+      isEmpty,
+      reason:
+          'Эти маршруты обязаны требовать вход — попадание любого из них '
+          'сюда означает, что данные кассы стали достижимы без сеанса '
+          'вовсе, а не только без права: $leaked',
+    );
+  });
 
-  test(
-    'publicRoutes не содержит дублей',
-    () {
-      expect(
-        AppRoutes.publicRoutes.length,
-        AppRoutes.publicRoutes.toSet().length,
-      );
-    },
-  );
+  test('publicRoutes не содержит дублей', () {
+    expect(
+      AppRoutes.publicRoutes.length,
+      AppRoutes.publicRoutes.toSet().length,
+    );
+  });
 }

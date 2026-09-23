@@ -5,6 +5,7 @@ import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/data/sale/local_cart_service.dart';
 import 'package:telepos/domain/sale/sale_checkout_service.dart';
 import 'package:telepos/domain/wire/wire_refusal.dart';
+import 'package:telepos/domain/sale/big_amount_limit.dart';
 
 /// Кассовая реализация [SaleCheckoutService] — задача 8.
 ///
@@ -35,10 +36,6 @@ class LocalSaleCheckoutService implements SaleCheckoutService {
   final AppDatabase _db;
   final LocalCartService _cart;
   final Talker _logger;
-
-  /// Потолок суммы чека, выше которого касса просит подтверждения
-  /// настройкой `allowBigAmount`. Число перенесено из контроллера как есть.
-  static final _bigAmountLimit = Decimal.parse('1000000');
 
   /// Разряды цены в завершённом чеке — денежные S3 (I159). То же число, с
   /// которым контроллер делил итог строки на количество.
@@ -120,9 +117,21 @@ class LocalSaleCheckoutService implements SaleCheckoutService {
     }
 
     if (!(pos?.allowBigAmount ?? false)) {
-      if (view.total > _bigAmountLimit) {
-        return const CheckoutPreparation.refused(
-          WireRefusal(checkoutBigAmountCode, 'сумма чека выше потолка кассы'),
+      // Потолок — настройка кассы (схема v57), а не число в коде. Пусто
+      // означает прежнее зашитое значение: касса, работавшая вчера, обязана
+      // работать сегодня так же.
+      final limit = bigAmountLimitOf(pos?.bigAmountLimit);
+      if (view.total > limit) {
+        // Довод отказа — САМ потолок, со знаком валюты. Собирает его КАССА:
+        // она знает и число, и валюту, а экран (в том числе браузерный) —
+        // только то, что ему сказали. До v57 отказ говорил «превышает
+        // 1 млн ₸» в любой стране, потому что фраза жила в словаре.
+        final symbol = pos?.currencySymbol;
+        return CheckoutPreparation.refused(
+          WireRefusal(
+            checkoutBigAmountCode,
+            symbol == null || symbol.isEmpty ? '$limit' : '$limit $symbol',
+          ),
         );
       }
     }
@@ -171,5 +180,4 @@ class LocalSaleCheckoutService implements SaleCheckoutService {
       lines: lines,
     );
   }
-
 }

@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:telepos/app/theme/app_colors.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 class _ShiftSummary {
   _ShiftSummary({
@@ -185,19 +186,19 @@ class _ShiftHistoryScreenState extends ConsumerState<ShiftHistoryScreen> {
             children: [
               _stat(
                 l10n.shiftHistorySales,
-                '${s.salesTotal} ₸',
+                '${s.salesTotal} ${tillCurrencySymbol()}',
                 '${s.salesCount}',
                 AppColors.success,
               ),
               _stat(
                 l10n.shiftHistoryRefunds,
-                '${s.refundsTotal} ₸',
+                '${s.refundsTotal} ${tillCurrencySymbol()}',
                 '${s.refundsCount}',
                 AppColors.warning,
               ),
               _stat(
                 l10n.shiftHistoryOpeningCash,
-                '${s.shift.openingCash ?? 0} ₸',
+                '${s.shift.openingCash ?? 0} ${tillCurrencySymbol()}',
                 '',
                 Theme.of(context).colorScheme.onSurfaceVariant,
               ),

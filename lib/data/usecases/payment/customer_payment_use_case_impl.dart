@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/cash/cash_operation_kind.dart';
 import 'package:telepos/data/database/daos/account_dao.dart';
 import 'package:telepos/data/payment/payment_kind_catalog_impl.dart';
 import 'package:telepos/domain/money/money_millis.dart';
@@ -130,7 +131,12 @@ class CustomerPaymentUseCaseImpl implements CustomerPaymentUseCase {
         redemption: decision != CustomerPaymentDecision.investment,
         amount: amount,
         tenderKindId: tenderKindId,
-        note: note ?? '${decision.displayName} на счёт покупателя',
+        // Примечание несёт ТОЛЬКО напечатанное человеком. Здесь
+        // стояло русское `'Вложение на счёт покупателя'` — слово для
+        // человека, уезжавшее в историю, откуда его не перевести. Род
+        // и так виден по строке: счёт покупателя в `accountId`, вид
+        // оплаты в `kindId`.
+        note: note,
         tillAccount: tillAccount,
         now: now,
       );
@@ -407,7 +413,7 @@ class CustomerPaymentUseCaseImpl implements CustomerPaymentUseCase {
     required int accountId,
     required Decimal amount,
     required int tenderKindId,
-    required String note,
+    required String? note,
     required Account tillAccount,
     required int now,
   }) async {
@@ -595,7 +601,7 @@ class CustomerPaymentUseCaseImpl implements CustomerPaymentUseCase {
     required bool redemption,
     required Decimal amount,
     required int tenderKindId,
-    required String note,
+    required String? note,
     required Account tillAccount,
     required int now,
   }) async {
@@ -622,6 +628,7 @@ class CustomerPaymentUseCaseImpl implements CustomerPaymentUseCase {
                 amount: amount,
                 type: 0,
                 accountId: Value(accountId),
+                reasonCode: const Value(kCashReasonCustomerTopUp),
                 note: Value(note),
                 docTime: Value(now),
                 state: const Value(1),

@@ -59,8 +59,9 @@ void main() {
   int secondsAgo(Duration age) =>
       DateTime.now().subtract(age).millisecondsSinceEpoch ~/ 1000;
 
-  Future<void> ageShift(Duration age) =>
-      db.update(db.shifts).write(ShiftsCompanion(openTime: Value(secondsAgo(age))));
+  Future<void> ageShift(Duration age) => db
+      .update(db.shifts)
+      .write(ShiftsCompanion(openTime: Value(secondsAgo(age))));
 
   Matcher overAge() => throwsA(
     isA<WireRefusal>().having((r) => r.code, 'code', payShiftOverAgeCode),
@@ -152,7 +153,11 @@ void main() {
       );
 
       await ageShift(const Duration(hours: 23, minutes: 59));
-      final view = await cart.start(terminalId: 7, wholesale: false, meta: m(2));
+      final view = await cart.start(
+        terminalId: 7,
+        wholesale: false,
+        meta: m(2),
+      );
       expect(view.receiptNo, isNotNull);
     });
   });
@@ -161,7 +166,11 @@ void main() {
     test(
       'смена перевалила за сутки, пока чек набирался, — деньги не берутся',
       () async {
-        var view = await cart.start(terminalId: 7, wholesale: false, meta: m(1));
+        var view = await cart.start(
+          terminalId: 7,
+          wholesale: false,
+          meta: m(1),
+        );
         view = await cart.addByBarcode(7, barcode, mv(view, 2));
         await ageShift(const Duration(hours: 25));
 

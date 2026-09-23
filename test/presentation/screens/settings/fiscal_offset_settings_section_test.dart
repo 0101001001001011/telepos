@@ -79,7 +79,9 @@ void main() {
   ) async {
     await pump(tester);
 
-    await tester.tap(find.byKey(const ValueKey('fiscal-offset-certificate-sale')));
+    await tester.tap(
+      find.byKey(const ValueKey('fiscal-offset-certificate-sale')),
+    );
     await tester.pumpAndSettle();
     expect(store.value.fiscalizeCertificateSale, isTrue);
 
@@ -106,7 +108,9 @@ void main() {
     await pump(tester);
     store.refuse = true;
 
-    await tester.tap(find.byKey(const ValueKey('fiscal-offset-certificate-sale')));
+    await tester.tap(
+      find.byKey(const ValueKey('fiscal-offset-certificate-sale')),
+    );
     await tester.pumpAndSettle();
 
     expect(store.saves, 1);

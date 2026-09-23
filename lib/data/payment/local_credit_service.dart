@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:talker/talker.dart';
 
 import 'package:telepos/data/database/app_database.dart';
+import 'package:telepos/domain/cash/cash_operation_kind.dart';
 import 'package:telepos/data/database/daos/credit_dao.dart';
 import 'package:telepos/domain/payment/credit_contract.dart';
 import 'package:telepos/domain/payment/credit_service.dart';
@@ -58,8 +59,7 @@ class LocalCreditService implements CreditService {
 
   @override
   Future<bool> hasOverdue(int agentLocalId, {DateTime? asOf}) async {
-    final at =
-        (asOf ?? DateTime.now()).millisecondsSinceEpoch ~/ 1000;
+    final at = (asOf ?? DateTime.now()).millisecondsSinceEpoch ~/ 1000;
     for (final view in await activeFor(agentLocalId)) {
       if (view.standingAt(at).isOverdue) return true;
     }
@@ -98,9 +98,9 @@ class LocalCreditService implements CreditService {
     }
 
     final now = (at ?? DateTime.now()).millisecondsSinceEpoch ~/ 1000;
-    var entries = (await _db.creditDao.scheduleRows(contract.id))
-        .map(CreditDao.entryToDomain)
-        .toList();
+    var entries = (await _db.creditDao.scheduleRows(
+      contract.id,
+    )).map(CreditDao.entryToDomain).toList();
     final before = CreditStanding.of(entries, now);
 
     // **Переплата — отказ, а не аванс.** Разбор целиком — в докстринге
@@ -204,7 +204,11 @@ class LocalCreditService implements CreditService {
               amount: amount,
               type: 0,
               accountId: Value(receivingAccountId),
-              note: Value('Погашение рассрочки ${contract.number}'),
+              // Основание — числом, номер договора — числом рядом.
+              // Стояло `'Погашение рассрочки №…'`: слово для человека,
+              // записанное в историю, откуда его не перевести.
+              reasonCode: const Value(kCashReasonCreditRepayment),
+              note: Value(contract.number),
               docTime: Value(now),
               state: const Value(_statePendingSync),
             ),
@@ -246,9 +250,9 @@ class LocalCreditService implements CreditService {
             ),
           );
 
-      entries = (await _db.creditDao.scheduleRows(contract.id))
-          .map(CreditDao.entryToDomain)
-          .toList();
+      entries = (await _db.creditDao.scheduleRows(
+        contract.id,
+      )).map(CreditDao.entryToDomain).toList();
       if (CreditStanding.of(entries, now).isSettled) {
         // Условно: два одновременных платежа, оба доведшие остаток до
         // нуля, закрыли бы договор дважды. Ноль затронутых строк здесь —
@@ -262,9 +266,9 @@ class LocalCreditService implements CreditService {
     });
 
     final after = CreditStanding.of(
-      (await _db.creditDao.scheduleRows(contract.id))
-          .map(CreditDao.entryToDomain)
-          .toList(),
+      (await _db.creditDao.scheduleRows(
+        contract.id,
+      )).map(CreditDao.entryToDomain).toList(),
       now,
     );
 
@@ -291,9 +295,9 @@ class LocalCreditService implements CreditService {
       );
       return null;
     }
-    final schedule = (await _db.creditDao.scheduleRows(row.id))
-        .map(CreditDao.entryToDomain)
-        .toList();
+    final schedule = (await _db.creditDao.scheduleRows(
+      row.id,
+    )).map(CreditDao.entryToDomain).toList();
     return CreditContractView(contract: contract, schedule: schedule);
   }
 }

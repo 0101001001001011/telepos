@@ -252,6 +252,7 @@ class TestShiftStates {
         id: 1,
         type: CashOperationType.investment,
         amount: Decimal.parse('10000'),
+        reasonCode: null,
         note: 'Размен',
         time: DateTime(2026, 2, 15, 9, 5),
       ),
@@ -259,6 +260,7 @@ class TestShiftStates {
         id: 2,
         type: CashOperationType.expense,
         amount: Decimal.parse('2000'),
+        reasonCode: null,
         note: 'Канцтовары',
         time: DateTime(2026, 2, 15, 12, 30),
       ),
@@ -274,16 +276,29 @@ class TestShiftStates {
     isLoading: false,
   );
 
+  /// Смена с излишком: в ящике насчитали 52 000 против ожидаемых 50 000.
+  ///
+  /// `openingCash` здесь — не украшение фикстуры. `ShiftState.difference`
+  /// считается от `expectedCash`, а не от `systemTotal`: прежде их было
+  /// два, экраны показывали одно, а касса записывала другое, и расходились
+  /// они ровно на подъёмные (И175). Смена без движений и с подъёмными
+  /// 50 000 — самый короткий способ получить ожидание в 50 000; остаток
+  /// счёта поставлен тем же числом, потому что у согласованной кассы они
+  /// равны по построению.
   static final withPositiveDifference = ShiftState(
     isOpen: true,
+    openingCash: Decimal.parse('50000'),
     systemTotal: Decimal.parse('50000'),
     billsTotal: Decimal.parse('52000'),
     billCounts: const {5000: 10, 2000: 1},
     isLoading: false,
   );
 
+  /// Смена с недостачей: насчитали 48 000 против ожидаемых 50 000. Довод
+  /// про `openingCash` — у [withPositiveDifference].
   static final withNegativeDifference = ShiftState(
     isOpen: true,
+    openingCash: Decimal.parse('50000'),
     systemTotal: Decimal.parse('50000'),
     billsTotal: Decimal.parse('48000'),
     billCounts: const {5000: 9, 2000: 1, 1000: 1},

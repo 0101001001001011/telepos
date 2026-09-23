@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:decimal/decimal.dart';
+import 'package:flutter/widgets.dart' show Locale;
+import 'package:telepos/core/locale/till_language.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sqlite3/sqlite3.dart' show SqliteException;
@@ -173,10 +176,7 @@ class LocalCertificateIssuer implements CertificateIssuer {
   }
 
   @override
-  Future<GiftCertificate> lookup({
-    required String number,
-    String? pin,
-  }) async {
+  Future<GiftCertificate> lookup({required String number, String? pin}) async {
     final trimmed = number.trim();
     final found = await _db.certificateDao.byNumber(trimmed);
     // `subject` у трёх исходов подбора — номер бумажки: `pay.complete`
@@ -295,7 +295,20 @@ class LocalCertificateIssuer implements CertificateIssuer {
       AccountsCompanion(
         id: Value(id),
         type: const Value(AccountType.certificateLiability),
-        name: const Value('Обязательства по сертификатам'),
+        // Имя — на языке кассы. `TillLanguage` держит именно его:
+        // `locale_provider` присваивает сюда язык интерфейса при
+        // сборке и при каждой смене. Имя у держателя историческое —
+        // он завёлся ради бумаги, — но выбор в нём один на кассу.
+        //
+        // Здесь стояло зашитое русское имя, и на американской кассе
+        // счёт с ним показывался в отчётах. Имя счёта — ДАННЫЕ:
+        // человек правит его на экране счетов, поэтому слово
+        // выбирается один раз, при заведении, а не при показе.
+        name: Value(
+          lookupAppLocalizations(
+            Locale(TillLanguage.current.languageCode),
+          ).accountCertificateLiability,
+        ),
         value: Value(Decimal.zero),
         // **Не виден кассе как счёт оплаты**: `PaymentService.accounts`
         // отдаёт видимые счета терминалу, и кассир мог бы выбрать

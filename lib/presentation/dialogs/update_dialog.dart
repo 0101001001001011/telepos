@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/services/update/update_info.dart';
 import '../../l10n/app_localizations.dart';
+import 'package:telepos/core/locale/till_conventions.dart';
 
 class UpdateDialog extends StatefulWidget {
   const UpdateDialog({
@@ -285,10 +286,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
   }
 
   String _formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    final year = date.year;
-    return '$day.$month.$year';
+    return TillConventions.current.formatDate(date);
   }
 }
 

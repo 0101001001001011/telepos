@@ -552,8 +552,7 @@ class WebKassaProvider implements FiscalProvider {
   FiscalResult _failure(WebKassaResponse resp) => FiscalResult.failure(
     resp.errorMessage ?? 'Ошибка WebKassa',
     code: _mapError(resp.errorCode),
-    rawErrorCode:
-        resp.errorCode == WebKassaApiClient.operatorUnavailableCode
+    rawErrorCode: resp.errorCode == WebKassaApiClient.operatorUnavailableCode
         ? resp.statusCode
         : resp.errorCode,
   );

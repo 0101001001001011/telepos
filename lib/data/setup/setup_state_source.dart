@@ -44,8 +44,5 @@ Future<SetupState> readSetupStateOf(AppDatabase db) async {
 /// `ThisPosEntries`, заведение кассира — `Users`. Состояние при этом одно, и
 /// приходит оно одним значением: половина его была бы утверждением про вторую
 /// половину, которого никто не делал.
-Stream<SetupState> watchSetupStateOf(AppDatabase db) => watchTables(
-  db,
-  [db.thisPosEntries, db.users],
-  () => readSetupStateOf(db),
-);
+Stream<SetupState> watchSetupStateOf(AppDatabase db) =>
+    watchTables(db, [db.thisPosEntries, db.users], () => readSetupStateOf(db));

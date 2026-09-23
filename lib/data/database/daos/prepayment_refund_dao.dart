@@ -70,13 +70,13 @@ class PrepaymentRefundDao extends DatabaseAccessor<AppDatabase>
     String? error,
   }) async {
     if (sign == null && error == null) return;
-    await (update(prepaymentRefunds)
-          ..where((r) => r.refundKey.equals(refundKey)))
-        .write(
-          PrepaymentRefundsCompanion(
-            fiscalSign: Value(sign),
-            fiscalError: Value(error),
-          ),
-        );
+    await (update(
+      prepaymentRefunds,
+    )..where((r) => r.refundKey.equals(refundKey))).write(
+      PrepaymentRefundsCompanion(
+        fiscalSign: Value(sign),
+        fiscalError: Value(error),
+      ),
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:talker/talker.dart';
 import 'package:telepos/data/database/app_database.dart';
 import 'package:telepos/domain/usecases/cash_operation/cash_in_out_controller.dart';
 import 'package:telepos/domain/usecases/fiscal/fiscal_service.dart';
+import 'package:telepos/domain/sale/big_amount_limit.dart';
 
 class CashInOutControllerImpl implements CashInOutController {
   CashInOutControllerImpl(this._db, {FiscalService? fiscalService})
@@ -77,7 +78,10 @@ class CashInOutControllerImpl implements CashInOutController {
   }) async {
     final validation = await validateAmount(amount);
     if (!validation.isValid) {
-      return CashOperationResult.failed(validation.errorMessage!);
+      return CashOperationResult.refused(
+        validation.refusal!,
+        limit: validation.limit,
+      );
     }
 
     return _createOperation(
@@ -98,7 +102,10 @@ class CashInOutControllerImpl implements CashInOutController {
   }) async {
     final validation = await validateAmount(amount);
     if (!validation.isValid) {
-      return CashOperationResult.failed(validation.errorMessage!);
+      return CashOperationResult.refused(
+        validation.refusal!,
+        limit: validation.limit,
+      );
     }
 
     if (expenseType.requiresNote && (note == null || note.trim().isEmpty)) {
@@ -111,7 +118,12 @@ class CashInOutControllerImpl implements CashInOutController {
       type: CashInOutType.expense,
       amount: amount,
       accountId: accountId,
-      note: _buildExpenseNote(expenseType, note),
+      // Род — в СВОЙ столбец, примечание несёт только то, что напечатал
+      // человек. До v58 сюда уезжало `'Зарплата: комментарий'`: слово для
+      // человека, записанное в историю, — его нельзя ни перевести, ни
+      // просуммировать. Разбор — в докстринге `CashOperations.expenseKind`.
+      note: (note != null && note.trim().isNotEmpty) ? note.trim() : null,
+      reasonCode: expenseType.index,
     );
 
     if (result.success && customFieldItemId != null) {
@@ -136,7 +148,10 @@ class CashInOutControllerImpl implements CashInOutController {
   }) async {
     final validation = await validateAmount(amount);
     if (!validation.isValid) {
-      return CashOperationResult.failed(validation.errorMessage!);
+      return CashOperationResult.refused(
+        validation.refusal!,
+        limit: validation.limit,
+      );
     }
 
     return _createOperation(
@@ -156,7 +171,10 @@ class CashInOutControllerImpl implements CashInOutController {
   }) async {
     final validation = await validateAmount(amount);
     if (!validation.isValid) {
-      return CashOperationResult.failed(validation.errorMessage!);
+      return CashOperationResult.refused(
+        validation.refusal!,
+        limit: validation.limit,
+      );
     }
 
     try {
@@ -207,7 +225,10 @@ class CashInOutControllerImpl implements CashInOutController {
             type: CashInOutType.expense.index,
             accountId: Value(fromAccountId),
             userId: Value(userId),
-            note: Value(_buildExpenseNote(ExpenseType.collection, note)),
+            note: Value(
+              (note != null && note.trim().isNotEmpty) ? note.trim() : null,
+            ),
+            reasonCode: Value(ExpenseType.collection.index),
             docTime: Value(now),
             state: const Value(1),
           ),
@@ -220,7 +241,10 @@ class CashInOutControllerImpl implements CashInOutController {
         type: CashInOutType.expense,
         amount: amount,
         operationId: operationId,
-        note: _buildExpenseNote(ExpenseType.collection, note),
+        // Оператору уезжает то, что напечатал человек. Род сюда не
+        // подклеивается: фискальный документ ждёт основание операции, а не
+        // подпись для экрана, и подпись эта вдобавок была русской.
+        note: note,
       );
 
       return CashOperationResult.created(operationId);
@@ -269,17 +293,22 @@ class CashInOutControllerImpl implements CashInOutController {
   @override
   Future<CashOperationValidation> validateAmount(Decimal amount) async {
     if (amount <= Decimal.zero) {
-      return CashOperationValidation.invalid('Сумма должна быть больше 0');
+      return CashOperationValidation.invalid(CashAmountRefusal.notPositive);
     }
 
     final pos = await _db.thisPosDao.get();
-    final allowBig = pos?.allowBigAmount ?? false;
-    final cap = allowBig
-        ? Decimal.fromInt(1000000000)
-        : CashInOutController.maxAmount;
+    // Разрешение на крупные суммы снимает потолок, а не поднимает его до
+    // второго зашитого числа: «миллиард» здесь был таким же произволом,
+    // как и миллион, и на кассе другой страны значил другие деньги.
+    if (pos?.allowBigAmount ?? false) return CashOperationValidation.valid();
 
+    final cap = bigAmountLimitOf(pos?.bigAmountLimit);
     if (amount > cap) {
-      return CashOperationValidation.invalid('Сумма не может превышать $cap');
+      final symbol = pos?.currencySymbol;
+      return CashOperationValidation.invalid(
+        CashAmountRefusal.aboveCeiling,
+        limit: symbol == null || symbol.isEmpty ? '$cap' : '$cap $symbol',
+      );
     }
 
     return CashOperationValidation.valid();
@@ -290,6 +319,7 @@ class CashInOutControllerImpl implements CashInOutController {
     required Decimal amount,
     required int accountId,
     String? note,
+    int? reasonCode,
   }) async {
     try {
       final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -340,6 +370,7 @@ class CashInOutControllerImpl implements CashInOutController {
             accountId: Value(accountId),
             userId: Value(userId),
             note: Value(note),
+            reasonCode: Value(reasonCode),
             docTime: Value(now),
             state: const Value(1),
           ),
@@ -362,12 +393,6 @@ class CashInOutControllerImpl implements CashInOutController {
     }
   }
 
-  String? _buildExpenseNote(ExpenseType expenseType, String? note) {
-    if (note != null && note.isNotEmpty) {
-      return '${expenseType.displayName}: $note';
-    }
-    return expenseType.displayName;
-  }
 
   @override
   Future<int> getPosAccountId() async {
@@ -378,5 +403,4 @@ class CashInOutControllerImpl implements CashInOutController {
       return 1;
     }
   }
-
 }

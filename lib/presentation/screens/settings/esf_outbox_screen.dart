@@ -10,6 +10,7 @@ import 'package:telepos/data/esf/offline_esf_provider.dart';
 import 'package:telepos/domain/esf/esf_models.dart';
 import 'package:telepos/domain/esf/esf_provider_registry.dart';
 import 'package:telepos/l10n/app_localizations.dart';
+import 'package:telepos/presentation/common/utils/till_money.dart';
 
 final esfOutboxProvider = FutureProvider<List<EsfOutboxEntry>>((ref) async {
   final store = GetIt.I<EsfOutboxStore>();
@@ -170,7 +171,7 @@ class _EsfTile extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            '${inv.totalWithVat} ₸ · ${l10n.esfOutboxAttempts(entry.attempts)}',
+            '${inv.totalWithVat} ${tillCurrencySymbol()} · ${l10n.esfOutboxAttempts(entry.attempts)}',
             style: TextStyle(
               fontSize: 12,
               color: Theme.of(context).colorScheme.onSurfaceVariant,

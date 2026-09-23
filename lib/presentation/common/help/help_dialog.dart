@@ -57,7 +57,10 @@ class _HelpDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    // Словарь обязателен: `l10n?.… ?? 'Справка'` означал тихий русский
+    // текст в сборке без делегатов. Ровно так экран покупателя год
+    // печатал по-русски, и вскрылось это только правкой на нём.
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Column(
@@ -111,7 +114,7 @@ class _HelpDialogContent extends StatelessWidget {
               if (content.tips.isNotEmpty) ...[
                 const SizedBox(height: 20),
                 Text(
-                  l10n?.helpTips ?? 'Советы',
+                  l10n.helpTips,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -123,7 +126,7 @@ class _HelpDialogContent extends StatelessWidget {
               if (content.shortcuts.isNotEmpty) ...[
                 const SizedBox(height: 20),
                 Text(
-                  l10n?.helpShortcuts ?? 'Горячие клавиши',
+                  l10n.helpShortcuts,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -193,7 +196,7 @@ class _HelpDialogContent extends StatelessWidget {
     );
   }
 
-  Widget _buildShortcutsTable(ThemeData theme, AppLocalizations? l10n) {
+  Widget _buildShortcutsTable(ThemeData theme, AppLocalizations l10n) {
     return Table(
       columnWidths: const {0: IntrinsicColumnWidth(), 1: FlexColumnWidth()},
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -206,7 +209,7 @@ class _HelpDialogContent extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Text(
-                l10n?.helpKey ?? 'Клавиша',
+                l10n.helpKey,
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -215,7 +218,7 @@ class _HelpDialogContent extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Text(
-                l10n?.helpAction ?? 'Действие',
+                l10n.helpAction,
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),

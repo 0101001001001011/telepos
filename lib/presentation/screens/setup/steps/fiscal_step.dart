@@ -81,11 +81,12 @@ class _FiscalStepState extends ConsumerState<FiscalStep> {
         ref.read(initialSetupControllerProvider.notifier);
 
     final config = state.fiscalConfig;
-    final availableFiscalType = switch (state.selectedCountry) {
-      CountryCode.kzt => FiscalType.webkassa,
-      CountryCode.rub => FiscalType.ofd,
-      _ => FiscalType.none,
-    };
+    // Протокол спрашивается у СТРАНЫ. Здесь стояла вторая таблица
+    // «страна → оператор», и она разошлась с признаком `hasFiscalisation`:
+    // девять стран объявляли фискализацию, а мастер предлагал оператора
+    // двум. Чек при этом печатал фискальный блок у всех девяти.
+    final availableFiscalType =
+        (state.selectedCountry ?? CountryCode.kzt).fiscalProtocol;
     final notRequired = availableFiscalType == FiscalType.none;
     final skipping = !notRequired && !config.enabled;
 

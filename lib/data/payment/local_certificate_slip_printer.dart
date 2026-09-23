@@ -23,11 +23,9 @@ import 'package:telepos/domain/services/receipt_print_service.dart';
 /// а при возврате деньги уже отданы. Единственный след неудачи — запись в
 /// журнале и [takeTroubles] для того, кто спросит.
 class LocalCertificateSlipPrinter implements CertificateSlipPrinter {
-  LocalCertificateSlipPrinter({
-    required AppDatabase db,
-    required Talker logger,
-  }) : _db = db,
-       _logger = logger;
+  LocalCertificateSlipPrinter({required AppDatabase db, required Talker logger})
+    : _db = db,
+      _logger = logger;
 
   final AppDatabase _db;
   final Talker _logger;

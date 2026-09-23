@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:telepos/hardware/display/customer_display_manager.dart';
 import 'package:telepos/hardware/label_printer/label_printer_service.dart';
 import 'package:telepos/hardware/scales/scales_service.dart';
+import 'package:telepos/l10n/app_localizations.dart';
 
 class SaleHardware {
   SaleHardware({
@@ -91,15 +92,20 @@ class SaleHardware {
   bool get isLabelPrinterConfigured =>
       _labelPrinter != null && (_labelPrinter.host?.isNotEmpty ?? false);
 
+  /// Напечатать ценник; возвращает текст отказа или `null`.
+  ///
+  /// Словарь — доводом: у службы железа контекста нет, а отказ читает
+  /// кассир. До 2026-09-22 три ответа были русскими строками.
   Future<String?> printPriceLabel({
     required String productName,
     required String barcode,
     required Decimal price,
+    required AppLocalizations l10n,
     int copies = 1,
   }) async {
     final printer = _labelPrinter;
     if (printer == null || !(printer.host?.isNotEmpty ?? false)) {
-      return 'Принтер этикеток не настроен';
+      return l10n.labelPrinterNotConfigured;
     }
     try {
       final result = await printer.printPriceLabel(
@@ -109,9 +115,9 @@ class SaleHardware {
         copies: copies,
       );
       if (result.success) return null;
-      return result.errorMessage ?? 'Ошибка печати этикетки';
+      return result.errorMessage ?? l10n.labelPrintFailed;
     } catch (e) {
-      return 'Ошибка печати этикетки: $e';
+      return '${l10n.labelPrintFailed}: $e';
     }
   }
 }

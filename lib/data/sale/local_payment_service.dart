@@ -16,8 +16,7 @@ import 'package:telepos/data/shift/shift_age_rule.dart';
 import 'package:telepos/data/payment/local_certificate_issuer.dart';
 import 'package:telepos/data/payment/local_credit_service.dart';
 import 'package:telepos/data/payment/payment_kind_catalog_impl.dart';
-import 'package:telepos/data/payment/qr_payment_coordinator.dart'
-    show QrGiveUp;
+import 'package:telepos/data/payment/qr_payment_coordinator.dart' show QrGiveUp;
 import 'package:telepos/data/payment/qr_payment_desk.dart';
 import 'package:telepos/core/constants/enums/product_type.dart';
 import 'package:telepos/core/errors/safe_error_text.dart';
@@ -1733,7 +1732,10 @@ class LocalPaymentService
       if (!offsetSettings.fiscalizeCertificateSale) {
         var certificateLines = Decimal.zero;
         var allLines = Decimal.zero;
-        for (final sp in await _db.saleProductDao.findBySale(receiptNo, posId)) {
+        for (final sp in await _db.saleProductDao.findBySale(
+          receiptNo,
+          posId,
+        )) {
           final line = sp.quantity * sp.price;
           allLines += line;
           final product = await _db.productInfoDao.findByUcode(sp.ucode);
@@ -2039,7 +2041,15 @@ class LocalPaymentService
       return CompletionTrouble(
         kind: CompletionTroubleKind.drawer,
         receiptNo: receiptNo,
-        message: 'денежный ящик не открылся',
+        // ПУСТО, а не подпись. Здесь стояло «денежный ящик не открылся» —
+        // дословный повтор словарного заголовка, который экран и так
+        // показывает, только по-русски: на английской кассе выходило «Cash
+        // drawer did not open: денежный ящик не открылся». Поймано пробным
+        // проходом главы 7 (2026-09-22).
+        //
+        // Подпись остаётся там, где она НЕСЁТ причину: «порт занят»,
+        // «бумаги нет». Пустая означает «сверх заголовка сказать нечего».
+        message: '',
       );
     } catch (e, st) {
       final safe = safeErrorText(e);
@@ -2348,7 +2358,6 @@ class LocalPaymentService
         }
       }
     }
-
 
     // # Аванс — второй зачёт, и он идёт следом за бонусом (задача 23)
     //

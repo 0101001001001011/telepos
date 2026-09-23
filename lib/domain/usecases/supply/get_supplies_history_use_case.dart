@@ -1,13 +1,9 @@
 import 'package:decimal/decimal.dart';
 import 'package:telepos/domain/usecases/supply/create_supply_use_case.dart';
 
-abstract class GetSuppliesHistoryUseCase {
-  Future<List<SupplyHistoryItem>> getSupplies({int limit = 50, int offset = 0});
-
-  Future<List<SupplyHistoryItem>> getBySupplier(int supplierId);
-
-  Future<SupplyDetails?> getDetails(int supplyId);
-}
+// Здесь жил договор `GetSuppliesHistoryUseCase` — зарегистрированный в
+// контейнере и не спрошенный ни разу (2026-09-22). Снят; типы истории
+// поставок остаются: ими пользуются живые сценарии прихода.
 
 class SupplyHistoryItem {
   const SupplyHistoryItem({

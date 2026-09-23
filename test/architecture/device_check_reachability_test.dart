@@ -145,9 +145,11 @@ void main() {
       () async {
         final outcome = await _check(
           catalog: catalog,
-          binding: _binding(DeviceClass.receiptPrinter, kEmulatedSpoolerProfileId, {
-            kEmulatedFileParam: _spoolFile(),
-          }),
+          binding: _binding(
+            DeviceClass.receiptPrinter,
+            kEmulatedSpoolerProfileId,
+            {kEmulatedFileParam: _spoolFile()},
+          ),
           // receiptPrinterFor намеренно не передан.
           deviceClass: DeviceClass.receiptPrinter,
         );
@@ -196,10 +198,14 @@ void main() {
     test('deviceRefused — прибор достижим и отказал', () async {
       final outcome = await _check(
         catalog: catalog,
-        binding: _binding(DeviceClass.receiptPrinter, kEmulatedSpoolerProfileId, {
-          kEmulatedFileParam: _spoolFile(),
-          kEmulatedRefuseParam: 'writeFails',
-        }),
+        binding: _binding(
+          DeviceClass.receiptPrinter,
+          kEmulatedSpoolerProfileId,
+          {
+            kEmulatedFileParam: _spoolFile(),
+            kEmulatedRefuseParam: 'writeFails',
+          },
+        ),
         receiptPrinterFor: (b) => EmulatedSpoolerPrinter(
           file: b.parameters[kEmulatedFileParam]!,
           refuse: b.parameters[kEmulatedRefuseParam] ?? '',
@@ -233,10 +239,11 @@ void main() {
     test('unexpectedError — драйвер выбросил исключение', () async {
       final outcome = await _check(
         catalog: catalog,
-        binding: _binding(DeviceClass.receiptPrinter, kEmulatedSpoolerProfileId, {
-          kEmulatedFileParam: _spoolFile(),
-          kEmulatedRefuseParam: 'throws',
-        }),
+        binding: _binding(
+          DeviceClass.receiptPrinter,
+          kEmulatedSpoolerProfileId,
+          {kEmulatedFileParam: _spoolFile(), kEmulatedRefuseParam: 'throws'},
+        ),
         receiptPrinterFor: (b) => EmulatedSpoolerPrinter(
           file: b.parameters[kEmulatedFileParam]!,
           refuse: b.parameters[kEmulatedRefuseParam] ?? '',

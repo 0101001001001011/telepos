@@ -84,9 +84,7 @@ class _ScalesDiagnosticsTabState extends State<ScalesDiagnosticsTab> {
         // под одним видом. Наладчик читает спиннер как «сейчас придёт» и
         // ждёт; правильный ответ — «касса ответила отказом, вот каким».
         if (snapshot.hasError) {
-          return _Note(
-            text: l10n.diagnosticsAskFailed('${snapshot.error}'),
-          );
+          return _Note(text: l10n.diagnosticsAskFailed('${snapshot.error}'));
         }
         final view = snapshot.data;
         if (view == null) {

@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../core/constants/enums/operating_mode.dart';
 import '../../../core/platform/host_process.dart';
 import '../../../core/platform/platform_info.dart';
+import 'package:telepos/app/config/app_version.dart';
 import 'package:telepos/domain/shift/shift_status.dart';
 
 enum ConnectionStatus { online, offline, syncing }
@@ -21,7 +22,14 @@ class AppState {
     this.userId,
     this.userName,
     this.userRole,
-    this.version = '1.0.0',
+    // Версия продукта, а не выдуманная `1.0.0`.
+    //
+    // Это поле НИКТО никогда не задавал: `copyWith(version: …)` не зовётся
+    // ни из одного места, и строка состояния показывала `1.0.0` в любой
+    // сборке — на каждом снимке README и в каждом кадре видео. Нашлось на
+    // съёмке маркетингового ролика: рядом стояла вторая, тоже неверная
+    // версия из боковой панели отчётов.
+    this.version = kAppVersion,
     this.freeStorageBytes,
     this.showStorageWarning = false,
     this.permissions = const {},

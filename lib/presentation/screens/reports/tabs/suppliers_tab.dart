@@ -247,7 +247,7 @@ class SuppliersTab extends ConsumerWidget {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'suppliers_volume',
-        ['Поставщик', 'Кол-во поставок'],
+        [l10n.agentTypeSupplier, l10n.repColSupplyCount],
         data.map((d) => [d.name, d.supplyCount.toString()]).toList(),
       ),
       child: BarChart(
@@ -259,7 +259,7 @@ class SuppliersTab extends ConsumerWidget {
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final supplier = data[group.x.toInt()];
                 return BarTooltipItem(
-                  '${supplier.name}\n${supplier.supplyCount} поставок',
+                  l10n.repSupplierTooltip(supplier.name, supplier.supplyCount),
                   const TextStyle(
                     color: AppColors.white,
                     fontSize: 12,
@@ -365,8 +365,8 @@ class SuppliersTab extends ConsumerWidget {
       subtitle: l10n.repSupplierTableSubtitle,
       height: math.min(56.0 + sorted.length * 48.0, 400),
       onExport: () => ReportExportButton.exportCsv(context, 'suppliers_table', [
-        'Поставщик',
-        'Кол-во поставок',
+        l10n.agentTypeSupplier,
+        l10n.repColSupplyCount,
       ], sorted.map((d) => [d.name, d.supplyCount.toString()]).toList()),
       child: SingleChildScrollView(
         child: DataTable(
@@ -475,7 +475,13 @@ class SuppliersTab extends ConsumerWidget {
       onExport: () => ReportExportButton.exportCsv(
         context,
         'supplier_price_history',
-        ['Товар', 'Поставщик', 'Дата', 'Цена', 'Кол-во'],
+        [
+          l10n.inventoryProduct,
+          l10n.agentTypeSupplier,
+          l10n.globalDate,
+          l10n.globalPrice,
+          l10n.tableHeaderQty,
+        ],
         data.map((d) {
           final dt = DateTime.fromMillisecondsSinceEpoch(d.editTime * 1000);
           return [
@@ -629,12 +635,12 @@ class SuppliersTab extends ConsumerWidget {
         context,
         'supplier_price_changes',
         [
-          'Товар',
-          'Поставщик',
-          'Старая цена',
-          'Новая цена',
-          'Изменение %',
-          'Дата',
+          l10n.inventoryProduct,
+          l10n.agentTypeSupplier,
+          l10n.repOldPrice,
+          l10n.repNewPrice,
+          l10n.repColChangePct,
+          l10n.globalDate,
         ],
         data
             .map(

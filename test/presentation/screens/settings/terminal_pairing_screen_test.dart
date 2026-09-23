@@ -236,9 +236,7 @@ void main() {
       // test/manual/wt_pairing_probe.dart, но здесь без сети, напрямую по
       // списку, которым владеет тот же синглтон, что использовал бы
       // /ca.crt.
-      final uri = Uri.parse(
-        addressText.split('\n').first,
-      );
+      final uri = Uri.parse(addressText.split('\n').first);
       expect(uri.queryParameters['invite'], shown);
       expect(
         invites.redeem(uri.queryParameters['invite']),
@@ -337,7 +335,8 @@ void main() {
       expect(
         find.text(shown!),
         findsNothing,
-        reason: 'код пережил уход со страницы — показать его второй раз '
+        reason:
+            'код пережил уход со страницы — показать его второй раз '
             'стало возможно',
       );
     },
@@ -364,10 +363,7 @@ void main() {
         find.byKey(const ValueKey('pairing-disabled-note')),
         findsOneWidget,
       );
-      expect(
-        find.byKey(const ValueKey('pairing-restart-note')),
-        findsNothing,
-      );
+      expect(find.byKey(const ValueKey('pairing-restart-note')), findsNothing);
     },
   );
 
@@ -452,10 +448,7 @@ void main() {
             'экран не перечитал достижимость после возврата — тот же дефект, '
             'что нашёл разбор фазы 1 у настройки',
       );
-      expect(
-        find.byKey(const ValueKey('pairing-disabled-note')),
-        findsNothing,
-      );
+      expect(find.byKey(const ValueKey('pairing-disabled-note')), findsNothing);
     },
   );
 

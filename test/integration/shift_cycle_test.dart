@@ -256,7 +256,10 @@ class _TestShiftFlow extends ConsumerWidget {
               child: const Text('Открыть смену'),
             ),
           ] else ...[
-            ...kBillDenominations.map((denomination) {
+            // Номиналы — по стране кассы. Константы `kBillDenominations`
+            // больше нет: она была одна на все страны и показывала
+            // казахстанские купюры на американской кассе.
+            ...billDenominationsOf(null).map((denomination) {
               final count = state.billCounts[denomination] ?? 0;
               return Row(
                 key: Key('bill_$denomination'),

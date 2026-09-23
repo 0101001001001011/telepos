@@ -213,9 +213,7 @@ void main() {
         );
         // Строка с подарком акции: три печенья по 100, одно даром.
         view = await cart.addByBarcode(7, barcodeB, mv(view, 4));
-        final biscuitId = view.lines
-            .firstWhere((l) => l.productId == 200)
-            .id;
+        final biscuitId = view.lines.firstWhere((l) => l.productId == 200).id;
         view = await cart.setQuantity(7, biscuitId, d('3'), mv(view, 5));
 
         // Снимок уже различает их — это то, что видит браузерный экран.
@@ -227,7 +225,8 @@ void main() {
         expect(
           biscuit.discounts.single.sourceId,
           77,
-          reason: 'какая именно акция — иначе «сколько отдали этой акцией» '
+          reason:
+              'какая именно акция — иначе «сколько отдали этой акцией» '
               'не спросить',
         );
         // Старый читатель не тронут: `discount` по-прежнему сумма.
@@ -244,11 +243,10 @@ void main() {
 
         // **Несущее утверждение.** В проданном чеке происхождение осталось.
         final rows = await db.saleDiscountDao.findBySale(receiptNo, 1);
-        expect(
-          rows.map((r) => r.origin).toSet(),
-          {DiscountOrigin.manual, DiscountOrigin.promotion},
-          reason: 'обе скидки записаны, и они разного происхождения',
-        );
+        expect(rows.map((r) => r.origin).toSet(), {
+          DiscountOrigin.manual,
+          DiscountOrigin.promotion,
+        }, reason: 'обе скидки записаны, и они разного происхождения');
 
         final manual = rows.firstWhere(
           (r) => r.origin == DiscountOrigin.manual,
@@ -285,7 +283,8 @@ void main() {
           expect(
             (sum - derived).abs() <= penny,
             isTrue,
-            reason: 'строка ${sp.id}: происхождение обязано объяснить всю '
+            reason:
+                'строка ${sp.id}: происхождение обязано объяснить всю '
                 'разность цен, а не часть её — по журналу $sum, '
                 'по ценам чека $derived',
           );
@@ -426,53 +425,46 @@ void main() {
       expect(await db.saleDiscountDao.findBySale(receiptNo, 1), isEmpty);
     });
 
-    test(
-      'повторная попытка оплаты не удваивает происхождение',
-      () async {
-        // Подготовка чека повторяется на каждой попытке (отказ терминала —
-        // обычный путь, а не авария), и без снятия прежних строк чек копил
-        // бы происхождение от каждой.
-        var view = await cart.start(
-          terminalId: 7,
-          wholesale: false,
-          meta: m(1),
-        );
-        view = await cart.addByBarcode(7, barcodeA, mv(view, 2));
-        view = await cart.setDiscountAmount(
+    test('повторная попытка оплаты не удваивает происхождение', () async {
+      // Подготовка чека повторяется на каждой попытке (отказ терминала —
+      // обычный путь, а не авария), и без снятия прежних строк чек копил
+      // бы происхождение от каждой.
+      var view = await cart.start(terminalId: 7, wholesale: false, meta: m(1));
+      view = await cart.addByBarcode(7, barcodeA, mv(view, 2));
+      view = await cart.setDiscountAmount(
+        7,
+        view.lines.single.id,
+        d('50'),
+        mv(view, 3),
+        by: cashier,
+      );
+      final receiptNo = view.receiptNo!;
+
+      // Первая попытка: наличных не хватает — отказ.
+      await expectLater(
+        payments.complete(
           7,
-          view.lines.single.id,
-          d('50'),
-          mv(view, 3),
-          by: cashier,
-        );
-        final receiptNo = view.receiptNo!;
+          PaymentRequest(type: PaymentType.cash, cashReceived: d('1')),
+          mv(view, 9),
+        ),
+        throwsA(isA<WireRefusal>()),
+      );
 
-        // Первая попытка: наличных не хватает — отказ.
-        await expectLater(
-          payments.complete(
-            7,
-            PaymentRequest(type: PaymentType.cash, cashReceived: d('1')),
-            mv(view, 9),
-          ),
-          throwsA(isA<WireRefusal>()),
-        );
+      await payments.complete(
+        7,
+        PaymentRequest(type: PaymentType.cash, cashReceived: d('500')),
+        CartCommandMeta(
+          key: 'k10',
+          baseVersion: view.version,
+          receiptNo: receiptNo,
+        ),
+      );
+      await payments.pendingSideEffects;
 
-        await payments.complete(
-          7,
-          PaymentRequest(type: PaymentType.cash, cashReceived: d('500')),
-          CartCommandMeta(
-            key: 'k10',
-            baseVersion: view.version,
-            receiptNo: receiptNo,
-          ),
-        );
-        await payments.pendingSideEffects;
-
-        final rows = await db.saleDiscountDao.findBySale(receiptNo, 1);
-        expect(rows, hasLength(1), reason: 'одна скидка — одна строка');
-        expect(rows.single.amount, d('50'));
-      },
-    );
+      final rows = await db.saleDiscountDao.findBySale(receiptNo, 1);
+      expect(rows, hasLength(1), reason: 'одна скидка — одна строка');
+      expect(rows.single.amount, d('50'));
+    });
   });
 
   group('аудит скидки', () {
@@ -497,7 +489,8 @@ void main() {
       expect(
         audit.single.percent,
         d('10'),
-        reason: '50 из 500 — десять процентов; предел объявлен процентом, '
+        reason:
+            '50 из 500 — десять процентов; предел объявлен процентом, '
             'а деньги отдаются суммой, и одно из другого потом не '
             'восстановить',
       );
@@ -562,8 +555,12 @@ void main() {
         expect(refusals.first.percent, d('40'));
         expect(
           refusals.first.capSource,
-          contains('Кассир'),
-          reason: 'чей предел отказал — иначе кассир пойдёт не туда',
+          contains('cashier'),
+          reason:
+              'чей предел отказал — иначе кассир пойдёт не туда. Роль '
+              'названа КЛЮЧОМ, а не словом «Кассир»: запись аудита не '
+              'имеет права зависеть от языка кассы, иначе одно и то же '
+              'событие на двух кассах записалось бы по-разному',
         );
 
         // Скидки в чеке при этом нет.
@@ -602,37 +599,43 @@ void main() {
       );
     });
 
-    test('снятие скидки уступкой не считается и журнал не разбавляет',
-        () async {
-      // Слом в обратную сторону: аудит, пишущий каждую команду, наполнил бы
-      // журнал событиями, где денег никому не отдавали, и первый же
-      // проверяющий перестал бы его читать.
-      var view = await cart.start(terminalId: 7, wholesale: false, meta: m(1));
-      view = await cart.addByBarcode(7, barcodeA, mv(view, 2));
-      final lineId = view.lines.single.id;
-      view = await cart.setDiscountAmount(
-        7,
-        lineId,
-        d('50'),
-        mv(view, 3),
-        by: cashier,
-      );
-      await cart.setDiscountAmount(
-        7,
-        lineId,
-        Decimal.zero,
-        mv(view, 4),
-        by: cashier,
-      );
+    test(
+      'снятие скидки уступкой не считается и журнал не разбавляет',
+      () async {
+        // Слом в обратную сторону: аудит, пишущий каждую команду, наполнил бы
+        // журнал событиями, где денег никому не отдавали, и первый же
+        // проверяющий перестал бы его читать.
+        var view = await cart.start(
+          terminalId: 7,
+          wholesale: false,
+          meta: m(1),
+        );
+        view = await cart.addByBarcode(7, barcodeA, mv(view, 2));
+        final lineId = view.lines.single.id;
+        view = await cart.setDiscountAmount(
+          7,
+          lineId,
+          d('50'),
+          mv(view, 3),
+          by: cashier,
+        );
+        await cart.setDiscountAmount(
+          7,
+          lineId,
+          Decimal.zero,
+          mv(view, 4),
+          by: cashier,
+        );
 
-      final audit = await db.saleDiscountDao.auditFor();
-      expect(
-        audit,
-        hasLength(1),
-        reason: 'записана уступка, но не её снятие',
-      );
-      expect(audit.single.amount, d('50'));
-    });
+        final audit = await db.saleDiscountDao.auditFor();
+        expect(
+          audit,
+          hasLength(1),
+          reason: 'записана уступка, но не её снятие',
+        );
+        expect(audit.single.amount, d('50'));
+      },
+    );
   });
 
   setUpAll(() {

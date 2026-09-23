@@ -36,17 +36,17 @@ part 'credit_dao.g.dart';
 class CreditDao extends DatabaseAccessor<AppDatabase> with _$CreditDaoMixin {
   CreditDao(super.db);
 
-  Future<CreditContractRow?> rowByNumber(String number) =>
-      (select(creditContracts)
-            ..where((c) => c.number.equals(number)))
-          .getSingleOrNull();
+  Future<CreditContractRow?> rowByNumber(String number) => (select(
+    creditContracts,
+  )..where((c) => c.number.equals(number))).getSingleOrNull();
 
   Future<CreditContractRow?> rowByReceipt({
     required int receiptNo,
     required int posId,
   }) =>
-      (select(creditContracts)
-            ..where((c) => c.receiptNo.equals(receiptNo) & c.posId.equals(posId)))
+      (select(creditContracts)..where(
+            (c) => c.receiptNo.equals(receiptNo) & c.posId.equals(posId),
+          ))
           .getSingleOrNull();
 
   Future<List<CreditContractRow>> rowsByAgent(
@@ -58,7 +58,10 @@ class CreditDao extends DatabaseAccessor<AppDatabase> with _$CreditDaoMixin {
     if (status != null) {
       q.where((c) => c.status.equals(status.code));
     }
-    q.orderBy([(c) => OrderingTerm.asc(c.signedAt), (c) => OrderingTerm.asc(c.id)]);
+    q.orderBy([
+      (c) => OrderingTerm.asc(c.signedAt),
+      (c) => OrderingTerm.asc(c.id),
+    ]);
     return q.get();
   }
 

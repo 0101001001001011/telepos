@@ -33,7 +33,8 @@ abstract final class PointModePermissions {
     PermissionKeys.opSellDebt,
     PermissionKeys.opRefundWithoutReceipt,
     PermissionKeys.opRefund,
-    PermissionKeys.navRefund, // Возврат недоступен целиком, не «виден и не работает»
+    PermissionKeys
+        .navRefund, // Возврат недоступен целиком, не «виден и не работает»
     PermissionKeys.opEditPrice,
     PermissionKeys.opSellDiscount,
     PermissionKeys.navSettings,

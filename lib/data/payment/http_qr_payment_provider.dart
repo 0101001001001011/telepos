@@ -111,9 +111,7 @@ class HttpQrPaymentProvider implements QrPaymentProvider {
   }
 
   @override
-  Future<QrProviderReply<QrIntentState>> cancel(
-    String providerIntentId,
-  ) async {
+  Future<QrProviderReply<QrIntentState>> cancel(String providerIntentId) async {
     final reply = await _post('/sbp/v1/qr/$providerIntentId/cancel', const {});
     if (!reply.isOk) return QrProviderReply.refused(reply.refusal!);
     return _stateOf(providerIntentId, reply.value!);
@@ -168,11 +166,7 @@ class HttpQrPaymentProvider implements QrPaymentProvider {
     String path,
     Map<String, Object?> body,
   ) => _send(
-    () => _client.post(
-      _uri(path),
-      headers: _headers,
-      body: jsonEncode(body),
-    ),
+    () => _client.post(_uri(path), headers: _headers, body: jsonEncode(body)),
   );
 
   /// Один круг сети и разбор ответа — **всё, что может пойти не так,

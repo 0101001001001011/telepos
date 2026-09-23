@@ -35,6 +35,7 @@ import 'package:telepos/domain/repositories/scanner_rules_repository.dart';
 import 'package:telepos/domain/network/network_status.dart';
 import 'package:telepos/domain/network/wifi_network.dart';
 import 'package:telepos/domain/startup/app_bootstrap.dart';
+import 'package:telepos/domain/startup/boot_stage.dart';
 import 'package:telepos/domain/startup/first_launch_repository.dart';
 import 'package:telepos/domain/startup/startup_state_repository.dart';
 import 'package:telepos/domain/terminal/terminal.dart';
@@ -57,7 +58,7 @@ import '../presentation/auth/support/fakes.dart';
 class _BootedTill implements AppBootstrap {
   @override
   Future<AppInitStatus> start({required BootProgress onProgress}) async {
-    onProgress(1.0, 'готово');
+    onProgress(1.0, BootStage.ready);
     return AppInitStatus.success;
   }
 }

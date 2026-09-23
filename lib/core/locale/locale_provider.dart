@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_locale.dart';
+import 'till_language.dart';
 import 'locale_service.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -28,7 +29,12 @@ class LocaleNotifier extends Notifier<AppLocale> {
   AppLocale build() {
     final service = ref.watch(localeServiceProvider);
     final systemLocale = PlatformDispatcher.instance.locale;
-    return service.getEffectiveLocale(systemLocale);
+    final locale = service.getEffectiveLocale(systemLocale);
+    // Бумага следует за экраном. До 2026-09-21 чек печатался по-русски
+    // независимо от языка кассы, потому что слой печати о языке не знал
+    // вовсе — здесь единственное место, где выбор языка уже известен.
+    TillLanguage.current = locale;
+    return locale;
   }
 
   LocaleService get _service => ref.read(localeServiceProvider);
@@ -36,6 +42,7 @@ class LocaleNotifier extends Notifier<AppLocale> {
   Future<void> setLocale(AppLocale locale) async {
     if (state == locale) return;
 
+    TillLanguage.current = locale;
     await _service.saveLocale(locale);
 
     state = locale;

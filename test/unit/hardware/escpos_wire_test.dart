@@ -814,7 +814,7 @@ SaleReceiptData _saleReceipt() {
     ),
     isVatPayer: true,
     vatAmount: Decimal.parse('402.857'),
-    vatRatePercent: 12,
+    vatRatePercent: Decimal.fromInt(12),
   );
 }
 

@@ -214,10 +214,7 @@ class PinCredential {
     )) {
       return const PinCheckResult(PinCheckOutcome.wrong);
     }
-    return PinCheckResult(
-      PinCheckOutcome.ok,
-      upgradedStorage: create(pin),
-    );
+    return PinCheckResult(PinCheckOutcome.ok, upgradedStorage: create(pin));
   }
 
   static Uint8List _derive(

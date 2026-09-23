@@ -146,7 +146,11 @@ class DeviceConnectionParam {
 /// no type system. "Keep it simple, string values are enough."
 @immutable
 class DeviceOption {
-  const DeviceOption({required this.key, required this.allowedValues, this.description = ''});
+  const DeviceOption({
+    required this.key,
+    required this.allowedValues,
+    this.description = '',
+  });
 
   /// Matched against the keys of `DeviceBinding.options`.
   final String key;

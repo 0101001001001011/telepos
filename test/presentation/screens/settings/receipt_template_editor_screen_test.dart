@@ -84,7 +84,10 @@ void main() {
     );
     for (var i = 0; i < 300; i++) {
       await tester.pumpAndSettle(const Duration(milliseconds: 10));
-      if (find.byKey(const Key('receipt_template_header')).evaluate().isNotEmpty) {
+      if (find
+          .byKey(const Key('receipt_template_header'))
+          .evaluate()
+          .isNotEmpty) {
         return;
       }
     }
@@ -121,40 +124,41 @@ void main() {
     fail('предпросмотр не пересобрался после правки');
   }
 
-  testWidgets(
-    'ширина — привязанного принтера; многострочная шапка по центру в '
-    'предпросмотре; выравнивание вправо переставляет строку',
-    (tester) async {
-      await open(tester);
-      expect(find.text('80 мм'), findsOneWidget);
-      expect(
-        find.byKey(const Key('receipt_template_mandatory_note')),
-        findsOneWidget,
-      );
-      // Выключателей обязательных реквизитов на экране больше нет.
-      expect(find.text('Печатать НДС'), findsNothing);
-      expect(find.text('Печатать ссылку проверки (QR)'), findsNothing);
-      expect(find.text('Печатать БИН/ИИН'), findsNothing);
+  testWidgets('ширина — привязанного принтера; многострочная шапка по центру в '
+      'предпросмотре; выравнивание вправо переставляет строку', (tester) async {
+    await open(tester);
+    expect(find.text('80 мм'), findsOneWidget);
+    expect(
+      find.byKey(const Key('receipt_template_mandatory_note')),
+      findsOneWidget,
+    );
+    // Выключателей обязательных реквизитов на экране больше нет.
+    expect(find.text('Печатать НДС'), findsNothing);
+    expect(find.text('Печатать ссылку проверки (QR)'), findsNothing);
+    expect(find.text('Печатать БИН/ИИН'), findsNothing);
 
-      final beforeHeader = previewText(tester);
-      await tester.enterText(
-        find.byKey(const Key('receipt_template_header')),
-        'Добро пожаловать!\nВторая',
-      );
-      await awaitNewPreview(tester, beforeHeader);
+    final beforeHeader = previewText(tester);
+    await tester.enterText(
+      find.byKey(const Key('receipt_template_header')),
+      'Добро пожаловать!\nВторая',
+    );
+    await awaitNewPreview(tester, beforeHeader);
 
-      var lines = previewLines(tester);
-      expect(lines, contains('${' ' * ((48 - 17) ~/ 2)}Добро пожаловать!'));
-      expect(lines, contains('${' ' * ((48 - 6) ~/ 2)}Вторая'));
-      final headerAt = lines.indexWhere((l) => l.trim() == 'Вторая');
-      final checkAt = lines.indexWhere((l) => l.startsWith('Чек №'));
-      expect(headerAt, lessThan(checkAt), reason: 'шапка выше обязательной части');
+    var lines = previewLines(tester);
+    expect(lines, contains('${' ' * ((48 - 17) ~/ 2)}Добро пожаловать!'));
+    expect(lines, contains('${' ' * ((48 - 6) ~/ 2)}Вторая'));
+    final headerAt = lines.indexWhere((l) => l.trim() == 'Вторая');
+    final checkAt = lines.indexWhere((l) => l.startsWith('Чек №'));
+    expect(
+      headerAt,
+      lessThan(checkAt),
+      reason: 'шапка выше обязательной части',
+    );
 
-      final beforeAlign = previewText(tester);
-      await tester.tap(find.byIcon(Icons.format_align_right).first);
-      await awaitNewPreview(tester, beforeAlign);
-      lines = previewLines(tester);
-      expect(lines, contains('${' ' * (48 - 6)}Вторая'));
-    },
-  );
+    final beforeAlign = previewText(tester);
+    await tester.tap(find.byIcon(Icons.format_align_right).first);
+    await awaitNewPreview(tester, beforeAlign);
+    lines = previewLines(tester);
+    expect(lines, contains('${' ' * (48 - 6)}Вторая'));
+  });
 }

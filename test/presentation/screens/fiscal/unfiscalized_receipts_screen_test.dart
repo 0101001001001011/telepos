@@ -85,8 +85,7 @@ void main() {
   );
 
   group('причина — фразой словаря, а не текстом data-слоя', () {
-    FiscalQueueEntry coded(String stored) =>
-        withDocument()..lastError = stored;
+    FiscalQueueEntry coded(String stored) => withDocument()..lastError = stored;
 
     testWidgets('русский интерфейс: код → русская фраза, кода на экране нет', (
       tester,
@@ -153,28 +152,27 @@ void main() {
     );
   });
 
-  testWidgets(
-    'строка СТАРОГО вида повтора не предлагает — и называет почему',
-    (tester) async {
-      await store.enqueue(legacy());
-      await tester.pumpWidget(host());
-      await tester.pumpAndSettle();
+  testWidgets('строка СТАРОГО вида повтора не предлагает — и называет почему', (
+    tester,
+  ) async {
+    await store.enqueue(legacy());
+    await tester.pumpWidget(host());
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const ValueKey('unfiscalized-retry')),
-        findsNothing,
-        reason:
-            'повторять нечем: в строке записка, а ключ чужой — повтор дал бы '
-            'второй фискальный документ на одну продажу',
-      );
-      expect(
-        find.byKey(const ValueKey('unfiscalized-write-off')),
-        findsOneWidget,
-      );
-      expect(find.textContaining('повторять нечем'), findsOneWidget);
-      expect(find.text('Чек №777'), findsOneWidget);
-    },
-  );
+    expect(
+      find.byKey(const ValueKey('unfiscalized-retry')),
+      findsNothing,
+      reason:
+          'повторять нечем: в строке записка, а ключ чужой — повтор дал бы '
+          'второй фискальный документ на одну продажу',
+    );
+    expect(
+      find.byKey(const ValueKey('unfiscalized-write-off')),
+      findsOneWidget,
+    );
+    expect(find.textContaining('повторять нечем'), findsOneWidget);
+    expect(find.text('Чек №777'), findsOneWidget);
+  });
 
   testWidgets('списание без причины подтвердить нельзя', (tester) async {
     await store.enqueue(withDocument());

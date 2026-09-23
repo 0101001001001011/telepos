@@ -1,0 +1,53 @@
+{
+  "id": "kr",
+  "title": "Корея",
+  "countryCode": "KR",
+  "taxTreatment": "inclusive",
+  "hasFiscalisation": false,
+  "currencySymbol": "₩",
+  "currencyBeforeAmount": true,
+  "expectedStandardRatePercent": "10",
+  "categories": [
+    {
+      "code": "standard",
+      "title": "부가가치세",
+      "isDefault": true
+    },
+    {
+      "code": "zero",
+      "title": "영세율"
+    },
+    {
+      "code": "exempt",
+      "title": "면세"
+    }
+  ],
+  "jurisdictions": [
+    {
+      "code": "kr",
+      "name": "부가세",
+      "level": 0,
+      "parent": null,
+      "tillLocation": true,
+      "rules": [
+        {
+          "category": null,
+          "kind": "taxed",
+          "ratePercent": "10"
+        },
+        {
+          "category": "zero",
+          "kind": "taxed",
+          "ratePercent": "0"
+        },
+        {
+          "category": "exempt",
+          "kind": "exempt",
+          "ratePercent": "0"
+        }
+      ]
+    }
+  ],
+  "validFrom": "2026-01-01",
+  "source": "부가가치세; проверьте перед работой"
+}

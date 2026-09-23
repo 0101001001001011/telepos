@@ -141,6 +141,21 @@ class AppLocalizationsKk extends AppLocalizations {
   String get loginShiftRequired => 'Кіру үшін ауысымды ашыңыз';
 
   @override
+  String get staffRoleOwner => 'Иесі';
+
+  @override
+  String get staffRoleAdministrator => 'Әкімші';
+
+  @override
+  String get staffRoleUser => 'Пайдаланушы';
+
+  @override
+  String get staffRoleCashier => 'Кассир';
+
+  @override
+  String get staffRoleUnknown => 'Белгісіз';
+
+  @override
   String get loginCashier => 'Кассир';
 
   @override
@@ -567,6 +582,25 @@ class AppLocalizationsKk extends AppLocalizations {
   String get cashTitle => 'Касса';
 
   @override
+  String get cashReasonCreditRepayment => 'Бөліп төлеуді өтеу';
+
+  @override
+  String get cashReasonCustomerTopUp => 'Сатып алушы шотын толтыру';
+
+  @override
+  String get accountBankCard => 'Банк (карта)';
+
+  @override
+  String get accountCertificateLiability =>
+      'Сертификаттар бойынша міндеттемелер';
+
+  @override
+  String get serviceConsumableFallback => 'Шығыс материалы';
+
+  @override
+  String get serviceAutoAddedByNorm => 'Шығыс нормасы бойынша қосылды';
+
+  @override
   String get cashInvestment => 'Салым';
 
   @override
@@ -589,21 +623,6 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get cashExpenseTypes => 'Шығыс түрі';
-
-  @override
-  String get cashSalary => 'Жалақы';
-
-  @override
-  String get cashRent => 'Жалға алу';
-
-  @override
-  String get cashUtilities => 'Коммуналдық';
-
-  @override
-  String get cashSupplies => 'Сатып алулар';
-
-  @override
-  String get cashOther => 'Басқа';
 
   @override
   String get discountTitle => 'Жеңілдік';
@@ -966,7 +985,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get loginShiftClosed => 'Ауысым жабық';
 
   @override
-  String get loginShiftUnknown => 'Ауысым: белгісіз';
+  String get loginShiftUnknown => 'Ауысым: касса жауап бермеді';
 
   @override
   String get saleQuickProducts => 'Жылдам тауарлар';
@@ -2053,11 +2072,6 @@ class AppLocalizationsKk extends AppLocalizations {
   String get allBreadcrumb => 'Барлығы';
 
   @override
-  String productPrice(String price) {
-    return '$price ₸';
-  }
-
-  @override
   String maxBonusPercent(int percent) {
     return 'Чек сомасының $percent%-на дейін есептен шығаруға болады';
   }
@@ -2712,7 +2726,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get setupVatPayerTitle => 'ҚҚС төлеуші';
 
   @override
-  String setupVatPayerRate(int rate) {
+  String setupVatPayerRate(String rate) {
     return 'ҚҚС мөлшерлемесі: $rate%';
   }
 
@@ -3126,7 +3140,7 @@ class AppLocalizationsKk extends AppLocalizations {
       'Кассамен жұмыс істеу үшін пайдаланушыларды жасаңыз';
 
   @override
-  String get setupAdminLabel => 'ӘКІМШІ';
+  String get setupAdminLabel => 'Әкімші';
 
   @override
   String get setupAdminSubtitle => 'Касса иесі';
@@ -3144,7 +3158,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get setupAdminPinDefault => 'Әдепкі: 0000';
 
   @override
-  String get setupSellerLabel => 'САТУШЫ';
+  String get setupSellerLabel => 'Сатушы';
 
   @override
   String get setupSellerOptional => 'Қосымша';
@@ -3274,7 +3288,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get setupStartWork => 'Жұмысты бастау';
 
   @override
-  String setupVatPayerSummary(int rate) {
+  String setupVatPayerSummary(String rate) {
     return 'ҚҚС төлеуші ($rate%)';
   }
 
@@ -4948,6 +4962,27 @@ class AppLocalizationsKk extends AppLocalizations {
   String get countryTurkmenistan => 'Түрікменстан';
 
   @override
+  String get permNavServiceQueue => 'Тапсырыстар кезегі';
+
+  @override
+  String get permNavServiceIntake => 'Тапсырыс қабылдау';
+
+  @override
+  String get permSellWithDiscount => 'Жеңілдікпен сату';
+
+  @override
+  String get permCashInOut => 'Енгізу / алу';
+
+  @override
+  String get permRefundGoods => 'Тауарды қайтару';
+
+  @override
+  String get permRefundWithoutReceipt => 'Чексіз қайтару';
+
+  @override
+  String get permGroupNavigation => 'Навигация';
+
+  @override
   String get permEditPrice => 'Бағаны өңдеу';
 
   @override
@@ -5448,7 +5483,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String shiftFixedAmount(String amount) {
-    return 'Тіркелетін сома: $amount KZT';
+    return 'Тіркелетін сома: $amount';
   }
 
   @override
@@ -5483,6 +5518,9 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get shiftRefundsTotal => 'Қайтарулар';
+
+  @override
+  String get cashOpeningCount => 'Ашу кезіндегі қайта санау';
 
   @override
   String get shiftShortage => 'Тапшылық';
@@ -6538,9 +6576,6 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get paymentDefaultLabel => 'Әдепкі';
-
-  @override
-  String get currencySymbol => '₸';
 
   @override
   String get serviceIntakeTitle => 'Тапсырысты қабылдау';
@@ -10192,7 +10227,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get setCorrectionReasonHint => 'мыс. өздік түзету';
 
   @override
-  String get setCorrectionAmountLabel => 'Түзету сомасы, KZT';
+  String setCorrectionAmountLabel(String currency) {
+    return 'Түзету сомасы, $currency';
+  }
 
   @override
   String get setCorrectionPaymentLabel => 'Төлеу әдісі';
@@ -10378,7 +10415,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String dishTotalYieldSummary(String cost, String yield) {
-    return 'Барлығы: $cost ₸  |  Шығымы: $yield';
+    return 'Барлығы: $cost  |  Шығымы: $yield';
   }
 
   @override
@@ -10739,7 +10776,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get repColCount => 'Саны';
 
   @override
-  String get repColSumTenge => 'Сома, ₸';
+  String repColSumTenge(String currency) {
+    return 'Сома, $currency';
+  }
 
   @override
   String get repColRow => 'Жол';
@@ -10830,7 +10869,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repF910Subtitle(String income, String rate, String tax) {
-    return 'Салық салынатын кіріс: $income ₸ • салық $rate%: $tax ₸';
+    return 'Салық салынатын кіріс: $income • салық $rate%: $tax';
   }
 
   @override
@@ -10847,7 +10886,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repF300Subtitle(String turnover, String vat) {
-    return 'Салық салынатын айналым: $turnover ₸ • есептелген ҚҚС: $vat ₸';
+    return 'Салық салынатын айналым: $turnover • есептелген ҚҚС: $vat';
   }
 
   @override
@@ -10863,7 +10902,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repCashBookSubtitle(String income, String expense, String balance) {
-    return 'Кіріс: $income • Шығыс: $expense • Қалдық: $balance ₸';
+    return 'Кіріс: $income • Шығыс: $expense • Қалдық: $balance';
   }
 
   @override
@@ -10871,7 +10910,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repVatPeriodSubtitle(String vat, String base) {
-    return 'ҚҚС: $vat ₸ • база: $base ₸';
+    return 'ҚҚС: $vat • база: $base';
   }
 
   @override
@@ -10887,7 +10926,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repCashCollectionSubtitle(int count, String total) {
-    return '$count операция • барлығы: $total ₸';
+    return '$count операция • барлығы: $total';
   }
 
   @override
@@ -10898,7 +10937,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repProfitMarginSubtitle(String profit, String margin, String note) {
-    return 'Пайда: $profit ₸ • маржа $margin% • $note';
+    return 'Пайда: $profit • маржа $margin% • $note';
   }
 
   @override
@@ -10913,7 +10952,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String repWriteoffSubtitle(int count, String total) {
-    return '$count құжат • барлығы: $total ₸';
+    return '$count құжат • барлығы: $total';
   }
 
   @override
@@ -11182,8 +11221,9 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get errorBigAmountBlocked =>
-      'Сату сомасы 1 млн ₸ асады. Касса баптауларында ірі сомаларға рұқсатты қосыңыз.';
+  String errorBigAmountBlocked(String limit) {
+    return 'Сату сомасы касса шегінен жоғары ($limit). Шекті көтеріңіз немесе касса баптауларында ірі сомаларға рұқсатты қосыңыз.';
+  }
 
   @override
   String errorMarkRequired(String name) {
@@ -12179,15 +12219,15 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String qrPaidPartial(String paid, String amount) {
-    return 'Оплачено частично: $paid из $amount';
+    return 'Ішінара төленді: $amount ішінен $paid';
   }
 
   @override
-  String get qrOrphanTitle => 'Деньги без чека';
+  String get qrOrphanTitle => 'Чексіз ақша';
 
   @override
   String get qrOrphanHint =>
-      'Покупатель заплатил по QR, а чек этими деньгами не закрыт.';
+      'Сатып алушы QR арқылы төледі, бірақ чек бұл ақшамен жабылмаған.';
 
   @override
   String qrOrphanLine(String amount, String provider, String key) {
@@ -12196,7 +12236,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get qrOrphanAfterGiveUp =>
-      'Подтверждение пришло после того, как касса перестала ждать';
+      'Растау касса күтуді тоқтатқаннан кейін келді';
 
   @override
   String get errorQrIntentUnknown =>
@@ -13171,4 +13211,1608 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get agentRefundPrepayment => 'Авансты қайтару';
+
+  @override
+  String get repTitle => 'Есептер';
+
+  @override
+  String get repTabAnalytics => 'Аналитика';
+
+  @override
+  String get repTabFinance => 'Қаржы';
+
+  @override
+  String get repTabForecasts => 'Болжамдар';
+
+  @override
+  String get repTabTaxKz => 'Салықтар/ҚР';
+
+  @override
+  String get repRangeDays7 => '7 күн';
+
+  @override
+  String get repRangeDays30 => '30 күн';
+
+  @override
+  String get repRangeCustom => 'Еркін';
+
+  @override
+  String get repKpiChange => 'Өзгеріс';
+
+  @override
+  String get repSubtitleVsPrev => 'алдыңғы кезеңмен';
+
+  @override
+  String get repChartRevenueByDay => 'Күн бойынша түсім';
+
+  @override
+  String get repChartTop5Products => 'Үздік 5 тауар';
+
+  @override
+  String get repChartPaymentMethods => 'Төлем тәсілдері';
+
+  @override
+  String get settingsRestartRequired =>
+      'Өзгерістер касса келесі рет іске қосылғанда қолданылады.';
+
+  @override
+  String get hardwareRestartRequired =>
+      'Құрылғы өзгерістері касса келесі рет іске қосылғанда қолданылады.';
+
+  @override
+  String get hardwareDeviceDisabled => 'Құрылғы өшірілген.';
+
+  @override
+  String get hardwareCustomerDisplayGraphic =>
+      'Сатып алушының графикалық экраны (2-монитор)';
+
+  @override
+  String get hardwareCustomerDisplayGraphicOff =>
+      'Сатып алушының графикалық экраны өшірілген.';
+
+  @override
+  String get hardwarePaymentKinds => 'Жұмыс орнының төлем түрлері';
+
+  @override
+  String get hardwarePaymentKindsUnrestricted =>
+      'Шектеу жоқ: жұмыс орны барлық төлем түрлерін қабылдайды.';
+
+  @override
+  String get fiscalSettingsDirectOfdLabel => 'ОФД-ға тікелей қосылу';
+
+  @override
+  String get markupAuto => 'Авто үстеме';
+
+  @override
+  String get markupSave => 'Үстемелерді сақтау';
+
+  @override
+  String get creditContractNumberLabel => 'Қағаздағы шарт нөмірі';
+
+  @override
+  String get creditNoLiveContracts => 'Белсенді бөліп төлеу шарттары жоқ';
+
+  @override
+  String get supplierOrderTitle => 'Жеткізушіге өтінім';
+
+  @override
+  String get supplierOrderAllStocked => 'Барлық тауар жеткілікті мөлшерде';
+
+  @override
+  String get supplierOrderNotNeeded => 'Қосымша тапсырыс қажет емес';
+
+  @override
+  String get hwScaleTitle => 'Таразы';
+
+  @override
+  String get hwReceiptPrinterTitle => 'Чек принтері';
+
+  @override
+  String get repRangeDays14 => '14 күн';
+
+  @override
+  String get repForecastSmaLowData => 'SMA (деректер аз)';
+
+  @override
+  String get repNoCategory => 'Санатсыз';
+
+  @override
+  String get repAllCustomers => 'Барлық клиенттер';
+
+  @override
+  String get repAllInStock => 'Барлық тауар қоймада';
+
+  @override
+  String get repAllCovered30 => 'Барлық тауар 30+ күнге жетеді';
+
+  @override
+  String get repColDays => 'Күн';
+
+  @override
+  String get repColDaysLeft => 'Қалған күн';
+
+  @override
+  String get repColSharePct => 'Үлес %';
+
+  @override
+  String get repColChangePct => 'Өзгеріс %';
+
+  @override
+  String get repColSalesCount => 'Сату саны';
+
+  @override
+  String get repReceiptCountLabel => 'Чек саны';
+
+  @override
+  String get repStockCritical => 'Қалдық тым аз! Шұғыл жеткізу қажет.';
+
+  @override
+  String get repColCumulativePct => 'Жинақ. %';
+
+  @override
+  String get repNotEnoughSalesData =>
+      'Таңдалған кезеңде сату деректері жеткіліксіз';
+
+  @override
+  String get repNoForecastData => 'Болжам жасауға дерек жоқ';
+
+  @override
+  String get repNoDataLast90 => 'Соңғы 90 күнде дерек жоқ';
+
+  @override
+  String get repNoCustomerData => 'Клиенттер туралы дерек жоқ';
+
+  @override
+  String get repNoLowStock => 'Қалдығы аз тауар жоқ';
+
+  @override
+  String get repLowStock => 'Қалдық аз';
+
+  @override
+  String get repNewPrice => 'Жаңа баға';
+
+  @override
+  String get repColEstimatedAmount => 'Болжам. сома';
+
+  @override
+  String get repColSeatings => 'Отырғызу';
+
+  @override
+  String get repForecast => 'Болжам';
+
+  @override
+  String get repRevenueForecast => 'Түсім болжамы';
+
+  @override
+  String get repRevenueForecastHw => 'Түсім болжамы (Holt-Winters)';
+
+  @override
+  String get repStockoutForecast => 'Қалдықтың таусылу болжамы';
+
+  @override
+  String get repStockForecast => 'Қалдық болжамы';
+
+  @override
+  String get repSalesWithoutCustomerHidden =>
+      'Клиентке байланбаған сатулар көрсетілмейді';
+
+  @override
+  String get repColSalesPerDay => 'Сату/күн';
+
+  @override
+  String get repColSold => 'Сатылды';
+
+  @override
+  String get repHourlyDistribution => 'Сағат бойынша бөліну';
+
+  @override
+  String get repColRecommendedOrder => 'Ұсын. тапсырыс';
+
+  @override
+  String get repRecommendedPurchases => 'Ұсынылатын сатып алу';
+
+  @override
+  String get repColAvgSalesPerDay => 'Орт. сату/күн';
+
+  @override
+  String get repColAvgCheckShort => 'Орт. чек';
+
+  @override
+  String get repAvgPrice => 'Орташа баға';
+
+  @override
+  String get repOldPrice => 'Ескі баға';
+
+  @override
+  String get repStockValue => 'Қалдық құны';
+
+  @override
+  String get repColTable => 'Үстел';
+
+  @override
+  String get repCurrentStock => 'Ағымдағы қалдық';
+
+  @override
+  String get repTop10Customers => 'Үздік 10 клиент';
+
+  @override
+  String get repTop10Products => 'Үздік 10 тауар';
+
+  @override
+  String get repActual => 'Нақты';
+
+  @override
+  String get repColHour => 'Сағат';
+
+  @override
+  String get repExport => 'Экспорт';
+
+  @override
+  String get repCashierPerformance => 'Кассирлердің тиімділігі';
+
+  @override
+  String get repWeightedAvgHint => 'өлшенген орташа (соңғы күндер салмақтырақ)';
+
+  @override
+  String get repSalesCountByHour => 'сағат бойынша сату саны';
+
+  @override
+  String get repNoUrgentItems => 'шұғыл позиция жоқ';
+
+  @override
+  String get repByRevenueTapHint =>
+      'түсім бойынша (егжей-тегжейі үшін басыңыз)';
+
+  @override
+  String get repDistributionTapHint => 'бөліну (секторды басыңыз)';
+
+  @override
+  String get repRevenueDistributionTapHint =>
+      'түсімнің бөлінуі (секторды басыңыз)';
+
+  @override
+  String get repAbcRare => 'сирек';
+
+  @override
+  String get repAbcMedium => 'орташа';
+
+  @override
+  String get repAbcFast => 'өтімді';
+
+  @override
+  String get repAbcLegend =>
+      'өтімді (A), орташа (B), сирек (C) — түсімге қосқан үлесі бойынша';
+
+  @override
+  String repReturnsCount(int count) {
+    return '$count қайтару';
+  }
+
+  @override
+  String repAbcGroupSummary(int count, String pct) {
+    return '$count тауар · $pct%';
+  }
+
+  @override
+  String repCustomerTooltip(String name, String amount, int count) {
+    return '$name\n$amount ($count чек)';
+  }
+
+  @override
+  String repDaysCountTapHint(int count) {
+    return '$count күн (егжей-тегжейі үшін басыңыз)';
+  }
+
+  @override
+  String repCashiersCount(int count) {
+    return '$count кассир';
+  }
+
+  @override
+  String repLowStockCountHint(int count) {
+    return '$count тауар (қалдық < 10, басыңыз)';
+  }
+
+  @override
+  String repOrdersShort(int count) {
+    return '$count тапс.';
+  }
+
+  @override
+  String repOrdersRevenueTooltip(int count, String amount) {
+    return '$count тапс.\n$amount';
+  }
+
+  @override
+  String repPieces(String qty) {
+    return '$qty дана';
+  }
+
+  @override
+  String repPiecesDot(String qty) {
+    return '$qty дана';
+  }
+
+  @override
+  String repForecastSubtitle(int actual, int horizon, String algorithm) {
+    return '$actual күн нақты + $horizon күн болжам ($algorithm)';
+  }
+
+  @override
+  String repSalesCountLine(int count) {
+    return '$count сату';
+  }
+
+  @override
+  String repReceiptsCount(int count) {
+    return '$count чек';
+  }
+
+  @override
+  String repSupplierTooltip(String name, int count) {
+    return '$name\n$count жеткізу';
+  }
+
+  @override
+  String repSeatingsLine(int count) {
+    return '$count отырғызу';
+  }
+
+  @override
+  String repDayOffset(int n) {
+    return '+$n күн';
+  }
+
+  @override
+  String repHoltWintersSeason(int season) {
+    return 'Holt-Winters (маусым=$season)';
+  }
+
+  @override
+  String repInvestmentsLine(String amount) {
+    return 'Салымдар: $amount';
+  }
+
+  @override
+  String repDividendsLine(String amount) {
+    return 'Дивидендтер: $amount';
+  }
+
+  @override
+  String repMarginLine(String pct) {
+    return 'Маржа: $pct%';
+  }
+
+  @override
+  String repKpiLoadErrorWith(String error) {
+    return 'KPI жүктелмеді: $error';
+  }
+
+  @override
+  String repErrorWith(String error) {
+    return 'Қате: $error';
+  }
+
+  @override
+  String repProfitLine(String amount) {
+    return 'Пайда: $amount';
+  }
+
+  @override
+  String repExpensesLine(String amount) {
+    return 'Шығыстар: $amount';
+  }
+
+  @override
+  String repLeadTimeHint(int lead, int safety) {
+    return 'жеткізу мерзімі $lead к. + сақтық қор $safety к.';
+  }
+
+  @override
+  String get markupHint =>
+      'Санат бойынша үстеме, %. Тауар келгенде бөлшек баға сатып алу бағасынан қайта есептеледі: сатып алу × (1 + үстеме%).';
+
+  @override
+  String get creditContractsTitle => 'Бөліп төлеу';
+
+  @override
+  String creditContractsTitleFor(String agent) {
+    return 'Бөліп төлеу — $agent';
+  }
+
+  @override
+  String repExportedTo(String path) {
+    return 'Экспортталды: $path';
+  }
+
+  @override
+  String repExportFailed(String error) {
+    return 'Экспорт қатесі: $error';
+  }
+
+  @override
+  String get hwSetupIncompleteDevices =>
+      'Баптау шебері аяқталмаған — құрылғыларды сақтайтын жер жоқ';
+
+  @override
+  String get hwSetupIncompleteCheck =>
+      'Баптау шебері аяқталмаған — тексеретін ештеңе жоқ';
+
+  @override
+  String get settingsSetupIncompleteSave =>
+      'Баптау шебері аяқталмаған — сақтайтын жер жоқ';
+
+  @override
+  String get hwProfileCatalogUnavailable =>
+      'Құрылғы профильдерінің каталогы қолжетімсіз — құрылғы баптауларын қазір өзгерту мүмкін емес.';
+
+  @override
+  String get printerProfileCatalogUnavailable =>
+      'Құрылғы профильдерінің каталогы қолжетімсіз — принтер баптауларын қазір өзгерту мүмкін емес.';
+
+  @override
+  String get labelPrinterProfileCatalogUnavailable =>
+      'Құрылғы профильдерінің каталогы қолжетімсіз — затбелгі принтерінің баптауларын қазір өзгерту мүмкін емес.';
+
+  @override
+  String get hwPaymentKindsUnsupported =>
+      'Бұл құрастырым жұмыс орнының төлем түрлерін сақтай алмайды.';
+
+  @override
+  String get hwPaymentKindsEnforcedByTill =>
+      'Тыйымды касса тексереді: төлем түріне рұқсаты жоқ терминал бас тарту алады, экранындағы түйме қалса да.';
+
+  @override
+  String get hwCustomerDisplayGraphicDesc =>
+      'Екінші мониторда сатып алушыға арналған графикалық экран: чек жолдары, саны және жиыны — нақты уақытта.';
+
+  @override
+  String get hwCustomerDisplayMonitor =>
+      'Сатып алушы экранына арналған монитор';
+
+  @override
+  String get hwCustomerDisplayMonitorHint =>
+      'POS негізгі мониторда қалады. Касса келесі рет іске қосылғанда автоматты түрде ашылады.';
+
+  @override
+  String get hwNoProfilesForClass =>
+      'Бұл құрылғы класы үшін қолжетімді үлгі жоқ.';
+
+  @override
+  String get hwNoConnectionParams =>
+      'Бұл үлгі қосымша қосылу параметрлерін қажет етпейді.';
+
+  @override
+  String hwMonitorWithSize(int index, String size) {
+    return 'Монитор $index — $size';
+  }
+
+  @override
+  String hwMonitorNumbered(int index) {
+    return 'Монитор $index';
+  }
+
+  @override
+  String hwPaymentKindsError(String error) {
+    return 'Төлем түрлері: $error';
+  }
+
+  @override
+  String hwPaymentKindsUnknown(String list) {
+    return 'Бұл жұмыс орнының баптауында осы нұсқа білмейтін түрлер жазылған: $list. Олар бойынша шектеу жоқ. Жазбаны түзету үшін түрлерді қайта таңдаңыз — оған дейін ол сол күйінде қалады.';
+  }
+
+  @override
+  String hwParamOptional(String description) {
+    return '$description (міндетті емес)';
+  }
+
+  @override
+  String globalMillimetres(String value) {
+    return '$value мм';
+  }
+
+  @override
+  String get devProfilePrinterEscpos80mm => 'ESC/POS чек принтері, 80 мм';
+
+  @override
+  String get devProfilePrinterEscpos58mm =>
+      'ESC/POS чек принтері, 58 мм (шағын, пышақсыз)';
+
+  @override
+  String get devProfilePrinterEscposUsb => 'ESC/POS чек принтері, USB/спулер';
+
+  @override
+  String get devProfilePrinterEscposBluetooth =>
+      'ESC/POS чек принтері, Bluetooth';
+
+  @override
+  String get devProfilePrinterEscposSerial =>
+      'ESC/POS чек принтері, тізбекті порт';
+
+  @override
+  String get devProfilePrinterLabelZpl104 => 'ZPL затбелгі принтері, 104 мм';
+
+  @override
+  String get devProfilePrinterLabelEpl58 => 'EPL затбелгі принтері, 58 мм';
+
+  @override
+  String get devProfileScannerUsbHid => 'USB штрихкод сканері (HID)';
+
+  @override
+  String get devProfileScannerBluetoothHid =>
+      'Bluetooth штрихкод сканері (HID)';
+
+  @override
+  String get devProfileScannerCamera => 'Құрылғы камерасы арқылы сканер';
+
+  @override
+  String get devProfileScannerSerial => 'Штрихкод сканері, тізбекті порт';
+
+  @override
+  String get devProfileScaleCasPd2 => 'CAS PD-II таразысы (тізбекті)';
+
+  @override
+  String get devProfileScaleCasErPlus => 'CAS ER-Plus таразысы';
+
+  @override
+  String get devProfileDrawerViaPrinter => 'Принтер арқылы ақша жәшігі (RJ11)';
+
+  @override
+  String get devProfileDrawerStandalone => 'Автономды ақша жәшігі (RJ11)';
+
+  @override
+  String get devProfileDisplayVfd => 'VFD сатып алушы дисплейі (тізбекті)';
+
+  @override
+  String get devProfileDisplayLcd2x20 => 'LCD сатып алушы дисплейі 2x20';
+
+  @override
+  String get devProfileDisplayLed8 => 'LED сатып алушы дисплейі (8 таңба)';
+
+  @override
+  String get devProfilePaymentKaspiPos => 'Kaspi POS терминалы';
+
+  @override
+  String get devParamPrinterIpAddress => 'Желілік принтердің IP-мекенжайы';
+
+  @override
+  String get devParamTcpPort9100 => 'TCP-порт, әдепкі 9100';
+
+  @override
+  String get devParamPrinterDevicePath =>
+      'Құрылғы жолы немесе басып шығару кезегінің аты';
+
+  @override
+  String get devParamPrinterMac =>
+      'Жұптастырылған Bluetooth принтерінің MAC-мекенжайы';
+
+  @override
+  String get devParamPrinterComPort => 'Принтердің тізбекті порты, мысалы COM4';
+
+  @override
+  String get devParamLabelPrinterIp => 'Затбелгі принтерінің IP-мекенжайы';
+
+  @override
+  String get devParamScannerMac =>
+      'Жұптастырылған Bluetooth сканерінің MAC-мекенжайы';
+
+  @override
+  String get devParamScannerComPort => 'Сканердің тізбекті порты, мысалы COM5';
+
+  @override
+  String get devParamScaleComPort => 'Таразының тізбекті порты, мысалы COM3';
+
+  @override
+  String get devParamDrawerComPort =>
+      'Жәшік интерфейс тақтасының тізбекті порты';
+
+  @override
+  String get devParamDisplayComPort => 'Сатып алушы дисплейінің тізбекті порты';
+
+  @override
+  String get devParamKaspiIp => 'Kaspi POS терминалының IP-мекенжайы';
+
+  @override
+  String get devParamKaspiPort => 'Терминал порты, әдетте 8888';
+
+  @override
+  String get devParamCameraId => 'Қай камераны қолдану керек';
+
+  @override
+  String get rcpTill => 'Касса';
+
+  @override
+  String get rcpTillColon => 'Касса:';
+
+  @override
+  String get rcpReceiptNo => 'Чек №';
+
+  @override
+  String get rcpCashier => 'Кассир:';
+
+  @override
+  String get rcpCustomer => 'Клиент:';
+
+  @override
+  String get rcpDate => 'Күні:';
+
+  @override
+  String get rcpBinIin => 'БСН/ЖСН:';
+
+  @override
+  String get rcpThankYou => 'Сатып алғаныңызға рахмет!';
+
+  @override
+  String get rcpSale => 'САТУ';
+
+  @override
+  String get rcpSubtotal => 'Аралық жиын:';
+
+  @override
+  String get rcpDiscount => 'Жеңілдік:';
+
+  @override
+  String get rcpServiceFee => 'Қызмет ақысы:';
+
+  @override
+  String get rcpTotal => 'ЖИЫНЫ:';
+
+  @override
+  String get rcpChange => 'Қайтарым:';
+
+  @override
+  String get rcpCash => 'ҚОЛМА-ҚОЛ';
+
+  @override
+  String get rcpCard => 'КАРТА';
+
+  @override
+  String get rcpQuantityShort => 'дана';
+
+  @override
+  String get rcpRefund => 'ҚАЙТАРУ';
+
+  @override
+  String get rcpRefundNo => 'Қайтару №';
+
+  @override
+  String get rcpSaleReceiptNo => 'Сату чегі №';
+
+  @override
+  String get rcpDuplicate => '*** ТЕЛНҰСҚА ***';
+
+  @override
+  String get rcpTable => 'Үстел:';
+
+  @override
+  String get rcpWaiter => 'Даяшы:';
+
+  @override
+  String get rcpGuests => 'Қонақтар:';
+
+  @override
+  String get rcpFiscalReceipt => 'ФИСКАЛДЫҚ ЧЕК';
+
+  @override
+  String get rcpNonFiscalReceipt => 'ФИСКАЛДЫҚ ЕМЕС ЧЕК';
+
+  @override
+  String get rcpNotFiscalDocument => 'ФИСКАЛДЫҚ ҚҰЖАТ ЕМЕС';
+
+  @override
+  String get rcpFiscalSign => 'ФИСК. БЕЛГІ:';
+
+  @override
+  String get rcpFiscalFn => 'ФЖ:';
+
+  @override
+  String get rcpFiscalRnm => 'ТНН:';
+
+  @override
+  String get rcpFiscalZnm => 'ЗНН:';
+
+  @override
+  String get rcpFiscalTime => 'УАҚЫТ:';
+
+  @override
+  String get rcpOfdName => 'ФДО';
+
+  @override
+  String get rcpOffline => '*** ОФФЛАЙН ***';
+
+  @override
+  String get rcpVerifyAt => 'Чекті тексеру үшін кіріңіз';
+
+  @override
+  String get rcpCustomerTaxId => 'Сатып алушының ЖСН:';
+
+  @override
+  String get rcpTaxA => 'А САЛЫҒЫ БОЙЫНША:';
+
+  @override
+  String get rcpFiscalOperatorNotSet => 'Фискалдық оператор бапталмаған';
+
+  @override
+  String get rcpFiscalModuleUnavailable => 'Фискалдау модулі қолжетімсіз';
+
+  @override
+  String get rcpDocumentNotIssued =>
+      'Құжат ресімделмеді — кассирге хабарласыңыз';
+
+  @override
+  String get rcpXReport => 'X-ЕСЕП';
+
+  @override
+  String get rcpZReport => 'Z-ЕСЕП';
+
+  @override
+  String get rcpInterim => 'АРАЛЫҚ (өшірусіз)';
+
+  @override
+  String get rcpShiftClose => 'АУЫСЫМДЫ ЖАБУ';
+
+  @override
+  String get rcpShiftStart => 'Басталуы:';
+
+  @override
+  String get rcpShiftEnd => 'Аяқталуы:';
+
+  @override
+  String get rcpSales => 'САТУЛАР';
+
+  @override
+  String get rcpRefunds => 'ҚАЙТАРУЛАР';
+
+  @override
+  String get rcpCount => 'Саны:';
+
+  @override
+  String get rcpAmount => 'Сомасы:';
+
+  @override
+  String get rcpCashOps => 'АҚША ОПЕРАЦИЯЛАРЫ';
+
+  @override
+  String get rcpOpeningFloat => 'Басына:';
+
+  @override
+  String get rcpSlipTitle => 'ТҮБІРТЕК';
+
+  @override
+  String get rcpType => 'Түрі:';
+
+  @override
+  String get rcpComment => 'Түсініктеме:';
+
+  @override
+  String get rcpCashIn => 'Кіріс:';
+
+  @override
+  String get rcpCashOut => 'Шығыс:';
+
+  @override
+  String get rcpTotalInDrawer => 'КАССАДА ЖИЫНЫ:';
+
+  @override
+  String get rcpCertificatesNotRevenue => 'СЕРТИФИКАТТАР (ТҮСІМ ЕМЕС)';
+
+  @override
+  String get rcpCertIssuedDebt => 'Шығарылды (касса борышы):';
+
+  @override
+  String get rcpCertRedeemed => 'Өтелді (тауармен):';
+
+  @override
+  String get rcpGiftCertificate => 'СЫЙЛЫҚ СЕРТИФИКАТЫ';
+
+  @override
+  String get rcpCertNo => 'Сертификат №';
+
+  @override
+  String get rcpCertFaceValue => 'Номиналы:';
+
+  @override
+  String get rcpCertValidUntil => 'Жарамдылығы:';
+
+  @override
+  String get rcpCertNoExpiry => 'мерзімсіз';
+
+  @override
+  String get rcpCertPinSet => 'ПИН қойылған';
+
+  @override
+  String get rcpCertIssuedByRefund => 'Қайтарумен шығарылды №';
+
+  @override
+  String get rcpCertInsteadOf => 'Сертификаттың орнына';
+
+  @override
+  String get rcpVat => 'ҚҚС';
+
+  @override
+  String get rcpSalesTax => 'Сатудан салық';
+
+  @override
+  String get rcpTaxExempt => 'Салық салынбайды';
+
+  @override
+  String get rcpTaxExemptMark => 'бос';
+
+  @override
+  String get taxSettingsTitle => 'Салықтар';
+
+  @override
+  String get taxSettingsSubtitle =>
+      'Мөлшерлемелер, юрисдикциялар және тауар санаттары';
+
+  @override
+  String get taxSettingsIntro =>
+      'Мөлшерлеме бір санмен берілмейді: ол касса тұрған юрисдикциялардың үлестерінен құралады және тауар санаты мен күнге байланысты. Дайын жинақты алып, кейін түзетуге болады.';
+
+  @override
+  String get taxSettingsNotConfigured =>
+      'Салық бапталмаған: касса нөл есептейді.';
+
+  @override
+  String get taxSettingsPresetSection => 'Дайын жинақ';
+
+  @override
+  String get taxSettingsCountry => 'Ел';
+
+  @override
+  String get taxSettingsRegion => 'Штат немесе облыс';
+
+  @override
+  String get taxSettingsCity => 'Қала';
+
+  @override
+  String get taxSettingsPreset => 'Жинақ';
+
+  @override
+  String get taxSettingsApplyPreset => 'Жинақты қолдану';
+
+  @override
+  String get taxSettingsPresetReplaces =>
+      'Қолдану ағымдағы баптауды толық ауыстырады. Екі жинақты қосуға болмайды: касса салықты екі есе алар еді.';
+
+  @override
+  String taxSettingsPresetSource(String source) {
+    return 'Дереккөз: $source';
+  }
+
+  @override
+  String taxSettingsPresetValidFrom(String date) {
+    return 'Мөлшерлемелер $date бастап қолданылады';
+  }
+
+  @override
+  String get taxSettingsPresetApplied => 'Жинақ қолданылды';
+
+  @override
+  String get taxSettingsCurrentSection => 'Ағымдағы баптау';
+
+  @override
+  String taxSettingsRateForStandard(String rate) {
+    return 'Кәдімгі тауар: $rate%';
+  }
+
+  @override
+  String get taxSettingsJurisdictions => 'Юрисдикциялар';
+
+  @override
+  String get taxSettingsCategories => 'Тауар санаттары';
+
+  @override
+  String get taxSettingsTillLocation => 'Касса осында тұр';
+
+  @override
+  String get taxSettingsTillLocationHint =>
+      'Белгі бірнеше болуы мүмкін: қала және арнайы аудандар. Жоғарғылары өздігінен қосылады.';
+
+  @override
+  String get taxSettingsRules => 'Ережелер';
+
+  @override
+  String get taxSettingsRuleTaxed => 'салықталады';
+
+  @override
+  String get taxSettingsRuleZero => 'нөлдік мөлшерлеме';
+
+  @override
+  String get taxSettingsRuleExempt => 'босатылған';
+
+  @override
+  String get taxSettingsAllCategories => 'барлық санаттар';
+
+  @override
+  String get taxSettingsAddJurisdiction => 'Юрисдикция қосу';
+
+  @override
+  String get taxSettingsAddCategory => 'Санат қосу';
+
+  @override
+  String get taxSettingsAddRule => 'Ереже қосу';
+
+  @override
+  String get taxSettingsName => 'Атауы';
+
+  @override
+  String get taxSettingsCode => 'Коды';
+
+  @override
+  String get taxSettingsRate => 'Мөлшерлеме, %';
+
+  @override
+  String get taxSettingsValidFrom => 'Бастап қолданылады';
+
+  @override
+  String get taxSettingsParent => 'Жоғарғы';
+
+  @override
+  String get taxSettingsNoParent => 'жоқ (түбір)';
+
+  @override
+  String get taxSettingsLevel => 'Деңгей';
+
+  @override
+  String get taxSettingsLevelCountry => 'Ел';
+
+  @override
+  String get taxSettingsLevelState => 'Штат';
+
+  @override
+  String get taxSettingsLevelCounty => 'Округ';
+
+  @override
+  String get taxSettingsLevelCity => 'Қала';
+
+  @override
+  String get taxSettingsLevelDistrict => 'Арнайы аудан';
+
+  @override
+  String get taxSettingsDelete => 'Жою';
+
+  @override
+  String get taxSettingsDeleteJurisdictionWarning =>
+      'Онымен бірге оның ережелері мен ішкі юрисдикциялары жойылады.';
+
+  @override
+  String get taxSettingsResponsibility =>
+      'Жинақтардағы сандар ашық дереккөздерден алынған және сілтемемен аталған. Салықтың дұрыстығына бағдарлама емес, салық төлеуші жауап береді.';
+
+  @override
+  String get taxSettingsNoPresetsForCountry =>
+      'Бұл ел үшін дайын жинақ жоқ — қолмен баптаңыз.';
+
+  @override
+  String get taxSettingsAdd => 'Қосу';
+
+  @override
+  String get taxSettingsCancel => 'Бас тарту';
+
+  @override
+  String get setupStoreAddressHint => 'Абай к-сі, 10, Алматы';
+
+  @override
+  String get setupStoreAddressHelper =>
+      'Чекке басылады. Онсыз сатып алушы сатып алу қай жерде жасалғанын көрмейді.';
+
+  @override
+  String get countryKz => 'Қазақстан';
+
+  @override
+  String get countryRu => 'Ресей';
+
+  @override
+  String get countryKg => 'Қырғызстан';
+
+  @override
+  String get countryUz => 'Өзбекстан';
+
+  @override
+  String get countryUs => 'АҚШ';
+
+  @override
+  String get countryTm => 'Түрікменстан';
+
+  @override
+  String get currencyKzt => 'Қазақстан теңгесі';
+
+  @override
+  String get currencyRub => 'Ресей рублі';
+
+  @override
+  String get currencyKgs => 'Қырғыз сомы';
+
+  @override
+  String get currencyUzs => 'Өзбек сумы';
+
+  @override
+  String get currencyUsd => 'АҚШ доллары';
+
+  @override
+  String get currencyTmt => 'Түрікмен манаты';
+
+  @override
+  String get setupStepSalesTax => 'Сатудан салық';
+
+  @override
+  String get setupSalesTaxPayerTitle => 'Сатудан салық жинаймын';
+
+  @override
+  String get setupSalesTaxPayerSubtitle =>
+      'Мөлшерлемелер «Баптаулар → Салықтар» бөлімінде юрисдикция бойынша беріледі';
+
+  @override
+  String get setupSalesTaxPayerDescription =>
+      'Салық баға үстіне қосылады және чекте жеке жолмен басылады.';
+
+  @override
+  String get setupSalesTaxNonPayerTitle => 'Сатудан салықсыз';
+
+  @override
+  String get setupSalesTaxNonPayerSubtitle => 'Бағаға ештеңе қосылмайды';
+
+  @override
+  String get setupSalesTaxNonPayerDescription =>
+      'Бағаға ештеңе қосылмайды, чекте салық жолы жоқ.';
+
+  @override
+  String get bootLoadingConfig => 'Конфигурацияны жүктеу…';
+
+  @override
+  String get bootCheckingPosKey => 'Касса кілтін тексеру…';
+
+  @override
+  String get bootLoadingAgents => 'Контрагенттерді жүктеу…';
+
+  @override
+  String get bootLoadingAccounts => 'Шоттарды жүктеу…';
+
+  @override
+  String get bootInitialisingDatabase => 'Дерекқорды дайындау…';
+
+  @override
+  String get bootLoadingCashiers => 'Кассирлерді жүктеу…';
+
+  @override
+  String get bootLoadingPosData => 'Касса деректерін жүктеу…';
+
+  @override
+  String get bootLoadingProducts => 'Тауарларды жүктеу…';
+
+  @override
+  String get bootCheckingReceiptNumbers => 'Чек нөмірлеуін тексеру…';
+
+  @override
+  String get bootCheckingLicence => 'Лицензияны тексеру…';
+
+  @override
+  String get bootCheckingReports => 'Есептерді тексеру…';
+
+  @override
+  String get bootFinishingInitialisation => 'Аяқтау…';
+
+  @override
+  String get bootStartingBackgroundJobs => 'Фондық тапсырмаларды қосу…';
+
+  @override
+  String get bootReady => 'Дайын';
+
+  @override
+  String get bootDataLoaded => 'Деректер жүктелді';
+
+  @override
+  String bootTillNotResponding(String code) {
+    return 'Касса жауап бермейді: $code';
+  }
+
+  @override
+  String get bootDownloadingBackup => 'Сақтық көшірмені жүктеу…';
+
+  @override
+  String get bootBackupDownloadFailed =>
+      'Сақтық көшірмені жүктеу мүмкін болмады';
+
+  @override
+  String get bootRestoringDatabase => 'Дерекқорды қалпына келтіру…';
+
+  @override
+  String get bootDatabaseRestoreFailed =>
+      'Дерекқорды қалпына келтіру мүмкін болмады';
+
+  @override
+  String get bootApplyingPosKey => 'Касса кілтін баптау…';
+
+  @override
+  String get bootRestoreDone => 'Қалпына келтіру аяқталды';
+
+  @override
+  String get bootCreatingBackup => 'Сақтық көшірме жасау…';
+
+  @override
+  String get bootBackupCreateFailed => 'Сақтық көшірме жасау мүмкін болмады';
+
+  @override
+  String get bootBackupDone => 'Сақтық көшірме жасалып жүктелді';
+
+  @override
+  String get bootLoadingUsers => 'Пайдаланушыларды жүктеу…';
+
+  @override
+  String get bootLoadingCategories => 'Санаттарды жүктеу…';
+
+  @override
+  String get bootLoadingSettings => 'Баптауларды жүктеу…';
+
+  @override
+  String get bootSyncDone => 'Синхрондау аяқталды';
+
+  @override
+  String get bootFailed => 'Қате';
+
+  @override
+  String get countryDeu => 'Германия';
+
+  @override
+  String get currencyDeu => 'Еуро';
+
+  @override
+  String get countryFra => 'Франция';
+
+  @override
+  String get currencyFra => 'Еуро';
+
+  @override
+  String get countryEsp => 'Испания';
+
+  @override
+  String get currencyEsp => 'Еуро';
+
+  @override
+  String get countryIta => 'Италия';
+
+  @override
+  String get currencyIta => 'Еуро';
+
+  @override
+  String get countryGbr => 'Ұлыбритания';
+
+  @override
+  String get currencyGbr => 'Фунт стерлинг';
+
+  @override
+  String get countryPol => 'Польша';
+
+  @override
+  String get currencyPol => 'Поляк злотыйы';
+
+  @override
+  String get countryTur => 'Түркия';
+
+  @override
+  String get currencyTur => 'Түрік лирасы';
+
+  @override
+  String get countryChn => 'Қытай';
+
+  @override
+  String get currencyChn => 'Қытай юані';
+
+  @override
+  String get countryJpn => 'Жапония';
+
+  @override
+  String get currencyJpn => 'Жапон иенасы';
+
+  @override
+  String get countryKor => 'Оңтүстік Корея';
+
+  @override
+  String get currencyKor => 'Корей вонасы';
+
+  @override
+  String get countryAre => 'БАӘ';
+
+  @override
+  String get currencyAre => 'БАӘ дирхамы';
+
+  @override
+  String get countrySau => 'Сауд Арабиясы';
+
+  @override
+  String get currencySau => 'Сауд риялы';
+
+  @override
+  String get countryInd => 'Үндістан';
+
+  @override
+  String get currencyInd => 'Үнді рупиясы';
+
+  @override
+  String get countryCan => 'Канада';
+
+  @override
+  String get currencyCan => 'Канада доллары';
+
+  @override
+  String get countryAus => 'Австралия';
+
+  @override
+  String get currencyAus => 'Австралия доллары';
+
+  @override
+  String get agentPaymentAccepted => 'Төлем қабылданды';
+
+  @override
+  String get catalogCategoryHasChildren => 'Санатта ішкі санаттар бар';
+
+  @override
+  String creditOutstanding(String amount) {
+    return 'Қалды: $amount';
+  }
+
+  @override
+  String get creditTakePayment => 'Төлемді қабылдау';
+
+  @override
+  String get creditPrintContract => 'Шартты басып шығару';
+
+  @override
+  String creditPaymentFor(String number) {
+    return '$number бойынша төлем';
+  }
+
+  @override
+  String creditOutstandingOnContract(String amount) {
+    return 'Шарт бойынша қалды: $amount';
+  }
+
+  @override
+  String get creditPayInFull => 'Толық өтеу';
+
+  @override
+  String get creditAccept => 'Қабылдау';
+
+  @override
+  String get displayProduct => 'Тауар';
+
+  @override
+  String markupSaved(int count) {
+    return 'Үстемелер сақталды: $count санат';
+  }
+
+  @override
+  String genericErrorWith(String detail) {
+    return 'Қате: $detail';
+  }
+
+  @override
+  String get serviceAttachPhoto => 'Фото';
+
+  @override
+  String get serviceAttachVideo => 'Бейне';
+
+  @override
+  String get shiftCorrectionReceipt => 'Түзету чегі';
+
+  @override
+  String get supplierChoose => 'Жеткізушіні таңдаңыз';
+
+  @override
+  String get supplierProduct => 'Тауар';
+
+  @override
+  String get supplierStock => 'Қалдық';
+
+  @override
+  String get supplierOrderQty => 'Тапсырыс';
+
+  @override
+  String get supplierCreateRequest => 'Өтінім жасау';
+
+  @override
+  String get supplierNeedQuantity => 'Кем дегенде бір тауарға саны керек';
+
+  @override
+  String unitMonthsShort(int count) {
+    return '$count ай';
+  }
+
+  @override
+  String unitDaysShort(int count) {
+    return '$count күн';
+  }
+
+  @override
+  String get displayWelcome => 'Қош келдіңіз!';
+
+  @override
+  String get displayWelcomeSubtitle => 'Сізді көргенімізге қуаныштымыз';
+
+  @override
+  String get displayPromoFree => 'Акция · тегін';
+
+  @override
+  String displayDiscountAmount(String amount) {
+    return 'Жеңілдік −$amount';
+  }
+
+  @override
+  String get displayWindowTitle => 'Сатып алушы экраны';
+
+  @override
+  String get shiftXReportPrinted => 'X-есеп басып шығарылды';
+
+  @override
+  String get shiftXReportPrintedOffline =>
+      'X-есеп басылды (фискалдық X кезекте, байланыс жоқ)';
+
+  @override
+  String get shiftXReportFailed => 'X-есепті басып шығару мүмкін болмады';
+
+  @override
+  String creditContractNotFound(String number) {
+    return '$number шарты кассада жоқ';
+  }
+
+  @override
+  String creditOverdue(String amount, int count) {
+    return 'МЕРЗІМІ ӨТКЕН: $amount ($count төлем)';
+  }
+
+  @override
+  String creditNextPayment(String date, String amount) {
+    return 'Келесі төлем $date: $amount';
+  }
+
+  @override
+  String get creditNoTillAccount =>
+      'Кассаның шоты жоқ — ақшаны қабылдайтын жер жоқ';
+
+  @override
+  String creditContractClosed(String number) {
+    return '$number шарты жабылды';
+  }
+
+  @override
+  String creditPartiallyPaid(String paid, String left) {
+    return '$paid қабылданды, $left қалды';
+  }
+
+  @override
+  String get creditPaymentAmount => 'Төлем сомасы';
+
+  @override
+  String get serviceWarrantyAndQuality => 'Кепілдік және сапа';
+
+  @override
+  String serviceWarrantyDays(int days) {
+    return 'Кепілдік: $days күн';
+  }
+
+  @override
+  String get serviceWarrantyNotSet => 'Кепілдік белгіленбеген';
+
+  @override
+  String get serviceQualityRatingTitle => 'Сапа бағасы';
+
+  @override
+  String serviceQualityRatingValue(int rating) {
+    return 'Бағасы: $rating/5';
+  }
+
+  @override
+  String get serviceRepairMedia => 'Жөндеу фото/бейнесі';
+
+  @override
+  String get serviceNoRepairMedia => 'Жөндеу медиасы жоқ';
+
+  @override
+  String get supplierLabel => 'Жеткізуші:';
+
+  @override
+  String supplierLinesToOrder(int count) {
+    return 'Тапсырысқа позиция: $count';
+  }
+
+  @override
+  String supplierRequestCreated(int count) {
+    return 'Өтінім жасалды: $count поз.';
+  }
+
+  @override
+  String get modifierRequired => 'Міндетті';
+
+  @override
+  String modifierMax(int count) {
+    return 'макс. $count';
+  }
+
+  @override
+  String get writeoffReasonUnspecified => 'Көрсетілмеген';
+
+  @override
+  String get labelSampleProduct => 'Тауар үлгісі';
+
+  @override
+  String markupCategoryNumbered(int id) {
+    return 'Санат #$id';
+  }
+
+  @override
+  String get salePolicyForbids =>
+      'Әрекетке касса баптауы рұқсат бермейді (Баптаулар → Сату саясаты)';
+
+  @override
+  String get labelPrintFailed => 'Заттаңбаны басып шығару қатесі';
+
+  @override
+  String get labelPrintFromTillOnly =>
+      'Заттаңба кассадан басылады, терминалдан емес';
+
+  @override
+  String get orphanQrTillNotRegistered =>
+      'Касса тіркелмеген — QR бойынша анықталмаған ақшаны сұрайтын жер жоқ';
+
+  @override
+  String get stockLowStockReorder => 'Қалдығы аз тауарларға қосымша тапсырыс';
+
+  @override
+  String get serviceNoteNeedsApproval => 'Клиенттің келісімі қажет';
+
+  @override
+  String deferredFromTill(String id) {
+    return 'касса $id';
+  }
+
+  @override
+  String dishSummary(int count, String cost) {
+    return 'Ингредиент: $count, өзіндік құны: $cost';
+  }
+
+  @override
+  String prepaymentIssueTo(String name) {
+    return 'Сатып алушыға аванс беру ($name)';
+  }
+
+  @override
+  String prepaymentFrom(String name) {
+    return 'Сатып алушының авансы ($name)';
+  }
+
+  @override
+  String prepaymentRefundTo(String name) {
+    return 'Сатып алушыға авансты қайтару ($name)';
+  }
+
+  @override
+  String get setupPartOrganization => 'ұйым';
+
+  @override
+  String get setupPartTill => 'касса';
+
+  @override
+  String get setupPartFiscal => 'фискализация';
+
+  @override
+  String get setupPartEquipment => 'жабдық';
+
+  @override
+  String get setupPartTerminals => 'төлем терминалдары';
+
+  @override
+  String get setupPartRules => 'ережелер';
+
+  @override
+  String get setupPartUser => 'пайдаланушы';
+
+  @override
+  String customerPaymentNote(String name) {
+    return 'Қарызды өтеу / төлем ($name)';
+  }
+
+  @override
+  String get chatMembersUnavailable => 'Қатысушылар тізімі жүктелмеді';
+
+  @override
+  String get chatMe => 'Мен';
+
+  @override
+  String get setPolicyBigAmountLimit => 'Чек сомасының шегі';
+
+  @override
+  String setPolicyBigAmountLimitDesc(String fallback) {
+    return 'Осы сомадан жоғары касса рұқсат сұрайды. Бос — $fallback.';
+  }
+
+  @override
+  String get cashRefusedNotPositive => 'Сома нөлден үлкен болуы керек';
+
+  @override
+  String cashRefusedAboveCeiling(String limit) {
+    return 'Сома касса шегінен жоғары ($limit). Баптауларда шекті көтеріңіз немесе ірі сомаларға рұқсатты қосыңыз.';
+  }
+
+  @override
+  String errorProductHasNoPrice(String name) {
+    return '«$name» тауарының бағасы жоқ — сату мүмкін емес. Каталогта баға қойыңыз.';
+  }
+
+  @override
+  String get sellingHoursTitle => 'Сатуға тыйым сағаттары';
+
+  @override
+  String get sellingHoursAdd => 'Терезе қосу';
+
+  @override
+  String get sellingHoursCategory => 'Санат';
+
+  @override
+  String get sellingHoursFrom => 'Басы (СС:ММ)';
+
+  @override
+  String get sellingHoursTo => 'Аяғы (СС:ММ)';
+
+  @override
+  String get sellingHoursActive => 'Тыйым күшінде';
+
+  @override
+  String sellingHoursBanned(String window) {
+    return 'Сату тыйым салынған $window';
+  }
+
+  @override
+  String sellingHoursOff(String window) {
+    return '$window терезесі өшірілген';
+  }
+
+  @override
+  String sellingHoursBroken(String window) {
+    return '«$window» сағаттары оқылмады — тыйым жұмыс істемейді';
+  }
+
+  @override
+  String get sellingHoursBadTime => 'Уақыт СС:ММ түрінде, мысалы 23:00';
+
+  @override
+  String sellingHoursPreviewDay(String window) {
+    return 'Тәулік ішінде: $window';
+  }
+
+  @override
+  String sellingHoursPreviewNight(String window) {
+    return 'Түнгі тыйым, түн ортасы арқылы: $window';
+  }
+
+  @override
+  String get sellingHoursExplainer =>
+      'Сағаттарды өзіңіз қоясыз: заң әр елде басқа. Санатқа тыйым оның ішіндегілерге де әсер етеді.';
+
+  @override
+  String get sellingHoursNoCategories =>
+      'Алдымен каталогта санат жасаңыз — тыйым санатқа қойылады.';
+
+  @override
+  String sellingHoursCategoryGone(int id) {
+    return '#$id санаты жойылған';
+  }
+
+  @override
+  String errorSellingHoursBanned(String category, String window) {
+    return '«$category» қазір сатуға болмайды: тыйым $window.';
+  }
+
+  @override
+  String errorSellingHoursBannedNoWindow(String category) {
+    return '«$category» қазір сатуға болмайды.';
+  }
+
+  @override
+  String get generalSettingsStoreAddress => 'Сауда нүктесінің мекенжайы';
+
+  @override
+  String get generalSettingsStoreAddressHint =>
+      'Чекте басылады. Дүкен көшсе, өзгертіңіз.';
 }
