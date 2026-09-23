@@ -30,29 +30,17 @@
   "globalError": "Error",
   "globalSuccess": "Success",
   "globalWarning": "Warning",
-  "globalInfo": "Info",
   "globalConfirm": "Confirm",
   "globalClear": "Clear",
   "globalSelect": "Select",
   "globalAll": "All",
-  "globalNone": "None",
   "globalTotal": "Total",
   "globalAmount": "Amount",
   "globalQuantity": "Quantity",
   "globalPrice": "Price",
   "globalDiscount": "Discount",
   "globalDate": "Date",
-  "globalTime": "Time",
-  "loginTitle": "Login",
-  "loginPin": "Enter PIN",
-  "loginPinHint": "4 digits",
   "loginEnter": "Enter",
-  "loginSelectUser": "Select user",
-  "loginNoUsers": "No users",
-  "loginWrongPin": "Wrong PIN",
-  "loginBlocked": "User blocked",
-  "loginSessionExpired": "Session expired",
-  "loginShiftRequired": "Open shift to login",
   "staffRoleOwner": "Owner",
   "staffRoleAdministrator": "Administrator",
   "staffRoleUser": "User",
@@ -60,82 +48,35 @@
   "staffRoleUnknown": "Unknown",
   "loginCashier": "Cashier",
   "loginAdmin": "Administrator",
-  "loginManager": "Manager",
   "loginLogout": "Logout",
-  "loginSwitchUser": "Switch user",
-  "saleTitle": "Sale",
-  "saleNewSale": "New sale",
-  "saleAddProduct": "Add product",
-  "saleScanBarcode": "Scan barcode",
-  "saleEnterBarcode": "Enter barcode",
   "saleProductNotFound": "Product not found",
-  "saleEmptyCart": "Cart is empty",
-  "saleSubtotal": "Subtotal",
-  "saleTax": "Tax",
-  "saleTotalDiscount": "Discount",
   "saleToPay": "To pay",
-  "saleItems": "{count, plural, one{{count} item} other{{count} items}}",
   "saleRemoveItem": "Remove item",
-  "saleClearCart": "Clear cart",
-  "saleConfirmClear": "Clear cart?",
-  "saleProceedPayment": "Proceed to payment",
   "saleHold": "Hold",
   "saleRecall": "Recall",
-  "saleHeldSales": "Held sales",
-  "saleNoHeldSales": "No held sales",
-  "saleProductSearch": "Search products",
-  "saleByCategory": "By category",
-  "saleByName": "By name",
-  "saleByBarcode": "By barcode",
-  "saleWeight": "Weight",
   "saleWeightKg": "Weight: {weight} kg",
-  "saleEnterWeight": "Enter weight",
-  "saleEnterQuantity": "Enter quantity",
-  "saleEnterPrice": "Enter price",
-  "saleFreePrice": "Free price",
-  "saleMaxDiscount": "Max discount: {percent}%",
   "refundTitle": "Refund",
-  "refundNewRefund": "New refund",
   "refundByReceipt": "By receipt",
   "refundWithoutReceipt": "Without receipt",
-  "refundEnterReceipt": "Enter receipt number",
   "refundReceiptNotFound": "Receipt not found",
-  "refundSelectItems": "Select items to refund",
-  "refundReason": "Refund reason",
-  "refundConfirm": "Confirm refund",
   "refundAmount": "Refund amount",
   "refundComplete": "Refund complete",
-  "refundCash": "Cash refund",
-  "refundCard": "Card refund",
   "refundConnectionLostHint": "The terminal will reconnect on its own — work resumes where it stopped",
   "refundConnectionLost": "Connection to the till lost",
   "@refundConnectionLost": {
     "description": "Подписка на черновик возврата оборвалась — состояние с кассы больше не приходит"
   },
   "refundNoItems": "No items to refund",
-  "refundAlreadyRefunded": "Item already refunded",
-  "refundPartial": "Partial refund",
   "shiftTitle": "Shift",
   "shiftOpen": "Open shift",
   "shiftClose": "Close shift",
-  "shiftCurrent": "Current shift",
   "shiftNumber": "Shift #: {number}",
   "shiftOpenedAt": "Opened: {time}",
-  "shiftCashier": "Cashier: {name}",
-  "shiftSalesCount": "Sales: {count}",
-  "shiftRefundsCount": "Refunds: {count}",
-  "shiftTotalSales": "Total sales",
-  "shiftTotalRefunds": "Total refunds",
   "shiftCashInDrawer": "Cash in drawer",
   "shiftExpected": "Expected",
-  "shiftActual": "Actual",
   "shiftDifference": "Difference",
   "shiftXReport": "X-report",
   "shiftZReport": "Z-report",
-  "shiftConfirmClose": "Close shift?",
-  "shiftAlreadyOpen": "Shift already open",
-  "shiftNotOpen": "Shift not open",
-  "shiftOpenFirst": "Open shift first",
   "paymentTitle": "Payment",
   "paymentCash": "Cash",
   "paymentCard": "Card",
@@ -144,52 +85,22 @@
   "paymentDebt": "Debt",
   "paymentInstallment": "Instalments",
   "paymentMixed": "Mixed",
-  "paymentEnterAmount": "Enter amount",
-  "paymentRemaining": "Remaining: {amount}",
-  "paymentChange": "Change: {amount}",
   "paymentComplete": "Payment complete",
   "paymentFailed": "Payment failed",
-  "paymentWaitingCard": "Waiting for card...",
-  "paymentWaitingQr": "Waiting for QR...",
-  "paymentInsertCard": "Insert card",
-  "paymentScanQr": "Scan QR",
-  "paymentApproved": "Approved",
-  "paymentDeclined": "Declined",
-  "paymentReceipt": "Print receipt",
-  "paymentNoReceipt": "No receipt",
-  "paymentEmail": "Send email",
-  "paymentSms": "Send SMS",
   "historyTitle": "History",
   "historyToday": "Today",
   "historyYesterday": "Yesterday",
-  "historyThisWeek": "This week",
-  "historyThisMonth": "This month",
-  "historyDateRange": "Select period",
-  "historyNoSales": "No sales for period",
-  "historyReceipt": "Receipt #{number}",
-  "historyReprint": "Reprint",
   "certificateSlipPrintFailed": "Certificate slip {number} was not printed: {reason}",
-  "historyDetails": "Details",
   "historySale": "Sale",
   "historyRefund": "Refund",
-  "historyFilter": "Filter",
-  "agentTitle": "Agents",
   "agentClients": "Clients",
   "agentSuppliers": "Suppliers",
-  "agentSearch": "Search agent",
-  "agentAdd": "Add agent",
   "agentEdit": "Edit",
   "agentName": "Name",
   "agentPhone": "Phone",
-  "agentEmail": "Email",
   "agentIin": "IIN/BIN",
-  "agentAddress": "Address",
   "agentBalance": "Balance",
-  "agentBonusBalance": "Bonus balance",
   "agentDebt": "Debt",
-  "agentNoAgents": "No agents",
-  "agentSaveSuccess": "Agent saved",
-  "agentDeleteConfirm": "Delete agent?",
   "cashTitle": "Cash",
   "cashReasonCreditRepayment": "Instalment repayment",
   "cashReasonCustomerTopUp": "Customer account top-up",
@@ -199,28 +110,13 @@
   "serviceAutoAddedByNorm": "Added from the consumption norm",
   "cashInvestment": "Cash in",
   "cashExpense": "Cash out",
-  "cashBalance": "Cash balance",
   "cashEnterAmount": "Enter amount",
-  "cashReason": "Reason",
-  "cashReasonPlaceholder": "Enter reason",
-  "cashSuccess": "Operation complete",
   "cashExpenseTypes": "Expense type",
   "discountTitle": "Discount",
   "discountPercent": "Percent",
-  "discountFixed": "Fixed",
-  "discountEnterValue": "Enter value",
   "discountApply": "Apply",
-  "discountRemove": "Remove discount",
-  "discountOnItem": "Item discount",
-  "discountOnTotal": "Total discount",
-  "discountMaxExceeded": "Maximum discount exceeded",
   "quickProductTitle": "Quick products",
-  "quickProductAdd": "Add product",
-  "quickProductName": "Name",
-  "quickProductPrice": "Price",
   "quickProductCategory": "Category",
-  "quickProductSave": "Save",
-  "quickProductDelete": "Delete",
   "syncTitle": "Sync",
   "syncStatus": "Sync status",
   "syncLastSync": "Last sync: {time}",
@@ -235,64 +131,20 @@
   "syncPending": "Pending: {count}",
   "syncOffline": "Offline",
   "syncOnline": "Online",
-  "printerTitle": "Printer",
-  "printerStatus": "Printer status",
   "printerConnected": "Connected",
   "printerDisconnected": "Disconnected",
   "printerError": "Printer error",
-  "printerPaperOut": "Paper out",
   "printerConnect": "Connect",
   "printerDisconnect": "Disconnect",
-  "printerTest": "Test print",
   "printerSettings": "Printer settings",
-  "printerWidth": "Receipt width",
   "additionalTitle": "Additional",
-  "additionalSettings": "Settings",
-  "additionalReports": "Reports",
-  "additionalInventory": "Inventory",
   "additionalSupply": "Supply",
-  "additionalPriceChange": "Price change",
-  "additionalBackup": "Backup",
-  "additionalRestore": "Restore",
   "additionalUpdate": "Update",
-  "additionalAbout": "About",
-  "additionalLicense": "License",
-  "additionalSupport": "Support",
-  "receiptTitle": "Receipt",
   "receiptNumber": "Receipt #",
   "receiptDate": "Date",
-  "receiptCashier": "Cashier",
-  "receiptItems": "Items",
-  "receiptSubtotal": "Subtotal",
-  "receiptDiscount": "Discount",
-  "receiptTax": "Tax",
   "receiptTotal": "TOTAL",
-  "receiptCash": "Cash",
-  "receiptCard": "Card",
-  "receiptChange": "Change",
-  "receiptThankYou": "Thank you for your purchase!",
-  "receiptFiscalNumber": "Fiscal number",
-  "receiptQrCode": "QR for verification",
-  "receiptCopy": "Receipt copy",
-  "errorUnknown": "Unknown error",
-  "errorNetwork": "Network error",
-  "errorServer": "Server error",
-  "errorTimeout": "Timeout",
-  "errorNotFound": "Not found",
-  "errorPermission": "Permission denied",
-  "errorDatabase": "Database error",
-  "errorValidation": "Validation error",
-  "errorRequired": "Required field",
   "errorInvalidFormat": "Invalid format",
-  "errorMinLength": "Minimum {min} characters",
-  "errorMaxLength": "Maximum {max} characters",
-  "errorMinValue": "Minimum {min}",
-  "errorMaxValue": "Maximum {max}",
   "errorPrinter": "Printer error",
-  "errorFiscal": "Fiscal error",
-  "errorPayment": "Payment error",
-  "errorSync": "Sync error",
-  "errorNoInternet": "No internet connection",
   "errorTryAgain": "Try again",
   "helpTitle": "Help",
   "helpTips": "Tips",
@@ -322,10 +174,6 @@
   "loginShiftOpen": "Shift open",
   "loginShiftClosed": "Shift closed",
   "loginShiftUnknown": "Shift: no answer from the till",
-  "saleQuickProducts": "Quick products",
-  "saleIncrease": "Increase",
-  "saleDecrease": "Decrease",
-  "saleMark": "Marking",
   "saleDataMatrix": "Marking (DataMatrix)",
   "saleHeld": "Sale held",
   "saleNoDeferredSales": "No deferred sales",
@@ -335,7 +183,6 @@
   "salePositions": "Items",
   "saleSearchHint": "Search product (name or barcode)",
   "refundWithReceipt": "WITH RECEIPT",
-  "refundWithoutReceiptUpper": "WITHOUT RECEIPT",
   "refundLoadReceipt": "Load receipt",
   "refundSearchProducts": "Search products",
   "refundSelectAll": "Select all",
@@ -343,72 +190,38 @@
   "refundMaxQuantity": "Maximum: {max}",
   "refundConfirmTitle": "Confirm refund",
   "refundSelectedItems": "Selected items: {count}",
-  "refundSuccessMsg": "Refund completed successfully",
   "refundSearchHint": "Search product for refund",
-  "paymentRefundTitle": "Refund",
-  "paymentPayTitle": "Payment",
-  "paymentRefundBtn": "REFUND",
-  "paymentPayBtn": "PAY",
   "paymentChangeLabel": "Change:",
-  "paymentSuccessRefund": "Refund completed",
-  "paymentSuccessPay": "Payment successful",
-  "paymentCardType": "Card",
-  "paymentToPay": "To pay",
-  "paymentBonusLabel": "Bonuses",
-  "paymentTotalToPay": "Total to pay",
   "paymentByCard": "By card",
-  "paymentRemainLabel": "Remaining",
-  "shiftBills": "Bills",
-  "shiftTotalAmount": "Total amount",
   "shiftOperations": "Operations",
   "shiftOpened": "Shift opened",
   "shiftClosed": "Shift closed",
   "shiftSince": "since {time}",
   "shiftSystem": "System",
   "shiftEntered": "Entered",
-  "shiftRecounting": "Bill recount",
   "shiftManualEntry": "Manual amount entry",
-  "shiftCashOps": "Cash operations",
   "shiftOpenAction": "Opening shift",
-  "shiftCloseAction": "Closing shift",
   "historyOperations": "Transaction history",
-  "historyResetFilters": "Reset filters",
   "historyRefresh": "Refresh",
   "historyNoRecords": "No records",
   "historyChangeFilters": "Try changing filters",
   "historyEmpty": "No transaction history",
-  "historyFilterTitle": "Filters",
   "historyPeriod": "Period",
-  "historyOpType": "Operation type",
   "historySearchHint": "Receipt number, amount...",
-  "historyType": "Type:",
   "historyPrint": "Print receipt",
-  "agentFound": "Found: {count}",
   "agentWithDebt": "With debt only",
   "agentSearchHint": "Search by name or phone...",
-  "agentNewClient": "New client",
   "agentNameRequired": "Name *",
-  "agentEnterName": "Enter client name",
-  "agentPhoneLabel": "Phone",
-  "agentIinLabel": "BIN/IIN",
-  "agentIinHint": "12 digits",
   "agentDeleteQuestion": "Delete client?",
   "agentDeleteConfirmMsg": "Are you sure you want to delete {name}?",
-  "agentDeleted": "Client deleted",
-  "agentFoundExisting": "Client found",
   "supplyTitle": "Supply receipt",
-  "supplySaved": "Supply saved",
   "supplySaveError": "Save error",
-  "supplyCancelQuestion": "Cancel supply?",
   "supplyDataLost": "All entered data will be lost.",
   "supplyProducts": "Products: {count}",
-  "supplyBarcodeHint": "Barcode or article",
   "supplyComment": "Comment",
   "supplyCommentHint": "Enter comment...",
-  "supplyNotFound": "Product not found",
   "supplySelectSupplier": "Select supplier",
   "supplySelectAccount": "Select account",
-  "supplyBalance": "Balance: {amount}",
   "supplyPurchasePrice": "Purchase price",
   "supplySerialNumbers": "Serial numbers",
   "supplySerialHint": "Enter or scan S/N",
@@ -424,8 +237,6 @@
     }
   },
   "supplySerialMismatch": "Serial number count does not match quantity",
-  "supplyInvalidQty": "Enter valid quantity",
-  "supplyInvalidPrice": "Enter valid price",
   "inventoryTitle": "Inventory",
   "inventoryFullCount": "Full inventory count",
   "inventoryFullCountSubtitle": "Zero out quantity of unscanned products",
@@ -458,70 +269,26 @@
   "writeoffCancelQuestion": "Cancel write-off?",
   "writeoffSaved": "Write-off saved",
   "settingsTitle": "Settings",
-  "settingsPosInfo": "POS info",
-  "settingsPosName": "POS name",
-  "settingsCompany": "Company",
-  "settingsIin": "IIN/BIN",
-  "settingsPosId": "POS ID",
-  "settingsStoreId": "Store ID",
-  "settingsNotSpecified": "Not specified",
-  "settingsAppVersion": "App version",
-  "settingsVersion": "Version",
-  "settingsPlatform": "Platform",
   "settingsLanguage": "Interface language",
   "settingsLanguageChanged": "Language changed",
-  "settingsCurrency": "Currency",
-  "settingsCurrencySymbol": "Symbol",
-  "settingsCurrencyCode": "Code",
-  "settingsCountry": "Country",
-  "settingsAdditional": "Additional settings",
   "settingsTransport": "Transport",
-  "settingsTransportDesc": "Data sync settings",
   "settingsPrinter": "Printer",
-  "settingsPrinterDesc": "Receipt print settings",
   "settingsFiscal": "Fiscalization",
-  "settingsFiscalDesc": "WebKassa, OFD, VAT",
   "settingsTelegram": "Telegram",
-  "settingsTelegramDesc": "Telegram integration and channels",
-  "settingsPermissions": "Permissions",
-  "settingsPermissionsDesc": "Cashier permissions",
   "fiscalTitle": "Fiscalization",
   "fiscalOperator": "Fiscal operator",
   "fiscalWebkassa": "WebKassa settings",
-  "fiscalTaxpayer": "Taxpayer data",
-  "fiscalVatSettings": "VAT settings",
-  "fiscalVatPayer": "VAT payer",
-  "fiscalPrintVat": "Print VAT on receipt",
   "fiscalSaved": "Settings saved",
-  "fiscalSaveError": "Save error",
   "printerSettingsTitle": "Printer settings",
   "printerConnectionType": "Connection type",
   "printerAddress": "Printer address",
-  "printerPaperWidth": "Paper width",
-  "printerTesting": "Testing",
-  "printerReady": "Ready",
-  "printerNotConnected": "Not connected",
-  "printerPaperOut2": "No paper",
-  "printerCoverOpen": "Cover open",
-  "printerPrinting": "Printing...",
-  "printerCheckStatus": "Checking...",
-  "printerPrintSuccess": "Print successful",
   "paymentNotFiscalized": "Receipt not fiscalized — payment recorded",
   "paymentFiscalModuleAbsent": "Fiscal module unavailable — receipts are not fiscalized",
   "cashDrawerOpenError": "Cash drawer did not open",
   "printerPrintError": "Print error",
-  "printerCheckBtn": "Check",
-  "printerTestReceipt": "Test receipt",
   "printerPort": "Port",
-  "cashOperationTitle": "Cash operation",
   "cashWithdrawal": "Withdrawal",
-  "cashCommentRequired": "Comment *",
   "cashCommentOptional": "Comment",
-  "cashCommentHint": "Enter comment...",
-  "cashEnterAmountMsg": "Enter amount",
-  "cashPositiveOnly": "Amount must be positive",
-  "cashInsufficient": "Insufficient cash",
-  "cashInvalidAmount": "Enter valid amount",
   "cashInDrawer": "Cash in drawer:",
   "telegramTitle": "Telegram Settings",
   "telegramAuth": "Authorization",
@@ -560,14 +327,8 @@
   "chatGallery": "Gallery",
   "chatSelectSource": "Select source",
   "updateAvailable": "Update available",
-  "updateInProgress": "Updating...",
-  "updateAutoIn": "Auto update in {seconds} sec",
-  "updateNowBtn": "Update now",
   "updateLater": "Later",
-  "updateSkip": "Skip",
-  "updateBtn": "Update",
   "storageWarningTitle": "Low disk space",
-  "storageWarningMsg": "Free at least 2 GB for stable POS operation.",
   "storageUnderstood": "Got it",
   "errorCritical": "Critical error",
   "errorAppProblem": "App encountered a problem",
@@ -593,16 +354,9 @@
   "selectPeriod": "Select period",
   "bonusProgram": "Bonus program",
   "enterPhone": "Enter client phone number",
-  "enterSmsCode": "Enter SMS code",
-  "resendIn": "Resend in {seconds} sec",
   "resendCode": "Resend code",
   "availableBonuses": "Available bonuses:",
   "useBonuses": "Use bonuses",
-  "deferredSales": "Held sales",
-  "noDeferredSales": "No held sales",
-  "fiscalErrors": "Fiscal errors",
-  "selectAllErrors": "Select all",
-  "retrySelected": "Retry",
   "receiptNo": "Receipt #{number}",
   "dontAskAgain": "Don't ask again",
   "deleteTitle": "Delete",
@@ -618,12 +372,10 @@
   "discountLimitPercent": "Up to {percent}% allowed — {source}",
   "discountLimitAmount": "Up to {amount} allowed — {source}",
   "discountApprovalAbove": "Above {percent}% a supervisor must approve",
-  "sumLabel": "Amount",
   "enterAmount": "Enter amount",
   "amountMustBePositive": "Amount must be positive",
   "notEnoughCashInDrawer": "Not enough cash in drawer",
   "enterValidAmount": "Enter a valid amount",
-  "inDrawer": "In drawer:",
   "commentOptional": "Comment (optional)",
   "operationReason": "Reason for operation...",
   "positions": "items",
@@ -640,10 +392,6 @@
   "cashier": "Cashier:",
   "buyer": "Customer:",
   "receiptHeader": "RECEIPT #{number}",
-  "receiptDiscountItem": "Discount:",
-  "receiptSubtotalLabel": "Subtotal",
-  "receiptPayment": "Payment:",
-  "fiscalMark": "FP:",
   "remainingStock": "Stock: {qty}",
   "tableHeaderName": "Name",
   "tableHeaderPrice": "Price",
@@ -653,14 +401,7 @@
   "addProductsViaSearch": "Add products via search\nor scan a barcode",
   "addProductsViaSearchShort": "Add products via search",
   "priceLabel": "Price",
-  "receiptTotalLabel": "Receipt total",
-  "positionsLabel": "Items",
-  "toPayLabel": "TO PAY",
   "payBtn": "PAY",
-  "totalLabel": "Total:",
-  "posAndQty": "{positions} items / {qty} pcs",
-  "modeRetail": "Retail",
-  "modeWholesale": "WHOLESALE",
   "quickProducts": "Quick products",
   "editProduct": "Edit",
   "labelComment": "Comment",
@@ -670,19 +411,12 @@
   "maxBonusPercent": "Can use up to {percent}% of receipt total",
   "insufficientBonuses": "Insufficient bonuses",
   "enterValidPhone": "Enter a valid phone number",
-  "errorsCount": "{count} errors",
-  "selectAllCount": "Select all ({count})",
   "retryCount": "Retry ({count})",
-  "receiptHash": "Receipt #{number}",
   "enterIntegerNumber": "Enter an integer",
   "enterDigits": "Enter {length} digits",
-  "drawerPrimary": "Main",
-  "drawerSecondary": "Additional",
-  "tooltipMore": "More",
   "statusOnline": "Online",
   "statusOffline": "Offline",
   "statusSyncing": "Sync...",
-  "thankYouForPurchase": "Thank you for your purchase!",
   "searchProductHint": "Search product (name or barcode)",
   "actionDefer": "Defer",
   "actionDeferredList": "Deferred",
@@ -690,7 +424,6 @@
   "actionIncrease": "Increase",
   "actionDecrease": "Decrease",
   "restaurantSettings": "Restaurant Mode",
-  "restaurantSettingsDesc": "Tables, zones, service charge",
   "restaurantOperatingMode": "Operating Mode",
   "restaurantModeRetail": "Retail",
   "restaurantModeRetailDesc": "Standard POS for stores",
@@ -700,7 +433,6 @@
   "restaurantModeServiceDesc": "Service intake, queue",
   "restaurantZoneManagement": "Zone Management",
   "restaurantZoneAdd": "Add Zone",
-  "restaurantZoneRename": "Rename",
   "restaurantZonePresets": "Presets",
   "restaurantZoneHall": "Hall",
   "restaurantZoneTerrace": "Terrace",
@@ -741,14 +473,6 @@
   "restaurantNoTablesHint": "Add tables in restaurant settings",
   "restaurantGoToSettings": "Go to Settings",
   "restaurantOrdersEmpty": "No active orders",
-  "restaurantOrderItems": "{count} items",
-  "@restaurantOrderItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "restaurantOrderGuests": "Guests: {count}",
   "@restaurantOrderGuests": {
     "placeholders": {
@@ -775,12 +499,9 @@
   },
   "restaurantNoOrder": "No active order",
   "restaurantOpenOrder": "Open Order",
-  "restaurantCloseOrder": "Close Order",
   "restaurantAddItems": "Add Items",
   "restaurantGoToPayment": "To Payment",
   "restaurantTransfer": "Transfer",
-  "restaurantSplitBill": "Split Bill",
-  "restaurantChangeStatus": "Change Status",
   "restaurantSetFree": "Free",
   "restaurantSetReserved": "Reserve",
   "restaurantSetDirty": "Needs Cleaning",
@@ -789,8 +510,6 @@
   "restaurantOrderType": "Order Type",
   "restaurantWaiter": "Waiter",
   "restaurantNote": "Note",
-  "restaurantDeliveryAddress": "Delivery Address",
-  "restaurantDeliveryPhone": "Phone",
   "restaurantTransferTitle": "Transfer Order",
   "restaurantTransferCurrent": "Current: {table}",
   "@restaurantTransferCurrent": {
@@ -826,15 +545,6 @@
   "restaurantSplitPaymentProceed": "To payment",
   "restaurantPreCheckPrinted": "Pre-check sent to printer",
   "restaurantPreCheckFailed": "Pre-check print failed",
-  "restaurantSubtotal": "Subtotal",
-  "restaurantServiceChargeLine": "Service charge ({percent}%)",
-  "@restaurantServiceChargeLine": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
   "restaurantOrderNumber": "Order #{number}",
   "@restaurantOrderNumber": {
     "placeholders": {
@@ -872,16 +582,6 @@
   },
   "restaurantOrderTab": "Order",
   "restaurantMenuTab": "Menu",
-  "restaurantGuestLabel": "Guest {number}",
-  "@restaurantGuestLabel": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      }
-    }
-  },
-  "restaurantRemoveItem": "Remove item",
-  "restaurantPrintPrecheck": "Pre-check",
   "restaurantNewTakeout": "Takeout",
   "restaurantNewDelivery": "Delivery",
   "setupSectionOrganization": "Company",
@@ -910,12 +610,10 @@
     }
   },
   "setupStepChecking": "Checking",
-  "setupStepTelegram": "Telegram",
   "setupStepCountry": "Country",
   "setupStepOrganization": "Organization",
   "setupStepVat": "VAT",
   "setupStepUsers": "Users",
-  "setupStepWorkMode": "Work Mode",
   "setupStepPos": "POS",
   "setupStepFiscal": "Fiscalization",
   "setupStepEquipment": "Equipment",
@@ -960,16 +658,6 @@
       }
     }
   },
-  "setupVatRateLabel": "VAT: {rate}%",
-  "@setupVatRateLabel": {
-    "placeholders": {
-      "rate": {
-        "type": "int"
-      }
-    }
-  },
-  "setupOrganizationTitle": "Organization Data",
-  "setupOrganizationDescription": "Enter your company information",
   "setupCompanyNameLabel": "Company name",
   "setupCompanyNameHint": "LLC \"My Company\"",
   "setupTaxIdDigits": "{length} digits",
@@ -984,8 +672,6 @@
   "setupActualAddressLabel": "Store address",
   "setupOwnerNameLabel": "Director's full name",
   "setupPhoneLabel": "Phone",
-  "setupVatTitle": "Value Added Tax",
-  "setupVatDescription": "Select your organization's tax regime",
   "setupVatPayerTitle": "VAT Payer",
   "setupVatPayerRate": "VAT rate: {rate}%",
   "@setupVatPayerRate": {
@@ -1000,18 +686,6 @@
   "setupVatNonPayerTitle": "No VAT",
   "setupVatNonPayerSubtitle": "VAT not applicable",
   "setupVatNonPayerDescription": "VAT will not be shown on receipts.\nFor individual entrepreneurs on simplified system.",
-  "setupWorkModeTitle": "Work Mode",
-  "setupWorkModeDescription": "Choose how your POS will operate",
-  "setupAutonomousTitle": "Autonomous Mode",
-  "setupAutonomousSubtitle": "Work without internet",
-  "setupAutonomousDescription": "POS works completely offline.\nData stored locally only.\nNo sync between registers.",
-  "setupNetworkTitle": "Network Mode",
-  "setupNetworkConfigured": "Telegram configured",
-  "setupNetworkRequired": "Telegram required",
-  "setupNetworkDescription": "Data sync between registers.\nCloud backup.\nReports and notifications via Telegram.",
-  "setupNetworkRequiresTelegram": "Telegram setup is required for network mode",
-  "setupOperatingModeTitle": "Business Type",
-  "setupOperatingModeDescription": "Select your business type",
   "setupRetailTitle": "Retail POS",
   "setupRetailSubtitle": "Shop, pharmacy, supermarket",
   "setupRetailDescription": "Standard POS for retail.\nSales, refunds, supply receipt.\nShifts and reporting.",
@@ -1021,8 +695,6 @@
   "setupServiceTitle": "Service Center",
   "setupServiceSubtitle": "Repair, services, procedures",
   "setupServiceDescription": "Service intake.\nWork orders and task tracking.\nStatus tracking and release.",
-  "setupPosConfigTitle": "POS Setup",
-  "setupPosConfigDescription": "Set POS parameters",
   "setupCashBoxNameLabel": "POS name",
   "setupCashBoxNameHint": "POS 1",
   "setupPosIdLabel": "POS ID",
@@ -1035,7 +707,6 @@
   "setupPrinterFooterLabel": "Receipt footer",
   "setupPrinterFooterHint": "Thank you for your purchase!",
   "setupFiscalNotRequired": "Fiscalization is not required for your country",
-  "setupFiscalDescription": "Set up fiscal operator connection",
   "setupEnableWebkassa": "Enable WebKassa",
   "setupEnableOfd": "Enable OFD",
   "setupWebkassaDescription": "Receipt fiscalization via WebKassa (Kazakhstan)",
@@ -1057,8 +728,6 @@
   "setupOfdKktRegNoLabel": "KKT reg. number",
   "setupOfdFnNoLabel": "FN number",
   "setupOfdUrlLabel": "OFD URL",
-  "setupEquipmentTitle": "Equipment",
-  "setupEquipmentDescription": "Configure connected equipment",
   "setupEquipmentPrinter": "Receipt Printer",
   "setupEquipmentScanner": "Barcode Scanner",
   "setupEquipmentScales": "Scales",
@@ -1069,7 +738,6 @@
   "setupConnectionBluetooth": "Bluetooth",
   "setupConnectionWifi": "Wi-Fi / Ethernet",
   "setupConnectionSerial": "COM port",
-  "setupConnectionNone": "Not selected",
   "setupPrinterIpLabel": "Printer IP address",
   "setupPrinterMacLabel": "Printer MAC address",
   "setupPrinterNameLabel": "Printer name",
@@ -1079,19 +747,10 @@
   "setupScannerUsb": "USB scanner",
   "setupScannerBluetooth": "Bluetooth scanner",
   "setupScalePortLabel": "COM port",
-  "setupBaudRateLabel": "Baud rate",
-  "setupCashDrawerConnected": "Connected to printer",
   "setupCashDrawerConnectedDesc": "Opens via printer command",
-  "setupSkip": "Skip",
-  "setupPaymentTerminalsTitle": "Payment Terminals",
-  "setupPaymentTerminalsDescription": "Configure payment system integrations",
   "setupKaspiIpLabel": "Terminal IP address",
   "setupPortLabel": "Port",
-  "setupApiUrlLabel": "API URL",
-  "setupApiKeyLabel": "API key",
   "setupNoTerminalsAvailable": "No payment terminals available for your region",
-  "setupBusinessRulesTitle": "Business Rules",
-  "setupBusinessRulesDescription": "Configure POS rules",
   "setupPermissionsTitle": "Permissions",
   "setupAllowDiscounts": "Discounts",
   "setupAllowDiscountsDesc": "Allow applying discounts",
@@ -1112,68 +771,28 @@
   "setupCashbackLabel": "Cashback",
   "setupCashbackDesc": "Enable bonus accrual",
   "setupCashbackRateLabel": "Cashback rate",
-  "setupRoundingTitle": "Rounding",
-  "setupDiscountRounding": "Discount rounding",
-  "setupWeightRounding": "Weight product rounding",
-  "setupRoundingNone": "No rounding",
-  "setupRoundingUp1": "To 1 (up)",
-  "setupRoundingDown1": "To 1 (down)",
-  "setupRoundingUp5": "To 5 (up)",
-  "setupRoundingDown5": "To 5 (down)",
-  "setupRoundingUp10": "To 10 (up)",
-  "setupRoundingDown10": "To 10 (down)",
-  "setupFiscalDisablesRounding": "Rounding is automatically disabled when fiscalization is enabled",
-  "setupUserCreationTitle": "Create Users",
-  "setupUserCreationDescription": "Create users for POS operation",
-  "setupAdminLabel": "Administrator",
   "setupAdminSubtitle": "POS owner",
   "setupUserNameLabel": "Name",
   "setupUserPinLabel": "PIN",
   "setupUserPinConfirmLabel": "Confirmation",
-  "setupAdminPinDefault": "Default: 0000",
   "setupSellerLabel": "Seller",
   "setupSellerOptional": "Optional",
-  "setupSellerPinDefault": "Default: 1111",
   "setupAdminPinMismatch": "Administrator PINs do not match",
-  "setupSummaryTitle": "Review Data",
-  "setupSummaryDescription": "Make sure everything is correct",
-  "setupSummaryCountry": "Country",
-  "setupSummaryCurrency": "Currency",
   "setupSummaryFormat": "Format",
-  "setupSummaryVat": "VAT",
-  "setupSummaryTelegram": "Telegram",
-  "setupSummaryStatus": "Status",
-  "setupConfigured": "Configured",
   "setupNotConfigured": "Not configured",
   "setupSummaryOrganization": "Organization",
   "setupSummaryName": "Name",
-  "setupSummaryAddress": "Address",
-  "setupSummaryWorkMode": "Work Mode",
-  "setupSummaryMode": "Mode",
-  "setupSummaryAutonomous": "Autonomous (no network)",
-  "setupSummaryNetwork": "Network (sync)",
-  "setupSummaryPos": "POS",
   "setupSummaryId": "ID",
-  "setupEnabled": "Enabled",
   "setupDisabled": "Disabled",
   "setupSummaryFiscalType": "Type",
   "setupSummaryEquipment": "Equipment",
   "setupSummaryPrinter": "Printer",
   "setupSummaryScanner": "Scanner",
   "setupSummaryScales": "Scales",
-  "setupSummaryCashDrawer": "Cash drawer",
-  "setupSummaryTerminals": "Payment Terminals",
-  "setupSummaryRules": "Business Rules",
-  "setupSummaryDiscounts": "Discounts",
-  "setupSummaryDebtSales": "Debt",
-  "setupSummaryCashback": "Cashback",
-  "setupSummaryBigAmount": "Large amounts",
-  "setupSummaryUsers": "Users",
   "setupSummaryAdmin": "Administrator",
   "setupSummarySeller": "Seller",
   "setupCompleteTitle": "Setup Complete!",
   "setupCompleteSubtitle": "POS is ready to work",
-  "setupStartWork": "Start Working",
   "setupVatPayerSummary": "VAT Payer ({rate}%)",
   "@setupVatPayerSummary": {
     "placeholders": {
@@ -1182,17 +801,6 @@
       }
     }
   },
-  "setupSummaryWkPosId": "WK POS ID",
-  "setupSummaryOfdInn": "INN",
-  "setupScalesConfigured": "Configured",
-  "setupScalesNotConfigured": "Not configured",
-  "setupCashDrawerOn": "Enabled",
-  "setupAllowed": "Allowed",
-  "setupDenied": "Denied",
-  "setupAllowedFem": "Allowed",
-  "setupDeniedFem": "Denied",
-  "setupCashbackOff": "Disabled",
-  "setupBigAmountLimit": "Limit 100,000",
   "setupDisplayPortLabel": "COM port",
   "telegramAuthSkip": "Skip (configure later)",
   "telegramInitializing": "Initializing",
@@ -1307,8 +915,6 @@
     }
   },
   "chatNoResults": "Nothing found",
-  "chatCopyUidInstructions": "Copy UID for use in other systems",
-  "chatUidExample": "Example: telepos@pos-1",
   "chatServiceUnavailable": "Service unavailable",
   "chatTelegramLinked": "Telegram linked successfully",
   "additionalLogout": "Logout",
@@ -1346,16 +952,7 @@
   "additionalPrinterConnectingUsb": "Connecting USB printer...",
   "additionalPrinterNotConnected": "Printer not connected",
   "additionalPrintingLastReceipt": "Printing last receipt...",
-  "additionalTestReceiptTitle": "=== TEST RECEIPT ===",
   "additionalReceiptPrinted": "Receipt printed",
-  "additionalPriceSearching": "Searching: {query}",
-  "@additionalPriceSearching": {
-    "placeholders": {
-      "query": {
-        "type": "String"
-      }
-    }
-  },
   "additionalMinimizing": "Minimizing window...",
   "additionalLatestVersion": "You have the latest version",
   "additionalExtraPrinterTitle": "Extra Printer",
@@ -1386,16 +983,6 @@
   "additionalPrinterUsbConnected": "USB printer connected",
   "additionalBarcodeLabel": "Barcode",
   "additionalBarcodeHint": "Scan or enter",
-  "additionalTestReceiptProduct": "Product {number}",
-  "@additionalTestReceiptProduct": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "additionalTestReceiptTotal": "TOTAL:",
-  "additionalTestReceiptThankYou": "Thank you for your purchase!",
   "langRussian": "Русский",
   "langEnglish": "English",
   "langKazakh": "Қазақша",
@@ -1459,183 +1046,12 @@
   "transportNotifyConnectivityDesc": "Notify on connectivity changes",
   "transportNotifyQueueFull": "Queue Full",
   "transportNotifyQueueFullDesc": "Notify when queue reaches limit",
-  "saleErrorInitiation": "Sale initiation error: {error}",
-  "@saleErrorInitiation": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorNotInitialized": "Sale not initialized",
-  "saleErrorEmpty": "Receipt is empty",
-  "saleErrorCompletion": "Sale completion error: {error}",
-  "@saleErrorCompletion": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorSearch": "Search error: {error}",
-  "@saleErrorSearch": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorDeferred": "Defer error: {error}",
-  "@saleErrorDeferred": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorDeferredNotFound": "Deferred receipt not found",
-  "saleErrorLoadingDeferred": "Error loading deferred receipt: {error}",
-  "@saleErrorLoadingDeferred": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "paymentCustomerDefault": "Customer",
-  "paymentErrorFormation": "Could not form payment. Check account settings.",
-  "paymentErrorSaving": "Error saving sale",
-  "paymentErrorProcessing": "Payment processing error: {error}",
-  "@paymentErrorProcessing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "paymentAccountDefault": "Account {id}",
-  "@paymentAccountDefault": {
-    "placeholders": {
-      "id": {
-        "type": "int"
-      }
-    }
-  },
-  "refundErrorReceiptNotFound": "Receipt #{number} not found",
-  "@refundErrorReceiptNotFound": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorLoadingReceipt": "Error loading receipt: {error}",
-  "@refundErrorLoadingReceipt": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorSearch": "Search error: {error}",
-  "@refundErrorSearch": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorProductNotFound": "Product not found",
   "refundErrorNotAuthenticated": "User not authenticated",
-  "refundErrorProcessing": "Refund error: {error}",
-  "@refundErrorProcessing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorLoadingData": "Error loading shift data: {error}",
-  "@shiftErrorLoadingData": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorOpening": "Error opening shift: {error}",
-  "@shiftErrorOpening": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorClosing": "Error closing shift: {error}",
-  "@shiftErrorClosing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorPrinting": "Z-report print error: {error}",
-  "@shiftErrorPrinting": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "cashOpTypeInvestment": "Deposit",
   "cashOpTypeExpense": "Expense",
   "cashOpTypeDividend": "Withdrawal",
   "supplyNoName": "No name",
-  "supplyNoTitle": "Untitled",
-  "supplyErrorSupplierNotFound": "Supplier not found",
-  "supplyErrorSelectingSupplier": "Error selecting supplier: {error}",
-  "@supplyErrorSelectingSupplier": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorAccountNotFound": "Account not found",
-  "supplyErrorSelectingAccount": "Error selecting account: {error}",
-  "@supplyErrorSelectingAccount": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorAddingProduct": "Error adding product: {error}",
-  "@supplyErrorAddingProduct": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorProductNotFound": "Product not found",
-  "supplyErrorMissingFields": "Fill in all required fields",
-  "supplyErrorSaving": "Save error: {error}",
-  "@supplyErrorSaving": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "historyErrorLoading": "Error loading history: {error}",
-  "@historyErrorLoading": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "syncTypeProducts": "Products",
   "syncTypePrices": "Prices",
   "syncTypeCategories": "Categories",
@@ -1646,115 +1062,12 @@
   "syncTypeCashOps": "Cash operations",
   "syncTypeShifts": "Shifts",
   "syncTypeSupplies": "Supplies",
-  "syncStepPreparing": "Preparing...",
-  "syncStepUploading": "Uploading: {type}",
-  "@syncStepUploading": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
-  "syncStepDownloading": "Downloading: {type}",
-  "@syncStepDownloading": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
   "syncCompleted": "Sync completed",
-  "loginErrorNoUsers": "No registered users",
-  "loginErrorLoadingData": "Error loading data: {error}",
-  "@loginErrorLoadingData": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "loginErrorSelectUser": "Select a user",
-  "loginErrorIncompletePin": "Enter PIN (minimum 4 digits)",
-  "loginErrorNoRsaKey": "Error: RSA key not configured. Contact administrator.",
-  "loginErrorWrongPin": "Wrong PIN",
-  "loginErrorSystemTime": "System time is incorrect. Check date and time settings.",
-  "receiptLabelBin": "BIN:",
-  "receiptLabelPhone": "Tel:",
-  "receiptLabelReceiptNo": "Receipt #:",
-  "receiptLabelPosId": "POS:",
-  "receiptLabelDate": "Date:",
-  "receiptLabelCashier": "Cashier:",
-  "receiptLabelTable": "Table:",
-  "receiptLabelWaiter": "Waiter:",
-  "receiptLabelGuests": "Guests:",
-  "receiptLabelCustomer": "Customer:",
-  "receiptLabelSubtotal": "Subtotal:",
-  "receiptLabelDiscount": "Discount:",
-  "receiptLabelServiceCharge": "Service charge:",
   "receiptLabelTotal": "TOTAL:",
-  "receiptLabelVat": "incl. VAT {percent}%:",
-  "@receiptLabelVat": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
-  "receiptLabelCash": "Cash:",
-  "receiptLabelCard": "Card:",
   "receiptLabelChange": "Change:",
-  "receiptLabelCheckReceipt": "Verify receipt:",
-  "receiptLabelItemName": "Name",
-  "receiptLabelQty": "Qty",
   "receiptLabelPrice": "Price",
   "receiptLabelAmount": "Amount",
-  "receiptLabelItemDiscount": "Discount:",
-  "receiptLabelFiscalBin": "BIN:",
-  "receiptLabelFiscalNo": "FN:",
-  "receiptLabelFiscalSign": "FS:",
-  "receiptLabelVatCertificate": "VAT:",
-  "receiptLabelOfflineMode": "*** OFFLINE ***",
-  "receiptLabelRefundHeader": "*** REFUND ***",
-  "receiptLabelRefundNo": "Refund #:",
-  "receiptLabelReason": "Reason:",
-  "receiptLabelRefundTotal": "REFUND TOTAL:",
-  "receiptLabelZReport": "Z-REPORT",
-  "receiptLabelShiftClosing": "SHIFT CLOSING",
-  "receiptLabelShiftNo": "Shift #:",
-  "receiptLabelShiftOpenTime": "Opened:",
-  "receiptLabelShiftCloseTime": "Closed:",
-  "receiptLabelSales": "SALES",
-  "receiptLabelQuantity": "Quantity:",
-  "receiptLabelCashSales": "Cash:",
-  "receiptLabelCardSales": "Card:",
-  "receiptLabelSalesTotal": "Total:",
-  "receiptLabelRefunds": "REFUNDS",
-  "receiptLabelRefundQty": "Quantity:",
-  "receiptLabelRefundAmount": "Amount:",
-  "receiptLabelCashOperations": "CASH OPERATIONS",
-  "receiptLabelInvestments": "Deposits:",
-  "receiptLabelExpenses": "Expenses:",
-  "receiptLabelRevenue": "REVENUE:",
-  "receiptLabelCashInDrawer": "CASH IN DRAWER:",
-  "receiptLabelXReport": "X-REPORT",
-  "receiptLabelType": "Type:",
-  "receiptLabelDescription": "Description:",
-  "receiptLabelDebtPayment": "DEBT PAYMENT",
-  "receiptLabelPreviousDebt": "Previous debt:",
-  "receiptLabelPaidAmount": "PAID:",
-  "receiptLabelRemainingDebt": "Remaining:",
-  "receiptLabelTestPrint": "TEST PRINT",
   "receiptLabelThankYou": "Thank you for your purchase!",
-  "receiptLabelSaleReceipt": "SALES RECEIPT",
-  "receiptLabelOfflineHeader": "*** OFFLINE MODE ***",
-  "receiptLabelVatCertificateTitle": "VAT Certificate:",
-  "fiscalErrorBin12Digits": "BIN must contain 12 digits",
-  "fiscalErrorBinDigitsOnly": "BIN must contain only digits",
-  "fiscalErrorFiscalNoRequired": "Fiscal number is required",
-  "fiscalErrorRnkRequired": "RNK is required",
-  "fiscalErrorZnkRequired": "ZNK is required",
-  "fiscalErrorVatSerialRequired": "VAT certificate serial is required",
-  "fiscalErrorVatNumberRequired": "VAT certificate number is required",
   "telegramTabPhone": "By phone",
   "telegramTabQr": "QR code",
   "telegramQrAuthTitle": "QR Code Login",
@@ -1950,6 +1263,12 @@
   "generalSettingsPosId": "POS ID",
   "generalSettingsStoreId": "Store ID",
   "generalSettingsNotSpecified": "Not specified",
+  "generalSettingsDataLocation": "Where the data lives",
+  "generalSettingsDataLocationDesc": "The till keeps everything on this machine. Knowing where matters for backups and for moving to another machine.",
+  "generalSettingsDataDb": "Database",
+  "generalSettingsDataLogs": "Logs",
+  "generalSettingsDataBackups": "Backups",
+  "generalSettingsPathCopied": "Path copied",
   "generalSettingsAppVersion": "App Version",
   "generalSettingsVersion": "Version",
   "generalSettingsPlatform": "Platform",
@@ -1971,13 +1290,10 @@
   "generalSettingsCurrencySymbol": "Symbol",
   "generalSettingsCurrencyCode": "Code",
   "generalSettingsCountry": "Country",
-  "generalSettingsAdditional": "Additional Settings",
   "generalSettingsTransport": "Transport",
   "generalSettingsTransportSubtitle": "Data sync settings",
   "generalSettingsPrinter": "Printer",
   "generalSettingsPrinterSubtitle": "Receipt printing settings",
-  "generalSettingsPermissions": "Permissions",
-  "generalSettingsPermissionsSubtitle": "Cashier permissions",
   "generalSettingsFiscal": "Fiscalization",
   "generalSettingsFiscalSubtitle": "WebKassa, OFD, VAT",
   "generalSettingsRestaurant": "Operating Mode",
@@ -1988,11 +1304,8 @@
   "generalSettingsVersionDesc": "Current version and platform",
   "generalSettingsLanguageDesc": "Interface language selection",
   "generalSettingsCurrencyDesc": "Currency and country",
-  "generalSettingsUpdate": "Update",
-  "generalSettingsUpdateSubtitle": "Check and install updates",
   "generalSettingsAppUpdate": "Application update",
   "generalSettingsAppUpdateSubtitle": "POS app update (not the OS update)",
-  "generalSettingsUpdateDesc": "Current version and updates",
   "settingsUpdateTitle": "Application Update",
   "settingsUpdateCurrentVersion": "Current version",
   "settingsUpdateCheckBtn": "Check for updates",
@@ -2051,52 +1364,7 @@
       }
     }
   },
-  "printerSettingsPrinting": "Printing...",
-  "printerSettingsTestReceipt": "TEST RECEIPT",
-  "printerSettingsWidth": "Width:",
-  "printerSettingsWidthValue": "{width} characters",
-  "@printerSettingsWidthValue": {
-    "placeholders": {
-      "width": {
-        "type": "int"
-      }
-    }
-  },
-  "printerSettingsType": "Type:",
-  "printerSettingsAddress": "Address:",
-  "printerSettingsNotSpecifiedAddr": "Not specified",
-  "printerSettingsPrinterWorks": "Printer works!",
-  "printerSettingsPrintSuccess": "Print successful",
-  "printerSettingsPrintError": "Print error",
-  "printerSettingsNotConnected": "Not connected",
-  "printerSettingsChecking": "Checking...",
-  "printerSettingsReady": "Ready",
-  "printerSettingsNoPaper": "No paper",
-  "printerSettingsCoverOpen": "Cover open",
   "printerSettingsSave": "Save",
-  "printerSettingsConnectionType": "Connection Type",
-  "printerSettingsPrinterAddress": "Printer Address",
-  "printerSettingsPaperWidth": "Paper Width",
-  "printerSettingsTesting": "Testing",
-  "printerSettingsStatus": "Status: {status}",
-  "@printerSettingsStatus": {
-    "placeholders": {
-      "status": {
-        "type": "String"
-      }
-    }
-  },
-  "printerSettingsCheck": "Check",
-  "printerSettingsTestCheck": "Test receipt",
-  "printerSettingsPort": "Port",
-  "printerSettingsIpAddress": "Printer IP address",
-  "printerSettingsMacAddress": "MAC address or name",
-  "printerSettingsPrinterName": "Printer name",
-  "printerSettingsComPort": "COM port",
-  "printerSettingsSerialCom": "Serial (COM)",
-  "printerSettingsPaperWidth58": "58mm (32 chars)",
-  "printerSettingsPaperWidth80_42": "80mm (42 chars)",
-  "printerSettingsPaperWidth80_48": "80mm (48 chars)",
   "fiscalSettingsTitle": "Fiscalization",
   "fiscalSettingsSaved": "Settings saved",
   "fiscalSettingsSaveError": "Save error: {error}",
@@ -2109,25 +1377,11 @@
   },
   "fiscalSettingsSave": "Save",
   "fiscalSettingsOperator": "Fiscal Operator",
-  "fiscalSettingsWebkassaSettings": "WebKassa Settings",
-  "fiscalSettingsTaxpayerInfo": "Taxpayer Information",
   "fiscalSettingsVatSettings": "VAT Settings",
   "fiscalSettingsWebkassaLabel": "WebKassa",
-  "fiscalSettingsWebkassaDesc": "Cloud fiscal service",
-  "fiscalSettingsOfdLabel": "OFD",
-  "fiscalSettingsOfdDesc": "Fiscal data operator",
   "fiscalSettingsNoneLabel": "No fiscalization",
-  "fiscalSettingsNoneDesc": "Receipts are not sent to OFD",
-  "fiscalSettingsOfdId": "OFD ID",
-  "fiscalSettingsOfdIdHint": "OFD identifier",
-  "fiscalSettingsOfdName": "OFD Name",
-  "fiscalSettingsOfdNameHint": "WebKassa / OFD.kz",
   "fiscalSettingsOfdHost": "OFD Server Address",
   "fiscalSettingsOfdHostHint": "https://api.webkassa.kz",
-  "fiscalSettingsWebkassaActive": "WebKassa activated",
-  "fiscalSettingsWebkassaInactive": "WebKassa not activated",
-  "fiscalSettingsCompanyName": "Company Name",
-  "fiscalSettingsCashBox": "Cash Register",
   "fiscalSettingsVatPayer": "VAT Payer",
   "fiscalSettingsVatPayerSubtitle": "Organization is a VAT payer (12%)",
   "fiscalSettingsPrintVat": "Print VAT on receipt",
@@ -2143,7 +1397,6 @@
   "fiscalOffsetPrepaymentReceiptSubtitle": "Issue a fiscal receipt when a customer pays an advance",
   "fiscalOffsetSaveError": "Could not save the setting",
   "customerPaymentTender": "Paid with",
-  "fiscalSettingsVatRate": "VAT rate: 12% (calculated as 3/28)",
   "historyProductUcode": "Product #{ucode}",
   "@historyProductUcode": {
     "placeholders": {
@@ -2164,14 +1417,6 @@
   "@historyAccountId": {
     "placeholders": {
       "id": {
-        "type": "String"
-      }
-    }
-  },
-  "historyLoadError": "Loading error: {error}",
-  "@historyLoadError": {
-    "placeholders": {
-      "error": {
         "type": "String"
       }
     }
@@ -2251,45 +1496,6 @@
   "historyPrevious": "Previous",
   "historyNextPage": "Next",
   "historyLastPage": "Last page",
-  "@historyType": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
-  "historyAmount": "Amount: {amount}",
-  "@historyAmount": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "historyDate": "Date: {date}",
-  "@historyDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "historyPos": "POS: {id}",
-  "@historyPos": {
-    "placeholders": {
-      "id": {
-        "type": "String"
-      }
-    }
-  },
-  "historyClientName": "Client: {name}",
-  "@historyClientName": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "historyFiscalYes": "Yes",
   "historyFiscalNo": "No",
   "historyFiscalError": "Error",
@@ -2352,7 +1558,6 @@
       }
     }
   },
-  "shiftFinishSalesBeforeClose": "Finish or cancel sales before closing the shift",
   "shiftBillsTab": "Bills",
   "shiftTotalTab": "Total",
   "shiftOperationsTab": "Operations",
@@ -2392,7 +1597,6 @@
     }
   },
   "supplyProductNotFound": "Product not found",
-  "supplyInvalidQuantity": "Enter a valid quantity",
   "supplySelectSupplierTitle": "Select supplier",
   "supplySuppliersNotFound": "No suppliers found",
   "supplySelectAccountTitle": "Select account",
@@ -2548,7 +1752,6 @@
       }
     }
   },
-  "syncWidgetWaiting": "Waiting",
   "syncWidgetSynced": "Synced",
   "syncWidgetJustNow": "just now",
   "syncWidgetMinutesAgo": "{minutes} min ago",
@@ -2575,12 +1778,6 @@
       }
     }
   },
-  "syncWidgetConnecting": "Connecting to server...",
-  "syncWidgetSyncingProducts": "Syncing products...",
-  "syncWidgetSyncingSales": "Syncing sales...",
-  "syncWidgetSyncingAgents": "Syncing agents...",
-  "syncWidgetSyncingPrices": "Syncing prices...",
-  "syncWidgetFinishing": "Finishing...",
   "updateDialogUpdating": "Updating...",
   "updateDialogAvailable": "Update available",
   "updateDialogAutoUpdate": "Auto update in {seconds} sec",
@@ -2635,7 +1832,6 @@
   "versionConflictOpenFolder": "Open in folder",
   "versionConflictPreviousVersion": "Previous version",
   "versionConflictContinue": "Continue",
-  "restoreLoadingBackups": "Loading backups...",
   "restoreSearchingBackups": "Searching backups...",
   "restoreLoadError": "Load error: {error}",
   "@restoreLoadError": {
@@ -2687,25 +1883,6 @@
   "agentNotFoundShort": "Not found",
   "agentEnterNameOrPhone": "Enter name or phone",
   "agentEnterCustomerName": "Enter customer name",
-  "agentDeletedCustomerPhone": "Customer with this phone was deleted",
-  "agentWantRestore": "Do you want to restore?",
-  "agentDeleteCustomerTitle": "Delete customer?",
-  "agentDeleteConfirmMessage": "Are you sure you want to delete \"{name}\"?",
-  "@agentDeleteConfirmMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "agentCustomerDeleted": "Customer \"{name}\" deleted",
-  "@agentCustomerDeleted": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "cashOpTitle": "Cash operation",
   "cashOpComment": "Comment",
   "cashOpCommentRequired": "Comment *",
@@ -3021,7 +2198,6 @@
   "paymentAccount": "Account",
   "authNoUsers": "No registered users",
   "authNoPin": "No PIN",
-  "authSelectUser": "Select user",
   "authNoUsersShort": "No users",
   "authEnterPin": "Enter PIN",
   "updateVersion": "Version {version}",
@@ -3048,23 +2224,13 @@
   "updateDownloading": "Downloading update",
   "updateDownloadingFile": "Downloading update file...",
   "updatePosNow": "UPDATE POS",
-  "serviceAddNote": "Add note",
   "serviceClientLookup": "Client lookup",
-  "serviceOrderDetail": "Service order details #{orderId}",
-  "@serviceOrderDetail": {
-    "placeholders": {
-      "orderId": {
-        "type": "int"
-      }
-    }
-  },
   "paymentDefaultLabel": "Default",
   "serviceIntakeTitle": "Service intake",
   "serviceIntakeClient": "Client",
   "serviceIntakeDevice": "Device / Item",
   "serviceIntakeServices": "Services",
   "serviceIntakeDelivery": "Delivery",
-  "serviceIntakePickup": "Pick up from client",
   "serviceIntakeSave": "Save",
   "serviceIntakeCancel": "Cancel",
   "serviceQueueTitle": "Service orders",
@@ -3086,10 +2252,8 @@
   "serviceMarkTesting": "Testing",
   "serviceMarkOther": "Other",
   "serviceAddMark": "Add work entry",
-  "serviceDeleteMark": "Delete entry",
   "serviceMarkDescription": "Description",
   "serviceMarkType": "Work type",
-  "serviceMarkCost": "Cost",
   "serviceMarkNote": "Note",
   "serviceCatalogTitle": "Service catalog",
   "serviceCatalogAdd": "Add service",
@@ -3114,7 +2278,6 @@
       }
     }
   },
-  "serviceTechnicianSelect": "Select technician",
   "servicePrepayment": "Prepayment",
   "servicePrepaymentAmount": "Prepayment amount",
   "serviceEstimatedDate": "Estimated date",
@@ -3129,14 +2292,12 @@
   "serviceDeliveryAddress": "Delivery address",
   "serviceNeedsPickup": "Pick up from client",
   "serviceNeedsDelivery": "Deliver to client",
-  "serviceQrFormat": "TELEPOS:SO:{id}:{number}",
   "serviceOrderCreated": "New order",
   "serviceOrderUpdated": "Edit",
   "serviceNoOrders": "No data",
   "serviceFilterAll": "All",
   "navCatalog": "Catalog",
   "catalogTitle": "Product Catalog",
-  "catalogSearch": "Search",
   "catalogSearchHint": "Name or barcode",
   "catalogFilterAll": "All",
   "catalogFilterProducts": "Products",
@@ -3152,10 +2313,8 @@
   "catalogType": "Type",
   "catalogPrice": "Selling price",
   "catalogWholesalePrice": "Wholesale price",
-  "catalogCategory": "Category",
   "catalogMeasure": "Unit of measure",
   "catalogQuantity": "Stock",
-  "catalogQuickProduct": "Quick product",
   "catalogAddToQuick": "Add to quick products",
   "catalogRemoveFromQuick": "Remove from quick products",
   "catalogNoProducts": "No products",
@@ -3185,7 +2344,6 @@
   "catalogNameRequired": "Enter product name",
   "catalogPriceRequired": "Enter price",
   "catalogPriceInvalid": "Price must be greater than 0",
-  "catalogBarcodeExists": "Product with this barcode already exists",
   "catalogCategories": "Categories",
   "catalogAllCategories": "All categories",
   "catalogNoCategories": "No categories",
@@ -3258,31 +2416,9 @@
   "accountsSettingsVisibleToPos": "Visible in POS",
   "hwSettingsSaved": "Hardware settings saved",
   "hwScannerTitle": "Barcode Scanner",
-  "hwScannerMode": "Scanner Mode",
-  "hwScannerModeKeyboard": "USB / keyboard (wedge)",
-  "hwScannerModeSerial": "Serial",
-  "hwScannerModeCamera": "Camera",
-  "hwScannerModeHint": "USB scanners work in this mode",
-  "hwScannerTimeout": "Timeout",
-  "hwScannerMinLength": "Min length",
-  "hwScannerMaxLength": "Max length",
   "hwDisplayTitle": "Customer Display",
-  "hwDisplayModel": "Model",
-  "hwDisplayModelLed8": "LED 8 chars",
-  "hwDisplayModelVfd20": "VFD 20x2",
-  "hwDisplayPort": "COM Port",
-  "hwDisplayBaudRate": "Baud Rate",
-  "hwDisplayDisabled": "Customer display disabled",
   "hwDrawerTitle": "Cash Drawer",
-  "hwDrawerMode": "Open Mode",
-  "hwDrawerModePrinter": "Via Printer",
-  "hwDrawerModeSerial": "Serial Port",
-  "hwDrawerPort": "COM Port",
   "hwTerminalsTitle": "Payment Terminals",
-  "hwTerminalIp": "IP Address",
-  "hwTerminalPort": "Port",
-  "hwTerminalMerchantId": "Merchant ID",
-  "hwTerminalTerminalId": "Terminal ID",
   "catalogExportCsv": "Export CSV",
   "catalogImport": "Import",
   "catalogFilterColumn": "Filter...",
@@ -3326,9 +2462,7 @@
   "catalogFilterInner": "Internal",
   "serviceMarkConsumable": "Consumable material",
   "serviceConsumableSearch": "Search product / consumable",
-  "serviceConsumableSelected": "Selected product",
   "serviceQuickServicesTitle": "Quick services",
-  "serviceQuickServicesEmpty": "No quick services",
   "serviceIntakeItems": "Items received",
   "serviceItemName": "What are you accepting (item, thing, device)",
   "serviceItemDescription": "Problem description / client wishes",
@@ -3349,13 +2483,11 @@
   "catalogTypeDish": "Dish",
   "catalogFilterDish": "Dishes",
   "dishCalculation": "Costing",
-  "dishCalculationStub": "Costing module will be available later",
   "dishIngredients": "Ingredients",
   "serviceConsumablesTitle": "Consumption norms",
   "serviceConsumablesEmpty": "No consumable materials",
   "serviceConsumablesAdd": "Add consumable",
   "serviceConsumableQuantity": "Qty per 1 service",
-  "serviceConsumablesAutoAdded": "Consumables added automatically",
   "catalogDescription": "Description",
   "catalogImagePlaceholder": "Tap to upload photo",
   "globalRetry": "Retry",
@@ -3554,10 +2686,8 @@
   "labelPrinterSettingsTitle": "Label printer",
   "labelPrinterSettingsSubtitle": "Price tags and barcodes",
   "labelPrinterLanguage": "Printer language",
-  "labelPrinterSize": "Label size",
   "labelPrinterWidthMm": "Width, mm",
   "labelPrinterHeightMm": "Height, mm",
-  "labelPrinterTestSuccess": "Label sent to printer",
   "labelPrinterNotConfigured": "Label printer is not configured. Set the address in settings.",
   "labelTemplatesTitle": "Label templates",
   "labelTemplatesManage": "Manage templates",
@@ -3608,15 +2738,9 @@
   "receiptTemplateHeaderFooter": "Header and footer",
   "receiptTemplateHeaderText": "Header text",
   "receiptTemplateFooterText": "Footer text",
-  "receiptTemplateExtraFooter": "Extra footer lines",
-  "receiptTemplateExtraFooterHint": "One line each (e.g. return policy)",
-  "receiptTemplateShowBin": "Print BIN/IIN",
   "receiptTemplateShowAddress": "Print address",
   "receiptTemplateShowCashier": "Print cashbox/cashier",
-  "receiptTemplateShowVat": "Print VAT",
-  "receiptTemplateShowQr": "Print verification link (QR)",
   "receiptTemplateShowItemNumbers": "Number items",
-  "receiptTemplateShowLogo": "Print logo",
   "receiptTemplateTestPrint": "Test print",
   "receiptTemplateTestPrintOk": "Sample receipt sent to printer",
   "receiptTemplateTestPrintFail": "Print failed (check the printer)",
@@ -3785,9 +2909,7 @@
   "sysmTerminalOpen": "Open terminal",
   "sysmTerminalRootNote": "Commands run as root on the appliance.",
   "sysmTerminalHint": "Enter a command (e.g.: systemctl status telepos-sysd)",
-  "sysmTerminalRun": "Run",
   "sysmTerminalClear": "Clear output",
-  "sysmTerminalRunning": "Running…",
   "sysmTerminalExitCode": "Exit code: {code}",
   "@sysmTerminalExitCode": {
     "placeholders": {
@@ -3797,12 +2919,7 @@
     }
   },
   "sysmTerminalEmpty": "Output will appear here",
-  "sysmTerminalHistory": "Command history",
   "sysmTerminalPresets": "Presets",
-  "sysmTerminalPresetsNetwork": "Network",
-  "sysmTerminalPresetsPrinters": "Printers",
-  "sysmTerminalPresetsSystem": "System",
-  "sysmTerminalPresetsTime": "Time",
   "sysmTermGroupDiagnostics": "Diagnostics",
   "sysmTermGroupPrinter": "Printer",
   "sysmTermGroupNetwork": "Network",
@@ -3831,8 +2948,6 @@
   "sysmTermSysKioskLogs": "Kiosk logs",
   "sysmTermTimeDateTime": "Date and time",
   "sysmTermTimeNtpSync": "NTP sync",
-  "labelPrinterDevicePath": "Device path",
-  "labelPrinterDevicePathHint": "E.g. /dev/usb/lp0 (USB) or /dev/ttyUSB0 (Serial). Leave empty for the default.",
   "movementTitle": "Transfer",
   "movementTitleFull": "Stock transfer",
   "movementFrom": "From *",
@@ -3956,7 +3071,6 @@
   "esfSettingsEnable": "Enable ESF",
   "esfSettingsEnableSubtitle": "Build invoices for B2B sales (by buyer BIN)",
   "esfSettingsOperator": "ESF operator",
-  "esfSettingsTestMode": "Test mode",
   "esfSettingsSupplier": "Supplier requisites (our organization)",
   "esfSettingsBin": "BIN/IIN",
   "esfSettingsName": "Name",
@@ -3965,9 +3079,6 @@
   "esfSettingsVatSeries": "VAT certificate series",
   "esfSettingsVatNumber": "VAT certificate number",
   "esfSettingsVatRate": "VAT rate, %",
-  "esfSettingsEcp": "Digital signature (NCA RK)",
-  "esfSettingsEcpKeyPath": "Signature key path",
-  "esfSettingsEcpKeyAlias": "Key alias",
   "esfSettingsB2bOnly": "B2B only",
   "esfSettingsB2bOnlySubtitle": "Do not build ESF for retail sales to individuals",
   "esfSettingsEcpHint": "Real issuance requires an NCA RK signature and an IS ESF profile. Drafts are built and stored offline without a signature.",
@@ -3975,7 +3086,6 @@
   "esfOutboxTitle": "ESF outbox",
   "esfOutboxEmpty": "No ESF documents",
   "esfOutboxEmptyHint": "Invoices will appear here after B2B sales",
-  "esfOutboxRetry": "Retry submission",
   "esfOutboxRetryAll": "Retry all",
   "esfOutboxRetryDone": "Processed: delivered {delivered}, queued {queued}, failed {failed}",
   "@esfOutboxRetryDone": {
@@ -4067,18 +3177,9 @@
   "sntSettingsEnable": "Enable SNT",
   "sntSettingsEnableSubtitle": "Assemble and submit accompanying waybills (IS ESF)",
   "sntSettingsProvider": "Submission method",
-  "sntSettingsTestMode": "Test mode",
   "sntSettingsRequisites": "Taxpayer details",
   "sntSettingsOwnBin": "BIN / IIN (ours)",
   "sntSettingsWarehouseCode": "Virtual warehouse code",
-  "sntSettingsBackend": "TelePOS backend (IS ESF proxy)",
-  "sntSettingsBackendUrl": "Backend URL",
-  "sntSettingsApiKey": "API key",
-  "sntSettingsEcp": "Digital signature (NUC RK)",
-  "sntSettingsCertPath": "Signature key path",
-  "sntSettingsCertPassword": "Key password",
-  "sntSettingsEcpHint": "Real SNT submission requires a NUC RK digital signature and a registered IS ESF profile. Without a signature, documents are assembled and stored locally (the Virtual warehouse works offline).",
-  "sntSettingsSharedEsfHint": "SNT and ESF are KGD subsystems. The BIN and signature can be configured on the ESF screen.",
   "sntSettingsWebkassaNote": "Connection credentials (login, apiKey, cashbox, signature) come from WebKassa (Fiscal) settings — one shared config.",
   "sntSettingsOpenEsf": "ESF settings",
   "sntSettingsSave": "Save",
@@ -4141,23 +3242,11 @@
   "ismptSettingsEnable": "Enable IS MPT",
   "ismptSettingsEnableSubtitle": "Verify and submit marking codes (ismet.kz / Tañba)",
   "ismptSettingsBackend": "Backend",
-  "ismptSettingsTestMode": "Test mode",
-  "ismptSettingsRequisites": "Taxpayer details",
-  "ismptSettingsOwnBin": "BIN / IIN (ours)",
-  "ismptSettingsApi": "True API (ismet.kz)",
-  "ismptSettingsApiUrl": "API URL",
-  "ismptSettingsApiKey": "API key / token",
-  "ismptSettingsEcp": "Digital signature (NUC RK)",
-  "ismptSettingsCertPath": "Signature key path",
-  "ismptSettingsCertPassword": "Key password",
-  "ismptSettingsEcpHint": "Live IS MPT operations require an NUC RK digital signature and a registered participant profile. Without a signature, marking codes are accepted and stored locally (receiving works offline, sales are never blocked).",
-  "ismptSettingsSharedEsfHint": "IS MPT and ESF are KGD subsystems. BIN and digital signature can be configured on the ESF screen.",
   "ismptSettingsWebkassaNote": "Marking-code verification runs through WebKassa. Connection credentials (login, apiKey, cashbox, signature) come from WebKassa (Fiscal) settings — one shared config.",
   "ismptSettingsOpenEsf": "ESF settings",
   "ismptSettingsSave": "Save",
   "ismptSettingsSaved": "IS MPT settings saved",
   "ismptSettingsSaveError": "Failed to save IS MPT settings",
-  "ismptSettingsBinRequired": "Enter the taxpayer's BIN / IIN",
   "reorderRulesTitle": "Reorder rules",
   "reorderRulesSubtitle": "Minimum stock per product",
   "reorderRulesEmpty": "No reorder rules",
@@ -4197,7 +3286,6 @@
   "shiftClosedGateTitle": "Shift is closed",
   "shiftClosedGateMessage": "Open a shift to continue with operations.",
   "shiftClosedGateOpen": "Open shift",
-  "sysmTerminalPresetsDiag": "Diagnostics",
   "wmsDashboardTitle": "WMS — Warehouse management",
   "wmsDashboardTitleShort": "WMS — Warehouse",
   "wmsSettings": "WMS settings",
@@ -4492,8 +3580,6 @@
   "setDeleteUserTitle": "Delete user?",
   "setDeleteUserConfirm": "User \"{name}\" will be deleted. This action cannot be undone.",
   "setDeleteUserError": "Failed to delete user: {error}",
-  "setUserNoEncryptionKey": "Encryption key is not set. Complete the initial POS setup.",
-  "setUserPinEncryptFailed": "Failed to encrypt PIN",
   "setWmsTitle": "WMS settings",
   "setWmsModules": "WMS modules",
   "setWmsCellStorage": "Bin storage",
@@ -4903,19 +3989,6 @@
   "setPolicyBigAmountDesc": "Lift the 1,000,000 cap on operations",
   "setPolicyBlockPriceDecrease": "Forbid lowering price below the card price",
   "setPolicyBlockPriceDecreaseDesc": "A receipt line price cannot be set below the product price",
-  "printerAutoDetect": "Find printer",
-  "printerAutoDetecting": "Searching for printer…",
-  "printerFound": "Found: {device}",
-  "printerFoundWithNote": "Found: {device} — {note}",
-  "printerNotFoundAnyPort": "Printer not found on any port (USB/serial). Check the cable and power.",
-  "printerUsbName": "USB printer",
-  "printerSelectDevice": "Select printer",
-  "printerNoAccessGroupLp": "Node found but no access (group lp required)",
-  "printerLabelUsb": "USB printer ({path})",
-  "printerLabelSerial": "Serial printer ({path})",
-  "printerNoAccessGroupLpHint": "Node found but no access (group lp required): usermod -aG lp telepos and restart the session.",
-  "printerRawOpenNoPermsHint": "Node {path} found but cannot be opened — no permissions. Add the user to group lp (usermod -aG lp telepos) and restart the session/appliance.",
-  "printerNotFoundNoNode": "Printer not found: no /dev/usb/lp* char node and no USB-serial port. Check the printer cable and power.",
   "ownerOnlyTitle": "Available to the till owner only",
   "ownerOnlyDesc": "System operations (reboot, reset, drivers, terminal) are available only under the owner account.",
   "telegramApiSectionTitle": "Telegram application",
@@ -4931,7 +4004,6 @@
   "telegramApiStatusMissing": "Credentials not set",
   "deviceSearchButton": "Search",
   "deviceSearchTitle": "Discovered devices",
-  "deviceSearchRunning": "Searching…",
   "deviceSearchEmpty": "Nothing found. Every source was searched — the device is not attached or is switched off.",
   "deviceSearchNoValueForField": "Devices were found, but none of them supplies a value for this field.",
   "deviceSearchFailedSources": "Could not search over: {sources}. That is not the same as “nothing is attached”.",
@@ -4989,7 +4061,6 @@
       }
     }
   },
-  "scannerRulesSaved": "Barcode reading rules saved",
   "printQueueSectionTitle": "Print queue",
   "printQueueSubtitle": "What is waiting to print, what did not print and why.",
   "printQueueEmpty": "The queue is empty — there are no unprinted receipts.",
@@ -5588,10 +4659,7 @@
   "emulatorScaleWeight": "Weight on the pan",
   "emulatorScaleWeightHint": "Emulator control: this is the number the scales will report",
   "emulatorQrProvider": "QR payment provider",
-  "emulatorQrAddressHint": "Enter this address in the QR provider settings",
-  "emulatorQrBindAction": "Use in QR settings",
   "emulatorQrBindDone": "QR settings now point at the emulator",
-  "emulatorQrBindingStale": "QR settings point at a stopped emulator — code payment will fail",
   "diagnosticsTabPayment": "Payment",
   "diagnosticsPaymentEmulatorBanner": "The QR provider is on this same computer: an emulator answers, not a bank",
   "paymentDiagnosticsUnavailable": "There is no payment data on this workstation",
@@ -6125,7 +5193,6 @@
   "rcpCustomer": "Customer:",
   "rcpDate": "Date:",
   "rcpBinIin": "Business ID:",
-  "rcpThankYou": "Thank you for your purchase!",
   "rcpSale": "SALE",
   "rcpSubtotal": "Subtotal:",
   "rcpDiscount": "Discount:",
@@ -6219,7 +5286,6 @@
     }
   },
   "taxSettingsPresetApplied": "Preset applied",
-  "taxSettingsCurrentSection": "Current setup",
   "taxSettingsRateForStandard": "Standard item: {rate}%",
   "@taxSettingsRateForStandard": {
     "placeholders": {
@@ -6232,28 +5298,14 @@
   "taxSettingsCategories": "Product categories",
   "taxSettingsTillLocation": "This till is located here",
   "taxSettingsTillLocationHint": "More than one may be ticked: the city and its special districts. Higher levels are added automatically.",
-  "taxSettingsRules": "Rules",
   "taxSettingsRuleTaxed": "taxed",
   "taxSettingsRuleZero": "zero rated",
   "taxSettingsRuleExempt": "exempt",
   "taxSettingsAllCategories": "all categories",
   "taxSettingsAddJurisdiction": "Add jurisdiction",
   "taxSettingsAddCategory": "Add category",
-  "taxSettingsAddRule": "Add rule",
   "taxSettingsName": "Name",
-  "taxSettingsCode": "Code",
-  "taxSettingsRate": "Rate, %",
-  "taxSettingsValidFrom": "Effective from",
-  "taxSettingsParent": "Parent",
-  "taxSettingsNoParent": "none (root)",
-  "taxSettingsLevel": "Level",
-  "taxSettingsLevelCountry": "Country",
-  "taxSettingsLevelState": "State",
-  "taxSettingsLevelCounty": "County",
-  "taxSettingsLevelCity": "City",
-  "taxSettingsLevelDistrict": "Special district",
   "taxSettingsDelete": "Delete",
-  "taxSettingsDeleteJurisdictionWarning": "Its rules and nested jurisdictions go with it.",
   "taxSettingsResponsibility": "Preset figures come from public sources, each cited. Responsibility for the tax charged lies with the taxpayer, not the software.",
   "taxSettingsNoPresetsForCountry": "No presets ship for this country — set it up by hand.",
   "taxSettingsAdd": "Add",
@@ -6395,11 +5447,9 @@
   "salePolicyForbids": "The till settings do not allow this (Settings → Sales policy)",
   "labelPrintFailed": "The label could not be printed",
   "labelPrintFromTillOnly": "Labels print from the till, not from a terminal",
-  "orphanQrTillNotRegistered": "This till is not registered — there is nobody to ask about unmatched QR money",
   "stockLowStockReorder": "Re-order products that are running low",
   "serviceNoteNeedsApproval": "Needs the customer to approve",
   "deferredFromTill": "till {id}",
-  "dishSummary": "Ingredients: {count}, cost: {cost}",
   "prepaymentIssueTo": "Advance paid out to {name}",
   "prepaymentFrom": "Advance from {name}",
   "prepaymentRefundTo": "Advance refunded to {name}",

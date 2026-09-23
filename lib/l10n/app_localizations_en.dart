@@ -72,9 +72,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get globalWarning => 'Warning';
 
   @override
-  String get globalInfo => 'Info';
-
-  @override
   String get globalConfirm => 'Confirm';
 
   @override
@@ -85,9 +82,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get globalAll => 'All';
-
-  @override
-  String get globalNone => 'None';
 
   @override
   String get globalTotal => 'Total';
@@ -108,37 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get globalDate => 'Date';
 
   @override
-  String get globalTime => 'Time';
-
-  @override
-  String get loginTitle => 'Login';
-
-  @override
-  String get loginPin => 'Enter PIN';
-
-  @override
-  String get loginPinHint => '4 digits';
-
-  @override
   String get loginEnter => 'Enter';
-
-  @override
-  String get loginSelectUser => 'Select user';
-
-  @override
-  String get loginNoUsers => 'No users';
-
-  @override
-  String get loginWrongPin => 'Wrong PIN';
-
-  @override
-  String get loginBlocked => 'User blocked';
-
-  @override
-  String get loginSessionExpired => 'Session expired';
-
-  @override
-  String get loginShiftRequired => 'Open shift to login';
 
   @override
   String get staffRoleOwner => 'Owner';
@@ -162,57 +126,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginAdmin => 'Administrator';
 
   @override
-  String get loginManager => 'Manager';
-
-  @override
   String get loginLogout => 'Logout';
-
-  @override
-  String get loginSwitchUser => 'Switch user';
-
-  @override
-  String get saleTitle => 'Sale';
-
-  @override
-  String get saleNewSale => 'New sale';
-
-  @override
-  String get saleAddProduct => 'Add product';
-
-  @override
-  String get saleScanBarcode => 'Scan barcode';
-
-  @override
-  String get saleEnterBarcode => 'Enter barcode';
 
   @override
   String get saleProductNotFound => 'Product not found';
 
   @override
-  String get saleEmptyCart => 'Cart is empty';
-
-  @override
-  String get saleSubtotal => 'Subtotal';
-
-  @override
-  String get saleTax => 'Tax';
-
-  @override
-  String get saleTotalDiscount => 'Discount';
-
-  @override
   String get saleToPay => 'To pay';
-
-  @override
-  String saleItems(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count items',
-      one: '$count item',
-    );
-    return '$_temp0';
-  }
 
   @override
   String paymentCardChargeUnsettled(String amount) {
@@ -223,40 +143,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saleRemoveItem => 'Remove item';
 
   @override
-  String get saleClearCart => 'Clear cart';
-
-  @override
-  String get saleConfirmClear => 'Clear cart?';
-
-  @override
-  String get saleProceedPayment => 'Proceed to payment';
-
-  @override
   String get saleHold => 'Hold';
 
   @override
   String get saleRecall => 'Recall';
-
-  @override
-  String get saleHeldSales => 'Held sales';
-
-  @override
-  String get saleNoHeldSales => 'No held sales';
-
-  @override
-  String get saleProductSearch => 'Search products';
-
-  @override
-  String get saleByCategory => 'By category';
-
-  @override
-  String get saleByName => 'By name';
-
-  @override
-  String get saleByBarcode => 'By barcode';
-
-  @override
-  String get saleWeight => 'Weight';
 
   @override
   String saleWeightKg(String weight) {
@@ -264,27 +154,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get saleEnterWeight => 'Enter weight';
-
-  @override
-  String get saleEnterQuantity => 'Enter quantity';
-
-  @override
-  String get saleEnterPrice => 'Enter price';
-
-  @override
-  String get saleFreePrice => 'Free price';
-
-  @override
-  String saleMaxDiscount(String percent) {
-    return 'Max discount: $percent%';
-  }
-
-  @override
   String get refundTitle => 'Refund';
-
-  @override
-  String get refundNewRefund => 'New refund';
 
   @override
   String get refundByReceipt => 'By receipt';
@@ -293,31 +163,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refundWithoutReceipt => 'Without receipt';
 
   @override
-  String get refundEnterReceipt => 'Enter receipt number';
-
-  @override
   String get refundReceiptNotFound => 'Receipt not found';
-
-  @override
-  String get refundSelectItems => 'Select items to refund';
-
-  @override
-  String get refundReason => 'Refund reason';
-
-  @override
-  String get refundConfirm => 'Confirm refund';
 
   @override
   String get refundAmount => 'Refund amount';
 
   @override
   String get refundComplete => 'Refund complete';
-
-  @override
-  String get refundCash => 'Cash refund';
-
-  @override
-  String get refundCard => 'Card refund';
 
   @override
   String get refundConnectionLostHint =>
@@ -330,12 +182,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refundNoItems => 'No items to refund';
 
   @override
-  String get refundAlreadyRefunded => 'Item already refunded';
-
-  @override
-  String get refundPartial => 'Partial refund';
-
-  @override
   String get shiftTitle => 'Shift';
 
   @override
@@ -343,9 +189,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shiftClose => 'Close shift';
-
-  @override
-  String get shiftCurrent => 'Current shift';
 
   @override
   String shiftNumber(int number) {
@@ -358,34 +201,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String shiftCashier(String name) {
-    return 'Cashier: $name';
-  }
-
-  @override
-  String shiftSalesCount(int count) {
-    return 'Sales: $count';
-  }
-
-  @override
-  String shiftRefundsCount(int count) {
-    return 'Refunds: $count';
-  }
-
-  @override
-  String get shiftTotalSales => 'Total sales';
-
-  @override
-  String get shiftTotalRefunds => 'Total refunds';
-
-  @override
   String get shiftCashInDrawer => 'Cash in drawer';
 
   @override
   String get shiftExpected => 'Expected';
-
-  @override
-  String get shiftActual => 'Actual';
 
   @override
   String get shiftDifference => 'Difference';
@@ -395,18 +214,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shiftZReport => 'Z-report';
-
-  @override
-  String get shiftConfirmClose => 'Close shift?';
-
-  @override
-  String get shiftAlreadyOpen => 'Shift already open';
-
-  @override
-  String get shiftNotOpen => 'Shift not open';
-
-  @override
-  String get shiftOpenFirst => 'Open shift first';
 
   @override
   String get paymentTitle => 'Payment';
@@ -433,53 +240,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentMixed => 'Mixed';
 
   @override
-  String get paymentEnterAmount => 'Enter amount';
-
-  @override
-  String paymentRemaining(String amount) {
-    return 'Remaining: $amount';
-  }
-
-  @override
-  String paymentChange(String amount) {
-    return 'Change: $amount';
-  }
-
-  @override
   String get paymentComplete => 'Payment complete';
 
   @override
   String get paymentFailed => 'Payment failed';
-
-  @override
-  String get paymentWaitingCard => 'Waiting for card...';
-
-  @override
-  String get paymentWaitingQr => 'Waiting for QR...';
-
-  @override
-  String get paymentInsertCard => 'Insert card';
-
-  @override
-  String get paymentScanQr => 'Scan QR';
-
-  @override
-  String get paymentApproved => 'Approved';
-
-  @override
-  String get paymentDeclined => 'Declined';
-
-  @override
-  String get paymentReceipt => 'Print receipt';
-
-  @override
-  String get paymentNoReceipt => 'No receipt';
-
-  @override
-  String get paymentEmail => 'Send email';
-
-  @override
-  String get paymentSms => 'Send SMS';
 
   @override
   String get historyTitle => 'History';
@@ -491,32 +255,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyYesterday => 'Yesterday';
 
   @override
-  String get historyThisWeek => 'This week';
-
-  @override
-  String get historyThisMonth => 'This month';
-
-  @override
-  String get historyDateRange => 'Select period';
-
-  @override
-  String get historyNoSales => 'No sales for period';
-
-  @override
-  String historyReceipt(String number) {
-    return 'Receipt #$number';
-  }
-
-  @override
-  String get historyReprint => 'Reprint';
-
-  @override
   String certificateSlipPrintFailed(String number, String reason) {
     return 'Certificate slip $number was not printed: $reason';
   }
-
-  @override
-  String get historyDetails => 'Details';
 
   @override
   String get historySale => 'Sale';
@@ -525,22 +266,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyRefund => 'Refund';
 
   @override
-  String get historyFilter => 'Filter';
-
-  @override
-  String get agentTitle => 'Agents';
-
-  @override
   String get agentClients => 'Clients';
 
   @override
   String get agentSuppliers => 'Suppliers';
-
-  @override
-  String get agentSearch => 'Search agent';
-
-  @override
-  String get agentAdd => 'Add agent';
 
   @override
   String get agentEdit => 'Edit';
@@ -552,31 +281,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agentPhone => 'Phone';
 
   @override
-  String get agentEmail => 'Email';
-
-  @override
   String get agentIin => 'IIN/BIN';
-
-  @override
-  String get agentAddress => 'Address';
 
   @override
   String get agentBalance => 'Balance';
 
   @override
-  String get agentBonusBalance => 'Bonus balance';
-
-  @override
   String get agentDebt => 'Debt';
-
-  @override
-  String get agentNoAgents => 'No agents';
-
-  @override
-  String get agentSaveSuccess => 'Agent saved';
-
-  @override
-  String get agentDeleteConfirm => 'Delete agent?';
 
   @override
   String get cashTitle => 'Cash';
@@ -606,19 +317,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cashExpense => 'Cash out';
 
   @override
-  String get cashBalance => 'Cash balance';
-
-  @override
   String get cashEnterAmount => 'Enter amount';
-
-  @override
-  String get cashReason => 'Reason';
-
-  @override
-  String get cashReasonPlaceholder => 'Enter reason';
-
-  @override
-  String get cashSuccess => 'Operation complete';
 
   @override
   String get cashExpenseTypes => 'Expense type';
@@ -630,46 +329,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discountPercent => 'Percent';
 
   @override
-  String get discountFixed => 'Fixed';
-
-  @override
-  String get discountEnterValue => 'Enter value';
-
-  @override
   String get discountApply => 'Apply';
-
-  @override
-  String get discountRemove => 'Remove discount';
-
-  @override
-  String get discountOnItem => 'Item discount';
-
-  @override
-  String get discountOnTotal => 'Total discount';
-
-  @override
-  String get discountMaxExceeded => 'Maximum discount exceeded';
 
   @override
   String get quickProductTitle => 'Quick products';
 
   @override
-  String get quickProductAdd => 'Add product';
-
-  @override
-  String get quickProductName => 'Name';
-
-  @override
-  String get quickProductPrice => 'Price';
-
-  @override
   String get quickProductCategory => 'Category';
-
-  @override
-  String get quickProductSave => 'Save';
-
-  @override
-  String get quickProductDelete => 'Delete';
 
   @override
   String get syncTitle => 'Sync';
@@ -718,12 +384,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncOnline => 'Online';
 
   @override
-  String get printerTitle => 'Printer';
-
-  @override
-  String get printerStatus => 'Printer status';
-
-  @override
   String get printerConnected => 'Connected';
 
   @override
@@ -733,61 +393,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get printerError => 'Printer error';
 
   @override
-  String get printerPaperOut => 'Paper out';
-
-  @override
   String get printerConnect => 'Connect';
 
   @override
   String get printerDisconnect => 'Disconnect';
 
   @override
-  String get printerTest => 'Test print';
-
-  @override
   String get printerSettings => 'Printer settings';
-
-  @override
-  String get printerWidth => 'Receipt width';
 
   @override
   String get additionalTitle => 'Additional';
 
   @override
-  String get additionalSettings => 'Settings';
-
-  @override
-  String get additionalReports => 'Reports';
-
-  @override
-  String get additionalInventory => 'Inventory';
-
-  @override
   String get additionalSupply => 'Supply';
 
   @override
-  String get additionalPriceChange => 'Price change';
-
-  @override
-  String get additionalBackup => 'Backup';
-
-  @override
-  String get additionalRestore => 'Restore';
-
-  @override
   String get additionalUpdate => 'Update';
-
-  @override
-  String get additionalAbout => 'About';
-
-  @override
-  String get additionalLicense => 'License';
-
-  @override
-  String get additionalSupport => 'Support';
-
-  @override
-  String get receiptTitle => 'Receipt';
 
   @override
   String get receiptNumber => 'Receipt #';
@@ -796,108 +417,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receiptDate => 'Date';
 
   @override
-  String get receiptCashier => 'Cashier';
-
-  @override
-  String get receiptItems => 'Items';
-
-  @override
-  String get receiptSubtotal => 'Subtotal';
-
-  @override
-  String get receiptDiscount => 'Discount';
-
-  @override
-  String get receiptTax => 'Tax';
-
-  @override
   String get receiptTotal => 'TOTAL';
-
-  @override
-  String get receiptCash => 'Cash';
-
-  @override
-  String get receiptCard => 'Card';
-
-  @override
-  String get receiptChange => 'Change';
-
-  @override
-  String get receiptThankYou => 'Thank you for your purchase!';
-
-  @override
-  String get receiptFiscalNumber => 'Fiscal number';
-
-  @override
-  String get receiptQrCode => 'QR for verification';
-
-  @override
-  String get receiptCopy => 'Receipt copy';
-
-  @override
-  String get errorUnknown => 'Unknown error';
-
-  @override
-  String get errorNetwork => 'Network error';
-
-  @override
-  String get errorServer => 'Server error';
-
-  @override
-  String get errorTimeout => 'Timeout';
-
-  @override
-  String get errorNotFound => 'Not found';
-
-  @override
-  String get errorPermission => 'Permission denied';
-
-  @override
-  String get errorDatabase => 'Database error';
-
-  @override
-  String get errorValidation => 'Validation error';
-
-  @override
-  String get errorRequired => 'Required field';
 
   @override
   String get errorInvalidFormat => 'Invalid format';
 
   @override
-  String errorMinLength(int min) {
-    return 'Minimum $min characters';
-  }
-
-  @override
-  String errorMaxLength(int max) {
-    return 'Maximum $max characters';
-  }
-
-  @override
-  String errorMinValue(String min) {
-    return 'Minimum $min';
-  }
-
-  @override
-  String errorMaxValue(String max) {
-    return 'Maximum $max';
-  }
-
-  @override
   String get errorPrinter => 'Printer error';
-
-  @override
-  String get errorFiscal => 'Fiscal error';
-
-  @override
-  String get errorPayment => 'Payment error';
-
-  @override
-  String get errorSync => 'Sync error';
-
-  @override
-  String get errorNoInternet => 'No internet connection';
 
   @override
   String get errorTryAgain => 'Try again';
@@ -987,18 +513,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginShiftUnknown => 'Shift: no answer from the till';
 
   @override
-  String get saleQuickProducts => 'Quick products';
-
-  @override
-  String get saleIncrease => 'Increase';
-
-  @override
-  String get saleDecrease => 'Decrease';
-
-  @override
-  String get saleMark => 'Marking';
-
-  @override
   String get saleDataMatrix => 'Marking (DataMatrix)';
 
   @override
@@ -1028,9 +542,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refundWithReceipt => 'WITH RECEIPT';
 
   @override
-  String get refundWithoutReceiptUpper => 'WITHOUT RECEIPT';
-
-  @override
   String get refundLoadReceipt => 'Load receipt';
 
   @override
@@ -1056,55 +567,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get refundSuccessMsg => 'Refund completed successfully';
-
-  @override
   String get refundSearchHint => 'Search product for refund';
-
-  @override
-  String get paymentRefundTitle => 'Refund';
-
-  @override
-  String get paymentPayTitle => 'Payment';
-
-  @override
-  String get paymentRefundBtn => 'REFUND';
-
-  @override
-  String get paymentPayBtn => 'PAY';
 
   @override
   String get paymentChangeLabel => 'Change:';
 
   @override
-  String get paymentSuccessRefund => 'Refund completed';
-
-  @override
-  String get paymentSuccessPay => 'Payment successful';
-
-  @override
-  String get paymentCardType => 'Card';
-
-  @override
-  String get paymentToPay => 'To pay';
-
-  @override
-  String get paymentBonusLabel => 'Bonuses';
-
-  @override
-  String get paymentTotalToPay => 'Total to pay';
-
-  @override
   String get paymentByCard => 'By card';
-
-  @override
-  String get paymentRemainLabel => 'Remaining';
-
-  @override
-  String get shiftBills => 'Bills';
-
-  @override
-  String get shiftTotalAmount => 'Total amount';
 
   @override
   String get shiftOperations => 'Operations';
@@ -1138,25 +607,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shiftEntered => 'Entered';
 
   @override
-  String get shiftRecounting => 'Bill recount';
-
-  @override
   String get shiftManualEntry => 'Manual amount entry';
-
-  @override
-  String get shiftCashOps => 'Cash operations';
 
   @override
   String get shiftOpenAction => 'Opening shift';
 
   @override
-  String get shiftCloseAction => 'Closing shift';
-
-  @override
   String get historyOperations => 'Transaction history';
-
-  @override
-  String get historyResetFilters => 'Reset filters';
 
   @override
   String get historyRefresh => 'Refresh';
@@ -1171,29 +628,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyEmpty => 'No transaction history';
 
   @override
-  String get historyFilterTitle => 'Filters';
-
-  @override
   String get historyPeriod => 'Period';
-
-  @override
-  String get historyOpType => 'Operation type';
 
   @override
   String get historySearchHint => 'Receipt number, amount...';
 
   @override
-  String historyType(String type) {
-    return 'Type:';
-  }
-
-  @override
   String get historyPrint => 'Print receipt';
-
-  @override
-  String agentFound(int count) {
-    return 'Found: $count';
-  }
 
   @override
   String get agentWithDebt => 'With debt only';
@@ -1202,22 +643,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agentSearchHint => 'Search by name or phone...';
 
   @override
-  String get agentNewClient => 'New client';
-
-  @override
   String get agentNameRequired => 'Name *';
-
-  @override
-  String get agentEnterName => 'Enter client name';
-
-  @override
-  String get agentPhoneLabel => 'Phone';
-
-  @override
-  String get agentIinLabel => 'BIN/IIN';
-
-  @override
-  String get agentIinHint => '12 digits';
 
   @override
   String get agentDeleteQuestion => 'Delete client?';
@@ -1228,22 +654,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get agentDeleted => 'Client deleted';
-
-  @override
-  String get agentFoundExisting => 'Client found';
-
-  @override
   String get supplyTitle => 'Supply receipt';
 
   @override
-  String get supplySaved => 'Supply saved';
-
-  @override
   String get supplySaveError => 'Save error';
-
-  @override
-  String get supplyCancelQuestion => 'Cancel supply?';
 
   @override
   String get supplyDataLost => 'All entered data will be lost.';
@@ -1254,27 +668,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get supplyBarcodeHint => 'Barcode or article';
-
-  @override
   String get supplyComment => 'Comment';
 
   @override
   String get supplyCommentHint => 'Enter comment...';
 
   @override
-  String get supplyNotFound => 'Product not found';
-
-  @override
   String get supplySelectSupplier => 'Select supplier';
 
   @override
   String get supplySelectAccount => 'Select account';
-
-  @override
-  String supplyBalance(String amount) {
-    return 'Balance: $amount';
-  }
 
   @override
   String get supplyPurchasePrice => 'Purchase price';
@@ -1293,12 +696,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get supplySerialMismatch =>
       'Serial number count does not match quantity';
-
-  @override
-  String get supplyInvalidQty => 'Enter valid quantity';
-
-  @override
-  String get supplyInvalidPrice => 'Enter valid price';
 
   @override
   String get inventoryTitle => 'Inventory';
@@ -1402,85 +799,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
-  String get settingsPosInfo => 'POS info';
-
-  @override
-  String get settingsPosName => 'POS name';
-
-  @override
-  String get settingsCompany => 'Company';
-
-  @override
-  String get settingsIin => 'IIN/BIN';
-
-  @override
-  String get settingsPosId => 'POS ID';
-
-  @override
-  String get settingsStoreId => 'Store ID';
-
-  @override
-  String get settingsNotSpecified => 'Not specified';
-
-  @override
-  String get settingsAppVersion => 'App version';
-
-  @override
-  String get settingsVersion => 'Version';
-
-  @override
-  String get settingsPlatform => 'Platform';
-
-  @override
   String get settingsLanguage => 'Interface language';
 
   @override
   String get settingsLanguageChanged => 'Language changed';
 
   @override
-  String get settingsCurrency => 'Currency';
-
-  @override
-  String get settingsCurrencySymbol => 'Symbol';
-
-  @override
-  String get settingsCurrencyCode => 'Code';
-
-  @override
-  String get settingsCountry => 'Country';
-
-  @override
-  String get settingsAdditional => 'Additional settings';
-
-  @override
   String get settingsTransport => 'Transport';
-
-  @override
-  String get settingsTransportDesc => 'Data sync settings';
 
   @override
   String get settingsPrinter => 'Printer';
 
   @override
-  String get settingsPrinterDesc => 'Receipt print settings';
-
-  @override
   String get settingsFiscal => 'Fiscalization';
 
   @override
-  String get settingsFiscalDesc => 'WebKassa, OFD, VAT';
-
-  @override
   String get settingsTelegram => 'Telegram';
-
-  @override
-  String get settingsTelegramDesc => 'Telegram integration and channels';
-
-  @override
-  String get settingsPermissions => 'Permissions';
-
-  @override
-  String get settingsPermissionsDesc => 'Cashier permissions';
 
   @override
   String get fiscalTitle => 'Fiscalization';
@@ -1492,22 +826,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fiscalWebkassa => 'WebKassa settings';
 
   @override
-  String get fiscalTaxpayer => 'Taxpayer data';
-
-  @override
-  String get fiscalVatSettings => 'VAT settings';
-
-  @override
-  String get fiscalVatPayer => 'VAT payer';
-
-  @override
-  String get fiscalPrintVat => 'Print VAT on receipt';
-
-  @override
   String get fiscalSaved => 'Settings saved';
-
-  @override
-  String get fiscalSaveError => 'Save error';
 
   @override
   String get printerSettingsTitle => 'Printer settings';
@@ -1517,33 +836,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get printerAddress => 'Printer address';
-
-  @override
-  String get printerPaperWidth => 'Paper width';
-
-  @override
-  String get printerTesting => 'Testing';
-
-  @override
-  String get printerReady => 'Ready';
-
-  @override
-  String get printerNotConnected => 'Not connected';
-
-  @override
-  String get printerPaperOut2 => 'No paper';
-
-  @override
-  String get printerCoverOpen => 'Cover open';
-
-  @override
-  String get printerPrinting => 'Printing...';
-
-  @override
-  String get printerCheckStatus => 'Checking...';
-
-  @override
-  String get printerPrintSuccess => 'Print successful';
 
   @override
   String get paymentNotFiscalized =>
@@ -1560,40 +852,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get printerPrintError => 'Print error';
 
   @override
-  String get printerCheckBtn => 'Check';
-
-  @override
-  String get printerTestReceipt => 'Test receipt';
-
-  @override
   String get printerPort => 'Port';
-
-  @override
-  String get cashOperationTitle => 'Cash operation';
 
   @override
   String get cashWithdrawal => 'Withdrawal';
 
   @override
-  String get cashCommentRequired => 'Comment *';
-
-  @override
   String get cashCommentOptional => 'Comment';
-
-  @override
-  String get cashCommentHint => 'Enter comment...';
-
-  @override
-  String get cashEnterAmountMsg => 'Enter amount';
-
-  @override
-  String get cashPositiveOnly => 'Amount must be positive';
-
-  @override
-  String get cashInsufficient => 'Insufficient cash';
-
-  @override
-  String get cashInvalidAmount => 'Enter valid amount';
 
   @override
   String get cashInDrawer => 'Cash in drawer:';
@@ -1712,31 +977,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateAvailable => 'Update available';
 
   @override
-  String get updateInProgress => 'Updating...';
-
-  @override
-  String updateAutoIn(int seconds) {
-    return 'Auto update in $seconds sec';
-  }
-
-  @override
-  String get updateNowBtn => 'Update now';
-
-  @override
   String get updateLater => 'Later';
 
   @override
-  String get updateSkip => 'Skip';
-
-  @override
-  String get updateBtn => 'Update';
-
-  @override
   String get storageWarningTitle => 'Low disk space';
-
-  @override
-  String get storageWarningMsg =>
-      'Free at least 2 GB for stable POS operation.';
 
   @override
   String get storageUnderstood => 'Got it';
@@ -1814,14 +1058,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterPhone => 'Enter client phone number';
 
   @override
-  String get enterSmsCode => 'Enter SMS code';
-
-  @override
-  String resendIn(int seconds) {
-    return 'Resend in $seconds sec';
-  }
-
-  @override
   String get resendCode => 'Resend code';
 
   @override
@@ -1829,21 +1065,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get useBonuses => 'Use bonuses';
-
-  @override
-  String get deferredSales => 'Held sales';
-
-  @override
-  String get noDeferredSales => 'No held sales';
-
-  @override
-  String get fiscalErrors => 'Fiscal errors';
-
-  @override
-  String get selectAllErrors => 'Select all';
-
-  @override
-  String get retrySelected => 'Retry';
 
   @override
   String receiptNo(String number) {
@@ -1905,9 +1126,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sumLabel => 'Amount';
-
-  @override
   String get enterAmount => 'Enter amount';
 
   @override
@@ -1918,9 +1136,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterValidAmount => 'Enter a valid amount';
-
-  @override
-  String get inDrawer => 'In drawer:';
 
   @override
   String get commentOptional => 'Comment (optional)';
@@ -1984,18 +1199,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get receiptDiscountItem => 'Discount:';
-
-  @override
-  String get receiptSubtotalLabel => 'Subtotal';
-
-  @override
-  String get receiptPayment => 'Payment:';
-
-  @override
-  String get fiscalMark => 'FP:';
-
-  @override
   String remainingStock(String qty) {
     return 'Stock: $qty';
   }
@@ -2026,30 +1229,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get priceLabel => 'Price';
 
   @override
-  String get receiptTotalLabel => 'Receipt total';
-
-  @override
-  String get positionsLabel => 'Items';
-
-  @override
-  String get toPayLabel => 'TO PAY';
-
-  @override
   String get payBtn => 'PAY';
-
-  @override
-  String get totalLabel => 'Total:';
-
-  @override
-  String posAndQty(int positions, String qty) {
-    return '$positions items / $qty pcs';
-  }
-
-  @override
-  String get modeRetail => 'Retail';
-
-  @override
-  String get modeWholesale => 'WHOLESALE';
 
   @override
   String get quickProducts => 'Quick products';
@@ -2083,23 +1263,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterValidPhone => 'Enter a valid phone number';
 
   @override
-  String errorsCount(int count) {
-    return '$count errors';
-  }
-
-  @override
-  String selectAllCount(int count) {
-    return 'Select all ($count)';
-  }
-
-  @override
   String retryCount(int count) {
     return 'Retry ($count)';
-  }
-
-  @override
-  String receiptHash(int number) {
-    return 'Receipt #$number';
   }
 
   @override
@@ -2111,15 +1276,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get drawerPrimary => 'Main';
-
-  @override
-  String get drawerSecondary => 'Additional';
-
-  @override
-  String get tooltipMore => 'More';
-
-  @override
   String get statusOnline => 'Online';
 
   @override
@@ -2127,9 +1283,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusSyncing => 'Sync...';
-
-  @override
-  String get thankYouForPurchase => 'Thank you for your purchase!';
 
   @override
   String get searchProductHint => 'Search product (name or barcode)';
@@ -2185,9 +1338,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restaurantSettings => 'Restaurant Mode';
 
   @override
-  String get restaurantSettingsDesc => 'Tables, zones, service charge';
-
-  @override
   String get restaurantOperatingMode => 'Operating Mode';
 
   @override
@@ -2213,9 +1363,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restaurantZoneAdd => 'Add Zone';
-
-  @override
-  String get restaurantZoneRename => 'Rename';
 
   @override
   String get restaurantZonePresets => 'Presets';
@@ -2319,11 +1466,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restaurantOrdersEmpty => 'No active orders';
 
   @override
-  String restaurantOrderItems(int count) {
-    return '$count items';
-  }
-
-  @override
   String restaurantOrderGuests(int count) {
     return 'Guests: $count';
   }
@@ -2345,9 +1487,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restaurantOpenOrder => 'Open Order';
 
   @override
-  String get restaurantCloseOrder => 'Close Order';
-
-  @override
   String get restaurantAddItems => 'Add Items';
 
   @override
@@ -2355,12 +1494,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restaurantTransfer => 'Transfer';
-
-  @override
-  String get restaurantSplitBill => 'Split Bill';
-
-  @override
-  String get restaurantChangeStatus => 'Change Status';
 
   @override
   String get restaurantSetFree => 'Free';
@@ -2385,12 +1518,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restaurantNote => 'Note';
-
-  @override
-  String get restaurantDeliveryAddress => 'Delivery Address';
-
-  @override
-  String get restaurantDeliveryPhone => 'Phone';
 
   @override
   String get restaurantTransferTitle => 'Transfer Order';
@@ -2466,14 +1593,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restaurantPreCheckFailed => 'Pre-check print failed';
 
   @override
-  String get restaurantSubtotal => 'Subtotal';
-
-  @override
-  String restaurantServiceChargeLine(String percent) {
-    return 'Service charge ($percent%)';
-  }
-
-  @override
   String restaurantOrderNumber(int number) {
     return 'Order #$number';
   }
@@ -2507,17 +1626,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restaurantMenuTab => 'Menu';
-
-  @override
-  String restaurantGuestLabel(int number) {
-    return 'Guest $number';
-  }
-
-  @override
-  String get restaurantRemoveItem => 'Remove item';
-
-  @override
-  String get restaurantPrintPrecheck => 'Pre-check';
 
   @override
   String get restaurantNewTakeout => 'Takeout';
@@ -2579,9 +1687,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupStepChecking => 'Checking';
 
   @override
-  String get setupStepTelegram => 'Telegram';
-
-  @override
   String get setupStepCountry => 'Country';
 
   @override
@@ -2592,9 +1697,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupStepUsers => 'Users';
-
-  @override
-  String get setupStepWorkMode => 'Work Mode';
 
   @override
   String get setupStepPos => 'POS';
@@ -2677,17 +1779,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String setupVatRateLabel(int rate) {
-    return 'VAT: $rate%';
-  }
-
-  @override
-  String get setupOrganizationTitle => 'Organization Data';
-
-  @override
-  String get setupOrganizationDescription => 'Enter your company information';
-
-  @override
   String get setupCompanyNameLabel => 'Company name';
 
   @override
@@ -2709,12 +1800,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupPhoneLabel => 'Phone';
-
-  @override
-  String get setupVatTitle => 'Value Added Tax';
-
-  @override
-  String get setupVatDescription => 'Select your organization\'s tax regime';
 
   @override
   String get setupVatPayerTitle => 'VAT Payer';
@@ -2740,45 +1825,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get setupVatNonPayerDescription =>
       'VAT will not be shown on receipts.\nFor individual entrepreneurs on simplified system.';
-
-  @override
-  String get setupWorkModeTitle => 'Work Mode';
-
-  @override
-  String get setupWorkModeDescription => 'Choose how your POS will operate';
-
-  @override
-  String get setupAutonomousTitle => 'Autonomous Mode';
-
-  @override
-  String get setupAutonomousSubtitle => 'Work without internet';
-
-  @override
-  String get setupAutonomousDescription =>
-      'POS works completely offline.\nData stored locally only.\nNo sync between registers.';
-
-  @override
-  String get setupNetworkTitle => 'Network Mode';
-
-  @override
-  String get setupNetworkConfigured => 'Telegram configured';
-
-  @override
-  String get setupNetworkRequired => 'Telegram required';
-
-  @override
-  String get setupNetworkDescription =>
-      'Data sync between registers.\nCloud backup.\nReports and notifications via Telegram.';
-
-  @override
-  String get setupNetworkRequiresTelegram =>
-      'Telegram setup is required for network mode';
-
-  @override
-  String get setupOperatingModeTitle => 'Business Type';
-
-  @override
-  String get setupOperatingModeDescription => 'Select your business type';
 
   @override
   String get setupRetailTitle => 'Retail POS';
@@ -2809,12 +1855,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get setupServiceDescription =>
       'Service intake.\nWork orders and task tracking.\nStatus tracking and release.';
-
-  @override
-  String get setupPosConfigTitle => 'POS Setup';
-
-  @override
-  String get setupPosConfigDescription => 'Set POS parameters';
 
   @override
   String get setupCashBoxNameLabel => 'POS name';
@@ -2852,9 +1892,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get setupFiscalNotRequired =>
       'Fiscalization is not required for your country';
-
-  @override
-  String get setupFiscalDescription => 'Set up fiscal operator connection';
 
   @override
   String get setupEnableWebkassa => 'Enable WebKassa';
@@ -2921,12 +1958,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupOfdUrlLabel => 'OFD URL';
 
   @override
-  String get setupEquipmentTitle => 'Equipment';
-
-  @override
-  String get setupEquipmentDescription => 'Configure connected equipment';
-
-  @override
   String get setupEquipmentPrinter => 'Receipt Printer';
 
   @override
@@ -2957,9 +1988,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupConnectionSerial => 'COM port';
 
   @override
-  String get setupConnectionNone => 'Not selected';
-
-  @override
   String get setupPrinterIpLabel => 'Printer IP address';
 
   @override
@@ -2987,23 +2015,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupScalePortLabel => 'COM port';
 
   @override
-  String get setupBaudRateLabel => 'Baud rate';
-
-  @override
-  String get setupCashDrawerConnected => 'Connected to printer';
-
-  @override
   String get setupCashDrawerConnectedDesc => 'Opens via printer command';
-
-  @override
-  String get setupSkip => 'Skip';
-
-  @override
-  String get setupPaymentTerminalsTitle => 'Payment Terminals';
-
-  @override
-  String get setupPaymentTerminalsDescription =>
-      'Configure payment system integrations';
 
   @override
   String get setupKaspiIpLabel => 'Terminal IP address';
@@ -3012,20 +2024,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupPortLabel => 'Port';
 
   @override
-  String get setupApiUrlLabel => 'API URL';
-
-  @override
-  String get setupApiKeyLabel => 'API key';
-
-  @override
   String get setupNoTerminalsAvailable =>
       'No payment terminals available for your region';
-
-  @override
-  String get setupBusinessRulesTitle => 'Business Rules';
-
-  @override
-  String get setupBusinessRulesDescription => 'Configure POS rules';
 
   @override
   String get setupPermissionsTitle => 'Permissions';
@@ -3088,49 +2088,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupCashbackRateLabel => 'Cashback rate';
 
   @override
-  String get setupRoundingTitle => 'Rounding';
-
-  @override
-  String get setupDiscountRounding => 'Discount rounding';
-
-  @override
-  String get setupWeightRounding => 'Weight product rounding';
-
-  @override
-  String get setupRoundingNone => 'No rounding';
-
-  @override
-  String get setupRoundingUp1 => 'To 1 (up)';
-
-  @override
-  String get setupRoundingDown1 => 'To 1 (down)';
-
-  @override
-  String get setupRoundingUp5 => 'To 5 (up)';
-
-  @override
-  String get setupRoundingDown5 => 'To 5 (down)';
-
-  @override
-  String get setupRoundingUp10 => 'To 10 (up)';
-
-  @override
-  String get setupRoundingDown10 => 'To 10 (down)';
-
-  @override
-  String get setupFiscalDisablesRounding =>
-      'Rounding is automatically disabled when fiscalization is enabled';
-
-  @override
-  String get setupUserCreationTitle => 'Create Users';
-
-  @override
-  String get setupUserCreationDescription => 'Create users for POS operation';
-
-  @override
-  String get setupAdminLabel => 'Administrator';
-
-  @override
   String get setupAdminSubtitle => 'POS owner';
 
   @override
@@ -3143,46 +2100,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupUserPinConfirmLabel => 'Confirmation';
 
   @override
-  String get setupAdminPinDefault => 'Default: 0000';
-
-  @override
   String get setupSellerLabel => 'Seller';
 
   @override
   String get setupSellerOptional => 'Optional';
 
   @override
-  String get setupSellerPinDefault => 'Default: 1111';
-
-  @override
   String get setupAdminPinMismatch => 'Administrator PINs do not match';
 
   @override
-  String get setupSummaryTitle => 'Review Data';
-
-  @override
-  String get setupSummaryDescription => 'Make sure everything is correct';
-
-  @override
-  String get setupSummaryCountry => 'Country';
-
-  @override
-  String get setupSummaryCurrency => 'Currency';
-
-  @override
   String get setupSummaryFormat => 'Format';
-
-  @override
-  String get setupSummaryVat => 'VAT';
-
-  @override
-  String get setupSummaryTelegram => 'Telegram';
-
-  @override
-  String get setupSummaryStatus => 'Status';
-
-  @override
-  String get setupConfigured => 'Configured';
 
   @override
   String get setupNotConfigured => 'Not configured';
@@ -3194,28 +2121,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupSummaryName => 'Name';
 
   @override
-  String get setupSummaryAddress => 'Address';
-
-  @override
-  String get setupSummaryWorkMode => 'Work Mode';
-
-  @override
-  String get setupSummaryMode => 'Mode';
-
-  @override
-  String get setupSummaryAutonomous => 'Autonomous (no network)';
-
-  @override
-  String get setupSummaryNetwork => 'Network (sync)';
-
-  @override
-  String get setupSummaryPos => 'POS';
-
-  @override
   String get setupSummaryId => 'ID';
-
-  @override
-  String get setupEnabled => 'Enabled';
 
   @override
   String get setupDisabled => 'Disabled';
@@ -3236,30 +2142,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupSummaryScales => 'Scales';
 
   @override
-  String get setupSummaryCashDrawer => 'Cash drawer';
-
-  @override
-  String get setupSummaryTerminals => 'Payment Terminals';
-
-  @override
-  String get setupSummaryRules => 'Business Rules';
-
-  @override
-  String get setupSummaryDiscounts => 'Discounts';
-
-  @override
-  String get setupSummaryDebtSales => 'Debt';
-
-  @override
-  String get setupSummaryCashback => 'Cashback';
-
-  @override
-  String get setupSummaryBigAmount => 'Large amounts';
-
-  @override
-  String get setupSummaryUsers => 'Users';
-
-  @override
   String get setupSummaryAdmin => 'Administrator';
 
   @override
@@ -3272,45 +2154,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupCompleteSubtitle => 'POS is ready to work';
 
   @override
-  String get setupStartWork => 'Start Working';
-
-  @override
   String setupVatPayerSummary(String rate) {
     return 'VAT Payer ($rate%)';
   }
-
-  @override
-  String get setupSummaryWkPosId => 'WK POS ID';
-
-  @override
-  String get setupSummaryOfdInn => 'INN';
-
-  @override
-  String get setupScalesConfigured => 'Configured';
-
-  @override
-  String get setupScalesNotConfigured => 'Not configured';
-
-  @override
-  String get setupCashDrawerOn => 'Enabled';
-
-  @override
-  String get setupAllowed => 'Allowed';
-
-  @override
-  String get setupDenied => 'Denied';
-
-  @override
-  String get setupAllowedFem => 'Allowed';
-
-  @override
-  String get setupDeniedFem => 'Denied';
-
-  @override
-  String get setupCashbackOff => 'Disabled';
-
-  @override
-  String get setupBigAmountLimit => 'Limit 100,000';
 
   @override
   String get setupDisplayPortLabel => 'COM port';
@@ -3579,12 +2425,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatNoResults => 'Nothing found';
 
   @override
-  String get chatCopyUidInstructions => 'Copy UID for use in other systems';
-
-  @override
-  String get chatUidExample => 'Example: telepos@pos-1';
-
-  @override
   String get chatServiceUnavailable => 'Service unavailable';
 
   @override
@@ -3677,15 +2517,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get additionalPrintingLastReceipt => 'Printing last receipt...';
 
   @override
-  String get additionalTestReceiptTitle => '=== TEST RECEIPT ===';
-
-  @override
   String get additionalReceiptPrinted => 'Receipt printed';
-
-  @override
-  String additionalPriceSearching(String query) {
-    return 'Searching: $query';
-  }
 
   @override
   String get additionalMinimizing => 'Minimizing window...';
@@ -3738,17 +2570,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get additionalBarcodeHint => 'Scan or enter';
-
-  @override
-  String additionalTestReceiptProduct(String number) {
-    return 'Product $number';
-  }
-
-  @override
-  String get additionalTestReceiptTotal => 'TOTAL:';
-
-  @override
-  String get additionalTestReceiptThankYou => 'Thank you for your purchase!';
 
   @override
   String get langRussian => 'Русский';
@@ -3876,104 +2697,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transportNotifyQueueFullDesc => 'Notify when queue reaches limit';
 
   @override
-  String saleErrorInitiation(String error) {
-    return 'Sale initiation error: $error';
-  }
-
-  @override
-  String get saleErrorNotInitialized => 'Sale not initialized';
-
-  @override
-  String get saleErrorEmpty => 'Receipt is empty';
-
-  @override
-  String saleErrorCompletion(String error) {
-    return 'Sale completion error: $error';
-  }
-
-  @override
-  String saleErrorSearch(String error) {
-    return 'Search error: $error';
-  }
-
-  @override
-  String saleErrorDeferred(String error) {
-    return 'Defer error: $error';
-  }
-
-  @override
-  String get saleErrorDeferredNotFound => 'Deferred receipt not found';
-
-  @override
-  String saleErrorLoadingDeferred(String error) {
-    return 'Error loading deferred receipt: $error';
-  }
-
-  @override
   String get paymentCustomerDefault => 'Customer';
 
   @override
-  String get paymentErrorFormation =>
-      'Could not form payment. Check account settings.';
-
-  @override
-  String get paymentErrorSaving => 'Error saving sale';
-
-  @override
-  String paymentErrorProcessing(String error) {
-    return 'Payment processing error: $error';
-  }
-
-  @override
-  String paymentAccountDefault(int id) {
-    return 'Account $id';
-  }
-
-  @override
-  String refundErrorReceiptNotFound(String number) {
-    return 'Receipt #$number not found';
-  }
-
-  @override
-  String refundErrorLoadingReceipt(String error) {
-    return 'Error loading receipt: $error';
-  }
-
-  @override
-  String refundErrorSearch(String error) {
-    return 'Search error: $error';
-  }
-
-  @override
-  String get refundErrorProductNotFound => 'Product not found';
-
-  @override
   String get refundErrorNotAuthenticated => 'User not authenticated';
-
-  @override
-  String refundErrorProcessing(String error) {
-    return 'Refund error: $error';
-  }
-
-  @override
-  String shiftErrorLoadingData(String error) {
-    return 'Error loading shift data: $error';
-  }
-
-  @override
-  String shiftErrorOpening(String error) {
-    return 'Error opening shift: $error';
-  }
-
-  @override
-  String shiftErrorClosing(String error) {
-    return 'Error closing shift: $error';
-  }
-
-  @override
-  String shiftErrorPrinting(String error) {
-    return 'Z-report print error: $error';
-  }
 
   @override
   String get cashOpTypeInvestment => 'Deposit';
@@ -3986,46 +2713,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supplyNoName => 'No name';
-
-  @override
-  String get supplyNoTitle => 'Untitled';
-
-  @override
-  String get supplyErrorSupplierNotFound => 'Supplier not found';
-
-  @override
-  String supplyErrorSelectingSupplier(String error) {
-    return 'Error selecting supplier: $error';
-  }
-
-  @override
-  String get supplyErrorAccountNotFound => 'Account not found';
-
-  @override
-  String supplyErrorSelectingAccount(String error) {
-    return 'Error selecting account: $error';
-  }
-
-  @override
-  String supplyErrorAddingProduct(String error) {
-    return 'Error adding product: $error';
-  }
-
-  @override
-  String get supplyErrorProductNotFound => 'Product not found';
-
-  @override
-  String get supplyErrorMissingFields => 'Fill in all required fields';
-
-  @override
-  String supplyErrorSaving(String error) {
-    return 'Save error: $error';
-  }
-
-  @override
-  String historyErrorLoading(String error) {
-    return 'Error loading history: $error';
-  }
 
   @override
   String get syncTypeProducts => 'Products';
@@ -4058,110 +2745,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncTypeSupplies => 'Supplies';
 
   @override
-  String get syncStepPreparing => 'Preparing...';
-
-  @override
-  String syncStepUploading(String type) {
-    return 'Uploading: $type';
-  }
-
-  @override
-  String syncStepDownloading(String type) {
-    return 'Downloading: $type';
-  }
-
-  @override
   String get syncCompleted => 'Sync completed';
-
-  @override
-  String get loginErrorNoUsers => 'No registered users';
-
-  @override
-  String loginErrorLoadingData(String error) {
-    return 'Error loading data: $error';
-  }
-
-  @override
-  String get loginErrorSelectUser => 'Select a user';
-
-  @override
-  String get loginErrorIncompletePin => 'Enter PIN (minimum 4 digits)';
-
-  @override
-  String get loginErrorNoRsaKey =>
-      'Error: RSA key not configured. Contact administrator.';
-
-  @override
-  String get loginErrorWrongPin => 'Wrong PIN';
-
-  @override
-  String get loginErrorSystemTime =>
-      'System time is incorrect. Check date and time settings.';
-
-  @override
-  String get receiptLabelBin => 'BIN:';
-
-  @override
-  String get receiptLabelPhone => 'Tel:';
-
-  @override
-  String get receiptLabelReceiptNo => 'Receipt #:';
-
-  @override
-  String get receiptLabelPosId => 'POS:';
-
-  @override
-  String get receiptLabelDate => 'Date:';
-
-  @override
-  String get receiptLabelCashier => 'Cashier:';
-
-  @override
-  String get receiptLabelTable => 'Table:';
-
-  @override
-  String get receiptLabelWaiter => 'Waiter:';
-
-  @override
-  String get receiptLabelGuests => 'Guests:';
-
-  @override
-  String get receiptLabelCustomer => 'Customer:';
-
-  @override
-  String get receiptLabelSubtotal => 'Subtotal:';
-
-  @override
-  String get receiptLabelDiscount => 'Discount:';
-
-  @override
-  String get receiptLabelServiceCharge => 'Service charge:';
 
   @override
   String get receiptLabelTotal => 'TOTAL:';
 
   @override
-  String receiptLabelVat(String percent) {
-    return 'incl. VAT $percent%:';
-  }
-
-  @override
-  String get receiptLabelCash => 'Cash:';
-
-  @override
-  String get receiptLabelCard => 'Card:';
-
-  @override
   String get receiptLabelChange => 'Change:';
-
-  @override
-  String get receiptLabelCheckReceipt => 'Verify receipt:';
-
-  @override
-  String get receiptLabelItemName => 'Name';
-
-  @override
-  String get receiptLabelQty => 'Qty';
 
   @override
   String get receiptLabelPrice => 'Price';
@@ -4170,147 +2760,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receiptLabelAmount => 'Amount';
 
   @override
-  String get receiptLabelItemDiscount => 'Discount:';
-
-  @override
-  String get receiptLabelFiscalBin => 'BIN:';
-
-  @override
-  String get receiptLabelFiscalNo => 'FN:';
-
-  @override
-  String get receiptLabelFiscalSign => 'FS:';
-
-  @override
-  String get receiptLabelVatCertificate => 'VAT:';
-
-  @override
-  String get receiptLabelOfflineMode => '*** OFFLINE ***';
-
-  @override
-  String get receiptLabelRefundHeader => '*** REFUND ***';
-
-  @override
-  String get receiptLabelRefundNo => 'Refund #:';
-
-  @override
-  String get receiptLabelReason => 'Reason:';
-
-  @override
-  String get receiptLabelRefundTotal => 'REFUND TOTAL:';
-
-  @override
-  String get receiptLabelZReport => 'Z-REPORT';
-
-  @override
-  String get receiptLabelShiftClosing => 'SHIFT CLOSING';
-
-  @override
-  String get receiptLabelShiftNo => 'Shift #:';
-
-  @override
-  String get receiptLabelShiftOpenTime => 'Opened:';
-
-  @override
-  String get receiptLabelShiftCloseTime => 'Closed:';
-
-  @override
-  String get receiptLabelSales => 'SALES';
-
-  @override
-  String get receiptLabelQuantity => 'Quantity:';
-
-  @override
-  String get receiptLabelCashSales => 'Cash:';
-
-  @override
-  String get receiptLabelCardSales => 'Card:';
-
-  @override
-  String get receiptLabelSalesTotal => 'Total:';
-
-  @override
-  String get receiptLabelRefunds => 'REFUNDS';
-
-  @override
-  String get receiptLabelRefundQty => 'Quantity:';
-
-  @override
-  String get receiptLabelRefundAmount => 'Amount:';
-
-  @override
-  String get receiptLabelCashOperations => 'CASH OPERATIONS';
-
-  @override
-  String get receiptLabelInvestments => 'Deposits:';
-
-  @override
-  String get receiptLabelExpenses => 'Expenses:';
-
-  @override
-  String get receiptLabelRevenue => 'REVENUE:';
-
-  @override
-  String get receiptLabelCashInDrawer => 'CASH IN DRAWER:';
-
-  @override
-  String get receiptLabelXReport => 'X-REPORT';
-
-  @override
-  String get receiptLabelType => 'Type:';
-
-  @override
-  String get receiptLabelDescription => 'Description:';
-
-  @override
-  String get receiptLabelDebtPayment => 'DEBT PAYMENT';
-
-  @override
-  String get receiptLabelPreviousDebt => 'Previous debt:';
-
-  @override
-  String get receiptLabelPaidAmount => 'PAID:';
-
-  @override
-  String get receiptLabelRemainingDebt => 'Remaining:';
-
-  @override
-  String get receiptLabelTestPrint => 'TEST PRINT';
-
-  @override
   String get receiptLabelThankYou => 'Thank you for your purchase!';
-
-  @override
-  String get receiptLabelSaleReceipt => 'SALES RECEIPT';
-
-  @override
-  String get receiptLabelOfflineHeader => '*** OFFLINE MODE ***';
-
-  @override
-  String get receiptLabelVatCertificateTitle => 'VAT Certificate:';
-
-  @override
-  String get fiscalErrorBin12Digits => 'BIN must contain 12 digits';
-
-  @override
-  String get fiscalErrorBinDigitsOnly => 'BIN must contain only digits';
-
-  @override
-  String get fiscalErrorFiscalNoRequired => 'Fiscal number is required';
-
-  @override
-  String get fiscalErrorRnkRequired => 'RNK is required';
-
-  @override
-  String get fiscalErrorZnkRequired => 'ZNK is required';
-
-  @override
-  String get fiscalErrorVatSerialRequired =>
-      'VAT certificate serial is required';
-
-  @override
-  String get fiscalErrorVatNumberRequired =>
-      'VAT certificate number is required';
 
   @override
   String get telegramTabPhone => 'By phone';
@@ -4771,6 +3221,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generalSettingsNotSpecified => 'Not specified';
 
   @override
+  String get generalSettingsDataLocation => 'Where the data lives';
+
+  @override
+  String get generalSettingsDataLocationDesc =>
+      'The till keeps everything on this machine. Knowing where matters for backups and for moving to another machine.';
+
+  @override
+  String get generalSettingsDataDb => 'Database';
+
+  @override
+  String get generalSettingsDataLogs => 'Logs';
+
+  @override
+  String get generalSettingsDataBackups => 'Backups';
+
+  @override
+  String get generalSettingsPathCopied => 'Path copied';
+
+  @override
   String get generalSettingsAppVersion => 'App Version';
 
   @override
@@ -4815,9 +3284,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generalSettingsCountry => 'Country';
 
   @override
-  String get generalSettingsAdditional => 'Additional Settings';
-
-  @override
   String get generalSettingsTransport => 'Transport';
 
   @override
@@ -4828,12 +3294,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get generalSettingsPrinterSubtitle => 'Receipt printing settings';
-
-  @override
-  String get generalSettingsPermissions => 'Permissions';
-
-  @override
-  String get generalSettingsPermissionsSubtitle => 'Cashier permissions';
 
   @override
   String get generalSettingsFiscal => 'Fiscalization';
@@ -4868,20 +3328,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generalSettingsCurrencyDesc => 'Currency and country';
 
   @override
-  String get generalSettingsUpdate => 'Update';
-
-  @override
-  String get generalSettingsUpdateSubtitle => 'Check and install updates';
-
-  @override
   String get generalSettingsAppUpdate => 'Application update';
 
   @override
   String get generalSettingsAppUpdateSubtitle =>
       'POS app update (not the OS update)';
-
-  @override
-  String get generalSettingsUpdateDesc => 'Current version and updates';
 
   @override
   String get settingsUpdateTitle => 'Application Update';
@@ -5001,104 +3452,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get printerSettingsPrinting => 'Printing...';
-
-  @override
-  String get printerSettingsTestReceipt => 'TEST RECEIPT';
-
-  @override
-  String get printerSettingsWidth => 'Width:';
-
-  @override
-  String printerSettingsWidthValue(int width) {
-    return '$width characters';
-  }
-
-  @override
-  String get printerSettingsType => 'Type:';
-
-  @override
-  String get printerSettingsAddress => 'Address:';
-
-  @override
-  String get printerSettingsNotSpecifiedAddr => 'Not specified';
-
-  @override
-  String get printerSettingsPrinterWorks => 'Printer works!';
-
-  @override
-  String get printerSettingsPrintSuccess => 'Print successful';
-
-  @override
-  String get printerSettingsPrintError => 'Print error';
-
-  @override
-  String get printerSettingsNotConnected => 'Not connected';
-
-  @override
-  String get printerSettingsChecking => 'Checking...';
-
-  @override
-  String get printerSettingsReady => 'Ready';
-
-  @override
-  String get printerSettingsNoPaper => 'No paper';
-
-  @override
-  String get printerSettingsCoverOpen => 'Cover open';
-
-  @override
   String get printerSettingsSave => 'Save';
-
-  @override
-  String get printerSettingsConnectionType => 'Connection Type';
-
-  @override
-  String get printerSettingsPrinterAddress => 'Printer Address';
-
-  @override
-  String get printerSettingsPaperWidth => 'Paper Width';
-
-  @override
-  String get printerSettingsTesting => 'Testing';
-
-  @override
-  String printerSettingsStatus(String status) {
-    return 'Status: $status';
-  }
-
-  @override
-  String get printerSettingsCheck => 'Check';
-
-  @override
-  String get printerSettingsTestCheck => 'Test receipt';
-
-  @override
-  String get printerSettingsPort => 'Port';
-
-  @override
-  String get printerSettingsIpAddress => 'Printer IP address';
-
-  @override
-  String get printerSettingsMacAddress => 'MAC address or name';
-
-  @override
-  String get printerSettingsPrinterName => 'Printer name';
-
-  @override
-  String get printerSettingsComPort => 'COM port';
-
-  @override
-  String get printerSettingsSerialCom => 'Serial (COM)';
-
-  @override
-  String get printerSettingsPaperWidth58 => '58mm (32 chars)';
-
-  @override
-  String get printerSettingsPaperWidth80_42 => '80mm (42 chars)';
-
-  @override
-  String get printerSettingsPaperWidth80_48 => '80mm (48 chars)';
 
   @override
   String get fiscalSettingsTitle => 'Fiscalization';
@@ -5118,61 +3472,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fiscalSettingsOperator => 'Fiscal Operator';
 
   @override
-  String get fiscalSettingsWebkassaSettings => 'WebKassa Settings';
-
-  @override
-  String get fiscalSettingsTaxpayerInfo => 'Taxpayer Information';
-
-  @override
   String get fiscalSettingsVatSettings => 'VAT Settings';
 
   @override
   String get fiscalSettingsWebkassaLabel => 'WebKassa';
 
   @override
-  String get fiscalSettingsWebkassaDesc => 'Cloud fiscal service';
-
-  @override
-  String get fiscalSettingsOfdLabel => 'OFD';
-
-  @override
-  String get fiscalSettingsOfdDesc => 'Fiscal data operator';
-
-  @override
   String get fiscalSettingsNoneLabel => 'No fiscalization';
-
-  @override
-  String get fiscalSettingsNoneDesc => 'Receipts are not sent to OFD';
-
-  @override
-  String get fiscalSettingsOfdId => 'OFD ID';
-
-  @override
-  String get fiscalSettingsOfdIdHint => 'OFD identifier';
-
-  @override
-  String get fiscalSettingsOfdName => 'OFD Name';
-
-  @override
-  String get fiscalSettingsOfdNameHint => 'WebKassa / OFD.kz';
 
   @override
   String get fiscalSettingsOfdHost => 'OFD Server Address';
 
   @override
   String get fiscalSettingsOfdHostHint => 'https://api.webkassa.kz';
-
-  @override
-  String get fiscalSettingsWebkassaActive => 'WebKassa activated';
-
-  @override
-  String get fiscalSettingsWebkassaInactive => 'WebKassa not activated';
-
-  @override
-  String get fiscalSettingsCompanyName => 'Company Name';
-
-  @override
-  String get fiscalSettingsCashBox => 'Cash Register';
 
   @override
   String get fiscalSettingsVatPayer => 'VAT Payer';
@@ -5225,9 +3537,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customerPaymentTender => 'Paid with';
 
   @override
-  String get fiscalSettingsVatRate => 'VAT rate: 12% (calculated as 3/28)';
-
-  @override
   String historyProductUcode(String ucode) {
     return 'Product #$ucode';
   }
@@ -5240,11 +3549,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String historyAccountId(String id) {
     return 'Account #$id';
-  }
-
-  @override
-  String historyLoadError(String error) {
-    return 'Loading error: $error';
   }
 
   @override
@@ -5398,26 +3702,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyLastPage => 'Last page';
 
   @override
-  String historyAmount(String amount) {
-    return 'Amount: $amount';
-  }
-
-  @override
-  String historyDate(String date) {
-    return 'Date: $date';
-  }
-
-  @override
-  String historyPos(String id) {
-    return 'POS: $id';
-  }
-
-  @override
-  String historyClientName(String name) {
-    return 'Client: $name';
-  }
-
-  @override
   String get historyFiscalYes => 'Yes';
 
   @override
@@ -5532,10 +3816,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get shiftFinishSalesBeforeClose =>
-      'Finish or cancel sales before closing the shift';
-
-  @override
   String get shiftBillsTab => 'Bills';
 
   @override
@@ -5592,9 +3872,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supplyProductNotFound => 'Product not found';
-
-  @override
-  String get supplyInvalidQuantity => 'Enter a valid quantity';
 
   @override
   String get supplySelectSupplierTitle => 'Select supplier';
@@ -5767,9 +4044,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get syncWidgetWaiting => 'Waiting';
-
-  @override
   String get syncWidgetSynced => 'Synced';
 
   @override
@@ -5789,24 +4063,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String syncWidgetDaysAgo(int days) {
     return '$days d ago';
   }
-
-  @override
-  String get syncWidgetConnecting => 'Connecting to server...';
-
-  @override
-  String get syncWidgetSyncingProducts => 'Syncing products...';
-
-  @override
-  String get syncWidgetSyncingSales => 'Syncing sales...';
-
-  @override
-  String get syncWidgetSyncingAgents => 'Syncing agents...';
-
-  @override
-  String get syncWidgetSyncingPrices => 'Syncing prices...';
-
-  @override
-  String get syncWidgetFinishing => 'Finishing...';
 
   @override
   String get updateDialogUpdating => 'Updating...';
@@ -5897,9 +4153,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get versionConflictContinue => 'Continue';
 
   @override
-  String get restoreLoadingBackups => 'Loading backups...';
-
-  @override
   String get restoreSearchingBackups => 'Searching backups...';
 
   @override
@@ -5975,26 +4228,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get agentEnterCustomerName => 'Enter customer name';
-
-  @override
-  String get agentDeletedCustomerPhone =>
-      'Customer with this phone was deleted';
-
-  @override
-  String get agentWantRestore => 'Do you want to restore?';
-
-  @override
-  String get agentDeleteCustomerTitle => 'Delete customer?';
-
-  @override
-  String agentDeleteConfirmMessage(String name) {
-    return 'Are you sure you want to delete \"$name\"?';
-  }
-
-  @override
-  String agentCustomerDeleted(String name) {
-    return 'Customer \"$name\" deleted';
-  }
 
   @override
   String get cashOpTitle => 'Cash operation';
@@ -6505,9 +4738,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authNoPin => 'No PIN';
 
   @override
-  String get authSelectUser => 'Select user';
-
-  @override
   String get authNoUsersShort => 'No users';
 
   @override
@@ -6548,15 +4778,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updatePosNow => 'UPDATE POS';
 
   @override
-  String get serviceAddNote => 'Add note';
-
-  @override
   String get serviceClientLookup => 'Client lookup';
-
-  @override
-  String serviceOrderDetail(int orderId) {
-    return 'Service order details #$orderId';
-  }
 
   @override
   String get paymentDefaultLabel => 'Default';
@@ -6575,9 +4797,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serviceIntakeDelivery => 'Delivery';
-
-  @override
-  String get serviceIntakePickup => 'Pick up from client';
 
   @override
   String get serviceIntakeSave => 'Save';
@@ -6643,16 +4862,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serviceAddMark => 'Add work entry';
 
   @override
-  String get serviceDeleteMark => 'Delete entry';
-
-  @override
   String get serviceMarkDescription => 'Description';
 
   @override
   String get serviceMarkType => 'Work type';
-
-  @override
-  String get serviceMarkCost => 'Cost';
 
   @override
   String get serviceMarkNote => 'Note';
@@ -6694,9 +4907,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String serviceTechnicianAssigned(String name) {
     return 'Technician assigned: $name';
   }
-
-  @override
-  String get serviceTechnicianSelect => 'Select technician';
 
   @override
   String get servicePrepayment => 'Prepayment';
@@ -6741,11 +4951,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serviceNeedsDelivery => 'Deliver to client';
 
   @override
-  String serviceQrFormat(Object id, Object number) {
-    return 'TELEPOS:SO:$id:$number';
-  }
-
-  @override
   String get serviceOrderCreated => 'New order';
 
   @override
@@ -6762,9 +4967,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catalogTitle => 'Product Catalog';
-
-  @override
-  String get catalogSearch => 'Search';
 
   @override
   String get catalogSearchHint => 'Name or barcode';
@@ -6812,16 +5014,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get catalogWholesalePrice => 'Wholesale price';
 
   @override
-  String get catalogCategory => 'Category';
-
-  @override
   String get catalogMeasure => 'Unit of measure';
 
   @override
   String get catalogQuantity => 'Stock';
-
-  @override
-  String get catalogQuickProduct => 'Quick product';
 
   @override
   String get catalogAddToQuick => 'Add to quick products';
@@ -6890,9 +5086,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catalogPriceInvalid => 'Price must be greater than 0';
-
-  @override
-  String get catalogBarcodeExists => 'Product with this barcode already exists';
 
   @override
   String get catalogCategories => 'Categories';
@@ -7104,79 +5297,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hwScannerTitle => 'Barcode Scanner';
 
   @override
-  String get hwScannerMode => 'Scanner Mode';
-
-  @override
-  String get hwScannerModeKeyboard => 'USB / keyboard (wedge)';
-
-  @override
-  String get hwScannerModeSerial => 'Serial';
-
-  @override
-  String get hwScannerModeCamera => 'Camera';
-
-  @override
-  String get hwScannerModeHint => 'USB scanners work in this mode';
-
-  @override
-  String get hwScannerTimeout => 'Timeout';
-
-  @override
-  String get hwScannerMinLength => 'Min length';
-
-  @override
-  String get hwScannerMaxLength => 'Max length';
-
-  @override
   String get hwDisplayTitle => 'Customer Display';
-
-  @override
-  String get hwDisplayModel => 'Model';
-
-  @override
-  String get hwDisplayModelLed8 => 'LED 8 chars';
-
-  @override
-  String get hwDisplayModelVfd20 => 'VFD 20x2';
-
-  @override
-  String get hwDisplayPort => 'COM Port';
-
-  @override
-  String get hwDisplayBaudRate => 'Baud Rate';
-
-  @override
-  String get hwDisplayDisabled => 'Customer display disabled';
 
   @override
   String get hwDrawerTitle => 'Cash Drawer';
 
   @override
-  String get hwDrawerMode => 'Open Mode';
-
-  @override
-  String get hwDrawerModePrinter => 'Via Printer';
-
-  @override
-  String get hwDrawerModeSerial => 'Serial Port';
-
-  @override
-  String get hwDrawerPort => 'COM Port';
-
-  @override
   String get hwTerminalsTitle => 'Payment Terminals';
-
-  @override
-  String get hwTerminalIp => 'IP Address';
-
-  @override
-  String get hwTerminalPort => 'Port';
-
-  @override
-  String get hwTerminalMerchantId => 'Merchant ID';
-
-  @override
-  String get hwTerminalTerminalId => 'Terminal ID';
 
   @override
   String get catalogExportCsv => 'Export CSV';
@@ -7232,13 +5359,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serviceConsumableSearch => 'Search product / consumable';
 
   @override
-  String get serviceConsumableSelected => 'Selected product';
-
-  @override
   String get serviceQuickServicesTitle => 'Quick services';
-
-  @override
-  String get serviceQuickServicesEmpty => 'No quick services';
 
   @override
   String get serviceIntakeItems => 'Items received';
@@ -7282,9 +5403,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dishCalculation => 'Costing';
 
   @override
-  String get dishCalculationStub => 'Costing module will be available later';
-
-  @override
   String get dishIngredients => 'Ingredients';
 
   @override
@@ -7298,9 +5416,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serviceConsumableQuantity => 'Qty per 1 service';
-
-  @override
-  String get serviceConsumablesAutoAdded => 'Consumables added automatically';
 
   @override
   String get catalogDescription => 'Description';
@@ -7768,16 +5883,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelPrinterLanguage => 'Printer language';
 
   @override
-  String get labelPrinterSize => 'Label size';
-
-  @override
   String get labelPrinterWidthMm => 'Width, mm';
 
   @override
   String get labelPrinterHeightMm => 'Height, mm';
-
-  @override
-  String get labelPrinterTestSuccess => 'Label sent to printer';
 
   @override
   String get labelPrinterNotConfigured =>
@@ -7938,32 +6047,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receiptTemplateFooterText => 'Footer text';
 
   @override
-  String get receiptTemplateExtraFooter => 'Extra footer lines';
-
-  @override
-  String get receiptTemplateExtraFooterHint =>
-      'One line each (e.g. return policy)';
-
-  @override
-  String get receiptTemplateShowBin => 'Print BIN/IIN';
-
-  @override
   String get receiptTemplateShowAddress => 'Print address';
 
   @override
   String get receiptTemplateShowCashier => 'Print cashbox/cashier';
 
   @override
-  String get receiptTemplateShowVat => 'Print VAT';
-
-  @override
-  String get receiptTemplateShowQr => 'Print verification link (QR)';
-
-  @override
   String get receiptTemplateShowItemNumbers => 'Number items';
-
-  @override
-  String get receiptTemplateShowLogo => 'Print logo';
 
   @override
   String get receiptTemplateTestPrint => 'Test print';
@@ -8330,13 +6420,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter a command (e.g.: systemctl status telepos-sysd)';
 
   @override
-  String get sysmTerminalRun => 'Run';
-
-  @override
   String get sysmTerminalClear => 'Clear output';
-
-  @override
-  String get sysmTerminalRunning => 'Running…';
 
   @override
   String sysmTerminalExitCode(int code) {
@@ -8347,22 +6431,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sysmTerminalEmpty => 'Output will appear here';
 
   @override
-  String get sysmTerminalHistory => 'Command history';
-
-  @override
   String get sysmTerminalPresets => 'Presets';
-
-  @override
-  String get sysmTerminalPresetsNetwork => 'Network';
-
-  @override
-  String get sysmTerminalPresetsPrinters => 'Printers';
-
-  @override
-  String get sysmTerminalPresetsSystem => 'System';
-
-  @override
-  String get sysmTerminalPresetsTime => 'Time';
 
   @override
   String get sysmTermGroupDiagnostics => 'Diagnostics';
@@ -8447,13 +6516,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sysmTermTimeNtpSync => 'NTP sync';
-
-  @override
-  String get labelPrinterDevicePath => 'Device path';
-
-  @override
-  String get labelPrinterDevicePathHint =>
-      'E.g. /dev/usb/lp0 (USB) or /dev/ttyUSB0 (Serial). Leave empty for the default.';
 
   @override
   String get movementTitle => 'Transfer';
@@ -8637,9 +6699,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get esfSettingsOperator => 'ESF operator';
 
   @override
-  String get esfSettingsTestMode => 'Test mode';
-
-  @override
   String get esfSettingsSupplier => 'Supplier requisites (our organization)';
 
   @override
@@ -8664,15 +6723,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get esfSettingsVatRate => 'VAT rate, %';
 
   @override
-  String get esfSettingsEcp => 'Digital signature (NCA RK)';
-
-  @override
-  String get esfSettingsEcpKeyPath => 'Signature key path';
-
-  @override
-  String get esfSettingsEcpKeyAlias => 'Key alias';
-
-  @override
   String get esfSettingsB2bOnly => 'B2B only';
 
   @override
@@ -8695,9 +6745,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get esfOutboxEmptyHint => 'Invoices will appear here after B2B sales';
-
-  @override
-  String get esfOutboxRetry => 'Retry submission';
 
   @override
   String get esfOutboxRetryAll => 'Retry all';
@@ -8826,9 +6873,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sntSettingsProvider => 'Submission method';
 
   @override
-  String get sntSettingsTestMode => 'Test mode';
-
-  @override
   String get sntSettingsRequisites => 'Taxpayer details';
 
   @override
@@ -8836,32 +6880,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sntSettingsWarehouseCode => 'Virtual warehouse code';
-
-  @override
-  String get sntSettingsBackend => 'TelePOS backend (IS ESF proxy)';
-
-  @override
-  String get sntSettingsBackendUrl => 'Backend URL';
-
-  @override
-  String get sntSettingsApiKey => 'API key';
-
-  @override
-  String get sntSettingsEcp => 'Digital signature (NUC RK)';
-
-  @override
-  String get sntSettingsCertPath => 'Signature key path';
-
-  @override
-  String get sntSettingsCertPassword => 'Key password';
-
-  @override
-  String get sntSettingsEcpHint =>
-      'Real SNT submission requires a NUC RK digital signature and a registered IS ESF profile. Without a signature, documents are assembled and stored locally (the Virtual warehouse works offline).';
-
-  @override
-  String get sntSettingsSharedEsfHint =>
-      'SNT and ESF are KGD subsystems. The BIN and signature can be configured on the ESF screen.';
 
   @override
   String get sntSettingsWebkassaNote =>
@@ -9000,41 +7018,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ismptSettingsBackend => 'Backend';
 
   @override
-  String get ismptSettingsTestMode => 'Test mode';
-
-  @override
-  String get ismptSettingsRequisites => 'Taxpayer details';
-
-  @override
-  String get ismptSettingsOwnBin => 'BIN / IIN (ours)';
-
-  @override
-  String get ismptSettingsApi => 'True API (ismet.kz)';
-
-  @override
-  String get ismptSettingsApiUrl => 'API URL';
-
-  @override
-  String get ismptSettingsApiKey => 'API key / token';
-
-  @override
-  String get ismptSettingsEcp => 'Digital signature (NUC RK)';
-
-  @override
-  String get ismptSettingsCertPath => 'Signature key path';
-
-  @override
-  String get ismptSettingsCertPassword => 'Key password';
-
-  @override
-  String get ismptSettingsEcpHint =>
-      'Live IS MPT operations require an NUC RK digital signature and a registered participant profile. Without a signature, marking codes are accepted and stored locally (receiving works offline, sales are never blocked).';
-
-  @override
-  String get ismptSettingsSharedEsfHint =>
-      'IS MPT and ESF are KGD subsystems. BIN and digital signature can be configured on the ESF screen.';
-
-  @override
   String get ismptSettingsWebkassaNote =>
       'Marking-code verification runs through WebKassa. Connection credentials (login, apiKey, cashbox, signature) come from WebKassa (Fiscal) settings — one shared config.';
 
@@ -9049,9 +7032,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ismptSettingsSaveError => 'Failed to save IS MPT settings';
-
-  @override
-  String get ismptSettingsBinRequired => 'Enter the taxpayer\'s BIN / IIN';
 
   @override
   String get reorderRulesTitle => 'Reorder rules';
@@ -9135,9 +7115,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shiftClosedGateOpen => 'Open shift';
-
-  @override
-  String get sysmTerminalPresetsDiag => 'Diagnostics';
 
   @override
   String get wmsDashboardTitle => 'WMS — Warehouse management';
@@ -9978,13 +7955,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String setDeleteUserError(String error) {
     return 'Failed to delete user: $error';
   }
-
-  @override
-  String get setUserNoEncryptionKey =>
-      'Encryption key is not set. Complete the initial POS setup.';
-
-  @override
-  String get setUserPinEncryptFailed => 'Failed to encrypt PIN';
 
   @override
   String get setWmsTitle => 'WMS settings';
@@ -11345,59 +9315,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'A receipt line price cannot be set below the product price';
 
   @override
-  String get printerAutoDetect => 'Find printer';
-
-  @override
-  String get printerAutoDetecting => 'Searching for printer…';
-
-  @override
-  String printerFound(String device) {
-    return 'Found: $device';
-  }
-
-  @override
-  String printerFoundWithNote(String device, String note) {
-    return 'Found: $device — $note';
-  }
-
-  @override
-  String get printerNotFoundAnyPort =>
-      'Printer not found on any port (USB/serial). Check the cable and power.';
-
-  @override
-  String get printerUsbName => 'USB printer';
-
-  @override
-  String get printerSelectDevice => 'Select printer';
-
-  @override
-  String get printerNoAccessGroupLp =>
-      'Node found but no access (group lp required)';
-
-  @override
-  String printerLabelUsb(String path) {
-    return 'USB printer ($path)';
-  }
-
-  @override
-  String printerLabelSerial(String path) {
-    return 'Serial printer ($path)';
-  }
-
-  @override
-  String get printerNoAccessGroupLpHint =>
-      'Node found but no access (group lp required): usermod -aG lp telepos and restart the session.';
-
-  @override
-  String printerRawOpenNoPermsHint(String path) {
-    return 'Node $path found but cannot be opened — no permissions. Add the user to group lp (usermod -aG lp telepos) and restart the session/appliance.';
-  }
-
-  @override
-  String get printerNotFoundNoNode =>
-      'Printer not found: no /dev/usb/lp* char node and no USB-serial port. Check the printer cable and power.';
-
-  @override
   String get ownerOnlyTitle => 'Available to the till owner only';
 
   @override
@@ -11444,9 +9361,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deviceSearchTitle => 'Discovered devices';
-
-  @override
-  String get deviceSearchRunning => 'Searching…';
 
   @override
   String get deviceSearchEmpty =>
@@ -11552,9 +9466,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String scannerRulesNotAnInteger(String value) {
     return '“$value” is not a whole number';
   }
-
-  @override
-  String get scannerRulesSaved => 'Barcode reading rules saved';
 
   @override
   String get printQueueSectionTitle => 'Print queue';
@@ -12950,18 +10861,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emulatorQrProvider => 'QR payment provider';
 
   @override
-  String get emulatorQrAddressHint =>
-      'Enter this address in the QR provider settings';
-
-  @override
-  String get emulatorQrBindAction => 'Use in QR settings';
-
-  @override
   String get emulatorQrBindDone => 'QR settings now point at the emulator';
-
-  @override
-  String get emulatorQrBindingStale =>
-      'QR settings point at a stopped emulator — code payment will fail';
 
   @override
   String get diagnosticsTabPayment => 'Payment';
@@ -13813,9 +11713,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rcpBinIin => 'Business ID:';
 
   @override
-  String get rcpThankYou => 'Thank you for your purchase!';
-
-  @override
   String get rcpSale => 'SALE';
 
   @override
@@ -14062,9 +11959,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taxSettingsPresetApplied => 'Preset applied';
 
   @override
-  String get taxSettingsCurrentSection => 'Current setup';
-
-  @override
   String taxSettingsRateForStandard(String rate) {
     return 'Standard item: $rate%';
   }
@@ -14081,9 +11975,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get taxSettingsTillLocationHint =>
       'More than one may be ticked: the city and its special districts. Higher levels are added automatically.';
-
-  @override
-  String get taxSettingsRules => 'Rules';
 
   @override
   String get taxSettingsRuleTaxed => 'taxed';
@@ -14104,50 +11995,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taxSettingsAddCategory => 'Add category';
 
   @override
-  String get taxSettingsAddRule => 'Add rule';
-
-  @override
   String get taxSettingsName => 'Name';
 
   @override
-  String get taxSettingsCode => 'Code';
-
-  @override
-  String get taxSettingsRate => 'Rate, %';
-
-  @override
-  String get taxSettingsValidFrom => 'Effective from';
-
-  @override
-  String get taxSettingsParent => 'Parent';
-
-  @override
-  String get taxSettingsNoParent => 'none (root)';
-
-  @override
-  String get taxSettingsLevel => 'Level';
-
-  @override
-  String get taxSettingsLevelCountry => 'Country';
-
-  @override
-  String get taxSettingsLevelState => 'State';
-
-  @override
-  String get taxSettingsLevelCounty => 'County';
-
-  @override
-  String get taxSettingsLevelCity => 'City';
-
-  @override
-  String get taxSettingsLevelDistrict => 'Special district';
-
-  @override
   String get taxSettingsDelete => 'Delete';
-
-  @override
-  String get taxSettingsDeleteJurisdictionWarning =>
-      'Its rules and nested jurisdictions go with it.';
 
   @override
   String get taxSettingsResponsibility =>
@@ -14624,10 +12475,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Labels print from the till, not from a terminal';
 
   @override
-  String get orphanQrTillNotRegistered =>
-      'This till is not registered — there is nobody to ask about unmatched QR money';
-
-  @override
   String get stockLowStockReorder => 'Re-order products that are running low';
 
   @override
@@ -14636,11 +12483,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String deferredFromTill(String id) {
     return 'till $id';
-  }
-
-  @override
-  String dishSummary(int count, String cost) {
-    return 'Ingredients: $count, cost: $cost';
   }
 
   @override

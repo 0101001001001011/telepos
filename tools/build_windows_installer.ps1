@@ -452,13 +452,34 @@ function Assert-NativeLibraries {
 
 function New-LicenseRtf {
     <#
-        Порождает license.rtf из LICENSE. Копию текста лицензии в репозитории
-        не держим: две копии одного текста расходятся так же, как две копии
-        версии.
-    #>
-    param([string] $Destination)
+        Порождает license.rtf: вступление на языке пакета плюс полный текст
+        LICENSE. Копию текста лицензии в репозитории не держим: две копии
+        одного текста расходятся так же, как две копии версии.
 
-    $text = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'LICENSE'))
+        ЗАЧЕМ ВСТУПЛЕНИЕ. До 2026-09-23 в окне соглашения показывался голый
+        текст Фонда свободного ПО, начинающийся с «Copyright (C) 2007 Free
+        Software Foundation». Про TelePOS и про того, кому принадлежат
+        права, не было ни слова — человек нажимал «Принимаю» под документом,
+        который ни разу не называл продукт, который он ставит.
+
+        ПОЧЕМУ ТЕКСТ ЛИЦЕНЗИИ ОСТАЁТСЯ АНГЛИЙСКИМ. Фонд свободного ПО не
+        признаёт переводы GNU AGPL официальными: расхождение перевода с
+        оригиналом меняло бы условия. Поэтому переводится ВСТУПЛЕНИЕ, а сам
+        текст остаётся тем единственным, который имеет силу, — и вступление
+        прямо это говорит.
+    #>
+    param([string] $Destination, [string] $Culture = 'en-US')
+
+    # Язык вступления — по языку пакета. Неизвестный язык получает
+    # английское: молчать хуже, чем сказать на чужом.
+    $lang = if ($Culture -like 'ru*') { 'ru' } else { 'en' }
+    $preambleFile = Join-Path $RepoRoot "installer\windows\license-preamble-$lang.txt"
+    if (-not (Test-Path $preambleFile)) {
+        throw "не найдено вступление к лицензии: $preambleFile"
+    }
+    $preamble = [System.IO.File]::ReadAllText($preambleFile)
+
+    $text = $preamble + "`r`n" + [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'LICENSE'))
     # В RTF служебные символы — обратная косая и фигурные скобки.
     #
     # Замена делается методом .Replace, а не оператором -replace: у оператора
@@ -474,9 +495,24 @@ function New-LicenseRtf {
     # правому операнду -replace и отказывается разбирать выражение.
     $escaped = ($escaped -replace "`r`n", "`n") -replace "`n", ('\par' + "`r`n")
 
-    $rtf = "{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}`r`n\fs18`r`n$escaped`r`n}"
-    [System.IO.File]::WriteAllText($Destination, $rtf, [System.Text.ASCIIEncoding]::new())
-    Write-Note "license.rtf порождён из LICENSE"
+    # Кириллица вступления записывается управляющей последовательностью RTF
+    # (обратная косая, буква u, код): RTF не знает Юникода сам по себе, а
+    # ASCII-кодировщик, стоявший здесь прежде, превратил бы каждую русскую
+    # букву в вопросительный знак. Пока вступление было только английским,
+    # это не проявлялось.
+    $sb = [System.Text.StringBuilder]::new()
+    foreach ($ch in $escaped.ToCharArray()) {
+        $code = [int] $ch
+        if ($code -lt 128) { [void] $sb.Append($ch) }
+        else { [void] $sb.Append('\u' + $code + '?') }
+    }
+    $escaped = $sb.ToString()
+
+    # `fcharset204` — кириллическая кодовая страница шрифта; без неё
+    # читатели RTF показывают подставленные знаки вместо букв.
+    $rtf = "{\rtf1\ansi\ansicpg1251\deff0{\fonttbl{\f0\fnil\fcharset204 Segoe UI;}}`r`n\fs18`r`n$escaped`r`n}"
+    [System.IO.File]::WriteAllText($Destination, $rtf, [System.Text.UTF8Encoding]::new($false))
+    Write-Note "license.rtf порождён: вступление ($lang) + LICENSE"
 }
 
 # ── Проверка кодировки скрипта доверия ───────────────────────────────────────
@@ -545,29 +581,167 @@ Assert-WebBundle
 
 Write-Stage 'Готовим промежуточные файлы'
 New-Item -ItemType Directory -Force -Path $ObjDir, $Output | Out-Null
-New-LicenseRtf -Destination (Join-Path $ObjDir 'license.rtf')
 
-Write-Stage 'Собираем MSI'
+# ── Языки установщика ────────────────────────────────────────────────────────
+#
+# ПАКЕТ МНОГОЯЗЫЧНЫЙ, И ЯЗЫК ВЫБИРАЕТ WINDOWS.
+#
+# Прежде здесь стояло `-culture ru-RU` одной строкой. Следствие: стандартные
+# окна WiX — «Далее», «Установить», «Принимаю» — были русскими НА ЛЮБОЙ
+# машине, включая ту, где всё остальное по-английски. Соглашение при этом
+# всегда было английским, то есть установщик говорил на двух языках сразу.
+#
+# Как это устроено. Пакет собирается по разу на каждый язык. Первый —
+# основной, он и становится установщиком. Для остальных считается
+# преобразование (.mst) и встраивается внутрь пакета отдельным хранилищем с
+# именем по коду языка. В сводке пакета перечисляются все коды: по этому
+# списку установщик Windows сам выбирает преобразование под язык системы, а
+# при отсутствии совпадения берёт основной.
+#
+# Почему английский основной, а не русский. Основной — это то, что увидит
+# человек, чьего языка в списке нет. Латиницу прочтёт больше людей, чем
+# кириллицу; обратный выбор оставлял бы немца с русскими кнопками.
+#
+# Чего здесь НЕТ: казахского, киргизского и узбекского. Их нет в переводах
+# WixToolset.UI, и подставить свои — отдельная работа с полным набором
+# строк стандартных окон. Пока эти языки получают английский, и это сказано
+# вслух, а не спрятано.
+$cultures = @('en-US', 'ru-RU')
+$lcids    = @{ 'en-US' = 1033; 'ru-RU' = 1049 }
+
 $msi = Join-Path $Output "TelePOS_Setup_$($v.Version).msi"
+$perCulture = @{}
 
-& $wix build `
-    (Join-Path $RepoRoot 'installer\windows\TelePOS.wxs') `
-    -arch x64 `
-    -culture ru-RU `
-    -ext WixToolset.UI.wixext `
-    -ext WixToolset.Util.wixext `
-    -d "Version=$($v.Version)" `
-    -d "BuildNumber=$($v.Build)" `
-    -d "BuildDir=$BuildDir" `
-    -d "WebDir=$WebDir" `
-    -d "SourceRoot=$RepoRoot" `
-    -d "ObjDir=$ObjDir" `
-    -intermediatefolder $ObjDir `
-    -o $msi
+foreach ($culture in $cultures) {
+    Write-Stage "Собираем MSI ($culture)"
+    # Соглашение порождается ЗАНОВО на каждый язык: вступление у них разное.
+    New-LicenseRtf -Destination (Join-Path $ObjDir 'license.rtf') -Culture $culture
 
-if ($LASTEXITCODE -ne 0) { throw "wix build завершился с кодом $LASTEXITCODE" }
+    $out = Join-Path $ObjDir "TelePOS_$culture.msi"
+    & $wix build `
+        (Join-Path $RepoRoot 'installer\windows\TelePOS.wxs') `
+        -arch x64 `
+        -culture $culture `
+        -ext WixToolset.UI.wixext `
+        -ext WixToolset.Util.wixext `
+        -d "Language=$($lcids[$culture])" `
+        -d "Version=$($v.Version)" `
+        -d "BuildNumber=$($v.Build)" `
+        -d "BuildDir=$BuildDir" `
+        -d "WebDir=$WebDir" `
+        -d "SourceRoot=$RepoRoot" `
+        -d "ObjDir=$ObjDir" `
+        -intermediatefolder (Join-Path $ObjDir $culture) `
+        -o $out
+
+    if ($LASTEXITCODE -ne 0) { throw "wix build ($culture) завершился с кодом $LASTEXITCODE" }
+    $perCulture[$culture] = $out
+}
+
+Copy-Item -Force $perCulture[$cultures[0]] $msi
+
+if ($cultures.Count -gt 1) {
+    Write-Stage 'Встраиваем языки'
+
+    # Преобразования считаются ДО открытия пакета на запись: открытый на
+    # запись пакет заблокирован, а `wix msi transform` читает его же.
+    $transforms = @{}
+    foreach ($culture in $cultures[1..($cultures.Count - 1)]) {
+        $lcid = $lcids[$culture]
+        $mst  = Join-Path $ObjDir "$lcid.mst"
+        & $wix msi transform -p $msi $perCulture[$culture] -o $mst
+        if ($LASTEXITCODE -ne 0) { throw "не удалось посчитать преобразование для $culture" }
+        $transforms[$lcid] = $mst
+    }
+
+    # `WindowsInstaller.Installer` — тот же приём, которым это делает
+    # WiLangId.vbs из Windows SDK: SDK здесь не требуется, а COM-объект
+    # установщика есть на любой Windows.
+    #
+    # Вызовы ПРЯМЫЕ, а не через `InvokeMember`. Первая редакция звала всё
+    # через `InvokeMember` и падала на `OpenDatabase` с «Type mismatch»:
+    # PowerShell передаёт туда массив доводов не так, как ждёт COM.
+    # `InvokeMember` нужен только параметризованным свойствам — у обычных
+    # методов он лишний и вреден.
+    $installer = New-Object -ComObject WindowsInstaller.Installer
+    # msiOpenDatabaseModeTransact = 1
+    $db = $installer.OpenDatabase($msi, 1)
+
+    foreach ($lcid in $transforms.Keys) {
+        $view = $db.OpenView('INSERT INTO `_Storages` (`Name`, `Data`) VALUES (?, ?)')
+        $record = $installer.CreateRecord(2)
+        # `StringData` — параметризованное свойство, прямой записи не
+        # поддаётся.
+        [void] $record.GetType().InvokeMember(
+            'StringData', 'SetProperty', $null, $record, @([int] 1, "$lcid"))
+        $record.SetStream(2, $transforms[$lcid])
+        $view.Execute($record)
+        $view.Close()
+        # Отпускать надо КАЖДУЮ ссылку, а не только базу: пока жив `$view`
+        # или `$record`, файл пакета заблокирован, и следующее открытие
+        # отвечает COMException «OpenDatabase,DatabasePath,OpenMode» — без
+        # единого слова о том, что дело в замке.
+        [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($record)
+        [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($view)
+        Write-Note "язык $lcid встроен"
+    }
+
+    $db.Commit()
+    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($db)
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+
+    # ── Список языков — ОТДЕЛЬНЫМ открытием пакета ──────────────────────
+    #
+    # Тем же дескриптором, которым уже зафиксировали хранилища, сводка не
+    # записывается: `Persist` отрабатывает молча, журнал сборки бодро
+    # сообщает «языки объявлены», а в пакете остаётся `x64;1033`.
+    #
+    # Поймано ПРОВЕРКОЙ САМОГО ПАКЕТА, а не журналом. Журналу здесь верить
+    # нельзя ровно потому, что он пересказывает намерение, а не результат.
+    $db2 = $installer.OpenDatabase($msi, 1)
+    # Свойство 7 — Template, вида «x64;1033,1049»; довод 2 — сколько свойств
+    # разрешено изменить.
+    $summary = $db2.GetType().InvokeMember(
+        'SummaryInformation', 'GetProperty', $null, $db2, @([int] 2))
+    $template = 'x64;' + (($cultures | ForEach-Object { $lcids[$_] }) -join ',')
+    [void] $summary.GetType().InvokeMember(
+        'Property', 'SetProperty', $null, $summary, @([int] 7, $template))
+    $summary.Persist()
+    $db2.Commit()
+
+    # Ссылки COM отпускаются явно: пока они живы, файл пакета заблокирован,
+    # и следующий шаг сборки не смог бы его даже измерить.
+    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($summary)
+    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($db2)
+    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($installer)
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+
+    # ── И ПРОВЕРКА, что записалось ──────────────────────────────────────
+    #
+    # Сборка не имеет права сказать «готово» о пакете, который не делает
+    # обещанного. Читается ровно то, по чему Windows выбирает язык.
+    $check = New-Object -ComObject WindowsInstaller.Installer
+    $dbc = $check.OpenDatabase($msi, 0)
+    $sic = $dbc.GetType().InvokeMember(
+        'SummaryInformation', 'GetProperty', $null, $dbc, @([int] 0))
+    $written = $sic.GetType().InvokeMember(
+        'Property', 'GetProperty', $null, $sic, @([int] 7))
+    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($dbc)
+    [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($check)
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+
+    if ($written -ne $template) {
+        throw "список языков не записался: в пакете «$written», ожидалось «$template»"
+    }
+    Write-Note "языки объявлены и проверены в пакете: $written"
+}
+
 
 $size = [math]::Round((Get-Item $msi).Length / 1MB, 1)
+
 Write-Stage "Готово: $msi ($size МБ)"
 
 # Подсказки печатаются полным путём и с оговорками, а не как шаблон

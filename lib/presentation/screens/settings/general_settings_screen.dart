@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:telepos/core/utils/directory_util.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -219,6 +221,13 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
                     ),
                     const SizedBox(height: 16),
                     _buildSectionCard(
+                      title: l10n.generalSettingsDataLocation,
+                      description: l10n.generalSettingsDataLocationDesc,
+                      icon: Icons.folder_outlined,
+                      child: _buildDataLocationContent(l10n),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSectionCard(
                       title: l10n.generalSettingsAppVersion,
                       description: l10n.generalSettingsVersionDesc,
                       icon: TeleposIcons.info,
@@ -279,6 +288,13 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
                           description: l10n.setScreenTouchDesc,
                           icon: Icons.touch_app,
                           child: _buildScrollAssistContent(),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSectionCard(
+                          title: l10n.generalSettingsDataLocation,
+                          description: l10n.generalSettingsDataLocationDesc,
+                          icon: Icons.folder_outlined,
+                          child: _buildDataLocationContent(l10n),
                         ),
                         const SizedBox(height: 16),
                         _buildSectionCard(
@@ -1179,6 +1195,94 @@ class _GeneralSettingsScreenState extends ConsumerState<GeneralSettingsScreen> {
       children: [
         _buildInfoRow(l10n.generalSettingsVersion, AppConstants.appVersion),
         _buildInfoRow(l10n.generalSettingsPlatform, _getPlatformName()),
+      ],
+    );
+  }
+
+  /// Где касса держит свои данные — путями, а не общими словами.
+  ///
+  /// # Зачем это на экране
+  ///
+  /// До 2026-09-23 не показывал НИ ОДИН экран. Для кассы, которую надо
+  /// резервировать и однажды перенести на другую машину, «где мои данные» —
+  /// законный вопрос, на который продукт не отвечал ничем: ни диагностика
+  /// (она про устройства), ни экран системы (он про здоровье и обновление).
+  ///
+  /// Найдено при подготовке съёмки главы 2: урок обещает рассказать, что
+  /// установка сделала с машиной, а показать было нечего.
+  ///
+  /// # Почему только чтение и копирование
+  ///
+  /// Менять расположение отсюда нельзя намеренно: перенос базы — это
+  /// остановка кассы, перенос файлов и `-wal`/`-shm` рядом с ними
+  /// (`AppDatabase.deleteWalSidecars`). Кнопка «сменить папку», сделанная
+  /// кнопкой, однажды переносит базу на ходу и теряет смену.
+  Widget _buildDataLocationContent(AppLocalizations l10n) {
+    Widget row(String label, String path) => InkWell(
+      onTap: () async {
+        await Clipboard.setData(ClipboardData(text: path));
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.generalSettingsPathCopied)),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 120,
+              child: Text(label, style: AppTextStyles.body),
+            ),
+            Expanded(
+              child: Text(
+                path,
+                style: AppTextStyles.body.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.copy_outlined,
+              size: 16,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // `DirectoryUtil` бросает `StateError`, пока каталоги не подняты, — а
+    // подняты они не всегда: в пробах виджетов `init()` никто не звал, да и
+    // при запуске экран может открыться раньше. Первая редакция звала пути
+    // напрямую, экран падал, и дерево виджетов рассыпалось следом
+    // («Looking up a deactivated widget's ancestor is unsafe» в пробе
+    // обхода маршрутов).
+    //
+    // Экран настроек не имеет права падать оттого, что путь пока неизвестен.
+    String? pathOr(String Function() read) {
+      try {
+        return read();
+      } on Object {
+        return null;
+      }
+    }
+
+    final places = <String, String?>{
+      l10n.generalSettingsDataDb: pathOr(() => DirectoryUtil.mainDatabasePath),
+      l10n.generalSettingsDataLogs: pathOr(() => DirectoryUtil.logsDir.path),
+      l10n.generalSettingsDataBackups: pathOr(
+        () => DirectoryUtil.backupsDir.path,
+      ),
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final place in places.entries)
+          if (place.value != null) row(place.key, place.value!),
       ],
     );
   }

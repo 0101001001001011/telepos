@@ -33,29 +33,17 @@
   "globalError": "Xato",
   "globalSuccess": "Muvaffaqiyatli",
   "globalWarning": "Ogohlantirish",
-  "globalInfo": "Ma'lumot",
   "globalConfirm": "Tasdiqlash",
   "globalClear": "Tozalash",
   "globalSelect": "Tanlash",
   "globalAll": "Hammasi",
-  "globalNone": "Yo'q",
   "globalTotal": "Jami",
   "globalAmount": "Summa",
   "globalQuantity": "Miqdori",
   "globalPrice": "Narx",
   "globalDiscount": "Chegirma",
   "globalDate": "Sana",
-  "globalTime": "Vaqt",
-  "loginTitle": "Tizimga kirish",
-  "loginPin": "PIN kiriting",
-  "loginPinHint": "4 raqam",
   "loginEnter": "Kirish",
-  "loginSelectUser": "Foydalanuvchini tanlang",
-  "loginNoUsers": "Foydalanuvchilar yo'q",
-  "loginWrongPin": "Noto'g'ri PIN",
-  "loginBlocked": "Foydalanuvchi bloklangan",
-  "loginSessionExpired": "Sessiya muddati tugadi",
-  "loginShiftRequired": "Kirish uchun smenani oching",
   "staffRoleOwner": "Egasi",
   "staffRoleAdministrator": "Administrator",
   "staffRoleUser": "Foydalanuvchi",
@@ -63,77 +51,26 @@
   "staffRoleUnknown": "Nomaʼlum",
   "loginCashier": "Kassir",
   "loginAdmin": "Administrator",
-  "loginManager": "Menejer",
   "loginLogout": "Chiqish",
-  "loginSwitchUser": "Foydalanuvchini almashtirish",
-  "saleTitle": "Sotuv",
-  "saleNewSale": "Yangi sotuv",
-  "saleAddProduct": "Tovar qo'shish",
-  "saleScanBarcode": "Shtrix-kodni skanerlash",
-  "saleEnterBarcode": "Shtrix-kodni kiriting",
   "saleProductNotFound": "Tovar topilmadi",
-  "saleEmptyCart": "Savat bo'sh",
-  "saleSubtotal": "Oraliq summa",
-  "saleTax": "QQS",
-  "saleTotalDiscount": "Chegirma",
   "saleToPay": "To'lashga",
-  "saleItems": "{count, plural, one{{count} ta tovar} other{{count} ta tovar}}",
-  "@saleItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "saleRemoveItem": "Tovarni o'chirish",
-  "saleClearCart": "Savatni tozalash",
-  "saleConfirmClear": "Savatni tozalash kerakmi?",
-  "saleProceedPayment": "To'lovga o'tish",
   "saleHold": "Keyinga qoldirish",
   "saleRecall": "Qaytarish",
-  "saleHeldSales": "Keyinga qoldirilgan sotuvlar",
-  "saleNoHeldSales": "Keyinga qoldirilgan sotuvlar yo'q",
-  "saleProductSearch": "Tovarlarni qidirish",
-  "saleByCategory": "Kategoriyalar bo'yicha",
-  "saleByName": "Nomi bo'yicha",
-  "saleByBarcode": "Shtrix-kod bo'yicha",
-  "saleWeight": "Og'irligi",
   "saleWeightKg": "Ogʻirligi: {weight} kg",
-  "saleEnterWeight": "Og'irlikni kiriting",
-  "saleEnterQuantity": "Miqdorini kiriting",
-  "saleEnterPrice": "Narxni kiriting",
-  "saleFreePrice": "Erkin narx",
-  "saleMaxDiscount": "Maks. chegirma: {percent}%",
-  "@saleMaxDiscount": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
   "refundTitle": "Qaytarish",
-  "refundNewRefund": "Yangi qaytarish",
   "refundByReceipt": "Chek bo'yicha",
   "refundWithoutReceipt": "Cheksiz",
-  "refundEnterReceipt": "Chek raqamini kiriting",
   "refundReceiptNotFound": "Chek topilmadi",
-  "refundSelectItems": "Qaytarish uchun tovarlarni tanlang",
-  "refundReason": "Qaytarish sababi",
-  "refundConfirm": "Qaytarishni tasdiqlash",
   "refundAmount": "Qaytarish summasi",
   "refundComplete": "Qaytarish bajarildi",
-  "refundCash": "Naqd qaytarish",
-  "refundCard": "Kartaga qaytarish",
   "refundConnectionLost": "Kassa bilan aloqa uzildi",
   "refundConnectionLostHint": "Terminal kassaga oʻzi qaytadi — ish oʻsha joydan davom etadi",
   "refundRefused": "Qaytarish bajarilmadi: {reason}",
   "refundNoItems": "Qaytarish uchun tovarlar yo'q",
-  "refundAlreadyRefunded": "Tovar qaytarilgan",
-  "refundPartial": "Qisman qaytarish",
   "shiftTitle": "Smena",
   "shiftOpen": "Smenani ochish",
   "shiftClose": "Smenani yopish",
-  "shiftCurrent": "Joriy smena",
   "shiftNumber": "Smena №: {number}",
   "@shiftNumber": {
     "placeholders": {
@@ -150,42 +87,11 @@
       }
     }
   },
-  "shiftCashier": "Kassir: {name}",
-  "@shiftCashier": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftSalesCount": "Sotuvlar: {count}",
-  "@shiftSalesCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "shiftRefundsCount": "Qaytarishlar: {count}",
-  "@shiftRefundsCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "shiftTotalSales": "Sotuvlar summasi",
-  "shiftTotalRefunds": "Qaytarishlar summasi",
   "shiftCashInDrawer": "Kassada",
   "shiftExpected": "Kutilgan",
-  "shiftActual": "Haqiqiy",
   "shiftDifference": "Farq",
   "shiftXReport": "X-hisobot",
   "shiftZReport": "Z-hisobot",
-  "shiftConfirmClose": "Smenani yopish kerakmi?",
-  "shiftAlreadyOpen": "Smena ochiq",
-  "shiftNotOpen": "Smena ochilmagan",
-  "shiftOpenFirst": "Avval smenani oching",
   "paymentTitle": "To'lov",
   "paymentCash": "Naqd",
   "paymentCard": "Karta",
@@ -194,73 +100,22 @@
   "paymentDebt": "Qarzga",
   "paymentInstallment": "Bo'lib to'lash",
   "paymentMixed": "Aralash",
-  "paymentEnterAmount": "Summani kiriting",
-  "paymentRemaining": "Qoldi: {amount}",
-  "@paymentRemaining": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "paymentChange": "Qaytim: {amount}",
-  "@paymentChange": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "paymentComplete": "To'lov yakunlandi",
   "paymentFailed": "To'lov xatosi",
-  "paymentWaitingCard": "Kartani kutish...",
-  "paymentWaitingQr": "QR kutish...",
-  "paymentInsertCard": "Kartani joylashtiring",
-  "paymentScanQr": "QR skanerlang",
-  "paymentApproved": "Tasdiqlandi",
-  "paymentDeclined": "Rad etildi",
-  "paymentReceipt": "Chek chop etish",
-  "paymentNoReceipt": "Cheksiz",
-  "paymentEmail": "Email-ga yuborish",
-  "paymentSms": "SMS yuborish",
   "historyTitle": "Tarix",
   "historyToday": "Bugun",
   "historyYesterday": "Kecha",
-  "historyThisWeek": "Bu hafta",
-  "historyThisMonth": "Bu oy",
-  "historyDateRange": "Davrni tanlash",
-  "historyNoSales": "Davrda sotuvlar yo'q",
-  "historyReceipt": "Chek №{number}",
-  "@historyReceipt": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "historyReprint": "Qayta chop etish",
   "certificateSlipPrintFailed": "{number} sertifikat slipi chop etilmadi: {reason}",
-  "historyDetails": "Batafsil",
   "historySale": "Sotuv",
   "historyRefund": "Qaytarish",
-  "historyFilter": "Filtr",
-  "agentTitle": "Kontragentlar",
   "agentClients": "Mijozlar",
   "agentSuppliers": "Yetkazib beruvchilar",
-  "agentSearch": "Kontragentni qidirish",
-  "agentAdd": "Kontragent qo'shish",
   "agentEdit": "Tahrirlash",
   "agentName": "Nomi/F.I.O.",
   "agentPhone": "Telefon",
-  "agentEmail": "Email",
   "agentIin": "STIR",
-  "agentAddress": "Manzil",
   "agentBalance": "Balans",
-  "agentBonusBalance": "Bonus balansi",
   "agentDebt": "Qarz",
-  "agentNoAgents": "Kontragentlar yo'q",
-  "agentSaveSuccess": "Kontragent saqlandi",
-  "agentDeleteConfirm": "Kontragentni o'chirish kerakmi?",
   "cashTitle": "Kassa",
   "cashReasonCreditRepayment": "Boʻlib toʻlashni yopish",
   "cashReasonCustomerTopUp": "Xaridor hisobini toʻldirish",
@@ -270,28 +125,13 @@
   "serviceAutoAddedByNorm": "Sarf meʼyori boʻyicha qoʻshildi",
   "cashInvestment": "Kirim",
   "cashExpense": "Chiqim",
-  "cashBalance": "Kassa balansi",
   "cashEnterAmount": "Summani kiriting",
-  "cashReason": "Asos",
-  "cashReasonPlaceholder": "Sababni ko'rsating",
-  "cashSuccess": "Operatsiya bajarildi",
   "cashExpenseTypes": "Chiqim turi",
   "discountTitle": "Chegirma",
   "discountPercent": "Foiz",
-  "discountFixed": "Belgilangan",
-  "discountEnterValue": "Qiymatni kiriting",
   "discountApply": "Qo'llash",
-  "discountRemove": "Chegirmani olib tashlash",
-  "discountOnItem": "Tovarga chegirma",
-  "discountOnTotal": "Chekka chegirma",
-  "discountMaxExceeded": "Maksimal chegirma oshib ketdi",
   "quickProductTitle": "Tez tovarlar",
-  "quickProductAdd": "Tovar qo'shish",
-  "quickProductName": "Nomi",
-  "quickProductPrice": "Narxi",
   "quickProductCategory": "Kategoriyasi",
-  "quickProductSave": "Saqlash",
-  "quickProductDelete": "O'chirish",
   "syncTitle": "Sinxronizatsiya",
   "syncStatus": "Sinxronizatsiya holati",
   "syncLastSync": "Oxirgi sinxronizatsiya: {time}",
@@ -320,92 +160,20 @@
   },
   "syncOffline": "Aloqa yo'q",
   "syncOnline": "Ulangan",
-  "printerTitle": "Printer",
-  "printerStatus": "Printer holati",
   "printerConnected": "Ulangan",
   "printerDisconnected": "Uzilgan",
   "printerError": "Printer xatosi",
-  "printerPaperOut": "Qog'oz yo'q",
   "printerConnect": "Ulash",
   "printerDisconnect": "Uzish",
-  "printerTest": "Test chop etish",
   "printerSettings": "Printer sozlamalari",
-  "printerWidth": "Chek kengligi",
   "additionalTitle": "Qo'shimcha",
-  "additionalSettings": "Sozlamalar",
-  "additionalReports": "Hisobotlar",
-  "additionalInventory": "Inventarizatsiya",
   "additionalSupply": "Tovar qabul qilish",
-  "additionalPriceChange": "Narxlarni o'zgartirish",
-  "additionalBackup": "Zahira nusxa",
-  "additionalRestore": "Tiklash",
   "additionalUpdate": "Yangilash",
-  "additionalAbout": "Dastur haqida",
-  "additionalLicense": "Litsenziya",
-  "additionalSupport": "Qo'llab-quvvatlash",
-  "receiptTitle": "Chek",
   "receiptNumber": "Chek №",
   "receiptDate": "Sana",
-  "receiptCashier": "Kassir",
-  "receiptItems": "Tovarlar",
-  "receiptSubtotal": "Oraliq summa",
-  "receiptDiscount": "Chegirma",
-  "receiptTax": "QQS",
   "receiptTotal": "JAMI",
-  "receiptCash": "Naqd",
-  "receiptCard": "Karta",
-  "receiptChange": "Qaytim",
-  "receiptThankYou": "Xaridingiz uchun rahmat!",
-  "receiptFiscalNumber": "Fiskal raqam",
-  "receiptQrCode": "Tekshirish uchun QR",
-  "receiptCopy": "Chek nusxasi",
-  "errorUnknown": "Noma'lum xato",
-  "errorNetwork": "Tarmoq xatosi",
-  "errorServer": "Server xatosi",
-  "errorTimeout": "Kutish vaqti tugadi",
-  "errorNotFound": "Topilmadi",
-  "errorPermission": "Ruxsat yo'q",
-  "errorDatabase": "Ma'lumotlar bazasi xatosi",
-  "errorValidation": "Validatsiya xatosi",
-  "errorRequired": "Majburiy maydon",
   "errorInvalidFormat": "Noto'g'ri format",
-  "errorMinLength": "Kamida {min} belgi",
-  "@errorMinLength": {
-    "placeholders": {
-      "min": {
-        "type": "int"
-      }
-    }
-  },
-  "errorMaxLength": "Ko'pi bilan {max} belgi",
-  "@errorMaxLength": {
-    "placeholders": {
-      "max": {
-        "type": "int"
-      }
-    }
-  },
-  "errorMinValue": "Kamida {min}",
-  "@errorMinValue": {
-    "placeholders": {
-      "min": {
-        "type": "String"
-      }
-    }
-  },
-  "errorMaxValue": "Ko'pi bilan {max}",
-  "@errorMaxValue": {
-    "placeholders": {
-      "max": {
-        "type": "String"
-      }
-    }
-  },
   "errorPrinter": "Printer xatosi",
-  "errorFiscal": "Fiskalizatsiya xatosi",
-  "errorPayment": "To'lov xatosi",
-  "errorSync": "Sinxronizatsiya xatosi",
-  "errorNoInternet": "Internet aloqasi yo'q",
   "errorTryAgain": "Qayta urinib ko'ring",
   "helpTitle": "Yordam",
   "helpTips": "Maslahatlar",
@@ -435,10 +203,6 @@
   "loginShiftOpen": "Smena ochiq",
   "loginShiftClosed": "Smena yopiq",
   "loginShiftUnknown": "Smena: kassa javob bermadi",
-  "saleQuickProducts": "Tez mahsulotlar",
-  "saleIncrease": "Oshirish",
-  "saleDecrease": "Kamaytirish",
-  "saleMark": "Markirovka",
   "saleDataMatrix": "Markirovka (DataMatrix)",
   "saleHeld": "Chek kechiktirildi",
   "saleNoDeferredSales": "Kechiktirilgan cheklar yo'q",
@@ -448,7 +212,6 @@
   "salePositions": "Mahsulotlar",
   "saleSearchHint": "Mahsulot qidirish (nomi yoki shtrix-kod)",
   "refundWithReceipt": "CHEK BILAN",
-  "refundWithoutReceiptUpper": "CHEKSIZ",
   "refundLoadReceipt": "Chekni yuklash",
   "refundSearchProducts": "Mahsulotlarni qidirish",
   "refundSelectAll": "Hammasini tanlash",
@@ -456,72 +219,38 @@
   "refundMaxQuantity": "Maksimum: {max}",
   "refundConfirmTitle": "Qaytarishni tasdiqlang",
   "refundSelectedItems": "Tanlangan mahsulotlar: {count}",
-  "refundSuccessMsg": "Qaytarish muvaffaqiyatli amalga oshirildi",
   "refundSearchHint": "Qaytarish uchun mahsulot qidirish",
-  "paymentRefundTitle": "Qaytarish",
-  "paymentPayTitle": "To'lov",
-  "paymentRefundBtn": "QAYTARISH",
-  "paymentPayBtn": "TO'LASH",
   "paymentChangeLabel": "Qaytim:",
-  "paymentSuccessRefund": "Qaytarish amalga oshirildi",
-  "paymentSuccessPay": "To'lov muvaffaqiyatli",
-  "paymentCardType": "Naqdsiz",
-  "paymentToPay": "To'lashga",
-  "paymentBonusLabel": "Bonuslar",
-  "paymentTotalToPay": "Jami to'lash",
   "paymentByCard": "Karta bilan",
-  "paymentRemainLabel": "Qoldi",
-  "shiftBills": "Kupyuralar",
-  "shiftTotalAmount": "Umumiy summa",
   "shiftOperations": "Operatsiyalar",
   "shiftOpened": "Smena ochildi",
   "shiftClosed": "Smena yopildi",
   "shiftSince": "{time} dan beri",
   "shiftSystem": "Tizim",
   "shiftEntered": "Kiritildi",
-  "shiftRecounting": "Kupyuralar bo'yicha qayta hisoblash",
   "shiftManualEntry": "Qo'lda summa kiritish",
-  "shiftCashOps": "Kassa operatsiyalari",
   "shiftOpenAction": "Smenani ochish",
-  "shiftCloseAction": "Smenani yopish",
   "historyOperations": "Operatsiyalar tarixi",
-  "historyResetFilters": "Filtrlarni tozalash",
   "historyRefresh": "Yangilash",
   "historyNoRecords": "Yozuvlar yo'q",
   "historyChangeFilters": "Filtrlarni o'zgartirib ko'ring",
   "historyEmpty": "Operatsiyalar tarixi bo'sh",
-  "historyFilterTitle": "Filtrlar",
   "historyPeriod": "Davr",
-  "historyOpType": "Operatsiya turi",
   "historySearchHint": "Chek raqami, summa...",
-  "historyType": "Turi:",
   "historyPrint": "Chekni chop etish",
-  "agentFound": "Topildi: {count}",
   "agentWithDebt": "Faqat qarzli",
   "agentSearchHint": "Ism yoki telefon bo'yicha qidirish...",
-  "agentNewClient": "Yangi mijoz",
   "agentNameRequired": "Ism *",
-  "agentEnterName": "Mijoz ismini kiriting",
-  "agentPhoneLabel": "Telefon",
-  "agentIinLabel": "STIR/JSHSHIR",
-  "agentIinHint": "12 raqam",
   "agentDeleteQuestion": "Mijozni o'chirish?",
   "agentDeleteConfirmMsg": "{name} ni o'chirmoqchimisiz?",
-  "agentDeleted": "Mijoz o'chirildi",
-  "agentFoundExisting": "Mijoz topildi",
   "supplyTitle": "Tovar qabul qilish",
-  "supplySaved": "Qabul saqlandi",
   "supplySaveError": "Saqlash xatosi",
-  "supplyCancelQuestion": "Qabul qilishni bekor qilish?",
   "supplyDataLost": "Barcha kiritilgan ma'lumotlar yo'qoladi.",
   "supplyProducts": "Mahsulotlar: {count}",
-  "supplyBarcodeHint": "Shtrix-kod yoki artikul",
   "supplyComment": "Izoh",
   "supplyCommentHint": "Izoh kiriting...",
-  "supplyNotFound": "Mahsulot topilmadi",
   "supplySelectSupplier": "Yetkazuvchini tanlang",
   "supplySelectAccount": "Hisobni tanlang",
-  "supplyBalance": "Balans: {amount}",
   "supplyPurchasePrice": "Kirim narxi",
   "supplySerialNumbers": "Seriya raqamlari",
   "supplySerialHint": "S/N kiriting yoki skanerlang",
@@ -537,8 +266,6 @@
     }
   },
   "supplySerialMismatch": "Seriya raqamlari soni miqdorga mos kelmaydi",
-  "supplyInvalidQty": "To'g'ri miqdorni kiriting",
-  "supplyInvalidPrice": "To'g'ri narxni kiriting",
   "inventoryTitle": "Inventarizatsiya",
   "inventoryFullCount": "To'liq inventarizatsiya",
   "inventoryFullCountSubtitle": "Skanerlanmagan tovarlar qoldig'ini nolga tushirish",
@@ -571,70 +298,26 @@
   "writeoffCancelQuestion": "Hisobdan chiqarishni bekor qilish?",
   "writeoffSaved": "Hisobdan chiqarish saqlandi",
   "settingsTitle": "Sozlamalar",
-  "settingsPosInfo": "Kassa ma'lumoti",
-  "settingsPosName": "Kassa nomi",
-  "settingsCompany": "Kompaniya",
-  "settingsIin": "STIR/JSHSHIR",
-  "settingsPosId": "POS ID",
-  "settingsStoreId": "Do'kon ID",
-  "settingsNotSpecified": "Ko'rsatilmagan",
-  "settingsAppVersion": "Ilova versiyasi",
-  "settingsVersion": "Versiya",
-  "settingsPlatform": "Platforma",
   "settingsLanguage": "Interfeys tili",
   "settingsLanguageChanged": "Til o'zgartirildi",
-  "settingsCurrency": "Valyuta",
-  "settingsCurrencySymbol": "Belgi",
-  "settingsCurrencyCode": "Kod",
-  "settingsCountry": "Mamlakat",
-  "settingsAdditional": "Qo'shimcha sozlamalar",
   "settingsTransport": "Transport",
-  "settingsTransportDesc": "Ma'lumotlarni sinxronlash sozlamalari",
   "settingsPrinter": "Printer",
-  "settingsPrinterDesc": "Chek chop etish sozlamalari",
   "settingsFiscal": "Fiskalizatsiya",
-  "settingsFiscalDesc": "WebKassa, OFD, QQS",
   "settingsTelegram": "Telegram",
-  "settingsTelegramDesc": "Telegram integratsiyasi va kanallar",
-  "settingsPermissions": "Ruxsatlar",
-  "settingsPermissionsDesc": "Kassirlar uchun ruxsatlar",
   "fiscalTitle": "Fiskaalizatsiya",
   "fiscalOperator": "Fiskal operator",
   "fiscalWebkassa": "WebKassa sozlamalari",
-  "fiscalTaxpayer": "Soliq to'lovchi ma'lumotlari",
-  "fiscalVatSettings": "QQS sozlamalari",
-  "fiscalVatPayer": "QQS to'lovchi",
-  "fiscalPrintVat": "Chekda QQS ni chop etish",
   "fiscalSaved": "Sozlamalar saqlandi",
-  "fiscalSaveError": "Saqlash xatosi",
   "printerSettingsTitle": "Printer sozlamalari",
   "printerConnectionType": "Ulanish turi",
   "printerAddress": "Printer manzili",
-  "printerPaperWidth": "Qog'oz kengligi",
-  "printerTesting": "Sinash",
-  "printerReady": "Tayyor",
-  "printerNotConnected": "Ulanmagan",
-  "printerPaperOut2": "Qog'oz yo'q",
-  "printerCoverOpen": "Qopqog'i ochiq",
-  "printerPrinting": "Chop etilmoqda...",
-  "printerCheckStatus": "Tekshirilmoqda...",
-  "printerPrintSuccess": "Chop etish muvaffaqiyatli",
   "paymentNotFiscalized": "Chek fiskallashtirilmadi — toʻlov qayd etildi",
   "paymentFiscalModuleAbsent": "Fiskallashtirish moduli mavjud emas — cheklar fiskallashtirilmaydi",
   "cashDrawerOpenError": "Kassa qutisi ochilmadi",
   "printerPrintError": "Chop etish xatosi",
-  "printerCheckBtn": "Tekshirish",
-  "printerTestReceipt": "Test chek",
   "printerPort": "Port",
-  "cashOperationTitle": "Kassa operatsiyasi",
   "cashWithdrawal": "Olish",
-  "cashCommentRequired": "Izoh *",
   "cashCommentOptional": "Izoh",
-  "cashCommentHint": "Izoh kiriting...",
-  "cashEnterAmountMsg": "Summani kiriting",
-  "cashPositiveOnly": "Summa musbat bo'lishi kerak",
-  "cashInsufficient": "Kassada mablag' yetarli emas",
-  "cashInvalidAmount": "To'g'ri summani kiriting",
   "cashInDrawer": "Kassada:",
   "telegramTitle": "Telegram sozlamalari",
   "telegramAuth": "Avtorizatsiya",
@@ -673,14 +356,8 @@
   "chatGallery": "Galereya",
   "chatSelectSource": "Manbani tanlang",
   "updateAvailable": "Yangilanish mavjud",
-  "updateInProgress": "Yangilanmoqda...",
-  "updateAutoIn": "Avtoyagilanish {seconds} soniyada",
-  "updateNowBtn": "Hozir yangilash",
   "updateLater": "Keyinroq",
-  "updateSkip": "O'tkazib yuborish",
-  "updateBtn": "Yangilash",
   "storageWarningTitle": "Diskda joy kam",
-  "storageWarningMsg": "Kassa barqaror ishlashi uchun kamida 2 GB bo'shatish tavsiya etiladi.",
   "storageUnderstood": "Tushunarli",
   "errorCritical": "Jiddiy xato",
   "errorAppProblem": "Ilovada muammo yuz berdi",
@@ -706,16 +383,9 @@
   "selectPeriod": "Davrni tanlang",
   "bonusProgram": "Bonus dasturi",
   "enterPhone": "Mijoz telefon raqamini kiriting",
-  "enterSmsCode": "SMS dagi kodni kiriting",
-  "resendIn": "{seconds} soniyadan keyin qayta yuborish",
   "resendCode": "Kodni qayta yuborish",
   "availableBonuses": "Mavjud bonuslar:",
   "useBonuses": "Bonuslarni ishlatish",
-  "deferredSales": "Kechiktirilgan sotuvlar",
-  "noDeferredSales": "Kechiktirilgan sotuvlar yo'q",
-  "fiscalErrors": "Fiskaalizatsiya xatolari",
-  "selectAllErrors": "Hammasini tanlash",
-  "retrySelected": "Qayta urinish",
   "receiptNo": "Chek №{number}",
   "dontAskAgain": "Qayta so'ramang",
   "deleteTitle": "O'chirish",
@@ -745,12 +415,10 @@
   "discountLimitPercent": "{percent} % gacha ruxsat — {source}",
   "discountLimitAmount": "{amount} gacha ruxsat — {source}",
   "discountApprovalAbove": "{percent} % dan yuqori katta xodim tasdiqlashi kerak",
-  "sumLabel": "Summa",
   "enterAmount": "Summani kiriting",
   "amountMustBePositive": "Summa musbat bo'lishi kerak",
   "notEnoughCashInDrawer": "Kassada mablag' yetarli emas",
   "enterValidAmount": "To'g'ri summani kiriting",
-  "inDrawer": "Kassada:",
   "commentOptional": "Izoh (majburiy emas)",
   "operationReason": "Operatsiya sababi...",
   "positions": "pozitsiyalar",
@@ -812,10 +480,6 @@
       }
     }
   },
-  "receiptDiscountItem": "Chegirma:",
-  "receiptSubtotalLabel": "Oraliq summa",
-  "receiptPayment": "To'lov:",
-  "fiscalMark": "FB:",
   "remainingStock": "Qold: {qty}",
   "@remainingStock": {
     "placeholders": {
@@ -832,24 +496,7 @@
   "addProductsViaSearch": "Qidirish orqali tovar qo'shing\nyoki shtrix-kodni skanerlang",
   "addProductsViaSearchShort": "Qidirish orqali tovar qo'shing",
   "priceLabel": "Narxi",
-  "receiptTotalLabel": "Chek bo'yicha jami",
-  "positionsLabel": "Pozitsiyalar",
-  "toPayLabel": "TO'LASHGA",
   "payBtn": "TO'LASH",
-  "totalLabel": "Jami:",
-  "posAndQty": "{positions} poz. / {qty} dona",
-  "@posAndQty": {
-    "placeholders": {
-      "positions": {
-        "type": "int"
-      },
-      "qty": {
-        "type": "String"
-      }
-    }
-  },
-  "modeRetail": "Chakana",
-  "modeWholesale": "ULGURJI",
   "quickProducts": "Tez tovarlar",
   "editProduct": "Tahrirlash",
   "labelComment": "Izoh",
@@ -873,34 +520,10 @@
   },
   "insufficientBonuses": "Bonuslar yetarli emas",
   "enterValidPhone": "To'g'ri telefon raqamini kiriting",
-  "errorsCount": "{count} ta xato",
-  "@errorsCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "selectAllCount": "Hammasini tanlash ({count})",
-  "@selectAllCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "retryCount": "Qayta urinish ({count})",
   "@retryCount": {
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "receiptHash": "Chek #{number}",
-  "@receiptHash": {
-    "placeholders": {
-      "number": {
         "type": "int"
       }
     }
@@ -914,13 +537,9 @@
       }
     }
   },
-  "drawerPrimary": "Asosiy",
-  "drawerSecondary": "Qo'shimcha",
-  "tooltipMore": "Yana",
   "statusOnline": "Online",
   "statusOffline": "Offline",
   "statusSyncing": "Sinxronlash...",
-  "thankYouForPurchase": "Xaridingiz uchun rahmat!",
   "searchProductHint": "Tovar qidirish (nomi yoki shtrix-kod)",
   "actionDefer": "Keyinga qoldirish",
   "actionDeferredList": "Kechiktirilganlar",
@@ -928,7 +547,6 @@
   "actionIncrease": "Oshirish",
   "actionDecrease": "Kamaytirish",
   "restaurantSettings": "Restoran rejimi",
-  "restaurantSettingsDesc": "Stollar, zonalar, servis to'lovi",
   "restaurantOperatingMode": "Ish rejimi",
   "restaurantModeRetail": "Chakana savdo",
   "restaurantModeRetailDesc": "Do'konlar uchun standart POS",
@@ -938,7 +556,6 @@
   "restaurantModeServiceDesc": "Qabul, navbat",
   "restaurantZoneManagement": "Zonalarni boshqarish",
   "restaurantZoneAdd": "Zona qo'shish",
-  "restaurantZoneRename": "Nomini o'zgartirish",
   "restaurantZonePresets": "Oldindan o'rnatilgan",
   "restaurantZoneHall": "Zal",
   "restaurantZoneTerrace": "Terrasa",
@@ -979,14 +596,6 @@
   "restaurantNoTablesHint": "Restoran sozlamalarida stollar qo'shing",
   "restaurantGoToSettings": "Sozlamalarga o'tish",
   "restaurantOrdersEmpty": "Faol buyurtmalar yo'q",
-  "restaurantOrderItems": "{count} pozitsiya",
-  "@restaurantOrderItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "restaurantOrderGuests": "Mehmonlar: {count}",
   "@restaurantOrderGuests": {
     "placeholders": {
@@ -1013,12 +622,9 @@
   },
   "restaurantNoOrder": "Faol buyurtma yo'q",
   "restaurantOpenOrder": "Buyurtma ochish",
-  "restaurantCloseOrder": "Buyurtmani yopish",
   "restaurantAddItems": "Pozitsiya qo'shish",
   "restaurantGoToPayment": "To'lovga",
   "restaurantTransfer": "Ko'chirish",
-  "restaurantSplitBill": "Bo'lish",
-  "restaurantChangeStatus": "Statusni o'zgartirish",
   "restaurantSetFree": "Bo'sh",
   "restaurantSetReserved": "Band qilish",
   "restaurantSetDirty": "Tozalash kerak",
@@ -1027,8 +633,6 @@
   "restaurantOrderType": "Buyurtma turi",
   "restaurantWaiter": "Ofitsiant",
   "restaurantNote": "Eslatma",
-  "restaurantDeliveryAddress": "Yetkazib berish manzili",
-  "restaurantDeliveryPhone": "Telefon",
   "restaurantTransferTitle": "Buyurtmani ko'chirish",
   "restaurantTransferCurrent": "Joriy: {table}",
   "@restaurantTransferCurrent": {
@@ -1064,15 +668,6 @@
   "restaurantSplitPaymentProceed": "To'lovga",
   "restaurantPreCheckPrinted": "Pre-chek printerga yuborildi",
   "restaurantPreCheckFailed": "Pre-chek chop etish xatosi",
-  "restaurantSubtotal": "Oraliq summa",
-  "restaurantServiceChargeLine": "Servis to'lovi ({percent}%)",
-  "@restaurantServiceChargeLine": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
   "restaurantOrderNumber": "Buyurtma #{number}",
   "@restaurantOrderNumber": {
     "placeholders": {
@@ -1110,16 +705,6 @@
   },
   "restaurantOrderTab": "Buyurtma",
   "restaurantMenuTab": "Menyu",
-  "restaurantGuestLabel": "Mehmon {number}",
-  "@restaurantGuestLabel": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      }
-    }
-  },
-  "restaurantRemoveItem": "Mahsulotni o'chirish",
-  "restaurantPrintPrecheck": "Oldindan chek",
   "restaurantNewTakeout": "Olib ketish",
   "restaurantNewDelivery": "Yetkazib berish",
   "setupSectionOrganization": "Tashkilot",
@@ -1148,12 +733,10 @@
     }
   },
   "setupStepChecking": "Tekshirish",
-  "setupStepTelegram": "Telegram",
   "setupStepCountry": "Mamlakat",
   "setupStepOrganization": "Tashkilot",
   "setupStepVat": "QQS",
   "setupStepUsers": "Foydalanuvchilar",
-  "setupStepWorkMode": "Ish rejimi",
   "setupStepPos": "Kassa",
   "setupStepFiscal": "Fiskalizatsiya",
   "setupStepEquipment": "Uskunalar",
@@ -1198,16 +781,6 @@
       }
     }
   },
-  "setupVatRateLabel": "QQS: {rate}%",
-  "@setupVatRateLabel": {
-    "placeholders": {
-      "rate": {
-        "type": "int"
-      }
-    }
-  },
-  "setupOrganizationTitle": "Tashkilot ma'lumotlari",
-  "setupOrganizationDescription": "Kompaniyangiz haqida ma'lumot kiriting",
   "setupCompanyNameLabel": "Tashkilot nomi",
   "setupCompanyNameHint": "MChJ \"Mening kompaniyam\"",
   "setupTaxIdDigits": "{length} ta raqam",
@@ -1222,8 +795,6 @@
   "setupActualAddressLabel": "Do'konning haqiqiy manzili",
   "setupOwnerNameLabel": "Rahbar F.I.O.",
   "setupPhoneLabel": "Telefon",
-  "setupVatTitle": "Qo'shilgan qiymat solig'i",
-  "setupVatDescription": "Tashkilotingizning soliq rejimini tanlang",
   "setupVatPayerTitle": "QQS to'lovchi",
   "setupVatPayerRate": "QQS stavkasi: {rate}%",
   "@setupVatPayerRate": {
@@ -1238,18 +809,6 @@
   "setupVatNonPayerTitle": "QQS siz",
   "setupVatNonPayerSubtitle": "QQS qo'llanilmaydi",
   "setupVatNonPayerDescription": "Cheklarda QQS ajratilmaydi.\nSoddalashtirilgan tizim yoki patentdagi YaTT uchun.",
-  "setupWorkModeTitle": "Ish rejimi",
-  "setupWorkModeDescription": "Kassangiz qanday ishlashini tanlang",
-  "setupAutonomousTitle": "Avtonom rejim",
-  "setupAutonomousSubtitle": "Internetsiz ishlash",
-  "setupAutonomousDescription": "Kassa to'liq avtonom ishlaydi.\nMa'lumotlar faqat mahalliy saqlanadi.\nKassalar orasida sinxronizatsiya yo'q.",
-  "setupNetworkTitle": "Tarmoq rejimi",
-  "setupNetworkConfigured": "Telegram sozlangan",
-  "setupNetworkRequired": "Telegram talab qilinadi",
-  "setupNetworkDescription": "Kassalar orasida ma'lumotlar sinxronizatsiyasi.\nBulutga zaxira nusxa.\nTelegram da hisobotlar va bildirishnomalar.",
-  "setupNetworkRequiresTelegram": "Tarmoq rejimi uchun Telegram ni sozlash kerak",
-  "setupOperatingModeTitle": "Biznes turi",
-  "setupOperatingModeDescription": "Biznesingiz turini tanlang",
   "setupRetailTitle": "Chakana kassa",
   "setupRetailSubtitle": "Do'kon, dorixona, supermarket",
   "setupRetailDescription": "Chakana savdo uchun standart POS.\nSotuvlar, qaytarishlar, tovar qabul qilish.\nSmenalar va hisobotlar.",
@@ -1259,8 +818,6 @@
   "setupServiceTitle": "Servis markazi",
   "setupServiceSubtitle": "Ta'mirlash, xizmatlar, protseduralar",
   "setupServiceDescription": "Ta'mirlash/xizmatga qabul qilish.\nBuyurtma-naryodlar va ish belgilari.\nStatusni kuzatish va topshirish.",
-  "setupPosConfigTitle": "Kassa sozlamalari",
-  "setupPosConfigDescription": "Kassa apparati parametrlarini ko'rsating",
   "setupCashBoxNameLabel": "Kassa nomi",
   "setupCashBoxNameHint": "Kassa 1",
   "setupPosIdLabel": "Kassa ID",
@@ -1273,7 +830,6 @@
   "setupPrinterFooterLabel": "Chek pastki qismi",
   "setupPrinterFooterHint": "Xaridingiz uchun rahmat!",
   "setupFiscalNotRequired": "Mamlakatingiz uchun fiskalizatsiya talab qilinmaydi",
-  "setupFiscalDescription": "Fiskal operatorga ulanishni sozlang",
   "setupEnableWebkassa": "WebKassa ni yoqish",
   "setupEnableOfd": "OFD ni yoqish",
   "setupWebkassaDescription": "WebKassa orqali cheklarni fiskalizatsiya qilish (Qozog'iston)",
@@ -1295,8 +851,6 @@
   "setupOfdKktRegNoLabel": "KKT ro'yxat raqami",
   "setupOfdFnNoLabel": "FN raqami",
   "setupOfdUrlLabel": "OFD URL",
-  "setupEquipmentTitle": "Uskunalar",
-  "setupEquipmentDescription": "Ulangan uskunalarni sozlang",
   "setupEquipmentPrinter": "Chek printeri",
   "setupEquipmentScanner": "Shtrix-kod skaneri",
   "setupEquipmentScales": "Tarozi",
@@ -1307,7 +861,6 @@
   "setupConnectionBluetooth": "Bluetooth",
   "setupConnectionWifi": "Wi-Fi / Ethernet",
   "setupConnectionSerial": "COM-port",
-  "setupConnectionNone": "Tanlanmagan",
   "setupPrinterIpLabel": "Printer IP-manzili",
   "setupPrinterMacLabel": "Printer MAC-manzili",
   "setupPrinterNameLabel": "Printer nomi",
@@ -1317,19 +870,10 @@
   "setupScannerUsb": "USB-skaner",
   "setupScannerBluetooth": "Bluetooth-skaner",
   "setupScalePortLabel": "COM-port",
-  "setupBaudRateLabel": "Tezlik (baud rate)",
-  "setupCashDrawerConnected": "Printerga ulangan",
   "setupCashDrawerConnectedDesc": "Printer buyrug'i bilan ochiladi",
-  "setupSkip": "O'tkazib yuborish",
-  "setupPaymentTerminalsTitle": "To'lov terminallari",
-  "setupPaymentTerminalsDescription": "To'lov tizimlari bilan integratsiyani sozlang",
   "setupKaspiIpLabel": "Terminal IP-manzili",
   "setupPortLabel": "Port",
-  "setupApiUrlLabel": "API URL",
-  "setupApiKeyLabel": "API kalit",
   "setupNoTerminalsAvailable": "Mintaqangiz uchun mavjud to'lov terminallari yo'q",
-  "setupBusinessRulesTitle": "Biznes qoidalari",
-  "setupBusinessRulesDescription": "Kassa ishlash qoidalarini sozlang",
   "setupPermissionsTitle": "Ruxsatlar",
   "setupAllowDiscounts": "Chegirmalar",
   "setupAllowDiscountsDesc": "Chegirmalarni qo'llashga ruxsat berish",
@@ -1350,68 +894,28 @@
   "setupCashbackLabel": "Keshbek",
   "setupCashbackDesc": "Bonus hisoblashni yoqish",
   "setupCashbackRateLabel": "Keshbek foizi",
-  "setupRoundingTitle": "Yaxlitlash",
-  "setupDiscountRounding": "Chegirmalarni yaxlitlash",
-  "setupWeightRounding": "Vaznli tovarlarni yaxlitlash",
-  "setupRoundingNone": "Yaxlitlashsiz",
-  "setupRoundingUp1": "1 gacha (yuqoriga)",
-  "setupRoundingDown1": "1 gacha (pastga)",
-  "setupRoundingUp5": "5 gacha (yuqoriga)",
-  "setupRoundingDown5": "5 gacha (pastga)",
-  "setupRoundingUp10": "10 gacha (yuqoriga)",
-  "setupRoundingDown10": "10 gacha (pastga)",
-  "setupFiscalDisablesRounding": "Fiskalizatsiya yoqilganda yaxlitlash avtomatik o'chiriladi",
-  "setupUserCreationTitle": "Foydalanuvchilarni yaratish",
-  "setupUserCreationDescription": "Kassa bilan ishlash uchun foydalanuvchilar yarating",
-  "setupAdminLabel": "Administrator",
   "setupAdminSubtitle": "Kassa egasi",
   "setupUserNameLabel": "Ism",
   "setupUserPinLabel": "PIN",
   "setupUserPinConfirmLabel": "Tasdiqlash",
-  "setupAdminPinDefault": "Standart: 0000",
   "setupSellerLabel": "Sotuvchi",
   "setupSellerOptional": "Ixtiyoriy",
-  "setupSellerPinDefault": "Standart: 1111",
   "setupAdminPinMismatch": "Administrator PIN-kodlari mos kelmaydi",
-  "setupSummaryTitle": "Ma'lumotlarni tekshiring",
-  "setupSummaryDescription": "Hamma narsa to'g'ri ko'rsatilganiga ishonch hosil qiling",
-  "setupSummaryCountry": "Mamlakat",
-  "setupSummaryCurrency": "Valyuta",
   "setupSummaryFormat": "Format",
-  "setupSummaryVat": "QQS",
-  "setupSummaryTelegram": "Telegram",
-  "setupSummaryStatus": "Holat",
-  "setupConfigured": "Sozlangan",
   "setupNotConfigured": "Sozlanmagan",
   "setupSummaryOrganization": "Tashkilot",
   "setupSummaryName": "Nomi",
-  "setupSummaryAddress": "Manzil",
-  "setupSummaryWorkMode": "Ish rejimi",
-  "setupSummaryMode": "Rejim",
-  "setupSummaryAutonomous": "Avtonom (tarmoqsiz)",
-  "setupSummaryNetwork": "Tarmoq (sinxronizatsiya)",
-  "setupSummaryPos": "Kassa",
   "setupSummaryId": "ID",
-  "setupEnabled": "Yoqilgan",
   "setupDisabled": "O'chirilgan",
   "setupSummaryFiscalType": "Turi",
   "setupSummaryEquipment": "Uskunalar",
   "setupSummaryPrinter": "Printer",
   "setupSummaryScanner": "Skaner",
   "setupSummaryScales": "Tarozi",
-  "setupSummaryCashDrawer": "Pul qutisi",
-  "setupSummaryTerminals": "To'lov terminallari",
-  "setupSummaryRules": "Biznes qoidalari",
-  "setupSummaryDiscounts": "Chegirmalar",
-  "setupSummaryDebtSales": "Qarzga",
-  "setupSummaryCashback": "Keshbek",
-  "setupSummaryBigAmount": "Katta summalar",
-  "setupSummaryUsers": "Foydalanuvchilar",
   "setupSummaryAdmin": "Administrator",
   "setupSummarySeller": "Sotuvchi",
   "setupCompleteTitle": "Sozlash tugadi!",
   "setupCompleteSubtitle": "Kassa ishlashga tayyor",
-  "setupStartWork": "Ishni boshlash",
   "setupVatPayerSummary": "QQS to'lovchi ({rate}%)",
   "@setupVatPayerSummary": {
     "placeholders": {
@@ -1420,17 +924,6 @@
       }
     }
   },
-  "setupSummaryWkPosId": "WK kassa ID",
-  "setupSummaryOfdInn": "STIR",
-  "setupScalesConfigured": "Sozlangan",
-  "setupScalesNotConfigured": "Sozlanmagan",
-  "setupCashDrawerOn": "Yoqilgan",
-  "setupAllowed": "Ruxsat berilgan",
-  "setupDenied": "Taqiqlangan",
-  "setupAllowedFem": "Ruxsat berilgan",
-  "setupDeniedFem": "Taqiqlangan",
-  "setupCashbackOff": "O'chirilgan",
-  "setupBigAmountLimit": "Limit 100 000",
   "setupDisplayPortLabel": "COM-port",
   "telegramAuthSkip": "O'tkazib yuborish (keyinroq sozlash)",
   "telegramInitializing": "Ishga tushirish",
@@ -1601,8 +1094,6 @@
     }
   },
   "chatNoResults": "Hech narsa topilmadi",
-  "chatCopyUidInstructions": "UID ni boshqa tizimlarda foydalanish uchun nusxalang",
-  "chatUidExample": "Masalan: telepos@pos-1",
   "chatServiceUnavailable": "Xizmat mavjud emas",
   "chatTelegramLinked": "Telegram muvaffaqiyatli ulandi",
   "chatCanDeleteOwnOnly": "Faqat o'z xabarlaringizni o'chirish mumkin",
@@ -1665,16 +1156,7 @@
   "additionalPrinterConnectingUsb": "USB printerga ulanmoqda...",
   "additionalPrinterNotConnected": "Printer ulanmagan",
   "additionalPrintingLastReceipt": "Oxirgi chek chop etilmoqda...",
-  "additionalTestReceiptTitle": "=== TEST CHEK ===",
   "additionalReceiptPrinted": "Chek chop etildi",
-  "additionalPriceSearching": "Qidirish: {query}",
-  "@additionalPriceSearching": {
-    "placeholders": {
-      "query": {
-        "type": "String"
-      }
-    }
-  },
   "additionalMinimizing": "Oyna kichraytirilmoqda...",
   "additionalLatestVersion": "Sizda oxirgi versiya o'rnatilgan",
   "additionalExtraPrinterTitle": "Qo'shimcha printer",
@@ -1705,16 +1187,6 @@
   "additionalPrinterUsbConnected": "USB printer ulandi",
   "additionalBarcodeLabel": "Shtrix-kod",
   "additionalBarcodeHint": "Skanerlang yoki kiriting",
-  "additionalTestReceiptProduct": "Tovar {number}",
-  "@additionalTestReceiptProduct": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "additionalTestReceiptTotal": "JAMI:",
-  "additionalTestReceiptThankYou": "Xaridingiz uchun rahmat!",
   "langRussian": "Ruscha",
   "langEnglish": "English",
   "langKazakh": "Qozoqcha",
@@ -1778,183 +1250,12 @@
   "transportNotifyConnectivityDesc": "Ulanish o'zgarganda xabar berish",
   "transportNotifyQueueFull": "Navbat to'la",
   "transportNotifyQueueFullDesc": "Navbat to'lganda xabar berish",
-  "saleErrorInitiation": "Sotuvni boshlash xatosi: {error}",
-  "@saleErrorInitiation": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorNotInitialized": "Sotuv ishga tushirilmagan",
-  "saleErrorEmpty": "Chek bo'sh",
-  "saleErrorCompletion": "Sotuvni yakunlash xatosi: {error}",
-  "@saleErrorCompletion": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorSearch": "Qidirish xatosi: {error}",
-  "@saleErrorSearch": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorDeferred": "Chekni kechiktirish xatosi: {error}",
-  "@saleErrorDeferred": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorDeferredNotFound": "Kechiktirilgan chek topilmadi",
-  "saleErrorLoadingDeferred": "Kechiktirilgan chekni yuklash xatosi: {error}",
-  "@saleErrorLoadingDeferred": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "paymentCustomerDefault": "Mijoz",
-  "paymentErrorFormation": "To'lovni shakllantirish imkoni bo'lmadi. Hisob sozlamalarini tekshiring.",
-  "paymentErrorSaving": "Sotuvni saqlash xatosi",
-  "paymentErrorProcessing": "To'lovni qayta ishlash xatosi: {error}",
-  "@paymentErrorProcessing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "paymentAccountDefault": "Hisob {id}",
-  "@paymentAccountDefault": {
-    "placeholders": {
-      "id": {
-        "type": "int"
-      }
-    }
-  },
-  "refundErrorReceiptNotFound": "#{number} chek topilmadi",
-  "@refundErrorReceiptNotFound": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorLoadingReceipt": "Chekni yuklash xatosi: {error}",
-  "@refundErrorLoadingReceipt": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorSearch": "Qidirish xatosi: {error}",
-  "@refundErrorSearch": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorProductNotFound": "Tovar topilmadi",
   "refundErrorNotAuthenticated": "Foydalanuvchi avtorizatsiya qilinmagan",
-  "refundErrorProcessing": "Qaytarish xatosi: {error}",
-  "@refundErrorProcessing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorLoadingData": "Smena ma'lumotlarini yuklash xatosi: {error}",
-  "@shiftErrorLoadingData": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorOpening": "Smenani ochish xatosi: {error}",
-  "@shiftErrorOpening": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorClosing": "Smenani yopish xatosi: {error}",
-  "@shiftErrorClosing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorPrinting": "Z-hisobotni chop etish xatosi: {error}",
-  "@shiftErrorPrinting": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "cashOpTypeInvestment": "Kiritish",
   "cashOpTypeExpense": "Chiqim",
   "cashOpTypeDividend": "Olish",
   "supplyNoName": "Nomsiz",
-  "supplyNoTitle": "Nomsiz",
-  "supplyErrorSupplierNotFound": "Yetkazib beruvchi topilmadi",
-  "supplyErrorSelectingSupplier": "Yetkazib beruvchini tanlash xatosi: {error}",
-  "@supplyErrorSelectingSupplier": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorAccountNotFound": "Hisob topilmadi",
-  "supplyErrorSelectingAccount": "Hisobni tanlash xatosi: {error}",
-  "@supplyErrorSelectingAccount": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorAddingProduct": "Tovar qo'shish xatosi: {error}",
-  "@supplyErrorAddingProduct": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorProductNotFound": "Tovar topilmadi",
-  "supplyErrorMissingFields": "Barcha majburiy maydonlarni to'ldiring",
-  "supplyErrorSaving": "Saqlash xatosi: {error}",
-  "@supplyErrorSaving": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "historyErrorLoading": "Tarixni yuklash xatosi: {error}",
-  "@historyErrorLoading": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "syncTypeProducts": "Tovarlar",
   "syncTypePrices": "Narxlar",
   "syncTypeCategories": "Kategoriyalar",
@@ -1965,115 +1266,12 @@
   "syncTypeCashOps": "Kassa operatsiyalari",
   "syncTypeShifts": "Smenalar",
   "syncTypeSupplies": "Qabul qilishlar",
-  "syncStepPreparing": "Tayyorlanmoqda...",
-  "syncStepUploading": "Yuklash: {type}",
-  "@syncStepUploading": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
-  "syncStepDownloading": "Yuklab olish: {type}",
-  "@syncStepDownloading": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
   "syncCompleted": "Sinxronizatsiya yakunlandi",
-  "loginErrorNoUsers": "Ro'yxatdan o'tgan foydalanuvchilar yo'q",
-  "loginErrorLoadingData": "Ma'lumotlarni yuklash xatosi: {error}",
-  "@loginErrorLoadingData": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "loginErrorSelectUser": "Foydalanuvchini tanlang",
-  "loginErrorIncompletePin": "PIN-kodni kiriting (kamida 4 ta raqam)",
-  "loginErrorNoRsaKey": "Xato: RSA kalit sozlanmagan. Administratorga murojaat qiling.",
-  "loginErrorWrongPin": "Noto'g'ri PIN-kod",
-  "loginErrorSystemTime": "Tizim vaqti noto'g'ri. Sana va vaqt sozlamalarini tekshiring.",
-  "receiptLabelBin": "STIR:",
-  "receiptLabelPhone": "Tel:",
-  "receiptLabelReceiptNo": "Chek №:",
-  "receiptLabelPosId": "Kassa:",
-  "receiptLabelDate": "Sana:",
-  "receiptLabelCashier": "Kassir:",
-  "receiptLabelTable": "Stol:",
-  "receiptLabelWaiter": "Ofitsiant:",
-  "receiptLabelGuests": "Mehmonlar:",
-  "receiptLabelCustomer": "Mijoz:",
-  "receiptLabelSubtotal": "Oraliq summa:",
-  "receiptLabelDiscount": "Chegirma:",
-  "receiptLabelServiceCharge": "Servis to'lovi:",
   "receiptLabelTotal": "JAMI:",
-  "receiptLabelVat": "shu jum. QQS {percent}%:",
-  "@receiptLabelVat": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
-  "receiptLabelCash": "Naqd:",
-  "receiptLabelCard": "Karta:",
   "receiptLabelChange": "Qaytim:",
-  "receiptLabelCheckReceipt": "Chekni tekshirish:",
-  "receiptLabelItemName": "Nomi",
-  "receiptLabelQty": "Miqdori",
   "receiptLabelPrice": "Narxi",
   "receiptLabelAmount": "Summasi",
-  "receiptLabelItemDiscount": "Chegirma:",
-  "receiptLabelFiscalBin": "STIR:",
-  "receiptLabelFiscalNo": "FR:",
-  "receiptLabelFiscalSign": "FI:",
-  "receiptLabelVatCertificate": "QQS:",
-  "receiptLabelOfflineMode": "*** OFLAYN ***",
-  "receiptLabelRefundHeader": "*** QAYTARISH ***",
-  "receiptLabelRefundNo": "Qaytarish №:",
-  "receiptLabelReason": "Sabab:",
-  "receiptLabelRefundTotal": "QAYTARISHGA:",
-  "receiptLabelZReport": "Z-HISOBOT",
-  "receiptLabelShiftClosing": "SMENA YOPILISHI",
-  "receiptLabelShiftNo": "Smena №:",
-  "receiptLabelShiftOpenTime": "Ochildi:",
-  "receiptLabelShiftCloseTime": "Yopildi:",
-  "receiptLabelSales": "SOTUVLAR",
-  "receiptLabelQuantity": "Miqdori:",
-  "receiptLabelCashSales": "Naqd:",
-  "receiptLabelCardSales": "Karta:",
-  "receiptLabelSalesTotal": "Jami:",
-  "receiptLabelRefunds": "QAYTARISHLAR",
-  "receiptLabelRefundQty": "Miqdori:",
-  "receiptLabelRefundAmount": "Summasi:",
-  "receiptLabelCashOperations": "KASSA OPERATSIYALARI",
-  "receiptLabelInvestments": "Kiritishlar:",
-  "receiptLabelExpenses": "To'lovlar:",
-  "receiptLabelRevenue": "TUSHUM:",
-  "receiptLabelCashInDrawer": "KASSADA:",
-  "receiptLabelXReport": "X-HISOBOT",
-  "receiptLabelType": "Turi:",
-  "receiptLabelDescription": "Tavsif:",
-  "receiptLabelDebtPayment": "QARZ TO'LASH",
-  "receiptLabelPreviousDebt": "Qarz edi:",
-  "receiptLabelPaidAmount": "TO'LANGAN:",
-  "receiptLabelRemainingDebt": "Qoldiq:",
-  "receiptLabelTestPrint": "TEST PRINT",
   "receiptLabelThankYou": "Xaridingiz uchun rahmat!",
-  "receiptLabelSaleReceipt": "KASSA CHEKI",
-  "receiptLabelOfflineHeader": "*** OFLAYN REJIM ***",
-  "receiptLabelVatCertificateTitle": "QQS guvohnomasi:",
-  "fiscalErrorBin12Digits": "STIR 12 ta raqamdan iborat bo'lishi kerak",
-  "fiscalErrorBinDigitsOnly": "STIR faqat raqamlardan iborat bo'lishi kerak",
-  "fiscalErrorFiscalNoRequired": "Fiskal raqam majburiy",
-  "fiscalErrorRnkRequired": "RNK majburiy",
-  "fiscalErrorZnkRequired": "ZNK majburiy",
-  "fiscalErrorVatSerialRequired": "QQS guvohnoma seriyasi majburiy",
-  "fiscalErrorVatNumberRequired": "QQS guvohnoma raqami majburiy",
   "syncToUpload": "Yuklashga",
   "syncToDownload": "Yuklab olishga",
   "syncDataTypeCol": "Ma'lumot turi",
@@ -2188,6 +1386,12 @@
   "generalSettingsPosId": "POS ID",
   "generalSettingsStoreId": "Do'kon ID",
   "generalSettingsNotSpecified": "Ko'rsatilmagan",
+  "generalSettingsDataLocation": "Maʼlumotlar qayerda saqlanadi",
+  "generalSettingsDataLocationDesc": "Kassa hamma narsani shu mashinada saqlaydi. Qayerdaligini bilish zaxira nusxa va koʻchirish uchun kerak.",
+  "generalSettingsDataDb": "Maʼlumotlar bazasi",
+  "generalSettingsDataLogs": "Jurnallar",
+  "generalSettingsDataBackups": "Zaxira nusxalar",
+  "generalSettingsPathCopied": "Yoʻl nusxalandi",
   "generalSettingsAppVersion": "Dastur versiyasi",
   "generalSettingsVersion": "Versiya",
   "generalSettingsPlatform": "Platforma",
@@ -2209,13 +1413,10 @@
   "generalSettingsCurrencySymbol": "Belgi",
   "generalSettingsCurrencyCode": "Kod",
   "generalSettingsCountry": "Davlat",
-  "generalSettingsAdditional": "Qo'shimcha sozlamalar",
   "generalSettingsTransport": "Transport",
   "generalSettingsTransportSubtitle": "Ma'lumotlarni sinxronizatsiya sozlamalari",
   "generalSettingsPrinter": "Printer",
   "generalSettingsPrinterSubtitle": "Chek chop etish sozlamalari",
-  "generalSettingsPermissions": "Ruxsatlar",
-  "generalSettingsPermissionsSubtitle": "Kassirlar uchun ruxsatlar",
   "generalSettingsFiscal": "Fiskalizatsiya",
   "generalSettingsFiscalSubtitle": "WebKassa, OFD, QQS",
   "generalSettingsRestaurant": "Restoran",
@@ -2226,11 +1427,8 @@
   "generalSettingsVersionDesc": "Joriy versiya va platforma",
   "generalSettingsLanguageDesc": "Interfeys tilini tanlash",
   "generalSettingsCurrencyDesc": "Valyuta va mamlakat",
-  "generalSettingsUpdate": "Yangilash",
-  "generalSettingsUpdateSubtitle": "Yangilanishlarni tekshirish va o'rnatish",
   "generalSettingsAppUpdate": "Ilovani yangilash",
   "generalSettingsAppUpdateSubtitle": "Kassa ilovasini yangilash (OS yangilanishi bilan adashtirmang)",
-  "generalSettingsUpdateDesc": "Joriy versiya va yangilanishlar",
   "settingsUpdateTitle": "Ilovani yangilash",
   "settingsUpdateCurrentVersion": "Joriy versiya",
   "settingsUpdateCheckBtn": "Yangilanishlarni tekshirish",
@@ -2289,52 +1487,7 @@
       }
     }
   },
-  "printerSettingsPrinting": "Chop etilmoqda...",
-  "printerSettingsTestReceipt": "TEST CHEK",
-  "printerSettingsWidth": "Kengligi:",
-  "printerSettingsWidthValue": "{width} belgi",
-  "@printerSettingsWidthValue": {
-    "placeholders": {
-      "width": {
-        "type": "int"
-      }
-    }
-  },
-  "printerSettingsType": "Turi:",
-  "printerSettingsAddress": "Manzil:",
-  "printerSettingsNotSpecifiedAddr": "Ko'rsatilmagan",
-  "printerSettingsPrinterWorks": "Printer ishlaydi!",
-  "printerSettingsPrintSuccess": "Chop etish muvaffaqiyatli",
-  "printerSettingsPrintError": "Chop etish xatosi",
-  "printerSettingsNotConnected": "Ulanmagan",
-  "printerSettingsChecking": "Tekshirilmoqda...",
-  "printerSettingsReady": "Tayyor",
-  "printerSettingsNoPaper": "Qog'oz yo'q",
-  "printerSettingsCoverOpen": "Qopqoq ochiq",
   "printerSettingsSave": "Saqlash",
-  "printerSettingsConnectionType": "Ulanish turi",
-  "printerSettingsPrinterAddress": "Printer manzili",
-  "printerSettingsPaperWidth": "Qog'oz kengligi",
-  "printerSettingsTesting": "Testlash",
-  "printerSettingsStatus": "Holat: {status}",
-  "@printerSettingsStatus": {
-    "placeholders": {
-      "status": {
-        "type": "String"
-      }
-    }
-  },
-  "printerSettingsCheck": "Tekshirish",
-  "printerSettingsTestCheck": "Test chek",
-  "printerSettingsPort": "Port",
-  "printerSettingsIpAddress": "Printerning IP manzili",
-  "printerSettingsMacAddress": "MAC manzili yoki nomi",
-  "printerSettingsPrinterName": "Printer nomi",
-  "printerSettingsComPort": "COM port",
-  "printerSettingsSerialCom": "Serial (COM)",
-  "printerSettingsPaperWidth58": "58mm (32 belgi)",
-  "printerSettingsPaperWidth80_42": "80mm (42 belgi)",
-  "printerSettingsPaperWidth80_48": "80mm (48 belgi)",
   "fiscalSettingsTitle": "Fiskalizatsiya",
   "fiscalSettingsSaved": "Sozlamalar saqlandi",
   "fiscalSettingsSaveError": "Saqlash xatosi: {error}",
@@ -2347,25 +1500,11 @@
   },
   "fiscalSettingsSave": "Saqlash",
   "fiscalSettingsOperator": "Fiskal operator",
-  "fiscalSettingsWebkassaSettings": "WebKassa sozlamalari",
-  "fiscalSettingsTaxpayerInfo": "Soliq to'lovchi ma'lumotlari",
   "fiscalSettingsVatSettings": "QQS sozlamalari",
   "fiscalSettingsWebkassaLabel": "WebKassa",
-  "fiscalSettingsWebkassaDesc": "Bulutli fiskal xizmat",
-  "fiscalSettingsOfdLabel": "OFD",
-  "fiscalSettingsOfdDesc": "Fiskal ma'lumotlar operatori",
   "fiscalSettingsNoneLabel": "Fiskalizatsiyasiz",
-  "fiscalSettingsNoneDesc": "Cheklar OFD-ga yuborilmaydi",
-  "fiscalSettingsOfdId": "OFD ID",
-  "fiscalSettingsOfdIdHint": "OFD identifikatori",
-  "fiscalSettingsOfdName": "OFD nomi",
-  "fiscalSettingsOfdNameHint": "WebKassa / OFD.kz",
   "fiscalSettingsOfdHost": "OFD server manzili",
   "fiscalSettingsOfdHostHint": "https://api.webkassa.kz",
-  "fiscalSettingsWebkassaActive": "WebKassa faollashtirildi",
-  "fiscalSettingsWebkassaInactive": "WebKassa faollashtirilmagan",
-  "fiscalSettingsCompanyName": "Nomi",
-  "fiscalSettingsCashBox": "Kassa",
   "fiscalSettingsVatPayer": "QQS to'lovchi",
   "fiscalSettingsVatPayerSubtitle": "Tashkilot QQS to'lovchisi hisoblanadi (12%)",
   "fiscalSettingsPrintVat": "Chekda QQS chop etish",
@@ -2381,7 +1520,6 @@
   "fiscalOffsetPrepaymentReceiptSubtitle": "Xaridor avans kiritganda fiskal chek berish",
   "fiscalOffsetSaveError": "Sozlamani saqlab bo'lmadi",
   "customerPaymentTender": "Nima bilan qabul qilindi",
-  "fiscalSettingsVatRate": "QQS stavkasi: 12% (3/28 formulasi bo'yicha)",
   "historyProductUcode": "Tovar #{ucode}",
   "@historyProductUcode": {
     "placeholders": {
@@ -2402,14 +1540,6 @@
   "@historyAccountId": {
     "placeholders": {
       "id": {
-        "type": "String"
-      }
-    }
-  },
-  "historyLoadError": "Yuklash xatosi: {error}",
-  "@historyLoadError": {
-    "placeholders": {
-      "error": {
         "type": "String"
       }
     }
@@ -2489,45 +1619,6 @@
   "historyPrevious": "Oldingi",
   "historyNextPage": "Keyingi",
   "historyLastPage": "Oxirgi sahifa",
-  "@historyType": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
-  "historyAmount": "Summa: {amount}",
-  "@historyAmount": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "historyDate": "Sana: {date}",
-  "@historyDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "historyPos": "POS: {id}",
-  "@historyPos": {
-    "placeholders": {
-      "id": {
-        "type": "String"
-      }
-    }
-  },
-  "historyClientName": "Mijoz: {name}",
-  "@historyClientName": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "historyFiscalYes": "Ha",
   "historyFiscalNo": "Yo'q",
   "historyFiscalError": "Xato",
@@ -2590,7 +1681,6 @@
       }
     }
   },
-  "shiftFinishSalesBeforeClose": "Smenani yopishdan oldin sotuvlarni yakunlang yoki bekor qiling",
   "shiftBillsTab": "Kupyuralar",
   "shiftTotalTab": "Umumiy summa",
   "shiftOperationsTab": "Operatsiyalar",
@@ -2630,7 +1720,6 @@
     }
   },
   "supplyProductNotFound": "Tovar topilmadi",
-  "supplyInvalidQuantity": "To'g'ri miqdorni kiriting",
   "supplySelectSupplierTitle": "Yetkazib beruvchini tanlang",
   "supplySuppliersNotFound": "Yetkazib beruvchilar topilmadi",
   "supplySelectAccountTitle": "Hisobni tanlang",
@@ -2786,7 +1875,6 @@
       }
     }
   },
-  "syncWidgetWaiting": "Kutmoqda",
   "syncWidgetSynced": "Sinxronlangan",
   "syncWidgetJustNow": "hozirgina",
   "syncWidgetMinutesAgo": "{minutes} daq. oldin",
@@ -2813,12 +1901,6 @@
       }
     }
   },
-  "syncWidgetConnecting": "Serverga ulanmoqda...",
-  "syncWidgetSyncingProducts": "Tovarlar sinxronlanmoqda...",
-  "syncWidgetSyncingSales": "Sotuvlar sinxronlanmoqda...",
-  "syncWidgetSyncingAgents": "Kontragentlar sinxronlanmoqda...",
-  "syncWidgetSyncingPrices": "Narxlar sinxronlanmoqda...",
-  "syncWidgetFinishing": "Yakunlanmoqda...",
   "updateDialogUpdating": "Yangilanmoqda...",
   "updateDialogAvailable": "Yangilanish mavjud",
   "updateDialogAutoUpdate": "Avtomatik yangilash {seconds} sek. dan keyin",
@@ -2873,7 +1955,6 @@
   "versionConflictOpenFolder": "Papkada ochish",
   "versionConflictPreviousVersion": "Oldingi versiya",
   "versionConflictContinue": "Davom etish",
-  "restoreLoadingBackups": "Bekaplar yuklanmoqda...",
   "restoreSearchingBackups": "Bekaplari qidirilmoqda...",
   "restoreLoadError": "Yuklash xatosi: {error}",
   "@restoreLoadError": {
@@ -2925,25 +2006,6 @@
   "agentNotFoundShort": "Topilmadi",
   "agentEnterNameOrPhone": "Ism yoki telefonni kiriting",
   "agentEnterCustomerName": "Mijoz ismini kiriting",
-  "agentDeletedCustomerPhone": "Ushbu telefon bilan mijoz o'chirilgan",
-  "agentWantRestore": "Tiklashni xohlaysizmi?",
-  "agentDeleteCustomerTitle": "Mijozni o'chirishmi?",
-  "agentDeleteConfirmMessage": "\"{name}\" o'chirishga ishonchingiz kommi?",
-  "@agentDeleteConfirmMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "agentCustomerDeleted": "Mijoz \"{name}\" o'chirildi",
-  "@agentCustomerDeleted": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "cashOpTitle": "Kassa operatsiyasi",
   "cashOpComment": "Izoh",
   "cashOpCommentRequired": "Izoh *",
@@ -3250,7 +2312,6 @@
   "paymentAccount": "Hisob",
   "authNoUsers": "Ro'yxatdan o'tgan foydalanuvchilar yo'q",
   "authNoPin": "PINsiz",
-  "authSelectUser": "Foydalanuvchini tanlang",
   "authNoUsersShort": "Foydalanuvchilar yo'q",
   "authEnterPin": "PIN-kodni kiriting",
   "updateVersion": "Versiya {version}",
@@ -3277,23 +2338,13 @@
   "updateDownloading": "Yangilanish yuklanmoqda",
   "updateDownloadingFile": "Yangilanish fayli yuklanmoqda...",
   "updatePosNow": "KASSANI YANGILASH",
-  "serviceAddNote": "Belgi qo'shish",
   "serviceClientLookup": "Mijozni qidirish",
-  "serviceOrderDetail": "Buyurtma-naryad tafsilotlari #{orderId}",
-  "@serviceOrderDetail": {
-    "placeholders": {
-      "orderId": {
-        "type": "int"
-      }
-    }
-  },
   "paymentDefaultLabel": "Standart",
   "serviceIntakeTitle": "Buyurtma qabul qilish",
   "serviceIntakeClient": "Mijoz",
   "serviceIntakeDevice": "Qurilma / Buyum",
   "serviceIntakeServices": "Xizmatlar",
   "serviceIntakeDelivery": "Yetkazib berish",
-  "serviceIntakePickup": "Mijozdan olish",
   "serviceIntakeSave": "Saqlash",
   "serviceIntakeCancel": "Bekor qilish",
   "serviceQueueTitle": "Buyurtma-naryadlar",
@@ -3315,10 +2366,8 @@
   "serviceMarkTesting": "Sinovdan o'tkazish",
   "serviceMarkOther": "Boshqa",
   "serviceAddMark": "Ish qo'shish",
-  "serviceDeleteMark": "Belgini o'chirish",
   "serviceMarkDescription": "Tavsif",
   "serviceMarkType": "Ish turi",
-  "serviceMarkCost": "Narx",
   "serviceMarkNote": "Izoh",
   "serviceCatalogTitle": "Xizmatlar katalogi",
   "serviceCatalogAdd": "Xizmat qo'shish",
@@ -3332,7 +2381,6 @@
   "serviceAssignTechnician": "Usta tayinlash",
   "serviceReassignTechnician": "Ustani qayta tayinlash",
   "serviceTechnicianAssigned": "Usta tayinlandi: {name}",
-  "serviceTechnicianSelect": "Ustani tanlang",
   "servicePrepayment": "Oldindan to'lov",
   "servicePrepaymentAmount": "Oldindan to'lov summasi",
   "serviceEstimatedDate": "Kutilgan sana",
@@ -3347,14 +2395,12 @@
   "serviceDeliveryAddress": "Yetkazib berish manzili",
   "serviceNeedsPickup": "Mijozdan olish",
   "serviceNeedsDelivery": "Mijozga yetkazish",
-  "serviceQrFormat": "TELEPOS:SO:{id}:{number}",
   "serviceOrderCreated": "Yangi buyurtma",
   "serviceOrderUpdated": "Tahrirlash",
   "serviceNoOrders": "Ma'lumot yo'q",
   "serviceFilterAll": "Hammasi",
   "navCatalog": "Katalog",
   "catalogTitle": "Tovarlar katalogi",
-  "catalogSearch": "Qidirish",
   "catalogSearchHint": "Nomi yoki shtrixkod",
   "catalogFilterAll": "Hammasi",
   "catalogFilterProducts": "Tovarlar",
@@ -3370,10 +2416,8 @@
   "catalogType": "Turi",
   "catalogPrice": "Sotish narxi",
   "catalogWholesalePrice": "Ulgurji narx",
-  "catalogCategory": "Kategoriya",
   "catalogMeasure": "O'lchov birligi",
   "catalogQuantity": "Qoldiq",
-  "catalogQuickProduct": "Tezkor tovar",
   "catalogAddToQuick": "Tezkorga qo'shish",
   "catalogRemoveFromQuick": "Tezkordan olib tashlash",
   "catalogNoProducts": "Tovarlar yo'q",
@@ -3403,7 +2447,6 @@
   "catalogNameRequired": "Nomini kiriting",
   "catalogPriceRequired": "Narxni kiriting",
   "catalogPriceInvalid": "Narx 0 dan katta bo'lishi kerak",
-  "catalogBarcodeExists": "Bu shtrixkodli tovar mavjud",
   "catalogCategories": "Kategoriyalar",
   "catalogAllCategories": "Barcha kategoriyalar",
   "catalogNoCategories": "Kategoriyalar yo'q",
@@ -3476,31 +2519,9 @@
   "accountsSettingsVisibleToPos": "POS da ko'rinadi",
   "hwSettingsSaved": "Uskuna sozlamalari saqlandi",
   "hwScannerTitle": "Shtrix-kod skaneri",
-  "hwScannerMode": "Skaner rejimi",
-  "hwScannerModeKeyboard": "USB / klaviatura (wedge)",
-  "hwScannerModeSerial": "Seriyali",
-  "hwScannerModeCamera": "Kamera",
-  "hwScannerModeHint": "USB skanerlar shu rejimda ishlaydi",
-  "hwScannerTimeout": "Taymaut",
-  "hwScannerMinLength": "Min. uzunlik",
-  "hwScannerMaxLength": "Maks. uzunlik",
   "hwDisplayTitle": "Xaridor displeyi",
-  "hwDisplayModel": "Model",
-  "hwDisplayModelLed8": "LED 8 belgi",
-  "hwDisplayModelVfd20": "VFD 20x2",
-  "hwDisplayPort": "COM-port",
-  "hwDisplayBaudRate": "Tezlik",
-  "hwDisplayDisabled": "Xaridor displeyi o'chirilgan",
   "hwDrawerTitle": "Kassa qutisi",
-  "hwDrawerMode": "Ochish rejimi",
-  "hwDrawerModePrinter": "Printer orqali",
-  "hwDrawerModeSerial": "Seriyali port",
-  "hwDrawerPort": "COM-port",
   "hwTerminalsTitle": "To'lov terminallari",
-  "hwTerminalIp": "IP-manzil",
-  "hwTerminalPort": "Port",
-  "hwTerminalMerchantId": "Merchant ID",
-  "hwTerminalTerminalId": "Terminal ID",
   "catalogExportCsv": "CSV eksport",
   "catalogImport": "Import",
   "catalogFilterColumn": "Filtr...",
@@ -3516,9 +2537,7 @@
   "catalogFilterInner": "Ichki",
   "serviceMarkConsumable": "Sarf materiali",
   "serviceConsumableSearch": "Tovar / sarf materialini qidirish",
-  "serviceConsumableSelected": "Tanlangan tovar",
   "serviceQuickServicesTitle": "Tez xizmatlar",
-  "serviceQuickServicesEmpty": "Tez xizmatlar yo'q",
   "serviceIntakeItems": "Qabul qilinadigan buyumlar",
   "serviceItemName": "Nimani qabul qilasiz (buyum, narsa, qurilma)",
   "serviceItemDescription": "Muammo tavsifi / mijoz istaklari",
@@ -3532,13 +2551,11 @@
   "catalogTypeDish": "Taom",
   "catalogFilterDish": "Taomlar",
   "dishCalculation": "Kalkulyatsiya",
-  "dishCalculationStub": "Kalkulyatsiya moduli keyinroq mavjud bo'ladi",
   "dishIngredients": "Ingredientlar",
   "serviceConsumablesTitle": "Sarf normalari",
   "serviceConsumablesEmpty": "Sarf materiallari yo'q",
   "serviceConsumablesAdd": "Sarf qo'shish",
   "serviceConsumableQuantity": "1 xizmatga soni",
-  "serviceConsumablesAutoAdded": "Sarf materiallari avtomatik qo'shildi",
   "catalogDescription": "Tavsif",
   "catalogImagePlaceholder": "Rasm yuklash uchun bosing",
   "globalRetry": "Qayta urinish",
@@ -3737,10 +2754,8 @@
   "labelPrinterSettingsTitle": "Yorliq printeri",
   "labelPrinterSettingsSubtitle": "Narx yorliqlari va shtrix-kodlar",
   "labelPrinterLanguage": "Printer tili",
-  "labelPrinterSize": "Yorliq o'lchami",
   "labelPrinterWidthMm": "Eni, mm",
   "labelPrinterHeightMm": "Balandligi, mm",
-  "labelPrinterTestSuccess": "Yorliq bosib chiqarishga yuborildi",
   "labelPrinterNotConfigured": "Yorliq printeri sozlanmagan. Sozlamalarda manzilni kiriting.",
   "labelTemplatesTitle": "Yorliq shablonlari",
   "labelTemplatesManage": "Shablonlarni boshqarish",
@@ -3791,15 +2806,9 @@
   "receiptTemplateHeaderFooter": "Sarlavha va pastki qism",
   "receiptTemplateHeaderText": "Sarlavha matni",
   "receiptTemplateFooterText": "Pastki matn",
-  "receiptTemplateExtraFooter": "Qo'shimcha pastki qatorlar",
-  "receiptTemplateExtraFooterHint": "Har biri alohida qator (masalan, qaytarish shartlari)",
-  "receiptTemplateShowBin": "BIN/IIN bosish",
   "receiptTemplateShowAddress": "Manzilni bosish",
   "receiptTemplateShowCashier": "Kassa/kassirni bosish",
-  "receiptTemplateShowVat": "QQS bosish",
-  "receiptTemplateShowQr": "Tekshirish havolasini bosish (QR)",
   "receiptTemplateShowItemNumbers": "Pozitsiyalarni raqamlash",
-  "receiptTemplateShowLogo": "Logotipni bosish",
   "receiptTemplateTestPrint": "Sinov bosib chiqarish",
   "receiptTemplateTestPrintOk": "Chek namunasi printerga yuborildi",
   "receiptTemplateTestPrintFail": "Bosib chiqarish muvaffaqiyatsiz (printerni tekshiring)",
@@ -3968,9 +2977,7 @@
   "sysmTerminalOpen": "Открыть терминал",
   "sysmTerminalRootNote": "Команды выполняются как root на приставке.",
   "sysmTerminalHint": "Введите команду (например: systemctl status telepos-sysd)",
-  "sysmTerminalRun": "Выполнить",
   "sysmTerminalClear": "Очистить вывод",
-  "sysmTerminalRunning": "Выполняется…",
   "sysmTerminalExitCode": "Код возврата: {code}",
   "@sysmTerminalExitCode": {
     "placeholders": {
@@ -3980,12 +2987,7 @@
     }
   },
   "sysmTerminalEmpty": "Вывод появится здесь",
-  "sysmTerminalHistory": "История команд",
   "sysmTerminalPresets": "Пресеты",
-  "sysmTerminalPresetsNetwork": "Сеть",
-  "sysmTerminalPresetsPrinters": "Принтеры",
-  "sysmTerminalPresetsSystem": "Система",
-  "sysmTerminalPresetsTime": "Время",
   "sysmTermGroupDiagnostics": "Diagnostika",
   "sysmTermGroupPrinter": "Printer",
   "sysmTermGroupNetwork": "Tarmoq",
@@ -4014,8 +3016,6 @@
   "sysmTermSysKioskLogs": "Kiosk jurnallari",
   "sysmTermTimeDateTime": "Sana va vaqt",
   "sysmTermTimeNtpSync": "NTP sinxronlash",
-  "labelPrinterDevicePath": "Путь к устройству",
-  "labelPrinterDevicePathHint": "Например: /dev/usb/lp0 (USB) или /dev/ttyUSB0 (Serial). Оставьте пустым для значения по умолчанию.",
   "movementTitle": "Перемещение",
   "movementTitleFull": "Перемещение товаров",
   "movementFrom": "Откуда *",
@@ -4139,7 +3139,6 @@
   "esfSettingsEnable": "Включить ЭСФ",
   "esfSettingsEnableSubtitle": "Формировать счета-фактуры по продажам B2B (по БИН покупателя)",
   "esfSettingsOperator": "Оператор ЭСФ",
-  "esfSettingsTestMode": "Тестовый режим",
   "esfSettingsSupplier": "Реквизиты поставщика (наша организация)",
   "esfSettingsBin": "БИН/ИИН",
   "esfSettingsName": "Наименование",
@@ -4148,9 +3147,6 @@
   "esfSettingsVatSeries": "Серия свидетельства НДС",
   "esfSettingsVatNumber": "Номер свидетельства НДС",
   "esfSettingsVatRate": "Ставка НДС, %",
-  "esfSettingsEcp": "ЭЦП (НУЦ РК)",
-  "esfSettingsEcpKeyPath": "Путь к ключу ЭЦП",
-  "esfSettingsEcpKeyAlias": "Алиас ключа",
   "esfSettingsB2bOnly": "Только B2B",
   "esfSettingsB2bOnlySubtitle": "Не формировать ЭСФ для розничных продаж физлицам",
   "esfSettingsEcpHint": "Для реальной выписки требуется ЭЦП НУЦ РК и профиль ИС ЭСФ. Черновики формируются и хранятся офлайн без ЭЦП.",
@@ -4158,7 +3154,6 @@
   "esfOutboxTitle": "Исходящие ЭСФ",
   "esfOutboxEmpty": "Нет документов ЭСФ",
   "esfOutboxEmptyHint": "Счета-фактуры появятся здесь после продаж B2B",
-  "esfOutboxRetry": "Повторить отправку",
   "esfOutboxRetryAll": "Повторить все",
   "esfOutboxRetryDone": "Обработано: доставлено {delivered}, в очереди {queued}, ошибок {failed}",
   "@esfOutboxRetryDone": {
@@ -4250,18 +3245,9 @@
   "sntSettingsEnable": "Включить СНТ",
   "sntSettingsEnableSubtitle": "Сборка и отправка сопроводительных накладных (ИС ЭСФ)",
   "sntSettingsProvider": "Способ отправки",
-  "sntSettingsTestMode": "Тестовый режим",
   "sntSettingsRequisites": "Реквизиты налогоплательщика",
   "sntSettingsOwnBin": "БИН / ИИН (наш)",
   "sntSettingsWarehouseCode": "Код виртуального склада",
-  "sntSettingsBackend": "TelePOS backend (прокси ИС ЭСФ)",
-  "sntSettingsBackendUrl": "URL бэкенда",
-  "sntSettingsApiKey": "API-ключ",
-  "sntSettingsEcp": "ЭЦП (НУЦ РК)",
-  "sntSettingsCertPath": "Путь к ключу ЭЦП",
-  "sntSettingsCertPassword": "Пароль ключа",
-  "sntSettingsEcpHint": "Реальная отправка СНТ требует ЭЦП НУЦ РК и зарегистрированного профиля ИС ЭСФ. Без ЭЦП документы собираются и хранятся локально (Виртуальный склад работает офлайн).",
-  "sntSettingsSharedEsfHint": "СНТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.",
   "sntSettingsWebkassaNote": "Ulanish rekvizitlari (login, apiKey, kassa, ERP) WebKassa (Fiskalizatsiya) sozlamalaridan olinadi — yagona umumiy konfiguratsiya.",
   "sntSettingsOpenEsf": "Настройки ЭСФ",
   "sntSettingsSave": "Сохранить",
@@ -4324,23 +3310,11 @@
   "ismptSettingsEnable": "Включить ИС МПТ",
   "ismptSettingsEnableSubtitle": "Проверка и отправка кодов маркировки (ismet.kz / Tañba)",
   "ismptSettingsBackend": "Бэкенд",
-  "ismptSettingsTestMode": "Тестовый режим",
-  "ismptSettingsRequisites": "Реквизиты налогоплательщика",
-  "ismptSettingsOwnBin": "БИН / ИИН (наш)",
-  "ismptSettingsApi": "True API (ismet.kz)",
-  "ismptSettingsApiUrl": "URL API",
-  "ismptSettingsApiKey": "API-ключ / токен",
-  "ismptSettingsEcp": "ЭЦП (НУЦ РК)",
-  "ismptSettingsCertPath": "Путь к ключу ЭЦП",
-  "ismptSettingsCertPassword": "Пароль ключа",
-  "ismptSettingsEcpHint": "Реальная работа с ИС МПТ требует ЭЦП НУЦ РК и зарегистрированного профиля участника оборота. Без ЭЦП коды маркировки принимаются и хранятся локально (приёмка работает офлайн, продажа не блокируется).",
-  "ismptSettingsSharedEsfHint": "ИС МПТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.",
   "ismptSettingsWebkassaNote": "Markirovka kodlarini tekshirish WebKassa orqali amalga oshiriladi. Ulanish rekvizitlari (login, apiKey, kassa, ERP) WebKassa (Fiskalizatsiya) sozlamalaridan olinadi — yagona umumiy konfiguratsiya.",
   "ismptSettingsOpenEsf": "Настройки ЭСФ",
   "ismptSettingsSave": "Сохранить",
   "ismptSettingsSaved": "Настройки ИС МПТ сохранены",
   "ismptSettingsSaveError": "Не удалось сохранить настройки ИС МПТ",
-  "ismptSettingsBinRequired": "Укажите БИН / ИИН налогоплательщика",
   "reorderRulesTitle": "Правила перезаказа",
   "reorderRulesSubtitle": "Минимальный остаток по товарам",
   "reorderRulesEmpty": "Нет правил перезаказа",
@@ -4380,7 +3354,6 @@
   "shiftClosedGateTitle": "Smena yopiq",
   "shiftClosedGateMessage": "Operatsiyalarni davom ettirish uchun smenani oching.",
   "shiftClosedGateOpen": "Smenani ochish",
-  "sysmTerminalPresetsDiag": "Diagnostika",
   "wmsDashboardTitle": "WMS — Ombor boshqaruvi",
   "wmsDashboardTitleShort": "WMS — Ombor",
   "wmsSettings": "WMS sozlamalari",
@@ -4675,8 +3648,6 @@
   "setDeleteUserTitle": "Foydalanuvchi o'chirilsinmi?",
   "setDeleteUserConfirm": "\"{name}\" foydalanuvchisi o'chiriladi. Bu amalni bekor qilib bo'lmaydi.",
   "setDeleteUserError": "Foydalanuvchini o'chirib bo'lmadi: {error}",
-  "setUserNoEncryptionKey": "Shifrlash kaliti sozlanmagan. POS dastlabki sozlamasini yakunlang.",
-  "setUserPinEncryptFailed": "PIN ni shifrlab bo'lmadi",
   "setWmsTitle": "WMS sozlamalari",
   "setWmsModules": "WMS modullari",
   "setWmsCellStorage": "Yacheykali saqlash",
@@ -5086,19 +4057,6 @@
   "setPolicyBigAmountDesc": "Operatsiyalardagi 1 000 000 chegarasini olib tashlash",
   "setPolicyBlockPriceDecrease": "Narxni karta narxidan past tushirishni taqiqlash",
   "setPolicyBlockPriceDecreaseDesc": "Chekdagi narxni mahsulot narxidan past qo'yib bo'lmaydi",
-  "printerAutoDetect": "Printerni topish",
-  "printerAutoDetecting": "Printer qidirilmoqda…",
-  "printerFound": "Topildi: {device}",
-  "printerFoundWithNote": "Topildi: {device} — {note}",
-  "printerNotFoundAnyPort": "Printer hech bir portda topilmadi (USB/serial). Kabel va quvvatni tekshiring.",
-  "printerUsbName": "USB printer",
-  "printerSelectDevice": "Printerni tanlang",
-  "printerNoAccessGroupLp": "Tugun topildi, lekin ruxsat yo'q (lp guruhi kerak)",
-  "printerLabelUsb": "USB-printer ({path})",
-  "printerLabelSerial": "Serial-printer ({path})",
-  "printerNoAccessGroupLpHint": "Tugun topildi, lekin ruxsat yo'q (lp guruhi kerak): usermod -aG lp telepos va seansni qayta ishga tushiring.",
-  "printerRawOpenNoPermsHint": "{path} tuguni topildi, lekin ochib bo'lmaydi — ruxsat yo'q. Foydalanuvchini lp guruhiga qo'shing (usermod -aG lp telepos) va seansni/qurilmani qayta ishga tushiring.",
-  "printerNotFoundNoNode": "Printer topilmadi: na /dev/usb/lp* char-tuguni, na USB-serial port bor. Printer kabeli va quvvatini tekshiring.",
   "ownerOnlyTitle": "Faqat kassa egasiga ochiq",
   "ownerOnlyDesc": "Tizim operatsiyalari (qayta yuklash, qayta tiklash, drayverlar, terminal) faqat egasi hisobida ochiq.",
   "telegramApiSectionTitle": "Telegram ilovasi",
@@ -5114,7 +4072,6 @@
   "telegramApiStatusMissing": "Kalitlar berilmagan",
   "deviceSearchButton": "Qidirish",
   "deviceSearchTitle": "Topilgan qurilmalar",
-  "deviceSearchRunning": "Qidirilmoqda…",
   "deviceSearchEmpty": "Hech narsa topilmadi. Barcha manbalar so'raldi — qurilma ulanmagan yoki o'chirilgan.",
   "deviceSearchNoValueForField": "Qurilmalar topildi, lekin hech biri bu maydon uchun qiymat bermaydi.",
   "deviceSearchFailedSources": "Qidiruv bajarilmadi: {sources}. Bu “hech narsa ulanmagan” degani emas.",
@@ -5172,7 +4129,6 @@
       }
     }
   },
-  "scannerRulesSaved": "Shtrix-kod o'qish qoidalari saqlandi",
   "printQueueSectionTitle": "Chop etish navbati",
   "printQueueSubtitle": "Nima chop etilishini kutmoqda, nima chop etilmadi va nima uchun.",
   "printQueueEmpty": "Navbat bo‘sh — chop etilmagan cheklar yo‘q.",
@@ -5706,10 +4662,7 @@
   "emulatorScaleWeight": "Tovoqdagi og‘irlik",
   "emulatorScaleWeightHint": "Emulyator puldi: tarozi kassaga shu sonni yuboradi",
   "emulatorQrProvider": "QR to'lov provayderi",
-  "emulatorQrAddressHint": "Bu manzilni QR provayderi sozlamasiga yozing",
-  "emulatorQrBindAction": "QR sozlamasiga yozish",
   "emulatorQrBindDone": "QR sozlamasi endi emulyatorga qaraydi",
-  "emulatorQrBindingStale": "QR sozlamasi o'chirilgan emulyatorga qaraydi — kod bo'yicha to'lov rad etiladi",
   "diagnosticsTabPayment": "To'lov",
   "diagnosticsPaymentEmulatorBanner": "QR provayderi shu kompyuterda: manzil ortida bank emas, emulyator",
   "paymentDiagnosticsUnavailable": "Bu ish o'rnida to'lov haqida ma'lumot yo'q",
@@ -6243,7 +5196,6 @@
   "rcpCustomer": "Mijoz:",
   "rcpDate": "Sana:",
   "rcpBinIin": "STIR:",
-  "rcpThankYou": "Xaridingiz uchun rahmat!",
   "rcpSale": "SOTUV",
   "rcpSubtotal": "Oraliq jami:",
   "rcpDiscount": "Chegirma:",
@@ -6323,34 +5275,19 @@
   "taxSettingsPresetSource": "Manba: {source}",
   "taxSettingsPresetValidFrom": "Stavkalar {date} dan amal qiladi",
   "taxSettingsPresetApplied": "To‘plam qo‘llandi",
-  "taxSettingsCurrentSection": "Joriy sozlama",
   "taxSettingsRateForStandard": "Oddiy tovar: {rate}%",
   "taxSettingsJurisdictions": "Yurisdiksiyalar",
   "taxSettingsCategories": "Tovar toifalari",
   "taxSettingsTillLocation": "Kassa shu yerda turadi",
   "taxSettingsTillLocationHint": "Belgi bir nechta bo‘lishi mumkin: shahar va maxsus tumanlar. Yuqoridagilari o‘zi qo‘shiladi.",
-  "taxSettingsRules": "Qoidalar",
   "taxSettingsRuleTaxed": "soliq olinadi",
   "taxSettingsRuleZero": "nol stavka",
   "taxSettingsRuleExempt": "ozod qilingan",
   "taxSettingsAllCategories": "barcha toifalar",
   "taxSettingsAddJurisdiction": "Yurisdiksiya qo‘shish",
   "taxSettingsAddCategory": "Toifa qo‘shish",
-  "taxSettingsAddRule": "Qoida qo‘shish",
   "taxSettingsName": "Nomi",
-  "taxSettingsCode": "Kodi",
-  "taxSettingsRate": "Stavka, %",
-  "taxSettingsValidFrom": "Amal qilish boshlanishi",
-  "taxSettingsParent": "Yuqori",
-  "taxSettingsNoParent": "yo‘q (ildiz)",
-  "taxSettingsLevel": "Daraja",
-  "taxSettingsLevelCountry": "Davlat",
-  "taxSettingsLevelState": "Shtat",
-  "taxSettingsLevelCounty": "Okrug",
-  "taxSettingsLevelCity": "Shahar",
-  "taxSettingsLevelDistrict": "Maxsus tuman",
   "taxSettingsDelete": "O‘chirish",
-  "taxSettingsDeleteJurisdictionWarning": "U bilan birga uning qoidalari va ichki yurisdiksiyalari o‘chadi.",
   "taxSettingsResponsibility": "To‘plamlardagi raqamlar ochiq manbalardan olingan va havola bilan ko‘rsatilgan. Soliqning to‘g‘riligi uchun dastur emas, soliq to‘lovchi javob beradi.",
   "taxSettingsNoPresetsForCountry": "Bu davlat uchun tayyor to‘plam yo‘q — qo‘lda sozlang.",
   "taxSettingsAdd": "Qo‘shish",
@@ -6492,11 +5429,9 @@
   "salePolicyForbids": "Amalga kassa sozlamalari ruxsat bermaydi (Sozlamalar → Sotuv siyosati)",
   "labelPrintFailed": "Yorliqni chop etishda xatolik",
   "labelPrintFromTillOnly": "Yorliq kassadan chop etiladi, terminaldan emas",
-  "orphanQrTillNotRegistered": "Kassa royxatdan otmagan — QR boyicha aniqlanmagan pulni sorash mumkin emas",
   "stockLowStockReorder": "Qoldigi kam tovarlarga qoshimcha buyurtma",
   "serviceNoteNeedsApproval": "Mijozning roziligi kerak",
   "deferredFromTill": "kassa {id}",
-  "dishSummary": "Ingredient: {count}, tannarxi: {cost}",
   "prepaymentIssueTo": "Xaridorga avans berish ({name})",
   "prepaymentFrom": "Xaridor avansi ({name})",
   "prepaymentRefundTo": "Xaridorga avansni qaytarish ({name})",

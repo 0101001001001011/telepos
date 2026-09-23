@@ -3,7 +3,7 @@ class AppConstants {
 
   static const appName = 'TelePOS';
 
-  static const appVersion = '3.7.0';
+  static const appVersion = '3.7.1';
 
   static const buildNumber = 19;
 

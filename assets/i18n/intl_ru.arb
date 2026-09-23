@@ -25,29 +25,17 @@
   "globalError": "Ошибка",
   "globalSuccess": "Успешно",
   "globalWarning": "Внимание",
-  "globalInfo": "Информация",
   "globalConfirm": "Подтвердить",
   "globalClear": "Очистить",
   "globalSelect": "Выбрать",
   "globalAll": "Все",
-  "globalNone": "Нет",
   "globalTotal": "Итого",
   "globalAmount": "Сумма",
   "globalQuantity": "Количество",
   "globalPrice": "Цена",
   "globalDiscount": "Скидка",
   "globalDate": "Дата",
-  "globalTime": "Время",
-  "loginTitle": "Вход в систему",
-  "loginPin": "Введите PIN",
-  "loginPinHint": "4 цифры",
   "loginEnter": "Войти",
-  "loginSelectUser": "Выберите пользователя",
-  "loginNoUsers": "Нет пользователей",
-  "loginWrongPin": "Неверный PIN",
-  "loginBlocked": "Пользователь заблокирован",
-  "loginSessionExpired": "Сессия истекла",
-  "loginShiftRequired": "Откройте смену для входа",
   "staffRoleOwner": "Владелец",
   "staffRoleAdministrator": "Администратор",
   "staffRoleUser": "Пользователь",
@@ -55,28 +43,9 @@
   "staffRoleUnknown": "Неизвестно",
   "loginCashier": "Кассир",
   "loginAdmin": "Администратор",
-  "loginManager": "Менеджер",
   "loginLogout": "Выход",
-  "loginSwitchUser": "Сменить пользователя",
-  "saleTitle": "Продажа",
-  "saleNewSale": "Новая продажа",
-  "saleAddProduct": "Добавить товар",
-  "saleScanBarcode": "Сканировать штрих-код",
-  "saleEnterBarcode": "Введите штрих-код",
   "saleProductNotFound": "Товар не найден",
-  "saleEmptyCart": "Корзина пуста",
-  "saleSubtotal": "Подытог",
-  "saleTax": "НДС",
-  "saleTotalDiscount": "Скидка",
   "saleToPay": "К оплате",
-  "saleItems": "{count, plural, one{{count} товар} few{{count} товара} other{{count} товаров}}",
-  "@saleItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "paymentCardChargeUnsettled": "Карта уже проведена на {amount}, и эта сумма не попадёт в чек. Отмените операцию на платёжном терминале.",
   "@paymentCardChargeUnsettled": {
     "placeholders": {
@@ -86,56 +55,24 @@
     }
   },
   "saleRemoveItem": "Удалить товар",
-  "saleClearCart": "Очистить корзину",
-  "saleConfirmClear": "Очистить корзину?",
-  "saleProceedPayment": "Перейти к оплате",
   "saleHold": "Отложить",
   "saleRecall": "Вернуть",
-  "saleHeldSales": "Отложенные продажи",
-  "saleNoHeldSales": "Нет отложенных продаж",
-  "saleProductSearch": "Поиск товаров",
-  "saleByCategory": "По категориям",
-  "saleByName": "По названию",
-  "saleByBarcode": "По штрих-коду",
-  "saleWeight": "Вес",
   "saleWeightKg": "Вес: {weight} кг",
-  "saleEnterWeight": "Введите вес",
-  "saleEnterQuantity": "Введите количество",
-  "saleEnterPrice": "Введите цену",
-  "saleFreePrice": "Свободная цена",
-  "saleMaxDiscount": "Макс. скидка: {percent}%",
-  "@saleMaxDiscount": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
   "refundTitle": "Возврат",
-  "refundNewRefund": "Новый возврат",
   "refundByReceipt": "По чеку",
   "refundWithoutReceipt": "Без чека",
-  "refundEnterReceipt": "Введите номер чека",
   "refundReceiptNotFound": "Чек не найден",
-  "refundSelectItems": "Выберите товары для возврата",
-  "refundReason": "Причина возврата",
-  "refundConfirm": "Подтвердить возврат",
   "refundAmount": "Сумма возврата",
   "refundComplete": "Возврат выполнен",
-  "refundCash": "Возврат наличными",
-  "refundCard": "Возврат на карту",
   "refundConnectionLostHint": "Терминал сам вернётся к кассе — работа продолжится с того же места",
   "refundConnectionLost": "Связь с кассой потеряна",
   "@refundConnectionLost": {
     "description": "Подписка на черновик возврата оборвалась — состояние с кассы больше не приходит"
   },
   "refundNoItems": "Нет товаров для возврата",
-  "refundAlreadyRefunded": "Товар уже возвращён",
-  "refundPartial": "Частичный возврат",
   "shiftTitle": "Смена",
   "shiftOpen": "Открыть смену",
   "shiftClose": "Закрыть смену",
-  "shiftCurrent": "Текущая смена",
   "shiftNumber": "Номер смены: {number}",
   "@shiftNumber": {
     "placeholders": {
@@ -152,42 +89,11 @@
       }
     }
   },
-  "shiftCashier": "Кассир: {name}",
-  "@shiftCashier": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftSalesCount": "Продаж: {count}",
-  "@shiftSalesCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "shiftRefundsCount": "Возвратов: {count}",
-  "@shiftRefundsCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "shiftTotalSales": "Сумма продаж",
-  "shiftTotalRefunds": "Сумма возвратов",
   "shiftCashInDrawer": "В кассе",
   "shiftExpected": "Ожидается",
-  "shiftActual": "Фактически",
   "shiftDifference": "Разница",
   "shiftXReport": "X-отчёт",
   "shiftZReport": "Z-отчёт",
-  "shiftConfirmClose": "Закрыть смену?",
-  "shiftAlreadyOpen": "Смена уже открыта",
-  "shiftNotOpen": "Смена не открыта",
-  "shiftOpenFirst": "Сначала откройте смену",
   "paymentTitle": "Оплата",
   "paymentCash": "Наличные",
   "paymentCard": "Карта",
@@ -196,51 +102,11 @@
   "paymentDebt": "В долг",
   "paymentInstallment": "Рассрочка",
   "paymentMixed": "Смешанная",
-  "paymentEnterAmount": "Введите сумму",
-  "paymentRemaining": "Осталось: {amount}",
-  "@paymentRemaining": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "paymentChange": "Сдача: {amount}",
-  "@paymentChange": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "paymentComplete": "Оплата завершена",
   "paymentFailed": "Ошибка оплаты",
-  "paymentWaitingCard": "Ожидание карты...",
-  "paymentWaitingQr": "Ожидание QR...",
-  "paymentInsertCard": "Вставьте карту",
-  "paymentScanQr": "Сканируйте QR",
-  "paymentApproved": "Одобрено",
-  "paymentDeclined": "Отклонено",
-  "paymentReceipt": "Печать чека",
-  "paymentNoReceipt": "Без чека",
-  "paymentEmail": "Отправить на email",
-  "paymentSms": "Отправить SMS",
   "historyTitle": "История",
   "historyToday": "Сегодня",
   "historyYesterday": "Вчера",
-  "historyThisWeek": "Эта неделя",
-  "historyThisMonth": "Этот месяц",
-  "historyDateRange": "Выбрать период",
-  "historyNoSales": "Нет продаж за период",
-  "historyReceipt": "Чек №{number}",
-  "@historyReceipt": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "historyReprint": "Повторная печать",
   "certificateSlipPrintFailed": "Слип сертификата {number} не напечатался: {reason}",
   "@certificateSlipPrintFailed": {
     "description": "Слип выпущенного сертификата не дошёл до очереди печати. Сам сертификат при этом выпущен и годен — кассир обязан выдать бумажку иначе.",
@@ -253,27 +119,16 @@
       }
     }
   },
-  "historyDetails": "Подробнее",
   "historySale": "Продажа",
   "historyRefund": "Возврат",
-  "historyFilter": "Фильтр",
-  "agentTitle": "Контрагенты",
   "agentClients": "Клиенты",
   "agentSuppliers": "Поставщики",
-  "agentSearch": "Поиск контрагента",
-  "agentAdd": "Добавить контрагента",
   "agentEdit": "Редактировать",
   "agentName": "Название/ФИО",
   "agentPhone": "Телефон",
-  "agentEmail": "Email",
   "agentIin": "ИИН/БИН",
-  "agentAddress": "Адрес",
   "agentBalance": "Баланс",
-  "agentBonusBalance": "Бонусный баланс",
   "agentDebt": "Задолженность",
-  "agentNoAgents": "Нет контрагентов",
-  "agentSaveSuccess": "Контрагент сохранён",
-  "agentDeleteConfirm": "Удалить контрагента?",
   "cashTitle": "Касса",
   "cashReasonCreditRepayment": "Погашение рассрочки",
   "cashReasonCustomerTopUp": "Пополнение счёта покупателя",
@@ -283,28 +138,13 @@
   "serviceAutoAddedByNorm": "Добавлено по норме расхода",
   "cashInvestment": "Внесение",
   "cashExpense": "Выплата",
-  "cashBalance": "Баланс кассы",
   "cashEnterAmount": "Введите сумму",
-  "cashReason": "Основание",
-  "cashReasonPlaceholder": "Укажите причину",
-  "cashSuccess": "Операция выполнена",
   "cashExpenseTypes": "Тип расхода",
   "discountTitle": "Скидка",
   "discountPercent": "Процент",
-  "discountFixed": "Фиксированная",
-  "discountEnterValue": "Введите значение",
   "discountApply": "Применить",
-  "discountRemove": "Убрать скидку",
-  "discountOnItem": "Скидка на товар",
-  "discountOnTotal": "Скидка на чек",
-  "discountMaxExceeded": "Превышена максимальная скидка",
   "quickProductTitle": "Быстрые товары",
-  "quickProductAdd": "Добавить товар",
-  "quickProductName": "Название",
-  "quickProductPrice": "Цена",
   "quickProductCategory": "Категория",
-  "quickProductSave": "Сохранить",
-  "quickProductDelete": "Удалить",
   "syncTitle": "Синхронизация",
   "syncStatus": "Статус синхронизации",
   "syncLastSync": "Последняя синхронизация: {time}",
@@ -333,92 +173,20 @@
   },
   "syncOffline": "Нет подключения",
   "syncOnline": "Подключено",
-  "printerTitle": "Принтер",
-  "printerStatus": "Статус принтера",
   "printerConnected": "Подключён",
   "printerDisconnected": "Отключён",
   "printerError": "Ошибка принтера",
-  "printerPaperOut": "Нет бумаги",
   "printerConnect": "Подключить",
   "printerDisconnect": "Отключить",
-  "printerTest": "Тестовая печать",
   "printerSettings": "Настройки принтера",
-  "printerWidth": "Ширина чека",
   "additionalTitle": "Дополнительно",
-  "additionalSettings": "Настройки",
-  "additionalReports": "Отчёты",
-  "additionalInventory": "Инвентаризация",
   "additionalSupply": "Приёмка товара",
-  "additionalPriceChange": "Изменение цен",
-  "additionalBackup": "Резервная копия",
-  "additionalRestore": "Восстановление",
   "additionalUpdate": "Обновление",
-  "additionalAbout": "О программе",
-  "additionalLicense": "Лицензия",
-  "additionalSupport": "Поддержка",
-  "receiptTitle": "Чек",
   "receiptNumber": "Чек №",
   "receiptDate": "Дата",
-  "receiptCashier": "Кассир",
-  "receiptItems": "Товары",
-  "receiptSubtotal": "Подытог",
-  "receiptDiscount": "Скидка",
-  "receiptTax": "НДС",
   "receiptTotal": "ИТОГО",
-  "receiptCash": "Наличные",
-  "receiptCard": "Карта",
-  "receiptChange": "Сдача",
-  "receiptThankYou": "Спасибо за покупку!",
-  "receiptFiscalNumber": "Фискальный номер",
-  "receiptQrCode": "QR для проверки",
-  "receiptCopy": "Копия чека",
-  "errorUnknown": "Неизвестная ошибка",
-  "errorNetwork": "Ошибка сети",
-  "errorServer": "Ошибка сервера",
-  "errorTimeout": "Превышено время ожидания",
-  "errorNotFound": "Не найдено",
-  "errorPermission": "Нет доступа",
-  "errorDatabase": "Ошибка базы данных",
-  "errorValidation": "Ошибка валидации",
-  "errorRequired": "Обязательное поле",
   "errorInvalidFormat": "Неверный формат",
-  "errorMinLength": "Минимум {min} символов",
-  "@errorMinLength": {
-    "placeholders": {
-      "min": {
-        "type": "int"
-      }
-    }
-  },
-  "errorMaxLength": "Максимум {max} символов",
-  "@errorMaxLength": {
-    "placeholders": {
-      "max": {
-        "type": "int"
-      }
-    }
-  },
-  "errorMinValue": "Минимум {min}",
-  "@errorMinValue": {
-    "placeholders": {
-      "min": {
-        "type": "String"
-      }
-    }
-  },
-  "errorMaxValue": "Максимум {max}",
-  "@errorMaxValue": {
-    "placeholders": {
-      "max": {
-        "type": "String"
-      }
-    }
-  },
   "errorPrinter": "Ошибка принтера",
-  "errorFiscal": "Ошибка фискализации",
-  "errorPayment": "Ошибка оплаты",
-  "errorSync": "Ошибка синхронизации",
-  "errorNoInternet": "Нет интернет-соединения",
   "errorTryAgain": "Попробуйте снова",
   "helpTitle": "Справка",
   "@helpTitle": {
@@ -466,10 +234,6 @@
   "loginShiftOpen": "Смена открыта",
   "loginShiftClosed": "Смена закрыта",
   "loginShiftUnknown": "Смена: касса не ответила",
-  "saleQuickProducts": "Быстрые товары",
-  "saleIncrease": "Увеличить",
-  "saleDecrease": "Уменьшить",
-  "saleMark": "Маркировка",
   "saleDataMatrix": "Маркировка (DataMatrix)",
   "saleHeld": "Чек отложен",
   "saleNoDeferredSales": "Нет отложенных чеков",
@@ -485,7 +249,6 @@
   "salePositions": "Позиций",
   "saleSearchHint": "Поиск товара (название или штрих-код)",
   "refundWithReceipt": "С ЧЕКОМ",
-  "refundWithoutReceiptUpper": "БЕЗ ЧЕКА",
   "refundLoadReceipt": "Загрузить чек",
   "refundSearchProducts": "Поиск товаров",
   "refundSelectAll": "Выбрать всё",
@@ -507,23 +270,9 @@
       }
     }
   },
-  "refundSuccessMsg": "Возврат успешно проведён",
   "refundSearchHint": "Поиск товара для возврата",
-  "paymentRefundTitle": "Возврат",
-  "paymentPayTitle": "Оплата",
-  "paymentRefundBtn": "ВЕРНУТЬ",
-  "paymentPayBtn": "ОПЛАТИТЬ",
   "paymentChangeLabel": "Сдача:",
-  "paymentSuccessRefund": "Возврат успешно проведён",
-  "paymentSuccessPay": "Оплата успешна",
-  "paymentCardType": "Безналичная",
-  "paymentToPay": "К оплате",
-  "paymentBonusLabel": "Бонусы",
-  "paymentTotalToPay": "Итого к оплате",
   "paymentByCard": "Картой",
-  "paymentRemainLabel": "Осталось",
-  "shiftBills": "Купюры",
-  "shiftTotalAmount": "Общая сумма",
   "shiftOperations": "Операции",
   "shiftOpened": "Смена открыта",
   "shiftClosed": "Смена закрыта",
@@ -540,39 +289,19 @@
   },
   "shiftSystem": "Система",
   "shiftEntered": "Введено",
-  "shiftRecounting": "Пересчёт по купюрам",
   "shiftManualEntry": "Ручной ввод суммы",
-  "shiftCashOps": "Кассовые операции",
   "shiftOpenAction": "Открытие смены",
-  "shiftCloseAction": "Закрытие смены",
   "historyOperations": "История операций",
-  "historyResetFilters": "Сбросить фильтры",
   "historyRefresh": "Обновить",
   "historyNoRecords": "Нет записей",
   "historyChangeFilters": "Попробуйте изменить фильтры",
   "historyEmpty": "История операций пуста",
-  "historyFilterTitle": "Фильтры",
   "historyPeriod": "Период",
-  "historyOpType": "Тип операции",
   "historySearchHint": "Номер чека, сумма...",
-  "historyType": "Тип:",
   "historyPrint": "Печать чека",
-  "agentFound": "Найдено: {count}",
-  "@agentFound": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "agentWithDebt": "Только с долгом",
   "agentSearchHint": "Поиск по имени или телефону...",
-  "agentNewClient": "Новый клиент",
   "agentNameRequired": "Имя *",
-  "agentEnterName": "Введите имя клиента",
-  "agentPhoneLabel": "Телефон",
-  "agentIinLabel": "БИН/ИИН",
-  "agentIinHint": "12 цифр",
   "agentDeleteQuestion": "Удалить клиента?",
   "agentDeleteConfirmMsg": "Вы уверены, что хотите удалить {name}?",
   "@agentDeleteConfirmMsg": {
@@ -582,12 +311,8 @@
       }
     }
   },
-  "agentDeleted": "Клиент удалён",
-  "agentFoundExisting": "Клиент найден",
   "supplyTitle": "Приёмка товара",
-  "supplySaved": "Приёмка сохранена",
   "supplySaveError": "Ошибка сохранения",
-  "supplyCancelQuestion": "Отменить приёмку?",
   "supplyDataLost": "Все введённые данные будут потеряны.",
   "supplyProducts": "Товаров: {count}",
   "@supplyProducts": {
@@ -597,20 +322,10 @@
       }
     }
   },
-  "supplyBarcodeHint": "Штрихкод или артикул",
   "supplyComment": "Комментарий",
   "supplyCommentHint": "Введите комментарий...",
-  "supplyNotFound": "Товар не найден",
   "supplySelectSupplier": "Выберите поставщика",
   "supplySelectAccount": "Выберите счёт",
-  "supplyBalance": "Баланс: {amount}",
-  "@supplyBalance": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "supplyPurchasePrice": "Цена прихода",
   "supplySerialNumbers": "Серийные номера",
   "supplySerialHint": "Введите или отсканируйте S/N",
@@ -626,8 +341,6 @@
     }
   },
   "supplySerialMismatch": "Число серийных номеров не совпадает с количеством",
-  "supplyInvalidQty": "Введите корректное количество",
-  "supplyInvalidPrice": "Введите корректную цену",
   "inventoryTitle": "Инвентаризация",
   "inventoryFullCount": "Полная инвентаризация",
   "inventoryFullCountSubtitle": "Обнулить остатки непросканированных товаров",
@@ -674,70 +387,26 @@
   "writeoffCancelQuestion": "Отменить списание?",
   "writeoffSaved": "Списание сохранено",
   "settingsTitle": "Настройки",
-  "settingsPosInfo": "Информация о кассе",
-  "settingsPosName": "Название кассы",
-  "settingsCompany": "Компания",
-  "settingsIin": "ИИН/БИН",
-  "settingsPosId": "ID POS",
-  "settingsStoreId": "ID магазина",
-  "settingsNotSpecified": "Не указано",
-  "settingsAppVersion": "Версия приложения",
-  "settingsVersion": "Версия",
-  "settingsPlatform": "Платформа",
   "settingsLanguage": "Язык интерфейса",
   "settingsLanguageChanged": "Язык изменён",
-  "settingsCurrency": "Валюта",
-  "settingsCurrencySymbol": "Символ",
-  "settingsCurrencyCode": "Код",
-  "settingsCountry": "Страна",
-  "settingsAdditional": "Дополнительные настройки",
   "settingsTransport": "Транспорт",
-  "settingsTransportDesc": "Настройки синхронизации данных",
   "settingsPrinter": "Принтер",
-  "settingsPrinterDesc": "Настройки печати чеков",
   "settingsFiscal": "Фискализация",
-  "settingsFiscalDesc": "WebKassa, ОФД, НДС",
   "settingsTelegram": "Telegram",
-  "settingsTelegramDesc": "Интеграция и каналы Telegram",
-  "settingsPermissions": "Права доступа",
-  "settingsPermissionsDesc": "Разрешения для кассиров",
   "fiscalTitle": "Фискализация",
   "fiscalOperator": "Фискальный оператор",
   "fiscalWebkassa": "Настройки WebKassa",
-  "fiscalTaxpayer": "Данные налогоплательщика",
-  "fiscalVatSettings": "Настройки НДС",
-  "fiscalVatPayer": "Плательщик НДС",
-  "fiscalPrintVat": "Печатать НДС на чеке",
   "fiscalSaved": "Настройки сохранены",
-  "fiscalSaveError": "Ошибка сохранения",
   "printerSettingsTitle": "Настройки принтера",
   "printerConnectionType": "Тип подключения",
   "printerAddress": "Адрес принтера",
-  "printerPaperWidth": "Ширина бумаги",
-  "printerTesting": "Тестирование",
-  "printerReady": "Готов",
-  "printerNotConnected": "Не подключен",
-  "printerPaperOut2": "Нет бумаги",
-  "printerCoverOpen": "Открыта крышка",
-  "printerPrinting": "Печать...",
-  "printerCheckStatus": "Проверка...",
-  "printerPrintSuccess": "Печать успешна",
   "paymentNotFiscalized": "Чек не фискализован — оплата проведена",
   "paymentFiscalModuleAbsent": "Модуль фискализации недоступен — чеки не фискализуются",
   "cashDrawerOpenError": "Денежный ящик не открылся",
   "printerPrintError": "Ошибка печати",
-  "printerCheckBtn": "Проверить",
-  "printerTestReceipt": "Тестовый чек",
   "printerPort": "Порт",
-  "cashOperationTitle": "Кассовая операция",
   "cashWithdrawal": "Изъятие",
-  "cashCommentRequired": "Комментарий *",
   "cashCommentOptional": "Комментарий",
-  "cashCommentHint": "Введите комментарий...",
-  "cashEnterAmountMsg": "Введите сумму",
-  "cashPositiveOnly": "Сумма должна быть положительной",
-  "cashInsufficient": "Недостаточно денег в кассе",
-  "cashInvalidAmount": "Введите корректную сумму",
   "cashInDrawer": "В кассе:",
   "telegramTitle": "Настройки Telegram",
   "telegramAuth": "Авторизация",
@@ -783,21 +452,8 @@
   "chatGallery": "Галерея",
   "chatSelectSource": "Выберите источник",
   "updateAvailable": "Доступно обновление",
-  "updateInProgress": "Обновление...",
-  "updateAutoIn": "Автоматическое обновление через {seconds} сек",
-  "@updateAutoIn": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
-  "updateNowBtn": "Обновить сейчас",
   "updateLater": "Позже",
-  "updateSkip": "Пропустить",
-  "updateBtn": "Обновить",
   "storageWarningTitle": "Мало места на диске",
-  "storageWarningMsg": "Для стабильной работы кассы рекомендуется освободить минимум 2 GB.",
   "storageUnderstood": "Понятно",
   "errorCritical": "Критическая ошибка",
   "errorAppProblem": "Приложение столкнулось с проблемой",
@@ -823,23 +479,9 @@
   "selectPeriod": "Выберите период",
   "bonusProgram": "Бонусная программа",
   "enterPhone": "Введите номер телефона клиента",
-  "enterSmsCode": "Введите код из SMS",
-  "resendIn": "Повторная отправка через {seconds} сек",
-  "@resendIn": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
   "resendCode": "Отправить код повторно",
   "availableBonuses": "Доступно бонусов:",
   "useBonuses": "Списать бонусов",
-  "deferredSales": "Отложенные продажи",
-  "noDeferredSales": "Нет отложенных продаж",
-  "fiscalErrors": "Ошибки фискализации",
-  "selectAllErrors": "Выбрать все",
-  "retrySelected": "Повторить",
   "receiptNo": "Чек #{number}",
   "@receiptNo": {
     "placeholders": {
@@ -910,12 +552,10 @@
       }
     }
   },
-  "sumLabel": "Сумма",
   "enterAmount": "Введите сумму",
   "amountMustBePositive": "Сумма должна быть положительной",
   "notEnoughCashInDrawer": "Недостаточно денег в кассе",
   "enterValidAmount": "Введите корректную сумму",
-  "inDrawer": "В кассе:",
   "commentOptional": "Комментарий (необязательно)",
   "operationReason": "Причина операции...",
   "positions": "позиций",
@@ -977,10 +617,6 @@
       }
     }
   },
-  "receiptDiscountItem": "Скидка:",
-  "receiptSubtotalLabel": "Подитого",
-  "receiptPayment": "Оплата:",
-  "fiscalMark": "ФП:",
   "remainingStock": "Ост: {qty}",
   "@remainingStock": {
     "placeholders": {
@@ -997,24 +633,7 @@
   "addProductsViaSearch": "Добавьте товары через поиск\nили сканируйте штрих-код",
   "addProductsViaSearchShort": "Добавьте товары через поиск",
   "priceLabel": "Цена",
-  "receiptTotalLabel": "Итого по чеку",
-  "positionsLabel": "Позиций",
-  "toPayLabel": "К ОПЛАТЕ",
   "payBtn": "ОПЛАТИТЬ",
-  "totalLabel": "Итого:",
-  "posAndQty": "{positions} поз. / {qty} шт.",
-  "@posAndQty": {
-    "placeholders": {
-      "positions": {
-        "type": "int"
-      },
-      "qty": {
-        "type": "String"
-      }
-    }
-  },
-  "modeRetail": "Розница",
-  "modeWholesale": "ОПТ",
   "quickProducts": "Быстрые товары",
   "editProduct": "Редактирование",
   "labelComment": "Комментарий",
@@ -1038,34 +657,10 @@
   },
   "insufficientBonuses": "Недостаточно бонусов",
   "enterValidPhone": "Введите корректный номер",
-  "errorsCount": "{count} ошибок",
-  "@errorsCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "selectAllCount": "Выбрать все ({count})",
-  "@selectAllCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "retryCount": "Повторить ({count})",
   "@retryCount": {
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "receiptHash": "Чек #{number}",
-  "@receiptHash": {
-    "placeholders": {
-      "number": {
         "type": "int"
       }
     }
@@ -1079,13 +674,9 @@
       }
     }
   },
-  "drawerPrimary": "Основное",
-  "drawerSecondary": "Дополнительно",
-  "tooltipMore": "Ещё",
   "statusOnline": "Online",
   "statusOffline": "Offline",
   "statusSyncing": "Sync...",
-  "thankYouForPurchase": "Спасибо за покупку!",
   "searchProductHint": "Поиск товара (название или штрих-код)",
   "actionDefer": "Отложить",
   "actionDeferredList": "Отложенные",
@@ -1110,7 +701,6 @@
   "actionIncrease": "Увеличить",
   "actionDecrease": "Уменьшить",
   "restaurantSettings": "Режим ресторана",
-  "restaurantSettingsDesc": "Столы, зоны, сервисный сбор",
   "restaurantOperatingMode": "Режим работы",
   "restaurantModeRetail": "Розничная торговля",
   "restaurantModeRetailDesc": "Стандартный POS для магазинов",
@@ -1120,7 +710,6 @@
   "restaurantModeServiceDesc": "Приём заявок, очередь",
   "restaurantZoneManagement": "Управление зонами",
   "restaurantZoneAdd": "Добавить зону",
-  "restaurantZoneRename": "Переименовать",
   "restaurantZonePresets": "Предустановки",
   "restaurantZoneHall": "Зал",
   "restaurantZoneTerrace": "Терраса",
@@ -1161,14 +750,6 @@
   "restaurantNoTablesHint": "Добавьте столы в настройках ресторана",
   "restaurantGoToSettings": "Перейти в настройки",
   "restaurantOrdersEmpty": "Нет активных заказов",
-  "restaurantOrderItems": "{count} позиций",
-  "@restaurantOrderItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "restaurantOrderGuests": "Гостей: {count}",
   "@restaurantOrderGuests": {
     "placeholders": {
@@ -1195,12 +776,9 @@
   },
   "restaurantNoOrder": "Нет активного заказа",
   "restaurantOpenOrder": "Открыть заказ",
-  "restaurantCloseOrder": "Закрыть заказ",
   "restaurantAddItems": "Добавить позиции",
   "restaurantGoToPayment": "К оплате",
   "restaurantTransfer": "Перенести",
-  "restaurantSplitBill": "Разделить",
-  "restaurantChangeStatus": "Изменить статус",
   "restaurantSetFree": "Свободен",
   "restaurantSetReserved": "Забронировать",
   "restaurantSetDirty": "Требует уборки",
@@ -1209,8 +787,6 @@
   "restaurantOrderType": "Тип заказа",
   "restaurantWaiter": "Официант",
   "restaurantNote": "Примечание",
-  "restaurantDeliveryAddress": "Адрес доставки",
-  "restaurantDeliveryPhone": "Телефон",
   "restaurantTransferTitle": "Перенос заказа",
   "restaurantTransferCurrent": "Текущий: {table}",
   "@restaurantTransferCurrent": {
@@ -1267,15 +843,6 @@
   "restaurantSplitPaymentProceed": "К оплате",
   "restaurantPreCheckPrinted": "Пре-чек отправлен на печать",
   "restaurantPreCheckFailed": "Ошибка печати пре-чека",
-  "restaurantSubtotal": "Подитог",
-  "restaurantServiceChargeLine": "Сервисный сбор ({percent}%)",
-  "@restaurantServiceChargeLine": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
   "restaurantOrderNumber": "Заказ #{number}",
   "@restaurantOrderNumber": {
     "placeholders": {
@@ -1313,16 +880,6 @@
   },
   "restaurantOrderTab": "Заказ",
   "restaurantMenuTab": "Меню",
-  "restaurantGuestLabel": "Гость {number}",
-  "@restaurantGuestLabel": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      }
-    }
-  },
-  "restaurantRemoveItem": "Удалить позицию",
-  "restaurantPrintPrecheck": "Пречек",
   "restaurantNewTakeout": "Навынос",
   "restaurantNewDelivery": "Доставка",
   "setupSectionOrganization": "Организация",
@@ -1351,12 +908,10 @@
     }
   },
   "setupStepChecking": "Проверка",
-  "setupStepTelegram": "Telegram",
   "setupStepCountry": "Страна",
   "setupStepOrganization": "Организация",
   "setupStepVat": "НДС",
   "setupStepUsers": "Пользователи",
-  "setupStepWorkMode": "Режим работы",
   "setupStepPos": "Касса",
   "setupStepFiscal": "Фискализация",
   "setupStepEquipment": "Оборудование",
@@ -1401,16 +956,6 @@
       }
     }
   },
-  "setupVatRateLabel": "НДС: {rate}%",
-  "@setupVatRateLabel": {
-    "placeholders": {
-      "rate": {
-        "type": "int"
-      }
-    }
-  },
-  "setupOrganizationTitle": "Данные организации",
-  "setupOrganizationDescription": "Введите информацию о вашей компании",
   "setupCompanyNameLabel": "Название организации",
   "setupCompanyNameHint": "ТОО \"Моя компания\"",
   "setupTaxIdDigits": "{length} цифр",
@@ -1425,8 +970,6 @@
   "setupActualAddressLabel": "Фактический адрес магазина",
   "setupOwnerNameLabel": "ФИО руководителя",
   "setupPhoneLabel": "Телефон",
-  "setupVatTitle": "Налог на добавленную стоимость",
-  "setupVatDescription": "Выберите режим налогообложения вашей организации",
   "setupVatPayerTitle": "Плательщик НДС",
   "setupVatPayerRate": "Ставка НДС: {rate}%",
   "@setupVatPayerRate": {
@@ -1441,18 +984,6 @@
   "setupVatNonPayerTitle": "Без НДС",
   "setupVatNonPayerSubtitle": "НДС не применяется",
   "setupVatNonPayerDescription": "В чеках НДС выделяться не будет.\nДля ИП на упрощённой системе или патенте.",
-  "setupWorkModeTitle": "Режим работы",
-  "setupWorkModeDescription": "Выберите как будет работать ваша касса",
-  "setupAutonomousTitle": "Автономный режим",
-  "setupAutonomousSubtitle": "Работа без интернета",
-  "setupAutonomousDescription": "Касса работает полностью автономно.\nДанные хранятся только локально.\nНет синхронизации между кассами.",
-  "setupNetworkTitle": "Сетевой режим",
-  "setupNetworkConfigured": "Telegram настроен",
-  "setupNetworkRequired": "Требуется Telegram",
-  "setupNetworkDescription": "Синхронизация данных между кассами.\nРезервное копирование в облако.\nОтчёты и уведомления в Telegram.",
-  "setupNetworkRequiresTelegram": "Для сетевого режима необходимо настроить Telegram",
-  "setupOperatingModeTitle": "Тип бизнеса",
-  "setupOperatingModeDescription": "Выберите тип вашего бизнеса",
   "setupRetailTitle": "Розничная касса",
   "setupRetailSubtitle": "Магазин, аптека, супермаркет",
   "setupRetailDescription": "Стандартный POS для розничной торговли.\nПродажи, возвраты, приёмка товара.\nСмены и отчётность.",
@@ -1462,8 +993,6 @@
   "setupServiceTitle": "Сервисный центр",
   "setupServiceSubtitle": "Ремонт, услуги, процедуры",
   "setupServiceDescription": "Приём в ремонт/обслуживание.\nЗаказ-наряды и отметки работ.\nОтслеживание статуса и выдача.",
-  "setupPosConfigTitle": "Настройка кассы",
-  "setupPosConfigDescription": "Укажите параметры кассового аппарата",
   "setupCashBoxNameLabel": "Название кассы",
   "setupCashBoxNameHint": "Касса 1",
   "setupPosIdLabel": "ID кассы",
@@ -1476,7 +1005,6 @@
   "setupPrinterFooterLabel": "Подвал чека",
   "setupPrinterFooterHint": "Спасибо за покупку!",
   "setupFiscalNotRequired": "Для вашей страны фискализация не требуется",
-  "setupFiscalDescription": "Настройте подключение к фискальному оператору",
   "setupEnableWebkassa": "Включить WebKassa",
   "setupEnableOfd": "Включить ОФД",
   "setupWebkassaDescription": "Фискализация чеков через WebKassa (Казахстан)",
@@ -1498,8 +1026,6 @@
   "setupOfdKktRegNoLabel": "Рег. номер ККТ",
   "setupOfdFnNoLabel": "Номер ФН",
   "setupOfdUrlLabel": "URL ОФД",
-  "setupEquipmentTitle": "Оборудование",
-  "setupEquipmentDescription": "Настройте подключённое оборудование",
   "setupEquipmentPrinter": "Принтер чеков",
   "setupEquipmentScanner": "Сканер штрихкодов",
   "setupEquipmentScales": "Весы",
@@ -1510,7 +1036,6 @@
   "setupConnectionBluetooth": "Bluetooth",
   "setupConnectionWifi": "Wi-Fi / Ethernet",
   "setupConnectionSerial": "COM-порт",
-  "setupConnectionNone": "Не выбран",
   "setupPrinterIpLabel": "IP-адрес принтера",
   "setupPrinterMacLabel": "MAC-адрес принтера",
   "setupPrinterNameLabel": "Название принтера",
@@ -1520,19 +1045,10 @@
   "setupScannerUsb": "USB-сканер",
   "setupScannerBluetooth": "Bluetooth-сканер",
   "setupScalePortLabel": "COM-порт",
-  "setupBaudRateLabel": "Скорость (baud rate)",
-  "setupCashDrawerConnected": "Подключён к принтеру",
   "setupCashDrawerConnectedDesc": "Открывается командой принтера",
-  "setupSkip": "Пропустить",
-  "setupPaymentTerminalsTitle": "Платёжные терминалы",
-  "setupPaymentTerminalsDescription": "Настройте интеграцию с платёжными системами",
   "setupKaspiIpLabel": "IP-адрес терминала",
   "setupPortLabel": "Порт",
-  "setupApiUrlLabel": "API URL",
-  "setupApiKeyLabel": "API ключ",
   "setupNoTerminalsAvailable": "Для вашего региона нет доступных платёжных терминалов",
-  "setupBusinessRulesTitle": "Бизнес-правила",
-  "setupBusinessRulesDescription": "Настройте правила работы кассы",
   "setupPermissionsTitle": "Разрешения",
   "setupAllowDiscounts": "Скидки",
   "setupAllowDiscountsDesc": "Разрешить применение скидок",
@@ -1553,68 +1069,28 @@
   "setupCashbackLabel": "Кешбэк",
   "setupCashbackDesc": "Включить начисление бонусов",
   "setupCashbackRateLabel": "Процент кешбэка",
-  "setupRoundingTitle": "Округление",
-  "setupDiscountRounding": "Округление скидок",
-  "setupWeightRounding": "Округление весовых товаров",
-  "setupRoundingNone": "Без округления",
-  "setupRoundingUp1": "До 1 (вверх)",
-  "setupRoundingDown1": "До 1 (вниз)",
-  "setupRoundingUp5": "До 5 (вверх)",
-  "setupRoundingDown5": "До 5 (вниз)",
-  "setupRoundingUp10": "До 10 (вверх)",
-  "setupRoundingDown10": "До 10 (вниз)",
-  "setupFiscalDisablesRounding": "При включённой фискализации округление автоматически отключается",
-  "setupUserCreationTitle": "Создание пользователей",
-  "setupUserCreationDescription": "Создайте пользователей для работы с кассой",
-  "setupAdminLabel": "Администратор",
   "setupAdminSubtitle": "Владелец кассы",
   "setupUserNameLabel": "Имя",
   "setupUserPinLabel": "PIN",
   "setupUserPinConfirmLabel": "Подтверждение",
-  "setupAdminPinDefault": "По умолчанию: 0000",
   "setupSellerLabel": "Продавец",
   "setupSellerOptional": "Опционально",
-  "setupSellerPinDefault": "По умолчанию: 1111",
   "setupAdminPinMismatch": "PIN-коды администратора не совпадают",
-  "setupSummaryTitle": "Проверьте данные",
-  "setupSummaryDescription": "Убедитесь, что всё указано верно",
-  "setupSummaryCountry": "Страна",
-  "setupSummaryCurrency": "Валюта",
   "setupSummaryFormat": "Формат",
-  "setupSummaryVat": "НДС",
-  "setupSummaryTelegram": "Telegram",
-  "setupSummaryStatus": "Статус",
-  "setupConfigured": "Настроен",
   "setupNotConfigured": "Не настроен",
   "setupSummaryOrganization": "Организация",
   "setupSummaryName": "Название",
-  "setupSummaryAddress": "Адрес",
-  "setupSummaryWorkMode": "Режим работы",
-  "setupSummaryMode": "Режим",
-  "setupSummaryAutonomous": "Автономный (без сети)",
-  "setupSummaryNetwork": "Сетевой (синхронизация)",
-  "setupSummaryPos": "Касса",
   "setupSummaryId": "ID",
-  "setupEnabled": "Включена",
   "setupDisabled": "Отключена",
   "setupSummaryFiscalType": "Тип",
   "setupSummaryEquipment": "Оборудование",
   "setupSummaryPrinter": "Принтер",
   "setupSummaryScanner": "Сканер",
   "setupSummaryScales": "Весы",
-  "setupSummaryCashDrawer": "Ден. ящик",
-  "setupSummaryTerminals": "Платёжные терминалы",
-  "setupSummaryRules": "Бизнес-правила",
-  "setupSummaryDiscounts": "Скидки",
-  "setupSummaryDebtSales": "В долг",
-  "setupSummaryCashback": "Кешбэк",
-  "setupSummaryBigAmount": "Крупные суммы",
-  "setupSummaryUsers": "Пользователи",
   "setupSummaryAdmin": "Администратор",
   "setupSummarySeller": "Продавец",
   "setupCompleteTitle": "Настройка завершена!",
   "setupCompleteSubtitle": "Касса готова к работе",
-  "setupStartWork": "Начать работу",
   "setupVatPayerSummary": "Плательщик НДС ({rate}%)",
   "@setupVatPayerSummary": {
     "placeholders": {
@@ -1623,17 +1099,6 @@
       }
     }
   },
-  "setupSummaryWkPosId": "ID кассы WK",
-  "setupSummaryOfdInn": "ИНН",
-  "setupScalesConfigured": "Настроены",
-  "setupScalesNotConfigured": "Не настроены",
-  "setupCashDrawerOn": "Включён",
-  "setupAllowed": "Разрешены",
-  "setupDenied": "Запрещены",
-  "setupAllowedFem": "Разрешена",
-  "setupDeniedFem": "Запрещена",
-  "setupCashbackOff": "Отключён",
-  "setupBigAmountLimit": "Лимит 100 000",
   "setupDisplayPortLabel": "COM-порт",
   "telegramAuthSkip": "Пропустить (настроить позже)",
   "telegramInitializing": "Инициализация",
@@ -1748,8 +1213,6 @@
     }
   },
   "chatNoResults": "Ничего не найдено",
-  "chatCopyUidInstructions": "Скопируйте UID для использования в других системах",
-  "chatUidExample": "Например: telepos@pos-1",
   "chatServiceUnavailable": "Сервис недоступен",
   "chatTelegramLinked": "Telegram успешно привязан",
   "additionalLogout": "Выход",
@@ -1787,16 +1250,7 @@
   "additionalPrinterConnectingUsb": "Подключение USB принтера...",
   "additionalPrinterNotConnected": "Принтер не подключён",
   "additionalPrintingLastReceipt": "Печать последнего чека...",
-  "additionalTestReceiptTitle": "=== ТЕСТОВЫЙ ЧЕК ===",
   "additionalReceiptPrinted": "Чек напечатан",
-  "additionalPriceSearching": "Поиск: {query}",
-  "@additionalPriceSearching": {
-    "placeholders": {
-      "query": {
-        "type": "String"
-      }
-    }
-  },
   "additionalMinimizing": "Сворачивание окна...",
   "additionalLatestVersion": "У вас установлена последняя версия",
   "additionalExtraPrinterTitle": "Дополнительный принтер",
@@ -1827,16 +1281,6 @@
   "additionalPrinterUsbConnected": "USB принтер подключён",
   "additionalBarcodeLabel": "Штрихкод",
   "additionalBarcodeHint": "Отсканируйте или введите",
-  "additionalTestReceiptProduct": "Товар {number}",
-  "@additionalTestReceiptProduct": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "additionalTestReceiptTotal": "ИТОГО:",
-  "additionalTestReceiptThankYou": "Спасибо за покупку!",
   "langRussian": "Русский",
   "langEnglish": "English",
   "langKazakh": "Қазақша",
@@ -1900,183 +1344,12 @@
   "transportNotifyConnectivityDesc": "Уведомлять о смене подключения",
   "transportNotifyQueueFull": "Очередь полна",
   "transportNotifyQueueFullDesc": "Уведомлять при заполнении очереди",
-  "saleErrorInitiation": "Ошибка инициации продажи: {error}",
-  "@saleErrorInitiation": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorNotInitialized": "Продажа не инициализирована",
-  "saleErrorEmpty": "Чек пуст",
-  "saleErrorCompletion": "Ошибка завершения продажи: {error}",
-  "@saleErrorCompletion": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorSearch": "Ошибка поиска: {error}",
-  "@saleErrorSearch": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorDeferred": "Ошибка отложения чека: {error}",
-  "@saleErrorDeferred": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "saleErrorDeferredNotFound": "Отложенный чек не найден",
-  "saleErrorLoadingDeferred": "Ошибка загрузки отложенного чека: {error}",
-  "@saleErrorLoadingDeferred": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "paymentCustomerDefault": "Клиент",
-  "paymentErrorFormation": "Не удалось сформировать платёж. Проверьте настройки счетов.",
-  "paymentErrorSaving": "Ошибка сохранения продажи",
-  "paymentErrorProcessing": "Ошибка обработки платежа: {error}",
-  "@paymentErrorProcessing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "paymentAccountDefault": "Счёт {id}",
-  "@paymentAccountDefault": {
-    "placeholders": {
-      "id": {
-        "type": "int"
-      }
-    }
-  },
-  "refundErrorReceiptNotFound": "Чек #{number} не найден",
-  "@refundErrorReceiptNotFound": {
-    "placeholders": {
-      "number": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorLoadingReceipt": "Ошибка загрузки чека: {error}",
-  "@refundErrorLoadingReceipt": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorSearch": "Ошибка поиска: {error}",
-  "@refundErrorSearch": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refundErrorProductNotFound": "Товар не найден",
   "refundErrorNotAuthenticated": "Пользователь не авторизован",
-  "refundErrorProcessing": "Ошибка возврата: {error}",
-  "@refundErrorProcessing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorLoadingData": "Ошибка загрузки данных смены: {error}",
-  "@shiftErrorLoadingData": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorOpening": "Ошибка открытия смены: {error}",
-  "@shiftErrorOpening": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorClosing": "Ошибка закрытия смены: {error}",
-  "@shiftErrorClosing": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "shiftErrorPrinting": "Ошибка печати Z-отчёта: {error}",
-  "@shiftErrorPrinting": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "cashOpTypeInvestment": "Внесение",
   "cashOpTypeExpense": "Расход",
   "cashOpTypeDividend": "Изъятие",
   "supplyNoName": "Без имени",
-  "supplyNoTitle": "Без названия",
-  "supplyErrorSupplierNotFound": "Поставщик не найден",
-  "supplyErrorSelectingSupplier": "Ошибка выбора поставщика: {error}",
-  "@supplyErrorSelectingSupplier": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorAccountNotFound": "Счёт не найден",
-  "supplyErrorSelectingAccount": "Ошибка выбора счёта: {error}",
-  "@supplyErrorSelectingAccount": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorAddingProduct": "Ошибка добавления товара: {error}",
-  "@supplyErrorAddingProduct": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "supplyErrorProductNotFound": "Товар не найден",
-  "supplyErrorMissingFields": "Заполните все обязательные поля",
-  "supplyErrorSaving": "Ошибка сохранения: {error}",
-  "@supplyErrorSaving": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "historyErrorLoading": "Ошибка загрузки истории: {error}",
-  "@historyErrorLoading": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
   "syncTypeProducts": "Товары",
   "syncTypePrices": "Цены",
   "syncTypeCategories": "Категории",
@@ -2087,115 +1360,12 @@
   "syncTypeCashOps": "Кассовые операции",
   "syncTypeShifts": "Смены",
   "syncTypeSupplies": "Приёмки",
-  "syncStepPreparing": "Подготовка...",
-  "syncStepUploading": "Выгрузка: {type}",
-  "@syncStepUploading": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
-  "syncStepDownloading": "Загрузка: {type}",
-  "@syncStepDownloading": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
   "syncCompleted": "Синхронизация завершена",
-  "loginErrorNoUsers": "Нет зарегистрированных пользователей",
-  "loginErrorLoadingData": "Ошибка загрузки данных: {error}",
-  "@loginErrorLoadingData": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "loginErrorSelectUser": "Выберите пользователя",
-  "loginErrorIncompletePin": "Введите PIN-код (минимум 4 цифры)",
-  "loginErrorNoRsaKey": "Ошибка: RSA ключ не настроен. Обратитесь к администратору.",
-  "loginErrorWrongPin": "Неверный PIN-код",
-  "loginErrorSystemTime": "Системное время некорректно. Проверьте настройки даты и времени.",
-  "receiptLabelBin": "БИН:",
-  "receiptLabelPhone": "Тел:",
-  "receiptLabelReceiptNo": "Чек №:",
-  "receiptLabelPosId": "Касса:",
-  "receiptLabelDate": "Дата:",
-  "receiptLabelCashier": "Кассир:",
-  "receiptLabelTable": "Стол:",
-  "receiptLabelWaiter": "Официант:",
-  "receiptLabelGuests": "Гостей:",
-  "receiptLabelCustomer": "Клиент:",
-  "receiptLabelSubtotal": "Подытог:",
-  "receiptLabelDiscount": "Скидка:",
-  "receiptLabelServiceCharge": "Сервис. сбор:",
   "receiptLabelTotal": "ИТОГО:",
-  "receiptLabelVat": "в т.ч. НДС {percent}%:",
-  "@receiptLabelVat": {
-    "placeholders": {
-      "percent": {
-        "type": "String"
-      }
-    }
-  },
-  "receiptLabelCash": "Наличные:",
-  "receiptLabelCard": "Карта:",
   "receiptLabelChange": "Сдача:",
-  "receiptLabelCheckReceipt": "Проверить чек:",
-  "receiptLabelItemName": "Наименование",
-  "receiptLabelQty": "Кол",
   "receiptLabelPrice": "Цена",
   "receiptLabelAmount": "Сумма",
-  "receiptLabelItemDiscount": "Скидка:",
-  "receiptLabelFiscalBin": "БИН:",
-  "receiptLabelFiscalNo": "ФН:",
-  "receiptLabelFiscalSign": "ФП:",
-  "receiptLabelVatCertificate": "НДС:",
-  "receiptLabelOfflineMode": "*** ОФФЛАЙН ***",
-  "receiptLabelRefundHeader": "*** ВОЗВРАТ ***",
-  "receiptLabelRefundNo": "Возврат №:",
-  "receiptLabelReason": "Причина:",
-  "receiptLabelRefundTotal": "К ВОЗВРАТУ:",
-  "receiptLabelZReport": "Z-ОТЧЁТ",
-  "receiptLabelShiftClosing": "ЗАКРЫТИЕ СМЕНЫ",
-  "receiptLabelShiftNo": "Смена №:",
-  "receiptLabelShiftOpenTime": "Открыта:",
-  "receiptLabelShiftCloseTime": "Закрыта:",
-  "receiptLabelSales": "ПРОДАЖИ",
-  "receiptLabelQuantity": "Количество:",
-  "receiptLabelCashSales": "Наличные:",
-  "receiptLabelCardSales": "Карта:",
-  "receiptLabelSalesTotal": "Итого:",
-  "receiptLabelRefunds": "ВОЗВРАТЫ",
-  "receiptLabelRefundQty": "Количество:",
-  "receiptLabelRefundAmount": "Сумма:",
-  "receiptLabelCashOperations": "КАССОВЫЕ ОПЕРАЦИИ",
-  "receiptLabelInvestments": "Внесения:",
-  "receiptLabelExpenses": "Выплаты:",
-  "receiptLabelRevenue": "ВЫРУЧКА:",
-  "receiptLabelCashInDrawer": "В КАССЕ:",
-  "receiptLabelXReport": "X-ОТЧЁТ",
-  "receiptLabelType": "Тип:",
-  "receiptLabelDescription": "Описание:",
-  "receiptLabelDebtPayment": "ПОГАШЕНИЕ ДОЛГА",
-  "receiptLabelPreviousDebt": "Долг был:",
-  "receiptLabelPaidAmount": "ОПЛАЧЕНО:",
-  "receiptLabelRemainingDebt": "Остаток:",
-  "receiptLabelTestPrint": "TEST PRINT",
   "receiptLabelThankYou": "Спасибо за покупку!",
-  "receiptLabelSaleReceipt": "КАССОВЫЙ ЧЕК",
-  "receiptLabelOfflineHeader": "*** ОФФЛАЙН РЕЖИМ ***",
-  "receiptLabelVatCertificateTitle": "Свидетельство НДС:",
-  "fiscalErrorBin12Digits": "БИН должен содержать 12 цифр",
-  "fiscalErrorBinDigitsOnly": "БИН должен содержать только цифры",
-  "fiscalErrorFiscalNoRequired": "Фискальный номер обязателен",
-  "fiscalErrorRnkRequired": "РНК обязателен",
-  "fiscalErrorZnkRequired": "ЗНК обязателен",
-  "fiscalErrorVatSerialRequired": "Серия свидетельства НДС обязательна",
-  "fiscalErrorVatNumberRequired": "Номер свидетельства НДС обязателен",
   "telegramTabPhone": "По телефону",
   "telegramTabQr": "QR-код",
   "telegramQrAuthTitle": "Вход через QR-код",
@@ -2391,6 +1561,12 @@
   "generalSettingsPosId": "ID POS",
   "generalSettingsStoreId": "ID магазина",
   "generalSettingsNotSpecified": "Не указано",
+  "generalSettingsDataLocation": "Где лежат данные",
+  "generalSettingsDataLocationDesc": "Касса хранит всё на этой машине. Знать где — нужно для резервной копии и переезда.",
+  "generalSettingsDataDb": "База",
+  "generalSettingsDataLogs": "Журналы",
+  "generalSettingsDataBackups": "Резервные копии",
+  "generalSettingsPathCopied": "Путь скопирован",
   "generalSettingsAppVersion": "Версия приложения",
   "generalSettingsVersion": "Версия",
   "generalSettingsPlatform": "Платформа",
@@ -2412,13 +1588,10 @@
   "generalSettingsCurrencySymbol": "Символ",
   "generalSettingsCurrencyCode": "Код",
   "generalSettingsCountry": "Страна",
-  "generalSettingsAdditional": "Дополнительные настройки",
   "generalSettingsTransport": "Транспорт",
   "generalSettingsTransportSubtitle": "Настройки синхронизации данных",
   "generalSettingsPrinter": "Принтер",
   "generalSettingsPrinterSubtitle": "Настройки печати чеков",
-  "generalSettingsPermissions": "Права доступа",
-  "generalSettingsPermissionsSubtitle": "Разрешения для кассиров",
   "generalSettingsFiscal": "Фискализация",
   "generalSettingsFiscalSubtitle": "WebKassa, ОФД, НДС",
   "generalSettingsRestaurant": "Режим работы",
@@ -2429,11 +1602,8 @@
   "generalSettingsVersionDesc": "Текущая версия и платформа",
   "generalSettingsLanguageDesc": "Выбор языка интерфейса",
   "generalSettingsCurrencyDesc": "Валюта и страна",
-  "generalSettingsUpdate": "Обновление",
-  "generalSettingsUpdateSubtitle": "Проверка и установка обновлений",
   "generalSettingsAppUpdate": "Обновление приложения",
   "generalSettingsAppUpdateSubtitle": "Обновление кассы (не путать с обновлением ОС)",
-  "generalSettingsUpdateDesc": "Текущая версия и обновления",
   "settingsUpdateTitle": "Обновление приложения",
   "settingsUpdateCurrentVersion": "Текущая версия",
   "settingsUpdateCheckBtn": "Проверить обновления",
@@ -2492,52 +1662,7 @@
       }
     }
   },
-  "printerSettingsPrinting": "Печать...",
-  "printerSettingsTestReceipt": "ТЕСТОВЫЙ ЧЕК",
-  "printerSettingsWidth": "Ширина:",
-  "printerSettingsWidthValue": "{width} символов",
-  "@printerSettingsWidthValue": {
-    "placeholders": {
-      "width": {
-        "type": "int"
-      }
-    }
-  },
-  "printerSettingsType": "Тип:",
-  "printerSettingsAddress": "Адрес:",
-  "printerSettingsNotSpecifiedAddr": "Не указан",
-  "printerSettingsPrinterWorks": "Принтер работает!",
-  "printerSettingsPrintSuccess": "Печать успешна",
-  "printerSettingsPrintError": "Ошибка печати",
-  "printerSettingsNotConnected": "Не подключен",
-  "printerSettingsChecking": "Проверка...",
-  "printerSettingsReady": "Готов",
-  "printerSettingsNoPaper": "Нет бумаги",
-  "printerSettingsCoverOpen": "Открыта крышка",
   "printerSettingsSave": "Сохранить",
-  "printerSettingsConnectionType": "Тип подключения",
-  "printerSettingsPrinterAddress": "Адрес принтера",
-  "printerSettingsPaperWidth": "Ширина бумаги",
-  "printerSettingsTesting": "Тестирование",
-  "printerSettingsStatus": "Статус: {status}",
-  "@printerSettingsStatus": {
-    "placeholders": {
-      "status": {
-        "type": "String"
-      }
-    }
-  },
-  "printerSettingsCheck": "Проверить",
-  "printerSettingsTestCheck": "Тестовый чек",
-  "printerSettingsPort": "Порт",
-  "printerSettingsIpAddress": "IP адрес принтера",
-  "printerSettingsMacAddress": "MAC адрес или имя",
-  "printerSettingsPrinterName": "Имя принтера",
-  "printerSettingsComPort": "COM порт",
-  "printerSettingsSerialCom": "Serial (COM)",
-  "printerSettingsPaperWidth58": "58mm (32 символа)",
-  "printerSettingsPaperWidth80_42": "80mm (42 символа)",
-  "printerSettingsPaperWidth80_48": "80mm (48 символов)",
   "fiscalSettingsTitle": "Фискализация",
   "fiscalSettingsSaved": "Настройки сохранены",
   "fiscalSettingsSaveError": "Ошибка сохранения: {error}",
@@ -2550,25 +1675,11 @@
   },
   "fiscalSettingsSave": "Сохранить",
   "fiscalSettingsOperator": "Фискальный оператор",
-  "fiscalSettingsWebkassaSettings": "Настройки WebKassa",
-  "fiscalSettingsTaxpayerInfo": "Данные налогоплательщика",
   "fiscalSettingsVatSettings": "Настройки НДС",
   "fiscalSettingsWebkassaLabel": "WebKassa",
-  "fiscalSettingsWebkassaDesc": "Облачный фискальный сервис",
-  "fiscalSettingsOfdLabel": "OFD",
-  "fiscalSettingsOfdDesc": "Оператор фискальных данных",
   "fiscalSettingsNoneLabel": "Без фискализации",
-  "fiscalSettingsNoneDesc": "Чеки не отправляются в ОФД",
-  "fiscalSettingsOfdId": "ID ОФД",
-  "fiscalSettingsOfdIdHint": "Идентификатор ОФД",
-  "fiscalSettingsOfdName": "Название ОФД",
-  "fiscalSettingsOfdNameHint": "WebKassa / ОФД.kz",
   "fiscalSettingsOfdHost": "Адрес сервера ОФД",
   "fiscalSettingsOfdHostHint": "https://api.webkassa.kz",
-  "fiscalSettingsWebkassaActive": "WebKassa активирована",
-  "fiscalSettingsWebkassaInactive": "WebKassa не активирована",
-  "fiscalSettingsCompanyName": "Наименование",
-  "fiscalSettingsCashBox": "Касса",
   "fiscalSettingsVatPayer": "Плательщик НДС",
   "fiscalSettingsVatPayerSubtitle": "Организация является плательщиком НДС (12%)",
   "fiscalSettingsPrintVat": "Печатать НДС на чеке",
@@ -2584,7 +1695,6 @@
   "fiscalOffsetPrepaymentReceiptSubtitle": "Выбивать фискальный чек, когда покупатель вносит аванс",
   "fiscalOffsetSaveError": "Не удалось сохранить настройку",
   "customerPaymentTender": "Чем принято",
-  "fiscalSettingsVatRate": "Ставка НДС: 12% (расчёт по формуле 3/28)",
   "historyProductUcode": "Товар #{ucode}",
   "@historyProductUcode": {
     "placeholders": {
@@ -2605,14 +1715,6 @@
   "@historyAccountId": {
     "placeholders": {
       "id": {
-        "type": "String"
-      }
-    }
-  },
-  "historyLoadError": "Ошибка загрузки: {error}",
-  "@historyLoadError": {
-    "placeholders": {
-      "error": {
         "type": "String"
       }
     }
@@ -2692,45 +1794,6 @@
   "historyPrevious": "Предыдущая",
   "historyNextPage": "Следующая",
   "historyLastPage": "Последняя страница",
-  "@historyType": {
-    "placeholders": {
-      "type": {
-        "type": "String"
-      }
-    }
-  },
-  "historyAmount": "Сумма: {amount}",
-  "@historyAmount": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "historyDate": "Дата: {date}",
-  "@historyDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "historyPos": "POS: {id}",
-  "@historyPos": {
-    "placeholders": {
-      "id": {
-        "type": "String"
-      }
-    }
-  },
-  "historyClientName": "Клиент: {name}",
-  "@historyClientName": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "historyFiscalYes": "Да",
   "historyFiscalNo": "Нет",
   "historyFiscalError": "Ошибка",
@@ -2793,7 +1856,6 @@
       }
     }
   },
-  "shiftFinishSalesBeforeClose": "Завершите или отмените продажи перед закрытием смены",
   "shiftBillsTab": "Купюры",
   "shiftTotalTab": "Общая сумма",
   "shiftOperationsTab": "Операции",
@@ -2826,7 +1888,6 @@
     }
   },
   "supplyProductNotFound": "Товар не найден",
-  "supplyInvalidQuantity": "Введите корректное количество",
   "supplySelectSupplierTitle": "Выберите поставщика",
   "supplySuppliersNotFound": "Поставщики не найдены",
   "supplySelectAccountTitle": "Выберите счёт",
@@ -2975,7 +2036,6 @@
       }
     }
   },
-  "syncWidgetWaiting": "Ожидает",
   "syncWidgetSynced": "Синхронизировано",
   "syncWidgetJustNow": "только что",
   "syncWidgetMinutesAgo": "{minutes} мин. назад",
@@ -3002,12 +2062,6 @@
       }
     }
   },
-  "syncWidgetConnecting": "Подключение к серверу...",
-  "syncWidgetSyncingProducts": "Синхронизация товаров...",
-  "syncWidgetSyncingSales": "Синхронизация продаж...",
-  "syncWidgetSyncingAgents": "Синхронизация контрагентов...",
-  "syncWidgetSyncingPrices": "Синхронизация цен...",
-  "syncWidgetFinishing": "Завершение...",
   "updateDialogUpdating": "Обновление...",
   "updateDialogAvailable": "Доступно обновление",
   "updateDialogAutoUpdate": "Автоматическое обновление через {seconds} сек",
@@ -3062,7 +2116,6 @@
   "versionConflictOpenFolder": "Открыть в папке",
   "versionConflictPreviousVersion": "Прежняя версия",
   "versionConflictContinue": "Продолжить",
-  "restoreLoadingBackups": "Загрузка бэкапов...",
   "restoreSearchingBackups": "Поиск бэкапов...",
   "restoreLoadError": "Ошибка загрузки: {error}",
   "@restoreLoadError": {
@@ -3114,25 +2167,6 @@
   "agentNotFoundShort": "Не найдено",
   "agentEnterNameOrPhone": "Введите имя или телефон",
   "agentEnterCustomerName": "Введите имя клиента",
-  "agentDeletedCustomerPhone": "Клиент с таким телефоном был удалён",
-  "agentWantRestore": "Хотите восстановить?",
-  "agentDeleteCustomerTitle": "Удалить клиента?",
-  "agentDeleteConfirmMessage": "Вы уверены, что хотите удалить \"{name}\"?",
-  "@agentDeleteConfirmMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "agentCustomerDeleted": "Клиент \"{name}\" удалён",
-  "@agentCustomerDeleted": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "cashOpTitle": "Кассовая операция",
   "cashOpComment": "Комментарий",
   "cashOpCommentRequired": "Комментарий *",
@@ -3448,7 +2482,6 @@
   "paymentAccount": "Счёт",
   "authNoUsers": "Нет зарегистрированных пользователей",
   "authNoPin": "Без PIN",
-  "authSelectUser": "Выберите пользователя",
   "authNoUsersShort": "Нет пользователей",
   "authEnterPin": "Введите PIN-код",
   "updateVersion": "Версия {version}",
@@ -3475,23 +2508,13 @@
   "updateDownloading": "Загрузка обновления",
   "updateDownloadingFile": "Загрузка файла обновления...",
   "updatePosNow": "ОБНОВИТЬ КАССУ",
-  "serviceAddNote": "Добавить отметку",
   "serviceClientLookup": "Поиск клиента",
-  "serviceOrderDetail": "Детали заказ-наряда #{orderId}",
-  "@serviceOrderDetail": {
-    "placeholders": {
-      "orderId": {
-        "type": "int"
-      }
-    }
-  },
   "paymentDefaultLabel": "По умолчанию",
   "serviceIntakeTitle": "Приём заказа",
   "serviceIntakeClient": "Клиент",
   "serviceIntakeDevice": "Устройство / Предмет",
   "serviceIntakeServices": "Услуги",
   "serviceIntakeDelivery": "Доставка",
-  "serviceIntakePickup": "Забрать у клиента",
   "serviceIntakeSave": "Сохранить",
   "serviceIntakeCancel": "Отмена",
   "serviceQueueTitle": "Заказ-наряды",
@@ -3513,10 +2536,8 @@
   "serviceMarkTesting": "Тестирование",
   "serviceMarkOther": "Прочее",
   "serviceAddMark": "Добавить работу",
-  "serviceDeleteMark": "Удалить отметку",
   "serviceMarkDescription": "Описание",
   "serviceMarkType": "Тип работы",
-  "serviceMarkCost": "Стоимость",
   "serviceMarkNote": "Примечание",
   "serviceCatalogTitle": "Каталог услуг",
   "serviceCatalogAdd": "Добавить услугу",
@@ -3541,7 +2562,6 @@
       }
     }
   },
-  "serviceTechnicianSelect": "Выберите мастера",
   "servicePrepayment": "Предоплата",
   "servicePrepaymentAmount": "Сумма предоплаты",
   "serviceEstimatedDate": "Ожидаемая дата",
@@ -3556,14 +2576,12 @@
   "serviceDeliveryAddress": "Адрес доставки",
   "serviceNeedsPickup": "Забрать у клиента",
   "serviceNeedsDelivery": "Доставить клиенту",
-  "serviceQrFormat": "TELEPOS:SO:{id}:{number}",
   "serviceOrderCreated": "Новый заказ",
   "serviceOrderUpdated": "Редактировать",
   "serviceNoOrders": "Нет данных",
   "serviceFilterAll": "Все",
   "navCatalog": "Каталог",
   "catalogTitle": "Каталог товаров",
-  "catalogSearch": "Поиск",
   "catalogSearchHint": "Название или штрихкод",
   "catalogFilterAll": "Все",
   "catalogFilterProducts": "Товары",
@@ -3579,10 +2597,8 @@
   "catalogType": "Тип",
   "catalogPrice": "Цена продажи",
   "catalogWholesalePrice": "Оптовая цена",
-  "catalogCategory": "Категория",
   "catalogMeasure": "Единица измерения",
   "catalogQuantity": "Остаток",
-  "catalogQuickProduct": "Быстрый товар",
   "catalogAddToQuick": "Добавить в быстрые",
   "catalogRemoveFromQuick": "Убрать из быстрых",
   "catalogNoProducts": "Нет товаров",
@@ -3612,7 +2628,6 @@
   "catalogNameRequired": "Введите название",
   "catalogPriceRequired": "Введите цену",
   "catalogPriceInvalid": "Цена должна быть больше 0",
-  "catalogBarcodeExists": "Товар с таким штрихкодом уже существует",
   "catalogCategories": "Категории",
   "catalogAllCategories": "Все категории",
   "catalogNoCategories": "Нет категорий",
@@ -3685,31 +2700,9 @@
   "accountsSettingsVisibleToPos": "Видим в POS",
   "hwSettingsSaved": "Настройки оборудования сохранены",
   "hwScannerTitle": "Сканер штрих-кодов",
-  "hwScannerMode": "Режим сканера",
-  "hwScannerModeKeyboard": "USB / клавиатура (wedge)",
-  "hwScannerModeSerial": "Серийный",
-  "hwScannerModeCamera": "Камера",
-  "hwScannerModeHint": "USB-сканеры работают в этом режиме",
-  "hwScannerTimeout": "Таймаут",
-  "hwScannerMinLength": "Мин. длина",
-  "hwScannerMaxLength": "Макс. длина",
   "hwDisplayTitle": "Дисплей покупателя",
-  "hwDisplayModel": "Модель",
-  "hwDisplayModelLed8": "LED 8 символов",
-  "hwDisplayModelVfd20": "VFD 20x2",
-  "hwDisplayPort": "COM-порт",
-  "hwDisplayBaudRate": "Скорость",
-  "hwDisplayDisabled": "Дисплей покупателя отключён",
   "hwDrawerTitle": "Кассовый ящик",
-  "hwDrawerMode": "Режим открытия",
-  "hwDrawerModePrinter": "Через принтер",
-  "hwDrawerModeSerial": "Серийный порт",
-  "hwDrawerPort": "COM-порт",
   "hwTerminalsTitle": "Платёжные терминалы",
-  "hwTerminalIp": "IP-адрес",
-  "hwTerminalPort": "Порт",
-  "hwTerminalMerchantId": "Merchant ID",
-  "hwTerminalTerminalId": "Terminal ID",
   "catalogExportCsv": "Экспорт CSV",
   "catalogImport": "Импорт",
   "catalogFilterColumn": "Фильтр...",
@@ -3753,9 +2746,7 @@
   "catalogFilterInner": "Внутренние",
   "serviceMarkConsumable": "Расходный материал",
   "serviceConsumableSearch": "Поиск товара / расходника",
-  "serviceConsumableSelected": "Выбранный товар",
   "serviceQuickServicesTitle": "Быстрые услуги",
-  "serviceQuickServicesEmpty": "Нет быстрых услуг",
   "serviceIntakeItems": "Принимаемые предметы",
   "serviceItemName": "Что принимаете (предмет, вещь, устройство)",
   "serviceItemDescription": "Описание проблемы / пожелания клиента",
@@ -3776,13 +2767,11 @@
   "catalogTypeDish": "Блюдо",
   "catalogFilterDish": "Блюда",
   "dishCalculation": "Калькуляция",
-  "dishCalculationStub": "Модуль калькуляции будет доступен позже",
   "dishIngredients": "Ингредиенты",
   "serviceConsumablesTitle": "Нормы расхода",
   "serviceConsumablesEmpty": "Нет расходных материалов",
   "serviceConsumablesAdd": "Добавить расходник",
   "serviceConsumableQuantity": "Кол-во на 1 услугу",
-  "serviceConsumablesAutoAdded": "Расходники добавлены автоматически",
   "catalogDescription": "Описание",
   "catalogImagePlaceholder": "Нажмите для загрузки фото",
   "catalogImageFromGallery": "Выбрать из галереи",
@@ -4036,10 +3025,8 @@
   "labelPrinterSettingsTitle": "Принтер этикеток",
   "labelPrinterSettingsSubtitle": "Ценники и штрих-коды",
   "labelPrinterLanguage": "Язык принтера",
-  "labelPrinterSize": "Размер этикетки",
   "labelPrinterWidthMm": "Ширина, мм",
   "labelPrinterHeightMm": "Высота, мм",
-  "labelPrinterTestSuccess": "Этикетка отправлена на печать",
   "labelPrinterNotConfigured": "Принтер этикеток не настроен. Укажите адрес в настройках.",
   "labelTemplatesTitle": "Шаблоны этикеток",
   "labelTemplatesManage": "Управление шаблонами",
@@ -4111,15 +3098,9 @@
   "receiptTemplateHeaderFooter": "Шапка и подвал",
   "receiptTemplateHeaderText": "Текст шапки",
   "receiptTemplateFooterText": "Текст подвала",
-  "receiptTemplateExtraFooter": "Доп. строки подвала",
-  "receiptTemplateExtraFooterHint": "По одной строке на каждую (например, условия возврата)",
-  "receiptTemplateShowBin": "Печатать БИН/ИИН",
   "receiptTemplateShowAddress": "Печатать адрес",
   "receiptTemplateShowCashier": "Печатать кассу/кассира",
-  "receiptTemplateShowVat": "Печатать НДС",
-  "receiptTemplateShowQr": "Печатать ссылку проверки (QR)",
   "receiptTemplateShowItemNumbers": "Нумеровать позиции",
-  "receiptTemplateShowLogo": "Печатать логотип",
   "receiptTemplateTestPrint": "Тестовая печать",
   "receiptTemplateTestPrintOk": "Образец чека отправлен на печать",
   "receiptTemplateTestPrintFail": "Не удалось напечатать (проверьте принтер)",
@@ -4262,9 +3243,7 @@
   "sysmTerminalOpen": "Открыть терминал",
   "sysmTerminalRootNote": "Команды выполняются как root на приставке.",
   "sysmTerminalHint": "Введите команду (например: systemctl status telepos-sysd)",
-  "sysmTerminalRun": "Выполнить",
   "sysmTerminalClear": "Очистить вывод",
-  "sysmTerminalRunning": "Выполняется…",
   "sysmTerminalExitCode": "Код возврата: {code}",
   "@sysmTerminalExitCode": {
     "placeholders": {
@@ -4274,12 +3253,7 @@
     }
   },
   "sysmTerminalEmpty": "Вывод появится здесь",
-  "sysmTerminalHistory": "История команд",
   "sysmTerminalPresets": "Пресеты",
-  "sysmTerminalPresetsNetwork": "Сеть",
-  "sysmTerminalPresetsPrinters": "Принтеры",
-  "sysmTerminalPresetsSystem": "Система",
-  "sysmTerminalPresetsTime": "Время",
   "sysmTermGroupDiagnostics": "Диагностика",
   "sysmTermGroupPrinter": "Принтер",
   "sysmTermGroupNetwork": "Сеть",
@@ -4308,8 +3282,6 @@
   "sysmTermSysKioskLogs": "Логи киоска",
   "sysmTermTimeDateTime": "Дата и время",
   "sysmTermTimeNtpSync": "Синхронизация NTP",
-  "labelPrinterDevicePath": "Путь к устройству",
-  "labelPrinterDevicePathHint": "Например: /dev/usb/lp0 (USB) или /dev/ttyUSB0 (Serial). Оставьте пустым для значения по умолчанию.",
   "movementTitle": "Перемещение",
   "movementTitleFull": "Перемещение товаров",
   "movementFrom": "Откуда *",
@@ -4433,7 +3405,6 @@
   "esfSettingsEnable": "Включить ЭСФ",
   "esfSettingsEnableSubtitle": "Формировать счета-фактуры по продажам B2B (по БИН покупателя)",
   "esfSettingsOperator": "Оператор ЭСФ",
-  "esfSettingsTestMode": "Тестовый режим",
   "esfSettingsSupplier": "Реквизиты поставщика (наша организация)",
   "esfSettingsBin": "БИН/ИИН",
   "esfSettingsName": "Наименование",
@@ -4442,9 +3413,6 @@
   "esfSettingsVatSeries": "Серия свидетельства НДС",
   "esfSettingsVatNumber": "Номер свидетельства НДС",
   "esfSettingsVatRate": "Ставка НДС, %",
-  "esfSettingsEcp": "ЭЦП (НУЦ РК)",
-  "esfSettingsEcpKeyPath": "Путь к ключу ЭЦП",
-  "esfSettingsEcpKeyAlias": "Алиас ключа",
   "esfSettingsB2bOnly": "Только B2B",
   "esfSettingsB2bOnlySubtitle": "Не формировать ЭСФ для розничных продаж физлицам",
   "esfSettingsEcpHint": "Для реальной выписки требуется ЭЦП НУЦ РК и профиль ИС ЭСФ. Черновики формируются и хранятся офлайн без ЭЦП.",
@@ -4452,7 +3420,6 @@
   "esfOutboxTitle": "Исходящие ЭСФ",
   "esfOutboxEmpty": "Нет документов ЭСФ",
   "esfOutboxEmptyHint": "Счета-фактуры появятся здесь после продаж B2B",
-  "esfOutboxRetry": "Повторить отправку",
   "esfOutboxRetryAll": "Повторить все",
   "esfOutboxRetryDone": "Обработано: доставлено {delivered}, в очереди {queued}, ошибок {failed}",
   "@esfOutboxRetryDone": {
@@ -4544,18 +3511,9 @@
   "sntSettingsEnable": "Включить СНТ",
   "sntSettingsEnableSubtitle": "Сборка и отправка сопроводительных накладных (ИС ЭСФ)",
   "sntSettingsProvider": "Способ отправки",
-  "sntSettingsTestMode": "Тестовый режим",
   "sntSettingsRequisites": "Реквизиты налогоплательщика",
   "sntSettingsOwnBin": "БИН / ИИН (наш)",
   "sntSettingsWarehouseCode": "Код виртуального склада",
-  "sntSettingsBackend": "TelePOS backend (прокси ИС ЭСФ)",
-  "sntSettingsBackendUrl": "URL бэкенда",
-  "sntSettingsApiKey": "API-ключ",
-  "sntSettingsEcp": "ЭЦП (НУЦ РК)",
-  "sntSettingsCertPath": "Путь к ключу ЭЦП",
-  "sntSettingsCertPassword": "Пароль ключа",
-  "sntSettingsEcpHint": "Реальная отправка СНТ требует ЭЦП НУЦ РК и зарегистрированного профиля ИС ЭСФ. Без ЭЦП документы собираются и хранятся локально (Виртуальный склад работает офлайн).",
-  "sntSettingsSharedEsfHint": "СНТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.",
   "sntSettingsWebkassaNote": "Реквизиты подключения (логин, apiKey, касса, ЭЦП) берутся из настроек WebKassa (Фискализация) — один общий конфиг.",
   "sntSettingsOpenEsf": "Настройки ЭСФ",
   "sntSettingsSave": "Сохранить",
@@ -4618,23 +3576,11 @@
   "ismptSettingsEnable": "Включить ИС МПТ",
   "ismptSettingsEnableSubtitle": "Проверка и отправка кодов маркировки (ismet.kz / Tañba)",
   "ismptSettingsBackend": "Бэкенд",
-  "ismptSettingsTestMode": "Тестовый режим",
-  "ismptSettingsRequisites": "Реквизиты налогоплательщика",
-  "ismptSettingsOwnBin": "БИН / ИИН (наш)",
-  "ismptSettingsApi": "True API (ismet.kz)",
-  "ismptSettingsApiUrl": "URL API",
-  "ismptSettingsApiKey": "API-ключ / токен",
-  "ismptSettingsEcp": "ЭЦП (НУЦ РК)",
-  "ismptSettingsCertPath": "Путь к ключу ЭЦП",
-  "ismptSettingsCertPassword": "Пароль ключа",
-  "ismptSettingsEcpHint": "Реальная работа с ИС МПТ требует ЭЦП НУЦ РК и зарегистрированного профиля участника оборота. Без ЭЦП коды маркировки принимаются и хранятся локально (приёмка работает офлайн, продажа не блокируется).",
-  "ismptSettingsSharedEsfHint": "ИС МПТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.",
   "ismptSettingsWebkassaNote": "Проверка кодов маркировки идёт через WebKassa. Реквизиты подключения (логин, apiKey, касса, ЭЦП) берутся из настроек WebKassa (Фискализация) — один общий конфиг.",
   "ismptSettingsOpenEsf": "Настройки ЭСФ",
   "ismptSettingsSave": "Сохранить",
   "ismptSettingsSaved": "Настройки ИС МПТ сохранены",
   "ismptSettingsSaveError": "Не удалось сохранить настройки ИС МПТ",
-  "ismptSettingsBinRequired": "Укажите БИН / ИИН налогоплательщика",
   "reorderRulesTitle": "Правила перезаказа",
   "reorderRulesSubtitle": "Минимальный остаток по товарам",
   "reorderRulesEmpty": "Нет правил перезаказа",
@@ -4681,7 +3627,6 @@
   "shiftClosedGateTitle": "Смена закрыта",
   "shiftClosedGateMessage": "Откройте смену, чтобы продолжить работу с операциями.",
   "shiftClosedGateOpen": "Открыть смену",
-  "sysmTerminalPresetsDiag": "Диагностика",
   "wmsDashboardTitle": "WMS — Управление складом",
   "wmsDashboardTitleShort": "WMS — Склад",
   "wmsSettings": "Настройки WMS",
@@ -5187,8 +4132,6 @@
       }
     }
   },
-  "setUserNoEncryptionKey": "Не настроен ключ шифрования. Завершите начальную настройку POS.",
-  "setUserPinEncryptFailed": "Не удалось зашифровать PIN",
   "setWmsTitle": "Настройки WMS",
   "setWmsModules": "Модули WMS",
   "setWmsCellStorage": "Ячеечное хранение",
@@ -5972,57 +4915,6 @@
   "setPolicyBigAmountDesc": "Снять ограничение в 1 000 000 на операции",
   "setPolicyBlockPriceDecrease": "Запретить снижение цены ниже карточки",
   "setPolicyBlockPriceDecreaseDesc": "Цену в чеке нельзя установить ниже цены товара",
-  "printerAutoDetect": "Найти принтер",
-  "printerAutoDetecting": "Поиск принтера…",
-  "printerFound": "Найдено: {device}",
-  "@printerFound": {
-    "placeholders": {
-      "device": {
-        "type": "String"
-      }
-    }
-  },
-  "printerFoundWithNote": "Найдено: {device} — {note}",
-  "@printerFoundWithNote": {
-    "placeholders": {
-      "device": {
-        "type": "String"
-      },
-      "note": {
-        "type": "String"
-      }
-    }
-  },
-  "printerNotFoundAnyPort": "Принтер не найден ни на одном порту (USB/serial). Проверьте кабель и питание.",
-  "printerUsbName": "USB-принтер",
-  "printerSelectDevice": "Выберите принтер",
-  "printerNoAccessGroupLp": "Узел найден, но нет прав (нужна группа lp)",
-  "printerLabelUsb": "USB-принтер ({path})",
-  "@printerLabelUsb": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "printerLabelSerial": "Serial-принтер ({path})",
-  "@printerLabelSerial": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "printerNoAccessGroupLpHint": "Узел найден, но нет прав (нужна группа lp): usermod -aG lp telepos и перезапуск сессии.",
-  "printerRawOpenNoPermsHint": "Узел {path} найден, но открыть нельзя — нет прав. Добавьте пользователя в группу lp (usermod -aG lp telepos) и перезапустите сессию/приставку.",
-  "@printerRawOpenNoPermsHint": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "printerNotFoundNoNode": "Принтер не найден: нет ни одного char-узла /dev/usb/lp* и USB-serial порта. Проверьте кабель и питание принтера.",
   "ownerOnlyTitle": "Доступно только владельцу кассы",
   "ownerOnlyDesc": "Системные операции (перезагрузка, сброс, драйверы, терминал) доступны только под учётной записью владельца.",
   "telegramApiSectionTitle": "Приложение Telegram",
@@ -6038,7 +4930,6 @@
   "telegramApiStatusMissing": "Ключи не заданы",
   "deviceSearchButton": "Искать",
   "deviceSearchTitle": "Найденные устройства",
-  "deviceSearchRunning": "Идёт поиск…",
   "deviceSearchEmpty": "Ничего не найдено. Все источники опрошены — устройство не подключено или выключено.",
   "deviceSearchNoValueForField": "Устройства найдены, но ни одно не даёт значения для этого поля.",
   "deviceSearchFailedSources": "Не удалось выполнить поиск: {sources}. Это не то же самое, что «ничего не подключено».",
@@ -6096,7 +4987,6 @@
       }
     }
   },
-  "scannerRulesSaved": "Правила чтения штрихкода сохранены",
   "printQueueSectionTitle": "Очередь печати",
   "printQueueSubtitle": "Что ждёт печати, что не напечаталось и почему.",
   "printQueueEmpty": "Очередь пуста — непечатанных чеков нет.",
@@ -6799,10 +5689,7 @@
   "emulatorScaleWeight": "Вес на чаше",
   "emulatorScaleWeightHint": "Пульт эмулятора: это число весы и пришлют кассе",
   "emulatorQrProvider": "Провайдер оплаты по QR",
-  "emulatorQrAddressHint": "Впишите этот адрес в настройке провайдера QR",
-  "emulatorQrBindAction": "Вписать в настройку QR",
   "emulatorQrBindDone": "Настройка QR теперь смотрит на эмулятор",
-  "emulatorQrBindingStale": "Настройка QR смотрит на выключенный эмулятор — оплата по коду откажет",
   "diagnosticsTabPayment": "Оплата",
   "diagnosticsPaymentEmulatorBanner": "Провайдер QR — на этом же компьютере: за адресом эмулятор, а не банк",
   "paymentDiagnosticsUnavailable": "Данных об оплате на этом рабочем месте нет",
@@ -7374,7 +6261,6 @@
   "rcpCustomer": "Клиент:",
   "rcpDate": "Дата:",
   "rcpBinIin": "БИН/ИИН:",
-  "rcpThankYou": "Спасибо за покупку!",
   "rcpSale": "ПРОДАЖА",
   "rcpSubtotal": "Подытог:",
   "rcpDiscount": "Скидка:",
@@ -7468,7 +6354,6 @@
     }
   },
   "taxSettingsPresetApplied": "Набор применён",
-  "taxSettingsCurrentSection": "Текущая настройка",
   "taxSettingsRateForStandard": "Обычный товар: {rate}%",
   "@taxSettingsRateForStandard": {
     "placeholders": {
@@ -7481,28 +6366,14 @@
   "taxSettingsCategories": "Категории товаров",
   "taxSettingsTillLocation": "Касса стоит здесь",
   "taxSettingsTillLocationHint": "Отметок может быть несколько: город и спецрайоны. Вышестоящие добавляются сами.",
-  "taxSettingsRules": "Правила",
   "taxSettingsRuleTaxed": "облагается",
   "taxSettingsRuleZero": "нулевая ставка",
   "taxSettingsRuleExempt": "освобождено",
   "taxSettingsAllCategories": "все категории",
   "taxSettingsAddJurisdiction": "Добавить юрисдикцию",
   "taxSettingsAddCategory": "Добавить категорию",
-  "taxSettingsAddRule": "Добавить правило",
   "taxSettingsName": "Название",
-  "taxSettingsCode": "Код",
-  "taxSettingsRate": "Ставка, %",
-  "taxSettingsValidFrom": "Действует с",
-  "taxSettingsParent": "Вышестоящая",
-  "taxSettingsNoParent": "нет (корень)",
-  "taxSettingsLevel": "Уровень",
-  "taxSettingsLevelCountry": "Страна",
-  "taxSettingsLevelState": "Штат",
-  "taxSettingsLevelCounty": "Округ",
-  "taxSettingsLevelCity": "Город",
-  "taxSettingsLevelDistrict": "Спецрайон",
   "taxSettingsDelete": "Удалить",
-  "taxSettingsDeleteJurisdictionWarning": "Вместе с ней уйдут её правила и вложенные юрисдикции.",
   "taxSettingsResponsibility": "Числа из наборов собраны из открытых источников и названы ссылкой. За правильность налога отвечает налогоплательщик, а не программа.",
   "taxSettingsNoPresetsForCountry": "Для этой страны готовых наборов нет — настройте вручную.",
   "taxSettingsAdd": "Добавить",
@@ -7793,24 +6664,12 @@
   "salePolicyForbids": "Действие запрещено настройками POS (Настройки → Политика продаж)",
   "labelPrintFailed": "Ошибка печати этикетки",
   "labelPrintFromTillOnly": "Печать этикеток — с кассы, не с терминала",
-  "orphanQrTillNotRegistered": "База кассы не зарегистрирована — неразобранные деньги по QR спросить не у кого",
   "stockLowStockReorder": "Дозаказ товаров с низким остатком",
   "serviceNoteNeedsApproval": "Требует согласования клиента",
   "deferredFromTill": "касса {id}",
   "@deferredFromTill": {
     "placeholders": {
       "id": {
-        "type": "String"
-      }
-    }
-  },
-  "dishSummary": "Ингредиентов: {count}, себестоимость: {cost}",
-  "@dishSummary": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "cost": {
         "type": "String"
       }
     }

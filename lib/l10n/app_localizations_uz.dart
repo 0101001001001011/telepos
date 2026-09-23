@@ -72,9 +72,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get globalWarning => 'Ogohlantirish';
 
   @override
-  String get globalInfo => 'Ma\'lumot';
-
-  @override
   String get globalConfirm => 'Tasdiqlash';
 
   @override
@@ -85,9 +82,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get globalAll => 'Hammasi';
-
-  @override
-  String get globalNone => 'Yo\'q';
 
   @override
   String get globalTotal => 'Jami';
@@ -108,37 +102,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get globalDate => 'Sana';
 
   @override
-  String get globalTime => 'Vaqt';
-
-  @override
-  String get loginTitle => 'Tizimga kirish';
-
-  @override
-  String get loginPin => 'PIN kiriting';
-
-  @override
-  String get loginPinHint => '4 raqam';
-
-  @override
   String get loginEnter => 'Kirish';
-
-  @override
-  String get loginSelectUser => 'Foydalanuvchini tanlang';
-
-  @override
-  String get loginNoUsers => 'Foydalanuvchilar yo\'q';
-
-  @override
-  String get loginWrongPin => 'Noto\'g\'ri PIN';
-
-  @override
-  String get loginBlocked => 'Foydalanuvchi bloklangan';
-
-  @override
-  String get loginSessionExpired => 'Sessiya muddati tugadi';
-
-  @override
-  String get loginShiftRequired => 'Kirish uchun smenani oching';
 
   @override
   String get staffRoleOwner => 'Egasi';
@@ -162,57 +126,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginAdmin => 'Administrator';
 
   @override
-  String get loginManager => 'Menejer';
-
-  @override
   String get loginLogout => 'Chiqish';
-
-  @override
-  String get loginSwitchUser => 'Foydalanuvchini almashtirish';
-
-  @override
-  String get saleTitle => 'Sotuv';
-
-  @override
-  String get saleNewSale => 'Yangi sotuv';
-
-  @override
-  String get saleAddProduct => 'Tovar qo\'shish';
-
-  @override
-  String get saleScanBarcode => 'Shtrix-kodni skanerlash';
-
-  @override
-  String get saleEnterBarcode => 'Shtrix-kodni kiriting';
 
   @override
   String get saleProductNotFound => 'Tovar topilmadi';
 
   @override
-  String get saleEmptyCart => 'Savat bo\'sh';
-
-  @override
-  String get saleSubtotal => 'Oraliq summa';
-
-  @override
-  String get saleTax => 'QQS';
-
-  @override
-  String get saleTotalDiscount => 'Chegirma';
-
-  @override
   String get saleToPay => 'To\'lashga';
-
-  @override
-  String saleItems(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count ta tovar',
-      one: '$count ta tovar',
-    );
-    return '$_temp0';
-  }
 
   @override
   String paymentCardChargeUnsettled(String amount) {
@@ -223,40 +143,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get saleRemoveItem => 'Tovarni o\'chirish';
 
   @override
-  String get saleClearCart => 'Savatni tozalash';
-
-  @override
-  String get saleConfirmClear => 'Savatni tozalash kerakmi?';
-
-  @override
-  String get saleProceedPayment => 'To\'lovga o\'tish';
-
-  @override
   String get saleHold => 'Keyinga qoldirish';
 
   @override
   String get saleRecall => 'Qaytarish';
-
-  @override
-  String get saleHeldSales => 'Keyinga qoldirilgan sotuvlar';
-
-  @override
-  String get saleNoHeldSales => 'Keyinga qoldirilgan sotuvlar yo\'q';
-
-  @override
-  String get saleProductSearch => 'Tovarlarni qidirish';
-
-  @override
-  String get saleByCategory => 'Kategoriyalar bo\'yicha';
-
-  @override
-  String get saleByName => 'Nomi bo\'yicha';
-
-  @override
-  String get saleByBarcode => 'Shtrix-kod bo\'yicha';
-
-  @override
-  String get saleWeight => 'Og\'irligi';
 
   @override
   String saleWeightKg(String weight) {
@@ -264,27 +154,7 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get saleEnterWeight => 'Og\'irlikni kiriting';
-
-  @override
-  String get saleEnterQuantity => 'Miqdorini kiriting';
-
-  @override
-  String get saleEnterPrice => 'Narxni kiriting';
-
-  @override
-  String get saleFreePrice => 'Erkin narx';
-
-  @override
-  String saleMaxDiscount(String percent) {
-    return 'Maks. chegirma: $percent%';
-  }
-
-  @override
   String get refundTitle => 'Qaytarish';
-
-  @override
-  String get refundNewRefund => 'Yangi qaytarish';
 
   @override
   String get refundByReceipt => 'Chek bo\'yicha';
@@ -293,31 +163,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get refundWithoutReceipt => 'Cheksiz';
 
   @override
-  String get refundEnterReceipt => 'Chek raqamini kiriting';
-
-  @override
   String get refundReceiptNotFound => 'Chek topilmadi';
-
-  @override
-  String get refundSelectItems => 'Qaytarish uchun tovarlarni tanlang';
-
-  @override
-  String get refundReason => 'Qaytarish sababi';
-
-  @override
-  String get refundConfirm => 'Qaytarishni tasdiqlash';
 
   @override
   String get refundAmount => 'Qaytarish summasi';
 
   @override
   String get refundComplete => 'Qaytarish bajarildi';
-
-  @override
-  String get refundCash => 'Naqd qaytarish';
-
-  @override
-  String get refundCard => 'Kartaga qaytarish';
 
   @override
   String get refundConnectionLostHint =>
@@ -330,12 +182,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get refundNoItems => 'Qaytarish uchun tovarlar yo\'q';
 
   @override
-  String get refundAlreadyRefunded => 'Tovar qaytarilgan';
-
-  @override
-  String get refundPartial => 'Qisman qaytarish';
-
-  @override
   String get shiftTitle => 'Smena';
 
   @override
@@ -343,9 +189,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get shiftClose => 'Smenani yopish';
-
-  @override
-  String get shiftCurrent => 'Joriy smena';
 
   @override
   String shiftNumber(int number) {
@@ -358,34 +201,10 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String shiftCashier(String name) {
-    return 'Kassir: $name';
-  }
-
-  @override
-  String shiftSalesCount(int count) {
-    return 'Sotuvlar: $count';
-  }
-
-  @override
-  String shiftRefundsCount(int count) {
-    return 'Qaytarishlar: $count';
-  }
-
-  @override
-  String get shiftTotalSales => 'Sotuvlar summasi';
-
-  @override
-  String get shiftTotalRefunds => 'Qaytarishlar summasi';
-
-  @override
   String get shiftCashInDrawer => 'Kassada';
 
   @override
   String get shiftExpected => 'Kutilgan';
-
-  @override
-  String get shiftActual => 'Haqiqiy';
 
   @override
   String get shiftDifference => 'Farq';
@@ -395,18 +214,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get shiftZReport => 'Z-hisobot';
-
-  @override
-  String get shiftConfirmClose => 'Smenani yopish kerakmi?';
-
-  @override
-  String get shiftAlreadyOpen => 'Smena ochiq';
-
-  @override
-  String get shiftNotOpen => 'Smena ochilmagan';
-
-  @override
-  String get shiftOpenFirst => 'Avval smenani oching';
 
   @override
   String get paymentTitle => 'To\'lov';
@@ -433,53 +240,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get paymentMixed => 'Aralash';
 
   @override
-  String get paymentEnterAmount => 'Summani kiriting';
-
-  @override
-  String paymentRemaining(String amount) {
-    return 'Qoldi: $amount';
-  }
-
-  @override
-  String paymentChange(String amount) {
-    return 'Qaytim: $amount';
-  }
-
-  @override
   String get paymentComplete => 'To\'lov yakunlandi';
 
   @override
   String get paymentFailed => 'To\'lov xatosi';
-
-  @override
-  String get paymentWaitingCard => 'Kartani kutish...';
-
-  @override
-  String get paymentWaitingQr => 'QR kutish...';
-
-  @override
-  String get paymentInsertCard => 'Kartani joylashtiring';
-
-  @override
-  String get paymentScanQr => 'QR skanerlang';
-
-  @override
-  String get paymentApproved => 'Tasdiqlandi';
-
-  @override
-  String get paymentDeclined => 'Rad etildi';
-
-  @override
-  String get paymentReceipt => 'Chek chop etish';
-
-  @override
-  String get paymentNoReceipt => 'Cheksiz';
-
-  @override
-  String get paymentEmail => 'Email-ga yuborish';
-
-  @override
-  String get paymentSms => 'SMS yuborish';
 
   @override
   String get historyTitle => 'Tarix';
@@ -491,32 +255,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get historyYesterday => 'Kecha';
 
   @override
-  String get historyThisWeek => 'Bu hafta';
-
-  @override
-  String get historyThisMonth => 'Bu oy';
-
-  @override
-  String get historyDateRange => 'Davrni tanlash';
-
-  @override
-  String get historyNoSales => 'Davrda sotuvlar yo\'q';
-
-  @override
-  String historyReceipt(String number) {
-    return 'Chek №$number';
-  }
-
-  @override
-  String get historyReprint => 'Qayta chop etish';
-
-  @override
   String certificateSlipPrintFailed(String number, String reason) {
     return '$number sertifikat slipi chop etilmadi: $reason';
   }
-
-  @override
-  String get historyDetails => 'Batafsil';
 
   @override
   String get historySale => 'Sotuv';
@@ -525,22 +266,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get historyRefund => 'Qaytarish';
 
   @override
-  String get historyFilter => 'Filtr';
-
-  @override
-  String get agentTitle => 'Kontragentlar';
-
-  @override
   String get agentClients => 'Mijozlar';
 
   @override
   String get agentSuppliers => 'Yetkazib beruvchilar';
-
-  @override
-  String get agentSearch => 'Kontragentni qidirish';
-
-  @override
-  String get agentAdd => 'Kontragent qo\'shish';
 
   @override
   String get agentEdit => 'Tahrirlash';
@@ -552,31 +281,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get agentPhone => 'Telefon';
 
   @override
-  String get agentEmail => 'Email';
-
-  @override
   String get agentIin => 'STIR';
-
-  @override
-  String get agentAddress => 'Manzil';
 
   @override
   String get agentBalance => 'Balans';
 
   @override
-  String get agentBonusBalance => 'Bonus balansi';
-
-  @override
   String get agentDebt => 'Qarz';
-
-  @override
-  String get agentNoAgents => 'Kontragentlar yo\'q';
-
-  @override
-  String get agentSaveSuccess => 'Kontragent saqlandi';
-
-  @override
-  String get agentDeleteConfirm => 'Kontragentni o\'chirish kerakmi?';
 
   @override
   String get cashTitle => 'Kassa';
@@ -607,19 +318,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get cashExpense => 'Chiqim';
 
   @override
-  String get cashBalance => 'Kassa balansi';
-
-  @override
   String get cashEnterAmount => 'Summani kiriting';
-
-  @override
-  String get cashReason => 'Asos';
-
-  @override
-  String get cashReasonPlaceholder => 'Sababni ko\'rsating';
-
-  @override
-  String get cashSuccess => 'Operatsiya bajarildi';
 
   @override
   String get cashExpenseTypes => 'Chiqim turi';
@@ -631,46 +330,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get discountPercent => 'Foiz';
 
   @override
-  String get discountFixed => 'Belgilangan';
-
-  @override
-  String get discountEnterValue => 'Qiymatni kiriting';
-
-  @override
   String get discountApply => 'Qo\'llash';
-
-  @override
-  String get discountRemove => 'Chegirmani olib tashlash';
-
-  @override
-  String get discountOnItem => 'Tovarga chegirma';
-
-  @override
-  String get discountOnTotal => 'Chekka chegirma';
-
-  @override
-  String get discountMaxExceeded => 'Maksimal chegirma oshib ketdi';
 
   @override
   String get quickProductTitle => 'Tez tovarlar';
 
   @override
-  String get quickProductAdd => 'Tovar qo\'shish';
-
-  @override
-  String get quickProductName => 'Nomi';
-
-  @override
-  String get quickProductPrice => 'Narxi';
-
-  @override
   String get quickProductCategory => 'Kategoriyasi';
-
-  @override
-  String get quickProductSave => 'Saqlash';
-
-  @override
-  String get quickProductDelete => 'O\'chirish';
 
   @override
   String get syncTitle => 'Sinxronizatsiya';
@@ -719,12 +385,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get syncOnline => 'Ulangan';
 
   @override
-  String get printerTitle => 'Printer';
-
-  @override
-  String get printerStatus => 'Printer holati';
-
-  @override
   String get printerConnected => 'Ulangan';
 
   @override
@@ -734,61 +394,22 @@ class AppLocalizationsUz extends AppLocalizations {
   String get printerError => 'Printer xatosi';
 
   @override
-  String get printerPaperOut => 'Qog\'oz yo\'q';
-
-  @override
   String get printerConnect => 'Ulash';
 
   @override
   String get printerDisconnect => 'Uzish';
 
   @override
-  String get printerTest => 'Test chop etish';
-
-  @override
   String get printerSettings => 'Printer sozlamalari';
-
-  @override
-  String get printerWidth => 'Chek kengligi';
 
   @override
   String get additionalTitle => 'Qo\'shimcha';
 
   @override
-  String get additionalSettings => 'Sozlamalar';
-
-  @override
-  String get additionalReports => 'Hisobotlar';
-
-  @override
-  String get additionalInventory => 'Inventarizatsiya';
-
-  @override
   String get additionalSupply => 'Tovar qabul qilish';
 
   @override
-  String get additionalPriceChange => 'Narxlarni o\'zgartirish';
-
-  @override
-  String get additionalBackup => 'Zahira nusxa';
-
-  @override
-  String get additionalRestore => 'Tiklash';
-
-  @override
   String get additionalUpdate => 'Yangilash';
-
-  @override
-  String get additionalAbout => 'Dastur haqida';
-
-  @override
-  String get additionalLicense => 'Litsenziya';
-
-  @override
-  String get additionalSupport => 'Qo\'llab-quvvatlash';
-
-  @override
-  String get receiptTitle => 'Chek';
 
   @override
   String get receiptNumber => 'Chek №';
@@ -797,108 +418,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get receiptDate => 'Sana';
 
   @override
-  String get receiptCashier => 'Kassir';
-
-  @override
-  String get receiptItems => 'Tovarlar';
-
-  @override
-  String get receiptSubtotal => 'Oraliq summa';
-
-  @override
-  String get receiptDiscount => 'Chegirma';
-
-  @override
-  String get receiptTax => 'QQS';
-
-  @override
   String get receiptTotal => 'JAMI';
-
-  @override
-  String get receiptCash => 'Naqd';
-
-  @override
-  String get receiptCard => 'Karta';
-
-  @override
-  String get receiptChange => 'Qaytim';
-
-  @override
-  String get receiptThankYou => 'Xaridingiz uchun rahmat!';
-
-  @override
-  String get receiptFiscalNumber => 'Fiskal raqam';
-
-  @override
-  String get receiptQrCode => 'Tekshirish uchun QR';
-
-  @override
-  String get receiptCopy => 'Chek nusxasi';
-
-  @override
-  String get errorUnknown => 'Noma\'lum xato';
-
-  @override
-  String get errorNetwork => 'Tarmoq xatosi';
-
-  @override
-  String get errorServer => 'Server xatosi';
-
-  @override
-  String get errorTimeout => 'Kutish vaqti tugadi';
-
-  @override
-  String get errorNotFound => 'Topilmadi';
-
-  @override
-  String get errorPermission => 'Ruxsat yo\'q';
-
-  @override
-  String get errorDatabase => 'Ma\'lumotlar bazasi xatosi';
-
-  @override
-  String get errorValidation => 'Validatsiya xatosi';
-
-  @override
-  String get errorRequired => 'Majburiy maydon';
 
   @override
   String get errorInvalidFormat => 'Noto\'g\'ri format';
 
   @override
-  String errorMinLength(int min) {
-    return 'Kamida $min belgi';
-  }
-
-  @override
-  String errorMaxLength(int max) {
-    return 'Ko\'pi bilan $max belgi';
-  }
-
-  @override
-  String errorMinValue(String min) {
-    return 'Kamida $min';
-  }
-
-  @override
-  String errorMaxValue(String max) {
-    return 'Ko\'pi bilan $max';
-  }
-
-  @override
   String get errorPrinter => 'Printer xatosi';
-
-  @override
-  String get errorFiscal => 'Fiskalizatsiya xatosi';
-
-  @override
-  String get errorPayment => 'To\'lov xatosi';
-
-  @override
-  String get errorSync => 'Sinxronizatsiya xatosi';
-
-  @override
-  String get errorNoInternet => 'Internet aloqasi yo\'q';
 
   @override
   String get errorTryAgain => 'Qayta urinib ko\'ring';
@@ -988,18 +514,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginShiftUnknown => 'Smena: kassa javob bermadi';
 
   @override
-  String get saleQuickProducts => 'Tez mahsulotlar';
-
-  @override
-  String get saleIncrease => 'Oshirish';
-
-  @override
-  String get saleDecrease => 'Kamaytirish';
-
-  @override
-  String get saleMark => 'Markirovka';
-
-  @override
   String get saleDataMatrix => 'Markirovka (DataMatrix)';
 
   @override
@@ -1029,9 +543,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get refundWithReceipt => 'CHEK BILAN';
 
   @override
-  String get refundWithoutReceiptUpper => 'CHEKSIZ';
-
-  @override
   String get refundLoadReceipt => 'Chekni yuklash';
 
   @override
@@ -1057,55 +568,13 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get refundSuccessMsg => 'Qaytarish muvaffaqiyatli amalga oshirildi';
-
-  @override
   String get refundSearchHint => 'Qaytarish uchun mahsulot qidirish';
-
-  @override
-  String get paymentRefundTitle => 'Qaytarish';
-
-  @override
-  String get paymentPayTitle => 'To\'lov';
-
-  @override
-  String get paymentRefundBtn => 'QAYTARISH';
-
-  @override
-  String get paymentPayBtn => 'TO\'LASH';
 
   @override
   String get paymentChangeLabel => 'Qaytim:';
 
   @override
-  String get paymentSuccessRefund => 'Qaytarish amalga oshirildi';
-
-  @override
-  String get paymentSuccessPay => 'To\'lov muvaffaqiyatli';
-
-  @override
-  String get paymentCardType => 'Naqdsiz';
-
-  @override
-  String get paymentToPay => 'To\'lashga';
-
-  @override
-  String get paymentBonusLabel => 'Bonuslar';
-
-  @override
-  String get paymentTotalToPay => 'Jami to\'lash';
-
-  @override
   String get paymentByCard => 'Karta bilan';
-
-  @override
-  String get paymentRemainLabel => 'Qoldi';
-
-  @override
-  String get shiftBills => 'Kupyuralar';
-
-  @override
-  String get shiftTotalAmount => 'Umumiy summa';
 
   @override
   String get shiftOperations => 'Operatsiyalar';
@@ -1139,25 +608,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get shiftEntered => 'Kiritildi';
 
   @override
-  String get shiftRecounting => 'Kupyuralar bo\'yicha qayta hisoblash';
-
-  @override
   String get shiftManualEntry => 'Qo\'lda summa kiritish';
-
-  @override
-  String get shiftCashOps => 'Kassa operatsiyalari';
 
   @override
   String get shiftOpenAction => 'Smenani ochish';
 
   @override
-  String get shiftCloseAction => 'Smenani yopish';
-
-  @override
   String get historyOperations => 'Operatsiyalar tarixi';
-
-  @override
-  String get historyResetFilters => 'Filtrlarni tozalash';
 
   @override
   String get historyRefresh => 'Yangilash';
@@ -1172,29 +629,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get historyEmpty => 'Operatsiyalar tarixi bo\'sh';
 
   @override
-  String get historyFilterTitle => 'Filtrlar';
-
-  @override
   String get historyPeriod => 'Davr';
-
-  @override
-  String get historyOpType => 'Operatsiya turi';
 
   @override
   String get historySearchHint => 'Chek raqami, summa...';
 
   @override
-  String historyType(String type) {
-    return 'Turi:';
-  }
-
-  @override
   String get historyPrint => 'Chekni chop etish';
-
-  @override
-  String agentFound(int count) {
-    return 'Topildi: $count';
-  }
 
   @override
   String get agentWithDebt => 'Faqat qarzli';
@@ -1203,22 +644,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get agentSearchHint => 'Ism yoki telefon bo\'yicha qidirish...';
 
   @override
-  String get agentNewClient => 'Yangi mijoz';
-
-  @override
   String get agentNameRequired => 'Ism *';
-
-  @override
-  String get agentEnterName => 'Mijoz ismini kiriting';
-
-  @override
-  String get agentPhoneLabel => 'Telefon';
-
-  @override
-  String get agentIinLabel => 'STIR/JSHSHIR';
-
-  @override
-  String get agentIinHint => '12 raqam';
 
   @override
   String get agentDeleteQuestion => 'Mijozni o\'chirish?';
@@ -1229,22 +655,10 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get agentDeleted => 'Mijoz o\'chirildi';
-
-  @override
-  String get agentFoundExisting => 'Mijoz topildi';
-
-  @override
   String get supplyTitle => 'Tovar qabul qilish';
 
   @override
-  String get supplySaved => 'Qabul saqlandi';
-
-  @override
   String get supplySaveError => 'Saqlash xatosi';
-
-  @override
-  String get supplyCancelQuestion => 'Qabul qilishni bekor qilish?';
 
   @override
   String get supplyDataLost => 'Barcha kiritilgan ma\'lumotlar yo\'qoladi.';
@@ -1255,27 +669,16 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get supplyBarcodeHint => 'Shtrix-kod yoki artikul';
-
-  @override
   String get supplyComment => 'Izoh';
 
   @override
   String get supplyCommentHint => 'Izoh kiriting...';
 
   @override
-  String get supplyNotFound => 'Mahsulot topilmadi';
-
-  @override
   String get supplySelectSupplier => 'Yetkazuvchini tanlang';
 
   @override
   String get supplySelectAccount => 'Hisobni tanlang';
-
-  @override
-  String supplyBalance(String amount) {
-    return 'Balans: $amount';
-  }
 
   @override
   String get supplyPurchasePrice => 'Kirim narxi';
@@ -1294,12 +697,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get supplySerialMismatch =>
       'Seriya raqamlari soni miqdorga mos kelmaydi';
-
-  @override
-  String get supplyInvalidQty => 'To\'g\'ri miqdorni kiriting';
-
-  @override
-  String get supplyInvalidPrice => 'To\'g\'ri narxni kiriting';
 
   @override
   String get inventoryTitle => 'Inventarizatsiya';
@@ -1405,85 +802,22 @@ class AppLocalizationsUz extends AppLocalizations {
   String get settingsTitle => 'Sozlamalar';
 
   @override
-  String get settingsPosInfo => 'Kassa ma\'lumoti';
-
-  @override
-  String get settingsPosName => 'Kassa nomi';
-
-  @override
-  String get settingsCompany => 'Kompaniya';
-
-  @override
-  String get settingsIin => 'STIR/JSHSHIR';
-
-  @override
-  String get settingsPosId => 'POS ID';
-
-  @override
-  String get settingsStoreId => 'Do\'kon ID';
-
-  @override
-  String get settingsNotSpecified => 'Ko\'rsatilmagan';
-
-  @override
-  String get settingsAppVersion => 'Ilova versiyasi';
-
-  @override
-  String get settingsVersion => 'Versiya';
-
-  @override
-  String get settingsPlatform => 'Platforma';
-
-  @override
   String get settingsLanguage => 'Interfeys tili';
 
   @override
   String get settingsLanguageChanged => 'Til o\'zgartirildi';
 
   @override
-  String get settingsCurrency => 'Valyuta';
-
-  @override
-  String get settingsCurrencySymbol => 'Belgi';
-
-  @override
-  String get settingsCurrencyCode => 'Kod';
-
-  @override
-  String get settingsCountry => 'Mamlakat';
-
-  @override
-  String get settingsAdditional => 'Qo\'shimcha sozlamalar';
-
-  @override
   String get settingsTransport => 'Transport';
-
-  @override
-  String get settingsTransportDesc => 'Ma\'lumotlarni sinxronlash sozlamalari';
 
   @override
   String get settingsPrinter => 'Printer';
 
   @override
-  String get settingsPrinterDesc => 'Chek chop etish sozlamalari';
-
-  @override
   String get settingsFiscal => 'Fiskalizatsiya';
 
   @override
-  String get settingsFiscalDesc => 'WebKassa, OFD, QQS';
-
-  @override
   String get settingsTelegram => 'Telegram';
-
-  @override
-  String get settingsTelegramDesc => 'Telegram integratsiyasi va kanallar';
-
-  @override
-  String get settingsPermissions => 'Ruxsatlar';
-
-  @override
-  String get settingsPermissionsDesc => 'Kassirlar uchun ruxsatlar';
 
   @override
   String get fiscalTitle => 'Fiskaalizatsiya';
@@ -1495,22 +829,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get fiscalWebkassa => 'WebKassa sozlamalari';
 
   @override
-  String get fiscalTaxpayer => 'Soliq to\'lovchi ma\'lumotlari';
-
-  @override
-  String get fiscalVatSettings => 'QQS sozlamalari';
-
-  @override
-  String get fiscalVatPayer => 'QQS to\'lovchi';
-
-  @override
-  String get fiscalPrintVat => 'Chekda QQS ni chop etish';
-
-  @override
   String get fiscalSaved => 'Sozlamalar saqlandi';
-
-  @override
-  String get fiscalSaveError => 'Saqlash xatosi';
 
   @override
   String get printerSettingsTitle => 'Printer sozlamalari';
@@ -1520,33 +839,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get printerAddress => 'Printer manzili';
-
-  @override
-  String get printerPaperWidth => 'Qog\'oz kengligi';
-
-  @override
-  String get printerTesting => 'Sinash';
-
-  @override
-  String get printerReady => 'Tayyor';
-
-  @override
-  String get printerNotConnected => 'Ulanmagan';
-
-  @override
-  String get printerPaperOut2 => 'Qog\'oz yo\'q';
-
-  @override
-  String get printerCoverOpen => 'Qopqog\'i ochiq';
-
-  @override
-  String get printerPrinting => 'Chop etilmoqda...';
-
-  @override
-  String get printerCheckStatus => 'Tekshirilmoqda...';
-
-  @override
-  String get printerPrintSuccess => 'Chop etish muvaffaqiyatli';
 
   @override
   String get paymentNotFiscalized =>
@@ -1563,40 +855,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get printerPrintError => 'Chop etish xatosi';
 
   @override
-  String get printerCheckBtn => 'Tekshirish';
-
-  @override
-  String get printerTestReceipt => 'Test chek';
-
-  @override
   String get printerPort => 'Port';
-
-  @override
-  String get cashOperationTitle => 'Kassa operatsiyasi';
 
   @override
   String get cashWithdrawal => 'Olish';
 
   @override
-  String get cashCommentRequired => 'Izoh *';
-
-  @override
   String get cashCommentOptional => 'Izoh';
-
-  @override
-  String get cashCommentHint => 'Izoh kiriting...';
-
-  @override
-  String get cashEnterAmountMsg => 'Summani kiriting';
-
-  @override
-  String get cashPositiveOnly => 'Summa musbat bo\'lishi kerak';
-
-  @override
-  String get cashInsufficient => 'Kassada mablag\' yetarli emas';
-
-  @override
-  String get cashInvalidAmount => 'To\'g\'ri summani kiriting';
 
   @override
   String get cashInDrawer => 'Kassada:';
@@ -1716,31 +981,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get updateAvailable => 'Yangilanish mavjud';
 
   @override
-  String get updateInProgress => 'Yangilanmoqda...';
-
-  @override
-  String updateAutoIn(int seconds) {
-    return 'Avtoyagilanish $seconds soniyada';
-  }
-
-  @override
-  String get updateNowBtn => 'Hozir yangilash';
-
-  @override
   String get updateLater => 'Keyinroq';
 
   @override
-  String get updateSkip => 'O\'tkazib yuborish';
-
-  @override
-  String get updateBtn => 'Yangilash';
-
-  @override
   String get storageWarningTitle => 'Diskda joy kam';
-
-  @override
-  String get storageWarningMsg =>
-      'Kassa barqaror ishlashi uchun kamida 2 GB bo\'shatish tavsiya etiladi.';
 
   @override
   String get storageUnderstood => 'Tushunarli';
@@ -1818,14 +1062,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get enterPhone => 'Mijoz telefon raqamini kiriting';
 
   @override
-  String get enterSmsCode => 'SMS dagi kodni kiriting';
-
-  @override
-  String resendIn(int seconds) {
-    return '$seconds soniyadan keyin qayta yuborish';
-  }
-
-  @override
   String get resendCode => 'Kodni qayta yuborish';
 
   @override
@@ -1833,21 +1069,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get useBonuses => 'Bonuslarni ishlatish';
-
-  @override
-  String get deferredSales => 'Kechiktirilgan sotuvlar';
-
-  @override
-  String get noDeferredSales => 'Kechiktirilgan sotuvlar yo\'q';
-
-  @override
-  String get fiscalErrors => 'Fiskaalizatsiya xatolari';
-
-  @override
-  String get selectAllErrors => 'Hammasini tanlash';
-
-  @override
-  String get retrySelected => 'Qayta urinish';
 
   @override
   String receiptNo(String number) {
@@ -1909,9 +1130,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get sumLabel => 'Summa';
-
-  @override
   String get enterAmount => 'Summani kiriting';
 
   @override
@@ -1922,9 +1140,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get enterValidAmount => 'To\'g\'ri summani kiriting';
-
-  @override
-  String get inDrawer => 'Kassada:';
 
   @override
   String get commentOptional => 'Izoh (majburiy emas)';
@@ -1988,18 +1203,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get receiptDiscountItem => 'Chegirma:';
-
-  @override
-  String get receiptSubtotalLabel => 'Oraliq summa';
-
-  @override
-  String get receiptPayment => 'To\'lov:';
-
-  @override
-  String get fiscalMark => 'FB:';
-
-  @override
   String remainingStock(String qty) {
     return 'Qold: $qty';
   }
@@ -2030,30 +1233,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get priceLabel => 'Narxi';
 
   @override
-  String get receiptTotalLabel => 'Chek bo\'yicha jami';
-
-  @override
-  String get positionsLabel => 'Pozitsiyalar';
-
-  @override
-  String get toPayLabel => 'TO\'LASHGA';
-
-  @override
   String get payBtn => 'TO\'LASH';
-
-  @override
-  String get totalLabel => 'Jami:';
-
-  @override
-  String posAndQty(int positions, String qty) {
-    return '$positions poz. / $qty dona';
-  }
-
-  @override
-  String get modeRetail => 'Chakana';
-
-  @override
-  String get modeWholesale => 'ULGURJI';
 
   @override
   String get quickProducts => 'Tez tovarlar';
@@ -2087,23 +1267,8 @@ class AppLocalizationsUz extends AppLocalizations {
   String get enterValidPhone => 'To\'g\'ri telefon raqamini kiriting';
 
   @override
-  String errorsCount(int count) {
-    return '$count ta xato';
-  }
-
-  @override
-  String selectAllCount(int count) {
-    return 'Hammasini tanlash ($count)';
-  }
-
-  @override
   String retryCount(int count) {
     return 'Qayta urinish ($count)';
-  }
-
-  @override
-  String receiptHash(int number) {
-    return 'Chek #$number';
   }
 
   @override
@@ -2115,15 +1280,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get drawerPrimary => 'Asosiy';
-
-  @override
-  String get drawerSecondary => 'Qo\'shimcha';
-
-  @override
-  String get tooltipMore => 'Yana';
-
-  @override
   String get statusOnline => 'Online';
 
   @override
@@ -2131,9 +1287,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get statusSyncing => 'Sinxronlash...';
-
-  @override
-  String get thankYouForPurchase => 'Xaridingiz uchun rahmat!';
 
   @override
   String get searchProductHint => 'Tovar qidirish (nomi yoki shtrix-kod)';
@@ -2189,9 +1342,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get restaurantSettings => 'Restoran rejimi';
 
   @override
-  String get restaurantSettingsDesc => 'Stollar, zonalar, servis to\'lovi';
-
-  @override
   String get restaurantOperatingMode => 'Ish rejimi';
 
   @override
@@ -2218,9 +1368,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get restaurantZoneAdd => 'Zona qo\'shish';
-
-  @override
-  String get restaurantZoneRename => 'Nomini o\'zgartirish';
 
   @override
   String get restaurantZonePresets => 'Oldindan o\'rnatilgan';
@@ -2325,11 +1472,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get restaurantOrdersEmpty => 'Faol buyurtmalar yo\'q';
 
   @override
-  String restaurantOrderItems(int count) {
-    return '$count pozitsiya';
-  }
-
-  @override
   String restaurantOrderGuests(int count) {
     return 'Mehmonlar: $count';
   }
@@ -2351,9 +1493,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get restaurantOpenOrder => 'Buyurtma ochish';
 
   @override
-  String get restaurantCloseOrder => 'Buyurtmani yopish';
-
-  @override
   String get restaurantAddItems => 'Pozitsiya qo\'shish';
 
   @override
@@ -2361,12 +1500,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get restaurantTransfer => 'Ko\'chirish';
-
-  @override
-  String get restaurantSplitBill => 'Bo\'lish';
-
-  @override
-  String get restaurantChangeStatus => 'Statusni o\'zgartirish';
 
   @override
   String get restaurantSetFree => 'Bo\'sh';
@@ -2391,12 +1524,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get restaurantNote => 'Eslatma';
-
-  @override
-  String get restaurantDeliveryAddress => 'Yetkazib berish manzili';
-
-  @override
-  String get restaurantDeliveryPhone => 'Telefon';
 
   @override
   String get restaurantTransferTitle => 'Buyurtmani ko\'chirish';
@@ -2474,14 +1601,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get restaurantPreCheckFailed => 'Pre-chek chop etish xatosi';
 
   @override
-  String get restaurantSubtotal => 'Oraliq summa';
-
-  @override
-  String restaurantServiceChargeLine(String percent) {
-    return 'Servis to\'lovi ($percent%)';
-  }
-
-  @override
   String restaurantOrderNumber(int number) {
     return 'Buyurtma #$number';
   }
@@ -2515,17 +1634,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get restaurantMenuTab => 'Menyu';
-
-  @override
-  String restaurantGuestLabel(int number) {
-    return 'Mehmon $number';
-  }
-
-  @override
-  String get restaurantRemoveItem => 'Mahsulotni o\'chirish';
-
-  @override
-  String get restaurantPrintPrecheck => 'Oldindan chek';
 
   @override
   String get restaurantNewTakeout => 'Olib ketish';
@@ -2587,9 +1695,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupStepChecking => 'Tekshirish';
 
   @override
-  String get setupStepTelegram => 'Telegram';
-
-  @override
   String get setupStepCountry => 'Mamlakat';
 
   @override
@@ -2600,9 +1705,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get setupStepUsers => 'Foydalanuvchilar';
-
-  @override
-  String get setupStepWorkMode => 'Ish rejimi';
 
   @override
   String get setupStepPos => 'Kassa';
@@ -2685,18 +1787,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String setupVatRateLabel(int rate) {
-    return 'QQS: $rate%';
-  }
-
-  @override
-  String get setupOrganizationTitle => 'Tashkilot ma\'lumotlari';
-
-  @override
-  String get setupOrganizationDescription =>
-      'Kompaniyangiz haqida ma\'lumot kiriting';
-
-  @override
   String get setupCompanyNameLabel => 'Tashkilot nomi';
 
   @override
@@ -2718,12 +1808,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get setupPhoneLabel => 'Telefon';
-
-  @override
-  String get setupVatTitle => 'Qo\'shilgan qiymat solig\'i';
-
-  @override
-  String get setupVatDescription => 'Tashkilotingizning soliq rejimini tanlang';
 
   @override
   String get setupVatPayerTitle => 'QQS to\'lovchi';
@@ -2749,45 +1833,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get setupVatNonPayerDescription =>
       'Cheklarda QQS ajratilmaydi.\nSoddalashtirilgan tizim yoki patentdagi YaTT uchun.';
-
-  @override
-  String get setupWorkModeTitle => 'Ish rejimi';
-
-  @override
-  String get setupWorkModeDescription => 'Kassangiz qanday ishlashini tanlang';
-
-  @override
-  String get setupAutonomousTitle => 'Avtonom rejim';
-
-  @override
-  String get setupAutonomousSubtitle => 'Internetsiz ishlash';
-
-  @override
-  String get setupAutonomousDescription =>
-      'Kassa to\'liq avtonom ishlaydi.\nMa\'lumotlar faqat mahalliy saqlanadi.\nKassalar orasida sinxronizatsiya yo\'q.';
-
-  @override
-  String get setupNetworkTitle => 'Tarmoq rejimi';
-
-  @override
-  String get setupNetworkConfigured => 'Telegram sozlangan';
-
-  @override
-  String get setupNetworkRequired => 'Telegram talab qilinadi';
-
-  @override
-  String get setupNetworkDescription =>
-      'Kassalar orasida ma\'lumotlar sinxronizatsiyasi.\nBulutga zaxira nusxa.\nTelegram da hisobotlar va bildirishnomalar.';
-
-  @override
-  String get setupNetworkRequiresTelegram =>
-      'Tarmoq rejimi uchun Telegram ni sozlash kerak';
-
-  @override
-  String get setupOperatingModeTitle => 'Biznes turi';
-
-  @override
-  String get setupOperatingModeDescription => 'Biznesingiz turini tanlang';
 
   @override
   String get setupRetailTitle => 'Chakana kassa';
@@ -2818,13 +1863,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get setupServiceDescription =>
       'Ta\'mirlash/xizmatga qabul qilish.\nBuyurtma-naryodlar va ish belgilari.\nStatusni kuzatish va topshirish.';
-
-  @override
-  String get setupPosConfigTitle => 'Kassa sozlamalari';
-
-  @override
-  String get setupPosConfigDescription =>
-      'Kassa apparati parametrlarini ko\'rsating';
 
   @override
   String get setupCashBoxNameLabel => 'Kassa nomi';
@@ -2862,9 +1900,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get setupFiscalNotRequired =>
       'Mamlakatingiz uchun fiskalizatsiya talab qilinmaydi';
-
-  @override
-  String get setupFiscalDescription => 'Fiskal operatorga ulanishni sozlang';
 
   @override
   String get setupEnableWebkassa => 'WebKassa ni yoqish';
@@ -2932,12 +1967,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupOfdUrlLabel => 'OFD URL';
 
   @override
-  String get setupEquipmentTitle => 'Uskunalar';
-
-  @override
-  String get setupEquipmentDescription => 'Ulangan uskunalarni sozlang';
-
-  @override
   String get setupEquipmentPrinter => 'Chek printeri';
 
   @override
@@ -2968,9 +1997,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupConnectionSerial => 'COM-port';
 
   @override
-  String get setupConnectionNone => 'Tanlanmagan';
-
-  @override
   String get setupPrinterIpLabel => 'Printer IP-manzili';
 
   @override
@@ -2998,23 +2024,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupScalePortLabel => 'COM-port';
 
   @override
-  String get setupBaudRateLabel => 'Tezlik (baud rate)';
-
-  @override
-  String get setupCashDrawerConnected => 'Printerga ulangan';
-
-  @override
   String get setupCashDrawerConnectedDesc => 'Printer buyrug\'i bilan ochiladi';
-
-  @override
-  String get setupSkip => 'O\'tkazib yuborish';
-
-  @override
-  String get setupPaymentTerminalsTitle => 'To\'lov terminallari';
-
-  @override
-  String get setupPaymentTerminalsDescription =>
-      'To\'lov tizimlari bilan integratsiyani sozlang';
 
   @override
   String get setupKaspiIpLabel => 'Terminal IP-manzili';
@@ -3023,21 +2033,8 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupPortLabel => 'Port';
 
   @override
-  String get setupApiUrlLabel => 'API URL';
-
-  @override
-  String get setupApiKeyLabel => 'API kalit';
-
-  @override
   String get setupNoTerminalsAvailable =>
       'Mintaqangiz uchun mavjud to\'lov terminallari yo\'q';
-
-  @override
-  String get setupBusinessRulesTitle => 'Biznes qoidalari';
-
-  @override
-  String get setupBusinessRulesDescription =>
-      'Kassa ishlash qoidalarini sozlang';
 
   @override
   String get setupPermissionsTitle => 'Ruxsatlar';
@@ -3105,50 +2102,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupCashbackRateLabel => 'Keshbek foizi';
 
   @override
-  String get setupRoundingTitle => 'Yaxlitlash';
-
-  @override
-  String get setupDiscountRounding => 'Chegirmalarni yaxlitlash';
-
-  @override
-  String get setupWeightRounding => 'Vaznli tovarlarni yaxlitlash';
-
-  @override
-  String get setupRoundingNone => 'Yaxlitlashsiz';
-
-  @override
-  String get setupRoundingUp1 => '1 gacha (yuqoriga)';
-
-  @override
-  String get setupRoundingDown1 => '1 gacha (pastga)';
-
-  @override
-  String get setupRoundingUp5 => '5 gacha (yuqoriga)';
-
-  @override
-  String get setupRoundingDown5 => '5 gacha (pastga)';
-
-  @override
-  String get setupRoundingUp10 => '10 gacha (yuqoriga)';
-
-  @override
-  String get setupRoundingDown10 => '10 gacha (pastga)';
-
-  @override
-  String get setupFiscalDisablesRounding =>
-      'Fiskalizatsiya yoqilganda yaxlitlash avtomatik o\'chiriladi';
-
-  @override
-  String get setupUserCreationTitle => 'Foydalanuvchilarni yaratish';
-
-  @override
-  String get setupUserCreationDescription =>
-      'Kassa bilan ishlash uchun foydalanuvchilar yarating';
-
-  @override
-  String get setupAdminLabel => 'Administrator';
-
-  @override
   String get setupAdminSubtitle => 'Kassa egasi';
 
   @override
@@ -3161,47 +2114,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupUserPinConfirmLabel => 'Tasdiqlash';
 
   @override
-  String get setupAdminPinDefault => 'Standart: 0000';
-
-  @override
   String get setupSellerLabel => 'Sotuvchi';
 
   @override
   String get setupSellerOptional => 'Ixtiyoriy';
 
   @override
-  String get setupSellerPinDefault => 'Standart: 1111';
-
-  @override
   String get setupAdminPinMismatch => 'Administrator PIN-kodlari mos kelmaydi';
 
   @override
-  String get setupSummaryTitle => 'Ma\'lumotlarni tekshiring';
-
-  @override
-  String get setupSummaryDescription =>
-      'Hamma narsa to\'g\'ri ko\'rsatilganiga ishonch hosil qiling';
-
-  @override
-  String get setupSummaryCountry => 'Mamlakat';
-
-  @override
-  String get setupSummaryCurrency => 'Valyuta';
-
-  @override
   String get setupSummaryFormat => 'Format';
-
-  @override
-  String get setupSummaryVat => 'QQS';
-
-  @override
-  String get setupSummaryTelegram => 'Telegram';
-
-  @override
-  String get setupSummaryStatus => 'Holat';
-
-  @override
-  String get setupConfigured => 'Sozlangan';
 
   @override
   String get setupNotConfigured => 'Sozlanmagan';
@@ -3213,28 +2135,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupSummaryName => 'Nomi';
 
   @override
-  String get setupSummaryAddress => 'Manzil';
-
-  @override
-  String get setupSummaryWorkMode => 'Ish rejimi';
-
-  @override
-  String get setupSummaryMode => 'Rejim';
-
-  @override
-  String get setupSummaryAutonomous => 'Avtonom (tarmoqsiz)';
-
-  @override
-  String get setupSummaryNetwork => 'Tarmoq (sinxronizatsiya)';
-
-  @override
-  String get setupSummaryPos => 'Kassa';
-
-  @override
   String get setupSummaryId => 'ID';
-
-  @override
-  String get setupEnabled => 'Yoqilgan';
 
   @override
   String get setupDisabled => 'O\'chirilgan';
@@ -3255,30 +2156,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupSummaryScales => 'Tarozi';
 
   @override
-  String get setupSummaryCashDrawer => 'Pul qutisi';
-
-  @override
-  String get setupSummaryTerminals => 'To\'lov terminallari';
-
-  @override
-  String get setupSummaryRules => 'Biznes qoidalari';
-
-  @override
-  String get setupSummaryDiscounts => 'Chegirmalar';
-
-  @override
-  String get setupSummaryDebtSales => 'Qarzga';
-
-  @override
-  String get setupSummaryCashback => 'Keshbek';
-
-  @override
-  String get setupSummaryBigAmount => 'Katta summalar';
-
-  @override
-  String get setupSummaryUsers => 'Foydalanuvchilar';
-
-  @override
   String get setupSummaryAdmin => 'Administrator';
 
   @override
@@ -3291,45 +2168,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get setupCompleteSubtitle => 'Kassa ishlashga tayyor';
 
   @override
-  String get setupStartWork => 'Ishni boshlash';
-
-  @override
   String setupVatPayerSummary(String rate) {
     return 'QQS to\'lovchi ($rate%)';
   }
-
-  @override
-  String get setupSummaryWkPosId => 'WK kassa ID';
-
-  @override
-  String get setupSummaryOfdInn => 'STIR';
-
-  @override
-  String get setupScalesConfigured => 'Sozlangan';
-
-  @override
-  String get setupScalesNotConfigured => 'Sozlanmagan';
-
-  @override
-  String get setupCashDrawerOn => 'Yoqilgan';
-
-  @override
-  String get setupAllowed => 'Ruxsat berilgan';
-
-  @override
-  String get setupDenied => 'Taqiqlangan';
-
-  @override
-  String get setupAllowedFem => 'Ruxsat berilgan';
-
-  @override
-  String get setupDeniedFem => 'Taqiqlangan';
-
-  @override
-  String get setupCashbackOff => 'O\'chirilgan';
-
-  @override
-  String get setupBigAmountLimit => 'Limit 100 000';
 
   @override
   String get setupDisplayPortLabel => 'COM-port';
@@ -3600,13 +2441,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get chatNoResults => 'Hech narsa topilmadi';
 
   @override
-  String get chatCopyUidInstructions =>
-      'UID ni boshqa tizimlarda foydalanish uchun nusxalang';
-
-  @override
-  String get chatUidExample => 'Masalan: telepos@pos-1';
-
-  @override
   String get chatServiceUnavailable => 'Xizmat mavjud emas';
 
   @override
@@ -3699,15 +2533,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get additionalPrintingLastReceipt => 'Oxirgi chek chop etilmoqda...';
 
   @override
-  String get additionalTestReceiptTitle => '=== TEST CHEK ===';
-
-  @override
   String get additionalReceiptPrinted => 'Chek chop etildi';
-
-  @override
-  String additionalPriceSearching(String query) {
-    return 'Qidirish: $query';
-  }
 
   @override
   String get additionalMinimizing => 'Oyna kichraytirilmoqda...';
@@ -3763,17 +2589,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get additionalBarcodeHint => 'Skanerlang yoki kiriting';
-
-  @override
-  String additionalTestReceiptProduct(String number) {
-    return 'Tovar $number';
-  }
-
-  @override
-  String get additionalTestReceiptTotal => 'JAMI:';
-
-  @override
-  String get additionalTestReceiptThankYou => 'Xaridingiz uchun rahmat!';
 
   @override
   String get langRussian => 'Ruscha';
@@ -3903,105 +2718,11 @@ class AppLocalizationsUz extends AppLocalizations {
   String get transportNotifyQueueFullDesc => 'Navbat to\'lganda xabar berish';
 
   @override
-  String saleErrorInitiation(String error) {
-    return 'Sotuvni boshlash xatosi: $error';
-  }
-
-  @override
-  String get saleErrorNotInitialized => 'Sotuv ishga tushirilmagan';
-
-  @override
-  String get saleErrorEmpty => 'Chek bo\'sh';
-
-  @override
-  String saleErrorCompletion(String error) {
-    return 'Sotuvni yakunlash xatosi: $error';
-  }
-
-  @override
-  String saleErrorSearch(String error) {
-    return 'Qidirish xatosi: $error';
-  }
-
-  @override
-  String saleErrorDeferred(String error) {
-    return 'Chekni kechiktirish xatosi: $error';
-  }
-
-  @override
-  String get saleErrorDeferredNotFound => 'Kechiktirilgan chek topilmadi';
-
-  @override
-  String saleErrorLoadingDeferred(String error) {
-    return 'Kechiktirilgan chekni yuklash xatosi: $error';
-  }
-
-  @override
   String get paymentCustomerDefault => 'Mijoz';
-
-  @override
-  String get paymentErrorFormation =>
-      'To\'lovni shakllantirish imkoni bo\'lmadi. Hisob sozlamalarini tekshiring.';
-
-  @override
-  String get paymentErrorSaving => 'Sotuvni saqlash xatosi';
-
-  @override
-  String paymentErrorProcessing(String error) {
-    return 'To\'lovni qayta ishlash xatosi: $error';
-  }
-
-  @override
-  String paymentAccountDefault(int id) {
-    return 'Hisob $id';
-  }
-
-  @override
-  String refundErrorReceiptNotFound(String number) {
-    return '#$number chek topilmadi';
-  }
-
-  @override
-  String refundErrorLoadingReceipt(String error) {
-    return 'Chekni yuklash xatosi: $error';
-  }
-
-  @override
-  String refundErrorSearch(String error) {
-    return 'Qidirish xatosi: $error';
-  }
-
-  @override
-  String get refundErrorProductNotFound => 'Tovar topilmadi';
 
   @override
   String get refundErrorNotAuthenticated =>
       'Foydalanuvchi avtorizatsiya qilinmagan';
-
-  @override
-  String refundErrorProcessing(String error) {
-    return 'Qaytarish xatosi: $error';
-  }
-
-  @override
-  String shiftErrorLoadingData(String error) {
-    return 'Smena ma\'lumotlarini yuklash xatosi: $error';
-  }
-
-  @override
-  String shiftErrorOpening(String error) {
-    return 'Smenani ochish xatosi: $error';
-  }
-
-  @override
-  String shiftErrorClosing(String error) {
-    return 'Smenani yopish xatosi: $error';
-  }
-
-  @override
-  String shiftErrorPrinting(String error) {
-    return 'Z-hisobotni chop etish xatosi: $error';
-  }
 
   @override
   String get cashOpTypeInvestment => 'Kiritish';
@@ -4014,47 +2735,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get supplyNoName => 'Nomsiz';
-
-  @override
-  String get supplyNoTitle => 'Nomsiz';
-
-  @override
-  String get supplyErrorSupplierNotFound => 'Yetkazib beruvchi topilmadi';
-
-  @override
-  String supplyErrorSelectingSupplier(String error) {
-    return 'Yetkazib beruvchini tanlash xatosi: $error';
-  }
-
-  @override
-  String get supplyErrorAccountNotFound => 'Hisob topilmadi';
-
-  @override
-  String supplyErrorSelectingAccount(String error) {
-    return 'Hisobni tanlash xatosi: $error';
-  }
-
-  @override
-  String supplyErrorAddingProduct(String error) {
-    return 'Tovar qo\'shish xatosi: $error';
-  }
-
-  @override
-  String get supplyErrorProductNotFound => 'Tovar topilmadi';
-
-  @override
-  String get supplyErrorMissingFields =>
-      'Barcha majburiy maydonlarni to\'ldiring';
-
-  @override
-  String supplyErrorSaving(String error) {
-    return 'Saqlash xatosi: $error';
-  }
-
-  @override
-  String historyErrorLoading(String error) {
-    return 'Tarixni yuklash xatosi: $error';
-  }
 
   @override
   String get syncTypeProducts => 'Tovarlar';
@@ -4087,111 +2767,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get syncTypeSupplies => 'Qabul qilishlar';
 
   @override
-  String get syncStepPreparing => 'Tayyorlanmoqda...';
-
-  @override
-  String syncStepUploading(String type) {
-    return 'Yuklash: $type';
-  }
-
-  @override
-  String syncStepDownloading(String type) {
-    return 'Yuklab olish: $type';
-  }
-
-  @override
   String get syncCompleted => 'Sinxronizatsiya yakunlandi';
-
-  @override
-  String get loginErrorNoUsers => 'Ro\'yxatdan o\'tgan foydalanuvchilar yo\'q';
-
-  @override
-  String loginErrorLoadingData(String error) {
-    return 'Ma\'lumotlarni yuklash xatosi: $error';
-  }
-
-  @override
-  String get loginErrorSelectUser => 'Foydalanuvchini tanlang';
-
-  @override
-  String get loginErrorIncompletePin =>
-      'PIN-kodni kiriting (kamida 4 ta raqam)';
-
-  @override
-  String get loginErrorNoRsaKey =>
-      'Xato: RSA kalit sozlanmagan. Administratorga murojaat qiling.';
-
-  @override
-  String get loginErrorWrongPin => 'Noto\'g\'ri PIN-kod';
-
-  @override
-  String get loginErrorSystemTime =>
-      'Tizim vaqti noto\'g\'ri. Sana va vaqt sozlamalarini tekshiring.';
-
-  @override
-  String get receiptLabelBin => 'STIR:';
-
-  @override
-  String get receiptLabelPhone => 'Tel:';
-
-  @override
-  String get receiptLabelReceiptNo => 'Chek №:';
-
-  @override
-  String get receiptLabelPosId => 'Kassa:';
-
-  @override
-  String get receiptLabelDate => 'Sana:';
-
-  @override
-  String get receiptLabelCashier => 'Kassir:';
-
-  @override
-  String get receiptLabelTable => 'Stol:';
-
-  @override
-  String get receiptLabelWaiter => 'Ofitsiant:';
-
-  @override
-  String get receiptLabelGuests => 'Mehmonlar:';
-
-  @override
-  String get receiptLabelCustomer => 'Mijoz:';
-
-  @override
-  String get receiptLabelSubtotal => 'Oraliq summa:';
-
-  @override
-  String get receiptLabelDiscount => 'Chegirma:';
-
-  @override
-  String get receiptLabelServiceCharge => 'Servis to\'lovi:';
 
   @override
   String get receiptLabelTotal => 'JAMI:';
 
   @override
-  String receiptLabelVat(String percent) {
-    return 'shu jum. QQS $percent%:';
-  }
-
-  @override
-  String get receiptLabelCash => 'Naqd:';
-
-  @override
-  String get receiptLabelCard => 'Karta:';
-
-  @override
   String get receiptLabelChange => 'Qaytim:';
-
-  @override
-  String get receiptLabelCheckReceipt => 'Chekni tekshirish:';
-
-  @override
-  String get receiptLabelItemName => 'Nomi';
-
-  @override
-  String get receiptLabelQty => 'Miqdori';
 
   @override
   String get receiptLabelPrice => 'Narxi';
@@ -4200,147 +2782,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get receiptLabelAmount => 'Summasi';
 
   @override
-  String get receiptLabelItemDiscount => 'Chegirma:';
-
-  @override
-  String get receiptLabelFiscalBin => 'STIR:';
-
-  @override
-  String get receiptLabelFiscalNo => 'FR:';
-
-  @override
-  String get receiptLabelFiscalSign => 'FI:';
-
-  @override
-  String get receiptLabelVatCertificate => 'QQS:';
-
-  @override
-  String get receiptLabelOfflineMode => '*** OFLAYN ***';
-
-  @override
-  String get receiptLabelRefundHeader => '*** QAYTARISH ***';
-
-  @override
-  String get receiptLabelRefundNo => 'Qaytarish №:';
-
-  @override
-  String get receiptLabelReason => 'Sabab:';
-
-  @override
-  String get receiptLabelRefundTotal => 'QAYTARISHGA:';
-
-  @override
-  String get receiptLabelZReport => 'Z-HISOBOT';
-
-  @override
-  String get receiptLabelShiftClosing => 'SMENA YOPILISHI';
-
-  @override
-  String get receiptLabelShiftNo => 'Smena №:';
-
-  @override
-  String get receiptLabelShiftOpenTime => 'Ochildi:';
-
-  @override
-  String get receiptLabelShiftCloseTime => 'Yopildi:';
-
-  @override
-  String get receiptLabelSales => 'SOTUVLAR';
-
-  @override
-  String get receiptLabelQuantity => 'Miqdori:';
-
-  @override
-  String get receiptLabelCashSales => 'Naqd:';
-
-  @override
-  String get receiptLabelCardSales => 'Karta:';
-
-  @override
-  String get receiptLabelSalesTotal => 'Jami:';
-
-  @override
-  String get receiptLabelRefunds => 'QAYTARISHLAR';
-
-  @override
-  String get receiptLabelRefundQty => 'Miqdori:';
-
-  @override
-  String get receiptLabelRefundAmount => 'Summasi:';
-
-  @override
-  String get receiptLabelCashOperations => 'KASSA OPERATSIYALARI';
-
-  @override
-  String get receiptLabelInvestments => 'Kiritishlar:';
-
-  @override
-  String get receiptLabelExpenses => 'To\'lovlar:';
-
-  @override
-  String get receiptLabelRevenue => 'TUSHUM:';
-
-  @override
-  String get receiptLabelCashInDrawer => 'KASSADA:';
-
-  @override
-  String get receiptLabelXReport => 'X-HISOBOT';
-
-  @override
-  String get receiptLabelType => 'Turi:';
-
-  @override
-  String get receiptLabelDescription => 'Tavsif:';
-
-  @override
-  String get receiptLabelDebtPayment => 'QARZ TO\'LASH';
-
-  @override
-  String get receiptLabelPreviousDebt => 'Qarz edi:';
-
-  @override
-  String get receiptLabelPaidAmount => 'TO\'LANGAN:';
-
-  @override
-  String get receiptLabelRemainingDebt => 'Qoldiq:';
-
-  @override
-  String get receiptLabelTestPrint => 'TEST PRINT';
-
-  @override
   String get receiptLabelThankYou => 'Xaridingiz uchun rahmat!';
-
-  @override
-  String get receiptLabelSaleReceipt => 'KASSA CHEKI';
-
-  @override
-  String get receiptLabelOfflineHeader => '*** OFLAYN REJIM ***';
-
-  @override
-  String get receiptLabelVatCertificateTitle => 'QQS guvohnomasi:';
-
-  @override
-  String get fiscalErrorBin12Digits =>
-      'STIR 12 ta raqamdan iborat bo\'lishi kerak';
-
-  @override
-  String get fiscalErrorBinDigitsOnly =>
-      'STIR faqat raqamlardan iborat bo\'lishi kerak';
-
-  @override
-  String get fiscalErrorFiscalNoRequired => 'Fiskal raqam majburiy';
-
-  @override
-  String get fiscalErrorRnkRequired => 'RNK majburiy';
-
-  @override
-  String get fiscalErrorZnkRequired => 'ZNK majburiy';
-
-  @override
-  String get fiscalErrorVatSerialRequired => 'QQS guvohnoma seriyasi majburiy';
-
-  @override
-  String get fiscalErrorVatNumberRequired => 'QQS guvohnoma raqami majburiy';
 
   @override
   String get telegramTabPhone => 'Telefon orqali';
@@ -4804,6 +3246,25 @@ class AppLocalizationsUz extends AppLocalizations {
   String get generalSettingsNotSpecified => 'Ko\'rsatilmagan';
 
   @override
+  String get generalSettingsDataLocation => 'Maʼlumotlar qayerda saqlanadi';
+
+  @override
+  String get generalSettingsDataLocationDesc =>
+      'Kassa hamma narsani shu mashinada saqlaydi. Qayerdaligini bilish zaxira nusxa va koʻchirish uchun kerak.';
+
+  @override
+  String get generalSettingsDataDb => 'Maʼlumotlar bazasi';
+
+  @override
+  String get generalSettingsDataLogs => 'Jurnallar';
+
+  @override
+  String get generalSettingsDataBackups => 'Zaxira nusxalar';
+
+  @override
+  String get generalSettingsPathCopied => 'Yoʻl nusxalandi';
+
+  @override
   String get generalSettingsAppVersion => 'Dastur versiyasi';
 
   @override
@@ -4848,9 +3309,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get generalSettingsCountry => 'Davlat';
 
   @override
-  String get generalSettingsAdditional => 'Qo\'shimcha sozlamalar';
-
-  @override
   String get generalSettingsTransport => 'Transport';
 
   @override
@@ -4862,12 +3320,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get generalSettingsPrinterSubtitle => 'Chek chop etish sozlamalari';
-
-  @override
-  String get generalSettingsPermissions => 'Ruxsatlar';
-
-  @override
-  String get generalSettingsPermissionsSubtitle => 'Kassirlar uchun ruxsatlar';
 
   @override
   String get generalSettingsFiscal => 'Fiskalizatsiya';
@@ -4901,21 +3353,11 @@ class AppLocalizationsUz extends AppLocalizations {
   String get generalSettingsCurrencyDesc => 'Valyuta va mamlakat';
 
   @override
-  String get generalSettingsUpdate => 'Yangilash';
-
-  @override
-  String get generalSettingsUpdateSubtitle =>
-      'Yangilanishlarni tekshirish va o\'rnatish';
-
-  @override
   String get generalSettingsAppUpdate => 'Ilovani yangilash';
 
   @override
   String get generalSettingsAppUpdateSubtitle =>
       'Kassa ilovasini yangilash (OS yangilanishi bilan adashtirmang)';
-
-  @override
-  String get generalSettingsUpdateDesc => 'Joriy versiya va yangilanishlar';
 
   @override
   String get settingsUpdateTitle => 'Ilovani yangilash';
@@ -5035,104 +3477,7 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get printerSettingsPrinting => 'Chop etilmoqda...';
-
-  @override
-  String get printerSettingsTestReceipt => 'TEST CHEK';
-
-  @override
-  String get printerSettingsWidth => 'Kengligi:';
-
-  @override
-  String printerSettingsWidthValue(int width) {
-    return '$width belgi';
-  }
-
-  @override
-  String get printerSettingsType => 'Turi:';
-
-  @override
-  String get printerSettingsAddress => 'Manzil:';
-
-  @override
-  String get printerSettingsNotSpecifiedAddr => 'Ko\'rsatilmagan';
-
-  @override
-  String get printerSettingsPrinterWorks => 'Printer ishlaydi!';
-
-  @override
-  String get printerSettingsPrintSuccess => 'Chop etish muvaffaqiyatli';
-
-  @override
-  String get printerSettingsPrintError => 'Chop etish xatosi';
-
-  @override
-  String get printerSettingsNotConnected => 'Ulanmagan';
-
-  @override
-  String get printerSettingsChecking => 'Tekshirilmoqda...';
-
-  @override
-  String get printerSettingsReady => 'Tayyor';
-
-  @override
-  String get printerSettingsNoPaper => 'Qog\'oz yo\'q';
-
-  @override
-  String get printerSettingsCoverOpen => 'Qopqoq ochiq';
-
-  @override
   String get printerSettingsSave => 'Saqlash';
-
-  @override
-  String get printerSettingsConnectionType => 'Ulanish turi';
-
-  @override
-  String get printerSettingsPrinterAddress => 'Printer manzili';
-
-  @override
-  String get printerSettingsPaperWidth => 'Qog\'oz kengligi';
-
-  @override
-  String get printerSettingsTesting => 'Testlash';
-
-  @override
-  String printerSettingsStatus(String status) {
-    return 'Holat: $status';
-  }
-
-  @override
-  String get printerSettingsCheck => 'Tekshirish';
-
-  @override
-  String get printerSettingsTestCheck => 'Test chek';
-
-  @override
-  String get printerSettingsPort => 'Port';
-
-  @override
-  String get printerSettingsIpAddress => 'Printerning IP manzili';
-
-  @override
-  String get printerSettingsMacAddress => 'MAC manzili yoki nomi';
-
-  @override
-  String get printerSettingsPrinterName => 'Printer nomi';
-
-  @override
-  String get printerSettingsComPort => 'COM port';
-
-  @override
-  String get printerSettingsSerialCom => 'Serial (COM)';
-
-  @override
-  String get printerSettingsPaperWidth58 => '58mm (32 belgi)';
-
-  @override
-  String get printerSettingsPaperWidth80_42 => '80mm (42 belgi)';
-
-  @override
-  String get printerSettingsPaperWidth80_48 => '80mm (48 belgi)';
 
   @override
   String get fiscalSettingsTitle => 'Fiskalizatsiya';
@@ -5152,61 +3497,19 @@ class AppLocalizationsUz extends AppLocalizations {
   String get fiscalSettingsOperator => 'Fiskal operator';
 
   @override
-  String get fiscalSettingsWebkassaSettings => 'WebKassa sozlamalari';
-
-  @override
-  String get fiscalSettingsTaxpayerInfo => 'Soliq to\'lovchi ma\'lumotlari';
-
-  @override
   String get fiscalSettingsVatSettings => 'QQS sozlamalari';
 
   @override
   String get fiscalSettingsWebkassaLabel => 'WebKassa';
 
   @override
-  String get fiscalSettingsWebkassaDesc => 'Bulutli fiskal xizmat';
-
-  @override
-  String get fiscalSettingsOfdLabel => 'OFD';
-
-  @override
-  String get fiscalSettingsOfdDesc => 'Fiskal ma\'lumotlar operatori';
-
-  @override
   String get fiscalSettingsNoneLabel => 'Fiskalizatsiyasiz';
-
-  @override
-  String get fiscalSettingsNoneDesc => 'Cheklar OFD-ga yuborilmaydi';
-
-  @override
-  String get fiscalSettingsOfdId => 'OFD ID';
-
-  @override
-  String get fiscalSettingsOfdIdHint => 'OFD identifikatori';
-
-  @override
-  String get fiscalSettingsOfdName => 'OFD nomi';
-
-  @override
-  String get fiscalSettingsOfdNameHint => 'WebKassa / OFD.kz';
 
   @override
   String get fiscalSettingsOfdHost => 'OFD server manzili';
 
   @override
   String get fiscalSettingsOfdHostHint => 'https://api.webkassa.kz';
-
-  @override
-  String get fiscalSettingsWebkassaActive => 'WebKassa faollashtirildi';
-
-  @override
-  String get fiscalSettingsWebkassaInactive => 'WebKassa faollashtirilmagan';
-
-  @override
-  String get fiscalSettingsCompanyName => 'Nomi';
-
-  @override
-  String get fiscalSettingsCashBox => 'Kassa';
 
   @override
   String get fiscalSettingsVatPayer => 'QQS to\'lovchi';
@@ -5260,10 +3563,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get customerPaymentTender => 'Nima bilan qabul qilindi';
 
   @override
-  String get fiscalSettingsVatRate =>
-      'QQS stavkasi: 12% (3/28 formulasi bo\'yicha)';
-
-  @override
   String historyProductUcode(String ucode) {
     return 'Tovar #$ucode';
   }
@@ -5276,11 +3575,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String historyAccountId(String id) {
     return 'Hisob #$id';
-  }
-
-  @override
-  String historyLoadError(String error) {
-    return 'Yuklash xatosi: $error';
   }
 
   @override
@@ -5434,26 +3728,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get historyLastPage => 'Oxirgi sahifa';
 
   @override
-  String historyAmount(String amount) {
-    return 'Summa: $amount';
-  }
-
-  @override
-  String historyDate(String date) {
-    return 'Sana: $date';
-  }
-
-  @override
-  String historyPos(String id) {
-    return 'POS: $id';
-  }
-
-  @override
-  String historyClientName(String name) {
-    return 'Mijoz: $name';
-  }
-
-  @override
   String get historyFiscalYes => 'Ha';
 
   @override
@@ -5569,10 +3843,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get shiftFinishSalesBeforeClose =>
-      'Smenani yopishdan oldin sotuvlarni yakunlang yoki bekor qiling';
-
-  @override
   String get shiftBillsTab => 'Kupyuralar';
 
   @override
@@ -5629,9 +3899,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get supplyProductNotFound => 'Tovar topilmadi';
-
-  @override
-  String get supplyInvalidQuantity => 'To\'g\'ri miqdorni kiriting';
 
   @override
   String get supplySelectSupplierTitle => 'Yetkazib beruvchini tanlang';
@@ -5807,9 +4074,6 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get syncWidgetWaiting => 'Kutmoqda';
-
-  @override
   String get syncWidgetSynced => 'Sinxronlangan';
 
   @override
@@ -5829,24 +4093,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String syncWidgetDaysAgo(int days) {
     return '$days kun oldin';
   }
-
-  @override
-  String get syncWidgetConnecting => 'Serverga ulanmoqda...';
-
-  @override
-  String get syncWidgetSyncingProducts => 'Tovarlar sinxronlanmoqda...';
-
-  @override
-  String get syncWidgetSyncingSales => 'Sotuvlar sinxronlanmoqda...';
-
-  @override
-  String get syncWidgetSyncingAgents => 'Kontragentlar sinxronlanmoqda...';
-
-  @override
-  String get syncWidgetSyncingPrices => 'Narxlar sinxronlanmoqda...';
-
-  @override
-  String get syncWidgetFinishing => 'Yakunlanmoqda...';
 
   @override
   String get updateDialogUpdating => 'Yangilanmoqda...';
@@ -5937,9 +4183,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get versionConflictContinue => 'Davom etish';
 
   @override
-  String get restoreLoadingBackups => 'Bekaplar yuklanmoqda...';
-
-  @override
   String get restoreSearchingBackups => 'Bekaplari qidirilmoqda...';
 
   @override
@@ -6017,26 +4260,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get agentEnterCustomerName => 'Mijoz ismini kiriting';
-
-  @override
-  String get agentDeletedCustomerPhone =>
-      'Ushbu telefon bilan mijoz o\'chirilgan';
-
-  @override
-  String get agentWantRestore => 'Tiklashni xohlaysizmi?';
-
-  @override
-  String get agentDeleteCustomerTitle => 'Mijozni o\'chirishmi?';
-
-  @override
-  String agentDeleteConfirmMessage(String name) {
-    return '\"$name\" o\'chirishga ishonchingiz kommi?';
-  }
-
-  @override
-  String agentCustomerDeleted(String name) {
-    return 'Mijoz \"$name\" o\'chirildi';
-  }
 
   @override
   String get cashOpTitle => 'Kassa operatsiyasi';
@@ -6548,9 +4771,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get authNoPin => 'PINsiz';
 
   @override
-  String get authSelectUser => 'Foydalanuvchini tanlang';
-
-  @override
   String get authNoUsersShort => 'Foydalanuvchilar yo\'q';
 
   @override
@@ -6591,15 +4811,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get updatePosNow => 'KASSANI YANGILASH';
 
   @override
-  String get serviceAddNote => 'Belgi qo\'shish';
-
-  @override
   String get serviceClientLookup => 'Mijozni qidirish';
-
-  @override
-  String serviceOrderDetail(int orderId) {
-    return 'Buyurtma-naryad tafsilotlari #$orderId';
-  }
 
   @override
   String get paymentDefaultLabel => 'Standart';
@@ -6618,9 +4830,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get serviceIntakeDelivery => 'Yetkazib berish';
-
-  @override
-  String get serviceIntakePickup => 'Mijozdan olish';
 
   @override
   String get serviceIntakeSave => 'Saqlash';
@@ -6686,16 +4895,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get serviceAddMark => 'Ish qo\'shish';
 
   @override
-  String get serviceDeleteMark => 'Belgini o\'chirish';
-
-  @override
   String get serviceMarkDescription => 'Tavsif';
 
   @override
   String get serviceMarkType => 'Ish turi';
-
-  @override
-  String get serviceMarkCost => 'Narx';
 
   @override
   String get serviceMarkNote => 'Izoh';
@@ -6737,9 +4940,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String serviceTechnicianAssigned(String name) {
     return 'Usta tayinlandi: $name';
   }
-
-  @override
-  String get serviceTechnicianSelect => 'Ustani tanlang';
 
   @override
   String get servicePrepayment => 'Oldindan to\'lov';
@@ -6784,11 +4984,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get serviceNeedsDelivery => 'Mijozga yetkazish';
 
   @override
-  String serviceQrFormat(Object id, Object number) {
-    return 'TELEPOS:SO:$id:$number';
-  }
-
-  @override
   String get serviceOrderCreated => 'Yangi buyurtma';
 
   @override
@@ -6805,9 +5000,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get catalogTitle => 'Tovarlar katalogi';
-
-  @override
-  String get catalogSearch => 'Qidirish';
 
   @override
   String get catalogSearchHint => 'Nomi yoki shtrixkod';
@@ -6855,16 +5047,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get catalogWholesalePrice => 'Ulgurji narx';
 
   @override
-  String get catalogCategory => 'Kategoriya';
-
-  @override
   String get catalogMeasure => 'O\'lchov birligi';
 
   @override
   String get catalogQuantity => 'Qoldiq';
-
-  @override
-  String get catalogQuickProduct => 'Tezkor tovar';
 
   @override
   String get catalogAddToQuick => 'Tezkorga qo\'shish';
@@ -6933,9 +5119,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get catalogPriceInvalid => 'Narx 0 dan katta bo\'lishi kerak';
-
-  @override
-  String get catalogBarcodeExists => 'Bu shtrixkodli tovar mavjud';
 
   @override
   String get catalogCategories => 'Kategoriyalar';
@@ -7148,79 +5331,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get hwScannerTitle => 'Shtrix-kod skaneri';
 
   @override
-  String get hwScannerMode => 'Skaner rejimi';
-
-  @override
-  String get hwScannerModeKeyboard => 'USB / klaviatura (wedge)';
-
-  @override
-  String get hwScannerModeSerial => 'Seriyali';
-
-  @override
-  String get hwScannerModeCamera => 'Kamera';
-
-  @override
-  String get hwScannerModeHint => 'USB skanerlar shu rejimda ishlaydi';
-
-  @override
-  String get hwScannerTimeout => 'Taymaut';
-
-  @override
-  String get hwScannerMinLength => 'Min. uzunlik';
-
-  @override
-  String get hwScannerMaxLength => 'Maks. uzunlik';
-
-  @override
   String get hwDisplayTitle => 'Xaridor displeyi';
-
-  @override
-  String get hwDisplayModel => 'Model';
-
-  @override
-  String get hwDisplayModelLed8 => 'LED 8 belgi';
-
-  @override
-  String get hwDisplayModelVfd20 => 'VFD 20x2';
-
-  @override
-  String get hwDisplayPort => 'COM-port';
-
-  @override
-  String get hwDisplayBaudRate => 'Tezlik';
-
-  @override
-  String get hwDisplayDisabled => 'Xaridor displeyi o\'chirilgan';
 
   @override
   String get hwDrawerTitle => 'Kassa qutisi';
 
   @override
-  String get hwDrawerMode => 'Ochish rejimi';
-
-  @override
-  String get hwDrawerModePrinter => 'Printer orqali';
-
-  @override
-  String get hwDrawerModeSerial => 'Seriyali port';
-
-  @override
-  String get hwDrawerPort => 'COM-port';
-
-  @override
   String get hwTerminalsTitle => 'To\'lov terminallari';
-
-  @override
-  String get hwTerminalIp => 'IP-manzil';
-
-  @override
-  String get hwTerminalPort => 'Port';
-
-  @override
-  String get hwTerminalMerchantId => 'Merchant ID';
-
-  @override
-  String get hwTerminalTerminalId => 'Terminal ID';
 
   @override
   String get catalogExportCsv => 'CSV eksport';
@@ -7276,13 +5393,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get serviceConsumableSearch => 'Tovar / sarf materialini qidirish';
 
   @override
-  String get serviceConsumableSelected => 'Tanlangan tovar';
-
-  @override
   String get serviceQuickServicesTitle => 'Tez xizmatlar';
-
-  @override
-  String get serviceQuickServicesEmpty => 'Tez xizmatlar yo\'q';
 
   @override
   String get serviceIntakeItems => 'Qabul qilinadigan buyumlar';
@@ -7326,10 +5437,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get dishCalculation => 'Kalkulyatsiya';
 
   @override
-  String get dishCalculationStub =>
-      'Kalkulyatsiya moduli keyinroq mavjud bo\'ladi';
-
-  @override
   String get dishIngredients => 'Ingredientlar';
 
   @override
@@ -7343,10 +5450,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get serviceConsumableQuantity => '1 xizmatga soni';
-
-  @override
-  String get serviceConsumablesAutoAdded =>
-      'Sarf materiallari avtomatik qo\'shildi';
 
   @override
   String get catalogDescription => 'Tavsif';
@@ -7819,16 +5922,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get labelPrinterLanguage => 'Printer tili';
 
   @override
-  String get labelPrinterSize => 'Yorliq o\'lchami';
-
-  @override
   String get labelPrinterWidthMm => 'Eni, mm';
 
   @override
   String get labelPrinterHeightMm => 'Balandligi, mm';
-
-  @override
-  String get labelPrinterTestSuccess => 'Yorliq bosib chiqarishga yuborildi';
 
   @override
   String get labelPrinterNotConfigured =>
@@ -7991,32 +6088,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get receiptTemplateFooterText => 'Pastki matn';
 
   @override
-  String get receiptTemplateExtraFooter => 'Qo\'shimcha pastki qatorlar';
-
-  @override
-  String get receiptTemplateExtraFooterHint =>
-      'Har biri alohida qator (masalan, qaytarish shartlari)';
-
-  @override
-  String get receiptTemplateShowBin => 'BIN/IIN bosish';
-
-  @override
   String get receiptTemplateShowAddress => 'Manzilni bosish';
 
   @override
   String get receiptTemplateShowCashier => 'Kassa/kassirni bosish';
 
   @override
-  String get receiptTemplateShowVat => 'QQS bosish';
-
-  @override
-  String get receiptTemplateShowQr => 'Tekshirish havolasini bosish (QR)';
-
-  @override
   String get receiptTemplateShowItemNumbers => 'Pozitsiyalarni raqamlash';
-
-  @override
-  String get receiptTemplateShowLogo => 'Logotipni bosish';
 
   @override
   String get receiptTemplateTestPrint => 'Sinov bosib chiqarish';
@@ -8390,13 +6468,7 @@ class AppLocalizationsUz extends AppLocalizations {
       'Введите команду (например: systemctl status telepos-sysd)';
 
   @override
-  String get sysmTerminalRun => 'Выполнить';
-
-  @override
   String get sysmTerminalClear => 'Очистить вывод';
-
-  @override
-  String get sysmTerminalRunning => 'Выполняется…';
 
   @override
   String sysmTerminalExitCode(int code) {
@@ -8407,22 +6479,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sysmTerminalEmpty => 'Вывод появится здесь';
 
   @override
-  String get sysmTerminalHistory => 'История команд';
-
-  @override
   String get sysmTerminalPresets => 'Пресеты';
-
-  @override
-  String get sysmTerminalPresetsNetwork => 'Сеть';
-
-  @override
-  String get sysmTerminalPresetsPrinters => 'Принтеры';
-
-  @override
-  String get sysmTerminalPresetsSystem => 'Система';
-
-  @override
-  String get sysmTerminalPresetsTime => 'Время';
 
   @override
   String get sysmTermGroupDiagnostics => 'Diagnostika';
@@ -8507,13 +6564,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get sysmTermTimeNtpSync => 'NTP sinxronlash';
-
-  @override
-  String get labelPrinterDevicePath => 'Путь к устройству';
-
-  @override
-  String get labelPrinterDevicePathHint =>
-      'Например: /dev/usb/lp0 (USB) или /dev/ttyUSB0 (Serial). Оставьте пустым для значения по умолчанию.';
 
   @override
   String get movementTitle => 'Перемещение';
@@ -8700,9 +6750,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get esfSettingsOperator => 'Оператор ЭСФ';
 
   @override
-  String get esfSettingsTestMode => 'Тестовый режим';
-
-  @override
   String get esfSettingsSupplier => 'Реквизиты поставщика (наша организация)';
 
   @override
@@ -8725,15 +6772,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get esfSettingsVatRate => 'Ставка НДС, %';
-
-  @override
-  String get esfSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get esfSettingsEcpKeyPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get esfSettingsEcpKeyAlias => 'Алиас ключа';
 
   @override
   String get esfSettingsB2bOnly => 'Только B2B';
@@ -8759,9 +6797,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get esfOutboxEmptyHint =>
       'Счета-фактуры появятся здесь после продаж B2B';
-
-  @override
-  String get esfOutboxRetry => 'Повторить отправку';
 
   @override
   String get esfOutboxRetryAll => 'Повторить все';
@@ -8890,9 +6925,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sntSettingsProvider => 'Способ отправки';
 
   @override
-  String get sntSettingsTestMode => 'Тестовый режим';
-
-  @override
   String get sntSettingsRequisites => 'Реквизиты налогоплательщика';
 
   @override
@@ -8900,32 +6932,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get sntSettingsWarehouseCode => 'Код виртуального склада';
-
-  @override
-  String get sntSettingsBackend => 'TelePOS backend (прокси ИС ЭСФ)';
-
-  @override
-  String get sntSettingsBackendUrl => 'URL бэкенда';
-
-  @override
-  String get sntSettingsApiKey => 'API-ключ';
-
-  @override
-  String get sntSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get sntSettingsCertPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get sntSettingsCertPassword => 'Пароль ключа';
-
-  @override
-  String get sntSettingsEcpHint =>
-      'Реальная отправка СНТ требует ЭЦП НУЦ РК и зарегистрированного профиля ИС ЭСФ. Без ЭЦП документы собираются и хранятся локально (Виртуальный склад работает офлайн).';
-
-  @override
-  String get sntSettingsSharedEsfHint =>
-      'СНТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.';
 
   @override
   String get sntSettingsWebkassaNote =>
@@ -9064,41 +7070,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get ismptSettingsBackend => 'Бэкенд';
 
   @override
-  String get ismptSettingsTestMode => 'Тестовый режим';
-
-  @override
-  String get ismptSettingsRequisites => 'Реквизиты налогоплательщика';
-
-  @override
-  String get ismptSettingsOwnBin => 'БИН / ИИН (наш)';
-
-  @override
-  String get ismptSettingsApi => 'True API (ismet.kz)';
-
-  @override
-  String get ismptSettingsApiUrl => 'URL API';
-
-  @override
-  String get ismptSettingsApiKey => 'API-ключ / токен';
-
-  @override
-  String get ismptSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get ismptSettingsCertPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get ismptSettingsCertPassword => 'Пароль ключа';
-
-  @override
-  String get ismptSettingsEcpHint =>
-      'Реальная работа с ИС МПТ требует ЭЦП НУЦ РК и зарегистрированного профиля участника оборота. Без ЭЦП коды маркировки принимаются и хранятся локально (приёмка работает офлайн, продажа не блокируется).';
-
-  @override
-  String get ismptSettingsSharedEsfHint =>
-      'ИС МПТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.';
-
-  @override
   String get ismptSettingsWebkassaNote =>
       'Markirovka kodlarini tekshirish WebKassa orqali amalga oshiriladi. Ulanish rekvizitlari (login, apiKey, kassa, ERP) WebKassa (Fiskalizatsiya) sozlamalaridan olinadi — yagona umumiy konfiguratsiya.';
 
@@ -9113,9 +7084,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get ismptSettingsSaveError => 'Не удалось сохранить настройки ИС МПТ';
-
-  @override
-  String get ismptSettingsBinRequired => 'Укажите БИН / ИИН налогоплательщика';
 
   @override
   String get reorderRulesTitle => 'Правила перезаказа';
@@ -9199,9 +7167,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get shiftClosedGateOpen => 'Smenani ochish';
-
-  @override
-  String get sysmTerminalPresetsDiag => 'Diagnostika';
 
   @override
   String get wmsDashboardTitle => 'WMS — Ombor boshqaruvi';
@@ -10047,13 +8012,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String setDeleteUserError(String error) {
     return 'Foydalanuvchini o\'chirib bo\'lmadi: $error';
   }
-
-  @override
-  String get setUserNoEncryptionKey =>
-      'Shifrlash kaliti sozlanmagan. POS dastlabki sozlamasini yakunlang.';
-
-  @override
-  String get setUserPinEncryptFailed => 'PIN ni shifrlab bo\'lmadi';
 
   @override
   String get setWmsTitle => 'WMS sozlamalari';
@@ -11429,59 +9387,6 @@ class AppLocalizationsUz extends AppLocalizations {
       'Chekdagi narxni mahsulot narxidan past qo\'yib bo\'lmaydi';
 
   @override
-  String get printerAutoDetect => 'Printerni topish';
-
-  @override
-  String get printerAutoDetecting => 'Printer qidirilmoqda…';
-
-  @override
-  String printerFound(String device) {
-    return 'Topildi: $device';
-  }
-
-  @override
-  String printerFoundWithNote(String device, String note) {
-    return 'Topildi: $device — $note';
-  }
-
-  @override
-  String get printerNotFoundAnyPort =>
-      'Printer hech bir portda topilmadi (USB/serial). Kabel va quvvatni tekshiring.';
-
-  @override
-  String get printerUsbName => 'USB printer';
-
-  @override
-  String get printerSelectDevice => 'Printerni tanlang';
-
-  @override
-  String get printerNoAccessGroupLp =>
-      'Tugun topildi, lekin ruxsat yo\'q (lp guruhi kerak)';
-
-  @override
-  String printerLabelUsb(String path) {
-    return 'USB-printer ($path)';
-  }
-
-  @override
-  String printerLabelSerial(String path) {
-    return 'Serial-printer ($path)';
-  }
-
-  @override
-  String get printerNoAccessGroupLpHint =>
-      'Tugun topildi, lekin ruxsat yo\'q (lp guruhi kerak): usermod -aG lp telepos va seansni qayta ishga tushiring.';
-
-  @override
-  String printerRawOpenNoPermsHint(String path) {
-    return '$path tuguni topildi, lekin ochib bo\'lmaydi — ruxsat yo\'q. Foydalanuvchini lp guruhiga qo\'shing (usermod -aG lp telepos) va seansni/qurilmani qayta ishga tushiring.';
-  }
-
-  @override
-  String get printerNotFoundNoNode =>
-      'Printer topilmadi: na /dev/usb/lp* char-tuguni, na USB-serial port bor. Printer kabeli va quvvatini tekshiring.';
-
-  @override
   String get ownerOnlyTitle => 'Faqat kassa egasiga ochiq';
 
   @override
@@ -11528,9 +9433,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get deviceSearchTitle => 'Topilgan qurilmalar';
-
-  @override
-  String get deviceSearchRunning => 'Qidirilmoqda…';
 
   @override
   String get deviceSearchEmpty =>
@@ -11635,9 +9537,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String scannerRulesNotAnInteger(String value) {
     return '“$value” butun son emas';
   }
-
-  @override
-  String get scannerRulesSaved => 'Shtrix-kod o\'qish qoidalari saqlandi';
 
   @override
   String get printQueueSectionTitle => 'Chop etish navbati';
@@ -13020,18 +10919,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get emulatorQrProvider => 'QR to\'lov provayderi';
 
   @override
-  String get emulatorQrAddressHint =>
-      'Bu manzilni QR provayderi sozlamasiga yozing';
-
-  @override
-  String get emulatorQrBindAction => 'QR sozlamasiga yozish';
-
-  @override
   String get emulatorQrBindDone => 'QR sozlamasi endi emulyatorga qaraydi';
-
-  @override
-  String get emulatorQrBindingStale =>
-      'QR sozlamasi o\'chirilgan emulyatorga qaraydi — kod bo\'yicha to\'lov rad etiladi';
 
   @override
   String get diagnosticsTabPayment => 'To\'lov';
@@ -13885,9 +11773,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get rcpBinIin => 'STIR:';
 
   @override
-  String get rcpThankYou => 'Xaridingiz uchun rahmat!';
-
-  @override
   String get rcpSale => 'SOTUV';
 
   @override
@@ -14135,9 +12020,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get taxSettingsPresetApplied => 'To‘plam qo‘llandi';
 
   @override
-  String get taxSettingsCurrentSection => 'Joriy sozlama';
-
-  @override
   String taxSettingsRateForStandard(String rate) {
     return 'Oddiy tovar: $rate%';
   }
@@ -14154,9 +12036,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get taxSettingsTillLocationHint =>
       'Belgi bir nechta bo‘lishi mumkin: shahar va maxsus tumanlar. Yuqoridagilari o‘zi qo‘shiladi.';
-
-  @override
-  String get taxSettingsRules => 'Qoidalar';
 
   @override
   String get taxSettingsRuleTaxed => 'soliq olinadi';
@@ -14177,50 +12056,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get taxSettingsAddCategory => 'Toifa qo‘shish';
 
   @override
-  String get taxSettingsAddRule => 'Qoida qo‘shish';
-
-  @override
   String get taxSettingsName => 'Nomi';
 
   @override
-  String get taxSettingsCode => 'Kodi';
-
-  @override
-  String get taxSettingsRate => 'Stavka, %';
-
-  @override
-  String get taxSettingsValidFrom => 'Amal qilish boshlanishi';
-
-  @override
-  String get taxSettingsParent => 'Yuqori';
-
-  @override
-  String get taxSettingsNoParent => 'yo‘q (ildiz)';
-
-  @override
-  String get taxSettingsLevel => 'Daraja';
-
-  @override
-  String get taxSettingsLevelCountry => 'Davlat';
-
-  @override
-  String get taxSettingsLevelState => 'Shtat';
-
-  @override
-  String get taxSettingsLevelCounty => 'Okrug';
-
-  @override
-  String get taxSettingsLevelCity => 'Shahar';
-
-  @override
-  String get taxSettingsLevelDistrict => 'Maxsus tuman';
-
-  @override
   String get taxSettingsDelete => 'O‘chirish';
-
-  @override
-  String get taxSettingsDeleteJurisdictionWarning =>
-      'U bilan birga uning qoidalari va ichki yurisdiksiyalari o‘chadi.';
 
   @override
   String get taxSettingsResponsibility =>
@@ -14697,10 +12536,6 @@ class AppLocalizationsUz extends AppLocalizations {
       'Yorliq kassadan chop etiladi, terminaldan emas';
 
   @override
-  String get orphanQrTillNotRegistered =>
-      'Kassa royxatdan otmagan — QR boyicha aniqlanmagan pulni sorash mumkin emas';
-
-  @override
   String get stockLowStockReorder =>
       'Qoldigi kam tovarlarga qoshimcha buyurtma';
 
@@ -14710,11 +12545,6 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String deferredFromTill(String id) {
     return 'kassa $id';
-  }
-
-  @override
-  String dishSummary(int count, String cost) {
-    return 'Ingredient: $count, tannarxi: $cost';
   }
 
   @override

@@ -132,37 +132,15 @@ class PlatformPaymentService {
     return availableConnectionTypes.contains(type);
   }
 
-  String get platformName {
-    switch (currentPlatform) {
-      case PaymentPlatform.desktop:
-        if (kIsWeb) return 'Web (Desktop)';
-        if (Platform.isWindows) return 'Windows';
-        if (Platform.isLinux) return 'Linux';
-        if (Platform.isMacOS) return 'macOS';
-        return 'Desktop';
-      case PaymentPlatform.mobile:
-        if (Platform.isAndroid) return 'Android';
-        if (Platform.isIOS) return 'iOS';
-        return 'Mobile';
-      case PaymentPlatform.web:
-        return 'Web';
-    }
-  }
+  // `platformName` и `connectionTypeName` жили здесь и не звались НИКЕМ.
+  // Замер мёртвых ключей словаря 2026-09-23 вывел на них по значению
+  // «Тестовый режим», и оказалось, что это не место для перевода, а
+  // мёртвый код: две подписи для человека, у которых нет читателя. Тот же
+  // узор, что 36 зарегистрированных и не спрошенных договоров.
+  //
+  // Появится читатель — слово выберет он, на языке интерфейса, а не эти
+  // литералы, где «USB» было английским, а «Тестовый режим» русским.
 
-  String connectionTypeName(PaymentConnectionType type) {
-    switch (type) {
-      case PaymentConnectionType.tcp:
-        return 'TCP/IP';
-      case PaymentConnectionType.bluetooth:
-        return 'Bluetooth';
-      case PaymentConnectionType.nfc:
-        return 'NFC';
-      case PaymentConnectionType.usb:
-        return 'USB';
-      case PaymentConnectionType.mock:
-        return 'Тестовый режим';
-    }
-  }
 
   void dispose() {
     _activeConnector?.dispose();

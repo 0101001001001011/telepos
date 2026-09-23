@@ -72,9 +72,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get globalWarning => 'Эскертүү';
 
   @override
-  String get globalInfo => 'Маалымат';
-
-  @override
   String get globalConfirm => 'Ырастоо';
 
   @override
@@ -85,9 +82,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get globalAll => 'Баары';
-
-  @override
-  String get globalNone => 'Жок';
 
   @override
   String get globalTotal => 'Жалпы';
@@ -108,37 +102,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get globalDate => 'Күнү';
 
   @override
-  String get globalTime => 'Убакыт';
-
-  @override
-  String get loginTitle => 'Системага кирүү';
-
-  @override
-  String get loginPin => 'PIN киргизиңиз';
-
-  @override
-  String get loginPinHint => '4 сан';
-
-  @override
   String get loginEnter => 'Кирүү';
-
-  @override
-  String get loginSelectUser => 'Колдонуучуну тандаңыз';
-
-  @override
-  String get loginNoUsers => 'Колдонуучулар жок';
-
-  @override
-  String get loginWrongPin => 'Туура эмес PIN';
-
-  @override
-  String get loginBlocked => 'Колдонуучу бөгөттөлгөн';
-
-  @override
-  String get loginSessionExpired => 'Сессия мөөнөтү бүттү';
-
-  @override
-  String get loginShiftRequired => 'Кирүү үчүн сменаны ачыңыз';
 
   @override
   String get staffRoleOwner => 'Ээси';
@@ -162,57 +126,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get loginAdmin => 'Администратор';
 
   @override
-  String get loginManager => 'Менеджер';
-
-  @override
   String get loginLogout => 'Чыгуу';
-
-  @override
-  String get loginSwitchUser => 'Колдонуучуну алмаштыруу';
-
-  @override
-  String get saleTitle => 'Сатуу';
-
-  @override
-  String get saleNewSale => 'Жаңы сатуу';
-
-  @override
-  String get saleAddProduct => 'Товар кошуу';
-
-  @override
-  String get saleScanBarcode => 'Штрих-кодду сканерлөө';
-
-  @override
-  String get saleEnterBarcode => 'Штрих-кодду киргизиңиз';
 
   @override
   String get saleProductNotFound => 'Товар табылган жок';
 
   @override
-  String get saleEmptyCart => 'Себет бош';
-
-  @override
-  String get saleSubtotal => 'Аралык сумма';
-
-  @override
-  String get saleTax => 'КНС';
-
-  @override
-  String get saleTotalDiscount => 'Арзандатуу';
-
-  @override
   String get saleToPay => 'Төлөөгө';
-
-  @override
-  String saleItems(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count товар',
-      one: '$count товар',
-    );
-    return '$_temp0';
-  }
 
   @override
   String paymentCardChargeUnsettled(String amount) {
@@ -223,40 +143,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get saleRemoveItem => 'Товарды алып салуу';
 
   @override
-  String get saleClearCart => 'Себетти тазалоо';
-
-  @override
-  String get saleConfirmClear => 'Себетти тазалоо керекпи?';
-
-  @override
-  String get saleProceedPayment => 'Төлөмгө өтүү';
-
-  @override
   String get saleHold => 'Кийинкиге калтыруу';
 
   @override
   String get saleRecall => 'Кайтаруу';
-
-  @override
-  String get saleHeldSales => 'Кийинкиге калтырылган сатуулар';
-
-  @override
-  String get saleNoHeldSales => 'Кийинкиге калтырылган сатуулар жок';
-
-  @override
-  String get saleProductSearch => 'Товарларды издөө';
-
-  @override
-  String get saleByCategory => 'Категориялар боюнча';
-
-  @override
-  String get saleByName => 'Аталышы боюнча';
-
-  @override
-  String get saleByBarcode => 'Штрих-код боюнча';
-
-  @override
-  String get saleWeight => 'Салмагы';
 
   @override
   String saleWeightKg(String weight) {
@@ -264,27 +154,7 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get saleEnterWeight => 'Салмакты киргизиңиз';
-
-  @override
-  String get saleEnterQuantity => 'Санын киргизиңиз';
-
-  @override
-  String get saleEnterPrice => 'Бааны киргизиңиз';
-
-  @override
-  String get saleFreePrice => 'Эркин баа';
-
-  @override
-  String saleMaxDiscount(String percent) {
-    return 'Макс. арзандатуу: $percent%';
-  }
-
-  @override
   String get refundTitle => 'Кайтаруу';
-
-  @override
-  String get refundNewRefund => 'Жаңы кайтаруу';
 
   @override
   String get refundByReceipt => 'Чек боюнча';
@@ -293,31 +163,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get refundWithoutReceipt => 'Чексиз';
 
   @override
-  String get refundEnterReceipt => 'Чек номерин киргизиңиз';
-
-  @override
   String get refundReceiptNotFound => 'Чек табылган жок';
-
-  @override
-  String get refundSelectItems => 'Кайтаруу үчүн товарларды тандаңыз';
-
-  @override
-  String get refundReason => 'Кайтаруу себеби';
-
-  @override
-  String get refundConfirm => 'Кайтарууну ырастоо';
 
   @override
   String get refundAmount => 'Кайтаруу суммасы';
 
   @override
   String get refundComplete => 'Кайтаруу аткарылды';
-
-  @override
-  String get refundCash => 'Накталай кайтаруу';
-
-  @override
-  String get refundCard => 'Картага кайтаруу';
 
   @override
   String get refundConnectionLostHint =>
@@ -330,12 +182,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get refundNoItems => 'Кайтаруу үчүн товарлар жок';
 
   @override
-  String get refundAlreadyRefunded => 'Товар мурда кайтарылган';
-
-  @override
-  String get refundPartial => 'Жарым-жартылай кайтаруу';
-
-  @override
   String get shiftTitle => 'Смена';
 
   @override
@@ -343,9 +189,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get shiftClose => 'Сменаны жабуу';
-
-  @override
-  String get shiftCurrent => 'Учурдагы смена';
 
   @override
   String shiftNumber(int number) {
@@ -358,34 +201,10 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String shiftCashier(String name) {
-    return 'Кассир: $name';
-  }
-
-  @override
-  String shiftSalesCount(int count) {
-    return 'Сатуулар: $count';
-  }
-
-  @override
-  String shiftRefundsCount(int count) {
-    return 'Кайтаруулар: $count';
-  }
-
-  @override
-  String get shiftTotalSales => 'Сатуу суммасы';
-
-  @override
-  String get shiftTotalRefunds => 'Кайтаруу суммасы';
-
-  @override
   String get shiftCashInDrawer => 'Кассада';
 
   @override
   String get shiftExpected => 'Күтүлгөн';
-
-  @override
-  String get shiftActual => 'Чыныгы';
 
   @override
   String get shiftDifference => 'Айырма';
@@ -395,18 +214,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get shiftZReport => 'Z-отчет';
-
-  @override
-  String get shiftConfirmClose => 'Сменаны жабуу керекпи?';
-
-  @override
-  String get shiftAlreadyOpen => 'Смена ачык';
-
-  @override
-  String get shiftNotOpen => 'Смена ачылган эмес';
-
-  @override
-  String get shiftOpenFirst => 'Алгач сменаны ачыңыз';
 
   @override
   String get paymentTitle => 'Төлөм';
@@ -433,53 +240,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get paymentMixed => 'Аралаш';
 
   @override
-  String get paymentEnterAmount => 'Сумманы киргизиңиз';
-
-  @override
-  String paymentRemaining(String amount) {
-    return 'Калды: $amount';
-  }
-
-  @override
-  String paymentChange(String amount) {
-    return 'Кайтарым: $amount';
-  }
-
-  @override
   String get paymentComplete => 'Төлөм аяктады';
 
   @override
   String get paymentFailed => 'Төлөм катасы';
-
-  @override
-  String get paymentWaitingCard => 'Картаны күтүү...';
-
-  @override
-  String get paymentWaitingQr => 'QR күтүү...';
-
-  @override
-  String get paymentInsertCard => 'Картаны салыңыз';
-
-  @override
-  String get paymentScanQr => 'QR сканерлеңиз';
-
-  @override
-  String get paymentApproved => 'Жактырылды';
-
-  @override
-  String get paymentDeclined => 'Четке кагылды';
-
-  @override
-  String get paymentReceipt => 'Чек басып чыгаруу';
-
-  @override
-  String get paymentNoReceipt => 'Чексиз';
-
-  @override
-  String get paymentEmail => 'Email-ге жөнөтүү';
-
-  @override
-  String get paymentSms => 'SMS жөнөтүү';
 
   @override
   String get historyTitle => 'Тарых';
@@ -491,32 +255,9 @@ class AppLocalizationsKy extends AppLocalizations {
   String get historyYesterday => 'Кечээ';
 
   @override
-  String get historyThisWeek => 'Бул жума';
-
-  @override
-  String get historyThisMonth => 'Бул ай';
-
-  @override
-  String get historyDateRange => 'Мезгилди тандоо';
-
-  @override
-  String get historyNoSales => 'Мезгилде сатуулар жок';
-
-  @override
-  String historyReceipt(String number) {
-    return 'Чек №$number';
-  }
-
-  @override
-  String get historyReprint => 'Кайра басып чыгаруу';
-
-  @override
   String certificateSlipPrintFailed(String number, String reason) {
     return '$number сертификатынын слиби басылган жок: $reason';
   }
-
-  @override
-  String get historyDetails => 'Толугураак';
 
   @override
   String get historySale => 'Сатуу';
@@ -525,22 +266,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get historyRefund => 'Кайтаруу';
 
   @override
-  String get historyFilter => 'Чыпка';
-
-  @override
-  String get agentTitle => 'Контрагенттер';
-
-  @override
   String get agentClients => 'Кардарлар';
 
   @override
   String get agentSuppliers => 'Жеткирүүчүлөр';
-
-  @override
-  String get agentSearch => 'Контрагентти издөө';
-
-  @override
-  String get agentAdd => 'Контрагент кошуу';
 
   @override
   String get agentEdit => 'Түзөтүү';
@@ -552,31 +281,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get agentPhone => 'Телефон';
 
   @override
-  String get agentEmail => 'Email';
-
-  @override
   String get agentIin => 'ИЖН/ИСН';
-
-  @override
-  String get agentAddress => 'Дарек';
 
   @override
   String get agentBalance => 'Баланс';
 
   @override
-  String get agentBonusBalance => 'Бонус балансы';
-
-  @override
   String get agentDebt => 'Карыз';
-
-  @override
-  String get agentNoAgents => 'Контрагенттер жок';
-
-  @override
-  String get agentSaveSuccess => 'Контрагент сакталды';
-
-  @override
-  String get agentDeleteConfirm => 'Контрагентти жок кылуу керекпи?';
 
   @override
   String get cashTitle => 'Касса';
@@ -607,19 +318,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get cashExpense => 'Чыгым';
 
   @override
-  String get cashBalance => 'Касса балансы';
-
-  @override
   String get cashEnterAmount => 'Сумманы киргизиңиз';
-
-  @override
-  String get cashReason => 'Негиздеме';
-
-  @override
-  String get cashReasonPlaceholder => 'Себебин көрсөтүңүз';
-
-  @override
-  String get cashSuccess => 'Операция аткарылды';
 
   @override
   String get cashExpenseTypes => 'Чыгым түрү';
@@ -631,46 +330,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get discountPercent => 'Пайыз';
 
   @override
-  String get discountFixed => 'Белгиленген';
-
-  @override
-  String get discountEnterValue => 'Маанини киргизиңиз';
-
-  @override
   String get discountApply => 'Колдонуу';
-
-  @override
-  String get discountRemove => 'Арзандатууну алып салуу';
-
-  @override
-  String get discountOnItem => 'Товарга арзандатуу';
-
-  @override
-  String get discountOnTotal => 'Чекке арзандатуу';
-
-  @override
-  String get discountMaxExceeded => 'Максималдык арзандатуу ашып кетти';
 
   @override
   String get quickProductTitle => 'Тез товарлар';
 
   @override
-  String get quickProductAdd => 'Товар кошуу';
-
-  @override
-  String get quickProductName => 'Аталышы';
-
-  @override
-  String get quickProductPrice => 'Баасы';
-
-  @override
   String get quickProductCategory => 'Категориясы';
-
-  @override
-  String get quickProductSave => 'Сактоо';
-
-  @override
-  String get quickProductDelete => 'Жок кылуу';
 
   @override
   String get syncTitle => 'Синхрондоо';
@@ -719,12 +385,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get syncOnline => 'Туташкан';
 
   @override
-  String get printerTitle => 'Принтер';
-
-  @override
-  String get printerStatus => 'Принтер абалы';
-
-  @override
   String get printerConnected => 'Туташкан';
 
   @override
@@ -734,61 +394,22 @@ class AppLocalizationsKy extends AppLocalizations {
   String get printerError => 'Принтер катасы';
 
   @override
-  String get printerPaperOut => 'Кагаз жок';
-
-  @override
   String get printerConnect => 'Туташуу';
 
   @override
   String get printerDisconnect => 'Ажыратуу';
 
   @override
-  String get printerTest => 'Тесттик басып чыгаруу';
-
-  @override
   String get printerSettings => 'Принтер орнотуулары';
-
-  @override
-  String get printerWidth => 'Чек туурасы';
 
   @override
   String get additionalTitle => 'Кошумча';
 
   @override
-  String get additionalSettings => 'Орнотуулар';
-
-  @override
-  String get additionalReports => 'Отчеттор';
-
-  @override
-  String get additionalInventory => 'Түгөндөө';
-
-  @override
   String get additionalSupply => 'Товар кабыл алуу';
 
   @override
-  String get additionalPriceChange => 'Бааларды өзгөртүү';
-
-  @override
-  String get additionalBackup => 'Камдык көчүрмө';
-
-  @override
-  String get additionalRestore => 'Калыбына келтирүү';
-
-  @override
   String get additionalUpdate => 'Жаңыртуу';
-
-  @override
-  String get additionalAbout => 'Программа жөнүндө';
-
-  @override
-  String get additionalLicense => 'Лицензия';
-
-  @override
-  String get additionalSupport => 'Колдоо';
-
-  @override
-  String get receiptTitle => 'Чек';
 
   @override
   String get receiptNumber => 'Чек №';
@@ -797,108 +418,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get receiptDate => 'Күнү';
 
   @override
-  String get receiptCashier => 'Кассир';
-
-  @override
-  String get receiptItems => 'Товарлар';
-
-  @override
-  String get receiptSubtotal => 'Аралык сумма';
-
-  @override
-  String get receiptDiscount => 'Арзандатуу';
-
-  @override
-  String get receiptTax => 'КНС';
-
-  @override
   String get receiptTotal => 'ЖАЛПЫ';
-
-  @override
-  String get receiptCash => 'Накталай';
-
-  @override
-  String get receiptCard => 'Карта';
-
-  @override
-  String get receiptChange => 'Кайтарым';
-
-  @override
-  String get receiptThankYou => 'Сатып алганыңызга рахмат!';
-
-  @override
-  String get receiptFiscalNumber => 'Фискалдык номер';
-
-  @override
-  String get receiptQrCode => 'Текшерүү үчүн QR';
-
-  @override
-  String get receiptCopy => 'Чек көчүрмөсү';
-
-  @override
-  String get errorUnknown => 'Белгисиз ката';
-
-  @override
-  String get errorNetwork => 'Тармак катасы';
-
-  @override
-  String get errorServer => 'Сервер катасы';
-
-  @override
-  String get errorTimeout => 'Күтүү убактысы бүттү';
-
-  @override
-  String get errorNotFound => 'Табылган жок';
-
-  @override
-  String get errorPermission => 'Уруксат жок';
-
-  @override
-  String get errorDatabase => 'Маалыматтар базасынын катасы';
-
-  @override
-  String get errorValidation => 'Валидация катасы';
-
-  @override
-  String get errorRequired => 'Милдеттүү талаа';
 
   @override
   String get errorInvalidFormat => 'Туура эмес формат';
 
   @override
-  String errorMinLength(int min) {
-    return 'Минимум $min символ';
-  }
-
-  @override
-  String errorMaxLength(int max) {
-    return 'Максимум $max символ';
-  }
-
-  @override
-  String errorMinValue(String min) {
-    return 'Минимум $min';
-  }
-
-  @override
-  String errorMaxValue(String max) {
-    return 'Максимум $max';
-  }
-
-  @override
   String get errorPrinter => 'Принтер катасы';
-
-  @override
-  String get errorFiscal => 'Фискализация катасы';
-
-  @override
-  String get errorPayment => 'Төлөм катасы';
-
-  @override
-  String get errorSync => 'Синхрондоо катасы';
-
-  @override
-  String get errorNoInternet => 'Интернет байланышы жок';
 
   @override
   String get errorTryAgain => 'Кайра аракет кылыңыз';
@@ -988,18 +514,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get loginShiftUnknown => 'Смена: касса жооп берген жок';
 
   @override
-  String get saleQuickProducts => 'Тез товарлар';
-
-  @override
-  String get saleIncrease => 'Көбөйтүү';
-
-  @override
-  String get saleDecrease => 'Азайтуу';
-
-  @override
-  String get saleMark => 'Маркировка';
-
-  @override
   String get saleDataMatrix => 'Маркировка (DataMatrix)';
 
   @override
@@ -1029,9 +543,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get refundWithReceipt => 'ЧЕК МЕНЕН';
 
   @override
-  String get refundWithoutReceiptUpper => 'ЧЕКСИЗ';
-
-  @override
   String get refundLoadReceipt => 'Чекти жүктөө';
 
   @override
@@ -1057,55 +568,13 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get refundSuccessMsg => 'Кайтаруу ийгиликтүү аяктады';
-
-  @override
   String get refundSearchHint => 'Кайтаруу үчүн товар издөө';
-
-  @override
-  String get paymentRefundTitle => 'Кайтаруу';
-
-  @override
-  String get paymentPayTitle => 'Төлөм';
-
-  @override
-  String get paymentRefundBtn => 'КАЙТАРУУ';
-
-  @override
-  String get paymentPayBtn => 'ТӨЛӨӨ';
 
   @override
   String get paymentChangeLabel => 'Кайтарым:';
 
   @override
-  String get paymentSuccessRefund => 'Кайтаруу аяктады';
-
-  @override
-  String get paymentSuccessPay => 'Төлөм ийгиликтүү';
-
-  @override
-  String get paymentCardType => 'Накталай эмес';
-
-  @override
-  String get paymentToPay => 'Төлөөгө';
-
-  @override
-  String get paymentBonusLabel => 'Бонустар';
-
-  @override
-  String get paymentTotalToPay => 'Жалпы төлөө';
-
-  @override
   String get paymentByCard => 'Карта менен';
-
-  @override
-  String get paymentRemainLabel => 'Калды';
-
-  @override
-  String get shiftBills => 'Купюралар';
-
-  @override
-  String get shiftTotalAmount => 'Жалпы сумма';
 
   @override
   String get shiftOperations => 'Операциялар';
@@ -1139,25 +608,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get shiftEntered => 'Киргизилди';
 
   @override
-  String get shiftRecounting => 'Купюралар боюнча кайра эсептөө';
-
-  @override
   String get shiftManualEntry => 'Кол менен сумма киргизүү';
-
-  @override
-  String get shiftCashOps => 'Касса операциялары';
 
   @override
   String get shiftOpenAction => 'Смена ачуу';
 
   @override
-  String get shiftCloseAction => 'Смена жабуу';
-
-  @override
   String get historyOperations => 'Операциялар тарыхы';
-
-  @override
-  String get historyResetFilters => 'Фильтрлерди тазалоо';
 
   @override
   String get historyRefresh => 'Жаңыртуу';
@@ -1172,29 +629,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get historyEmpty => 'Операциялар тарыхы бош';
 
   @override
-  String get historyFilterTitle => 'Фильтрлер';
-
-  @override
   String get historyPeriod => 'Мезгил';
-
-  @override
-  String get historyOpType => 'Операция түрү';
 
   @override
   String get historySearchHint => 'Чек номери, сумма...';
 
   @override
-  String historyType(String type) {
-    return 'Түрү:';
-  }
-
-  @override
   String get historyPrint => 'Чекти басып чыгаруу';
-
-  @override
-  String agentFound(int count) {
-    return 'Табылды: $count';
-  }
 
   @override
   String get agentWithDebt => 'Карызы бар гана';
@@ -1203,22 +644,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get agentSearchHint => 'Аты же телефону боюнча издөө...';
 
   @override
-  String get agentNewClient => 'Жаңы клиент';
-
-  @override
   String get agentNameRequired => 'Аты *';
-
-  @override
-  String get agentEnterName => 'Клиенттин атын киргизиңиз';
-
-  @override
-  String get agentPhoneLabel => 'Телефон';
-
-  @override
-  String get agentIinLabel => 'БИН/ЖСН';
-
-  @override
-  String get agentIinHint => '12 сан';
 
   @override
   String get agentDeleteQuestion => 'Клиентти жок кылуу?';
@@ -1229,22 +655,10 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get agentDeleted => 'Клиент жок кылынды';
-
-  @override
-  String get agentFoundExisting => 'Клиент табылды';
-
-  @override
   String get supplyTitle => 'Товар кабылдоо';
 
   @override
-  String get supplySaved => 'Кабылдоо сакталды';
-
-  @override
   String get supplySaveError => 'Сактоо катасы';
-
-  @override
-  String get supplyCancelQuestion => 'Кабылдоону жокко чыгаруу?';
 
   @override
   String get supplyDataLost => 'Киргизилген бардык маалыматтар жоголот.';
@@ -1255,27 +669,16 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get supplyBarcodeHint => 'Штрих-код же артикул';
-
-  @override
   String get supplyComment => 'Комментарий';
 
   @override
   String get supplyCommentHint => 'Комментарий жазыңыз...';
 
   @override
-  String get supplyNotFound => 'Товар табылган жок';
-
-  @override
   String get supplySelectSupplier => 'Жеткирүүчүнү тандаңыз';
 
   @override
   String get supplySelectAccount => 'Эсепти тандаңыз';
-
-  @override
-  String supplyBalance(String amount) {
-    return 'Баланс: $amount';
-  }
 
   @override
   String get supplyPurchasePrice => 'Келүү баасы';
@@ -1294,12 +697,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get supplySerialMismatch =>
       'Сериялык номерлердин саны санга дал келбейт';
-
-  @override
-  String get supplyInvalidQty => 'Туура санды киргизиңиз';
-
-  @override
-  String get supplyInvalidPrice => 'Туура бааны киргизиңиз';
 
   @override
   String get inventoryTitle => 'Инвентаризация';
@@ -1403,85 +800,22 @@ class AppLocalizationsKy extends AppLocalizations {
   String get settingsTitle => 'Жөндөөлөр';
 
   @override
-  String get settingsPosInfo => 'Касса маалыматы';
-
-  @override
-  String get settingsPosName => 'Касса аталышы';
-
-  @override
-  String get settingsCompany => 'Компания';
-
-  @override
-  String get settingsIin => 'ЖСН/БИН';
-
-  @override
-  String get settingsPosId => 'POS ID';
-
-  @override
-  String get settingsStoreId => 'Дүкөн ID';
-
-  @override
-  String get settingsNotSpecified => 'Көрсөтүлгөн эмес';
-
-  @override
-  String get settingsAppVersion => 'Колдонмо версиясы';
-
-  @override
-  String get settingsVersion => 'Версия';
-
-  @override
-  String get settingsPlatform => 'Платформа';
-
-  @override
   String get settingsLanguage => 'Интерфейс тили';
 
   @override
   String get settingsLanguageChanged => 'Тил өзгөртүлдү';
 
   @override
-  String get settingsCurrency => 'Валюта';
-
-  @override
-  String get settingsCurrencySymbol => 'Белги';
-
-  @override
-  String get settingsCurrencyCode => 'Код';
-
-  @override
-  String get settingsCountry => 'Өлкө';
-
-  @override
-  String get settingsAdditional => 'Кошумча жөндөөлөр';
-
-  @override
   String get settingsTransport => 'Транспорт';
-
-  @override
-  String get settingsTransportDesc => 'Маалыматтарды шайкештирүү жөндөөлөрү';
 
   @override
   String get settingsPrinter => 'Принтер';
 
   @override
-  String get settingsPrinterDesc => 'Чектерди басып чыгаруу жөндөөлөрү';
-
-  @override
   String get settingsFiscal => 'Фискализация';
 
   @override
-  String get settingsFiscalDesc => 'WebKassa, ОФД, КНС';
-
-  @override
   String get settingsTelegram => 'Telegram';
-
-  @override
-  String get settingsTelegramDesc => 'Telegram интеграциясы жана каналдар';
-
-  @override
-  String get settingsPermissions => 'Уруксаттар';
-
-  @override
-  String get settingsPermissionsDesc => 'Кассирлерге уруксаттар';
 
   @override
   String get fiscalTitle => 'Фискализация';
@@ -1493,22 +827,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get fiscalWebkassa => 'WebKassa жөндөөлөрү';
 
   @override
-  String get fiscalTaxpayer => 'Салык төлөөчүнүн маалыматы';
-
-  @override
-  String get fiscalVatSettings => 'КНС жөндөөлөрү';
-
-  @override
-  String get fiscalVatPayer => 'КНС төлөөчү';
-
-  @override
-  String get fiscalPrintVat => 'Чекте КНС басуу';
-
-  @override
   String get fiscalSaved => 'Жөндөөлөр сакталды';
-
-  @override
-  String get fiscalSaveError => 'Сактоо катасы';
 
   @override
   String get printerSettingsTitle => 'Принтер жөндөөлөрү';
@@ -1518,33 +837,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get printerAddress => 'Принтер дареги';
-
-  @override
-  String get printerPaperWidth => 'Кагаз эни';
-
-  @override
-  String get printerTesting => 'Тестирлөө';
-
-  @override
-  String get printerReady => 'Даяр';
-
-  @override
-  String get printerNotConnected => 'Туташкан эмес';
-
-  @override
-  String get printerPaperOut2 => 'Кагаз жок';
-
-  @override
-  String get printerCoverOpen => 'Капкагы ачык';
-
-  @override
-  String get printerPrinting => 'Басып чыгаруу...';
-
-  @override
-  String get printerCheckStatus => 'Текшерүү...';
-
-  @override
-  String get printerPrintSuccess => 'Басып чыгаруу ийгиликтүү';
 
   @override
   String get paymentNotFiscalized => 'Чек фискалдашпады — төлөм катталды';
@@ -1560,40 +852,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get printerPrintError => 'Басып чыгаруу катасы';
 
   @override
-  String get printerCheckBtn => 'Текшерүү';
-
-  @override
-  String get printerTestReceipt => 'Тесттик чек';
-
-  @override
   String get printerPort => 'Порт';
-
-  @override
-  String get cashOperationTitle => 'Касса операциясы';
 
   @override
   String get cashWithdrawal => 'Алуу';
 
   @override
-  String get cashCommentRequired => 'Комментарий *';
-
-  @override
   String get cashCommentOptional => 'Комментарий';
-
-  @override
-  String get cashCommentHint => 'Комментарий жазыңыз...';
-
-  @override
-  String get cashEnterAmountMsg => 'Сумманы киргизиңиз';
-
-  @override
-  String get cashPositiveOnly => 'Сумма оң болушу керек';
-
-  @override
-  String get cashInsufficient => 'Кассада акча жетишсиз';
-
-  @override
-  String get cashInvalidAmount => 'Туура сумманы киргизиңиз';
 
   @override
   String get cashInDrawer => 'Кассада:';
@@ -1713,31 +978,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get updateAvailable => 'Жаңыртуу жеткиликтүү';
 
   @override
-  String get updateInProgress => 'Жаңыртылууда...';
-
-  @override
-  String updateAutoIn(int seconds) {
-    return 'Автожаңыртуу $seconds сек кийин';
-  }
-
-  @override
-  String get updateNowBtn => 'Азыр жаңыртуу';
-
-  @override
   String get updateLater => 'Кийин';
 
   @override
-  String get updateSkip => 'Өткөрүп жиберүү';
-
-  @override
-  String get updateBtn => 'Жаңыртуу';
-
-  @override
   String get storageWarningTitle => 'Дискте орун аз';
-
-  @override
-  String get storageWarningMsg =>
-      'Кассанын туруктуу иштеши үчүн эң аз дегенде 2 ГБ бошотуңуз.';
 
   @override
   String get storageUnderstood => 'Түшүнүктүү';
@@ -1815,14 +1059,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get enterPhone => 'Клиенттин телефон номерин киргизиңиз';
 
   @override
-  String get enterSmsCode => 'SMS-тен кодду киргизиңиз';
-
-  @override
-  String resendIn(int seconds) {
-    return '$seconds сек кийин кайра жөнөтүү';
-  }
-
-  @override
   String get resendCode => 'Кодду кайра жөнөтүү';
 
   @override
@@ -1830,21 +1066,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get useBonuses => 'Бонустарды эсептен чыгаруу';
-
-  @override
-  String get deferredSales => 'Кийинкиге калтырылган сатуулар';
-
-  @override
-  String get noDeferredSales => 'Кийинкиге калтырылган сатуулар жок';
-
-  @override
-  String get fiscalErrors => 'Фискализация каталары';
-
-  @override
-  String get selectAllErrors => 'Баарын тандоо';
-
-  @override
-  String get retrySelected => 'Кайталоо';
 
   @override
   String receiptNo(String number) {
@@ -1906,9 +1127,6 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get sumLabel => 'Сумма';
-
-  @override
   String get enterAmount => 'Сумманы киргизиңиз';
 
   @override
@@ -1919,9 +1137,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get enterValidAmount => 'Туура сумманы киргизиңиз';
-
-  @override
-  String get inDrawer => 'Кассада:';
 
   @override
   String get commentOptional => 'Комментарий (милдеттүү эмес)';
@@ -1985,18 +1200,6 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get receiptDiscountItem => 'Арзандатуу:';
-
-  @override
-  String get receiptSubtotalLabel => 'Аралык сумма';
-
-  @override
-  String get receiptPayment => 'Төлөм:';
-
-  @override
-  String get fiscalMark => 'ФБ:';
-
-  @override
   String remainingStock(String qty) {
     return 'Калд: $qty';
   }
@@ -2027,30 +1230,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get priceLabel => 'Баасы';
 
   @override
-  String get receiptTotalLabel => 'Чек боюнча жалпы';
-
-  @override
-  String get positionsLabel => 'Позициялар';
-
-  @override
-  String get toPayLabel => 'ТӨЛӨӨГӨ';
-
-  @override
   String get payBtn => 'ТӨЛӨӨ';
-
-  @override
-  String get totalLabel => 'Жалпы:';
-
-  @override
-  String posAndQty(int positions, String qty) {
-    return '$positions поз. / $qty даана';
-  }
-
-  @override
-  String get modeRetail => 'Чекене';
-
-  @override
-  String get modeWholesale => 'ДҮҢҮНӨН';
 
   @override
   String get quickProducts => 'Тез товарлар';
@@ -2084,23 +1264,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get enterValidPhone => 'Туура телефон номерин киргизиңиз';
 
   @override
-  String errorsCount(int count) {
-    return '$count ката';
-  }
-
-  @override
-  String selectAllCount(int count) {
-    return 'Баарын тандоо ($count)';
-  }
-
-  @override
   String retryCount(int count) {
     return 'Кайталоо ($count)';
-  }
-
-  @override
-  String receiptHash(int number) {
-    return 'Чек #$number';
   }
 
   @override
@@ -2112,15 +1277,6 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get drawerPrimary => 'Негизги';
-
-  @override
-  String get drawerSecondary => 'Кошумча';
-
-  @override
-  String get tooltipMore => 'Дагы';
-
-  @override
   String get statusOnline => 'Online';
 
   @override
@@ -2128,9 +1284,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get statusSyncing => 'Синхрондоо...';
-
-  @override
-  String get thankYouForPurchase => 'Сатып алганыңызга рахмат!';
 
   @override
   String get searchProductHint => 'Товар издөө (аты же штрих-код)';
@@ -2186,9 +1339,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get restaurantSettings => 'Ресторан режими';
 
   @override
-  String get restaurantSettingsDesc => 'Столдор, зоналар, сервис алымы';
-
-  @override
   String get restaurantOperatingMode => 'Иштөө режими';
 
   @override
@@ -2214,9 +1364,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get restaurantZoneAdd => 'Зона кошуу';
-
-  @override
-  String get restaurantZoneRename => 'Атын өзгөртүү';
 
   @override
   String get restaurantZonePresets => 'Алдын ала орнотуулар';
@@ -2321,11 +1468,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get restaurantOrdersEmpty => 'Активдүү заказдар жок';
 
   @override
-  String restaurantOrderItems(int count) {
-    return '$count позиция';
-  }
-
-  @override
   String restaurantOrderGuests(int count) {
     return 'Конокторо: $count';
   }
@@ -2347,9 +1489,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get restaurantOpenOrder => 'Заказ ачуу';
 
   @override
-  String get restaurantCloseOrder => 'Заказды жабуу';
-
-  @override
   String get restaurantAddItems => 'Позиция кошуу';
 
   @override
@@ -2357,12 +1496,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get restaurantTransfer => 'Которуу';
-
-  @override
-  String get restaurantSplitBill => 'Бөлүү';
-
-  @override
-  String get restaurantChangeStatus => 'Статусту өзгөртүү';
 
   @override
   String get restaurantSetFree => 'Бош';
@@ -2387,12 +1520,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get restaurantNote => 'Эскертүү';
-
-  @override
-  String get restaurantDeliveryAddress => 'Жеткирүү дареги';
-
-  @override
-  String get restaurantDeliveryPhone => 'Телефон';
 
   @override
   String get restaurantTransferTitle => 'Заказды которуу';
@@ -2470,14 +1597,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get restaurantPreCheckFailed => 'Пре-чек басып чыгаруу катасы';
 
   @override
-  String get restaurantSubtotal => 'Аралык сумма';
-
-  @override
-  String restaurantServiceChargeLine(String percent) {
-    return 'Сервис алымы ($percent%)';
-  }
-
-  @override
   String restaurantOrderNumber(int number) {
     return 'Заказ #$number';
   }
@@ -2511,17 +1630,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get restaurantMenuTab => 'Меню';
-
-  @override
-  String restaurantGuestLabel(int number) {
-    return 'Конок $number';
-  }
-
-  @override
-  String get restaurantRemoveItem => 'Товарды жок кылуу';
-
-  @override
-  String get restaurantPrintPrecheck => 'Алдын ала чек';
 
   @override
   String get restaurantNewTakeout => 'Алып кетүү';
@@ -2583,9 +1691,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupStepChecking => 'Текшерүү';
 
   @override
-  String get setupStepTelegram => 'Telegram';
-
-  @override
   String get setupStepCountry => 'Өлкө';
 
   @override
@@ -2596,9 +1701,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get setupStepUsers => 'Колдонуучулар';
-
-  @override
-  String get setupStepWorkMode => 'Иштөө режими';
 
   @override
   String get setupStepPos => 'Касса';
@@ -2681,18 +1783,6 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String setupVatRateLabel(int rate) {
-    return 'КНС: $rate%';
-  }
-
-  @override
-  String get setupOrganizationTitle => 'Уюм маалыматтары';
-
-  @override
-  String get setupOrganizationDescription =>
-      'Компанияңыз жөнүндө маалыматты киргизиңиз';
-
-  @override
   String get setupCompanyNameLabel => 'Уюмдун аталышы';
 
   @override
@@ -2714,12 +1804,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get setupPhoneLabel => 'Телефон';
-
-  @override
-  String get setupVatTitle => 'Кошумча наркка салык';
-
-  @override
-  String get setupVatDescription => 'Уюмуңуздун салык режимин тандаңыз';
 
   @override
   String get setupVatPayerTitle => 'КНС төлөөчү';
@@ -2745,45 +1829,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get setupVatNonPayerDescription =>
       'Чектерде КНС бөлүнбөйт.\nЖөнөкөйлөштүрүлгөн системадагы ЖИ үчүн.';
-
-  @override
-  String get setupWorkModeTitle => 'Иштөө режими';
-
-  @override
-  String get setupWorkModeDescription => 'Кассаңыз кантип иштээрин тандаңыз';
-
-  @override
-  String get setupAutonomousTitle => 'Автономдук режим';
-
-  @override
-  String get setupAutonomousSubtitle => 'Интернетсиз иштөө';
-
-  @override
-  String get setupAutonomousDescription =>
-      'Касса толугу менен автономдук иштейт.\nМаалыматтар жергиликтүү гана сакталат.\nКассалар ортосунда шайкештирүү жок.';
-
-  @override
-  String get setupNetworkTitle => 'Тармактык режим';
-
-  @override
-  String get setupNetworkConfigured => 'Telegram жөндөлгөн';
-
-  @override
-  String get setupNetworkRequired => 'Telegram талап кылынат';
-
-  @override
-  String get setupNetworkDescription =>
-      'Кассалар ортосунда маалыматтарды шайкештирүү.\nБулутка камдык көчүрмө.\nTelegram-да отчеттор жана билдирмелер.';
-
-  @override
-  String get setupNetworkRequiresTelegram =>
-      'Тармактык режим үчүн Telegram жөндөө зарыл';
-
-  @override
-  String get setupOperatingModeTitle => 'Бизнес түрү';
-
-  @override
-  String get setupOperatingModeDescription => 'Бизнесиңиздин түрүн тандаңыз';
 
   @override
   String get setupRetailTitle => 'Чекене касса';
@@ -2814,13 +1859,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get setupServiceDescription =>
       'Оңдоого/тейлөөгө кабыл алуу.\nЗаказ-наряддар жана иштер белгилери.\nСтатусту көзөмөлдөө жана берүү.';
-
-  @override
-  String get setupPosConfigTitle => 'Кассаны жөндөө';
-
-  @override
-  String get setupPosConfigDescription =>
-      'Касса аппаратынын параметрлерин көрсөтүңүз';
 
   @override
   String get setupCashBoxNameLabel => 'Касса аталышы';
@@ -2858,10 +1896,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get setupFiscalNotRequired =>
       'Сиздин өлкө үчүн фискализация талап кылынбайт';
-
-  @override
-  String get setupFiscalDescription =>
-      'Фискалдык оператор менен туташууну жөндөңүз';
 
   @override
   String get setupEnableWebkassa => 'WebKassa иштетүү';
@@ -2929,12 +1963,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupOfdUrlLabel => 'ОФД URL';
 
   @override
-  String get setupEquipmentTitle => 'Жабдуулар';
-
-  @override
-  String get setupEquipmentDescription => 'Туташкан жабдууларды жөндөңүз';
-
-  @override
   String get setupEquipmentPrinter => 'Чек принтери';
 
   @override
@@ -2965,9 +1993,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupConnectionSerial => 'COM-порт';
 
   @override
-  String get setupConnectionNone => 'Тандалган эмес';
-
-  @override
   String get setupPrinterIpLabel => 'Принтердин IP-дареги';
 
   @override
@@ -2995,23 +2020,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupScalePortLabel => 'COM-порт';
 
   @override
-  String get setupBaudRateLabel => 'Ылдамдык (baud rate)';
-
-  @override
-  String get setupCashDrawerConnected => 'Принтерге туташкан';
-
-  @override
   String get setupCashDrawerConnectedDesc => 'Принтердин буйругу менен ачылат';
-
-  @override
-  String get setupSkip => 'Өткөрүп жиберүү';
-
-  @override
-  String get setupPaymentTerminalsTitle => 'Төлөм терминалдары';
-
-  @override
-  String get setupPaymentTerminalsDescription =>
-      'Төлөм системалары менен интеграцияны жөндөңүз';
 
   @override
   String get setupKaspiIpLabel => 'Терминалдын IP-дареги';
@@ -3020,21 +2029,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupPortLabel => 'Порт';
 
   @override
-  String get setupApiUrlLabel => 'API URL';
-
-  @override
-  String get setupApiKeyLabel => 'API ачкыч';
-
-  @override
   String get setupNoTerminalsAvailable =>
       'Сиздин аймак үчүн жеткиликтүү төлөм терминалдары жок';
-
-  @override
-  String get setupBusinessRulesTitle => 'Бизнес-эрежелер';
-
-  @override
-  String get setupBusinessRulesDescription =>
-      'Кассанын иштөө эрежелерин жөндөңүз';
 
   @override
   String get setupPermissionsTitle => 'Уруксаттар';
@@ -3101,50 +2097,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupCashbackRateLabel => 'Кешбэк пайызы';
 
   @override
-  String get setupRoundingTitle => 'Тегеректөө';
-
-  @override
-  String get setupDiscountRounding => 'Арзандатууларды тегеректөө';
-
-  @override
-  String get setupWeightRounding => 'Салмак товарларды тегеректөө';
-
-  @override
-  String get setupRoundingNone => 'Тегеректөөсүз';
-
-  @override
-  String get setupRoundingUp1 => '1-ге чейин (жогору)';
-
-  @override
-  String get setupRoundingDown1 => '1-ге чейин (төмөн)';
-
-  @override
-  String get setupRoundingUp5 => '5-ке чейин (жогору)';
-
-  @override
-  String get setupRoundingDown5 => '5-ке чейин (төмөн)';
-
-  @override
-  String get setupRoundingUp10 => '10-го чейин (жогору)';
-
-  @override
-  String get setupRoundingDown10 => '10-го чейин (төмөн)';
-
-  @override
-  String get setupFiscalDisablesRounding =>
-      'Фискализация иштетилгенде тегеректөө автоматтык түрдө өчүрүлөт';
-
-  @override
-  String get setupUserCreationTitle => 'Колдонуучуларды түзүү';
-
-  @override
-  String get setupUserCreationDescription =>
-      'Касса менен иштөө үчүн колдонуучуларды түзүңүз';
-
-  @override
-  String get setupAdminLabel => 'Администратор';
-
-  @override
   String get setupAdminSubtitle => 'Касса ээси';
 
   @override
@@ -3157,47 +2109,17 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupUserPinConfirmLabel => 'Ырастоо';
 
   @override
-  String get setupAdminPinDefault => 'Демейки боюнча: 0000';
-
-  @override
   String get setupSellerLabel => 'Сатуучу';
 
   @override
   String get setupSellerOptional => 'Кошумча';
 
   @override
-  String get setupSellerPinDefault => 'Демейки боюнча: 1111';
-
-  @override
   String get setupAdminPinMismatch =>
       'Администратордун PIN-коддору дал келбейт';
 
   @override
-  String get setupSummaryTitle => 'Маалыматтарды текшериңиз';
-
-  @override
-  String get setupSummaryDescription => 'Баары туура көрсөтүлгөнүн текшериңиз';
-
-  @override
-  String get setupSummaryCountry => 'Өлкө';
-
-  @override
-  String get setupSummaryCurrency => 'Валюта';
-
-  @override
   String get setupSummaryFormat => 'Формат';
-
-  @override
-  String get setupSummaryVat => 'КНС';
-
-  @override
-  String get setupSummaryTelegram => 'Telegram';
-
-  @override
-  String get setupSummaryStatus => 'Статус';
-
-  @override
-  String get setupConfigured => 'Жөндөлгөн';
 
   @override
   String get setupNotConfigured => 'Жөндөлгөн эмес';
@@ -3209,28 +2131,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupSummaryName => 'Аталышы';
 
   @override
-  String get setupSummaryAddress => 'Дарек';
-
-  @override
-  String get setupSummaryWorkMode => 'Иштөө режими';
-
-  @override
-  String get setupSummaryMode => 'Режим';
-
-  @override
-  String get setupSummaryAutonomous => 'Автономдук (тармаксыз)';
-
-  @override
-  String get setupSummaryNetwork => 'Тармактык (шайкештирүү)';
-
-  @override
-  String get setupSummaryPos => 'Касса';
-
-  @override
   String get setupSummaryId => 'ID';
-
-  @override
-  String get setupEnabled => 'Иштетилген';
 
   @override
   String get setupDisabled => 'Өчүрүлгөн';
@@ -3251,30 +2152,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupSummaryScales => 'Тараза';
 
   @override
-  String get setupSummaryCashDrawer => 'Акча кутусу';
-
-  @override
-  String get setupSummaryTerminals => 'Төлөм терминалдары';
-
-  @override
-  String get setupSummaryRules => 'Бизнес-эрежелер';
-
-  @override
-  String get setupSummaryDiscounts => 'Арзандатуулар';
-
-  @override
-  String get setupSummaryDebtSales => 'Карызга';
-
-  @override
-  String get setupSummaryCashback => 'Кешбэк';
-
-  @override
-  String get setupSummaryBigAmount => 'Чоң суммалар';
-
-  @override
-  String get setupSummaryUsers => 'Колдонуучулар';
-
-  @override
   String get setupSummaryAdmin => 'Администратор';
 
   @override
@@ -3287,45 +2164,9 @@ class AppLocalizationsKy extends AppLocalizations {
   String get setupCompleteSubtitle => 'Касса иштөөгө даяр';
 
   @override
-  String get setupStartWork => 'Иштей баштоо';
-
-  @override
   String setupVatPayerSummary(String rate) {
     return 'КНС төлөөчү ($rate%)';
   }
-
-  @override
-  String get setupSummaryWkPosId => 'Касса ID WK';
-
-  @override
-  String get setupSummaryOfdInn => 'ИНН';
-
-  @override
-  String get setupScalesConfigured => 'Жөндөлгөн';
-
-  @override
-  String get setupScalesNotConfigured => 'Жөндөлгөн эмес';
-
-  @override
-  String get setupCashDrawerOn => 'Күйгүзүлгөн';
-
-  @override
-  String get setupAllowed => 'Уруксат берилген';
-
-  @override
-  String get setupDenied => 'Тыюу салынган';
-
-  @override
-  String get setupAllowedFem => 'Уруксат берилген';
-
-  @override
-  String get setupDeniedFem => 'Тыюу салынган';
-
-  @override
-  String get setupCashbackOff => 'Өчүрүлгөн';
-
-  @override
-  String get setupBigAmountLimit => 'Лимит 100 000';
 
   @override
   String get setupDisplayPortLabel => 'COM-порт';
@@ -3595,13 +2436,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get chatNoResults => 'Эч нерсе табылган жок';
 
   @override
-  String get chatCopyUidInstructions =>
-      'UID-ди башка системаларда колдонуу үчүн көчүрүңүз';
-
-  @override
-  String get chatUidExample => 'Мисалы: telepos@pos-1';
-
-  @override
   String get chatServiceUnavailable => 'Кызмат жеткиликсиз';
 
   @override
@@ -3694,15 +2528,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get additionalPrintingLastReceipt => 'Акыркы чекти басып чыгаруу...';
 
   @override
-  String get additionalTestReceiptTitle => '=== ТЕСТТИК ЧЕК ===';
-
-  @override
   String get additionalReceiptPrinted => 'Чек басылды';
-
-  @override
-  String additionalPriceSearching(String query) {
-    return 'Издөө: $query';
-  }
 
   @override
   String get additionalMinimizing => 'Терезени кичирейтүү...';
@@ -3757,17 +2583,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get additionalBarcodeHint => 'Сканерлеңиз же киргизиңиз';
-
-  @override
-  String additionalTestReceiptProduct(String number) {
-    return 'Товар $number';
-  }
-
-  @override
-  String get additionalTestReceiptTotal => 'ЖАЛПЫ:';
-
-  @override
-  String get additionalTestReceiptThankYou => 'Сатып алганыңыз үчүн рахмат!';
 
   @override
   String get langRussian => 'Русский';
@@ -3897,105 +2712,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get transportNotifyQueueFullDesc => 'Кезек толгондо кабарлоо';
 
   @override
-  String saleErrorInitiation(String error) {
-    return 'Сатуу баштоо катасы: $error';
-  }
-
-  @override
-  String get saleErrorNotInitialized => 'Сатуу башталган эмес';
-
-  @override
-  String get saleErrorEmpty => 'Чек бош';
-
-  @override
-  String saleErrorCompletion(String error) {
-    return 'Сатууну аяктоо катасы: $error';
-  }
-
-  @override
-  String saleErrorSearch(String error) {
-    return 'Издөө катасы: $error';
-  }
-
-  @override
-  String saleErrorDeferred(String error) {
-    return 'Чекти кийинкиге калтыруу катасы: $error';
-  }
-
-  @override
-  String get saleErrorDeferredNotFound =>
-      'Кийинкиге калтырылган чек табылган жок';
-
-  @override
-  String saleErrorLoadingDeferred(String error) {
-    return 'Кийинкиге калтырылган чекти жүктөө катасы: $error';
-  }
-
-  @override
   String get paymentCustomerDefault => 'Клиент';
 
   @override
-  String get paymentErrorFormation =>
-      'Төлөмдү түзүү мүмкүн болгон жок. Эсептердин жөндөөлөрүн текшериңиз.';
-
-  @override
-  String get paymentErrorSaving => 'Сатууну сактоо катасы';
-
-  @override
-  String paymentErrorProcessing(String error) {
-    return 'Төлөмдү иштетүү катасы: $error';
-  }
-
-  @override
-  String paymentAccountDefault(int id) {
-    return 'Эсеп $id';
-  }
-
-  @override
-  String refundErrorReceiptNotFound(String number) {
-    return 'Чек #$number табылган жок';
-  }
-
-  @override
-  String refundErrorLoadingReceipt(String error) {
-    return 'Чекти жүктөө катасы: $error';
-  }
-
-  @override
-  String refundErrorSearch(String error) {
-    return 'Издөө катасы: $error';
-  }
-
-  @override
-  String get refundErrorProductNotFound => 'Товар табылган жок';
-
-  @override
   String get refundErrorNotAuthenticated => 'Колдонуучу авторизацияланган эмес';
-
-  @override
-  String refundErrorProcessing(String error) {
-    return 'Кайтаруу катасы: $error';
-  }
-
-  @override
-  String shiftErrorLoadingData(String error) {
-    return 'Смена маалыматтарын жүктөө катасы: $error';
-  }
-
-  @override
-  String shiftErrorOpening(String error) {
-    return 'Сменаны ачуу катасы: $error';
-  }
-
-  @override
-  String shiftErrorClosing(String error) {
-    return 'Сменаны жабуу катасы: $error';
-  }
-
-  @override
-  String shiftErrorPrinting(String error) {
-    return 'Z-отчетту басып чыгаруу катасы: $error';
-  }
 
   @override
   String get cashOpTypeInvestment => 'Салуу';
@@ -4008,47 +2728,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get supplyNoName => 'Аты жок';
-
-  @override
-  String get supplyNoTitle => 'Аталышы жок';
-
-  @override
-  String get supplyErrorSupplierNotFound => 'Жеткирүүчү табылган жок';
-
-  @override
-  String supplyErrorSelectingSupplier(String error) {
-    return 'Жеткирүүчүнү тандоо катасы: $error';
-  }
-
-  @override
-  String get supplyErrorAccountNotFound => 'Эсеп табылган жок';
-
-  @override
-  String supplyErrorSelectingAccount(String error) {
-    return 'Эсепти тандоо катасы: $error';
-  }
-
-  @override
-  String supplyErrorAddingProduct(String error) {
-    return 'Товар кошуу катасы: $error';
-  }
-
-  @override
-  String get supplyErrorProductNotFound => 'Товар табылган жок';
-
-  @override
-  String get supplyErrorMissingFields =>
-      'Бардык милдеттүү талааларды толтуруңуз';
-
-  @override
-  String supplyErrorSaving(String error) {
-    return 'Сактоо катасы: $error';
-  }
-
-  @override
-  String historyErrorLoading(String error) {
-    return 'Тарыхты жүктөө катасы: $error';
-  }
 
   @override
   String get syncTypeProducts => 'Товарлар';
@@ -4081,110 +2760,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get syncTypeSupplies => 'Кабылдоолор';
 
   @override
-  String get syncStepPreparing => 'Даярдоо...';
-
-  @override
-  String syncStepUploading(String type) {
-    return 'Чыгаруу: $type';
-  }
-
-  @override
-  String syncStepDownloading(String type) {
-    return 'Жүктөө: $type';
-  }
-
-  @override
   String get syncCompleted => 'Шайкештирүү аяктады';
-
-  @override
-  String get loginErrorNoUsers => 'Каттоодон өткөн колдонуучулар жок';
-
-  @override
-  String loginErrorLoadingData(String error) {
-    return 'Маалыматтарды жүктөө катасы: $error';
-  }
-
-  @override
-  String get loginErrorSelectUser => 'Колдонуучуну тандаңыз';
-
-  @override
-  String get loginErrorIncompletePin => 'PIN-кодду киргизиңиз (минимум 4 сан)';
-
-  @override
-  String get loginErrorNoRsaKey =>
-      'Ката: RSA ачкычы жөндөлгөн эмес. Администраторго кайрылыңыз.';
-
-  @override
-  String get loginErrorWrongPin => 'Туура эмес PIN-код';
-
-  @override
-  String get loginErrorSystemTime =>
-      'Системалык убакыт туура эмес. Күн жана убакыт жөндөөлөрүн текшериңиз.';
-
-  @override
-  String get receiptLabelBin => 'БИН:';
-
-  @override
-  String get receiptLabelPhone => 'Тел:';
-
-  @override
-  String get receiptLabelReceiptNo => 'Чек №:';
-
-  @override
-  String get receiptLabelPosId => 'Касса:';
-
-  @override
-  String get receiptLabelDate => 'Күнү:';
-
-  @override
-  String get receiptLabelCashier => 'Кассир:';
-
-  @override
-  String get receiptLabelTable => 'Стол:';
-
-  @override
-  String get receiptLabelWaiter => 'Официант:';
-
-  @override
-  String get receiptLabelGuests => 'Конок:';
-
-  @override
-  String get receiptLabelCustomer => 'Клиент:';
-
-  @override
-  String get receiptLabelSubtotal => 'Аралык жыйынтык:';
-
-  @override
-  String get receiptLabelDiscount => 'Арзандатуу:';
-
-  @override
-  String get receiptLabelServiceCharge => 'Сервис алымы:';
 
   @override
   String get receiptLabelTotal => 'ЖАЛПЫ:';
 
   @override
-  String receiptLabelVat(String percent) {
-    return 'анын ичинде КНС $percent%:';
-  }
-
-  @override
-  String get receiptLabelCash => 'Накталай:';
-
-  @override
-  String get receiptLabelCard => 'Карта:';
-
-  @override
   String get receiptLabelChange => 'Кайтарым:';
-
-  @override
-  String get receiptLabelCheckReceipt => 'Чекти текшерүү:';
-
-  @override
-  String get receiptLabelItemName => 'Аталышы';
-
-  @override
-  String get receiptLabelQty => 'Сан';
 
   @override
   String get receiptLabelPrice => 'Баа';
@@ -4193,146 +2775,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get receiptLabelAmount => 'Сумма';
 
   @override
-  String get receiptLabelItemDiscount => 'Арзандатуу:';
-
-  @override
-  String get receiptLabelFiscalBin => 'БИН:';
-
-  @override
-  String get receiptLabelFiscalNo => 'ФН:';
-
-  @override
-  String get receiptLabelFiscalSign => 'ФП:';
-
-  @override
-  String get receiptLabelVatCertificate => 'КНС:';
-
-  @override
-  String get receiptLabelOfflineMode => '*** ОФФЛАЙН ***';
-
-  @override
-  String get receiptLabelRefundHeader => '*** КАЙТАРУУ ***';
-
-  @override
-  String get receiptLabelRefundNo => 'Кайтаруу №:';
-
-  @override
-  String get receiptLabelReason => 'Себеп:';
-
-  @override
-  String get receiptLabelRefundTotal => 'КАЙТАРУУГА:';
-
-  @override
-  String get receiptLabelZReport => 'Z-ОТЧЕТ';
-
-  @override
-  String get receiptLabelShiftClosing => 'СМЕНА ЖАБУУ';
-
-  @override
-  String get receiptLabelShiftNo => 'Смена №:';
-
-  @override
-  String get receiptLabelShiftOpenTime => 'Ачылган:';
-
-  @override
-  String get receiptLabelShiftCloseTime => 'Жабылган:';
-
-  @override
-  String get receiptLabelSales => 'САТУУЛАР';
-
-  @override
-  String get receiptLabelQuantity => 'Саны:';
-
-  @override
-  String get receiptLabelCashSales => 'Накталай:';
-
-  @override
-  String get receiptLabelCardSales => 'Карта:';
-
-  @override
-  String get receiptLabelSalesTotal => 'Жалпы:';
-
-  @override
-  String get receiptLabelRefunds => 'КАЙТАРУУЛАР';
-
-  @override
-  String get receiptLabelRefundQty => 'Саны:';
-
-  @override
-  String get receiptLabelRefundAmount => 'Суммасы:';
-
-  @override
-  String get receiptLabelCashOperations => 'КАССА ОПЕРАЦИЯЛАРЫ';
-
-  @override
-  String get receiptLabelInvestments => 'Салуулар:';
-
-  @override
-  String get receiptLabelExpenses => 'Чыгымдар:';
-
-  @override
-  String get receiptLabelRevenue => 'КИРЕШE:';
-
-  @override
-  String get receiptLabelCashInDrawer => 'КАССАДА:';
-
-  @override
-  String get receiptLabelXReport => 'X-ОТЧЕТ';
-
-  @override
-  String get receiptLabelType => 'Түрү:';
-
-  @override
-  String get receiptLabelDescription => 'Сүрөттөмө:';
-
-  @override
-  String get receiptLabelDebtPayment => 'КАРЫЗДЫ ЖАБУУ';
-
-  @override
-  String get receiptLabelPreviousDebt => 'Карыз болгон:';
-
-  @override
-  String get receiptLabelPaidAmount => 'ТӨЛӨНДҮ:';
-
-  @override
-  String get receiptLabelRemainingDebt => 'Калдык:';
-
-  @override
-  String get receiptLabelTestPrint => 'TEST PRINT';
-
-  @override
   String get receiptLabelThankYou => 'Сатып алганыңызга рахмат!';
-
-  @override
-  String get receiptLabelSaleReceipt => 'КАССАЛЫК ЧЕК';
-
-  @override
-  String get receiptLabelOfflineHeader => '*** ОФФЛАЙН РЕЖИМ ***';
-
-  @override
-  String get receiptLabelVatCertificateTitle => 'КНС күбөлүгү:';
-
-  @override
-  String get fiscalErrorBin12Digits => 'БИН 12 сандан турушу керек';
-
-  @override
-  String get fiscalErrorBinDigitsOnly => 'БИН сандардан гана турушу керек';
-
-  @override
-  String get fiscalErrorFiscalNoRequired => 'Фискалдык номер милдеттүү';
-
-  @override
-  String get fiscalErrorRnkRequired => 'РНК милдеттүү';
-
-  @override
-  String get fiscalErrorZnkRequired => 'ЗНК милдеттүү';
-
-  @override
-  String get fiscalErrorVatSerialRequired =>
-      'КНС күбөлүгүнүн сериясы милдеттүү';
-
-  @override
-  String get fiscalErrorVatNumberRequired => 'КНС күбөлүгүнүн номери милдеттүү';
 
   @override
   String get telegramTabPhone => 'Телефон менен';
@@ -4794,6 +3237,25 @@ class AppLocalizationsKy extends AppLocalizations {
   String get generalSettingsNotSpecified => 'Көрсөтүлгөн эмес';
 
   @override
+  String get generalSettingsDataLocation => 'Маалыматтар кайда жатат';
+
+  @override
+  String get generalSettingsDataLocationDesc =>
+      'Касса баарын ушул машинада сактайт. Кайда экенин билүү камдык көчүрмө жана көчүү үчүн керек.';
+
+  @override
+  String get generalSettingsDataDb => 'Маалымат базасы';
+
+  @override
+  String get generalSettingsDataLogs => 'Журналдар';
+
+  @override
+  String get generalSettingsDataBackups => 'Камдык көчүрмөлөр';
+
+  @override
+  String get generalSettingsPathCopied => 'Жол көчүрүлдү';
+
+  @override
   String get generalSettingsAppVersion => 'Тиркеменин версиясы';
 
   @override
@@ -4838,9 +3300,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get generalSettingsCountry => 'Өлкө';
 
   @override
-  String get generalSettingsAdditional => 'Кошумча орнотуулар';
-
-  @override
   String get generalSettingsTransport => 'Транспорт';
 
   @override
@@ -4852,12 +3311,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get generalSettingsPrinterSubtitle => 'Чек басып чыгаруу орнотуулары';
-
-  @override
-  String get generalSettingsPermissions => 'Уруксаттар';
-
-  @override
-  String get generalSettingsPermissionsSubtitle => 'Кассирлер үчүн уруксаттар';
 
   @override
   String get generalSettingsFiscal => 'Фискализация';
@@ -4892,21 +3345,11 @@ class AppLocalizationsKy extends AppLocalizations {
   String get generalSettingsCurrencyDesc => 'Валюта жана өлкө';
 
   @override
-  String get generalSettingsUpdate => 'Жаңыртуу';
-
-  @override
-  String get generalSettingsUpdateSubtitle =>
-      'Жаңыртууларды текшерүү жана орнотуу';
-
-  @override
   String get generalSettingsAppUpdate => 'Тиркемени жаңыртуу';
 
   @override
   String get generalSettingsAppUpdateSubtitle =>
       'Касса тиркемесин жаңыртуу (ОС жаңыртуусу менен чаташтырбаңыз)';
-
-  @override
-  String get generalSettingsUpdateDesc => 'Учурдагы версия жана жаңыртуулар';
 
   @override
   String get settingsUpdateTitle => 'Колдонмону жаңыртуу';
@@ -5026,104 +3469,7 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get printerSettingsPrinting => 'Басып чыгарылууда...';
-
-  @override
-  String get printerSettingsTestReceipt => 'ТЕСТТИК ЧЕК';
-
-  @override
-  String get printerSettingsWidth => 'Туурасы:';
-
-  @override
-  String printerSettingsWidthValue(int width) {
-    return '$width символ';
-  }
-
-  @override
-  String get printerSettingsType => 'Түрү:';
-
-  @override
-  String get printerSettingsAddress => 'Дарек:';
-
-  @override
-  String get printerSettingsNotSpecifiedAddr => 'Көрсөтүлгөн эмес';
-
-  @override
-  String get printerSettingsPrinterWorks => 'Принтер иштейт!';
-
-  @override
-  String get printerSettingsPrintSuccess => 'Басып чыгаруу ийгиликтүү';
-
-  @override
-  String get printerSettingsPrintError => 'Басып чыгаруу катасы';
-
-  @override
-  String get printerSettingsNotConnected => 'Туташкан эмес';
-
-  @override
-  String get printerSettingsChecking => 'Текшерилүүдө...';
-
-  @override
-  String get printerSettingsReady => 'Даяр';
-
-  @override
-  String get printerSettingsNoPaper => 'Кагаз жок';
-
-  @override
-  String get printerSettingsCoverOpen => 'Капкак ачык';
-
-  @override
   String get printerSettingsSave => 'Сактоо';
-
-  @override
-  String get printerSettingsConnectionType => 'Туташуу түрү';
-
-  @override
-  String get printerSettingsPrinterAddress => 'Принтер дареги';
-
-  @override
-  String get printerSettingsPaperWidth => 'Кагаз туурасы';
-
-  @override
-  String get printerSettingsTesting => 'Тестирлөө';
-
-  @override
-  String printerSettingsStatus(String status) {
-    return 'Абал: $status';
-  }
-
-  @override
-  String get printerSettingsCheck => 'Текшерүү';
-
-  @override
-  String get printerSettingsTestCheck => 'Тесттик чек';
-
-  @override
-  String get printerSettingsPort => 'Порт';
-
-  @override
-  String get printerSettingsIpAddress => 'Принтердин IP дареги';
-
-  @override
-  String get printerSettingsMacAddress => 'MAC дарек же аталышы';
-
-  @override
-  String get printerSettingsPrinterName => 'Принтер аталышы';
-
-  @override
-  String get printerSettingsComPort => 'COM порт';
-
-  @override
-  String get printerSettingsSerialCom => 'Serial (COM)';
-
-  @override
-  String get printerSettingsPaperWidth58 => '58мм (32 символ)';
-
-  @override
-  String get printerSettingsPaperWidth80_42 => '80мм (42 символ)';
-
-  @override
-  String get printerSettingsPaperWidth80_48 => '80мм (48 символ)';
 
   @override
   String get fiscalSettingsTitle => 'Фискализация';
@@ -5143,61 +3489,19 @@ class AppLocalizationsKy extends AppLocalizations {
   String get fiscalSettingsOperator => 'Фискалдык оператор';
 
   @override
-  String get fiscalSettingsWebkassaSettings => 'WebKassa орнотуулары';
-
-  @override
-  String get fiscalSettingsTaxpayerInfo => 'Салык төлөөчүнүн маалыматтары';
-
-  @override
   String get fiscalSettingsVatSettings => 'КНС орнотуулары';
 
   @override
   String get fiscalSettingsWebkassaLabel => 'WebKassa';
 
   @override
-  String get fiscalSettingsWebkassaDesc => 'Булуттук фискалдык кызмат';
-
-  @override
-  String get fiscalSettingsOfdLabel => 'ОФД';
-
-  @override
-  String get fiscalSettingsOfdDesc => 'Фискалдык маалыматтар операторлору';
-
-  @override
   String get fiscalSettingsNoneLabel => 'Фискализациясыз';
-
-  @override
-  String get fiscalSettingsNoneDesc => 'Чектер ОФД-ге жөнөтүлбөйт';
-
-  @override
-  String get fiscalSettingsOfdId => 'ОФД ID';
-
-  @override
-  String get fiscalSettingsOfdIdHint => 'ОФД идентификатору';
-
-  @override
-  String get fiscalSettingsOfdName => 'ОФД аталышы';
-
-  @override
-  String get fiscalSettingsOfdNameHint => 'WebKassa / ОФД.kz';
 
   @override
   String get fiscalSettingsOfdHost => 'ОФД сервер дареги';
 
   @override
   String get fiscalSettingsOfdHostHint => 'https://api.webkassa.kz';
-
-  @override
-  String get fiscalSettingsWebkassaActive => 'WebKassa активдештирилди';
-
-  @override
-  String get fiscalSettingsWebkassaInactive => 'WebKassa активдештирилген эмес';
-
-  @override
-  String get fiscalSettingsCompanyName => 'Аталышы';
-
-  @override
-  String get fiscalSettingsCashBox => 'Касса';
 
   @override
   String get fiscalSettingsVatPayer => 'КНС төлөөчү';
@@ -5249,10 +3553,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get customerPaymentTender => 'Эмне менен кабыл алынды';
 
   @override
-  String get fiscalSettingsVatRate =>
-      'КНС ставкасы: 12% (3/28 формуласы менен)';
-
-  @override
   String historyProductUcode(String ucode) {
     return 'Товар #$ucode';
   }
@@ -5265,11 +3565,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String historyAccountId(String id) {
     return 'Эсеп #$id';
-  }
-
-  @override
-  String historyLoadError(String error) {
-    return 'Жүктөө катасы: $error';
   }
 
   @override
@@ -5423,26 +3718,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get historyLastPage => 'Акыркы бет';
 
   @override
-  String historyAmount(String amount) {
-    return 'Сумма: $amount';
-  }
-
-  @override
-  String historyDate(String date) {
-    return 'Күнү: $date';
-  }
-
-  @override
-  String historyPos(String id) {
-    return 'POS: $id';
-  }
-
-  @override
-  String historyClientName(String name) {
-    return 'Кардар: $name';
-  }
-
-  @override
   String get historyFiscalYes => 'Ооба';
 
   @override
@@ -5557,10 +3832,6 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get shiftFinishSalesBeforeClose =>
-      'Сменаны жабуудан мурун сатууларды аяктаңыз же жокко чыгарыңыз';
-
-  @override
   String get shiftBillsTab => 'Купюралар';
 
   @override
@@ -5617,9 +3888,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get supplyProductNotFound => 'Товар табылган жок';
-
-  @override
-  String get supplyInvalidQuantity => 'Туура санды киргизиңиз';
 
   @override
   String get supplySelectSupplierTitle => 'Жеткирүүчүнү тандаңыз';
@@ -5793,9 +4061,6 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get syncWidgetWaiting => 'Күтүүдө';
-
-  @override
   String get syncWidgetSynced => 'Синхрондолду';
 
   @override
@@ -5815,24 +4080,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String syncWidgetDaysAgo(int days) {
     return '$days күн мурун';
   }
-
-  @override
-  String get syncWidgetConnecting => 'Серверге туташууда...';
-
-  @override
-  String get syncWidgetSyncingProducts => 'Товарларды синхрондоо...';
-
-  @override
-  String get syncWidgetSyncingSales => 'Сатууларды синхрондоо...';
-
-  @override
-  String get syncWidgetSyncingAgents => 'Контрагенттерди синхрондоо...';
-
-  @override
-  String get syncWidgetSyncingPrices => 'Бааларды синхрондоо...';
-
-  @override
-  String get syncWidgetFinishing => 'Аяктоодо...';
 
   @override
   String get updateDialogUpdating => 'Жаңыртуу...';
@@ -5923,9 +4170,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get versionConflictContinue => 'Улантуу';
 
   @override
-  String get restoreLoadingBackups => 'Бэкаптар жүктөлүүдө...';
-
-  @override
   String get restoreSearchingBackups => 'Бэкаптарды издөө...';
 
   @override
@@ -6003,25 +4247,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get agentEnterCustomerName => 'Кардардын атын жазыңыз';
-
-  @override
-  String get agentDeletedCustomerPhone => 'Бул телефон менен кардар өчүрүлгөн';
-
-  @override
-  String get agentWantRestore => 'Калыбына келтиресизби?';
-
-  @override
-  String get agentDeleteCustomerTitle => 'Кардарды өчүрөсүзбү?';
-
-  @override
-  String agentDeleteConfirmMessage(String name) {
-    return '\"$name\" өчүрүүгө ишенесизби?';
-  }
-
-  @override
-  String agentCustomerDeleted(String name) {
-    return 'Кардар \"$name\" өчүрүлдү';
-  }
 
   @override
   String get cashOpTitle => 'Кассалык операция';
@@ -6532,9 +4757,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get authNoPin => 'PIN жок';
 
   @override
-  String get authSelectUser => 'Колдонуучуну тандаңыз';
-
-  @override
   String get authNoUsersShort => 'Колдонуучулар жок';
 
   @override
@@ -6575,15 +4797,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get updatePosNow => 'КАССАНЫ ЖАҢЫРТУУ';
 
   @override
-  String get serviceAddNote => 'Белги кошуу';
-
-  @override
   String get serviceClientLookup => 'Кардарды издөө';
-
-  @override
-  String serviceOrderDetail(int orderId) {
-    return 'Тапшырма-наряд чоо-жайы #$orderId';
-  }
 
   @override
   String get paymentDefaultLabel => 'Демейки';
@@ -6602,9 +4816,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get serviceIntakeDelivery => 'Жеткирүү';
-
-  @override
-  String get serviceIntakePickup => 'Кардардан алуу';
 
   @override
   String get serviceIntakeSave => 'Сактоо';
@@ -6670,16 +4881,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get serviceAddMark => 'Иш кошуу';
 
   @override
-  String get serviceDeleteMark => 'Белгини жок кылуу';
-
-  @override
   String get serviceMarkDescription => 'Сүрөттөмө';
 
   @override
   String get serviceMarkType => 'Иш түрү';
-
-  @override
-  String get serviceMarkCost => 'Баа';
 
   @override
   String get serviceMarkNote => 'Эскертүү';
@@ -6721,9 +4926,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String serviceTechnicianAssigned(String name) {
     return 'Уста дайындалды: $name';
   }
-
-  @override
-  String get serviceTechnicianSelect => 'Уста тандаңыз';
 
   @override
   String get servicePrepayment => 'Алдын ала төлөм';
@@ -6768,11 +4970,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get serviceNeedsDelivery => 'Кардарга жеткирүү';
 
   @override
-  String serviceQrFormat(Object id, Object number) {
-    return 'TELEPOS:SO:$id:$number';
-  }
-
-  @override
   String get serviceOrderCreated => 'Жаңы тапшырма';
 
   @override
@@ -6789,9 +4986,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get catalogTitle => 'Товарлар каталогу';
-
-  @override
-  String get catalogSearch => 'Издөө';
 
   @override
   String get catalogSearchHint => 'Аталышы же штрихкод';
@@ -6839,16 +5033,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get catalogWholesalePrice => 'Дүңүнөн баа';
 
   @override
-  String get catalogCategory => 'Категория';
-
-  @override
   String get catalogMeasure => 'Өлчөм бирдиги';
 
   @override
   String get catalogQuantity => 'Калдык';
-
-  @override
-  String get catalogQuickProduct => 'Ыкчам товар';
 
   @override
   String get catalogAddToQuick => 'Ыкчамга кошуу';
@@ -6917,9 +5105,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get catalogPriceInvalid => 'Баа 0дөн жогору болушу керек';
-
-  @override
-  String get catalogBarcodeExists => 'Бул штрихкоддогу товар бар';
 
   @override
   String get catalogCategories => 'Категориялар';
@@ -7131,79 +5316,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get hwScannerTitle => 'Штрих-код сканери';
 
   @override
-  String get hwScannerMode => 'Сканер режими';
-
-  @override
-  String get hwScannerModeKeyboard => 'USB / клавиатура (wedge)';
-
-  @override
-  String get hwScannerModeSerial => 'Сериялык';
-
-  @override
-  String get hwScannerModeCamera => 'Камера';
-
-  @override
-  String get hwScannerModeHint => 'USB сканерлер ушул режимде иштейт';
-
-  @override
-  String get hwScannerTimeout => 'Таймаут';
-
-  @override
-  String get hwScannerMinLength => 'Мин. узундук';
-
-  @override
-  String get hwScannerMaxLength => 'Макс. узундук';
-
-  @override
   String get hwDisplayTitle => 'Сатып алуучу дисплейи';
-
-  @override
-  String get hwDisplayModel => 'Модель';
-
-  @override
-  String get hwDisplayModelLed8 => 'LED 8 символ';
-
-  @override
-  String get hwDisplayModelVfd20 => 'VFD 20x2';
-
-  @override
-  String get hwDisplayPort => 'COM-порт';
-
-  @override
-  String get hwDisplayBaudRate => 'Ылдамдык';
-
-  @override
-  String get hwDisplayDisabled => 'Сатып алуучу дисплейи өчүрүлгөн';
 
   @override
   String get hwDrawerTitle => 'Кассалык ящик';
 
   @override
-  String get hwDrawerMode => 'Ачуу режими';
-
-  @override
-  String get hwDrawerModePrinter => 'Принтер аркылуу';
-
-  @override
-  String get hwDrawerModeSerial => 'Сериялык порт';
-
-  @override
-  String get hwDrawerPort => 'COM-порт';
-
-  @override
   String get hwTerminalsTitle => 'Төлөм терминалдары';
-
-  @override
-  String get hwTerminalIp => 'IP-дарек';
-
-  @override
-  String get hwTerminalPort => 'Порт';
-
-  @override
-  String get hwTerminalMerchantId => 'Merchant ID';
-
-  @override
-  String get hwTerminalTerminalId => 'Terminal ID';
 
   @override
   String get catalogExportCsv => 'CSV экспорттоо';
@@ -7259,13 +5378,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get serviceConsumableSearch => 'Товар / чыгымды издөө';
 
   @override
-  String get serviceConsumableSelected => 'Тандалган товар';
-
-  @override
   String get serviceQuickServicesTitle => 'Тез кызматтар';
-
-  @override
-  String get serviceQuickServicesEmpty => 'Тез кызматтар жок';
 
   @override
   String get serviceIntakeItems => 'Кабыл алынуучу буюмдар';
@@ -7310,10 +5423,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get dishCalculation => 'Калькуляция';
 
   @override
-  String get dishCalculationStub =>
-      'Калькуляция модулу кийинчерээк жеткиликтүү болот';
-
-  @override
   String get dishIngredients => 'Ингредиенттер';
 
   @override
@@ -7327,9 +5436,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get serviceConsumableQuantity => '1 кызматка саны';
-
-  @override
-  String get serviceConsumablesAutoAdded => 'Чыгымдар автоматтык түрдө кошулду';
 
   @override
   String get catalogDescription => 'Сүрөттөмө';
@@ -7799,16 +5905,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get labelPrinterLanguage => 'Принтер тили';
 
   @override
-  String get labelPrinterSize => 'Этикетканын өлчөмү';
-
-  @override
   String get labelPrinterWidthMm => 'Туурасы, мм';
 
   @override
   String get labelPrinterHeightMm => 'Бийиктиги, мм';
-
-  @override
-  String get labelPrinterTestSuccess => 'Этикетка басып чыгарууга жөнөтүлдү';
 
   @override
   String get labelPrinterNotConfigured =>
@@ -7971,32 +6071,13 @@ class AppLocalizationsKy extends AppLocalizations {
   String get receiptTemplateFooterText => 'Аяк текст';
 
   @override
-  String get receiptTemplateExtraFooter => 'Кошумча аяк саптар';
-
-  @override
-  String get receiptTemplateExtraFooterHint =>
-      'Ар бири өзүнчө сап (мисалы, кайтаруу шарттары)';
-
-  @override
-  String get receiptTemplateShowBin => 'БСН/ЖСН басып чыгаруу';
-
-  @override
   String get receiptTemplateShowAddress => 'Дарек басып чыгаруу';
 
   @override
   String get receiptTemplateShowCashier => 'Касса/кассирди басып чыгаруу';
 
   @override
-  String get receiptTemplateShowVat => 'КНС басып чыгаруу';
-
-  @override
-  String get receiptTemplateShowQr => 'Текшерүү шилтемесин басып чыгаруу (QR)';
-
-  @override
   String get receiptTemplateShowItemNumbers => 'Позицияларды номерлөө';
-
-  @override
-  String get receiptTemplateShowLogo => 'Логотипти басып чыгаруу';
 
   @override
   String get receiptTemplateTestPrint => 'Сыноо басып чыгаруу';
@@ -8371,13 +6452,7 @@ class AppLocalizationsKy extends AppLocalizations {
       'Введите команду (например: systemctl status telepos-sysd)';
 
   @override
-  String get sysmTerminalRun => 'Выполнить';
-
-  @override
   String get sysmTerminalClear => 'Очистить вывод';
-
-  @override
-  String get sysmTerminalRunning => 'Выполняется…';
 
   @override
   String sysmTerminalExitCode(int code) {
@@ -8388,22 +6463,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get sysmTerminalEmpty => 'Вывод появится здесь';
 
   @override
-  String get sysmTerminalHistory => 'История команд';
-
-  @override
   String get sysmTerminalPresets => 'Пресеты';
-
-  @override
-  String get sysmTerminalPresetsNetwork => 'Сеть';
-
-  @override
-  String get sysmTerminalPresetsPrinters => 'Принтеры';
-
-  @override
-  String get sysmTerminalPresetsSystem => 'Система';
-
-  @override
-  String get sysmTerminalPresetsTime => 'Время';
 
   @override
   String get sysmTermGroupDiagnostics => 'Диагностика';
@@ -8489,13 +6549,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get sysmTermTimeNtpSync => 'NTP синхрондоо';
-
-  @override
-  String get labelPrinterDevicePath => 'Путь к устройству';
-
-  @override
-  String get labelPrinterDevicePathHint =>
-      'Например: /dev/usb/lp0 (USB) или /dev/ttyUSB0 (Serial). Оставьте пустым для значения по умолчанию.';
 
   @override
   String get movementTitle => 'Перемещение';
@@ -8682,9 +6735,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get esfSettingsOperator => 'Оператор ЭСФ';
 
   @override
-  String get esfSettingsTestMode => 'Тестовый режим';
-
-  @override
   String get esfSettingsSupplier => 'Реквизиты поставщика (наша организация)';
 
   @override
@@ -8707,15 +6757,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get esfSettingsVatRate => 'Ставка НДС, %';
-
-  @override
-  String get esfSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get esfSettingsEcpKeyPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get esfSettingsEcpKeyAlias => 'Алиас ключа';
 
   @override
   String get esfSettingsB2bOnly => 'Только B2B';
@@ -8741,9 +6782,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get esfOutboxEmptyHint =>
       'Счета-фактуры появятся здесь после продаж B2B';
-
-  @override
-  String get esfOutboxRetry => 'Повторить отправку';
 
   @override
   String get esfOutboxRetryAll => 'Повторить все';
@@ -8872,9 +6910,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get sntSettingsProvider => 'Способ отправки';
 
   @override
-  String get sntSettingsTestMode => 'Тестовый режим';
-
-  @override
   String get sntSettingsRequisites => 'Реквизиты налогоплательщика';
 
   @override
@@ -8882,32 +6917,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get sntSettingsWarehouseCode => 'Код виртуального склада';
-
-  @override
-  String get sntSettingsBackend => 'TelePOS backend (прокси ИС ЭСФ)';
-
-  @override
-  String get sntSettingsBackendUrl => 'URL бэкенда';
-
-  @override
-  String get sntSettingsApiKey => 'API-ключ';
-
-  @override
-  String get sntSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get sntSettingsCertPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get sntSettingsCertPassword => 'Пароль ключа';
-
-  @override
-  String get sntSettingsEcpHint =>
-      'Реальная отправка СНТ требует ЭЦП НУЦ РК и зарегистрированного профиля ИС ЭСФ. Без ЭЦП документы собираются и хранятся локально (Виртуальный склад работает офлайн).';
-
-  @override
-  String get sntSettingsSharedEsfHint =>
-      'СНТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.';
 
   @override
   String get sntSettingsWebkassaNote =>
@@ -9046,41 +7055,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get ismptSettingsBackend => 'Бэкенд';
 
   @override
-  String get ismptSettingsTestMode => 'Тестовый режим';
-
-  @override
-  String get ismptSettingsRequisites => 'Реквизиты налогоплательщика';
-
-  @override
-  String get ismptSettingsOwnBin => 'БИН / ИИН (наш)';
-
-  @override
-  String get ismptSettingsApi => 'True API (ismet.kz)';
-
-  @override
-  String get ismptSettingsApiUrl => 'URL API';
-
-  @override
-  String get ismptSettingsApiKey => 'API-ключ / токен';
-
-  @override
-  String get ismptSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get ismptSettingsCertPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get ismptSettingsCertPassword => 'Пароль ключа';
-
-  @override
-  String get ismptSettingsEcpHint =>
-      'Реальная работа с ИС МПТ требует ЭЦП НУЦ РК и зарегистрированного профиля участника оборота. Без ЭЦП коды маркировки принимаются и хранятся локально (приёмка работает офлайн, продажа не блокируется).';
-
-  @override
-  String get ismptSettingsSharedEsfHint =>
-      'ИС МПТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.';
-
-  @override
   String get ismptSettingsWebkassaNote =>
       'Проверка кодов маркировки идёт через WebKassa. Реквизиты подключения (логин, apiKey, касса, ЭЦП) берутся из настроек WebKassa (Фискализация) — один общий конфиг.';
 
@@ -9095,9 +7069,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get ismptSettingsSaveError => 'Не удалось сохранить настройки ИС МПТ';
-
-  @override
-  String get ismptSettingsBinRequired => 'Укажите БИН / ИИН налогоплательщика';
 
   @override
   String get reorderRulesTitle => 'Правила перезаказа';
@@ -9181,9 +7152,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get shiftClosedGateOpen => 'Алмашууну ачуу';
-
-  @override
-  String get sysmTerminalPresetsDiag => 'Диагностика';
 
   @override
   String get wmsDashboardTitle => 'WMS — Кампаны башкаруу';
@@ -10026,13 +7994,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String setDeleteUserError(String error) {
     return 'Колдонуучуну өчүрүү мүмкүн болбоду: $error';
   }
-
-  @override
-  String get setUserNoEncryptionKey =>
-      'Шифрлоо ачкычы тууралбаган. POS алгачкы тууралоосун аяктаңыз.';
-
-  @override
-  String get setUserPinEncryptFailed => 'PIN шифрлоо мүмкүн болбоду';
 
   @override
   String get setWmsTitle => 'WMS жөндөөлөрү';
@@ -11400,59 +9361,6 @@ class AppLocalizationsKy extends AppLocalizations {
       'Чектеги бааны товардын баасынан төмөн коюуга болбойт';
 
   @override
-  String get printerAutoDetect => 'Принтерди табуу';
-
-  @override
-  String get printerAutoDetecting => 'Принтер изделүүдө…';
-
-  @override
-  String printerFound(String device) {
-    return 'Табылды: $device';
-  }
-
-  @override
-  String printerFoundWithNote(String device, String note) {
-    return 'Табылды: $device — $note';
-  }
-
-  @override
-  String get printerNotFoundAnyPort =>
-      'Принтер бир да портто табылган жок (USB/serial). Кабелди жана кубатты текшериңиз.';
-
-  @override
-  String get printerUsbName => 'USB-принтер';
-
-  @override
-  String get printerSelectDevice => 'Принтерди тандаңыз';
-
-  @override
-  String get printerNoAccessGroupLp =>
-      'Түйүн табылды, бирок уруксат жок (lp тобу керек)';
-
-  @override
-  String printerLabelUsb(String path) {
-    return 'USB-принтер ($path)';
-  }
-
-  @override
-  String printerLabelSerial(String path) {
-    return 'Serial-принтер ($path)';
-  }
-
-  @override
-  String get printerNoAccessGroupLpHint =>
-      'Түйүн табылды, бирок уруксат жок (lp тобу керек): usermod -aG lp telepos жана сеансты кайра иштетиңиз.';
-
-  @override
-  String printerRawOpenNoPermsHint(String path) {
-    return '$path түйүнү табылды, бирок ачуу мүмкүн эмес — уруксат жок. Колдонуучуну lp тобуна кошуңуз (usermod -aG lp telepos) жана сеансты/түзмөктү кайра иштетиңиз.';
-  }
-
-  @override
-  String get printerNotFoundNoNode =>
-      'Принтер табылган жок: /dev/usb/lp* char-түйүнү да, USB-serial порту да жок. Принтердин кабелин жана кубатын текшериңиз.';
-
-  @override
   String get ownerOnlyTitle => 'Бул касса ээсине гана жеткиликтүү';
 
   @override
@@ -11499,9 +9407,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get deviceSearchTitle => 'Табылган түзмөктөр';
-
-  @override
-  String get deviceSearchRunning => 'Издөө жүрүүдө…';
 
   @override
   String get deviceSearchEmpty =>
@@ -11607,9 +9512,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String scannerRulesNotAnInteger(String value) {
     return '«$value» мааниси бүтүн сан эмес';
   }
-
-  @override
-  String get scannerRulesSaved => 'Штрихкодду окуу эрежелери сакталды';
 
   @override
   String get printQueueSectionTitle => 'Басып чыгаруу кезеги';
@@ -12993,18 +10895,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get emulatorQrProvider => 'QR төлөм провайдери';
 
   @override
-  String get emulatorQrAddressHint =>
-      'Бул даректи QR провайдеринин жөндөөсүнө жазыңыз';
-
-  @override
-  String get emulatorQrBindAction => 'QR жөндөөсүнө жазуу';
-
-  @override
   String get emulatorQrBindDone => 'QR жөндөөсү эми эмуляторго багытталган';
-
-  @override
-  String get emulatorQrBindingStale =>
-      'QR жөндөөсү өчүрүлгөн эмуляторго багытталган — код боюнча төлөм четке кагылат';
 
   @override
   String get diagnosticsTabPayment => 'Төлөм';
@@ -13854,9 +11745,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get rcpBinIin => 'БИН/ЖИН:';
 
   @override
-  String get rcpThankYou => 'Сатып алганыңыз үчүн рахмат!';
-
-  @override
   String get rcpSale => 'САТУУ';
 
   @override
@@ -14103,9 +11991,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get taxSettingsPresetApplied => 'Топтом колдонулду';
 
   @override
-  String get taxSettingsCurrentSection => 'Учурдагы жөндөө';
-
-  @override
   String taxSettingsRateForStandard(String rate) {
     return 'Кадимки товар: $rate%';
   }
@@ -14122,9 +12007,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get taxSettingsTillLocationHint =>
       'Белги бирден көп болушу мүмкүн: шаар жана атайын райондор. Жогоркулары өзү кошулат.';
-
-  @override
-  String get taxSettingsRules => 'Эрежелер';
 
   @override
   String get taxSettingsRuleTaxed => 'салыкталат';
@@ -14145,50 +12027,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get taxSettingsAddCategory => 'Категория кошуу';
 
   @override
-  String get taxSettingsAddRule => 'Эреже кошуу';
-
-  @override
   String get taxSettingsName => 'Аталышы';
 
   @override
-  String get taxSettingsCode => 'Коду';
-
-  @override
-  String get taxSettingsRate => 'Чен, %';
-
-  @override
-  String get taxSettingsValidFrom => 'Тартып колдонулат';
-
-  @override
-  String get taxSettingsParent => 'Жогорку';
-
-  @override
-  String get taxSettingsNoParent => 'жок (тамыр)';
-
-  @override
-  String get taxSettingsLevel => 'Деңгээл';
-
-  @override
-  String get taxSettingsLevelCountry => 'Өлкө';
-
-  @override
-  String get taxSettingsLevelState => 'Штат';
-
-  @override
-  String get taxSettingsLevelCounty => 'Округ';
-
-  @override
-  String get taxSettingsLevelCity => 'Шаар';
-
-  @override
-  String get taxSettingsLevelDistrict => 'Атайын район';
-
-  @override
   String get taxSettingsDelete => 'Өчүрүү';
-
-  @override
-  String get taxSettingsDeleteJurisdictionWarning =>
-      'Аны менен кошо эрежелери жана ички юрисдикциялары өчөт.';
 
   @override
   String get taxSettingsResponsibility =>
@@ -14666,10 +12508,6 @@ class AppLocalizationsKy extends AppLocalizations {
       'Этикетка кассадан басылат, терминалдан эмес';
 
   @override
-  String get orphanQrTillNotRegistered =>
-      'Касса катталган эмес — QR боюнча аныкталбаган акчаны сурар жер жок';
-
-  @override
   String get stockLowStockReorder => 'Калдыгы аз товарларга кошумча заказ';
 
   @override
@@ -14678,11 +12516,6 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String deferredFromTill(String id) {
     return 'касса $id';
-  }
-
-  @override
-  String dishSummary(int count, String cost) {
-    return 'Ингредиент: $count, өздүк наркы: $cost';
   }
 
   @override

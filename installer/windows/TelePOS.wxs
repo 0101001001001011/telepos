@@ -24,16 +24,34 @@
   <?ifndef ObjDir ?><?error Не задан каталог промежуточных файлов: ожидается -d ObjDir=... ?><?endif?>
   <?ifndef WebDir ?><?error Не задан каталог браузерного бандла: ожидается -d WebDir=... ?><?endif?>
 
+  <!--
+    Язык пакета — ИЗ КУЛЬТУРЫ СБОРКИ, а не зашитый.
+
+    Стояло `Language="1049"`: пакет объявлял себя русским независимо от того,
+    с какой культурой его собрали. Вместе с `-culture ru-RU` в сборщике это
+    означало русские стандартные окна WiX на любой машине мира.
+
+    Код языка приходит доводом сборки (`-d Language=…`), а не переменной
+    локализации: `!(loc.Language)` в WiX 6 не определена ни одним встроенным
+    переводом — «The localization variable !(loc.Language) is unknown»
+    (WIX0102). Довод честнее: сборщик и так знает код каждой культуры.
+
+    Кодовая страница общая и явная. Без неё английская сборка получает 1252,
+    русская — 1251, и преобразование между ними посчитать нельзя: «The code
+    pages of the outputs do not match» (WIX0228). А без преобразования нет и
+    многоязычного пакета.
+  -->
   <Package
       Name="TelePOS"
       Manufacturer="Rob Kim"
       Version="$(Version)"
       Scope="perMachine"
       Compressed="yes"
-      Language="1049"
+      Language="$(Language)"
+      Codepage="65001"
       UpgradeCode="df337c0c-b6d8-4f09-8e19-a2e6e21a9a97">
 
-    <SummaryInformation Description="TelePOS — касса для розницы, общепита, услуг и склада" />
+    <SummaryInformation Description="TelePOS — offline-first point of sale for retail, restaurant, service and warehouse" />
 
     <!--
       Обновление версией: 3.5.0 поверх 3.4.x заменяет, а не ставится рядом.
@@ -42,12 +60,12 @@
     -->
     <MajorUpgrade
         AllowSameVersionUpgrades="yes"
-        DowngradeErrorMessage="На этом компьютере уже установлена более новая версия TelePOS. Сначала удалите её." />
+        DowngradeErrorMessage="A newer version of TelePOS is already installed on this computer. Remove it first." />
 
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
     <!-- 64 бита: Flutter собирает только x64, 32-разрядной сборки не существует. -->
-    <Launch Condition="VersionNT64" Message="TelePOS работает только на 64-разрядной Windows." />
+    <Launch Condition="VersionNT64" Message="TelePOS runs on 64-bit Windows only." />
 
     <!--
       Тихая установка без прав администратора отказывает СРАЗУ и по имени.
@@ -81,7 +99,7 @@
       — UILevel = 2, Privileged = 1.
     -->
     <Launch Condition="Privileged OR UILevel &gt; 2"
-            Message="TelePOS ставится для всей машины, а тихая установка (/qn) не может запросить права администратора сама. Запустите msiexec от имени администратора — либо без /qn, чтобы Windows спросила сама." />
+            Message="TelePOS installs for the whole machine, and a silent install (/qn) cannot ask for administrator rights on its own. Run msiexec as an administrator — or without /qn, so that Windows asks." />
 
     <Icon Id="TelePosIcon" SourceFile="$(SourceRoot)\windows\runner\resources\app_icon.ico" />
     <Property Id="ARPPRODUCTICON" Value="TelePosIcon" />
@@ -96,7 +114,7 @@
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/0101001001001011/telepos" />
     <Property Id="ARPURLUPDATEINFO" Value="https://github.com/0101001001001011/telepos/releases" />
     <Property Id="ARPCONTACT" Value="https://github.com/0101001001001011/telepos/issues" />
-    <Property Id="ARPCOMMENTS" Value="Офлайн-первая касса: розница, общепит, услуги, склад. Лицензия GNU AGPL v3 или новее." />
+    <Property Id="ARPCOMMENTS" Value="Offline-first point of sale: retail, restaurant, service, warehouse. Licensed under GNU AGPL v3 or later." />
     <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALLFOLDER]" After="CostFinalize" />
     <Property Id="ARPHELPLINK" Value="https://github.com/0101001001001011/telepos" />
     <Property Id="ARPNOREPAIR" Value="1" />
@@ -162,9 +180,24 @@
 
     <!-- ── Ярлыки ───────────────────────────────────────────────────────── -->
 
+    <!--
+      Подпись ярлыка по-английски, как и весь остальной установщик.
+
+      Стояло «Касса TelePOS» — на любой машине, в любой стране. Установщик
+      при этом английский целиком: имя продукта, лицензия из `LICENSE`,
+      стандартные диалоги WiX. Русская подсказка под ярлыком была
+      единственным словом, которое не совпадало с остальными, и видел её
+      каждый, кто наводил мышь.
+
+      Найдено при подготовке съёмки главы 2 (2026-09-23), до камеры.
+      Установщик языка интерфейса не знает и знать не может: он работает
+      до того, как касса заведена, — поэтому здесь не словарь, а один
+      язык, тот же, на котором говорит сам установщик.
+    -->
+
     <ComponentGroup Id="Shortcuts">
       <Component Id="MenuShortcut" Directory="AppMenuFolder" Guid="b57f083d-a787-4ba5-96ed-f3ccdd62b3cc">
-        <Shortcut Id="MenuTelePos" Name="TelePOS" Description="Касса TelePOS"
+        <Shortcut Id="MenuTelePos" Name="TelePOS" Description="TelePOS point of sale"
                   Target="[INSTALLFOLDER]telepos.exe" WorkingDirectory="INSTALLFOLDER" Icon="TelePosIcon" />
         <RemoveFolder Id="RemoveAppMenuFolder" Directory="AppMenuFolder" On="uninstall" />
         <!-- Ключ реестра как KeyPath: ярлык сам по себе KeyPath'ом быть не может. -->
@@ -172,7 +205,7 @@
       </Component>
 
       <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="bf13557a-5826-447a-9cae-3fea110c330a">
-        <Shortcut Id="DesktopTelePos" Name="TelePOS" Description="Касса TelePOS"
+        <Shortcut Id="DesktopTelePos" Name="TelePOS" Description="TelePOS point of sale"
                   Target="[INSTALLFOLDER]telepos.exe" WorkingDirectory="INSTALLFOLDER" Icon="TelePosIcon" />
         <RegistryValue Root="HKLM" Key="SOFTWARE\TelePOS" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
       </Component>

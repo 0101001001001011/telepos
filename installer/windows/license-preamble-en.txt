@@ -1,0 +1,24 @@
+TelePOS — point of sale for retail, restaurant, service and warehouse
+Copyright (C) 2026 Rob Kim
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details.
+
+In plain words, and without replacing anything below: you may run this till
+in your shop, read its source, change it and pass it on. If you offer a
+modified version to other people over a network, those people are entitled
+to its source. The source of this version is at
+https://github.com/0101001001001011/telepos
+
+This build is an alpha. No shop is known to be running it in production.
+
+The full and binding text of the licence follows.
+
+--------------------------------------------------------------------------

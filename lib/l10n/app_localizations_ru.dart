@@ -72,9 +72,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get globalWarning => 'Внимание';
 
   @override
-  String get globalInfo => 'Информация';
-
-  @override
   String get globalConfirm => 'Подтвердить';
 
   @override
@@ -85,9 +82,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get globalAll => 'Все';
-
-  @override
-  String get globalNone => 'Нет';
 
   @override
   String get globalTotal => 'Итого';
@@ -108,37 +102,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get globalDate => 'Дата';
 
   @override
-  String get globalTime => 'Время';
-
-  @override
-  String get loginTitle => 'Вход в систему';
-
-  @override
-  String get loginPin => 'Введите PIN';
-
-  @override
-  String get loginPinHint => '4 цифры';
-
-  @override
   String get loginEnter => 'Войти';
-
-  @override
-  String get loginSelectUser => 'Выберите пользователя';
-
-  @override
-  String get loginNoUsers => 'Нет пользователей';
-
-  @override
-  String get loginWrongPin => 'Неверный PIN';
-
-  @override
-  String get loginBlocked => 'Пользователь заблокирован';
-
-  @override
-  String get loginSessionExpired => 'Сессия истекла';
-
-  @override
-  String get loginShiftRequired => 'Откройте смену для входа';
 
   @override
   String get staffRoleOwner => 'Владелец';
@@ -162,58 +126,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginAdmin => 'Администратор';
 
   @override
-  String get loginManager => 'Менеджер';
-
-  @override
   String get loginLogout => 'Выход';
-
-  @override
-  String get loginSwitchUser => 'Сменить пользователя';
-
-  @override
-  String get saleTitle => 'Продажа';
-
-  @override
-  String get saleNewSale => 'Новая продажа';
-
-  @override
-  String get saleAddProduct => 'Добавить товар';
-
-  @override
-  String get saleScanBarcode => 'Сканировать штрих-код';
-
-  @override
-  String get saleEnterBarcode => 'Введите штрих-код';
 
   @override
   String get saleProductNotFound => 'Товар не найден';
 
   @override
-  String get saleEmptyCart => 'Корзина пуста';
-
-  @override
-  String get saleSubtotal => 'Подытог';
-
-  @override
-  String get saleTax => 'НДС';
-
-  @override
-  String get saleTotalDiscount => 'Скидка';
-
-  @override
   String get saleToPay => 'К оплате';
-
-  @override
-  String saleItems(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count товаров',
-      few: '$count товара',
-      one: '$count товар',
-    );
-    return '$_temp0';
-  }
 
   @override
   String paymentCardChargeUnsettled(String amount) {
@@ -224,40 +143,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saleRemoveItem => 'Удалить товар';
 
   @override
-  String get saleClearCart => 'Очистить корзину';
-
-  @override
-  String get saleConfirmClear => 'Очистить корзину?';
-
-  @override
-  String get saleProceedPayment => 'Перейти к оплате';
-
-  @override
   String get saleHold => 'Отложить';
 
   @override
   String get saleRecall => 'Вернуть';
-
-  @override
-  String get saleHeldSales => 'Отложенные продажи';
-
-  @override
-  String get saleNoHeldSales => 'Нет отложенных продаж';
-
-  @override
-  String get saleProductSearch => 'Поиск товаров';
-
-  @override
-  String get saleByCategory => 'По категориям';
-
-  @override
-  String get saleByName => 'По названию';
-
-  @override
-  String get saleByBarcode => 'По штрих-коду';
-
-  @override
-  String get saleWeight => 'Вес';
 
   @override
   String saleWeightKg(String weight) {
@@ -265,27 +154,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get saleEnterWeight => 'Введите вес';
-
-  @override
-  String get saleEnterQuantity => 'Введите количество';
-
-  @override
-  String get saleEnterPrice => 'Введите цену';
-
-  @override
-  String get saleFreePrice => 'Свободная цена';
-
-  @override
-  String saleMaxDiscount(String percent) {
-    return 'Макс. скидка: $percent%';
-  }
-
-  @override
   String get refundTitle => 'Возврат';
-
-  @override
-  String get refundNewRefund => 'Новый возврат';
 
   @override
   String get refundByReceipt => 'По чеку';
@@ -294,31 +163,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get refundWithoutReceipt => 'Без чека';
 
   @override
-  String get refundEnterReceipt => 'Введите номер чека';
-
-  @override
   String get refundReceiptNotFound => 'Чек не найден';
-
-  @override
-  String get refundSelectItems => 'Выберите товары для возврата';
-
-  @override
-  String get refundReason => 'Причина возврата';
-
-  @override
-  String get refundConfirm => 'Подтвердить возврат';
 
   @override
   String get refundAmount => 'Сумма возврата';
 
   @override
   String get refundComplete => 'Возврат выполнен';
-
-  @override
-  String get refundCash => 'Возврат наличными';
-
-  @override
-  String get refundCard => 'Возврат на карту';
 
   @override
   String get refundConnectionLostHint =>
@@ -331,12 +182,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get refundNoItems => 'Нет товаров для возврата';
 
   @override
-  String get refundAlreadyRefunded => 'Товар уже возвращён';
-
-  @override
-  String get refundPartial => 'Частичный возврат';
-
-  @override
   String get shiftTitle => 'Смена';
 
   @override
@@ -344,9 +189,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftClose => 'Закрыть смену';
-
-  @override
-  String get shiftCurrent => 'Текущая смена';
 
   @override
   String shiftNumber(int number) {
@@ -359,34 +201,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String shiftCashier(String name) {
-    return 'Кассир: $name';
-  }
-
-  @override
-  String shiftSalesCount(int count) {
-    return 'Продаж: $count';
-  }
-
-  @override
-  String shiftRefundsCount(int count) {
-    return 'Возвратов: $count';
-  }
-
-  @override
-  String get shiftTotalSales => 'Сумма продаж';
-
-  @override
-  String get shiftTotalRefunds => 'Сумма возвратов';
-
-  @override
   String get shiftCashInDrawer => 'В кассе';
 
   @override
   String get shiftExpected => 'Ожидается';
-
-  @override
-  String get shiftActual => 'Фактически';
 
   @override
   String get shiftDifference => 'Разница';
@@ -396,18 +214,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftZReport => 'Z-отчёт';
-
-  @override
-  String get shiftConfirmClose => 'Закрыть смену?';
-
-  @override
-  String get shiftAlreadyOpen => 'Смена уже открыта';
-
-  @override
-  String get shiftNotOpen => 'Смена не открыта';
-
-  @override
-  String get shiftOpenFirst => 'Сначала откройте смену';
 
   @override
   String get paymentTitle => 'Оплата';
@@ -434,53 +240,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paymentMixed => 'Смешанная';
 
   @override
-  String get paymentEnterAmount => 'Введите сумму';
-
-  @override
-  String paymentRemaining(String amount) {
-    return 'Осталось: $amount';
-  }
-
-  @override
-  String paymentChange(String amount) {
-    return 'Сдача: $amount';
-  }
-
-  @override
   String get paymentComplete => 'Оплата завершена';
 
   @override
   String get paymentFailed => 'Ошибка оплаты';
-
-  @override
-  String get paymentWaitingCard => 'Ожидание карты...';
-
-  @override
-  String get paymentWaitingQr => 'Ожидание QR...';
-
-  @override
-  String get paymentInsertCard => 'Вставьте карту';
-
-  @override
-  String get paymentScanQr => 'Сканируйте QR';
-
-  @override
-  String get paymentApproved => 'Одобрено';
-
-  @override
-  String get paymentDeclined => 'Отклонено';
-
-  @override
-  String get paymentReceipt => 'Печать чека';
-
-  @override
-  String get paymentNoReceipt => 'Без чека';
-
-  @override
-  String get paymentEmail => 'Отправить на email';
-
-  @override
-  String get paymentSms => 'Отправить SMS';
 
   @override
   String get historyTitle => 'История';
@@ -492,32 +255,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyYesterday => 'Вчера';
 
   @override
-  String get historyThisWeek => 'Эта неделя';
-
-  @override
-  String get historyThisMonth => 'Этот месяц';
-
-  @override
-  String get historyDateRange => 'Выбрать период';
-
-  @override
-  String get historyNoSales => 'Нет продаж за период';
-
-  @override
-  String historyReceipt(String number) {
-    return 'Чек №$number';
-  }
-
-  @override
-  String get historyReprint => 'Повторная печать';
-
-  @override
   String certificateSlipPrintFailed(String number, String reason) {
     return 'Слип сертификата $number не напечатался: $reason';
   }
-
-  @override
-  String get historyDetails => 'Подробнее';
 
   @override
   String get historySale => 'Продажа';
@@ -526,22 +266,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyRefund => 'Возврат';
 
   @override
-  String get historyFilter => 'Фильтр';
-
-  @override
-  String get agentTitle => 'Контрагенты';
-
-  @override
   String get agentClients => 'Клиенты';
 
   @override
   String get agentSuppliers => 'Поставщики';
-
-  @override
-  String get agentSearch => 'Поиск контрагента';
-
-  @override
-  String get agentAdd => 'Добавить контрагента';
 
   @override
   String get agentEdit => 'Редактировать';
@@ -553,31 +281,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get agentPhone => 'Телефон';
 
   @override
-  String get agentEmail => 'Email';
-
-  @override
   String get agentIin => 'ИИН/БИН';
-
-  @override
-  String get agentAddress => 'Адрес';
 
   @override
   String get agentBalance => 'Баланс';
 
   @override
-  String get agentBonusBalance => 'Бонусный баланс';
-
-  @override
   String get agentDebt => 'Задолженность';
-
-  @override
-  String get agentNoAgents => 'Нет контрагентов';
-
-  @override
-  String get agentSaveSuccess => 'Контрагент сохранён';
-
-  @override
-  String get agentDeleteConfirm => 'Удалить контрагента?';
 
   @override
   String get cashTitle => 'Касса';
@@ -607,19 +317,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cashExpense => 'Выплата';
 
   @override
-  String get cashBalance => 'Баланс кассы';
-
-  @override
   String get cashEnterAmount => 'Введите сумму';
-
-  @override
-  String get cashReason => 'Основание';
-
-  @override
-  String get cashReasonPlaceholder => 'Укажите причину';
-
-  @override
-  String get cashSuccess => 'Операция выполнена';
 
   @override
   String get cashExpenseTypes => 'Тип расхода';
@@ -631,46 +329,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get discountPercent => 'Процент';
 
   @override
-  String get discountFixed => 'Фиксированная';
-
-  @override
-  String get discountEnterValue => 'Введите значение';
-
-  @override
   String get discountApply => 'Применить';
-
-  @override
-  String get discountRemove => 'Убрать скидку';
-
-  @override
-  String get discountOnItem => 'Скидка на товар';
-
-  @override
-  String get discountOnTotal => 'Скидка на чек';
-
-  @override
-  String get discountMaxExceeded => 'Превышена максимальная скидка';
 
   @override
   String get quickProductTitle => 'Быстрые товары';
 
   @override
-  String get quickProductAdd => 'Добавить товар';
-
-  @override
-  String get quickProductName => 'Название';
-
-  @override
-  String get quickProductPrice => 'Цена';
-
-  @override
   String get quickProductCategory => 'Категория';
-
-  @override
-  String get quickProductSave => 'Сохранить';
-
-  @override
-  String get quickProductDelete => 'Удалить';
 
   @override
   String get syncTitle => 'Синхронизация';
@@ -719,12 +384,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get syncOnline => 'Подключено';
 
   @override
-  String get printerTitle => 'Принтер';
-
-  @override
-  String get printerStatus => 'Статус принтера';
-
-  @override
   String get printerConnected => 'Подключён';
 
   @override
@@ -734,61 +393,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get printerError => 'Ошибка принтера';
 
   @override
-  String get printerPaperOut => 'Нет бумаги';
-
-  @override
   String get printerConnect => 'Подключить';
 
   @override
   String get printerDisconnect => 'Отключить';
 
   @override
-  String get printerTest => 'Тестовая печать';
-
-  @override
   String get printerSettings => 'Настройки принтера';
-
-  @override
-  String get printerWidth => 'Ширина чека';
 
   @override
   String get additionalTitle => 'Дополнительно';
 
   @override
-  String get additionalSettings => 'Настройки';
-
-  @override
-  String get additionalReports => 'Отчёты';
-
-  @override
-  String get additionalInventory => 'Инвентаризация';
-
-  @override
   String get additionalSupply => 'Приёмка товара';
 
   @override
-  String get additionalPriceChange => 'Изменение цен';
-
-  @override
-  String get additionalBackup => 'Резервная копия';
-
-  @override
-  String get additionalRestore => 'Восстановление';
-
-  @override
   String get additionalUpdate => 'Обновление';
-
-  @override
-  String get additionalAbout => 'О программе';
-
-  @override
-  String get additionalLicense => 'Лицензия';
-
-  @override
-  String get additionalSupport => 'Поддержка';
-
-  @override
-  String get receiptTitle => 'Чек';
 
   @override
   String get receiptNumber => 'Чек №';
@@ -797,108 +417,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get receiptDate => 'Дата';
 
   @override
-  String get receiptCashier => 'Кассир';
-
-  @override
-  String get receiptItems => 'Товары';
-
-  @override
-  String get receiptSubtotal => 'Подытог';
-
-  @override
-  String get receiptDiscount => 'Скидка';
-
-  @override
-  String get receiptTax => 'НДС';
-
-  @override
   String get receiptTotal => 'ИТОГО';
-
-  @override
-  String get receiptCash => 'Наличные';
-
-  @override
-  String get receiptCard => 'Карта';
-
-  @override
-  String get receiptChange => 'Сдача';
-
-  @override
-  String get receiptThankYou => 'Спасибо за покупку!';
-
-  @override
-  String get receiptFiscalNumber => 'Фискальный номер';
-
-  @override
-  String get receiptQrCode => 'QR для проверки';
-
-  @override
-  String get receiptCopy => 'Копия чека';
-
-  @override
-  String get errorUnknown => 'Неизвестная ошибка';
-
-  @override
-  String get errorNetwork => 'Ошибка сети';
-
-  @override
-  String get errorServer => 'Ошибка сервера';
-
-  @override
-  String get errorTimeout => 'Превышено время ожидания';
-
-  @override
-  String get errorNotFound => 'Не найдено';
-
-  @override
-  String get errorPermission => 'Нет доступа';
-
-  @override
-  String get errorDatabase => 'Ошибка базы данных';
-
-  @override
-  String get errorValidation => 'Ошибка валидации';
-
-  @override
-  String get errorRequired => 'Обязательное поле';
 
   @override
   String get errorInvalidFormat => 'Неверный формат';
 
   @override
-  String errorMinLength(int min) {
-    return 'Минимум $min символов';
-  }
-
-  @override
-  String errorMaxLength(int max) {
-    return 'Максимум $max символов';
-  }
-
-  @override
-  String errorMinValue(String min) {
-    return 'Минимум $min';
-  }
-
-  @override
-  String errorMaxValue(String max) {
-    return 'Максимум $max';
-  }
-
-  @override
   String get errorPrinter => 'Ошибка принтера';
-
-  @override
-  String get errorFiscal => 'Ошибка фискализации';
-
-  @override
-  String get errorPayment => 'Ошибка оплаты';
-
-  @override
-  String get errorSync => 'Ошибка синхронизации';
-
-  @override
-  String get errorNoInternet => 'Нет интернет-соединения';
 
   @override
   String get errorTryAgain => 'Попробуйте снова';
@@ -988,18 +513,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginShiftUnknown => 'Смена: касса не ответила';
 
   @override
-  String get saleQuickProducts => 'Быстрые товары';
-
-  @override
-  String get saleIncrease => 'Увеличить';
-
-  @override
-  String get saleDecrease => 'Уменьшить';
-
-  @override
-  String get saleMark => 'Маркировка';
-
-  @override
   String get saleDataMatrix => 'Маркировка (DataMatrix)';
 
   @override
@@ -1029,9 +542,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get refundWithReceipt => 'С ЧЕКОМ';
 
   @override
-  String get refundWithoutReceiptUpper => 'БЕЗ ЧЕКА';
-
-  @override
   String get refundLoadReceipt => 'Загрузить чек';
 
   @override
@@ -1057,55 +567,13 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get refundSuccessMsg => 'Возврат успешно проведён';
-
-  @override
   String get refundSearchHint => 'Поиск товара для возврата';
-
-  @override
-  String get paymentRefundTitle => 'Возврат';
-
-  @override
-  String get paymentPayTitle => 'Оплата';
-
-  @override
-  String get paymentRefundBtn => 'ВЕРНУТЬ';
-
-  @override
-  String get paymentPayBtn => 'ОПЛАТИТЬ';
 
   @override
   String get paymentChangeLabel => 'Сдача:';
 
   @override
-  String get paymentSuccessRefund => 'Возврат успешно проведён';
-
-  @override
-  String get paymentSuccessPay => 'Оплата успешна';
-
-  @override
-  String get paymentCardType => 'Безналичная';
-
-  @override
-  String get paymentToPay => 'К оплате';
-
-  @override
-  String get paymentBonusLabel => 'Бонусы';
-
-  @override
-  String get paymentTotalToPay => 'Итого к оплате';
-
-  @override
   String get paymentByCard => 'Картой';
-
-  @override
-  String get paymentRemainLabel => 'Осталось';
-
-  @override
-  String get shiftBills => 'Купюры';
-
-  @override
-  String get shiftTotalAmount => 'Общая сумма';
 
   @override
   String get shiftOperations => 'Операции';
@@ -1139,25 +607,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shiftEntered => 'Введено';
 
   @override
-  String get shiftRecounting => 'Пересчёт по купюрам';
-
-  @override
   String get shiftManualEntry => 'Ручной ввод суммы';
-
-  @override
-  String get shiftCashOps => 'Кассовые операции';
 
   @override
   String get shiftOpenAction => 'Открытие смены';
 
   @override
-  String get shiftCloseAction => 'Закрытие смены';
-
-  @override
   String get historyOperations => 'История операций';
-
-  @override
-  String get historyResetFilters => 'Сбросить фильтры';
 
   @override
   String get historyRefresh => 'Обновить';
@@ -1172,29 +628,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyEmpty => 'История операций пуста';
 
   @override
-  String get historyFilterTitle => 'Фильтры';
-
-  @override
   String get historyPeriod => 'Период';
-
-  @override
-  String get historyOpType => 'Тип операции';
 
   @override
   String get historySearchHint => 'Номер чека, сумма...';
 
   @override
-  String historyType(String type) {
-    return 'Тип:';
-  }
-
-  @override
   String get historyPrint => 'Печать чека';
-
-  @override
-  String agentFound(int count) {
-    return 'Найдено: $count';
-  }
 
   @override
   String get agentWithDebt => 'Только с долгом';
@@ -1203,22 +643,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get agentSearchHint => 'Поиск по имени или телефону...';
 
   @override
-  String get agentNewClient => 'Новый клиент';
-
-  @override
   String get agentNameRequired => 'Имя *';
-
-  @override
-  String get agentEnterName => 'Введите имя клиента';
-
-  @override
-  String get agentPhoneLabel => 'Телефон';
-
-  @override
-  String get agentIinLabel => 'БИН/ИИН';
-
-  @override
-  String get agentIinHint => '12 цифр';
 
   @override
   String get agentDeleteQuestion => 'Удалить клиента?';
@@ -1229,22 +654,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get agentDeleted => 'Клиент удалён';
-
-  @override
-  String get agentFoundExisting => 'Клиент найден';
-
-  @override
   String get supplyTitle => 'Приёмка товара';
 
   @override
-  String get supplySaved => 'Приёмка сохранена';
-
-  @override
   String get supplySaveError => 'Ошибка сохранения';
-
-  @override
-  String get supplyCancelQuestion => 'Отменить приёмку?';
 
   @override
   String get supplyDataLost => 'Все введённые данные будут потеряны.';
@@ -1255,27 +668,16 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get supplyBarcodeHint => 'Штрихкод или артикул';
-
-  @override
   String get supplyComment => 'Комментарий';
 
   @override
   String get supplyCommentHint => 'Введите комментарий...';
 
   @override
-  String get supplyNotFound => 'Товар не найден';
-
-  @override
   String get supplySelectSupplier => 'Выберите поставщика';
 
   @override
   String get supplySelectAccount => 'Выберите счёт';
-
-  @override
-  String supplyBalance(String amount) {
-    return 'Баланс: $amount';
-  }
 
   @override
   String get supplyPurchasePrice => 'Цена прихода';
@@ -1294,12 +696,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get supplySerialMismatch =>
       'Число серийных номеров не совпадает с количеством';
-
-  @override
-  String get supplyInvalidQty => 'Введите корректное количество';
-
-  @override
-  String get supplyInvalidPrice => 'Введите корректную цену';
 
   @override
   String get inventoryTitle => 'Инвентаризация';
@@ -1403,85 +799,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsTitle => 'Настройки';
 
   @override
-  String get settingsPosInfo => 'Информация о кассе';
-
-  @override
-  String get settingsPosName => 'Название кассы';
-
-  @override
-  String get settingsCompany => 'Компания';
-
-  @override
-  String get settingsIin => 'ИИН/БИН';
-
-  @override
-  String get settingsPosId => 'ID POS';
-
-  @override
-  String get settingsStoreId => 'ID магазина';
-
-  @override
-  String get settingsNotSpecified => 'Не указано';
-
-  @override
-  String get settingsAppVersion => 'Версия приложения';
-
-  @override
-  String get settingsVersion => 'Версия';
-
-  @override
-  String get settingsPlatform => 'Платформа';
-
-  @override
   String get settingsLanguage => 'Язык интерфейса';
 
   @override
   String get settingsLanguageChanged => 'Язык изменён';
 
   @override
-  String get settingsCurrency => 'Валюта';
-
-  @override
-  String get settingsCurrencySymbol => 'Символ';
-
-  @override
-  String get settingsCurrencyCode => 'Код';
-
-  @override
-  String get settingsCountry => 'Страна';
-
-  @override
-  String get settingsAdditional => 'Дополнительные настройки';
-
-  @override
   String get settingsTransport => 'Транспорт';
-
-  @override
-  String get settingsTransportDesc => 'Настройки синхронизации данных';
 
   @override
   String get settingsPrinter => 'Принтер';
 
   @override
-  String get settingsPrinterDesc => 'Настройки печати чеков';
-
-  @override
   String get settingsFiscal => 'Фискализация';
 
   @override
-  String get settingsFiscalDesc => 'WebKassa, ОФД, НДС';
-
-  @override
   String get settingsTelegram => 'Telegram';
-
-  @override
-  String get settingsTelegramDesc => 'Интеграция и каналы Telegram';
-
-  @override
-  String get settingsPermissions => 'Права доступа';
-
-  @override
-  String get settingsPermissionsDesc => 'Разрешения для кассиров';
 
   @override
   String get fiscalTitle => 'Фискализация';
@@ -1493,22 +826,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fiscalWebkassa => 'Настройки WebKassa';
 
   @override
-  String get fiscalTaxpayer => 'Данные налогоплательщика';
-
-  @override
-  String get fiscalVatSettings => 'Настройки НДС';
-
-  @override
-  String get fiscalVatPayer => 'Плательщик НДС';
-
-  @override
-  String get fiscalPrintVat => 'Печатать НДС на чеке';
-
-  @override
   String get fiscalSaved => 'Настройки сохранены';
-
-  @override
-  String get fiscalSaveError => 'Ошибка сохранения';
 
   @override
   String get printerSettingsTitle => 'Настройки принтера';
@@ -1518,33 +836,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get printerAddress => 'Адрес принтера';
-
-  @override
-  String get printerPaperWidth => 'Ширина бумаги';
-
-  @override
-  String get printerTesting => 'Тестирование';
-
-  @override
-  String get printerReady => 'Готов';
-
-  @override
-  String get printerNotConnected => 'Не подключен';
-
-  @override
-  String get printerPaperOut2 => 'Нет бумаги';
-
-  @override
-  String get printerCoverOpen => 'Открыта крышка';
-
-  @override
-  String get printerPrinting => 'Печать...';
-
-  @override
-  String get printerCheckStatus => 'Проверка...';
-
-  @override
-  String get printerPrintSuccess => 'Печать успешна';
 
   @override
   String get paymentNotFiscalized => 'Чек не фискализован — оплата проведена';
@@ -1560,40 +851,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get printerPrintError => 'Ошибка печати';
 
   @override
-  String get printerCheckBtn => 'Проверить';
-
-  @override
-  String get printerTestReceipt => 'Тестовый чек';
-
-  @override
   String get printerPort => 'Порт';
-
-  @override
-  String get cashOperationTitle => 'Кассовая операция';
 
   @override
   String get cashWithdrawal => 'Изъятие';
 
   @override
-  String get cashCommentRequired => 'Комментарий *';
-
-  @override
   String get cashCommentOptional => 'Комментарий';
-
-  @override
-  String get cashCommentHint => 'Введите комментарий...';
-
-  @override
-  String get cashEnterAmountMsg => 'Введите сумму';
-
-  @override
-  String get cashPositiveOnly => 'Сумма должна быть положительной';
-
-  @override
-  String get cashInsufficient => 'Недостаточно денег в кассе';
-
-  @override
-  String get cashInvalidAmount => 'Введите корректную сумму';
 
   @override
   String get cashInDrawer => 'В кассе:';
@@ -1713,31 +977,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get updateAvailable => 'Доступно обновление';
 
   @override
-  String get updateInProgress => 'Обновление...';
-
-  @override
-  String updateAutoIn(int seconds) {
-    return 'Автоматическое обновление через $seconds сек';
-  }
-
-  @override
-  String get updateNowBtn => 'Обновить сейчас';
-
-  @override
   String get updateLater => 'Позже';
 
   @override
-  String get updateSkip => 'Пропустить';
-
-  @override
-  String get updateBtn => 'Обновить';
-
-  @override
   String get storageWarningTitle => 'Мало места на диске';
-
-  @override
-  String get storageWarningMsg =>
-      'Для стабильной работы кассы рекомендуется освободить минимум 2 GB.';
 
   @override
   String get storageUnderstood => 'Понятно';
@@ -1815,14 +1058,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get enterPhone => 'Введите номер телефона клиента';
 
   @override
-  String get enterSmsCode => 'Введите код из SMS';
-
-  @override
-  String resendIn(int seconds) {
-    return 'Повторная отправка через $seconds сек';
-  }
-
-  @override
   String get resendCode => 'Отправить код повторно';
 
   @override
@@ -1830,21 +1065,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get useBonuses => 'Списать бонусов';
-
-  @override
-  String get deferredSales => 'Отложенные продажи';
-
-  @override
-  String get noDeferredSales => 'Нет отложенных продаж';
-
-  @override
-  String get fiscalErrors => 'Ошибки фискализации';
-
-  @override
-  String get selectAllErrors => 'Выбрать все';
-
-  @override
-  String get retrySelected => 'Повторить';
 
   @override
   String receiptNo(String number) {
@@ -1906,9 +1126,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get sumLabel => 'Сумма';
-
-  @override
   String get enterAmount => 'Введите сумму';
 
   @override
@@ -1919,9 +1136,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get enterValidAmount => 'Введите корректную сумму';
-
-  @override
-  String get inDrawer => 'В кассе:';
 
   @override
   String get commentOptional => 'Комментарий (необязательно)';
@@ -1985,18 +1199,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get receiptDiscountItem => 'Скидка:';
-
-  @override
-  String get receiptSubtotalLabel => 'Подитого';
-
-  @override
-  String get receiptPayment => 'Оплата:';
-
-  @override
-  String get fiscalMark => 'ФП:';
-
-  @override
   String remainingStock(String qty) {
     return 'Ост: $qty';
   }
@@ -2027,30 +1229,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get priceLabel => 'Цена';
 
   @override
-  String get receiptTotalLabel => 'Итого по чеку';
-
-  @override
-  String get positionsLabel => 'Позиций';
-
-  @override
-  String get toPayLabel => 'К ОПЛАТЕ';
-
-  @override
   String get payBtn => 'ОПЛАТИТЬ';
-
-  @override
-  String get totalLabel => 'Итого:';
-
-  @override
-  String posAndQty(int positions, String qty) {
-    return '$positions поз. / $qty шт.';
-  }
-
-  @override
-  String get modeRetail => 'Розница';
-
-  @override
-  String get modeWholesale => 'ОПТ';
 
   @override
   String get quickProducts => 'Быстрые товары';
@@ -2084,23 +1263,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get enterValidPhone => 'Введите корректный номер';
 
   @override
-  String errorsCount(int count) {
-    return '$count ошибок';
-  }
-
-  @override
-  String selectAllCount(int count) {
-    return 'Выбрать все ($count)';
-  }
-
-  @override
   String retryCount(int count) {
     return 'Повторить ($count)';
-  }
-
-  @override
-  String receiptHash(int number) {
-    return 'Чек #$number';
   }
 
   @override
@@ -2112,15 +1276,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get drawerPrimary => 'Основное';
-
-  @override
-  String get drawerSecondary => 'Дополнительно';
-
-  @override
-  String get tooltipMore => 'Ещё';
-
-  @override
   String get statusOnline => 'Online';
 
   @override
@@ -2128,9 +1283,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get statusSyncing => 'Sync...';
-
-  @override
-  String get thankYouForPurchase => 'Спасибо за покупку!';
 
   @override
   String get searchProductHint => 'Поиск товара (название или штрих-код)';
@@ -2186,9 +1338,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get restaurantSettings => 'Режим ресторана';
 
   @override
-  String get restaurantSettingsDesc => 'Столы, зоны, сервисный сбор';
-
-  @override
   String get restaurantOperatingMode => 'Режим работы';
 
   @override
@@ -2214,9 +1363,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restaurantZoneAdd => 'Добавить зону';
-
-  @override
-  String get restaurantZoneRename => 'Переименовать';
 
   @override
   String get restaurantZonePresets => 'Предустановки';
@@ -2320,11 +1466,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get restaurantOrdersEmpty => 'Нет активных заказов';
 
   @override
-  String restaurantOrderItems(int count) {
-    return '$count позиций';
-  }
-
-  @override
   String restaurantOrderGuests(int count) {
     return 'Гостей: $count';
   }
@@ -2346,9 +1487,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get restaurantOpenOrder => 'Открыть заказ';
 
   @override
-  String get restaurantCloseOrder => 'Закрыть заказ';
-
-  @override
   String get restaurantAddItems => 'Добавить позиции';
 
   @override
@@ -2356,12 +1494,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restaurantTransfer => 'Перенести';
-
-  @override
-  String get restaurantSplitBill => 'Разделить';
-
-  @override
-  String get restaurantChangeStatus => 'Изменить статус';
 
   @override
   String get restaurantSetFree => 'Свободен';
@@ -2386,12 +1518,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restaurantNote => 'Примечание';
-
-  @override
-  String get restaurantDeliveryAddress => 'Адрес доставки';
-
-  @override
-  String get restaurantDeliveryPhone => 'Телефон';
 
   @override
   String get restaurantTransferTitle => 'Перенос заказа';
@@ -2469,14 +1595,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get restaurantPreCheckFailed => 'Ошибка печати пре-чека';
 
   @override
-  String get restaurantSubtotal => 'Подитог';
-
-  @override
-  String restaurantServiceChargeLine(String percent) {
-    return 'Сервисный сбор ($percent%)';
-  }
-
-  @override
   String restaurantOrderNumber(int number) {
     return 'Заказ #$number';
   }
@@ -2510,17 +1628,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restaurantMenuTab => 'Меню';
-
-  @override
-  String restaurantGuestLabel(int number) {
-    return 'Гость $number';
-  }
-
-  @override
-  String get restaurantRemoveItem => 'Удалить позицию';
-
-  @override
-  String get restaurantPrintPrecheck => 'Пречек';
 
   @override
   String get restaurantNewTakeout => 'Навынос';
@@ -2582,9 +1689,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupStepChecking => 'Проверка';
 
   @override
-  String get setupStepTelegram => 'Telegram';
-
-  @override
   String get setupStepCountry => 'Страна';
 
   @override
@@ -2595,9 +1699,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get setupStepUsers => 'Пользователи';
-
-  @override
-  String get setupStepWorkMode => 'Режим работы';
 
   @override
   String get setupStepPos => 'Касса';
@@ -2680,18 +1781,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String setupVatRateLabel(int rate) {
-    return 'НДС: $rate%';
-  }
-
-  @override
-  String get setupOrganizationTitle => 'Данные организации';
-
-  @override
-  String get setupOrganizationDescription =>
-      'Введите информацию о вашей компании';
-
-  @override
   String get setupCompanyNameLabel => 'Название организации';
 
   @override
@@ -2713,13 +1802,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get setupPhoneLabel => 'Телефон';
-
-  @override
-  String get setupVatTitle => 'Налог на добавленную стоимость';
-
-  @override
-  String get setupVatDescription =>
-      'Выберите режим налогообложения вашей организации';
 
   @override
   String get setupVatPayerTitle => 'Плательщик НДС';
@@ -2745,46 +1827,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get setupVatNonPayerDescription =>
       'В чеках НДС выделяться не будет.\nДля ИП на упрощённой системе или патенте.';
-
-  @override
-  String get setupWorkModeTitle => 'Режим работы';
-
-  @override
-  String get setupWorkModeDescription =>
-      'Выберите как будет работать ваша касса';
-
-  @override
-  String get setupAutonomousTitle => 'Автономный режим';
-
-  @override
-  String get setupAutonomousSubtitle => 'Работа без интернета';
-
-  @override
-  String get setupAutonomousDescription =>
-      'Касса работает полностью автономно.\nДанные хранятся только локально.\nНет синхронизации между кассами.';
-
-  @override
-  String get setupNetworkTitle => 'Сетевой режим';
-
-  @override
-  String get setupNetworkConfigured => 'Telegram настроен';
-
-  @override
-  String get setupNetworkRequired => 'Требуется Telegram';
-
-  @override
-  String get setupNetworkDescription =>
-      'Синхронизация данных между кассами.\nРезервное копирование в облако.\nОтчёты и уведомления в Telegram.';
-
-  @override
-  String get setupNetworkRequiresTelegram =>
-      'Для сетевого режима необходимо настроить Telegram';
-
-  @override
-  String get setupOperatingModeTitle => 'Тип бизнеса';
-
-  @override
-  String get setupOperatingModeDescription => 'Выберите тип вашего бизнеса';
 
   @override
   String get setupRetailTitle => 'Розничная касса';
@@ -2815,13 +1857,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get setupServiceDescription =>
       'Приём в ремонт/обслуживание.\nЗаказ-наряды и отметки работ.\nОтслеживание статуса и выдача.';
-
-  @override
-  String get setupPosConfigTitle => 'Настройка кассы';
-
-  @override
-  String get setupPosConfigDescription =>
-      'Укажите параметры кассового аппарата';
 
   @override
   String get setupCashBoxNameLabel => 'Название кассы';
@@ -2859,10 +1894,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get setupFiscalNotRequired =>
       'Для вашей страны фискализация не требуется';
-
-  @override
-  String get setupFiscalDescription =>
-      'Настройте подключение к фискальному оператору';
 
   @override
   String get setupEnableWebkassa => 'Включить WebKassa';
@@ -2929,12 +1960,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupOfdUrlLabel => 'URL ОФД';
 
   @override
-  String get setupEquipmentTitle => 'Оборудование';
-
-  @override
-  String get setupEquipmentDescription => 'Настройте подключённое оборудование';
-
-  @override
   String get setupEquipmentPrinter => 'Принтер чеков';
 
   @override
@@ -2965,9 +1990,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupConnectionSerial => 'COM-порт';
 
   @override
-  String get setupConnectionNone => 'Не выбран';
-
-  @override
   String get setupPrinterIpLabel => 'IP-адрес принтера';
 
   @override
@@ -2995,23 +2017,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupScalePortLabel => 'COM-порт';
 
   @override
-  String get setupBaudRateLabel => 'Скорость (baud rate)';
-
-  @override
-  String get setupCashDrawerConnected => 'Подключён к принтеру';
-
-  @override
   String get setupCashDrawerConnectedDesc => 'Открывается командой принтера';
-
-  @override
-  String get setupSkip => 'Пропустить';
-
-  @override
-  String get setupPaymentTerminalsTitle => 'Платёжные терминалы';
-
-  @override
-  String get setupPaymentTerminalsDescription =>
-      'Настройте интеграцию с платёжными системами';
 
   @override
   String get setupKaspiIpLabel => 'IP-адрес терминала';
@@ -3020,20 +2026,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupPortLabel => 'Порт';
 
   @override
-  String get setupApiUrlLabel => 'API URL';
-
-  @override
-  String get setupApiKeyLabel => 'API ключ';
-
-  @override
   String get setupNoTerminalsAvailable =>
       'Для вашего региона нет доступных платёжных терминалов';
-
-  @override
-  String get setupBusinessRulesTitle => 'Бизнес-правила';
-
-  @override
-  String get setupBusinessRulesDescription => 'Настройте правила работы кассы';
 
   @override
   String get setupPermissionsTitle => 'Разрешения';
@@ -3097,50 +2091,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupCashbackRateLabel => 'Процент кешбэка';
 
   @override
-  String get setupRoundingTitle => 'Округление';
-
-  @override
-  String get setupDiscountRounding => 'Округление скидок';
-
-  @override
-  String get setupWeightRounding => 'Округление весовых товаров';
-
-  @override
-  String get setupRoundingNone => 'Без округления';
-
-  @override
-  String get setupRoundingUp1 => 'До 1 (вверх)';
-
-  @override
-  String get setupRoundingDown1 => 'До 1 (вниз)';
-
-  @override
-  String get setupRoundingUp5 => 'До 5 (вверх)';
-
-  @override
-  String get setupRoundingDown5 => 'До 5 (вниз)';
-
-  @override
-  String get setupRoundingUp10 => 'До 10 (вверх)';
-
-  @override
-  String get setupRoundingDown10 => 'До 10 (вниз)';
-
-  @override
-  String get setupFiscalDisablesRounding =>
-      'При включённой фискализации округление автоматически отключается';
-
-  @override
-  String get setupUserCreationTitle => 'Создание пользователей';
-
-  @override
-  String get setupUserCreationDescription =>
-      'Создайте пользователей для работы с кассой';
-
-  @override
-  String get setupAdminLabel => 'Администратор';
-
-  @override
   String get setupAdminSubtitle => 'Владелец кассы';
 
   @override
@@ -3153,46 +2103,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupUserPinConfirmLabel => 'Подтверждение';
 
   @override
-  String get setupAdminPinDefault => 'По умолчанию: 0000';
-
-  @override
   String get setupSellerLabel => 'Продавец';
 
   @override
   String get setupSellerOptional => 'Опционально';
 
   @override
-  String get setupSellerPinDefault => 'По умолчанию: 1111';
-
-  @override
   String get setupAdminPinMismatch => 'PIN-коды администратора не совпадают';
 
   @override
-  String get setupSummaryTitle => 'Проверьте данные';
-
-  @override
-  String get setupSummaryDescription => 'Убедитесь, что всё указано верно';
-
-  @override
-  String get setupSummaryCountry => 'Страна';
-
-  @override
-  String get setupSummaryCurrency => 'Валюта';
-
-  @override
   String get setupSummaryFormat => 'Формат';
-
-  @override
-  String get setupSummaryVat => 'НДС';
-
-  @override
-  String get setupSummaryTelegram => 'Telegram';
-
-  @override
-  String get setupSummaryStatus => 'Статус';
-
-  @override
-  String get setupConfigured => 'Настроен';
 
   @override
   String get setupNotConfigured => 'Не настроен';
@@ -3204,28 +2124,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupSummaryName => 'Название';
 
   @override
-  String get setupSummaryAddress => 'Адрес';
-
-  @override
-  String get setupSummaryWorkMode => 'Режим работы';
-
-  @override
-  String get setupSummaryMode => 'Режим';
-
-  @override
-  String get setupSummaryAutonomous => 'Автономный (без сети)';
-
-  @override
-  String get setupSummaryNetwork => 'Сетевой (синхронизация)';
-
-  @override
-  String get setupSummaryPos => 'Касса';
-
-  @override
   String get setupSummaryId => 'ID';
-
-  @override
-  String get setupEnabled => 'Включена';
 
   @override
   String get setupDisabled => 'Отключена';
@@ -3246,30 +2145,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupSummaryScales => 'Весы';
 
   @override
-  String get setupSummaryCashDrawer => 'Ден. ящик';
-
-  @override
-  String get setupSummaryTerminals => 'Платёжные терминалы';
-
-  @override
-  String get setupSummaryRules => 'Бизнес-правила';
-
-  @override
-  String get setupSummaryDiscounts => 'Скидки';
-
-  @override
-  String get setupSummaryDebtSales => 'В долг';
-
-  @override
-  String get setupSummaryCashback => 'Кешбэк';
-
-  @override
-  String get setupSummaryBigAmount => 'Крупные суммы';
-
-  @override
-  String get setupSummaryUsers => 'Пользователи';
-
-  @override
   String get setupSummaryAdmin => 'Администратор';
 
   @override
@@ -3282,45 +2157,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupCompleteSubtitle => 'Касса готова к работе';
 
   @override
-  String get setupStartWork => 'Начать работу';
-
-  @override
   String setupVatPayerSummary(String rate) {
     return 'Плательщик НДС ($rate%)';
   }
-
-  @override
-  String get setupSummaryWkPosId => 'ID кассы WK';
-
-  @override
-  String get setupSummaryOfdInn => 'ИНН';
-
-  @override
-  String get setupScalesConfigured => 'Настроены';
-
-  @override
-  String get setupScalesNotConfigured => 'Не настроены';
-
-  @override
-  String get setupCashDrawerOn => 'Включён';
-
-  @override
-  String get setupAllowed => 'Разрешены';
-
-  @override
-  String get setupDenied => 'Запрещены';
-
-  @override
-  String get setupAllowedFem => 'Разрешена';
-
-  @override
-  String get setupDeniedFem => 'Запрещена';
-
-  @override
-  String get setupCashbackOff => 'Отключён';
-
-  @override
-  String get setupBigAmountLimit => 'Лимит 100 000';
 
   @override
   String get setupDisplayPortLabel => 'COM-порт';
@@ -3590,13 +2429,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatNoResults => 'Ничего не найдено';
 
   @override
-  String get chatCopyUidInstructions =>
-      'Скопируйте UID для использования в других системах';
-
-  @override
-  String get chatUidExample => 'Например: telepos@pos-1';
-
-  @override
   String get chatServiceUnavailable => 'Сервис недоступен';
 
   @override
@@ -3689,15 +2521,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get additionalPrintingLastReceipt => 'Печать последнего чека...';
 
   @override
-  String get additionalTestReceiptTitle => '=== ТЕСТОВЫЙ ЧЕК ===';
-
-  @override
   String get additionalReceiptPrinted => 'Чек напечатан';
-
-  @override
-  String additionalPriceSearching(String query) {
-    return 'Поиск: $query';
-  }
 
   @override
   String get additionalMinimizing => 'Сворачивание окна...';
@@ -3752,17 +2576,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get additionalBarcodeHint => 'Отсканируйте или введите';
-
-  @override
-  String additionalTestReceiptProduct(String number) {
-    return 'Товар $number';
-  }
-
-  @override
-  String get additionalTestReceiptTotal => 'ИТОГО:';
-
-  @override
-  String get additionalTestReceiptThankYou => 'Спасибо за покупку!';
 
   @override
   String get langRussian => 'Русский';
@@ -3895,104 +2708,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Уведомлять при заполнении очереди';
 
   @override
-  String saleErrorInitiation(String error) {
-    return 'Ошибка инициации продажи: $error';
-  }
-
-  @override
-  String get saleErrorNotInitialized => 'Продажа не инициализирована';
-
-  @override
-  String get saleErrorEmpty => 'Чек пуст';
-
-  @override
-  String saleErrorCompletion(String error) {
-    return 'Ошибка завершения продажи: $error';
-  }
-
-  @override
-  String saleErrorSearch(String error) {
-    return 'Ошибка поиска: $error';
-  }
-
-  @override
-  String saleErrorDeferred(String error) {
-    return 'Ошибка отложения чека: $error';
-  }
-
-  @override
-  String get saleErrorDeferredNotFound => 'Отложенный чек не найден';
-
-  @override
-  String saleErrorLoadingDeferred(String error) {
-    return 'Ошибка загрузки отложенного чека: $error';
-  }
-
-  @override
   String get paymentCustomerDefault => 'Клиент';
 
   @override
-  String get paymentErrorFormation =>
-      'Не удалось сформировать платёж. Проверьте настройки счетов.';
-
-  @override
-  String get paymentErrorSaving => 'Ошибка сохранения продажи';
-
-  @override
-  String paymentErrorProcessing(String error) {
-    return 'Ошибка обработки платежа: $error';
-  }
-
-  @override
-  String paymentAccountDefault(int id) {
-    return 'Счёт $id';
-  }
-
-  @override
-  String refundErrorReceiptNotFound(String number) {
-    return 'Чек #$number не найден';
-  }
-
-  @override
-  String refundErrorLoadingReceipt(String error) {
-    return 'Ошибка загрузки чека: $error';
-  }
-
-  @override
-  String refundErrorSearch(String error) {
-    return 'Ошибка поиска: $error';
-  }
-
-  @override
-  String get refundErrorProductNotFound => 'Товар не найден';
-
-  @override
   String get refundErrorNotAuthenticated => 'Пользователь не авторизован';
-
-  @override
-  String refundErrorProcessing(String error) {
-    return 'Ошибка возврата: $error';
-  }
-
-  @override
-  String shiftErrorLoadingData(String error) {
-    return 'Ошибка загрузки данных смены: $error';
-  }
-
-  @override
-  String shiftErrorOpening(String error) {
-    return 'Ошибка открытия смены: $error';
-  }
-
-  @override
-  String shiftErrorClosing(String error) {
-    return 'Ошибка закрытия смены: $error';
-  }
-
-  @override
-  String shiftErrorPrinting(String error) {
-    return 'Ошибка печати Z-отчёта: $error';
-  }
 
   @override
   String get cashOpTypeInvestment => 'Внесение';
@@ -4005,46 +2724,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get supplyNoName => 'Без имени';
-
-  @override
-  String get supplyNoTitle => 'Без названия';
-
-  @override
-  String get supplyErrorSupplierNotFound => 'Поставщик не найден';
-
-  @override
-  String supplyErrorSelectingSupplier(String error) {
-    return 'Ошибка выбора поставщика: $error';
-  }
-
-  @override
-  String get supplyErrorAccountNotFound => 'Счёт не найден';
-
-  @override
-  String supplyErrorSelectingAccount(String error) {
-    return 'Ошибка выбора счёта: $error';
-  }
-
-  @override
-  String supplyErrorAddingProduct(String error) {
-    return 'Ошибка добавления товара: $error';
-  }
-
-  @override
-  String get supplyErrorProductNotFound => 'Товар не найден';
-
-  @override
-  String get supplyErrorMissingFields => 'Заполните все обязательные поля';
-
-  @override
-  String supplyErrorSaving(String error) {
-    return 'Ошибка сохранения: $error';
-  }
-
-  @override
-  String historyErrorLoading(String error) {
-    return 'Ошибка загрузки истории: $error';
-  }
 
   @override
   String get syncTypeProducts => 'Товары';
@@ -4077,110 +2756,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get syncTypeSupplies => 'Приёмки';
 
   @override
-  String get syncStepPreparing => 'Подготовка...';
-
-  @override
-  String syncStepUploading(String type) {
-    return 'Выгрузка: $type';
-  }
-
-  @override
-  String syncStepDownloading(String type) {
-    return 'Загрузка: $type';
-  }
-
-  @override
   String get syncCompleted => 'Синхронизация завершена';
-
-  @override
-  String get loginErrorNoUsers => 'Нет зарегистрированных пользователей';
-
-  @override
-  String loginErrorLoadingData(String error) {
-    return 'Ошибка загрузки данных: $error';
-  }
-
-  @override
-  String get loginErrorSelectUser => 'Выберите пользователя';
-
-  @override
-  String get loginErrorIncompletePin => 'Введите PIN-код (минимум 4 цифры)';
-
-  @override
-  String get loginErrorNoRsaKey =>
-      'Ошибка: RSA ключ не настроен. Обратитесь к администратору.';
-
-  @override
-  String get loginErrorWrongPin => 'Неверный PIN-код';
-
-  @override
-  String get loginErrorSystemTime =>
-      'Системное время некорректно. Проверьте настройки даты и времени.';
-
-  @override
-  String get receiptLabelBin => 'БИН:';
-
-  @override
-  String get receiptLabelPhone => 'Тел:';
-
-  @override
-  String get receiptLabelReceiptNo => 'Чек №:';
-
-  @override
-  String get receiptLabelPosId => 'Касса:';
-
-  @override
-  String get receiptLabelDate => 'Дата:';
-
-  @override
-  String get receiptLabelCashier => 'Кассир:';
-
-  @override
-  String get receiptLabelTable => 'Стол:';
-
-  @override
-  String get receiptLabelWaiter => 'Официант:';
-
-  @override
-  String get receiptLabelGuests => 'Гостей:';
-
-  @override
-  String get receiptLabelCustomer => 'Клиент:';
-
-  @override
-  String get receiptLabelSubtotal => 'Подытог:';
-
-  @override
-  String get receiptLabelDiscount => 'Скидка:';
-
-  @override
-  String get receiptLabelServiceCharge => 'Сервис. сбор:';
 
   @override
   String get receiptLabelTotal => 'ИТОГО:';
 
   @override
-  String receiptLabelVat(String percent) {
-    return 'в т.ч. НДС $percent%:';
-  }
-
-  @override
-  String get receiptLabelCash => 'Наличные:';
-
-  @override
-  String get receiptLabelCard => 'Карта:';
-
-  @override
   String get receiptLabelChange => 'Сдача:';
-
-  @override
-  String get receiptLabelCheckReceipt => 'Проверить чек:';
-
-  @override
-  String get receiptLabelItemName => 'Наименование';
-
-  @override
-  String get receiptLabelQty => 'Кол';
 
   @override
   String get receiptLabelPrice => 'Цена';
@@ -4189,147 +2771,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get receiptLabelAmount => 'Сумма';
 
   @override
-  String get receiptLabelItemDiscount => 'Скидка:';
-
-  @override
-  String get receiptLabelFiscalBin => 'БИН:';
-
-  @override
-  String get receiptLabelFiscalNo => 'ФН:';
-
-  @override
-  String get receiptLabelFiscalSign => 'ФП:';
-
-  @override
-  String get receiptLabelVatCertificate => 'НДС:';
-
-  @override
-  String get receiptLabelOfflineMode => '*** ОФФЛАЙН ***';
-
-  @override
-  String get receiptLabelRefundHeader => '*** ВОЗВРАТ ***';
-
-  @override
-  String get receiptLabelRefundNo => 'Возврат №:';
-
-  @override
-  String get receiptLabelReason => 'Причина:';
-
-  @override
-  String get receiptLabelRefundTotal => 'К ВОЗВРАТУ:';
-
-  @override
-  String get receiptLabelZReport => 'Z-ОТЧЁТ';
-
-  @override
-  String get receiptLabelShiftClosing => 'ЗАКРЫТИЕ СМЕНЫ';
-
-  @override
-  String get receiptLabelShiftNo => 'Смена №:';
-
-  @override
-  String get receiptLabelShiftOpenTime => 'Открыта:';
-
-  @override
-  String get receiptLabelShiftCloseTime => 'Закрыта:';
-
-  @override
-  String get receiptLabelSales => 'ПРОДАЖИ';
-
-  @override
-  String get receiptLabelQuantity => 'Количество:';
-
-  @override
-  String get receiptLabelCashSales => 'Наличные:';
-
-  @override
-  String get receiptLabelCardSales => 'Карта:';
-
-  @override
-  String get receiptLabelSalesTotal => 'Итого:';
-
-  @override
-  String get receiptLabelRefunds => 'ВОЗВРАТЫ';
-
-  @override
-  String get receiptLabelRefundQty => 'Количество:';
-
-  @override
-  String get receiptLabelRefundAmount => 'Сумма:';
-
-  @override
-  String get receiptLabelCashOperations => 'КАССОВЫЕ ОПЕРАЦИИ';
-
-  @override
-  String get receiptLabelInvestments => 'Внесения:';
-
-  @override
-  String get receiptLabelExpenses => 'Выплаты:';
-
-  @override
-  String get receiptLabelRevenue => 'ВЫРУЧКА:';
-
-  @override
-  String get receiptLabelCashInDrawer => 'В КАССЕ:';
-
-  @override
-  String get receiptLabelXReport => 'X-ОТЧЁТ';
-
-  @override
-  String get receiptLabelType => 'Тип:';
-
-  @override
-  String get receiptLabelDescription => 'Описание:';
-
-  @override
-  String get receiptLabelDebtPayment => 'ПОГАШЕНИЕ ДОЛГА';
-
-  @override
-  String get receiptLabelPreviousDebt => 'Долг был:';
-
-  @override
-  String get receiptLabelPaidAmount => 'ОПЛАЧЕНО:';
-
-  @override
-  String get receiptLabelRemainingDebt => 'Остаток:';
-
-  @override
-  String get receiptLabelTestPrint => 'TEST PRINT';
-
-  @override
   String get receiptLabelThankYou => 'Спасибо за покупку!';
-
-  @override
-  String get receiptLabelSaleReceipt => 'КАССОВЫЙ ЧЕК';
-
-  @override
-  String get receiptLabelOfflineHeader => '*** ОФФЛАЙН РЕЖИМ ***';
-
-  @override
-  String get receiptLabelVatCertificateTitle => 'Свидетельство НДС:';
-
-  @override
-  String get fiscalErrorBin12Digits => 'БИН должен содержать 12 цифр';
-
-  @override
-  String get fiscalErrorBinDigitsOnly => 'БИН должен содержать только цифры';
-
-  @override
-  String get fiscalErrorFiscalNoRequired => 'Фискальный номер обязателен';
-
-  @override
-  String get fiscalErrorRnkRequired => 'РНК обязателен';
-
-  @override
-  String get fiscalErrorZnkRequired => 'ЗНК обязателен';
-
-  @override
-  String get fiscalErrorVatSerialRequired =>
-      'Серия свидетельства НДС обязательна';
-
-  @override
-  String get fiscalErrorVatNumberRequired =>
-      'Номер свидетельства НДС обязателен';
 
   @override
   String get telegramTabPhone => 'По телефону';
@@ -4789,6 +3231,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get generalSettingsNotSpecified => 'Не указано';
 
   @override
+  String get generalSettingsDataLocation => 'Где лежат данные';
+
+  @override
+  String get generalSettingsDataLocationDesc =>
+      'Касса хранит всё на этой машине. Знать где — нужно для резервной копии и переезда.';
+
+  @override
+  String get generalSettingsDataDb => 'База';
+
+  @override
+  String get generalSettingsDataLogs => 'Журналы';
+
+  @override
+  String get generalSettingsDataBackups => 'Резервные копии';
+
+  @override
+  String get generalSettingsPathCopied => 'Путь скопирован';
+
+  @override
   String get generalSettingsAppVersion => 'Версия приложения';
 
   @override
@@ -4833,9 +3294,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get generalSettingsCountry => 'Страна';
 
   @override
-  String get generalSettingsAdditional => 'Дополнительные настройки';
-
-  @override
   String get generalSettingsTransport => 'Транспорт';
 
   @override
@@ -4847,12 +3305,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get generalSettingsPrinterSubtitle => 'Настройки печати чеков';
-
-  @override
-  String get generalSettingsPermissions => 'Права доступа';
-
-  @override
-  String get generalSettingsPermissionsSubtitle => 'Разрешения для кассиров';
 
   @override
   String get generalSettingsFiscal => 'Фискализация';
@@ -4885,20 +3337,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get generalSettingsCurrencyDesc => 'Валюта и страна';
 
   @override
-  String get generalSettingsUpdate => 'Обновление';
-
-  @override
-  String get generalSettingsUpdateSubtitle => 'Проверка и установка обновлений';
-
-  @override
   String get generalSettingsAppUpdate => 'Обновление приложения';
 
   @override
   String get generalSettingsAppUpdateSubtitle =>
       'Обновление кассы (не путать с обновлением ОС)';
-
-  @override
-  String get generalSettingsUpdateDesc => 'Текущая версия и обновления';
 
   @override
   String get settingsUpdateTitle => 'Обновление приложения';
@@ -5019,104 +3462,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get printerSettingsPrinting => 'Печать...';
-
-  @override
-  String get printerSettingsTestReceipt => 'ТЕСТОВЫЙ ЧЕК';
-
-  @override
-  String get printerSettingsWidth => 'Ширина:';
-
-  @override
-  String printerSettingsWidthValue(int width) {
-    return '$width символов';
-  }
-
-  @override
-  String get printerSettingsType => 'Тип:';
-
-  @override
-  String get printerSettingsAddress => 'Адрес:';
-
-  @override
-  String get printerSettingsNotSpecifiedAddr => 'Не указан';
-
-  @override
-  String get printerSettingsPrinterWorks => 'Принтер работает!';
-
-  @override
-  String get printerSettingsPrintSuccess => 'Печать успешна';
-
-  @override
-  String get printerSettingsPrintError => 'Ошибка печати';
-
-  @override
-  String get printerSettingsNotConnected => 'Не подключен';
-
-  @override
-  String get printerSettingsChecking => 'Проверка...';
-
-  @override
-  String get printerSettingsReady => 'Готов';
-
-  @override
-  String get printerSettingsNoPaper => 'Нет бумаги';
-
-  @override
-  String get printerSettingsCoverOpen => 'Открыта крышка';
-
-  @override
   String get printerSettingsSave => 'Сохранить';
-
-  @override
-  String get printerSettingsConnectionType => 'Тип подключения';
-
-  @override
-  String get printerSettingsPrinterAddress => 'Адрес принтера';
-
-  @override
-  String get printerSettingsPaperWidth => 'Ширина бумаги';
-
-  @override
-  String get printerSettingsTesting => 'Тестирование';
-
-  @override
-  String printerSettingsStatus(String status) {
-    return 'Статус: $status';
-  }
-
-  @override
-  String get printerSettingsCheck => 'Проверить';
-
-  @override
-  String get printerSettingsTestCheck => 'Тестовый чек';
-
-  @override
-  String get printerSettingsPort => 'Порт';
-
-  @override
-  String get printerSettingsIpAddress => 'IP адрес принтера';
-
-  @override
-  String get printerSettingsMacAddress => 'MAC адрес или имя';
-
-  @override
-  String get printerSettingsPrinterName => 'Имя принтера';
-
-  @override
-  String get printerSettingsComPort => 'COM порт';
-
-  @override
-  String get printerSettingsSerialCom => 'Serial (COM)';
-
-  @override
-  String get printerSettingsPaperWidth58 => '58mm (32 символа)';
-
-  @override
-  String get printerSettingsPaperWidth80_42 => '80mm (42 символа)';
-
-  @override
-  String get printerSettingsPaperWidth80_48 => '80mm (48 символов)';
 
   @override
   String get fiscalSettingsTitle => 'Фискализация';
@@ -5136,61 +3482,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fiscalSettingsOperator => 'Фискальный оператор';
 
   @override
-  String get fiscalSettingsWebkassaSettings => 'Настройки WebKassa';
-
-  @override
-  String get fiscalSettingsTaxpayerInfo => 'Данные налогоплательщика';
-
-  @override
   String get fiscalSettingsVatSettings => 'Настройки НДС';
 
   @override
   String get fiscalSettingsWebkassaLabel => 'WebKassa';
 
   @override
-  String get fiscalSettingsWebkassaDesc => 'Облачный фискальный сервис';
-
-  @override
-  String get fiscalSettingsOfdLabel => 'OFD';
-
-  @override
-  String get fiscalSettingsOfdDesc => 'Оператор фискальных данных';
-
-  @override
   String get fiscalSettingsNoneLabel => 'Без фискализации';
-
-  @override
-  String get fiscalSettingsNoneDesc => 'Чеки не отправляются в ОФД';
-
-  @override
-  String get fiscalSettingsOfdId => 'ID ОФД';
-
-  @override
-  String get fiscalSettingsOfdIdHint => 'Идентификатор ОФД';
-
-  @override
-  String get fiscalSettingsOfdName => 'Название ОФД';
-
-  @override
-  String get fiscalSettingsOfdNameHint => 'WebKassa / ОФД.kz';
 
   @override
   String get fiscalSettingsOfdHost => 'Адрес сервера ОФД';
 
   @override
   String get fiscalSettingsOfdHostHint => 'https://api.webkassa.kz';
-
-  @override
-  String get fiscalSettingsWebkassaActive => 'WebKassa активирована';
-
-  @override
-  String get fiscalSettingsWebkassaInactive => 'WebKassa не активирована';
-
-  @override
-  String get fiscalSettingsCompanyName => 'Наименование';
-
-  @override
-  String get fiscalSettingsCashBox => 'Касса';
 
   @override
   String get fiscalSettingsVatPayer => 'Плательщик НДС';
@@ -5242,10 +3546,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customerPaymentTender => 'Чем принято';
 
   @override
-  String get fiscalSettingsVatRate =>
-      'Ставка НДС: 12% (расчёт по формуле 3/28)';
-
-  @override
   String historyProductUcode(String ucode) {
     return 'Товар #$ucode';
   }
@@ -5258,11 +3558,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String historyAccountId(String id) {
     return 'Счёт #$id';
-  }
-
-  @override
-  String historyLoadError(String error) {
-    return 'Ошибка загрузки: $error';
   }
 
   @override
@@ -5416,26 +3711,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyLastPage => 'Последняя страница';
 
   @override
-  String historyAmount(String amount) {
-    return 'Сумма: $amount';
-  }
-
-  @override
-  String historyDate(String date) {
-    return 'Дата: $date';
-  }
-
-  @override
-  String historyPos(String id) {
-    return 'POS: $id';
-  }
-
-  @override
-  String historyClientName(String name) {
-    return 'Клиент: $name';
-  }
-
-  @override
   String get historyFiscalYes => 'Да';
 
   @override
@@ -5549,10 +3824,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get shiftFinishSalesBeforeClose =>
-      'Завершите или отмените продажи перед закрытием смены';
-
-  @override
   String get shiftBillsTab => 'Купюры';
 
   @override
@@ -5609,9 +3880,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get supplyProductNotFound => 'Товар не найден';
-
-  @override
-  String get supplyInvalidQuantity => 'Введите корректное количество';
 
   @override
   String get supplySelectSupplierTitle => 'Выберите поставщика';
@@ -5784,9 +4052,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get syncWidgetWaiting => 'Ожидает';
-
-  @override
   String get syncWidgetSynced => 'Синхронизировано';
 
   @override
@@ -5806,24 +4071,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String syncWidgetDaysAgo(int days) {
     return '$days дн. назад';
   }
-
-  @override
-  String get syncWidgetConnecting => 'Подключение к серверу...';
-
-  @override
-  String get syncWidgetSyncingProducts => 'Синхронизация товаров...';
-
-  @override
-  String get syncWidgetSyncingSales => 'Синхронизация продаж...';
-
-  @override
-  String get syncWidgetSyncingAgents => 'Синхронизация контрагентов...';
-
-  @override
-  String get syncWidgetSyncingPrices => 'Синхронизация цен...';
-
-  @override
-  String get syncWidgetFinishing => 'Завершение...';
 
   @override
   String get updateDialogUpdating => 'Обновление...';
@@ -5914,9 +4161,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get versionConflictContinue => 'Продолжить';
 
   @override
-  String get restoreLoadingBackups => 'Загрузка бэкапов...';
-
-  @override
   String get restoreSearchingBackups => 'Поиск бэкапов...';
 
   @override
@@ -5993,25 +4237,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get agentEnterCustomerName => 'Введите имя клиента';
-
-  @override
-  String get agentDeletedCustomerPhone => 'Клиент с таким телефоном был удалён';
-
-  @override
-  String get agentWantRestore => 'Хотите восстановить?';
-
-  @override
-  String get agentDeleteCustomerTitle => 'Удалить клиента?';
-
-  @override
-  String agentDeleteConfirmMessage(String name) {
-    return 'Вы уверены, что хотите удалить \"$name\"?';
-  }
-
-  @override
-  String agentCustomerDeleted(String name) {
-    return 'Клиент \"$name\" удалён';
-  }
 
   @override
   String get cashOpTitle => 'Кассовая операция';
@@ -6522,9 +4747,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get authNoPin => 'Без PIN';
 
   @override
-  String get authSelectUser => 'Выберите пользователя';
-
-  @override
   String get authNoUsersShort => 'Нет пользователей';
 
   @override
@@ -6565,15 +4787,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get updatePosNow => 'ОБНОВИТЬ КАССУ';
 
   @override
-  String get serviceAddNote => 'Добавить отметку';
-
-  @override
   String get serviceClientLookup => 'Поиск клиента';
-
-  @override
-  String serviceOrderDetail(int orderId) {
-    return 'Детали заказ-наряда #$orderId';
-  }
 
   @override
   String get paymentDefaultLabel => 'По умолчанию';
@@ -6592,9 +4806,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get serviceIntakeDelivery => 'Доставка';
-
-  @override
-  String get serviceIntakePickup => 'Забрать у клиента';
 
   @override
   String get serviceIntakeSave => 'Сохранить';
@@ -6660,16 +4871,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get serviceAddMark => 'Добавить работу';
 
   @override
-  String get serviceDeleteMark => 'Удалить отметку';
-
-  @override
   String get serviceMarkDescription => 'Описание';
 
   @override
   String get serviceMarkType => 'Тип работы';
-
-  @override
-  String get serviceMarkCost => 'Стоимость';
 
   @override
   String get serviceMarkNote => 'Примечание';
@@ -6711,9 +4916,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String serviceTechnicianAssigned(String name) {
     return 'Мастер назначен: $name';
   }
-
-  @override
-  String get serviceTechnicianSelect => 'Выберите мастера';
 
   @override
   String get servicePrepayment => 'Предоплата';
@@ -6758,11 +4960,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get serviceNeedsDelivery => 'Доставить клиенту';
 
   @override
-  String serviceQrFormat(Object id, Object number) {
-    return 'TELEPOS:SO:$id:$number';
-  }
-
-  @override
   String get serviceOrderCreated => 'Новый заказ';
 
   @override
@@ -6779,9 +4976,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalogTitle => 'Каталог товаров';
-
-  @override
-  String get catalogSearch => 'Поиск';
 
   @override
   String get catalogSearchHint => 'Название или штрихкод';
@@ -6829,16 +5023,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get catalogWholesalePrice => 'Оптовая цена';
 
   @override
-  String get catalogCategory => 'Категория';
-
-  @override
   String get catalogMeasure => 'Единица измерения';
 
   @override
   String get catalogQuantity => 'Остаток';
-
-  @override
-  String get catalogQuickProduct => 'Быстрый товар';
 
   @override
   String get catalogAddToQuick => 'Добавить в быстрые';
@@ -6907,9 +5095,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalogPriceInvalid => 'Цена должна быть больше 0';
-
-  @override
-  String get catalogBarcodeExists => 'Товар с таким штрихкодом уже существует';
 
   @override
   String get catalogCategories => 'Категории';
@@ -7122,79 +5307,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hwScannerTitle => 'Сканер штрих-кодов';
 
   @override
-  String get hwScannerMode => 'Режим сканера';
-
-  @override
-  String get hwScannerModeKeyboard => 'USB / клавиатура (wedge)';
-
-  @override
-  String get hwScannerModeSerial => 'Серийный';
-
-  @override
-  String get hwScannerModeCamera => 'Камера';
-
-  @override
-  String get hwScannerModeHint => 'USB-сканеры работают в этом режиме';
-
-  @override
-  String get hwScannerTimeout => 'Таймаут';
-
-  @override
-  String get hwScannerMinLength => 'Мин. длина';
-
-  @override
-  String get hwScannerMaxLength => 'Макс. длина';
-
-  @override
   String get hwDisplayTitle => 'Дисплей покупателя';
-
-  @override
-  String get hwDisplayModel => 'Модель';
-
-  @override
-  String get hwDisplayModelLed8 => 'LED 8 символов';
-
-  @override
-  String get hwDisplayModelVfd20 => 'VFD 20x2';
-
-  @override
-  String get hwDisplayPort => 'COM-порт';
-
-  @override
-  String get hwDisplayBaudRate => 'Скорость';
-
-  @override
-  String get hwDisplayDisabled => 'Дисплей покупателя отключён';
 
   @override
   String get hwDrawerTitle => 'Кассовый ящик';
 
   @override
-  String get hwDrawerMode => 'Режим открытия';
-
-  @override
-  String get hwDrawerModePrinter => 'Через принтер';
-
-  @override
-  String get hwDrawerModeSerial => 'Серийный порт';
-
-  @override
-  String get hwDrawerPort => 'COM-порт';
-
-  @override
   String get hwTerminalsTitle => 'Платёжные терминалы';
-
-  @override
-  String get hwTerminalIp => 'IP-адрес';
-
-  @override
-  String get hwTerminalPort => 'Порт';
-
-  @override
-  String get hwTerminalMerchantId => 'Merchant ID';
-
-  @override
-  String get hwTerminalTerminalId => 'Terminal ID';
 
   @override
   String get catalogExportCsv => 'Экспорт CSV';
@@ -7250,13 +5369,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get serviceConsumableSearch => 'Поиск товара / расходника';
 
   @override
-  String get serviceConsumableSelected => 'Выбранный товар';
-
-  @override
   String get serviceQuickServicesTitle => 'Быстрые услуги';
-
-  @override
-  String get serviceQuickServicesEmpty => 'Нет быстрых услуг';
 
   @override
   String get serviceIntakeItems => 'Принимаемые предметы';
@@ -7300,9 +5413,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dishCalculation => 'Калькуляция';
 
   @override
-  String get dishCalculationStub => 'Модуль калькуляции будет доступен позже';
-
-  @override
   String get dishIngredients => 'Ингредиенты';
 
   @override
@@ -7316,10 +5426,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get serviceConsumableQuantity => 'Кол-во на 1 услугу';
-
-  @override
-  String get serviceConsumablesAutoAdded =>
-      'Расходники добавлены автоматически';
 
   @override
   String get catalogDescription => 'Описание';
@@ -7788,16 +5894,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get labelPrinterLanguage => 'Язык принтера';
 
   @override
-  String get labelPrinterSize => 'Размер этикетки';
-
-  @override
   String get labelPrinterWidthMm => 'Ширина, мм';
 
   @override
   String get labelPrinterHeightMm => 'Высота, мм';
-
-  @override
-  String get labelPrinterTestSuccess => 'Этикетка отправлена на печать';
 
   @override
   String get labelPrinterNotConfigured =>
@@ -7959,32 +6059,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get receiptTemplateFooterText => 'Текст подвала';
 
   @override
-  String get receiptTemplateExtraFooter => 'Доп. строки подвала';
-
-  @override
-  String get receiptTemplateExtraFooterHint =>
-      'По одной строке на каждую (например, условия возврата)';
-
-  @override
-  String get receiptTemplateShowBin => 'Печатать БИН/ИИН';
-
-  @override
   String get receiptTemplateShowAddress => 'Печатать адрес';
 
   @override
   String get receiptTemplateShowCashier => 'Печатать кассу/кассира';
 
   @override
-  String get receiptTemplateShowVat => 'Печатать НДС';
-
-  @override
-  String get receiptTemplateShowQr => 'Печатать ссылку проверки (QR)';
-
-  @override
   String get receiptTemplateShowItemNumbers => 'Нумеровать позиции';
-
-  @override
-  String get receiptTemplateShowLogo => 'Печатать логотип';
 
   @override
   String get receiptTemplateTestPrint => 'Тестовая печать';
@@ -8358,13 +6439,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Введите команду (например: systemctl status telepos-sysd)';
 
   @override
-  String get sysmTerminalRun => 'Выполнить';
-
-  @override
   String get sysmTerminalClear => 'Очистить вывод';
-
-  @override
-  String get sysmTerminalRunning => 'Выполняется…';
 
   @override
   String sysmTerminalExitCode(int code) {
@@ -8375,22 +6450,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sysmTerminalEmpty => 'Вывод появится здесь';
 
   @override
-  String get sysmTerminalHistory => 'История команд';
-
-  @override
   String get sysmTerminalPresets => 'Пресеты';
-
-  @override
-  String get sysmTerminalPresetsNetwork => 'Сеть';
-
-  @override
-  String get sysmTerminalPresetsPrinters => 'Принтеры';
-
-  @override
-  String get sysmTerminalPresetsSystem => 'Система';
-
-  @override
-  String get sysmTerminalPresetsTime => 'Время';
 
   @override
   String get sysmTermGroupDiagnostics => 'Диагностика';
@@ -8475,13 +6535,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sysmTermTimeNtpSync => 'Синхронизация NTP';
-
-  @override
-  String get labelPrinterDevicePath => 'Путь к устройству';
-
-  @override
-  String get labelPrinterDevicePathHint =>
-      'Например: /dev/usb/lp0 (USB) или /dev/ttyUSB0 (Serial). Оставьте пустым для значения по умолчанию.';
 
   @override
   String get movementTitle => 'Перемещение';
@@ -8668,9 +6721,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get esfSettingsOperator => 'Оператор ЭСФ';
 
   @override
-  String get esfSettingsTestMode => 'Тестовый режим';
-
-  @override
   String get esfSettingsSupplier => 'Реквизиты поставщика (наша организация)';
 
   @override
@@ -8693,15 +6743,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get esfSettingsVatRate => 'Ставка НДС, %';
-
-  @override
-  String get esfSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get esfSettingsEcpKeyPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get esfSettingsEcpKeyAlias => 'Алиас ключа';
 
   @override
   String get esfSettingsB2bOnly => 'Только B2B';
@@ -8727,9 +6768,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get esfOutboxEmptyHint =>
       'Счета-фактуры появятся здесь после продаж B2B';
-
-  @override
-  String get esfOutboxRetry => 'Повторить отправку';
 
   @override
   String get esfOutboxRetryAll => 'Повторить все';
@@ -8858,9 +6896,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sntSettingsProvider => 'Способ отправки';
 
   @override
-  String get sntSettingsTestMode => 'Тестовый режим';
-
-  @override
   String get sntSettingsRequisites => 'Реквизиты налогоплательщика';
 
   @override
@@ -8868,32 +6903,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sntSettingsWarehouseCode => 'Код виртуального склада';
-
-  @override
-  String get sntSettingsBackend => 'TelePOS backend (прокси ИС ЭСФ)';
-
-  @override
-  String get sntSettingsBackendUrl => 'URL бэкенда';
-
-  @override
-  String get sntSettingsApiKey => 'API-ключ';
-
-  @override
-  String get sntSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get sntSettingsCertPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get sntSettingsCertPassword => 'Пароль ключа';
-
-  @override
-  String get sntSettingsEcpHint =>
-      'Реальная отправка СНТ требует ЭЦП НУЦ РК и зарегистрированного профиля ИС ЭСФ. Без ЭЦП документы собираются и хранятся локально (Виртуальный склад работает офлайн).';
-
-  @override
-  String get sntSettingsSharedEsfHint =>
-      'СНТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.';
 
   @override
   String get sntSettingsWebkassaNote =>
@@ -9032,41 +7041,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ismptSettingsBackend => 'Бэкенд';
 
   @override
-  String get ismptSettingsTestMode => 'Тестовый режим';
-
-  @override
-  String get ismptSettingsRequisites => 'Реквизиты налогоплательщика';
-
-  @override
-  String get ismptSettingsOwnBin => 'БИН / ИИН (наш)';
-
-  @override
-  String get ismptSettingsApi => 'True API (ismet.kz)';
-
-  @override
-  String get ismptSettingsApiUrl => 'URL API';
-
-  @override
-  String get ismptSettingsApiKey => 'API-ключ / токен';
-
-  @override
-  String get ismptSettingsEcp => 'ЭЦП (НУЦ РК)';
-
-  @override
-  String get ismptSettingsCertPath => 'Путь к ключу ЭЦП';
-
-  @override
-  String get ismptSettingsCertPassword => 'Пароль ключа';
-
-  @override
-  String get ismptSettingsEcpHint =>
-      'Реальная работа с ИС МПТ требует ЭЦП НУЦ РК и зарегистрированного профиля участника оборота. Без ЭЦП коды маркировки принимаются и хранятся локально (приёмка работает офлайн, продажа не блокируется).';
-
-  @override
-  String get ismptSettingsSharedEsfHint =>
-      'ИС МПТ и ЭСФ — подсистемы КГД. БИН и ЭЦП можно настроить на экране ЭСФ.';
-
-  @override
   String get ismptSettingsWebkassaNote =>
       'Проверка кодов маркировки идёт через WebKassa. Реквизиты подключения (логин, apiKey, касса, ЭЦП) берутся из настроек WebKassa (Фискализация) — один общий конфиг.';
 
@@ -9081,9 +7055,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ismptSettingsSaveError => 'Не удалось сохранить настройки ИС МПТ';
-
-  @override
-  String get ismptSettingsBinRequired => 'Укажите БИН / ИИН налогоплательщика';
 
   @override
   String get reorderRulesTitle => 'Правила перезаказа';
@@ -9167,9 +7138,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shiftClosedGateOpen => 'Открыть смену';
-
-  @override
-  String get sysmTerminalPresetsDiag => 'Диагностика';
 
   @override
   String get wmsDashboardTitle => 'WMS — Управление складом';
@@ -10010,13 +7978,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String setDeleteUserError(String error) {
     return 'Не удалось удалить пользователя: $error';
   }
-
-  @override
-  String get setUserNoEncryptionKey =>
-      'Не настроен ключ шифрования. Завершите начальную настройку POS.';
-
-  @override
-  String get setUserPinEncryptFailed => 'Не удалось зашифровать PIN';
 
   @override
   String get setWmsTitle => 'Настройки WMS';
@@ -11383,59 +9344,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Цену в чеке нельзя установить ниже цены товара';
 
   @override
-  String get printerAutoDetect => 'Найти принтер';
-
-  @override
-  String get printerAutoDetecting => 'Поиск принтера…';
-
-  @override
-  String printerFound(String device) {
-    return 'Найдено: $device';
-  }
-
-  @override
-  String printerFoundWithNote(String device, String note) {
-    return 'Найдено: $device — $note';
-  }
-
-  @override
-  String get printerNotFoundAnyPort =>
-      'Принтер не найден ни на одном порту (USB/serial). Проверьте кабель и питание.';
-
-  @override
-  String get printerUsbName => 'USB-принтер';
-
-  @override
-  String get printerSelectDevice => 'Выберите принтер';
-
-  @override
-  String get printerNoAccessGroupLp =>
-      'Узел найден, но нет прав (нужна группа lp)';
-
-  @override
-  String printerLabelUsb(String path) {
-    return 'USB-принтер ($path)';
-  }
-
-  @override
-  String printerLabelSerial(String path) {
-    return 'Serial-принтер ($path)';
-  }
-
-  @override
-  String get printerNoAccessGroupLpHint =>
-      'Узел найден, но нет прав (нужна группа lp): usermod -aG lp telepos и перезапуск сессии.';
-
-  @override
-  String printerRawOpenNoPermsHint(String path) {
-    return 'Узел $path найден, но открыть нельзя — нет прав. Добавьте пользователя в группу lp (usermod -aG lp telepos) и перезапустите сессию/приставку.';
-  }
-
-  @override
-  String get printerNotFoundNoNode =>
-      'Принтер не найден: нет ни одного char-узла /dev/usb/lp* и USB-serial порта. Проверьте кабель и питание принтера.';
-
-  @override
   String get ownerOnlyTitle => 'Доступно только владельцу кассы';
 
   @override
@@ -11482,9 +9390,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deviceSearchTitle => 'Найденные устройства';
-
-  @override
-  String get deviceSearchRunning => 'Идёт поиск…';
 
   @override
   String get deviceSearchEmpty =>
@@ -11589,9 +9494,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String scannerRulesNotAnInteger(String value) {
     return 'Значение «$value» — не целое число';
   }
-
-  @override
-  String get scannerRulesSaved => 'Правила чтения штрихкода сохранены';
 
   @override
   String get printQueueSectionTitle => 'Очередь печати';
@@ -12972,18 +10874,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get emulatorQrProvider => 'Провайдер оплаты по QR';
 
   @override
-  String get emulatorQrAddressHint =>
-      'Впишите этот адрес в настройке провайдера QR';
-
-  @override
-  String get emulatorQrBindAction => 'Вписать в настройку QR';
-
-  @override
   String get emulatorQrBindDone => 'Настройка QR теперь смотрит на эмулятор';
-
-  @override
-  String get emulatorQrBindingStale =>
-      'Настройка QR смотрит на выключенный эмулятор — оплата по коду откажет';
 
   @override
   String get diagnosticsTabPayment => 'Оплата';
@@ -13837,9 +11728,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get rcpBinIin => 'БИН/ИИН:';
 
   @override
-  String get rcpThankYou => 'Спасибо за покупку!';
-
-  @override
   String get rcpSale => 'ПРОДАЖА';
 
   @override
@@ -14085,9 +11973,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get taxSettingsPresetApplied => 'Набор применён';
 
   @override
-  String get taxSettingsCurrentSection => 'Текущая настройка';
-
-  @override
   String taxSettingsRateForStandard(String rate) {
     return 'Обычный товар: $rate%';
   }
@@ -14104,9 +11989,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get taxSettingsTillLocationHint =>
       'Отметок может быть несколько: город и спецрайоны. Вышестоящие добавляются сами.';
-
-  @override
-  String get taxSettingsRules => 'Правила';
 
   @override
   String get taxSettingsRuleTaxed => 'облагается';
@@ -14127,50 +12009,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get taxSettingsAddCategory => 'Добавить категорию';
 
   @override
-  String get taxSettingsAddRule => 'Добавить правило';
-
-  @override
   String get taxSettingsName => 'Название';
 
   @override
-  String get taxSettingsCode => 'Код';
-
-  @override
-  String get taxSettingsRate => 'Ставка, %';
-
-  @override
-  String get taxSettingsValidFrom => 'Действует с';
-
-  @override
-  String get taxSettingsParent => 'Вышестоящая';
-
-  @override
-  String get taxSettingsNoParent => 'нет (корень)';
-
-  @override
-  String get taxSettingsLevel => 'Уровень';
-
-  @override
-  String get taxSettingsLevelCountry => 'Страна';
-
-  @override
-  String get taxSettingsLevelState => 'Штат';
-
-  @override
-  String get taxSettingsLevelCounty => 'Округ';
-
-  @override
-  String get taxSettingsLevelCity => 'Город';
-
-  @override
-  String get taxSettingsLevelDistrict => 'Спецрайон';
-
-  @override
   String get taxSettingsDelete => 'Удалить';
-
-  @override
-  String get taxSettingsDeleteJurisdictionWarning =>
-      'Вместе с ней уйдут её правила и вложенные юрисдикции.';
 
   @override
   String get taxSettingsResponsibility =>
@@ -14646,10 +12488,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Печать этикеток — с кассы, не с терминала';
 
   @override
-  String get orphanQrTillNotRegistered =>
-      'База кассы не зарегистрирована — неразобранные деньги по QR спросить не у кого';
-
-  @override
   String get stockLowStockReorder => 'Дозаказ товаров с низким остатком';
 
   @override
@@ -14658,11 +12496,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String deferredFromTill(String id) {
     return 'касса $id';
-  }
-
-  @override
-  String dishSummary(int count, String cost) {
-    return 'Ингредиентов: $count, себестоимость: $cost';
   }
 
   @override
