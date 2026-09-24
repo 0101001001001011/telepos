@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Узбекский перевод окон установщика — ЛАТИНИЦЕЙ.
+
+  Письменность выбрана по тому, на чём говорит сам продукт: словарь кассы
+  (`assets/i18n/intl_uz.arb`) — латиница, и установщик, открывающийся перед
+  ней, обязан совпадать. Две письменности подряд у одного продукта выглядят
+  как две разные программы.
+
+  ЗАЧЕМ СВОЙ ФАЙЛ. WixToolset.UI узбекского не везёт: сборка с `-culture
+  uz-UZ` (и `uz-Latn-UZ` тоже) падает на `!(loc.WixUIOK)`. Казахский, к
+  слову, есть — прежнее утверждение, что «WiX не везёт ни один из трёх»,
+  было неверным и непроверенным.
+
+  Разбор, что переводится, а что копируется дословно, — в `ky-KG.wxl`;
+  здесь то же самое.
+-->
+<WixLocalization Culture="uz-UZ"
+                 xmlns="http://wixtoolset.org/schemas/v4/wxl">
+
+  <!-- ── Кнопки ─────────────────────────────────────────────────────── -->
+  <String Id="WixUIBack" Value="&amp;Orqaga" />
+  <String Id="WixUINext" Value="&amp;Keyingi" />
+  <String Id="WixUICancel" Value="Bekor qilish" />
+  <String Id="WixUIFinish" Value="&amp;Tayyor" />
+  <String Id="WixUIRetry" Value="&amp;Qayta urinish" />
+  <String Id="WixUIIgnore" Value="&amp;Eʼtiborsiz qoldirish" />
+  <String Id="WixUIYes" Value="&amp;Ha" />
+  <String Id="WixUINo" Value="&amp;Yoʻq" />
+  <String Id="WixUIOK" Value="OK" />
+  <String Id="WixUIPrint" Value="&amp;Chop etish" />
+
+  <!-- ── Приветствие ────────────────────────────────────────────────── -->
+  <String Id="WelcomeDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="WelcomeDlgBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="WelcomeDlgTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasiga xush kelibsiz" />
+  <String Id="WelcomeDlgDescription" Value="Usta [ProductName] dasturini kompyuteringizga oʻrnatadi. Davom etish uchun «Keyingi», chiqish uchun «Bekor qilish» tugmasini bosing." />
+  <String Id="WelcomeUpdateDlgDescriptionUpdate" Value="Usta [ProductName] dasturini kompyuteringizda yangilaydi. Davom etish uchun «Keyingi», chiqish uchun «Bekor qilish» tugmasini bosing." />
+
+  <!-- ── Лицензия ───────────────────────────────────────────────────── -->
+  <String Id="LicenseAgreementDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="LicenseAgreementDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="LicenseAgreementDlgTitle" Value="{\WixUI_Font_Title}Yakuniy foydalanuvchi bilan litsenziya shartnomasi" />
+  <String Id="LicenseAgreementDlgDescription" Value="Quyidagi litsenziya shartnomasini diqqat bilan oʻqib chiqing" />
+  <String Id="LicenseAgreementDlgLicenseAcceptedCheckBox" Value="Litsenziya shartnomasi shartlarini &amp;qabul qilaman" />
+
+  <!-- ── Папка установки ────────────────────────────────────────────── -->
+  <String Id="InstallDirDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="InstallDirDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="InstallDirDlgTitle" Value="{\WixUI_Font_Title}Belgilangan papka" />
+  <String Id="InstallDirDlgDescription" Value="Standart papkaga oʻrnatish uchun «Keyingi», boshqasini tanlash uchun «Oʻzgartirish» tugmasini bosing." />
+  <String Id="InstallDirDlgFolderLabel" Value="[ProductName] qayerga oʻrnatiladi:" />
+  <String Id="InstallDirDlgChange" Value="&amp;Oʻzgartirish..." />
+
+  <!-- ── Обзор папок ────────────────────────────────────────────────── -->
+  <String Id="BrowseDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="BrowseDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="BrowseDlgTitle" Value="{\WixUI_Font_Title}Belgilangan papkani oʻzgartirish" />
+  <String Id="BrowseDlgDescription" Value="Belgilangan papkani tanlang" />
+  <String Id="BrowseDlgComboLabel" Value="&amp;Qayerdan qidirish:" />
+  <String Id="BrowseDlgPathLabel" Value="&amp;Papka nomi:" />
+  <String Id="BrowseDlgWixUI_Bmp_Up" Value="WixUI_Bmp_Up" />
+  <String Id="BrowseDlgWixUI_Bmp_UpTooltip" Value="Bir daraja yuqoriga" />
+  <String Id="BrowseDlgNewFolder" Value="WixUI_Bmp_New" />
+  <String Id="BrowseDlgNewFolderTooltip" Value="Yangi papka yaratish" />
+
+  <!-- ── Готовность и ход ───────────────────────────────────────────── -->
+  <String Id="VerifyReadyDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="VerifyReadyDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="VerifyReadyDlgInstall" Value="&amp;Oʻrnatish" />
+  <String Id="VerifyReadyDlgInstallTitle" Value="{\WixUI_Font_Title}[ProductName] oʻrnatishga tayyor" />
+  <String Id="VerifyReadyDlgInstallText" Value="Oʻrnatishni boshlash uchun «Oʻrnatish» tugmasini bosing. Tanlovlarni koʻrib chiqish yoki oʻzgartirish uchun «Orqaga», chiqish uchun «Bekor qilish» tugmasini bosing." />
+  <String Id="VerifyReadyDlgChange" Value="&amp;Oʻzgartirish" />
+  <String Id="VerifyReadyDlgChangeTitle" Value="{\WixUI_Font_Title}[ProductName] oʻzgartirishga tayyor" />
+  <String Id="VerifyReadyDlgChangeText" Value="Oʻzgartirishni boshlash uchun «Oʻzgartirish» tugmasini bosing. Tanlovlarni koʻrib chiqish uchun «Orqaga», chiqish uchun «Bekor qilish» tugmasini bosing." />
+  <String Id="VerifyReadyDlgRepair" Value="&amp;Tuzatish" />
+  <String Id="VerifyReadyDlgRepairTitle" Value="{\WixUI_Font_Title}[ProductName] tuzatishga tayyor" />
+  <String Id="VerifyReadyDlgRepairText" Value="[ProductName] oʻrnatilishini tuzatish uchun «Tuzatish» tugmasini bosing. Tanlovlarni koʻrib chiqish uchun «Orqaga», chiqish uchun «Bekor qilish» tugmasini bosing." />
+  <String Id="VerifyReadyDlgRemove" Value="&amp;Oʻchirish" />
+  <String Id="VerifyReadyDlgRemoveTitle" Value="{\WixUI_Font_Title}[ProductName] oʻchirishga tayyor" />
+  <String Id="VerifyReadyDlgRemoveText" Value="[ProductName] dasturini kompyuterdan oʻchirish uchun «Oʻchirish» tugmasini bosing. Tanlovlarni koʻrib chiqish uchun «Orqaga», chiqish uchun «Bekor qilish» tugmasini bosing." />
+  <String Id="VerifyReadyDlgUpdate" Value="&amp;Yangilash" />
+  <String Id="VerifyReadyDlgUpdateTitle" Value="{\WixUI_Font_Title}[ProductName] yangilashga tayyor" />
+  <String Id="VerifyReadyDlgUpdateText" Value="Yangilash uchun «Yangilash» tugmasini bosing. Tanlovlarni koʻrib chiqish uchun «Orqaga», chiqish uchun «Bekor qilish» tugmasini bosing." />
+
+  <String Id="ProgressDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="ProgressDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ProgressDlgProgressBar" Value="Bajarildi" />
+  <String Id="ProgressDlgStatusLabel" Value="Holati:" />
+  <String Id="ProgressDlgTitleInstalling" Value="{\WixUI_Font_Title}[ProductName] oʻrnatilmoqda" />
+  <String Id="ProgressDlgTextInstalling" Value="Usta [ProductName] dasturini oʻrnatmoqda, kuting." />
+  <String Id="ProgressDlgTitleChanging" Value="{\WixUI_Font_Title}[ProductName] oʻzgartirilmoqda" />
+  <String Id="ProgressDlgTextChanging" Value="Usta [ProductName] dasturini oʻzgartirmoqda, kuting." />
+  <String Id="ProgressDlgTitleRepairing" Value="{\WixUI_Font_Title}[ProductName] tuzatilmoqda" />
+  <String Id="ProgressDlgTextRepairing" Value="Usta [ProductName] dasturini tuzatmoqda, kuting." />
+  <String Id="ProgressDlgTitleRemoving" Value="{\WixUI_Font_Title}[ProductName] oʻchirilmoqda" />
+  <String Id="ProgressDlgTextRemoving" Value="Usta [ProductName] dasturini oʻchirmoqda, kuting." />
+  <String Id="ProgressDlgTitleUpdating" Value="{\WixUI_Font_Title}[ProductName] yangilanmoqda" />
+  <String Id="ProgressDlgTextUpdating" Value="Usta [ProductName] dasturini yangilamoqda, kuting." />
+
+  <!-- ── Завершение и прерывание ────────────────────────────────────── -->
+  <String Id="ExitDialog_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="ExitDialogBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="ExitDialogTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasi yakunlandi" />
+  <String Id="ExitDialogDescription" Value="Ustadan chiqish uchun «Tayyor» tugmasini bosing." />
+
+  <String Id="UserExit_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="UserExitBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="UserExitTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasi toʻxtatildi" />
+  <String Id="UserExitDescription1" Value="[ProductName] oʻrnatilishi toʻxtatildi. Tizimingiz oʻzgartirilmadi. Dasturni keyinroq oʻrnatish uchun oʻrnatishni qaytadan boshlang." />
+  <String Id="UserExitDescription2" Value="Ustadan chiqish uchun «Tayyor» tugmasini bosing." />
+
+  <String Id="FatalError_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="FatalErrorBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="FatalErrorTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasi muddatidan oldin toʻxtadi" />
+  <String Id="FatalErrorDescription1" Value="Xatolik tufayli [ProductName] oʻrnatish ustasi muddatidan oldin toʻxtadi. Tizimingiz oʻzgartirilmadi. Dasturni keyinroq oʻrnatish uchun oʻrnatishni qaytadan boshlang." />
+  <String Id="FatalErrorDescription2" Value="Ustadan chiqish uchun «Tayyor» tugmasini bosing." />
+
+  <String Id="CancelDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="CancelDlgIcon" Value="WixUI_Ico_Info" />
+  <String Id="CancelDlgIconTooltip" Value="Maʼlumot belgisi" />
+  <String Id="CancelDlgText" Value="[ProductName] oʻrnatilishini rostdan ham bekor qilasizmi?" />
+
+  <String Id="ErrorDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="ErrorDlgErrorIcon" Value="WixUI_Ico_Info" />
+  <String Id="ErrorDlgErrorIconTooltip" Value="Maʼlumot belgisi" />
+  <String Id="ErrorDlgErrorText" Value="Maʼlumot" />
+
+  <String Id="PrepareDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="PrepareDlgBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="PrepareDlgTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasiga xush kelibsiz" />
+  <String Id="PrepareDlgDescription" Value="Usta oʻrnatishga tayyorlanmoqda, kuting." />
+
+  <String Id="ResumeDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="ResumeDlgBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="ResumeDlgInstall" Value="&amp;Oʻrnatish" />
+  <String Id="ResumeDlgTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasi davom ettirilmoqda" />
+  <String Id="ResumeDlgDescription" Value="Usta [ProductName] oʻrnatilishini yakunlaydi. Davom etish uchun «Oʻrnatish», chiqish uchun «Bekor qilish» tugmasini bosing." />
+
+  <!-- ── Обслуживание ──────────────────────────────────────────────── -->
+  <String Id="MaintenanceWelcomeDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="MaintenanceWelcomeDlgBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="MaintenanceWelcomeDlgTitle" Value="{\WixUI_Font_Bigger}[ProductName] oʻrnatish ustasiga xush kelibsiz" />
+  <String Id="MaintenanceWelcomeDlgDescription" Value="Usta [ProductName] tarkibiy qismlarining oʻrnatilishini oʻzgartirish yoki dasturni kompyuterdan oʻchirish imkonini beradi. Davom etish uchun «Keyingi», chiqish uchun «Bekor qilish» tugmasini bosing." />
+
+  <String Id="MaintenanceTypeDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="MaintenanceTypeDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="MaintenanceTypeDlgTitle" Value="{\WixUI_Font_Title}Oʻrnatishni oʻzgartirish, tuzatish yoki oʻchirish" />
+  <String Id="MaintenanceTypeDlgDescription" Value="Bajariladigan amalni tanlang." />
+  <String Id="MaintenanceTypeDlgChangeButton" Value="&amp;Oʻzgartirish" />
+  <String Id="MaintenanceTypeDlgChangeButtonTooltip" Value="Oʻrnatishni oʻzgartirish" />
+  <String Id="MaintenanceTypeDlgChangeText" Value="Tarkibiy qismlarning oʻrnatilish usulini oʻzgartirish imkonini beradi." />
+  <String Id="MaintenanceTypeDlgChangeDisabledText" Value="[ProductName] alohida tanlanadigan tarkibiy qismlarga ega emas." />
+  <String Id="MaintenanceTypeDlgRepairButton" Value="&amp;Tuzatish" />
+  <String Id="MaintenanceTypeDlgRepairButtonTooltip" Value="Oʻrnatishni tuzatish" />
+  <String Id="MaintenanceTypeDlgRepairText" Value="Yetishmayotgan va buzilgan fayllarni, yorliqlarni va reyestr yozuvlarini tiklab, soʻnggi oʻrnatish xatoliklarini tuzatadi." />
+  <String Id="MaintenanceTypeDlgRepairDisabledText" Value="[ProductName] tuzatib boʻlmaydi." />
+  <String Id="MaintenanceTypeDlgRemoveButton" Value="&amp;Oʻchirish" />
+  <String Id="MaintenanceTypeDlgRemoveButtonTooltip" Value="Oʻrnatishni oʻchirish" />
+  <String Id="MaintenanceTypeDlgRemoveText" Value="[ProductName] dasturini kompyuteringizdan oʻchiradi." />
+  <String Id="MaintenanceTypeDlgRemoveDisabledText" Value="[ProductName] oʻchirib boʻlmaydi." />
+
+  <!-- ── Диск и занятые файлы ──────────────────────────────────────── -->
+  <String Id="DiskCostDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="DiskCostDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="DiskCostDlgTitle" Value="{\WixUI_Font_Title}Disk joyiga talablar" />
+  <String Id="DiskCostDlgDescription" Value="Tanlangan tarkibiy qismlarni oʻrnatish uchun zarur disk joyi." />
+  <String Id="DiskCostDlgText" Value="Belgilangan disklarda tanlangan tarkibiy qismlar uchun joy yetarli emas. Ayrim fayllarni oʻchiring, kamroq tarkibiy qism tanlang yoki boshqa diskni koʻrsating." />
+  <String Id="DiskCostDlgVolumeList" Value="{120}{70}{70}{70}{70}" />
+
+  <String Id="OutOfDiskDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="OutOfDiskDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="OutOfDiskDlgTitle" Value="{\WixUI_Font_Title}Disk joyi yetarli emas" />
+  <String Id="OutOfDiskDlgDescription" Value="Oʻrnatish uchun zarur joy mavjud joydan oshib ketdi." />
+  <String Id="OutOfDiskDlgText" Value="Belgilangan disklarda tanlangan tarkibiy qismlar uchun joy yetarli emas. Ayrim fayllarni oʻchiring, kamroq tarkibiy qism tanlang yoki boshqa diskni koʻrsating." />
+  <String Id="OutOfDiskDlgVolumeList" Value="{120}{70}{70}{70}{70}" />
+
+  <String Id="OutOfRbDiskDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="OutOfRbDiskDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="OutOfRbDiskDlgTitle" Value="{\WixUI_Font_Title}Disk joyi yetarli emas" />
+  <String Id="OutOfRbDiskDlgDescription" Value="Oʻrnatish uchun zarur joy mavjud joydan oshib ketdi." />
+  <String Id="OutOfRbDiskDlgText" Value="Belgilangan disklarda tanlangan tarkibiy qismlar uchun joy yetarli emas. Ayrim fayllarni oʻchiring, kamroq tarkibiy qism tanlang yoki boshqa diskni koʻrsating." />
+  <String Id="OutOfRbDiskDlgText2" Value="Shuningdek, oʻrnatuvchining orqaga qaytarish imkoniyatini oʻchirib qoʻyishingiz mumkin. U oʻchirilsa, oʻrnatish uzilganda kompyuter avvalgi holatiga qaytarilmaydi. Tavakkal qilishga rozi boʻlsangiz «Ha» tugmasini bosing." />
+  <String Id="OutOfRbDiskDlgVolumeList" Value="{120}{70}{70}{70}{70}" />
+
+  <String Id="FilesInUse_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="FilesInUseBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="FilesInUseTitle" Value="{\WixUI_Font_Title}Fayllar band" />
+  <String Id="FilesInUseDescription" Value="Yangilanishi kerak boʻlgan ayrim fayllar hozir ishlatilmoqda." />
+  <String Id="FilesInUseText" Value="Quyidagi dasturlar oʻrnatish yangilaydigan fayllardan foydalanmoqda. Ularni yoping va davom etish uchun «Qayta urinish» yoki chiqish uchun «Chiqish» tugmasini bosing." />
+  <String Id="FilesInUseExit" Value="&amp;Chiqish" />
+
+  <String Id="MsiRMFilesInUse_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="MsiRMFilesInUseBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="MsiRMFilesInUseTitle" Value="{\WixUI_Font_Title}Fayllar band" />
+  <String Id="MsiRMFilesInUseDescription" Value="Yangilanishi kerak boʻlgan ayrim fayllar hozir ishlatilmoqda." />
+  <String Id="MsiRMFilesInUseText" Value="Quyidagi dasturlar oʻrnatish yangilaydigan fayllardan foydalanmoqda. Usta ularni yopib, qaytadan ochishga urinishi mumkin, yoki kompyuterni keyinroq oʻchirib-yoqsangiz boʻladi." />
+  <String Id="MsiRMFilesInUseUseRM" Value="Dasturlarni &amp;yopib, qaytadan ochishga urinish." />
+  <String Id="MsiRMFilesInUseDontUseRM" Value="Dasturlarni &amp;yopmaslik. Kompyuterni qayta yoqish talab qilinadi." />
+
+  <String Id="WaitForCostingDlg_Title" Value="[ProductName] oʻrnatish" />
+  <String Id="WaitForCostingDlgIcon" Value="WixUI_Ico_Exclam" />
+  <String Id="WaitForCostingDlgIconTooltip" Value="Ogohlantirish belgisi" />
+  <String Id="WaitForCostingDlgReturn" Value="&amp;Qaytish" />
+  <String Id="WaitForCostingDlgText" Value="Oʻrnatuvchi disk joyiga talablarni hisoblab boʻlguncha kuting." />
+
+  <!-- ── Служебные подписи ─────────────────────────────────────────── -->
+  <String Id="UITextbytes" Value="bayt" />
+  <String Id="UITextGB" Value="GB" />
+  <String Id="UITextKB" Value="KB" />
+  <String Id="UITextMB" Value="MB" />
+  <String Id="UITextNewFolder" Value="Yangi papka" />
+  <String Id="UITextScriptInProgress" Value="Maʼlumot toʻplanmoqda. Kuting." />
+  <String Id="UITextTimeRemaining" Value="Qolgan vaqt: {[1] daqiqa }{[2] soniya}" />
+
+  <String Id="UITextMenuAbsent" Value="Tarkibiy qism mavjud boʻlmaydi" />
+  <String Id="UITextMenuAdvertise" Value="Tarkibiy qism kerak boʻlganda oʻrnatiladi" />
+  <String Id="UITextMenuAllCD" Value="Tarkibiy qism va uning ichidagilar CD-dan ishlaydi" />
+  <String Id="UITextMenuAllLocal" Value="Tarkibiy qism va uning ichidagilar qattiq diskka oʻrnatiladi" />
+  <String Id="UITextMenuAllNetwork" Value="Tarkibiy qism va uning ichidagilar tarmoqdan ishlaydi" />
+  <String Id="UITextMenuCD" Value="Tarkibiy qism CD-dan ishlaydi" />
+  <String Id="UITextMenuLocal" Value="Tarkibiy qism qattiq diskka oʻrnatiladi" />
+  <String Id="UITextMenuNetwork" Value="Tarkibiy qism tarmoqdan ishlaydi" />
+
+  <String Id="UITextSelAbsentAbsent" Value="Bu tarkibiy qism mavjud boʻlmaganicha qoladi." />
+  <String Id="UITextSelAbsentAdvertise" Value="Bu tarkibiy qism kerak boʻlganda oʻrnatiladi." />
+  <String Id="UITextSelAbsentCD" Value="Bu tarkibiy qism CD-dan ishlaydi." />
+  <String Id="UITextSelAbsentLocal" Value="Bu tarkibiy qism qattiq diskka oʻrnatiladi." />
+  <String Id="UITextSelAbsentNetwork" Value="Bu tarkibiy qism tarmoqdan ishlaydi." />
+  <String Id="UITextSelAdvertiseAbsent" Value="Bu tarkibiy qism mavjud boʻlmaydi." />
+  <String Id="UITextSelAdvertiseAdvertise" Value="Bu tarkibiy qism kerak boʻlganda oʻrnatiladi." />
+  <String Id="UITextSelAdvertiseCD" Value="Bu tarkibiy qism CD-dan ishlaydi." />
+  <String Id="UITextSelAdvertiseLocal" Value="Bu tarkibiy qism qattiq diskka oʻrnatiladi." />
+  <String Id="UITextSelAdvertiseNetwork" Value="Bu tarkibiy qism tarmoqdan ishlaydi." />
+  <String Id="UITextSelCDAbsent" Value="Bu tarkibiy qism mavjud boʻlmaydi." />
+  <String Id="UITextSelCDAdvertise" Value="Bu tarkibiy qism kerak boʻlganda oʻrnatiladi." />
+  <String Id="UITextSelCDCD" Value="Bu tarkibiy qism CD-dan ishlaydi." />
+  <String Id="UITextSelCDLocal" Value="Bu tarkibiy qism qattiq diskka oʻrnatiladi." />
+  <String Id="UITextSelLocalAbsent" Value="Bu tarkibiy qism butunlay oʻchiriladi." />
+  <String Id="UITextSelLocalAdvertise" Value="Bu tarkibiy qism kerak boʻlganda oʻrnatiladi." />
+  <String Id="UITextSelLocalCD" Value="Bu tarkibiy qism CD-dan ishlaydi." />
+  <String Id="UITextSelLocalLocal" Value="Bu tarkibiy qism qattiq diskda qoladi." />
+  <String Id="UITextSelLocalNetwork" Value="Bu tarkibiy qism tarmoqdan ishlaydi." />
+  <String Id="UITextSelNetworkAbsent" Value="Bu tarkibiy qism mavjud boʻlmaydi." />
+  <String Id="UITextSelNetworkAdvertise" Value="Bu tarkibiy qism kerak boʻlganda oʻrnatiladi." />
+  <String Id="UITextSelNetworkLocal" Value="Bu tarkibiy qism qattiq diskka oʻrnatiladi." />
+  <String Id="UITextSelNetworkNetwork" Value="Bu tarkibiy qism tarmoqda qoladi." />
+
+  <String Id="UITextSelChildCostNeg" Value="Bu tarkibiy qism qattiq diskda joy egallamaydi." />
+  <String Id="UITextSelChildCostPos" Value="Bu tarkibiy qism qattiq diskda [1] egallaydi." />
+  <String Id="UITextSelCostPending" Value="Zarur joy hisoblanmoqda..." />
+  <String Id="UITextSelParentCostNegNeg" Value="Bu tarkibiy qism qattiq diskda joy egallamaydi. Ichidagi [2] tarkibiy qismdan [1] tanlangan. Ular qattiq diskda joy egallamaydi." />
+  <String Id="UITextSelParentCostNegPos" Value="Bu tarkibiy qism qattiq diskda joy egallamaydi. Ichidagi [2] tarkibiy qismdan [1] tanlangan. Ular qattiq diskda [3] egallaydi." />
+  <String Id="UITextSelParentCostPosNeg" Value="Bu tarkibiy qism qattiq diskda [4] egallaydi. Ichidagi [2] tarkibiy qismdan [1] tanlangan. Ular qattiq diskda joy egallamaydi." />
+  <String Id="UITextSelParentCostPosPos" Value="Bu tarkibiy qism qattiq diskda [4] egallaydi. Ichidagi [2] tarkibiy qismdan [1] tanlangan. Ular qattiq diskda [3] egallaydi." />
+
+  <String Id="UITextVolumeCostAvailable" Value="Mavjud" />
+  <String Id="UITextVolumeCostDifference" Value="Farq" />
+  <String Id="UITextVolumeCostRequired" Value="Talab qilinadi" />
+  <String Id="UITextVolumeCostSize" Value="Disk hajmi" />
+  <String Id="UITextVolumeCostVolume" Value="Disk" />
+</WixLocalization>

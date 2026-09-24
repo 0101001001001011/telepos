@@ -19,6 +19,18 @@ when the internet does not.
 
 ---
 
+## Guides
+
+Video guides are being recorded and published as they are finished — the
+first launch, the setup wizard, the emulators, the first sale and the shift,
+the printer and the cash drawer.
+
+- YouTube — https://www.youtube.com/@BobKim-xz5fy
+- Telegram — https://t.me/sphere_x_bot
+
+They are in English, filmed against a real till on a real desktop, not a
+mock-up: what you see in the frame is what the product does.
+
 ## Project status
 
 **Alpha. It sells, and it is not finished.** Read this section before anything

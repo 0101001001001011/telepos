@@ -470,9 +470,20 @@ function New-LicenseRtf {
     #>
     param([string] $Destination, [string] $Culture = 'en-US')
 
-    # Язык вступления — по языку пакета. Неизвестный язык получает
-    # английское: молчать хуже, чем сказать на чужом.
-    $lang = if ($Culture -like 'ru*') { 'ru' } else { 'en' }
+    # Язык вступления — по языку пакета. Неизвестный получает английское:
+    # молчать хуже, чем сказать на чужом.
+    #
+    # Первая редакция знала только русский и английский, и казахская,
+    # киргизская, узбекская сборки молча получали бы английское вступление
+    # перед английским же текстом лицензии — то есть человек, которому
+    # установщик говорит на его языке, на самом важном экране терял бы его.
+    $lang = switch -Wildcard ($Culture) {
+        'ru*' { 'ru'; break }
+        'kk*' { 'kk'; break }
+        'ky*' { 'ky'; break }
+        'uz*' { 'uz'; break }
+        default { 'en' }
+    }
     $preambleFile = Join-Path $RepoRoot "installer\windows\license-preamble-$lang.txt"
     if (-not (Test-Path $preambleFile)) {
         throw "не найдено вступление к лицензии: $preambleFile"
@@ -602,12 +613,31 @@ New-Item -ItemType Directory -Force -Path $ObjDir, $Output | Out-Null
 # человек, чьего языка в списке нет. Латиницу прочтёт больше людей, чем
 # кириллицу; обратный выбор оставлял бы немца с русскими кнопками.
 #
-# Чего здесь НЕТ: казахского, киргизского и узбекского. Их нет в переводах
-# WixToolset.UI, и подставить свои — отдельная работа с полным набором
-# строк стандартных окон. Пока эти языки получают английский, и это сказано
-# вслух, а не спрятано.
-$cultures = @('en-US', 'ru-RU')
-$lcids    = @{ 'en-US' = 1033; 'ru-RU' = 1049 }
+# ПЯТЬ ЯЗЫКОВ — ровно те, на которых говорит сама касса.
+#
+# Прежде здесь стояло два и запись: «казахского, киргизского и узбекского
+# нет в переводах WixToolset.UI». Утверждение было НЕПРОВЕРЕННЫМ и неверным
+# наполовину: казахский WiX везёт — измерено чтением собранного пакета.
+# Не везёт киргизский и узбекский, и для них написаны свои файлы перевода:
+# `installer/windows/loc/*.wxl`, по 205 строк — ровно тех, на которые
+# ссылаются окна `WixUI_InstallDir`. Набор измерен самим WiX, а не угадан.
+#
+# Узбекский — ЛАТИНИЦЕЙ, как и словарь кассы: две письменности подряд у
+# одного продукта выглядят как две разные программы.
+$cultures = @('en-US', 'ru-RU', 'kk-KZ', 'ky-KG', 'uz-UZ')
+$lcids    = @{
+    'en-US' = 1033
+    'ru-RU' = 1049
+    'kk-KZ' = 1087
+    'ky-KG' = 1088
+    'uz-UZ' = 1091
+}
+
+# Свои переводы — только там, где их нет у WiX.
+$ownLoc = @{
+    'ky-KG' = 'installer\windows\loc\ky-KG.wxl'
+    'uz-UZ' = 'installer\windows\loc\uz-UZ.wxl'
+}
 
 $msi = Join-Path $Output "TelePOS_Setup_$($v.Version).msi"
 $perCulture = @{}
@@ -618,10 +648,15 @@ foreach ($culture in $cultures) {
     New-LicenseRtf -Destination (Join-Path $ObjDir 'license.rtf') -Culture $culture
 
     $out = Join-Path $ObjDir "TelePOS_$culture.msi"
+    $locArgs = @()
+    if ($ownLoc.ContainsKey($culture)) {
+        $locArgs = @('-loc', (Join-Path $RepoRoot $ownLoc[$culture]))
+    }
     & $wix build `
         (Join-Path $RepoRoot 'installer\windows\TelePOS.wxs') `
         -arch x64 `
         -culture $culture `
+        @locArgs `
         -ext WixToolset.UI.wixext `
         -ext WixToolset.Util.wixext `
         -d "Language=$($lcids[$culture])" `

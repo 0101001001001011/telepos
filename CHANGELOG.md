@@ -4,6 +4,232 @@ All notable changes to TelePOS are recorded here. The public repository receives
 source snapshots, not the development history, so entries are grouped by
 snapshot date rather than by commit.
 
+## Guides
+
+Video guides for TelePOS are published as they are recorded:
+
+- YouTube — https://www.youtube.com/@BobKim-xz5fy
+- Telegram — https://t.me/sphere_x_bot
+
+## 3.7.2 — 2026-09-24
+
+The installer now speaks all five languages the till speaks, and picks the
+right one by itself.
+
+### Five languages, chosen by Windows
+
+- **English, Russian, Kazakh, Kyrgyz and Uzbek.** The package carries an
+  English base and an embedded transform per language, and declares all five
+  codes; Windows applies the one that matches the system.
+- Kyrgyz and Uzbek have no translation in the WiX toolset, so they were
+  written for this project — 205 strings each, exactly the ones the installer
+  dialogs reference. Uzbek is in the Latin script, matching the till's own
+  dictionary: two scripts in a row from one product look like two different
+  products.
+- Kazakh needed nothing written: WiX ships it.
+
+  *Correcting 3.7.1's notes:* they said WiX ships no translation for any of
+  the three. That was wrong and unchecked — the sort of claim about the world
+  that should be measured rather than assumed. The 3.7.1 notes now carry the
+  correction.
+
+- The licence screen opens with a preamble in the language of the installer —
+  the product, who holds its copyright, what you may do in plain words, where
+  the source is, and that this is an alpha — in all five. Without it the three
+  new languages would have quietly shown an English preamble above an English
+  licence: you would lose your language on the one screen where it matters.
+  The binding text of the GNU AGPL stays English, and the preamble says why.
+
+### What this release does not change
+
+Nothing in the till itself. Database schema v58, same as 3.7.0 and 3.7.1.
+If you have 3.7.1 installed and read English, there is nothing here for you.
+
+### Notes
+
+- Alpha. No shop is running this in production yet — we are looking for QA.
+
+## 3.7.1 — 2026-09-24
+
+A correcting release, hours after 3.7.0. Most of it is the installer, which
+turned out to be speaking Russian to the whole world, and a licence screen
+that never named the product you were about to install.
+
+### The installer now speaks the language of the machine
+
+- **The MSI is multilingual and Windows picks the language.** It used to be
+  built with a single culture and with the product language hard-wired, so
+  the stock dialogs — Next, Install, I accept — were **Russian on every
+  machine in the world**, including an American one, while the licence next
+  to them was always English. The package now carries an English base and an
+  embedded Russian transform, and declares both language codes; Windows
+  applies the right one.
+- English is the base on purpose: the base is what a person sees when their
+  own language is not in the list.
+- Kazakh, Kyrgyz and Uzbek are **not** in this build; those systems get
+  English. They are in the next one.
+
+  *Correction, added after release:* the reason first given here — "WiX ships
+  no UI translation for them" — was wrong and had not been checked. WiX does
+  ship Kazakh. It does not ship Kyrgyz or Uzbek, and those two now have
+  translations written for this project.
+- The shortcut tooltip, the package description, the entry in Programs and
+  Features and two refusal messages ("64-bit Windows only", "a silent
+  install cannot ask for administrator rights") were Russian on every
+  install. They are not any more.
+
+### The licence screen says what you are accepting
+
+The agreement used to be the bare text from the Free Software Foundation,
+opening with *Copyright (C) 2007 Free Software Foundation* — you clicked "I
+accept" under a document that never once named the product being installed,
+or who holds its copyright.
+
+It now opens with a short preamble in the language of the installer: the
+product, the copyright holder, what you may do in plain words, where the
+source is, and that this is an alpha. The binding text of the GNU AGPL
+follows, **in English**, because the Free Software Foundation does not
+recognise translations of it as official — and the preamble says exactly
+that rather than leaving you to assume.
+
+### Corrections in the till
+
+- **The till now tells you where its data lives.** No screen did: not
+  diagnostics (those are about devices), not system management. For a till
+  that has to be backed up and one day moved to another machine, that was a
+  fair question with no answer anywhere in the product. Settings → General
+  now lists the database, the logs and the backups, and copies a path on a
+  click. Read-only on purpose: a "change folder" button would one day move a
+  database out from under an open shift.
+- **The version the till reported was one release behind.** It lived in
+  three places and the release script knew two of them, so 3.7.0 introduced
+  itself as 3.6.0 — exactly as 3.5.1 had introduced itself as 3.5.0. There
+  is one literal now, in the place the script edits.
+- **669 dictionary keys that nothing asked for** were removed, across all
+  five languages. A dead key is worse than a missing one: the dictionary
+  claims a screen is translated when it is not. That is how the expense
+  kinds came to have two competing key sets, one of them unused.
+
+### Notes
+
+- Database schema v58, unchanged from 3.7.0.
+- Alpha. No shop is running this in production yet — we are looking for QA.
+
+## 3.7.0 — 2026-09-23
+
+This release makes the till **usable outside Kazakhstan**. Tax became a
+configured engine instead of a number in the source, the interface and the
+paper stopped speaking Russian on a non-Russian till, and the shift's money
+was reduced to a single identity that the screen, the ledger and the Z-report
+all agree on.
+
+Most of what is listed here was found by **filming the video guides on an
+American till**, not by the test suite. A dry run puts the product in front of
+a camera in a language and a country it had never actually run in, and that
+turns out to be a measuring instrument the suite is not.
+
+### Tax: configured, not compiled
+
+- **Tax rates left the source code.** `CountryCode.vatRate` is gone. Rates live
+  in `assets/tax_presets/*.json` — 19 sets, one per country plus a city-level
+  set for the United States — and the setup wizard applies the country's set
+  once; after that the till lives by its own configuration. Rates are written
+  as strings, never as JSON numbers.
+- **A rate is derived, not stored**: jurisdiction + product category + date.
+  A jurisdiction set (country → state → county → city) stacks, a category can
+  be exempt in one jurisdiction and taxed in another, and every rate carries
+  the date it takes effect.
+- **Tax on top of the price** (United States) versus **tax inside the price**
+  (CIS VAT) are both first-class, and a receipt shows the rate breakdown under
+  each rate rather than one line for the whole receipt.
+- The VAT formula existed in **six** places and they had drifted; one of them
+  had been folded into `4/29` and was hard-wired to 16 % on the live receipt
+  printing path. There is one home now, and a guard that looks for the
+  *declaration*, not the spelling — a folded formula leaves no trace to grep.
+- Seller address reaches the receipt **in every country**. Until now the wizard
+  collected it and only Kazakh fiscalisation wrote it, so an American receipt
+  never carried it at all. It is also editable: a shop that moves no longer
+  needs a reinstall.
+- Receipt dates follow the country, not the CIS order.
+
+### Language
+
+- The interface, the paper and the customer display now follow the till's
+  language. Previously: 54 hardcoded Russian strings across 13 screens, then
+  another 88 the first guard could not see, then 26 more in states it never
+  reached — including "X-report" and "Correction receipt" on the shift screen.
+- **Printed documents** (receipt, X-report, Z-report, cash-operation slip) are
+  assembled in the till's language. Before this, every line on paper was a
+  Russian literal regardless of the setting.
+- **The customer display** — the screen the *buyer* reads — said "Цена:",
+  "ИТОГО:", "Сдача:" on every till in the world.
+- Words that a person reads no longer live outside the dictionary: role names,
+  permission labels, device catalogue entries, expense kinds. A guard enforces
+  it, and it covers `core/`, `data/`, `hardware/` and `telegram/` — the layers
+  where the previous guard did not look.
+- **The expense kind got a column** (`cash_operations.reason_code`). It used to
+  be glued into the note as prose — `"Зарплата: for August"` — which cannot be
+  translated after the fact and cannot be summed: "how much went on wages this
+  month" would have meant parsing Russian text.
+- 52 hardcoded tenge signs across the screens; the currency symbol now comes
+  from the till, and currency was removed from the dictionary entirely.
+- Banknote denominations come from the country. An American cashier was
+  counting notes that do not exist and could not count a dollar, a five or a
+  twenty.
+
+### The shift's money is one number
+
+The panel labelled *Expected in register* showed `0.00` with $200 in the
+drawer. Behind it were six defects in one model, each of them individually
+green across 6 000+ tests:
+
+- the opening count was written to the shift row and **nowhere else**, so the
+  till's own ledger never saw it;
+- a cash deposit entered the expectation through **no term at all** — paying
+  100 into the drawer produced a 100 overage at close;
+- the close reconciliation wrote its journal row without moving the balance, so
+  the journal and the ledger parted permanently;
+- a close without a recount recorded the ledger while the screen compared
+  against the expectation;
+- the Z-report was never handed this shift's opening float and printed the
+  **previous** shift's closing count;
+- the screens showed a discrepancy computed from the ledger while the till
+  recorded one computed from the expectation — a cashier who counted the
+  drawer correctly would have seen a $200 overage.
+
+There is one identity now, and the POS account balance, the shift expectation
+and the `TOTAL IN DRAWER` line of the Z-report all equal it at every moment of
+a shift. A difference between a hand count and the ledger is posted as a
+visible cash operation of its own kind, never absorbed and never typed as a
+deposit or a withdrawal.
+
+### Other corrections worth naming
+
+- **A product with no price was given away for free**, on both paths including
+  the scanner. It hid behind 36 registered-and-never-asked contracts — 4 376
+  lines of code that looked live, including a `SaleValidationService` that
+  created the impression prices were checked.
+- **Selling-hours restrictions** (alcohol at night and the like) were declared
+  and did nothing: the table, the DAO and the use case had existed from the
+  start, nobody called them, and there was no screen to fill them in. Inside
+  the DAO, a query that accounted for the parent category threw its own result
+  away. Implemented end to end, with a `/selling-hours` screen.
+- **The receipt ceiling** was hard-wired to one million (≈$2 000), so an
+  American till had no protection at all. It is a setting now.
+- **A per-role discount limit did not apply on browser terminals.** The session
+  was minted with the *display word* for the role while the wire matched it
+  against the stable key, so the match never succeeded and only the "any role"
+  limit was ever found.
+- National systems (ESF, SNT, ESUTD, IS MPT) and the Kazakh tax tab were shown
+  on every country's till; they follow the country now. Nine countries declared
+  fiscalisation while only two had an operator.
+
+### Notes
+
+- Database schema v58. Migration from any released version is tested, including
+  the timing and integrity checks.
+- Alpha. No production deployments yet — we are looking for QA.
+
 ## 3.6.0 — 2026-09-19
 
 The till can now sell completely from a **browser terminal** (a tablet or

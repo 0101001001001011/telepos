@@ -1,0 +1,29 @@
+TelePOS — chakana savdo, umumiy ovqatlanish, xizmat koʻrsatish va ombor
+uchun kassa
+Copyright (C) 2026 Rob Kim
+
+Bu — erkin dastur: siz uni Erkin dasturiy taʼminot jamgʻarmasi eʼlon qilgan
+GNU Affero General Public License shartlari bilan — 3-versiya yoki, xohishingizga
+koʻra, keyingi istalgan versiya — tarqatishingiz va oʻzgartirishingiz mumkin.
+
+Dastur foydali boʻladi degan umidda tarqatiladi, lekin HECH QANDAY
+KAFOLATSIZ, shu jumladan tovar holati va maʼlum bir maqsadga yaroqlilik
+haqidagi nazarda tutilgan kafolatlarsiz.
+
+Oddiy soʻz bilan, quyidagining hech narsasini bekor qilmagan holda: siz bu
+kassani oʻz doʻkoningizda ishlatishingiz, uning manba kodini oʻqishingiz,
+oʻzgartirishingiz va boshqalarga berishingiz mumkin. Oʻzgartirilgan versiyani
+boshqa odamlarga tarmoq orqali taklif qilsangiz, ular uning manba kodini
+olishga haqli. Ushbu versiyaning manba kodi —
+https://github.com/0101001001001011/telepos
+
+Bu yigʻma — alfa. Uni ishlab chiqarishda ishlatayotgan birorta ham doʻkon
+bizga maʼlum emas.
+
+LITSENZIYANING TOʻLIQ VA YURIDIK KUCHGA EGA MATNI — FAQAT INGLIZ TILIDA VA U
+QUYIDA KELTIRILGAN. Ushbu tarjima tushunish uchun berilgan, yuridik kuchga
+ega emas: Erkin dasturiy taʼminot jamgʻarmasi GNU AGPL tarjimalarini rasmiy
+deb tan olmaydi, chunki tarjimaning asl nusxadan farqi shartlarni oʻzgartirgan
+boʻlardi.
+
+--------------------------------------------------------------------------
